@@ -55,7 +55,7 @@ function read_rows() {
 	//alert("Row " + i + " = " + row + " parent = " + row.parentNode);
 	var s = row.getElementsByTagName("select")[0];
 	s.onchange = function() { sort_rows(); }
-	rank[i] = Number(s.options[s.selectedIndex].value);
+	rank[i] = s.selectedIndex + 1;
     }
 }
 
@@ -83,22 +83,43 @@ function setup() {
 }
 
 var num_selected;
+var have_rank = new Array;
+
+function scan_ranks() {
+    var i;
+    for (i = 1; i <= num_choices+1; i++) have_rank[i] = false;
+    for (i = 0; i < num_choices; i++) have_rank[rank[i]] = true;
+}
 
 function min_selected_rank() {
-    var min_rank = num_choices + 1;
+    var cur = num_choices + 1;
     num_selected = 0;
     for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) {
 	    num_selected++;
-	    if (rank[i] < min_rank) {
-		min_rank = rank[i];
-		//alert("min rank " + min_rank + " at " + i);
+	    if (rank[i] < cur) {
+		cur = rank[i];
+		//alert("new min rank " + cur + " at " + i);
 	    }
 	}
     }
-    return min_rank;
+    return cur;
 }
 
+function max_selected_rank() {
+    var cur = 1;
+    num_selected = 0;
+    for (var i = 0; i < num_choices; i++) {
+	if (selected[i]) {
+	    num_selected++;
+	    if (rank[i] > cur) {
+		cur = rank[i];
+		//alert("new max rank " + cur + " at " + i);
+	    }
+	}
+    }
+    return cur;
+}
 function set_rank(i, r) {
     //alert("Setting rank of " + i + " to " + r);
     rank[i] = r;
@@ -119,82 +140,85 @@ function do_make_tie() {
     sort_rows();
 }
 
-function do_move (delta) {
+function do_move_up () {
     var min_rank = min_selected_rank();
     if (num_selected < 1) {
 	alert("No choices were selected. "+
 	      "Click (or shift-click) to select choices");
 	return false;
     }
-    var new_rank = min_rank + delta;
+    if (min_rank == 1) return;
+    var new_rank = min_rank - 1;
+    scan_ranks();
     var collision = false;
-    if (new_rank < 1) new_rank = 1;
+    if (have_rank[new_rank]) { // skip over unused ranks
+	collision = true;
+    } else while (!have_rank[new_rank - 1] && new_rank > 1 ) {
+	new_rank = new_rank - 1;
+    }
     for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) {
 	    set_rank(i, new_rank);
-	} else {
-	    if (!selected[i] && rank[i] == new_rank)
-		collision = true;
-	}
-    }
-    if (collision) { // shift things at that rank the other way
-	for (var i = 0; i < num_choices; i++) {
-	    if (!selected[i] && rank[i] == new_rank) {
-		set_rank(i, rank[i] - delta);
-	    }
+	} else if (collision && rank[i] == new_rank) {
+	    set_rank(i, rank[i] + 1);
 	}
     }
     sort_rows();
 }
 
-function do_move_up () { do_move(-1); }
-function do_move_down () { do_move(1); }
+function do_move_down () {
+    var max_rank = max_selected_rank();
+    if (num_selected < 1) {
+	alert("No choices were selected. "+
+	      "Click (or shift-click) to select choices");
+	return false;
+    }
+    if (max_rank == num_choices + 1) return;
+    var new_rank = max_rank + 1;
+    scan_ranks();
+    var collision = false;
+    if (have_rank[new_rank]) { // skip over unused ranks
+	collision = true;
+    } else while (!have_rank[new_rank + 1] &&
+     	          new_rank < num_choices) {
+	new_rank = new_rank + 1;
+    }
+    for (var i = 0; i < num_choices; i++) {
+	if (selected[i]) {
+	    set_rank(i, new_rank);
+	} else if (collision && rank[i] == new_rank) {
+	    set_rank(i, rank[i] - 1);
+	}
+    }
+    sort_rows();
+}
 
 function do_move_top() {
     var min_rank = min_selected_rank();
-    var collision = false;
+    if (min_rank <= cur_top) cur_top = 1;
+    scan_ranks();
+    var collision = have_rank[min_rank];
     for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) {
-	    if (rank[i] <= cur_top) { // already at top
-		cur_top = 1;
-	    }
 	    set_rank(i, cur_top);
-	} else {
-	    if (!selected[i] && rank[i] == cur_top)
-		collision = true;
-	}
-    }
-    if (collision) { // shift things in between
-	for (var i = 0; i < num_choices; i++) {
-	    if (!selected[i] && rank[i] >= cur_top &&
-		                rank[i] < min_rank) {
-		set_rank(i, rank[i] + 1);
-	    }
+	} else if (collision && rank[i] >= cur_top && rank[i] < min_rank) {
+	    set_rank(i, rank[i] + 1);
 	}
     }
     cur_top++;
     sort_rows();
 }
 function do_move_bottom() {
-    var min_rank = min_selected_rank();
-    var collision = false;
-    for (var i = 0; i < num_choices; i++) {
+    var max_rank = max_selected_rank();
+    if (max_rank >= cur_bot) cur_bot = num_choices;
+    scan_ranks();
+    var collision = have_rank[max_rank];
+    for (var i = num_choices-1; i >= 0; i--) {
 	if (selected[i]) {
-	    if (rank[i] >= cur_bot) { // already at top
-		cur_bot = num_choices;
-	    }
+	    if (rank[i] >= cur_bot) cur_bot = num_choices;
 	    set_rank(i, cur_bot);
-	} else {
-	    if (!selected[i] && rank[i] == cur_bot)
-		collision = true;
-	}
-    }
-    if (collision) { // shift things in between
-	for (var i = 0; i < num_choices; i++) {
-	    if (!selected[i] && rank[i] <= cur_bot &&
-		                rank[i] > min_rank) {
-		set_rank(i, rank[i] - 1);
-	    }
+	} else if (collision && rank[i] <= cur_bot && rank[i] > max_rank) {
+	    set_rank(i, rank[i] - 1);
 	}
     }
     cur_bot--;
