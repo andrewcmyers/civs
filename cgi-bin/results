@@ -299,36 +299,63 @@ sub ComputeNonproportionalResults {
 
 sub PrintRanking {
     my @result = @{$_[0]};
+    my @matrix = @{$_[1]};
     my $had_tie = 0;
-    print "<ol>";
+    print '<ol>';
     my $j = 0;
     my $num_seen = 0;
     for (my $rank = 0; $rank <= $#result; $rank++) {
 	my @winner = @{$result[$rank]};
+	# find the explanatory defeat
 	print '<li value="'.($j+1).'">';
 	my $ranksize = $#winner + 1;
 	if ($ranksize > 1) {
-		    print "<i>Tied</i>:<br>";
+	    print '<i>Tied</i>:<br>';
 	}
 	    my $tie;
 	if ($num_seen < $num_winners &&
-		    $num_seen + $ranksize > $num_winners) 
-	    {
-		    $tie = 1;
-		    $had_tie = 1;
+	    $num_seen + $ranksize > $num_winners) {
+	    $tie = 1;
+	    $had_tie = 1;
 	} else {
-		    $tie = 0;
+	    $tie = 0;
 	}
 	for (my $i = 0; $i <= $#winner; $i++) {
-		    if ($i > 0) { print "<br>"; }
-		    if ($tie) { print "<font color=red>"; }
-		    if ($num_seen < $num_winners) {
-			print b($choices[$winner[$i]]);
-		    } else {
-			print $choices[$winner[$i]];
+	    if ($i > 0) { print '<br>'; }
+	    if ($tie) { print '<font color=red>'; }
+	    my $explanation = '';
+	    if ($rank > 0) {
+		for (my $brank = $rank-1; $brank >= 0; $brank--) {
+		    my @pwinners = @{$result[$brank]};
+		    for (my $bi = 0; $bi <= $#pwinners; $bi++) {
+			if ($matrix[$pwinners[$bi]][$winner[$i]] >
+			    $matrix[$winner[$i]][$pwinners[$bi]]) {
+			    $explanation =
+			    escapeHTML($choices[$winner[$i]]).
+				' loses to '.
+				escapeHTML($choices[$pwinners[$bi]]).', '.
+				$matrix[$pwinners[$bi]][$winner[$i]].'&ndash;'.
+				$matrix[$winner[$i]][$pwinners[$bi]];
+			    $brank = -1; last;
+			}
 		    }
-		    $choice_rank[$winner[$i]] = $j++;
-		    if ($tie) { print "</font>"; }
+		}
+	    } else {
+		$explanation = escapeHTML($choices[$winner[$i]]).' is top-ranked';
+	    }
+	    if ($explanation ne '') {
+		print '<span title="',$explanation,'">';
+	    }
+	    if ($num_seen < $num_winners) {
+		print b($choices[$winner[$i]]);
+	    } else {
+		print escapeHTML($choices[$winner[$i]]);
+	    }
+	    $choice_rank[$winner[$i]] = $j++;
+	    if ($explanation ne '') {
+		print '</span>';
+	    }
+	    if ($tie) { print '</font>'; }
 	}
 	$num_seen += $#winner + 1;
 	print '</li>';
@@ -346,7 +373,7 @@ sub PrintCondorcetWinner {
 	print h2("Condorcet winner");
 	if ($condorcet_winner >= 0) {
 		    print p('The Condorcet winner of this election is '.
-			    strong($choices[$condorcet_winner]));
+			    strong($choices[$condorcet_winner]).'.');
 	} else {
 		    print p('This election had no Condorcet winner.').$cr;
 	}
@@ -354,7 +381,7 @@ sub PrintCondorcetWinner {
 }
 
 sub PrintBW {
-	PrintRanking [@result];
+	PrintRanking [@result], [@matrix];
 
 	print h2("Preference matrix");
 	print p("The following matrix shows the number of ballots on
@@ -389,7 +416,7 @@ sub PrintRP {
 	    &rp::rank_candidates([@matrix], $num_choices, [@choices]);
 	#print pre("Done ranking");
 
-	PrintRanking $rref;
+	PrintRanking $rref, [@matrix];
 
 	print h2("Preference matrix");
 	print p("The following matrix shows the number of ballots on

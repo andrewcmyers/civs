@@ -122,16 +122,20 @@ cycle, as long as <i>individually</i> they do not.
 
 <h3>Ranking the choices</h3>
 
-<p>After considering all preferences, any choices involved in a cycle of kept
-preferences are considered to have tied with each other.  There is no
-tie-breaking mechanism, as in MAM; the algorithm is deterministic.  The
-algorithm for ranking the various choices is to successively identify the
-Schwartz sets defined by the graph of kept preferences. The top-ranked choices
-are the Schwartz set: the smallest set of choices such that no choices outside
-the set are preferred to any in the set. After these choices are removed from
-the graph, the second tier of choices are the Schwartz set in the new graph,
-and so on. Typically, the Schwartz set consists of a single choice at
-every level; ties can only occur if there are preferences of equal strength.
+<p>
+The algorithm for ranking the various choices is to successively
+identify the Schwartz sets defined by the graph of kept preferences.  The
+top-ranked choices are the initial Schwartz set: the smallest set of choices
+such that no choices outside the set are preferred to any in the
+set. After these choices are removed from the graph, the second tier of
+choices are the Schwartz set in the new graph, and so on. Typically, the
+Schwartz set consists of a single choice at every level; ties can only
+occur if there are preferences of equal strength.  When a Schwartz set
+contains multiple choices, there must be a cycle of kept preferences. In
+this case, the choices within that Schwartz set
+are ranked based on the strength of the strongest preference against
+that choice.  There is no random
+tie-breaking mechanism, as in MAM; the algorithm is deterministic.
 </p>
 
 </body></html>

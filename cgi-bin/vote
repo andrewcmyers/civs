@@ -30,7 +30,14 @@ my $old_voter_key = param('voter_key'); # nearly obsolete
 my $voter_key = param('key');
 my $authorization_key = param('akey');
 
-HTML_Header('CIVS Voting', 'vote.js');
+my $js_ui = 1;
+if ($proportional eq 'yes') { $js_ui = 0; }
+
+if ($js_ui) {
+    HTML_Header('CIVS Voting', 'vote.js');
+} else {
+    HTML_Header('CIVS Voting');
+}
 
 my $winners_text;
 if ($num_winners == 1) {
@@ -91,18 +98,17 @@ Contact the election supervisor if you need help.").$cr;
 
 if ($proportional ne 'yes') {
     print "<p>Please rank the following choices by assigning
-    each choice a rank, where a lower rank means that you
+    each choice a rank, where a smaller-numbered rank means that you
     prefer that choice more. For example, it would make
     sense to give your top choice (or choices) the rank 1.
     You may give choices the same rank if you have no
     preference between them. You do not have to use all the
-    possible ranks. All choices are currently given the
+    possible ranks. All choices are initially given the
     lowest possible rank. Note that &ldquo;No opinion&rdquo;
-    is not the same as the lowest possible rank; it genuinely
+    is <i>not</i> the same as the lowest possible rank; it genuinely
     expresses no opinion.
-    </p> <p>For more information on
-    how the Condorcet voting system works, <a
-    href=\"$civs_url\">click here</a></p>\n\n";
+    <a href=\"$civs_url\">(More information on Concorcet election
+    methods)</a></p>", $cr, $cr;
 } else {
     print '<p>This election is decided using an experimental
     Condorcet-based algorithm designed to provide proportional
@@ -136,7 +142,7 @@ if ($ballot_reporting eq 'yes') {
 	print p(b("Ballot reporting is enabled for this election. ")
 	    . "Your ballot (the rankings you assign to candidates) "
 		. "will be made public when the election is closed. "
-	    . "However, your ballot will be anonymized: "
+	    . "However, your ballot will be anonymous: "
 		. "no personally identifying information will appear.");
 }
 
@@ -153,14 +159,8 @@ print '<form method="POST"
 print '<table class="form" border="0" cellpadding="5" cellspacing="0"><tr><td>', $cr;
 
 print '<table border="1" cellpadding="5" cellspacing="0" id="preftable"><tr>
-	<td bgcolor="#000080" bordercolor="#000080">
-	  <b><font color=white
-	  face=sans-serif>Choice&nbsp;&nbsp;&nbsp;</font></b>
-	</td>
-	<td bgcolor="#000080" bordercolor="#000080">
-          <b><font color=white
-	  face=sans-serif>'.$rating.'</font></b>
-	</td>
+	<th>&nbsp;Choice&nbsp;</th>
+	<th>'.$rating.'</th>
        </tr>';
 
 print hidden('voter', $voter); # nearly obsolete
@@ -182,7 +182,11 @@ for (my $i = 0; $i < $num_choices; $i++) {
     my $k = $choice_index[$i];
     my $selected = $rank[$k];
     my $choice = $choices[$k];
-    print "<tr onClick=\"select_row(this, event.shiftKey);\"><td><b>$choice</b></td>\n";
+    if ($js_ui) {
+	print "<tr onClick=\"select_row(this, event.shiftKey);\"><td><b>$choice</b></td>\n";
+    } else {
+	print "<tr><td><b>$choice</b></td>\n";
+    }
     if ($proportional ne 'yes') {
 	print "<td><select size=1 name=\"C$k\" onChange=\"sort_rows()\">\n";
 	for (my $j = 1; $j <= $num_choices; $j++) {
@@ -204,19 +208,21 @@ for (my $i = 0; $i < $num_choices; $i++) {
     }
     print "</tr>\n";
 }
-print '</table>', $cr;
-print '</td><td valign="top" align="center">
-<input type="button" id="move_top" disabled value="top"
-   onClick="do_move_top()"><br>
-<input type="button" id="move_up" disabled value="up"
-   onClick="do_move_up()"><br>
-<input type="button" id="make_tie" disabled value="tie"
-   onClick="do_make_tie()"><br>
-<input type="button" id="move_down" disabled value="down"
-   onClick="do_move_down()"><br>
-<input type="button" id="move_bottom" disabled value="bottom"
-   onClick="do_move_bottom()">
-</td>', $cr;
+print '</table></td>', $cr;
+if ($js_ui) {
+    print '<td valign="top" align="center">
+	<input type="button" id="move_top" disabled value="top"
+	onClick="do_move_top()"><br>
+	<input type="button" id="move_up" disabled value="up"
+	onClick="do_move_up()"><br>
+	<input type="button" id="make_tie" disabled value="tie"
+	onClick="do_make_tie()"><br>
+	<input type="button" id="move_down" disabled value="down"
+	onClick="do_move_down()"><br>
+	<input type="button" id="move_bottom" disabled value="bottom"
+	onClick="do_move_bottom()">
+	</td>', $cr;
+}
 print '</tr></table>', $cr;
 
 
