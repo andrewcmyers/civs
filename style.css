@@ -62,4 +62,4 @@ td.lose { font-family: Courier New, courier, fixed; text-align:center;
 td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
 
-tr.selected { background-color: #a0ff60 }
+tr.selected { background-color: #ffffd0 }

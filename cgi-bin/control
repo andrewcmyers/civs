@@ -90,7 +90,7 @@ if (IsStarted or $num_auth) {
 print "Total authorized voters: $num_auth_string", br() unless $public eq 'yes';
 $num_votes += 0;
 print "Actual votes cast so far: $num_votes", br();
-print "Election ends $election_end", br();
+print "Election ends $election_end.", br();
 
 if ($writeins eq 'yes') {
     print 'Write-in choices are allowed.', br();
