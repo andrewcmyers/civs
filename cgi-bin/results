@@ -269,11 +269,11 @@ print "<pre>";
 	#print "Simple count yields $icnt, $jcnt\n";
 # now throw out invalid f-preferences
 	$ipref = $icnt; $jpref = $jcnt;
-	if ($f != 0 && $ipref > 0 && POSIX::ceil($ipref * $num_winners / $num_votes) < $f) {
+	if ($f != 0 && $ipref > 0 && ($ipref * ($num_winners+1)/$num_votes) < $f) {
 	    #print "Pref 1 is invalid\n";
 	    $ipref = 0;
 	}
-	if ($f != 0 && $jpref > 0 && POSIX::ceil($jpref * $num_winners / $num_votes) < $f) {
+	if ($f != 0 && $jpref > 0 && ($jpref * ($num_winners+1)/$num_votes) < $f) {
 	    #print "Pref 2 is invalid\n";
 	    $jpref = 0;
 	}
