@@ -175,7 +175,9 @@ if (param('AddWritein') ne '' && $writeins eq 'yes') {
 	$choices = $choices . "\n" . $writein;
 	$choice_index[$num_choices] = $num_choices;
 	$rank[$num_choices] = $num_choices;
-	$choices[$num_choices++] = $writein;
+	$index = $num_choices;
+	$choices[$index] = $writein;
+	$num_choices++;
 	$edata{'choices'} = $choices;
 #   Now update the vote matrix so that this write-in is
 #   ranked last by every voter so far.
