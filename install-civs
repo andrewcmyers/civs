@@ -39,7 +39,7 @@ TestAndCreateDir $CIVSDATADIR/elections;
 	< $f > "${HTMLDIR}/$f"
     done
 
-    for f in add_voters beatpath.pm mam.pm civs_common.pm close control \
+    for f in add_voters beatpath.pm civs_common.pm close control \
         create_election download_ballots election.pm mail.pm results \
 	start_election vote
     do

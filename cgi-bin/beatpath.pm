@@ -51,6 +51,7 @@ sub min {
 }
 
 sub transitive_closure {
+  my $cycle = 0;
   for (my $k = 0; $k < $n; $k++) {
     for (my $i = 0; $i < $n; $i++) {
       for (my $j = 0; $j < $n; $j++) {
@@ -60,9 +61,11 @@ sub transitive_closure {
 	if ($s > $matrix[$i][$j]) {
 	    $matrix[$i][$j] = $s;
 	}
+	if ($s > 0 && $matrix[$j][$i] > 0) { $cycle = 1; }
       }
     }
   }
+  return $cycle;
 }
  
 # Return the winner or winners in @winner, according to

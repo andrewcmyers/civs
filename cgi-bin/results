@@ -152,17 +152,26 @@ sub PrintNonproportionalDetails {
     }
     print "</table>";
 
-    print h2('Simple MAM report');
+if (!param('MAM')) {
+    $link = a({-href=>"$thisurl?id=$election_id&detailed=1&MAM=1#MAM"},
+		'Compare with MAM results (may be time-consuming)');
+    print p($link);
+} else {
+    print a({-name=>'MAM'},h2('Simple MAM report'));
 
-print p("This is the result of running a partial
-implementation of the Maximize Affirmed Majorities algorithm
-on the ballots. This implementation does not break
-ties correctly as specified by Stephen Eppley.").$cr;
-#print "<pre>";
-#print "Entering MAM$cr";
+print p("The following is the result of running a partial
+implementation of the 
+<a href=\"http://alumnus.caltech.edu/~seppley/MAM%20procedure%20definition.htm\">
+Maximize Affirmed Majorities algorithm</a>
+on the ballots.
+This process is more computationally intensive than
+Beatpath Winner and it may be necessary to wait for
+a minute or two for the results").$cr;
+    STDOUT->flush();
 @pairs = ();
 for (my $j = 0; $j < $num_choices; $j++) {
     for (my $k = 0; $k < $num_choices; $k++) {
+	$affirmed[$j][$k] = 0;
 	if ($matrix[$j][$k] > $matrix[$k][$j]) {
 	    push @pairs, [($j, $k, $matrix[$j][$k], $matrix[$k][$j])];
 	}
@@ -179,42 +188,42 @@ sub order_pairs {
 }
 @pairs = sort order_pairs @pairs;
 
-@affirmed = ();
-
-sub cycle {
-    for (my $j = 0; $j < $num_choices; $j++) {
-	for (my $k = 0; $k < $j; $k++) {
-	    if ($beatpath::matrix[$j][$k] > 0 &&
-		$beatpath::matrix[$k][$j] > 0) {
-		# print("Found cycle with $j, $k\n");
-		return 1; }
-	}
-    }
-    return 0;
-}
+$denied_any = 0;
 
 foreach $pair_ref (@pairs) {
     @pair = @{$pair_ref};
-    #print "$pair[2]-$pair[3]: $pair[0] vs. $pair[1]$cr";
     $winner = $pair[0];
     $loser = $pair[1];
+    $beatpath::n = $num_choices;
     for (my $j = 0; $j < $num_choices; $j++) {
 	for (my $k = 0; $k < $num_choices; $k++) {
-	    $trial[$j][$k] = $affirmed[$j][$k];
+	    $beatpath::matrix[$j][$k] = $affirmed[$j][$k];
 	}
     }
-    $trial[$winner][$loser] = $pair[2];
-    $beatpath::matrix = $trial;
-    $beatpath::transitive_closure;
-    if (!cycle) {
+    $beatpath::matrix[$winner][$loser] = $pair[2];
+    my $cycle = beatpath::transitive_closure();
+    if (!$cycle) {
 	$affirmed[$winner][$loser] = $pair[2];
-	#print ("affirmed\n");
     } else {
-	#print ("denied\n");
+	if (!$denied_any) {
+	    print p('Some voter preferences were ignored because they conflict with
+	    other, stronger preferences:').$cr;
+	    print '<ul>';
+	    $denied_any = 1;
+	}
+	$wname = $choices[$winner];
+	$lname = $choices[$loser];
+	print li("The $pair[2]&ndash;$pair[3] preference for $wname over $lname").$cr;
     }
+    STDOUT->flush();
 }
+if ($denied_any) { print '</ul>'; }
 
-# print "</pre>";
+ # print "</pre>";
+ print p('The following matrix reports all the preferences that were
+ affirmed. Any disagreement between MAM and Beatpath Winner will show
+ up as non-zero entries below the diagonal. Note that this implementation
+ does not break ties in the way specified by Stephen Eppley.');
     print '<table class="matrix">'.$cr;
 
     print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
@@ -250,7 +259,7 @@ foreach $pair_ref (@pairs) {
 	print "</tr>\n";
     }
     print "</table>";
-
+} # if MAM
 
     print h2('Ballot report');
 
