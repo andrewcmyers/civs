@@ -98,11 +98,12 @@ sub winners {
 # candidates and so on.
 sub rank_candidates {
   local @save_matrix = @matrix;
+  local $j;
+  @ignore = ();
   clean_matrix();
   transitive_closure();
 
   local $num_ranked = 0;
-  $num_ranked += $#loser + 1;
   @result = ();
   while ($num_ranked < $n) {
     winners();

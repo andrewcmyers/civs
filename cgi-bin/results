@@ -16,7 +16,7 @@ $thisurl = $civs_bin_path."/results";
 HTML_Header("CIVS Election Results");
 use election;
 
-CIVS_Header("Election Results");
+CIVS_Header("Election Results: $title");
 
 CheckElectionID;
 CheckStarted;
@@ -25,7 +25,7 @@ if ($public ne 'yes') {
     CheckStopped;
 }
 
-print h1("$title");
+print h2($title);
 
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
 if ($public ne 'yes') {
@@ -41,6 +41,89 @@ if (IsStopped) {
     print "Election has not yet ended.$cr";
 }
 
+sub print_nonprop_results {
+# print_nonprop_results: print the results of the ordinary
+# (nonproportional) beatpath algorithm. Assumes that matrix[j][k]
+# contains the ordinary preferences and that closure_matrix[j][j]
+# contains the results from the beatpath closure.
+
+    local $j, $jj, $k, $kk;
+    print h2("Choices and vote matrix");
+    print p("The following matrix shows the number of ballots on
+    which choices beat other choices, considered pairwise.");
+    print "<table>\n";
+
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+    for ($jj = 0; $jj < $num_choices; $jj++) {
+	$j = $choice_index[$jj];
+	if ($proportional ne 'yes') { $j = $jj + 1; }
+	print "<th width=20px>".$j.".</th>";
+    }
+    print "</tr>\n";
+    for ($jj = 0; $jj < $num_choices; $jj++) {
+	$j1 = $j = $choice_index[$jj];
+	if ($proportional ne 'yes') { $j1 = $jj + 1; }
+	print "<tr>";
+	print "<th align=left>".$j1.". ".$choices[$j]."</th>\n";
+	print "<td width=40px>&nbsp;</td>\n";
+	for ($kk = 0; $kk < $num_choices; $kk++) {
+	    $k = $choice_index[$kk];
+	    print "<td class=count>";
+	    if ($j == $k) {
+		print "- ";
+	    } else {
+		print $matrix[$j][$k]. " ";
+	    }
+	    print "</td>";
+	}
+	print "</tr>\n";
+    }
+    print "</table>";
+
+    print h2("Beatpath closure matrix");
+    print p("
+    The following matrix shows the strength of the strongest
+    beatpath connecting each pair of choices. Choice 1 is preferred
+    to choice 2 if there is a better beatpath leading from 1 to 2
+    than any leading from 2 to 1.
+    ");
+    print "<table>\n";
+
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+    for ($jj = 0; $jj < $num_choices; $jj++) {
+	$j1 = $choice_index[$jj];
+	if ($proportional ne 'yes') { $j1 = $jj + 1; }
+	print "<th width=20px>".$j1.".</th>";
+    }
+    print "</tr>\n";
+    for ($jj = 0; $jj < $num_choices; $jj++) {
+	$j1 = $j = $choice_index[$jj];
+	if ($proportional ne 'yes') { $j1 = $jj + 1; }
+	print "<tr>";
+	print "<th align=left>".$j1.". ".$choices[$j]."</th>\n";
+	print "<td width=40px>&nbsp;</td>\n";
+	for ($kk = 0; $kk < $num_choices; $kk++) {
+	    $k = $choice_index[$kk];
+	    print "<td class=count>";
+	    if ($j == $k) {
+		print "-";
+	    } else {
+		$w = $closure_matrix[$j][$k];
+		$l = $closure_matrix[$k][$j];
+		if ($w > $l) {
+		    print "$w";
+		} else {
+		    if ($w != 0) { print "$w"; }
+		    else { print "."; }
+		}
+	    }
+	    print "</td>";
+	}
+	print "</tr>\n";
+    }
+    print "</table>";
+}
 
 print h2('Election instructions'), p($description);
 
@@ -70,8 +153,6 @@ if ($condorcet_winner >= 0) {
     print p('This election had no Condorcet winner.').$cr;
 }
 
-print h2('Ranking of the choices').$cr;
-print p('Winning choices are shown in bold.');
 print "<pre>";
 $beatpath::n = $num_choices;
 for ($j = 0; $j < $num_choices; $j++) {
@@ -84,7 +165,9 @@ for ($j = 0; $j < $num_choices; $j++) {
 @closure_matrix = @beatpath::closure_matrix;
 print "</pre>";
 
-$num_seen = 0;
+print h2('Ranking of the choices').$cr;
+print p('Winning choices are shown in bold.');
+
 $had_tie = 0;
 print "<ol>";
 $j = 0;
@@ -120,75 +203,7 @@ if ($had_tie) {
     print p("Choices shown in red have tied for being selected. You may wish to select among them randomly.");
 }
 
-
-print h2("Choices and vote matrix");
-print p("The following matrix shows the number of ballots on
-which choices beat other choices, considered pairwise.");
-print "<table>\n";
-
-print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
-for ($j = 0; $j < $num_choices; $j++) {
-    print "<td width=20px>".($j+1).".</td>";
-}
-print "</tr>\n";
-for ($jj = 0; $jj < $num_choices; $jj++) {
-    $j = $choice_index[$jj];
-    print "<tr>";
-    print "<td>".($jj+1).". ".$choices[$j]."</td>\n";
-    print "<td width=40px>&nbsp;</td>\n";
-    for ($kk = 0; $kk < $num_choices; $kk++) {
-	$k = $choice_index[$kk];
-	print "<td><tt>";
-	if ($j == $k) {
-	    print "- ";
-	} else {
-	    print $matrix[$j][$k]. " ";
-	}
-	print "</tt></td>";
-    }
-    print "</tr>\n";
-}
-print "</table>";
-
-print h2("Beatpath closure matrix");
-print p("
-The following matrix shows the strength of the strongest
-beatpath connecting each pair of choices. Choice 1 is preferred
-to choice 2 if there is a better beatpath leading from 1 to 2
-than any leading from 2 to 1.
-");
-print "<table>\n";
-
-print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
-for ($j = 0; $j < $num_choices; $j++) {
-    print "<td width=20px>".($j+1).".</td>";
-}
-print "</tr>\n";
-for ($jj = 0; $jj < $num_choices; $jj++) {
-    $j = $choice_index[$jj];
-    print "<tr>";
-    print "<td>".($jj+1).". ".$choices[$j]."</td>\n";
-    print "<td width=40px>&nbsp;</td>\n";
-    for ($kk = 0; $kk < $num_choices; $kk++) {
-	$k = $choice_index[$kk];
-	print "<td><tt>";
-	if ($j == $k) {
-	    print "-";
-	} else {
-	    $w = $closure_matrix[$j][$k];
-	    $l = $closure_matrix[$k][$j];
-	    if ($w > $l) {
-		print "$w";
-	    } else {
-		if ($w != 0) { print "$w"; }
-		else { print "."; }
-	    }
-	}
-	print "</tt></td>";
-    }
-    print "</tr>\n";
-}
-print "</table>";
+print_nonprop_results;
 
 } else { # proportional representation 'algorithm'
     print "<h2>Choices</h2>";
@@ -285,6 +300,7 @@ print "<pre>";
 
     if ($num_choices > $num_winners) {
 # need to throw out some choices...
+# XXX This all needs to be reimplemented more carefully
 
 	sub flatten {
 	    local $ret = $_[0];
@@ -300,8 +316,7 @@ print "<pre>";
 	}
 	$change = 1;
 	$curr_comm = flatten @curr_comm;
-	$num_beaten = 0;
-	$num_visited = 0;
+
 # @committee is the array of all visited committees
 # %cindex is the index of committees
 # $borm[ci1][ci2] is whether comm with index ci2 beats or matches
@@ -313,9 +328,9 @@ print "<pre>";
 	$recurse = 1;
 	sub dprint {
 	    local $msg = $_[0];
-	    for (local $i = 0; $i < $depth; $i++) {
-		print " ";
-	    }
+	#   for (local $i = 0; $i < $depth; $i++) {
+	#     print " ";
+	#   }
 	    print $msg;
 	}
 
@@ -326,6 +341,7 @@ print "<pre>";
 	    local $bestpref = 0;
 	    local $bestipref = 0;
 	    local $bestjpref = 0;
+	    $seen{$curr_comm} = $seen{$new_comm} = 1;
 	    for (local $f = 1; $f <= $num_winners; $f++) {
 		kPref($f, $curr_comm, $new_comm);
 		if ($ipref > $bestpref) { $bestipref = $ipref; }
@@ -368,11 +384,13 @@ print "<pre>";
 	    return 0;
 	}
 	sub visit {
+# XXX this function is a mess.
 # visit(c): visit all the committees that beat
 #   or match c, where b is a set of committees
-#   known to be beaten by c
-# effects: sets $visited{"$c1|$c2"} to whether c1 transitively beats
-#   or matches c2.
+#   known to be beaten by c.
+# effects: sets $tally1{c1}{c2} to the strong preference for c1 over c2
+#          sets $tally2{c1}{c2} to the strong preference for c2 over c1
+#          sets $weaktally1{c1}{c2}, $weaktally2{c1}{c2} correspondingly
 # requires: $beaten[0..$num_beaten-1] is a set of 
 #   committees known to be beaten (or matched) transitively by c
 	    $iters++;
@@ -441,7 +459,7 @@ print "<pre>";
 		    } # for j
 		} # for i
 		if (!$done && $added) {
-		    dprint "$curr_comm beats all nearby sets\n";
+		    dprint "$curr_comm beats all nearby unvisited sets\n";
 		}
 	    } # if change
 	    $beaten[$cci] = $save_beaten;
@@ -468,7 +486,7 @@ print "<pre>";
     if ($iters > 500) {
 	print p(b("Search failed."));
     }
-    print '<pre>'.b('Acquiring additional preference information...').$cr;
+    print '<pre>'.b('Acquiring any missing preference information...').$cr;
     $recurse = 0;
     $divisor = 1;
     while ($divisor < $num_votes) { $divisor *= 10; }
@@ -482,12 +500,10 @@ print "<pre>";
 	    $beatpath::matrix[$j][$k] = $matrix[$j][$k] = $jk;
 	    $beatpath::matrix[$k][$j] = $matrix[$k][$j] = $kj;
 
-	    if ($jk == $kj) {
-		$beatpath::matrix[$j][$k] = $matrix[$j][$k] =
+		$beatpath::matrix[$j][$k] = $matrix[$j][$k] +=
 		    $weaktally1{$curr_comm}{$new_comm}/$divisor;
-		$beatpath::matrix[$k][$j] = $matrix[$k][$j] =
+		$beatpath::matrix[$k][$j] = $matrix[$k][$j] +=
 		    $weaktally2{$curr_comm}{$new_comm}/$divisor;
-	    }
 	}
     }
     print '</pre>';
@@ -517,68 +533,80 @@ print "<pre>";
 	print '</tr></table>';
     }
     if ($num_unbeaten == 1) {
-	print h2("Winning set of choices\n");
+	print h2("Winning set of choices$cr");
 	print p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> Condorcet winner of this election was the following set of choices, which are not listed
 	in any particular order:");
 	printSchwartz;
     } else {
-	print h2("Winning sets of choices\n");
+	print h2("Winning sets of choices$cr");
 	print p("There were $num_unbeaten unbeaten sets:$cr");
 	printSchwartz;
     }
     print h2('Preference matrix');
-    print p('This is the voting preference matrix for the '.($#committee+1).
-	' sets of choices explored,
+    local $combinations = 1;
+    local $num_seen = 0;
+    for (local $i = 0; $i < $num_winners; $i++) {
+	$combinations = $combinations * ($num_choices - $i);
+    }
+    foreach $k (keys %seen) {
+	$num_seen++;
+    }
+    $num_visited = $#committee + 1;
+
+    print p("There are $combinations possible committees that can be
+      formed using $num_winners of the $num_choices choices. Of these,
+      $num_visited committees were explored, comparing against 
+      $num_seen nearby committees.\n");
+
+    print p('This is the voting preference matrix,
              reporting maximal valid proportional preferences.
-	     Fractions indicate weak (nonproportional) preferences, in which
-	     a majority is allowed to express preferences beyond
-	    its usual proportional representation because the minority
-	    is indifferent.');
-    print "<table>\n";
+	     Fractions indicate nonproportional preferences, which
+	     help break ties in proportional preference.');
+    print "<table>$cr";
     print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
     for ($j = 0; $j <= $#committee; $j++) {
-	print "<td width=20px>".($j+1).".</td>";
+	print "<th width=20px>".($j+1).".</td>";
     }
-    print "</tr>\n";
+    print "</tr>$cr";
     for ($jj = 0; $jj <= $#committee; $jj++) {
 	$j = $choice_index[$jj];
 	print "<tr>";
-	print "<td>".($jj+1).". (".$committee[$j].")</td>\n";
+	print "<th class=choice>".($jj+1).".&nbsp;(".$committee[$j].")</td>\n";
 	print "<td width=40px>&nbsp;</td>\n";
 	for ($kk = 0; $kk <= $#committee; $kk++) {
 	    $k = $choice_index[$kk];
-	    print "<td><tt>";
+	    print "<td class=count>";
 	    if ($j != $k) {
 		print $matrix[$j][$k];
 	    } else {
 		print '-';
 	    }
-	    print "</tt></td>";
+	    print "</td>";
 	}
 	print "</tr>\n";
     }
     print "</table>";
 
     print h2('Beatpath closure matrix');
-    print p("The following is the beatpath matrix for the ".($#committee+1).
-	" sets of choices explored. Choice 1 is preferred
+    print p("The following is the corresponding
+	    beatpath matrix. Choice 1 is preferred
 	    to choice 2 if there is a better beatpath leading from 1 to 2
 	    than any leading from 2 to 1.");
 
     print "<table>\n";
     print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
     for ($j = 0; $j <= $#committee; $j++) {
-	print "<td width=20px>".($j+1).".</td>";
+	print "<th width=20px>".($j+1).".</th>";
     }
     print "</tr>\n";
     for ($jj = 0; $jj <= $#committee; $jj++) {
 	$j = $choice_index[$jj];
 	print "<tr>";
-	print "<td>".($jj+1).". ".$committee[$j]."</td>\n";
+	print "<th class=\"choice\">".($jj+1).".&nbsp;(".$committee[$j].")</th>\n";
 	print "<td width=40px>&nbsp;</td>\n";
 	for ($kk = 0; $kk <= $#committee; $kk++) {
 	    $k = $choice_index[$kk];
-	    print "<td><tt>";
+	    print "<td class=count>";
 	    # print "(".$matrix[$j][$k].") ";
 	    if ($j == $k) {
 		print "-";
@@ -592,7 +620,7 @@ print "<pre>";
 		    else { print "."; }
 		}
 	    }
-	    print "</tt></td>";
+	    print "</td>";
 	}
 	print "</tr>\n";
     }
@@ -614,7 +642,7 @@ print "<pre>";
 	$comparison_request = 1;
     }
     @curr_comm = split /,/, $committee[$winner[0]];
-    print '<tr><th>Set 1</th><th>Set 2</th></tr>';
+    print '<tr><th width=40px>Set 1</th><th width=40px>Set 2</th></tr>';
     for (local $i = 1; $i <= $num_winners; $i++) {
 	local $besti = $curr_comm[$i-1];
 	local $li, $ri;
@@ -677,6 +705,51 @@ print "<pre>";
 	print p(b("Note:").' Nonproportional preferences are relevant only if there is a tie in proportional preferences.');
 	print '</a>';
     }
+    print "<hr>\n";
+    print h2('Nonproportional election');
+    print p('The following reports what the results of the election
+             would have been if run on single choices, without
+	     proportional representation.');
+
+    for (local $j = 0; $j < $num_choices; $j++) {
+	$choice_index[$j] = $j;
+	for (local $k = 0; $k < $j; $k++) {
+	    local $sjk = 0;
+	    local $skj = 0;
+	    for (local $v = 0; $v < $num_votes; $v++) {
+		local $voter_key = $voter_keys[$v];
+		local $weights = $vdata{$voter_key};
+		local @weights = split /,/, $weights;
+		local $wj = $weights[$j];
+		local $wk = $weights[$k];
+		if ($wj > $wk) { $sjk++; }
+		if ($wk > $wj) { $skj++; }
+	    }
+	    $matrix[$j][$k] = $sjk;
+	    $matrix[$k][$j] = $skj;
+	}
+    }
+
+    print "<pre>";
+    $beatpath::n = $num_choices;
+    for ($j = 0; $j < $num_choices; $j++) {
+	for ($k = 0; $k < $num_choices; $k++) {
+	    $beatpath::matrix[$j][$k] = $matrix[$j][$k];
+	}
+    }
+    &beatpath::rank_candidates();
+    @result = @beatpath::result;
+    @closure_matrix = @beatpath::closure_matrix;
+    $j = 0;
+    for ($rank = 0; $rank <= $#result; $rank++) {
+	@winner = @{$result[$rank]};
+	for ($i = 0; $i <= $#winner; $i++) {
+	    $choice_index[$j++] = $winner[$i];
+	}
+    }
+    print "</pre>";
+
+    print_nonprop_results;
 }
 
 

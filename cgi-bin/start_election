@@ -93,6 +93,9 @@ close(START);
 $edata{'num_auth'} = $#addresses + 1;
 $edata{'addresses'} = "";
 
+print end_html();
 untie %edata;
+
+Log("Election $title ($election_id) started");
 
 exit 0;

@@ -19,7 +19,7 @@ sub GetPrivateHostID {
 }
 
 sub HTML_Header {
-    $title = $_[0];
+    local $title = $_[0];
     print header(), start_html(-title => $title,
 			       -style => {'src' => "@CIVSURL@/style.css"});
 }
