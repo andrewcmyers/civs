@@ -486,7 +486,7 @@ print "<pre>";
 		$beatpath::matrix[$j][$k] = $matrix[$j][$k] =
 		    $weaktally1{$curr_comm}{$new_comm}/$divisor;
 		$beatpath::matrix[$k][$j] = $matrix[$k][$j] =
-		    $weaktally2{$new_comm}{$curr_comm}/$divisor;
+		    $weaktally2{$curr_comm}{$new_comm}/$divisor;
 	    }
 	}
     }
@@ -528,7 +528,7 @@ print "<pre>";
     }
     print h2('Preference matrix');
     print p('This is the simple voting preference matrix.
-	     Fractional preferences correspond to weak preferences where
+	     Fractions indicate weak preferences where
 	     a majority is allowed to express preferences beyond
 	    its usual proportional representation because the minority
 	    is indifferent');
@@ -541,7 +541,7 @@ print "<pre>";
     for ($jj = 0; $jj <= $#committee; $jj++) {
 	$j = $choice_index[$jj];
 	print "<tr>";
-	print "<td>".($jj+1).". ".$committee[$j]."</td>\n";
+	print "<td>".($jj+1).". (".$committee[$j].")</td>\n";
 	print "<td width=40px>&nbsp;</td>\n";
 	for ($kk = 0; $kk <= $#committee; $kk++) {
 	    $k = $choice_index[$kk];
