@@ -63,7 +63,11 @@ print '<input type="text" size=2
 	name="num_winners" value="'.$num_winners.'">';
 print hidden('id', $election_id);
 if ($real_nwin != $num_winners) {
-    print "&nbsp;(Election actually has $real_nwin winners)";
+    my $winmsg = '1 winner';
+    if ($real_nwin != 1) {
+	$winmsg = $real_nwin.' winners';
+    }
+    print "&nbsp;(Election actually has $winmsg)";
 }
 print br();
 if ($proportional eq 'yes') {
