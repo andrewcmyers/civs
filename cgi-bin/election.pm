@@ -231,13 +231,8 @@ sub CheckVoterKey {
 	}
     } else {
 	if (!$voter_keys{$voter_key}) {
-	    my @vkeys = keys %voter_keys;
-	    my $vkeys = join ' ', @vkeys;
-	my $otherkeys = $edata{'voter_keys'};
-	    print h1("Error"), p("Your voter key ($voter_key) is invalid.
+	    print h1("Error"), p("Your voter key is invalid.
 	    You should have received a correct URL by email."), 
-    		p("Valid keys are: $vkeys"),
-		p("also, $otherkeys"), end_html();
 	    exit 0;
 	}
     }
