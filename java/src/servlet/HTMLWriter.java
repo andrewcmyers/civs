@@ -17,9 +17,7 @@ import java.io.PrintWriter;
  */
 public class HTMLWriter {
 	int indent = 0;
-
 	int pos = 0;
-
 	Stack s = new Stack();
 
 	PrintWriter writer;
@@ -30,9 +28,10 @@ public class HTMLWriter {
 
 	public void print(String s) {
 		pos += s.length();
+		writer.print(s);
 	}
 	public void print(int i) {
-		String s = Integer.toString(i);
+		print(Integer.toString(i));
 	}
 	public void printq(String s) {
 		print("\"");
@@ -43,10 +42,11 @@ public class HTMLWriter {
 		printq(Integer.toString(i));
 	}
 	public void breakLine() {
-		writer.print("\n");
+		writer.print("\r\n");
 		for (int i = 0; i < indent; i++) {
 			writer.print(" ");
 		}
+		pos = indent;
 	}
 
 	public void begin() {
@@ -56,5 +56,45 @@ public class HTMLWriter {
 
 	public void end() {
 		indent = ((Integer)s.pop()).intValue();
+	}
+	public void close() {
+		writer.close();
+	}
+	
+	/** Escape HTML special characters in s and
+	 * print the result. */
+	public void escape(String s) {
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			switch (c) {
+				case '&':
+					print("&amp;");
+					break;					
+				case '<':
+					print("&lt;");
+					break;
+				case '>':
+					print("&gt;");
+					break;
+			    case '\r':
+				case '\n':
+					writer.print("\r\n");
+					if (i+1 < s.length() &&
+							(int) c + (int) s.charAt(i+1) == 23)
+						i++;
+					breakLine();					
+					break;
+				default:
+					int code = (int)c;
+				    if (code >= 0x20 && code <= 0x7E || code >= 0xA0 && code <= 0xFF) {
+				    	writer.print(c);
+				    	pos++;				    
+				    } else {
+				    	writer.print("&#");
+				    	writer.print(code);
+				    }
+				    break;
+			}		
+		}	
 	}
 }

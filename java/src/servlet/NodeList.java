@@ -10,13 +10,13 @@ public class NodeList extends Node {
 	NodeList rest;
 	
 	public NodeList(Node n1) {
-		rest = null;
 		first = n1;
+		rest = null;
 	}
 	
 	public NodeList(Node n1, Node n2) {
 		first = n1;
-		rest = new NodeList(n2);		
+		rest = new NodeList(n2);	
 	}
 	public NodeList(Node n1, Node n2, Node n3) {
 		first = n1;
@@ -29,9 +29,9 @@ public class NodeList extends Node {
 	public void write(HTMLWriter w) {
 		NodeList n = this;
 		while (n != null) {
-			first.write(w);
-			n.write(w);
+			n.first.write(w);
 			n = n.rest;
+			if (n != null) w.breakLine();
 		}
 	}
 	public NodeList append(Node n2) {

@@ -1,9 +1,3 @@
-/*
- * Created on Mar 8, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package servlet;
 
 /**
@@ -20,11 +14,12 @@ public class Page extends Node {
 		body = b;
 	}
 
-	/* (non-Javadoc)
-	 * @see servlet.Node#write(java.io.PrintWriter, int)
-	 */
 	public void write(HTMLWriter p) {
+		p.print("<html>");
+		p.breakLine();
 		head.write(p);
 		body.write(p);
+		p.print("</html>");
+		p.breakLine();
 	}
 }

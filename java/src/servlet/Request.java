@@ -1,20 +1,18 @@
-/*
- * Created on Mar 8, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package servlet;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author andru
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * A Request represents an HTTP request from
+ * the client.
  */
 public class Request {
+	HttpServletRequest request;
 	public Request(HttpServletRequest req) {
+		request = req;
+	}
+	public String getParam(Input inp) {
+		String name = inp.getName();
+		return request.getParameter(name);
 	}
 }

@@ -12,8 +12,12 @@ abstract public class Servlet extends HttpServlet {
   					HttpServletResponse response)
     throws IOException, ServletException {
       response.setContentType("text/html");
+
       Request req = new Request(request);
       Node n = get(req);
-      n.write(new HTMLWriter(response.getWriter()));
+      PrintWriter rw = response.getWriter();
+      n.write(new HTMLWriter(rw));
+
+      rw.close();
   }
 }
