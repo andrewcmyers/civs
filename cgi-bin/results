@@ -322,8 +322,7 @@ print "<pre>";
 	sub compare_sets {
 # compare_sets compares $curr_comm and $new_comm and returns
 # 1 if the latter is better.
-	    #print "Replacing $new_comm[$i] with $j at index $i\n";
-	    # print "$curr_comm vs. $new_comm (@new_comm): ";
+	    #print "$curr_comm vs. $new_comm (@new_comm): ";
 	    local $bestpref = 0;
 	    local $bestipref = 0;
 	    local $bestjpref = 0;
@@ -334,11 +333,16 @@ print "<pre>";
 		if ($bestipref > $bestpref) { $bestpref = $bestipref; }
 		if ($bestjpref > $bestpref) { $bestpref = $bestjpref; }
 	    }
-	    # print "best f-preference tally yields $bestipref to $bestjpref\n";
+	    # print "best f-preference tally: $bestipref to $bestjpref\n";
 	    $tally1{$curr_comm}{$new_comm} = $bestipref;
 	    $tally2{$curr_comm}{$new_comm} = $bestjpref;
+	    kPref(0, $curr_comm, $new_comm);
+	    #print "weak pref: $ipref to $jpref\n";
+	    $weaktally1{$curr_comm}{$new_comm} = $ipref;
+	    $weaktally2{$curr_comm}{$new_comm} = $jpref;
+
 	    if ($bestjpref > $bestipref) {
-		dprint "$new_comm is preferred to $curr_comm, $bestjpref&ndash;$bestipref\n";
+		# dprint "$new_comm is preferred to $curr_comm, $bestjpref&ndash;$bestipref\n";
 		if ($recurse) {
 		    local $save_full_search = $full_search;
 		    visit($new_comm);
@@ -346,17 +350,13 @@ print "<pre>";
 		}
 		return 1;
 	    } elsif ($bestjpref == $bestipref) {
-		kPref(0, $curr_comm, $new_comm);
-		#print "weak pref: $ipref to $jpref\n";
-		$weaktally1{$curr_comm}{$new_comm} = $ipref;
-		$weaktally2{$curr_comm}{$new_comm} = $jpref;
 		if ($jpref > $ipref
 		    # || ($full_search && $jpref == $ipref)
 		    ) {
-		    dprint "$new_comm is (weakly) preferred to $curr_comm, $jpref&ndash;$ipref\n";
-		    if ($jpref == $ipref) {
-			dprint "  ...exploring because a cycle has been detected\n";
-		    }
+		    # dprint "$new_comm is (weakly) preferred to $curr_comm, $jpref&ndash;$ipref\n";
+		    # if ($jpref == $ipref) {
+			# dprint "  ...exploring because a cycle has been detected\n";
+		    # }
 		    if ($recurse) {
 			local $save_full_search = $full_search;
 			visit($new_comm);
@@ -527,9 +527,10 @@ print "<pre>";
 	printSchwartz;
     }
     print h2('Preference matrix');
-    print p('This is the voting preference matrix,
-             reporting maximal valid <i>f</i>-preferences.
-	     Fractions indicate weak preferences, for which
+    print p('This is the voting preference matrix for the '.($#committee+1).
+	' sets of choices explored,
+             reporting maximal valid proportional preferences.
+	     Fractions indicate weak (nonproportional) preferences, in which
 	     a majority is allowed to express preferences beyond
 	    its usual proportional representation because the minority
 	    is indifferent.');
@@ -596,6 +597,84 @@ print "<pre>";
 	print "</tr>\n";
     }
     print "</table>";
+    print h2("Comparison");
+
+    local $max = $num_choices-1;
+    print p("The following form allows comparison of any two sets of choices.
+    Just enter the numbers of the choices (from 0 to $max) in each set, with the
+    numbers of one set's choices in the left column and the numbers of the other's
+    in the right column.");
+    print '<form method="POST"
+	    action="'.$thisurl.'"
+	    enctype="multipart/form-data"
+	    name="CompareSets">';
+
+    print  '<table>';
+    if (param('Compare') ne '') {
+	$comparison_request = 1;
+    }
+    @curr_comm = split /,/, $committee[$winner[0]];
+    print '<tr><th>Set 1</th><th>Set 2</th></tr>';
+    for (local $i = 1; $i <= $num_winners; $i++) {
+	local $besti = $curr_comm[$i-1];
+	local $li, $ri;
+	if ($comparison_request) {
+	    $li = param("L$i");
+	    $ri = param("R$i");
+	} else {
+	    $li = $curr_comm[$i-1];
+	    $ri = "?";
+	}
+	print "<tr><td><input type=\"text\" name=\"L$i\" size=\"3\" value=\"$li\"></td>\n";
+	print "<td><input type=\"text\" name=\"R$i\" size=\"3\" value=\"$ri\"></tr>";
+    }
+    print '</table>';
+    print hidden('id', $election_id);
+    print '<input type="submit" value="Compare sets" name="Compare">';
+    print '</form>';
+    if ($comparison_request) {
+	for (local $i = 1; $i <= $num_winners; $i++) {
+	    $curr_comm[$i-1] = param("L$i");
+	    $new_comm[$i-1] = param("R$i");
+	}
+	@curr_comm = sort {$a <=> $b} @curr_comm;
+	@new_comm = sort {$a <=> $b} @new_comm;
+	$curr_comm = flatten @curr_comm;
+	$new_comm = flatten @new_comm;
+
+	print h3("$curr_comm vs. $new_comm:");
+	$recurse = 0;
+	print '<pre>';
+	compare_sets;
+	print '</pre>';
+
+	$t1 = $tally1{$curr_comm}{$new_comm};
+	$t2 = $tally2{$curr_comm}{$new_comm};
+	if ($t1 eq '') {
+	    print p('Could not compute preference for some reason.');
+	}
+	print '<p>Strong (proportional) preference: ';
+	if ($t1 > $t2) {
+	    print $curr_comm." is preferred by $t1 to $t2";
+	} elsif ($t1 < $t2) {
+	    print $new_comm." is preferred by $t2 to $t1";
+	} else {
+	    print "tie, $t1 to $t2\n";
+	}
+	print '<br>';
+	$t1 = $weaktally1{$curr_comm}{$new_comm};
+	$t2 = $weaktally2{$curr_comm}{$new_comm};
+	print 'Weak (nonproportional) preference: ';
+	if ($t1 > $t2) {
+	    print $curr_comm." is preferred by $t1 to $t2\n";
+	} elsif ($t1 < $t2) {
+	    print $new_comm." is preferred by $t2 to $t1\n";
+	} else {
+	    print "tie, $t1 to $t2\n";
+	}
+	print '</p>';
+	print p(b("Note:").' Nonproportional preferences are relevant only if there is a tie in proportional preferences.');
+    }
 }
 
 
