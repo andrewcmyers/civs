@@ -1,5 +1,8 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use strict;
+use warnings;
+
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -9,7 +12,7 @@ use beatpath;
 use Socket;
 use IO::Handle;
 
-$thisurl = $civs_bin_path."/download_ballots";
+my $thisurl = $civs_bin_path."/download_ballots";
 
 use election;
 
@@ -37,20 +40,20 @@ print header(-type=>'application/text', -attachment=>'civs_ballots.csv');
 print join ',', @choices;
 print "\n";
 
-@voters = split /\n/, $vdata{'recorded_voters'};
+my @voters = split /\n/, $vdata{'recorded_voters'};
 fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
-foreach $voter_key (@voters) {
+foreach my $voter_key (@voters) {
     # recorded_vote is a comma separated list of the ranks
     # that the voter assigned to candidates.  Element i of the list
     # corresponds to candidate i.
-    $recorded_vote = $vdata{$voter_key}; 
+    my $recorded_vote = $vdata{$voter_key}; 
     print "$recorded_vote\n";
 }
 
 exit 0;
 
 sub error {
-    $msg = shift;
+    my $msg = shift;
     HTML_Header("CIVS Ballot Download");
     CIVS_Header("CIVS Ballot Download");
     print h2("Error");
