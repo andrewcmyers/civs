@@ -9,7 +9,7 @@ package servlet;
  * requests made within a session are treated as being part of the given session.
  */
 
-public class Session {
+public final class Session {
 	String name;
 	Servlet servlet;
 
@@ -20,5 +20,5 @@ public class Session {
 		servlet = srv;
 		name = srv.nonce.generate();		
 	}
-
+	Servlet servlet() { return servlet; }
 }

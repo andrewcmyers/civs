@@ -9,12 +9,16 @@
       <servlet-name>civs</servlet-name>
       <servlet-class>civs.Main</servlet-class>
       <init-param>
-	<param-name>CIVSDATADIR</param-name>
-	<param-value>@CIVSDATADIR@</param-value>
+	<param-name>CIVS_data_dir</param-name>
+	<param-value>@CIVS_DATA_DIR@</param-value>
       </init-param>
       <init-param>
-	<param-name>style_sheet</param-name>
-	<param-value>@STYLESHEET@</param-value>
+	<param-name>style_sheet_url</param-name>
+	<param-value>@STYLE_SHEET_URL@</param-value>
+      </init-param>
+      <init-param>
+	<param-name>servlet_url</param-name>
+	<param-value>/civs/main</param-value>
       </init-param>
     </servlet>
     <servlet-mapping>

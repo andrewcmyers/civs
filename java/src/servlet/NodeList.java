@@ -21,10 +21,28 @@ public class NodeList extends Node {
 		first = n1;
 		rest = new NodeList(n2, n3);	
 	}
+	public NodeList(Node n1, Node n2, Node n3, Node n4) {
+		first = n1;
+		rest = new NodeList(n2, n3, n4);	
+	}
+	public NodeList(Node n1, Node n2, Node n3, Node n4, Node n5) {
+		first = n1;
+		rest = new NodeList(n2, n3, n4, n5);	
+	}
+	public NodeList(Node n1, Node n2, Node n3, Node n4, Node n5, Node n6) {
+		first = n1;
+		rest = new NodeList(n2, n3, n4, n5, n6);	
+	}
+	public NodeList(Node n1, Node n2, Node n3, Node n4, Node n5, Node n6, Node n7) {
+		first = n1;
+		rest = new NodeList(n2, n3, n4, n5, n6, n7);	
+	}
+	
 	public NodeList(Node n, NodeList l) {
 		first = n;
 		rest = l;
 	}
+	
 	public void write(HTMLWriter w) {
 		NodeList n = this;
 		while (n != null) {

@@ -19,36 +19,41 @@ fi
 
 echo "Read settings file $1."
 
-TestAndCreateDir "$SERVLETDIR";
-TestAndCreateDir "$HTMLDIR";
-TestAndCreateDir "$CIVSDATADIR";
-TestAndCreateDir "$CIVSDATADIR/elections";
+TestAndCreateDir "$SERVLET_DIR";
+TestAndCreateDir "$HTML_DIR";
+TestAndCreateDir "$CIVS_DATA_DIR";
+TestAndCreateDir "$CIVS_DATA_DIR/elections";
 
-CIVSDATADIR=`echo $CIVSDATADIR | sed -e 's@\\\\@\\\\\\\\@g' \
+echo "Servlet directory is $SERVLET_DIR"
+echo "HTML directory is $HTML_DIR"
+echo "CIVS data directory is $CIVS_DATA_DIR"
+
+CIVS_DATA_DIR=`echo $CIVS_DATA_DIR | sed -e 's@\\\\@\\\\\\\\@g' \
                                      -e 's@ @\\\\ @g'` || exit 1
 
 Subst() {
     base="`basename $1`"
     sed  < "$1" \
 	 > "$2/$base" \
-	    -e 's|@HTMLDIR@|'"$HTMLDIR"'|'\
+	    -e 's|@HTML_DIR@|'"$HTML_DIR"'|'\
 	    -e 's|@THISHOST@|'"$THISHOST"'|' \
-	    -e 's|@CIVSDATADIR@|'"$CIVSDATADIR"'|' \
+	    -e 's|@CIVS_DATA_DIR@|'"$CIVS_DATA_DIR"'|' \
 	    -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|' \
 	    -e 's|@CIVSURL@|'"$CIVSURL"'|' \
 	    -e 's|@SUPERVISOR@|'"$SUPERVISOR"'|' \
 	    -e 's|@SMTPHOST@|'"$SMTPHOST"'|' \
 	    -e 's|@LOCALDEBUG@|'"$LOCALDEBUG"'|' \
 	    -e 's|@ADDTOPATH@|'"$ADDTOPATH"'|' \
-	    -e 's|@STYLESHEET@|'"$STYLESHEET"'|'
+	    -e 's|@SERVLET_URL@|'"$SERVLET_URL"'|' \
+	    -e 's|@STYLE_SHEET_URL@|'"$STYLE_SHEET_URL"'|'
 }
 
 for f in html/*.html html/*.css html/*.js
 do
-    Subst $f "$HTMLDIR"
+    Subst $f "$HTML_DIR"
 done
 
-webinf="$SERVLETDIR/WEB-INF"
+webinf="$SERVLET_DIR/WEB-INF"
 TestAndCreateDir "$webinf"
 classes="$webinf/classes"
 TestAndCreateDir "$classes"
@@ -57,7 +62,7 @@ Subst web.xml "$webinf"
 cp -r classes/civs "$classes"
 cp -r classes/servlet "$classes"
 
-if [ ! -s $CIVSDATADIR/private_host_id ]; then
+if [ ! -s $CIVS_DATA_DIR/private_host_id ]; then
     echo "*********************************************";
     echo "                 WARNING                     ";
     echo "*********************************************";
@@ -69,16 +74,16 @@ if [ ! -s $CIVSDATADIR/private_host_id ]; then
     echo "need to create your own key.  See the INSTALL file for more";
     echo "information."
     echo "";
-    openssl rand -base64 32 -out $CIVSDATADIR/private_host_id;
+    openssl rand -base64 32 -out $CIVS_DATA_DIR/private_host_id;
     echo "*********************************************";
 fi
 
-if [ ! -s $CIVSDATADIR/nonce_seed ]; then
+if [ ! -s $CIVS_DATA_DIR/nonce_seed ]; then
     echo "Seeding the CIVS nonce generator.";
-    openssl rand -base64 32 -out $CIVSDATADIR/nonce_seed;
+    openssl rand -base64 32 -out $CIVS_DATA_DIR/nonce_seed;
 fi
 
-touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log
-chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log
+touch $CIVS_DATA_DIR/nonce_seed $CIVS_DATA_DIR/log
+chmod ugo+w $CIVS_DATA_DIR/nonce_seed $CIVS_DATA_DIR/log
 	
 echo "Install completed.  Check for any errors reported above.";

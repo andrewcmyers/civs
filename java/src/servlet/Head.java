@@ -18,17 +18,20 @@ public class Head extends Node {
 	public void write(HTMLWriter w) {
 		w.print("<head>");
 		w.breakLine();
-		w.print("  <title>");
+		w.print("  ");
+		w.begin();
+		w.print("<title>");
 		w.escape(title);
 		w.print("</title>");
-		w.breakLine();
 		
 		if (styleFile != null) {
+			w.breakLine();
 			w.print("<link rel=\"stylesheet\" type=\"text/css\" href=");
 			w.printq(styleFile);
-			w.print(" type=\"text/css\">");
-			w.breakLine();
+			w.print(" type=\"text/css\" />");
 		}
+		w.end();
+		w.breakLine();
 		w.print("</head>");
 		w.breakLine();
 	}

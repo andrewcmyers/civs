@@ -30,7 +30,7 @@ public class HTMLWriter {
 	/* Output s with quotes around it. */
 	public void printq(String s) {
 		print("\"");
-		print(s);
+		escape(s);
 		print("\"");
 	}
 	public void printq(int i) {

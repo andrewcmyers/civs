@@ -12,6 +12,11 @@ class Container extends Node {
 	Node contents;
 	
 	Container(String tag_, Node n) {
+		this(tag_, n, null);
+	}
+	
+	Container(String tag_, Node n, String class_) {
+		super(class_);
 		tag = tag_;
 		contents = n;
 	}
@@ -20,13 +25,18 @@ class Container extends Node {
 		// default: no options.
 	}
 	
+	protected void writeContents(HTMLWriter p) {
+		contents.write(p);
+	}
 	public void write(HTMLWriter p) {
 		p.print("<");
 		p.print(tag);
 		writeOptions(p);
 		p.print(">");
+		p.breakLine();
+		p.print("  ");
 		p.begin();
-		contents.write(p);
+		writeContents(p);
 		p.end();
 		p.breakLine();
 		p.print("</" + tag + ">");
