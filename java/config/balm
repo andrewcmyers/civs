@@ -1,0 +1,2 @@
+export TOMCAT=/home/andru/jakarta-tomcat-5.5.7/webapps
+export HTMLDIR=$TOMCAT/civs

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app 
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <servlet>
+      <servlet-name>civs</servlet-name>
+      <servlet-class>civs.Main</servlet-class>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>@SERVLETNAME@</servlet-name>
+      <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!-- General description of your web application -->
+
+    <display-name>Condorcet Internet Voting Service</display-name>
+
+    <description>
+       A public internet voting service using Condorcet
+       algorithms for deciding ranking of the choices.
+    </description>
+
+
+    <!-- Context initialization parameters that define shared
+         String constants used within your application, which
+         can be customized by the system administrator who is
+         installing your application.  The values actually
+         assigned to these parameters can be retrieved in a
+         servlet or JSP page by calling:
+
+             String value =
+               getServletContext().getInitParameter("name");
+
+         where "name" matches the <param-name> element of
+         one of these initialization parameters.
+
+         You can define any number of context initialization
+         parameters, including zero.
+    -->
+
+    <!-- Define the default session timeout for your application,
+         in minutes.  From a servlet or JSP page, you can modify
+         the timeout for a particular session dynamically by using
+         HttpSession.getMaxInactiveInterval(). -->
+
+    <session-config>
+      <session-timeout>30</session-timeout>    <!-- 30 minutes -->
+    </session-config>
+
+    <env-entry>
+      <env-entry-name>CIVSDATADIR</env-entry-name>
+      <env-entry-value>@CIVSDATADIR@</env-entry-value>
+      <env-entry-type>java.lang.String</env-entry-type>
+    </env-entry>
+</web-app>
