@@ -72,43 +72,6 @@ sub PrintNonproportionalDetails {
     print p(&details_bookmark . a({-href=>"$summary_url"}, "Hide details"));
 	
     my $j, $jj, $k, $kk;
-    print h2("Preference matrix");
-    print p("The following matrix shows the number of ballots on
-    which choices beat other choices, considered pairwise.");
-    print '<table class="matrix">';
-
-    print '<tr><td>&nbsp;</td><td>&nbsp;</td>';
-    for ($jj = 0; $jj < $num_choices; $jj++) {
-	$j = $jj + 1;
-	print "<th width=20px>".$j.".</th>";
-    }
-    print "</tr>\n";
-    for ($jj = 0; $jj < $num_choices; $jj++) {
-	$j = $choice_index[$jj];
-	$j1 = $jj + 1;
-	print "<tr>";
-	print "<th align=left>".$j1.". ".$choices[$j]."</th>\n";
-	print "<td width=40px>&nbsp;</td>\n";
-	for ($kk = 0; $kk < $num_choices; $kk++) {
-	    $k = $choice_index[$kk];
-	    if ($j == $k) {
-		print '<td class="count">-</td>';
-	    } else {
-		if ($matrix[$j][$k] > $matrix[$k][$j]) {
-		    print '<td class="win">';
-		} elsif ($matrix[$j][$k] == $matrix[$k][$j]) {
-		    print '<td class="tie">';
-		} else {
-		    print '<td class="lose">';
-		}
-		print $matrix[$j][$k];
-		print "</td>";
-	    }
-	}
-	print "</tr>\n";
-    }
-    print "</table>";
-
     print h2("Beatpath closure matrix");
     print p("
     The following matrix shows the strength of the strongest
@@ -374,6 +337,44 @@ sub PrintNonproportionalResults {
 	if ($had_tie) {
 	    print p("Choices shown in red have tied for being selected. You may wish to select among them randomly.");
 	}
+# I think this belongs in the main results section -- Andrew
+	print h2("Preference matrix");
+	print p("The following matrix shows the number of ballots on
+	which choices beat other choices, considered pairwise.");
+	print '<table class="matrix">';
+
+	print '<tr><td>&nbsp;</td><td>&nbsp;</td>';
+	for ($jj = 0; $jj < $num_choices; $jj++) {
+	    $j = $jj + 1;
+	    print "<th width=20px>".$j.".</th>";
+	}
+	print "</tr>\n";
+	for ($jj = 0; $jj < $num_choices; $jj++) {
+	    $j = $choice_index[$jj];
+	    $j1 = $jj + 1;
+	    print "<tr>";
+	    print "<th align=left>".$j1.". ".$choices[$j]."</th>\n";
+	    print "<td width=40px>&nbsp;</td>\n";
+	    for ($kk = 0; $kk < $num_choices; $kk++) {
+		$k = $choice_index[$kk];
+		if ($j == $k) {
+		    print '<td class="count">-</td>';
+		} else {
+		    if ($matrix[$j][$k] > $matrix[$k][$j]) {
+			print '<td class="win">';
+		    } elsif ($matrix[$j][$k] == $matrix[$k][$j]) {
+			print '<td class="tie">';
+		    } else {
+			print '<td class="lose">';
+		    }
+		    print $matrix[$j][$k];
+		    print "</td>";
+		}
+	    }
+	    print "</tr>\n";
+	}
+	print "</table>";
+
 
 	print hr();
 	if ($detailed) {
