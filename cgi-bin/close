@@ -1,0 +1,46 @@
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use icvs_common;
+use DB_File;
+use mail;
+
+use Socket;
+use IO::Handle;
+
+$thisurl = $civs_bin_path."/close";
+
+print header(), start_html("Condorcet Internet Voting Service");
+use election;
+
+untie %edata;
+
+ICVS_Header("Stopping election");
+
+LockElection;
+
+CheckElectionID;
+CheckStarted;
+CheckControlKey;
+CheckNotStopped;
+
+if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL)) {
+    print h1("Error"), p("Was not able to stop the election");
+} else {
+    print STOPPED "stopped\n"; close(STOPPED);
+    Log("Election $title ($election_id) stopped");
+    print h1("Election stopped: $title");
+    print p("The election has been stopped. It was announced to end $election_end");
+    print p("<a href=\"http://$thishost$civs_bin_path/results?id=$election_id\">
+    View the results of the election");
+}
+print end_html();
+
+$vdata{'close_time'} = localtime();
+
+untie %vdata;
+
+UnlockElection;
+
+exit 0;

@@ -1,0 +1,136 @@
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use POSIX qw(strftime);
+use icvs_common;
+use DB_File;
+use mail;
+use beatpath;
+
+use Socket;
+use IO::Handle;
+
+$thisurl = $civs_bin_path."/results";
+
+
+print header(), start_html("Condorcet Internet Voting Service");
+use election;
+
+ICVS_Header("Election Results");
+
+CheckElectionID;
+CheckStarted;
+if ($public ne 'yes') {
+    CheckStopped;
+}
+
+print h1("$title");
+
+print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
+if ($public ne 'yes') {
+    print "Total authorized voters: $num_auth", br();
+}
+$num_votes += 0;
+print "Actual votes cast: $num_votes", br();
+print "Announced end of election: $election_end", br();
+if (IsStopped) {
+    $close_time = $vdata{'close_time'};
+    print "Actual time election ended: $close_time\n";
+} else {
+    print "Election has not yet ended.\n";
+}
+
+print h2('Description'), p($description);
+
+print h2("Candidates and vote matrix");
+print p("The following matrix shows the number of ballots on which candidates beat other candidates, considered pairwise.");
+print "<table>\n";
+
+$condorcet_winner = -1;
+print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+for ($j = 0; $j < $num_choices; $j++) {
+    print "<td width=20px>".($j+1).".</td>";
+}
+print "</tr>\n";
+for ($j = 0; $j < $num_choices; $j++) {
+    print "<tr>";
+    print "<td>".($j+1).". ".$choices[$j]."</td>\n";
+    print "<td width=40px>&nbsp;</td>\n";
+    if ($condorcet_winner < 0) { $condorcet_winner = $j; }
+    for ($k = 0; $k < $num_choices; $k++) {
+	$n = $vdata{"$j.$k"} + 0;
+	$matrix[$j][$k] = $n;
+	print "<td><tt>";
+	if ($j == $k) {
+	    print "- ";
+	} else {
+	    print $n. " ";
+	    $m = $vdata{"$k.$j"} + 0;
+	    if ($n <= $m && $condorcet_winner == $j) {
+		$condorcet_winner = -1; # can't be this one
+	    }
+	}
+	print "</tt></td>";
+    }
+    print "</tr>\n";
+}
+print "</table>";
+
+print h2("Ranking of the candidates\n");
+print p("Winning choices are shown in bold.");
+print "<pre>";
+$beatpath::n = $num_choices;
+@beatpath::matrix = @matrix;
+&beatpath::rank_candidates();
+@result = @beatpath::result;
+print "</pre>";
+
+$num_seen = 0;
+$had_tie = 0;
+print "<ol>";
+for ($rank = 0; $rank <= $#result; $rank++) {
+    @winner = @{$result[$rank]};
+    print "<li>";
+    $ranksize = $#winner + 1;
+    if ($ranksize > 1) {
+	print "Tied:<br>";
+    }
+    if ($num_seen < $num_winners &&
+	$num_seen + $ranksize > $num_winners) {
+	$tie = 1;
+	$had_tie = 1;
+    } else {
+	$tie = 0;
+    }
+    for ($i = 0; $i <= $#winner; $i++) {
+	if ($i > 0) { print "<br>"; }
+	if ($tie) { print "<font color=red>"; }
+	if ($num_seen < $num_winners) {
+	    print b($choices[$winner[$i]]);
+	} else {
+	    print $choices[$winner[$i]];
+	}
+	if ($tie) { print "</font>"; }
+    }
+    $num_seen += $#winner + 1;
+}
+print "</ol>";
+if ($had_tie) {
+    print p("Candidates shown in red have tied for being selected. You may wish to select among them randomly.");
+}
+
+print h2("Condorcet winner");
+if ($condorcet_winner >= 0) {
+    print p("The Condorcet winner of this election is ".strong($choices[$condorcet_winner]));
+} else {
+    print p("This election had no Condorcet winner.\n");
+}
+
+
+print end_html();
+
+untie %edata;
+untie %vdata;
+
+exit 0;

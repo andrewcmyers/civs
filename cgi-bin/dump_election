@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+
+use DB_File;
+
+undef $/;
+
+if ($#ARGV < 0) {
+    print STDERR "Usage: dump_election <election_dir>\n";
+    exit 1;
+}
+$election_dir = $ARGV[0];
+
+$election_data = $election_dir."/election_data";
+$vote_data = $election_dir."/vote_data";
+
+print "Election data file = $election_data\n";
+
+$db = tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
+$vdb = tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
+
+print "Election data:\n";
+foreach $name (keys %edata) {
+    print $name . ": " .$edata{$name} ."\n";
+}
+print "Voting data:\n";
+foreach $name (keys %vdata) {
+    print $name . ": " .$vdata{$name} ."\n";
+}
+
+untie %edata;
+
+exit 0;

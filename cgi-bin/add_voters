@@ -1,0 +1,82 @@
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use icvs_common;
+use DB_File;
+use mail;
+
+use Socket;
+use IO::Handle;
+use election;
+
+LockElection;
+
+$thisurl = $civs_bin_path."/add_voters";
+
+$new_addresses = param('new_addresses');
+$new_addresses_file = param('new_addresses_file');
+while (<$new_addresses_file>) {
+    $new_addresses .= $_;
+}
+@new_addresses = split /[\r\n]+/, $new_addresses;
+
+print header(), start_html("Condorcet Internet Voting Service");
+ICVS_Header("Adding voters");
+
+CheckControlKey;
+
+if (!IsStarted || IsStopped) {
+    print h1(Error), p("Sorry, voters can only be added to an election in progress.");
+    exit 0;
+}
+
+print "<pre>\n";
+GetPrivateHostID;
+ConnectMail;
+
+# Send all of the voters their keys
+
+foreach $v (@new_addresses) {
+    $voter_key = substr(md5_hex("voter".$private_host_id.$election_id.$v), 0, 16);
+    print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
+    Send "mail from: $email_addr"; ConsumeSMTP;
+    Send "rcpt to: $v"; ConsumeSMTP;
+    Send "data"; ConsumeSMTP;
+    Send "From: $email_addr (Condorcet Internet Voting Service)";
+    Send "To: $v";
+    Send "Subject: CIVS Election now available for voting: $title";
+    Send "";
+    Send "A Condorcet Internet Voting Service election named $title has been created.";
+    Send "You have been designated as a voter by the election supervisor,";
+    Send "$name ($email_addr). If you would like to vote, please visit the";
+    Send "following URL:";
+    Send "";
+    Send "http://$thishost$civs_bin_path/vote?id=$election_id&voter=$v&voter_key=$voter_key";
+    Send "";
+    Send "This is your private URL. Do not give it to anyone else because";
+    Send "they could use it to vote for you.";
+    Send "";
+    Send "The election has been announced to end $election_end.";
+    Send "To view the results of the election once it is closed, visit:";
+    Send "http://$thishost$civs_bin_path/results?id=$election_id";
+    Send "";
+    Send "For more information about the Condorcet Internet Voting Service, see";
+    Send "$icvs_url.";
+    Send "."; ConsumeSMTP;
+}
+
+Send "quit";
+close(SMTP);
+print "Done.\n</pre>\n";
+
+$num_new_voters = $#new_addresses + 1;
+$edata{'num_auth'} += $num_new_voters;
+
+print end_html();
+Log("$num_new_voters new voters added to $title ($election_id)");
+untie %edata;
+
+UnlockElection;
+
+exit 0;

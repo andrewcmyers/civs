@@ -1,0 +1,64 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Condorcet Internet Voting Service</title>
+</head>
+
+<body>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tr>
+    <td width="100%" bgcolor="#000080" valign="top" nowrap>
+      <h1><font color=white face=sans-serif>&nbsp;Condorcet Internet Voting
+      Service</font></h1>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" bgcolor="#000080" valign="top" nowrap>
+      <h2 align="center"><font color=white face=sans-serif>Election creation</font></h2>
+    </td>
+  </tr>
+</table>
+<p>This web page allows you to create a new CIVS election. You will be   
+the supervisor of the election you create.</p>                          
+
+<hr>
+
+<form method="POST"
+    action="/cgi-bin/andru/icvs/create_election"
+    enctype="multipart/form-data"
+    name="CreateElection">
+    <p>Name of the election (e.g., <b>The Democratic Primary</b>)
+  <input type="text" name="title" size="50"></p>
+    <p>Description of the election and available choices (optional)<br>
+    <textarea valign="top" rows="4" name="description" cols="60"></textarea></p>
+
+  <p>Your name or other unique identifier that will be recognizable to the
+  voters: <input type="text" name="name" size="20"></p>
+  <p>Your e-mail address: <input type="text" name="email_addr" size="20"></p>
+  <p>Enter the names of all the choices (candidates), one per line, or upload a file
+     containing all the choices:</p>
+  <p align="left"><textarea rows="5" name="choices" cols="60"></textarea>&nbsp;&nbsp;</p>
+  <p align="left"><input id=choices_file type=file name="choices_file"></p>
+  <p>How many choices will win the election: <input type="text" name="num_winners" size="5" value="1"></p>
+  <p>The day and time when you plan to stop the election:
+    <input type="text" name="election_end" size="30"></p>
+  <p>The e-mail addresses of all the voters, one per line:</p>
+  <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
+  <p><input id=addresses_file type=file name="addresses_file"></p>
+  <p><input id=public type="checkbox" name="public" value="yes">
+  Make this an open election (voters can add themselves).<br>
+  <input id=writeins type="checkbox" name="writeins" value="yes">
+  Allow voters to write in new choices.</p>
+  <p>Make sure your e-mail address is correct because election information will
+  be mailed to you. Voters will not be informed of the election's
+  existence until you respond to this e-mail message to show that your address
+  is good.</p>
+  <p><input type="submit" value="Create election" name="submit"><input type="reset" value="Reset" name="reset"></p>
+</form>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use icvs_common;
+use DB_File;
+use mail;
+
+use Socket;
+use IO::Handle;
+
+$thisurl = $civs_bin_path."/create_election";
+
+$email_addr = param('email_addr');
+if (!($email_addr =~ m/.\@./)) {
+    print header(), start_html("Invalid email address");
+    ICVS_Header();
+    print h1("Invalid email address");
+    print p("The address \"$email_addr\" is not acceptable");
+    print end_html();
+    exit 0;
+}
+
+##### Construct the new election identifier
+GetPrivateHostID;
+open(LOCK, $lockfile);
+flock LOCK, LOCK_EX;
+
+open(LASTELECTIONID, "<$last_election_id_file");
+$last_election_id = <LASTELECTIONID>;
+close (LASTELECTIONID);
+
+$election_id = md5_hex($private_host_id,$last_election_id);
+
+open(LASTELECTIONID, ">$last_election_id_file");
+print LASTELECTIONID $election_id."\n";
+$election_id = "E_".substr($election_id, 0, 16);
+close (LASTELECTIONID);
+
+flock LOCK, LOCK_UN;
+close(LOCK);
+#####
+
+$election_dir = $home."/elections/".$election_id;
+$election_data = $election_dir."/election_data";
+
+mkdir($election_dir);
+
+$db = tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
+
+##### read form data
+$edata{'title'} = $title = param('title');
+$edata{'description'} = param('description');
+$edata{'name'} = $name = param('name');
+$edata{'email_addr'} = param('email_addr');
+$edata{'num_winners'} = param('num_winners');
+$edata{'election_end'} = param('election_end');
+$public = param('public');
+if ($public eq '') {
+    $public = "no";
+}
+$edata{'public'} = $public;
+$writeins = param('writeins');
+if ($writeins eq '') {
+    $writeins = 'no';
+}
+$edata{'writeins'} = $writeins;
+$choices = param('choices');
+$choices_file = param('choices_file');
+while (<$choices_file>) {
+    $choices .= $_;
+}
+$edata{'choices'} = $choices;
+
+$addresses = param('addresses');
+$addresses_file = param('addresses_file');
+while (<$addresses_file>) {
+    $addresses .= $_;
+}
+$edata{'addresses'} = $addresses;
+
+print header(), start_html("Election creation result");
+ICVS_Header("Election created: $title");
+
+# print pre("public = $public");
+print "<pre>";
+
+$control_key = substr(md5_hex("control".$private_host_id.$election_id), 0, 16);
+
+ConnectMail;
+Send "mail from: andru\@cs.cornell.edu"; ConsumeSMTP;
+Send "rcpt to: $email_addr"; ConsumeSMTP;
+Send "data"; ConsumeSMTP;
+Send "From: andru\@cs.cornell.edu (Condorcet Internet Voting Service)";
+Send "To: $email_addr ($name)";
+Send "Subject: CIVS election created ($election_id)";
+Send "";
+Send "This email acknowledges the creation of a new election,";
+Send "$title. You have been designated as the supervisor of this";
+Send "election. To start and stop the election, please use the following URL:";
+Send "";
+Send "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key";
+Send "";
+if ($public eq 'yes') {
+    Send "Because this is an open election, voters may be directed to the following URL:";
+    Send "";
+    Send "http://$thishost$civs_bin_path/vote?id=$election_id";
+    Send "";
+}
+Send "For more information about the Condorcet Internet Voting Service, see";
+Send "  $icvs_url.\r\n";
+Send "."; ConsumeSMTP;
+Send "quit";
+close(SMTP);
+
+print "</pre>\n";
+
+print p("Mail has been sent to the address you provided (<tt>$email_addr</tt>).");
+print p("Click on the URL in that email to start the election: <strong>$title</strong>.");
+
+print end_html();
+Log("Election $title ($election_id) created by $email_addr");
+untie %edata;
+
+exit 0;

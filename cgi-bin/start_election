@@ -1,0 +1,89 @@
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+
+use IO::Handle;
+use CGI qw(:standard);
+use DB_File;
+use Digest::MD5 qw(md5_hex);
+use icvs_common;
+use mail;
+
+print header(), start_html('Condorcet Internet Voting Service');
+ICVS_Header('Start election');
+STDOUT->flush();
+
+use election;
+
+CheckElectionID;
+CheckControlKey;
+
+if (IsStarted) {
+    print h1("Error");
+    print p("This election has already been started"), end_html();
+    exit 0;
+}
+
+StartElection;
+
+print p("The election <strong>$title</strong> has been started.\n");
+
+STDOUT->flush();
+
+print "<pre>\n";
+
+if ($#addresses > 100) {
+    print h2("Sorry, more than 100 voters are currently not allowed\n");
+    exit 1;
+}
+
+GetPrivateHostID;
+ConnectMail;
+
+# Send all of the voters their keys
+
+foreach $v (@addresses) {
+    $voter_key = substr(md5_hex("voter".$private_host_id.$election_id.$v), 0, 16);
+    print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
+    Send "mail from: $email_addr"; ConsumeSMTP;
+    Send "rcpt to: $v"; ConsumeSMTP;
+    Send "data"; ConsumeSMTP;
+    Send "From: $email_addr (Condorcet Internet Voting Service)";
+    Send "To: $v";
+    Send "Subject: CIVS Election now available for voting: $title";
+    Send "";
+    Send "A Condorcet Internet Voting Service election named $title has been created.";
+    Send "You have been designated as a voter by the election supervisor,";
+    Send "$name ($email_addr). If you would like to vote, please visit the";
+    Send "following URL:";
+    Send "";
+    Send "http://$thishost$civs_bin_path/vote?id=$election_id&voter=$v&voter_key=$voter_key";
+    Send "";
+    Send "This is your private URL. Do not give it to anyone else because";
+    Send "they could use it to vote for you. Your privacy will not be violated";
+    Send "by voting. The voting service does not keep track of your email address";
+    Send "or release any information about whether or how you have voted.";
+    Send "";
+    Send "The election has been announced to end $election_end.";
+    Send "To view the results of the election once it is closed, visit:";
+    Send "http://$thishost$civs_bin_path/results?id=$election_id";
+    Send "";
+    Send "For more information about the Condorcet Internet Voting Service, see";
+    Send "$icvs_url.";
+    Send "."; ConsumeSMTP;
+}
+
+Send "quit";
+close(SMTP);
+print "Done.\n</pre>\n";
+
+print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key\">Go back to election control</a>");
+
+close(START);
+
+# Destroy record of voter addresses so we can't
+# figure out who voted for what.
+$edata{'num_auth'} = $#addresses + 1;
+$edata{'addresses'} = "";
+
+untie %edata;
+
+exit 0;

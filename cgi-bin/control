@@ -1,0 +1,92 @@
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use icvs_common;
+use DB_File;
+use mail;
+
+use Socket;
+use IO::Handle;
+
+$thisurl = $civs_bin_path."/control";
+
+print header(), start_html("Condorcet Internet Voting Service");
+use election;
+
+untie %edata;
+
+ICVS_Header("Election control");
+
+CheckElectionID;
+CheckControlKey;
+
+print h1("Election: $title");
+
+if (!IsStarted) {
+    print "<form method=POST
+		action=\"$civs_bin_path/start_election\"
+		enctype=\"multipart/form-data\"
+		name=\"Start\">\n";
+    print '<p>The election has not yet started. Press this button to start it: ';
+    print hidden('id', $election_id);
+    print hidden('key', $control_key);
+    print '<input type="submit" value="Start election" name="start">';
+    print '</p></form>';
+} elsif (!IsStopped) {
+    print "<form method=POST
+		action=$civs_bin_path/close
+		enctype=\"multipart/form-data\"
+		name=\"Close\">\n";
+    print '<p>The election is in progress. Press this button to end it: ';
+    print hidden('id', $election_id);
+    print hidden('key', $control_key);
+    print '<input type="submit" value="End election" name="close">';
+    print '</p></form>';
+} else {
+    print p("The election has ended. <a href=\"$civs_bin_path/results?id=$election_id\">Election results</a> are available.");
+}
+
+
+
+print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
+print "Total authorized voters: $num_auth", br();
+$num_votes += 0;
+print "Actual votes cast so far: $num_votes", br();
+print "Election ends $election_end", br();
+
+print h2('Description:'), p($description);
+print h2("Candidates");
+if ($num_winners == 1) {
+    $wintxt = "candidate";
+} else {
+    $wintxt = "$num_winners candidates";
+}
+print p("The top $wintxt will win the election.");
+print "<ul>";
+for ($j = 0; $j < $num_choices; $j++) {
+    print li($choices[$j]);
+}
+print "</ul>";
+
+print h2("Add voters");
+
+print p("Enter e-mail addresses of voters, one per line. These
+may be new voters or existing voters who have not voted yet.
+Giving the e-mail address of an already existing voter will not
+let that voter vote twice.");
+print "<form method=POST
+	     action=$civs_bin_path/add_voters
+	     enctype=\"multipart/form-data\"
+	     name=\"AddVoters\">\n";
+print hidden('id', $election_id);
+print hidden('key', $control_key);
+print p('<textarea rows="2" name="new_addresses" cols="50"></textarea>');
+print p('Upload file: <input id=new_addresses_file type=file name="new_addresses_file">');
+print '<input type="submit" value="Add voters" name="add">';
+print '</form>';
+
+print end_html();
+
+untie %vdata;
+exit 0;

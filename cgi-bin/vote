@@ -1,0 +1,196 @@
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use icvs_common;
+use DB_File;
+use mail;
+
+use Socket;
+use IO::Handle;
+
+$thisurl = $civs_bin_path."/vote";
+
+# There are four different ways to enter this script.
+# 1. As the initial page one uses to cast a vote in a private election
+#    (with id, voter, voter_key defined)
+# 2. As the initial page one uses to cast a vote in a public election (id
+#    defined, no voter/voter_key)
+# 3. To actually cast a vote (old process_vote): Vote is defined, as are C1-Cn.
+# 4. To reorder the choices from their default order (case 1, case 2 variants
+#    where C1-Cn are already defined)
+
+$voter = param('voter');
+$voter_key = param('voter_key');
+
+print header(), start_html("Condorcet Internet Voting Service");
+
+if ($num_winners == 1) {
+    $winners_text = "(1) favorite choice";
+} else {
+    $winners_text = "($num_winners) favorite choices";
+}
+
+use election;
+
+ICVS_Header("$title");
+
+CheckElectionID;
+CheckStarted;
+CheckNotStopped;
+if ($public ne 'yes') {
+    CheckVoterKey;
+} else {
+    $voter_key = remote_addr();
+    $voter = "voter";
+}
+CheckNotVoted;
+
+if (param('Vote') ne '') {
+# process the vote!
+
+    $vote = '';
+    $i=0;
+
+# Record the vote (note that vdata is
+# indexed by voter key, preserving anonymity.)
+# print "num_choices = $num_choices\n";
+    for ($i = 0; $i < $num_choices; $i++) {
+	$rank = param('C'.$i);
+	if ($vote eq '') {
+	    $vote = $rank;
+	} else {
+	    $vote = $vote.",".$rank
+	}
+	$rank[$i] = $rank;
+    }
+    $vdata{$voter_key} = $vote;
+
+    open(LOG, ">>$election_log");
+    print LOG "Election: $title ($election_id) : Recorded vote from voter key $voter_key\n";
+    close(LOG);
+
+# Now, update matrix.
+# Note: vdate{"2.3"} contains the number of votes where
+# candidate 2 beats candidate 3 (i.e., has lower
+# numbered rank)
+    for ($j = 0; $j < $num_choices; $j++) {
+	for ($k = 0; $k < $num_choices; $k++) {
+	    $jk = $vdata{"$j.$k"};
+	    if ($rank[$j] ne 'No opinion' &&
+		$rank[$k] ne 'No opinion' &&
+		$rank[$j] < $rank[$k]) {
+		$vdata{"$j.$k"} = $jk + 1;
+	    }
+	}
+    }
+    $vdata{'num_votes'}++;
+
+    print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.\n");
+
+    untie %edata;
+    untie %vdata;
+    UnlockElection;
+
+    PointToResults;
+    print end_html();
+
+    exit 0;
+}
+
+# Not processing a vote. Either this is an initial vote page
+# or we've been asked to resort the choices.
+
+$sort_choices = param('SortChoices');
+if ($sort_choices ne '') {
+    for ($i = 0; $i < $num_choices; $i++) {
+	$rank = param('C'.$i);
+	@iota[$i] = $i;
+	$rank[$i] = param('C'.$i);
+    }
+    @choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
+}
+
+if (param("AddWritein") ne '') {
+    $writein = param('writein');
+    $choices = $choices . "\n" . $writein;
+    @choices[$num_choices] = $writein;
+    $num_choices++;
+    $edata{'choices'} = $choices;
+}
+
+print "<p>Welcome, $voter! ";
+print "This page allows you to vote on <b>$title</b></p>
+<p>$description</p>
+
+Only the $winners_text will win the election and be selected.<br>
+The election ends <b>$election_end</b>.
+The election supervisor is $name (<tt>$email_addr</tt>). Contact the election supervisor if you need help.</p>
+
+<p>Please rank the following choices by assigning each choice a rank, where a
+lower rank means that you prefer that choice more. For example, it would make
+sense to give your top choice (or choices) the rank 1. You may give candidates
+the same rank if you have no preference between them. You do not have to use all
+the possible ranks. All choices are currently given the lowest possible rank.</p>
+<p>For more information on how the Condorcet voting system works, <a href=$icvs_url>click here</a></p>\n\n";
+print '<form method="POST"
+        action="'.$thisurl.'"
+        enctype="multipart/form-data"
+        name="CastVote">';
+
+print '<table border="1" cellpadding="5" cellspacing="0"><tr>
+	<td bgcolor="#000080" bordercolor="#000080"><b><font color=white face=sans-serif>Choice</font></b></td>
+	<td width="40" bgcolor="#000080" bordercolor="#000080">&nbsp;</td>
+	<td bgcolor="#000080" bordercolor="#000080"><b><font color=white face=sans-serif>Rank</font></b></td>
+    </tr>';
+
+print hidden('voter', $voter);
+print hidden('voter_key', $voter_key);
+print hidden('id', $election_id);
+
+$i=0;
+for ($i = 0; $i < $num_choices; $i++) {
+    if ($sort_choices ne '') {
+	$k = $choice_index[$i];
+	$selected = $rank[$k];
+    } else {
+	$k = $i;
+	$selected = $num_choices;
+    }
+    $choice = $choices[$k];
+    print "<tr><td><b>$choice</b></td><td>&nbsp;</td>\n";
+    print "<td><select size=1 name=\"C$k\">\n";
+    for ($j = 1; $j <= $num_choices; $j++) {
+	if ($j == $selected) {
+	    print "  <option selected>$j</option>\n";
+	} else {
+	    print "  <option>$j</option>\n";
+	}
+    }
+    if ($selected eq "No opinion") {
+	print "  <option selected>No opinion</option>";
+    } else {
+	print "  <option>No opinion</option>";
+    }
+    print "</select></td></tr>\n";
+}
+print "</table>\n";
+print '<p>Click here to sort the choices by their current rank:
+       <input type="submit" value="Sort choices" name="SortChoices"></p>';
+if ($writeins ne '') {
+    print '<p>Write in a new choice: <input type="text" size="60" name="writein">';
+    print '<input type="submit" value="Add write-in" name="AddWritein"></p>';
+}
+print '<p><input type="submit" value="Vote!" name="Vote">
+       <input type="reset" value="Reset" name="Vote"></p>
+';
+print "</form>\n";
+
+print p("If you have already voted, you may see
+    <a href=\"http://$thishost$civs_bin_path/results?id=$election_id\">
+    the results of the election.</a>");
+
+print end_html();
+untie %edata;
+
+exit 0;
