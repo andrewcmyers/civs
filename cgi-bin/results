@@ -46,11 +46,12 @@ if ($public ne 'yes') {
 print "Actual votes cast: $num_votes", br();
 print "Number of winning choices: $num_winners", br();
 if ($proportional eq 'yes') {
-    print 'This election implements proportional representation. ';
+    my $url = 'http://'.$thishost.$civs_url."/proportional.html";
+    print "This election implements <a href=\"$url\">proportional representation</a>. ";
     if ($use_combined_weights) {
-	print ' The combined-weights criterion';
+	print " The <a href=\"$url#combinedweights\">combined-weights criterion</a>";
     } else {
-	print ' The best-candidate criterion';
+	print " The <a href=\"$url#bestcandidate\">best-candidate criterion</a>";
     }
     print ' is used to identify each voter\'s preferred set of choices.';
 }
@@ -428,7 +429,7 @@ sub PrintProportionalResults {
     }
     print "</ol>";
 
-    $prop_details = 1;
+    $prop_details = 0;
 
     if ($prop_details) {
 	print '<h2>Log of search for best result set</h2>'.$cr;
@@ -531,10 +532,10 @@ sub PrintProportionalResults {
 	    return $ret;
 	}
 	sub compute_in {
-	    my $curr_comm = $_[0];
+	    my @c = @{$_[0]};
 	    my $i;
 	    for ($i = 0; $i < $num_choices; $i++) { $in{$i} = 0; }
-	    for ($i = 0; $i < $num_winners; $i++) { $in{$curr_comm[$i]} = 1; }
+	    for ($i = 0; $i < $num_winners; $i++) { $in{$c[$i]} = 1; }
 	}
 	$change = 1;
 	$curr_comm = flatten @curr_comm;
@@ -625,30 +626,31 @@ sub PrintProportionalResults {
 	    if ($iters > 500) { return; } # truncate runaway search
 	    $depth++;
 
-	    my $curr_comm = $_[0];
-	    my @curr_comm = split /,/, $curr_comm;
+	    my $comm = $_[0];
+	    my @comm = split /,/, $comm;
 	    my $cci;
 	    my $added = 0;
-	    if ($visited{$curr_comm}) {
+	    if ($visited{$comm}) {
+		print "already visited: $comm\n";
 		if ($full_search) { $depth--; return; }
 		if (!$full_search) {
 		    if ($prop_details) {
-		    dprint "$curr_comm is in a cycle (in the Schwartz set?)\n";
+		    dprint "$comm is in a cycle (in the Schwartz set?)\n";
 		    }
 		    $full_search = 1;
 		}
 	    } else {
 		$cci = $#committee + 1;
-		$committee[$cci] = $curr_comm;
-		$cindex{$curr_comm} = $cci;
-		$mcomm = flatten(renumber($curr_comm));
+		$committee[$cci] = $comm;
+		$cindex{$comm} = $cci;
+		$mcomm = flatten(renumber($comm));
 		if ($prop_details) {
-		    dprint "<b>Considering set: $mcomm ($curr_comm)</b>\n";
+		    dprint "<b>Considering set: $mcomm ($comm)</b>\n";
 		}
-		$visited{$curr_comm} = 1;
+		$visited{$comm} = 1;
 		$added = 1;
 	    }
-	    $cci = $cindex{$curr_comm};
+	    $cci = $cindex{$comm};
 	    my $change = 0;
 	    my $save_beaten = $beaten[$cci];
 	    $beaten[$cci] = 1;
@@ -663,46 +665,47 @@ sub PrintProportionalResults {
 	    }
 	    if ($change) {
 		if (!$added) {
-		    # dprint "Change to beaten info, revisiting from $curr_comm\n";
+		    # dprint "Change to beaten info, revisiting from $comm\n";
 		}
 		my @new_comm, $new_comm;
-		compute_in $curr_com;
+		compute_in [@comm];
 		my $done = 0;
 		for (my $i = 0; $i < $num_winners && !$done; $i++) {
 # try improving each current member
 		    for (my $j = 0; $j < $num_choices && !$done; $j++) {
-			@new_comm = @curr_comm;
+			@new_comm = @comm;
 # try replacing with each choice not currently in the committee
 			if (!$in{$j}) {
 			    my %save_in = %in;
 			    $new_comm[$i] = $j;
 			    @new_comm = sort {$a <=> $b} @new_comm ;
 			    $new_comm = flatten @new_comm;
-			    dprint "Constructed $new_comm\n";
+			    # dprint "Constructed $new_comm\n";
 			    if (
 				!$visited{$new_comm} &&
-				compare_sets($curr_comm, $new_comm)) {
+				compare_sets($comm, $new_comm)) {
 				# if (!$full_search)
 				{ $done = 1; }
+# XXX obsolete
 # If this committee isn't in the Schwartz set then there is
 # no reason to compare to any more committees, because we
 # already found at least one that is better than this one.
 			    }
 			    %in = %save_in;
 			} else {
-			    print "Can't add $j, it's already in \n";
+			    # print "Can't add $j, it's already in $comm\n";
 			}
 		    } # for j
 		} # for i
 		if (!$done && $added) {
-		    $mcomm = flatten(renumber($curr_comm));
+		    $mcomm = flatten(renumber($comm));
 		    if ($prop_details) {
 			dprint "$mcomm beats all nearby unvisited sets\n";
 		    }
 		}
 	    } # if change
 	    $beaten[$cci] = $save_beaten;
-	    dprint "<b>Done with ".flatten(renumber($curr_comm))."</b>\n";
+	    # dprint "<b>Done with ".flatten(renumber($comm))."</b>\n";
 	    $depth--;
 	}
 	visit($curr_comm);
