@@ -1,0 +1,70 @@
+#!@PERL@ -I@CGIBINDIR@
+
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use POSIX qw(strftime);
+use civs_common;
+use DB_File;
+use mail;
+use beatpath;
+
+use Socket;
+use IO::Handle;
+
+$thisurl = $civs_bin_path."/download_ballots";
+
+use election;
+
+if (!IsWellFormedElectionID) {
+    error("The election identifier \"$election_id\" is not valid.");
+}
+
+if (!IsStarted) {
+    error("This election does not exist or has not been started");
+}
+
+if ($public ne 'yes') {
+    if (!IsStopped) {
+	error("This election has not yet been closed");
+    }
+}
+
+if ($ballot_reporting ne 'yes') {
+    error("Ballot reporting is not enabled for this election");
+}
+
+print header(-type=>'application/text', -attachment=>'civs_ballots.csv');
+
+# print the list of candidate names
+print join ',', @choices;
+print "\n";
+
+@voters = split /\n/, $vdata{'recorded_voters'};
+fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
+foreach $voter_key (@voters) {
+    # recorded_vote is a comma separated list of the ranks
+    # that the voter assigned to candidates.  Element i of the list
+    # corresponds to candidate i.
+    $recorded_vote = $vdata{$voter_key}; 
+    print "$recorded_vote\n";
+}
+
+untie %edata;
+untie %vdata;
+
+exit 0;
+
+sub error {
+    $msg = shift;
+    HTML_Header("CIVS Ballot Download");
+    CIVS_Header("CIVS Ballot Download");
+    print h2("Error");
+    print p($msg);
+    print end_html();
+
+    untie %edata;
+    untie %vdata;
+
+    exit 0;
+}
+
