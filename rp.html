@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head>
   <meta http-equiv="Content-Type" content="text/html">
-  <title>CIVS Ranked Pairs</title>
+  <title>CIVS completion algorithms</title>
   <link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
 </head>
 
@@ -21,7 +21,7 @@
   </tr>
   <tr>
     <td width="100%" valign="top" nowrap colspan=2>
-      <h2 align="center">The CIVS Ranked Pairs algorithm</h2>
+      <h2 align="center">Condorcet completion in CIVS</h2>
     </td>
   </tr>
 </tbody>
@@ -29,28 +29,65 @@
 
 <h2>Introduction</h2>
 
-<p>CIVS currently supports two algorithms for Condorcet completion.
-These algorithms are relevant when there is a cycle in the preferences
-given by the voters. If there is no cycle, all Condorcet algorithms
-will arrive at the same ranking. Cycles do happen, but in practice,
-cycles involving the top-ranked choice seem to be relatively rare.
-There, if the goal of the election is simply to pick the top choice,
-it usually doesn't matter which algorithm is used.</p>
+<p>
+In ranked preference voting systems, there is the possibility that preference
+cycles exist. For example, it is possible that on a majority of ballots, choice
+A is preferred to choice B; on a majority of ballots, B is preferred to C; and
+on a majority of ballots C is preferred to A. Fortunately, cycles involving the
+top-ranked candidate don't seem to happen And there are good methods for
+resolving these cycles, called <i>completion rules</i>.  If the goal of
+the election is simply to pick the top choice, It usually doesn't matter which
+rule is used.
+</p>
 
-<p>The completion algorithms
-supported by CIVS are the <b>Beatpath Winner</b> algorithm,
-also known as <a href="http://electionmethods.org/CondorcetEx.htm">
-Cloneproof Schwartz Sequential Dropping</a>, and
-a variant of the Ranked Pairs algorithm called <b>CIVS Ranked Pairs</b>
-here. This page describes the CIVS ranked pairs algorithm.</p>
+<h2>Supported completion rules</h3>
 
-<h2>Algorithm</h2>
+<p>CIVS currently supports three rules for Condorcet completion.  If there
+is no cycle, all completion rules will arrive at the same ranking.  The
+completion rules supported by CIVS are <b>Beatpath Winner</b>, also known
+as <a href="http://electionmethods.org/CondorcetEx.htm"> Cloneproof Schwartz
+Sequential Dropping</a>, <a href="http://alumnus.caltech.edu/~seppley/">
+Maximize Affirmed Majorities</a> (MAM), and a deterministic variant of MAM
+called <b>CIVS Ranked Pairs</b>. CIVS Ranked Pairs is described below.
+</p>
 
-<p>The CIVS Ranked Pairs algorithm is a deterministic
-variant of Eppley's
-<a href="http://alumnus.caltech.edu/~seppley/">Maximize
-Affirmed Majorities</a> (MAM),
-and is also related to other algorithms such as
+<p>
+CIVS does not impose a completion rule; in fact, anyone viewing
+the results of an election can see what the results would have been with
+an of the rules. It is probably a good idea for the election supervisor
+to decide on an rule ahead of time. On the other hand, all three
+rules usually agree with each other, especially on the ranking of
+the first few choices. The color coding of the final preference matrix
+tells you whether a completion rule was needed. If there are no red
+cells above the diagonal (or green cells below it), then there were
+no cycles for a completion rule to resolve.
+</p>
+
+<p>
+The different rules have advantages and disadvantages. Beatpath
+Winner can be computed very cheaply using the Floyd-Warshall
+all-pairs-shortest-paths algorithm. The two ranked pairs rules (CIVS
+Ranked Pairs and MAM) are more expensive to compute.
+If there are <i>n</i> choices,
+the ranked pairs algorithms are about <i>n</i> times slower than
+Beatpath Winner, but
+this slowdown is only noticeable if there are many choices (more than twenty).
+Based on experience with using these completion rules in CIVS, the
+ranked pairs methods seem to produce better results. They seem to be
+more stable in the sense that a given voter's ballot does not affect
+the ordering as much as it can in Beatpath Winner. The difference
+between CIVS Ranked Pairs and MAM is that MAM uses a sophisticated
+random tie-breaking method, whereas CIVS Ranked Pairs is completely
+deterministic. Thus, the result of running MAM is not determined
+by just the ballots cast. Comparison of the results of MAM and CIVS
+RP will show if randomization was needed and used by MAM.
+</p>
+
+<h2>CIVS Ranked Pairs</h2>
+
+<p>The CIVS Ranked Pairs completion rule is a deterministic
+variant of Eppley's MAM procedure
+and is also related to other completion rules such as
 <a href="http://en.wikipedia.org/wiki/Ranked_Pairs">
 Tideman Ranked Pairs</a>.
 In these algorithms, each of the pairwise preferences in the preference matrix
@@ -67,7 +104,9 @@ preference has fewer votes against.  Of course, it is entirely possible that
 two preferences have exactly the same number of votes in favor and against.
 Like MAM and unlike Tideman, the ordering of preferences does not take margins
 into account.
+</p>
 
+<p>
 The major difference between CIVS Ranked Pairs and MAM is
 the rule on when a preferent is kept. A preference is
 kept exactly when it does not create any <i>new</i> cycles when considered in

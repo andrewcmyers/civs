@@ -104,28 +104,26 @@ if ($algorithm eq 'civs_ranked_pairs') {
     $bw_checked = 'checked';
 }
 
-print STDOUT 'Condorcet completion algorithm:
+print STDOUT 'Condorcet completion rule:
     <input type="radio"
 	name="algorithm"
 	onClick="newSettings()"
 	value="beatpath_winner" ',
 	$bw_checked,
-    '>
-    <a href="',$civs_url,'/rp.html">Beatpath Winner/SSD</a>
+    '> Beatpath Winner/SSD &nbsp;&nbsp;
     <input type="radio"
 	name="algorithm",
 	onClick="newSettings()"
 	value="civs_ranked_pairs"',
 	$rp_checked,
-    '>',
-    '<a href="',$civs_url,'/rp.html">CIVS Ranked Pairs</a>',
-    '<input type="radio"
+    '> CIVS Ranked Pairs &nbsp;&nbsp;
+    <input type="radio"
 	name="algorithm",
 	onClick="newSettings()"
 	value="mam"',
 	$mam_checked,
-    '>',
-    '<a href="http://alumnus.caltech.edu/~seppley/">MAM</a>';
+    '> MAM';
+    print '&nbsp;&nbsp;&nbsp; <a href="',$civs_url,'/rp.html">(What is this?)</a>';
 
   # print '&nbsp;<input type="submit" name="submit" value="Update display options">';
 print '</form>',$cr;
@@ -252,7 +250,6 @@ sub PrintNonproportionalDetails {
 
 			my $i = 1;
 	
-			fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
 			foreach my $voter_key (@voters) {
 		    	# recorded_vote is a comma separated list of the ranks
 			    # that the voter assigned to candidates.  Element i of the list
@@ -381,7 +378,9 @@ sub PrintRP {
 	    $rp::mam = 1;
 	    my @voters = split /\n/, $vdata_copy{'recorded_voters'};
 	    my @ballots = ();
-	    fisher_yates_shuffle(\@voters);  # permute @voters for randomness
+# generate a consistent random seed
+	    srand(hex(substr($election_id, length($election_id) - 8)));
+	    fisher_yates_shuffle(\@voters);
 	    foreach my $voter_key (@voters) {
 		my $ballot = $vdata_copy{$voter_key}; 
 		push @ballots, $ballot;
@@ -404,7 +403,7 @@ sub PrintRP {
 
 	if (!$allowed_cycle && !$denied_any) {
 	    print p('All preferences were affirmed. All
-	    reasonable Condorcet completion algorithms will
+	    Condorcet election methods will
 	    agree with this ranking.');
 	}
 	if ($denied_any) {
@@ -418,7 +417,8 @@ sub PrintRP {
 	    if ($rp::tiebreak) {
 		print p('Random tie breaking was used to
 		arrive at this ordering, as per the MAM
-		algorithm.');
+		algorithm. This may have affected the ordering
+		of the choices.');
 	    } else {
 		print p('No random tie breaking was needed to
 		arrive at this ordering.');
