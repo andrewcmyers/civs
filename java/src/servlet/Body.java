@@ -6,15 +6,15 @@
  */
 package servlet;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author andru
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Request {
-	public Request(HttpServletRequest req) {
+public class Body extends Container {
+	Node contents;	
+	public Body(Node contents) {
+		super("body", contents);
 	}
 }

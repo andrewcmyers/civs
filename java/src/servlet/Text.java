@@ -1,11 +1,8 @@
 package servlet;
 
-import java.io.PrintWriter;
-
-
 public class Text extends Node {
     String contents;
 
-    Text(String s) { contents = s; }
-    void write(PrintWriter p, int indent) { p.print(s); }
+    public Text(String s) { contents = s; }
+    public void write(HTMLWriter w) { w.print(contents); }
 }

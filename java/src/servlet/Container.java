@@ -6,15 +6,26 @@
  */
 package servlet;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author andru
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Request {
-	public Request(HttpServletRequest req) {
+public class Container extends Node {
+	String tag;
+	Node contents;
+	
+	Container(String tag_, Node n) {
+		tag = tag_;
+		contents = n;
+	}
+	
+	public void write(HTMLWriter p) {
+		p.print("<" + tag + ">");
+		p.begin();
+		contents.write(p);
+		p.end();
+		p.print("</" + tag + ">");
 	}
 }

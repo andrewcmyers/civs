@@ -6,8 +6,6 @@
  */
 package servlet;
 
-import java.io.PrintWriter;
-
 /**
  * @author andru
  *
@@ -16,12 +14,31 @@ import java.io.PrintWriter;
  */
 public class NodeList extends Node {
 
-	/* (non-Javadoc)
-	 * @see servlet.Node#write(java.io.PrintWriter, int)
-	 */
-	void write(PrintWriter p, int indent) {
-		// TODO Auto-generated method stub
-
+	Node first;
+	NodeList next;
+	public NodeList(Node n1) {
+		next = null;
+		first = n1;
 	}
-
+	
+	public NodeList(Node n1, Node n2) {
+		first = n1;
+		next = new NodeList(n2);		
+	}
+	public NodeList(Node n1, Node n2, Node n3) {
+		first = n1;
+		next = new NodeList(n2, n3);	
+	}
+	public NodeList(Node n, NodeList l) {
+		first = n;
+		next = l;
+	}
+	public void write(HTMLWriter w) {
+		NodeList n = this;
+		while (n != null) {
+			first.write(w);
+			n.write(w);
+			n = n.next;
+		}
+	}
 }

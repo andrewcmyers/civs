@@ -6,15 +6,26 @@
  */
 package servlet;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author andru
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Request {
-	public Request(HttpServletRequest req) {
+public class Page extends Node {
+	Head head;
+	Body body;
+	
+	public Page(Head h, Body b) {
+		head = h;
+		body = b;
+	}
+
+	/* (non-Javadoc)
+	 * @see servlet.Node#write(java.io.PrintWriter, int)
+	 */
+	public void write(HTMLWriter p) {
+		head.write(p);
+		body.write(p);
 	}
 }

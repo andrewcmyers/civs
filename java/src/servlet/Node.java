@@ -1,7 +1,6 @@
 package servlet;
 
-import java.io.PrintWriter;
-
 public abstract class Node {
-    abstract void write(PrintWriter p, int indent);
+	/** Write out HTML for this node to p. */
+    public abstract void write(HTMLWriter p);
 }
