@@ -79,10 +79,7 @@ easily cast multiple votes, and this is as good as one can
 reasonably expect an open election to be. For closed
 elections, voters receive a unique key by e-mail that
 permits them to vote just once. Further attempts to vote
-will be rejected. If a voter claims that they did not receive
-the e-mail, the supervisor can send them a new key without
-fear that this will enable the voter to vote twice (assuming
-the same e-mail address is used!)
+will be rejected.
 
 CIVS sends various information by e-mail. It assumes that
 e-mail is a secure medium. If your e-mail is compromised,
@@ -92,7 +89,7 @@ or as an election supervisor.
 <h2>Keys</h2>
 
 CIVS works by generating several different keys that serve
-as capabilities. These keys are generated using a
+as capabilities. These 64-bit keys are generated using a
 combination of random noise and secure hashing.
 <ul>
 <li>The server has a <i>private host key</i>
@@ -102,11 +99,15 @@ defined by the service manager at installation time.
 Compromising the private host key is not very useful to an
 attacker (it was in the older CIVS protocol).
 </li>
+<li>Each election has an <i>election identifier</i> that names
+the election and is used to find the corresponding storage. Possession
+of the election identifier enables viewing of the results of the election
+when they are made available, but little else.
+</li>
 <li>For each election there is a <i>control key</i>
 that gives the ability to control the election as
 supervisor. This key is mailed to the supervisor when the
-election is created. The control key is stored on the
-server.</li>
+election is created.</li>
 <li>For each election there is also an <i>authorization key</i>
 that gives the ability to add new voters to the election
 (and to check whether a voter is already enabled.)
@@ -114,9 +115,10 @@ The authorization key is also mailed to the supervisor at
 the beginning of the election. However, it is
 <strong>not</strong> stored on the server, thus protecting
 the anonymity of voters.</li>
-<li>Each voter receives a <i>voter key</i> that gives the
+<li>Each voter receives a unique <i>voter key</i> that gives the
 right to vote on the election. Voter keys are stored on the
 server but cannot be used to find the identity of the voter.
+</li>
 </ul>
 
 <h2>Closed election protocol</h2>
