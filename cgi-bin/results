@@ -70,7 +70,7 @@ if ($condorcet_winner >= 0) {
     print p("This election had no Condorcet winner.\n");
 }
 
-print h2("Ranking of the candidates\n");
+print h2("Ranking of the choices\n");
 print p("Winning choices are shown in bold.");
 print "<pre>";
 $beatpath::n = $num_choices;
@@ -117,12 +117,13 @@ for ($rank = 0; $rank <= $#result; $rank++) {
 }
 print "</ol>";
 if ($had_tie) {
-    print p("Candidates shown in red have tied for being selected. You may wish to select among them randomly.");
+    print p("Choices shown in red have tied for being selected. You may wish to select among them randomly.");
 }
 
 
-print h2("Candidates and vote matrix");
-print p("The following matrix shows the number of ballots on which candidates beat other candidates, considered pairwise.");
+print h2("Choices and vote matrix");
+print p("The following matrix shows the number of ballots on
+which choices beat other choices, considered pairwise.");
 print "<table>\n";
 
 print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
@@ -152,8 +153,8 @@ print "</table>";
 print h2("Beatpath closure matrix");
 print p("
 The following matrix shows the strength of the strongest
-beatpath connecting each pair of candidates. Candidate 1 is preferred
-to candidate 2 if there is a better beatpath leading from 1 to 2
+beatpath connecting each pair of choices. Choice 1 is preferred
+to choice 2 if there is a better beatpath leading from 1 to 2
 than any leading from 2 to 1.
 ");
 print "<table>\n";
@@ -190,7 +191,7 @@ for ($jj = 0; $jj < $num_choices; $jj++) {
 print "</table>";
 
 } else { # proportional representation 'algorithm'
-    print "<h2>Candidates</h2>";
+    print "<h2>Choices</h2>";
     print "<ol start=0>";
     for ($j = 0; $j < $num_choices; $j++) {
 	print "<li> ".$choices[$j]."</li>\n";
@@ -254,7 +255,7 @@ print "<pre>";
 # are represented as strings. If there is no valid k-preference
 # both $ipref and $jpref are set to zero.
 	local ($f, $i, $j) = @_;
-	#print "Comparing $i to $j at $f-preference.\n";
+	#print "Comparing $i to $j at $f-preference. ";
 	local ($icnt, $jcnt) = (0,0);
 	for ($v = 0; $v < $num_votes; $v++) {
 	    if ($f == 0) {
@@ -297,76 +298,146 @@ print "<pre>";
 	    for ($i = 0; $i < $num_choices; $i++) { $in{$i} = 0; }
 	    for ($i = 0; $i < $num_winners; $i++) { $in{$curr_comm[$i]} = 1; }
 	}
-	compute_in;
 	$change = 1;
 	$curr_comm = flatten @curr_comm;
-	print "<b>Current set = $curr_comm</b>\n";
-	for ($iters = 0; $iters < 500 && $change; $iters++) {
-	    $change = 0;
-# $in{i} is whether choice i is in curr_comm
+	$num_beaten = 0;
+	$num_visited = 0;
+# @committee is the array of all visited committees
+# %cindex is the index of committees
+# $borm[ci1][ci2] is whether comm with index ci2 beats or matches
+#    (transitively) the one with ci2
+	sub visit {
+# visit(c): visit all the committees that beat
+#   or match c, where b is a set of committees
+#   known to be beaten by c
+# effects: sets $visited{"$c1|$c2"} to whether c1 transitively beats
+#   or matches c2.
+# requires: $beaten[0..$num_beaten-1] is a set of 
+#   committees known to be beaten (or matched) transitively by c
 
-	    for ($i = 0; $i < $num_winners; $i++) {
+	    local $curr_comm = $_[0];
+	    local @curr_comm = split /,/, $curr_comm;
+	    local $cci;
+	    if (!$visited{$curr_comm}) {
+		$cci = $#committee + 1;
+		$committee[$cci] = $curr_comm;
+		$cindex{$curr_comm} = $cci;
+		print "<b>Considering set: $curr_comm ($#committee)</b>\n";
+		$visited{$curr_comm} = 1;
+	    }
+	    $cci = $cindex{$curr_comm};
+	    local $change = 0;
+	    local $save_beaten = $beaten[$cci];
+	    $beaten[$cci] = 1;
+	    for (local $b = 0; $b <= $#committee; $b++) {
+# check if any new beaten info has shown up and add to @borm
+# if so.
+		if ($beaten[$b] && !$borm[$cci][$b]) {
+		    $change = 1;
+		    $borm[$cci][$b] = 1;
+		    print "$committee[$cci] beats $committee[$b]\n";
+		}
+	    }
+	    if ($change) {
+		local @new_comm;
+		compute_in;
+		for (local $i = 0; $i < $num_winners; $i++) {
 # try improving each current member
-		for ($j = 0; $j < $num_choices; $j++) {
-		    @new_comm = @curr_comm;
+		    for (local $j = 0; $j < $num_choices; $j++) {
+			@new_comm = @curr_comm;
 # try replacing with each choice not currently in the committee
-		    if (!$in{$j}) {
-			# print "Replacing $new_comm[$i] with $j at index $i\n";
-			$new_comm[$i] = $j;
-			@new_comm = sort @new_comm;
-			$new_comm = flatten @new_comm;
-			print "$curr_comm vs. $new_comm: ";
-			$bestpref = 0;
-			$bestipref = 0;
-			$bestjpref = 0;
-			for ($f = 1; $f <= $num_winners; $f++) {
-			    kPref($f, $curr_comm, $new_comm);
-			    #print "Result is $ipref, $jpref\n";
-			    if ($ipref > $bestpref) {
-				$bestpref = $bestipref = $ipref;
+			if (!$in{$j}) {
+			    #print "Replacing $new_comm[$i] with $j at index $i\n";
+			    $new_comm[$i] = $j;
+			    @new_comm = sort @new_comm;
+			    $new_comm = flatten @new_comm;
+			    #print "$curr_comm vs. $new_comm: ";
+			    local $bestpref = 0;
+			    local $bestipref = 0;
+			    local $bestjpref = 0;
+			    for (local $f = 1; $f <= $num_winners; $f++) {
+				kPref($f, $curr_comm, $new_comm);
+				#print "...result is $ipref, $jpref\n";
+				if ($ipref > $bestpref) {
+				    $bestipref = $ipref;
+				}
+				if ($jpref > $bestpref) {
+				    $bestjpref = $jpref;
+				}
+				if ($bestipref > $bestpref) {
+				    $bestpref = $bestipref;
+				}
+				if ($bestjpref > $bestpref) {
+				    $bestpref = $bestjpref;
+				}
 			    }
-			    if ($jpref > $bestpref) {
-				$bestpref = $bestjpref = $jpref;
+			    #print "best f-preference tally yields $bestipref to $bestjpref\n";
+			    if ($bestjpref >= $bestipref) {
+				$tally{$curr_comm}{$new_comm} =
+				    "$bestipref,$bestjpref";
+				if ($bestjpref == $bestipref) {
+				    kPref(0, $curr_comm, $new_comm);
+				    #print "weak pref: $ipref to $jpref\n";
+				    $weaktally{$curr_comm}{$new_comm} =
+					"$ipref,$jpref";
+				    if ($jpref > $ipref) {
+					visit($new_comm);
+				    }
+				} else {
+				    visit($new_comm);
+				}
 			    }
+			} else { # in the committee
+			    # print "$j is already in the committee\n";
 			}
-			print "best f-preference tally yields $bestipref to $bestjpref\n";
-			if ($bestjpref == $bestipref) {
-			    print "<b>Tie: Checking out full preferences</b>\n";
-			    kPref(0, $curr_comm, $new_comm);
-			    $bestipref = $ipref;
-			    $bestjpref = $jpref;
-			    print "Full tally is $bestipref to $bestjpref\n";
-			}
-			if ($bestjpref > $bestipref) {
-			    print "<b>Current set = $new_comm</b>\n";
-			    $change = 1;
-			    @curr_comm = @new_comm;
-			    $curr_comm = $new_comm;
-			    compute_in;
-			}
-		    } else {
-			# print "$j is already in the committee\n";
-		    }
+		    } # for j
+		} # for i
+	    } # if change
+	    $beaten[$cci] = $save_beaten;
+	}
+	visit($curr_comm);
+
+	$num_unbeaten = $#committee + 1;
+	for ($i = 0; $i <= $#committee; $i++) {
+	    $unbeaten[$i] = 1;
+	}
+	for ($i = 0; $i <= $#committee; $i++) {
+	    for ($j = 0; $j <= $#committee; $j++) {
+		if ($unbeaten[$i] && !$borm[$i][$j]) {
+		    $unbeaten[$i] = 0;
+		    $num_unbeaten--;
 		}
 	    }
 	}
-	if ($iters < 500) {
-	    print "<b>Search completed successfully</b>\n";
-	    $successful = 1;
-	}
-    }
+    } # if need to pick winners
     print "</pre>";
     print "<h2>Winning set of choices</h2>\n";
-    if ($successful) {
-	print p("The following winners are not listed in any
-	particular order.");
-	print "<ol>";
-	for ($i = 0; $i < $num_winners; $i++) {
-	    print "<li> ".$choices[$curr_comm[$i]]."\n";
+
+    sub printSchwartz {
+	print '<table><tr>';
+	for ($i = 0; $i <= $#committee; $i++) {
+	    if ($unbeaten[$i]) {
+		@curr_comm = split /,/, $committee[$i];
+		print "<td><ol>";
+		for ($i = 0; $i < $num_winners; $i++) {
+		    print "<li> ".$choices[$curr_comm[$i]]."\n";
+		}
+		print "</ol></td>";
+	    }
 	}
-	print "</ol>";
+	print '</tr></table>';
+    }
+    if ($num_unbeaten == 1) {
+	print p("The Condorcet winner of this election was
+	the following set of choices, which are not listed
+	in any particular order:");
+	printSchwartz;
     } else {
-	print p("No winning set of choices was found.");
+	print p("There were several unbeaten committees:\n");
+	printSchwartz;
+	print p("A Condorcet completion algorithm needs to
+		be run to choose among them. This is not yet
+		implemented\n");
     }
 }
 
