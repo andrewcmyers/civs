@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 TestAndCreateDir() {
     if [ ! -d $1 ]; then
