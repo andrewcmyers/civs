@@ -10,8 +10,8 @@
       <servlet-class>civs.Main</servlet-class>
     </servlet>
     <servlet-mapping>
-      <servlet-name>@SERVLETNAME@</servlet-name>
-      <url-pattern>/</url-pattern>
+      <servlet-name>civs</servlet-name>
+      <url-pattern>/main</url-pattern>
     </servlet-mapping>
 
     <!-- General description of your web application -->

@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+  <meta http-equiv="Content-Type" content="text/html">
+  <title>CIVS completion algorithms</title>
+  <link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+</head>
+
+<body>
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>&nbsp;Condorcet Internet Voting
+      Service</h1>
+    </td>
+    <td width=0% nowrap valign=top align=right>
+	<a href="@CIVSURL@">CIVS Home</a><br>
+	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
+	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" valign="top" nowrap colspan=2>
+      <h2 align="center">Condorcet completion in CIVS</h2>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<h2>Introduction</h2>
+
+<p>Condorcet election methods have been called Instant Round-Robin Voting
+because they use the voters' rankings to compare every choice against
+every other in head-to-head matchups. The voters are considered to collectively
+have a preference for choice A over choice B if A is ranked higher than B
+on more ballots than B is ranked higher than A on. If the voters prefer
+a choice A to every other choice, choice A is the <b>Condorcet winner</b>.
+Condorcet election methods are methods that are guaranteed to elect
+the Condorcet winner if one exists.
+</p>
+
+<p>
+Although having a Condorcet winner is common, especially when there are
+many voters, there isn't always a Condorcet winner.
+In ranked-preference voting systems, <b>preference
+cycles</b> may exist. For example, it is possible that on most ballots, choice
+A is preferred to choice B, on most ballots B is preferred to C, and
+on most ballots C is preferred to A. Fortunately, cycles involving the
+top-ranked candidate don't seem to happen often. And there are good methods for
+resolving these cycles, called <b>Condorcet completion rules</b>.
+If the goal of the election is simply to pick the top choice,
+it usually doesn't matter which rule is used.
+</p>
+
+<p>
+In the CIVS election result report, the color coding of the final
+preference matrix tells you whether a completion rule was needed. If
+there are no red cells above the diagonal (or green cells below it),
+then there are no cycles for a completion rule to resolve, and it
+doesn't matter what completion rule is used.
+</p>
+
+<h2>Supported completion rules</h3>
+
+<p>CIVS currently supports three rules for Condorcet completion:
+<b>Beatpath Winner</b>, also known
+as <a href="http://electionmethods.org/CondorcetEx.htm"> Cloneproof Schwartz
+Sequential Dropping</a>, <a href="http://alumnus.caltech.edu/~seppley/">
+Maximize Affirmed Majorities</a> (MAM), and a deterministic variant of MAM
+called <b>CIVS Ranked Pairs</b>. The first two rules are described
+elsewhere (follow the links); CIVS Ranked Pairs is described below. 
+</p>
+
+<p>
+CIVS does not impose a completion rule; in fact, anyone viewing
+the results of an election can see what the results would have been with
+each of the rules. It is probably a good idea for the election supervisor
+to decide on an rule ahead of time. On the other hand, all three
+rules usually agree with each other, especially on the ranking of
+the first few choices.
+</p>
+
+<p>
+The different rules have advantages and disadvantages. Beatpath
+Winner can be computed very cheaply using the Floyd-Warshall
+all-pairs-shortest-paths algorithm. The two ranked pairs rules (CIVS
+Ranked Pairs and MAM) are more expensive to compute.
+If there are <i>n</i> choices,
+the ranked pairs algorithms are about <i>n</i> times slower than
+Beatpath Winner, but
+this slowdown is only noticeable if there are many choices (more than twenty).
+Based on experience with using these completion rules in CIVS, the
+ranked pairs methods seem to produce better results. They seem to be
+more stable in the sense that a given voter's ballot does not affect
+the ordering as much as it can in Beatpath Winner. The difference
+between CIVS Ranked Pairs and MAM is that MAM uses a sophisticated
+random tie-breaking method, whereas CIVS Ranked Pairs is completely
+deterministic. Thus, the result of running MAM is not determined
+by just the ballots cast. Comparison of the results of MAM and CIVS
+RP will show if randomization was needed and used by MAM.
+</p>
+
+<h2>CIVS Ranked Pairs</h2>
+
+<p>The CIVS Ranked Pairs completion rule is a deterministic
+variant of Eppley's MAM procedure
+and is also related to other completion rules such as
+<a href="http://en.wikipedia.org/wiki/Ranked_Pairs">
+Tideman Ranked Pairs</a>.
+In these algorithms, each of the pairwise preferences in the preference matrix
+is considered in in the order of the strength of the preference, and
+<b>kept</b> (<b>affirmed</b>) if it does not create cycles with previously
+kept preferences. Otherwise, the preference is ignored because it is in
+conflict with stronger preferences.
+
+<h3>Affirming preferences</h3>
+
+<p>
+In the CIVS ranked
+pairs algorithm, as in MAM, one preference is stronger than another if it has
+more votes in favor, or if the number of votes in favor are equal, if the
+preference has fewer votes against.  Of course, it is entirely possible that
+two preferences have exactly the same number of votes in favor and against.
+Like MAM and unlike Tideman, the ordering of preferences does not take margins
+into account.
+</p>
+
+<p>
+The major difference between CIVS Ranked Pairs and MAM is
+the rule on when to keep a preference. A preference is
+kept exactly when it does not create any <i>new</i> cycles when considered in
+conjunction with <i>strictly stronger</i>, kept preferences. Thus, preferences
+of equal strength may be kept even though in conjunction they produce a new
+cycle, as long as <i>individually</i> they do not.
+</p>
+
+<h3>Ranking the choices</h3>
+
+<p>
+The algorithm for ranking the various choices is to successively
+identify the Schwartz sets defined by the graph of kept preferences.  The
+top-ranked choices are the initial Schwartz set: the smallest set of choices
+such that no choices outside the set are preferred to any in the
+set. After these choices are removed from the graph, the second tier of
+choices are the Schwartz set in the new graph, and so on. Typically, the
+Schwartz set consists of a single choice at every level; ties can only
+occur if there are preferences of equal strength.  When a Schwartz set
+contains multiple choices, there must be a cycle of kept preferences. In
+this case, the choices within that Schwartz set
+are ranked based on the strength of the strongest preference against
+that choice.  There is no random
+tie-breaking mechanism, as in MAM; the algorithm is deterministic.
+</p>
+
+</body></html>

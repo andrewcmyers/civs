@@ -16,7 +16,7 @@ fi
 
 . $1 || exit 1
 
-echo "Read settings file $1"
+echo "Read settings file $1."
 
 TestAndCreateDir $HTMLDIR;
 TestAndCreateDir $SERVLETDIR;
@@ -25,7 +25,7 @@ TestAndCreateDir $CIVSDATADIR;
 TestAndCreateDir $CIVSDATADIR/elections;
 
 Subst() {
-    set base=`basename $1`
+    base="`basename $1`"
     sed  < "$1" \
 	 > "$2/$base" \
 	    -e 's|@HTMLDIR@|'$HTMLDIR'|'\
@@ -36,17 +36,16 @@ Subst() {
 	    -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	    -e 's|@SMTPHOST@|'$SMTPHOST'|' \
 	    -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
-	    -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
+	    -e 's|@ADDTOPATH@|'$ADDTOPATH'|'
 }
 
-for f in civs_create.html index.html public_elections.html \
-    proportional.html sec_priv.html acks.html changelog.html
+for f in html/*.html
 do
     Subst $f $HTMLDIR
 done
 
-set webinf=$SERVLETDIR/WEB-INF
-set classes=$webinf/classes
+webinf=$SERVLETDIR/WEB-INF
+classes=$webinf/classes
 
 Subst web.xml $webinf
 cp -r classes/civs $classes
