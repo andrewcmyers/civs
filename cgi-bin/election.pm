@@ -165,10 +165,12 @@ sub CheckControlKey {
 
 sub CheckElectionID {
     if (!($election_id =~ m/^E_[0123456789abcdef]+/)) {
-	$election_id = "";
-	print h1("Invalid election identifier");
-	print p("The election identifier \"$election_id\" is not valid.\n");
-	Log("Attempt to provide a bogus election identifier: \"$election_id\"");
+	if ($election_id ne '') {
+	    print h1("Invalid election identifier");
+	    print p("The election identifier \"$election_id\" is not valid.\n");
+	    Log("Attempt to provide a bogus election identifier: \"$election_id\"");
+	    $election_id = '';
+	}
 	print end_html();
 	exit 1;
     }
