@@ -22,28 +22,9 @@ if (!($email_addr =~ m/.\@./)) {
     exit 0;
 }
 
-##### Construct the new election identifier
-GetPrivateHostID;
-open(LOCK, $lockfile);
-flock LOCK, LOCK_EX;
-
-open(LASTELECTIONID, "<$last_election_id_file");
-$last_election_id = <LASTELECTIONID>;
-close (LASTELECTIONID);
-
-$election_id = md5_hex($private_host_id,$last_election_id);
-
-open(LASTELECTIONID, ">$last_election_id_file");
-print LASTELECTIONID $election_id."\n";
-$election_id = "E_".substr($election_id, 0, 16);
-close (LASTELECTIONID);
-
-flock LOCK, LOCK_UN;
-close(LOCK);
-#####
-
-$election_dir = $home."/elections/".$election_id;
-$election_data = $election_dir."/election_data";
+$election_id = 'E_'.SecureNonce();
+$election_dir = $home.'/elections/'.$election_id;
+$election_data = $election_dir.'/election_data';
 
 if (!mkdir($election_dir)) {
     HTML_Header("CIVS Election Creation");

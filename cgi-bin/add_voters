@@ -37,39 +37,7 @@ if (!($local_debug)) { ConnectMail; }
 
 # Send all of the voters their keys
 
-foreach $v (@new_addresses) {
-  $voter_key = substr(md5_hex("voter".$private_host_id.$election_id.$v), 0, 16);
-  $url = "http://$thishost$civs_bin_path/vote?id=$election_id&voter=".CGI::escape($v)."&voter_key=$voter_key";
-  print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
-  if ($local_debug) {
-    print "link: <a href=\"$url\">$url</a>\n";
-  } else {
-    Send "mail from: $email_addr"; ConsumeSMTP;
-    Send "rcpt to: $v"; ConsumeSMTP;
-    Send "data"; ConsumeSMTP;
-    Send "From: $email_addr (Condorcet Internet Voting Service)";
-    Send "To: $v";
-    Send "Subject: CIVS Election now available for voting: $title";
-    Send "";
-    Send "A Condorcet Internet Voting Service election named $title has been created.";
-    Send "You have been designated as a voter by the election supervisor,";
-    Send "$name ($email_addr). If you would like to vote, please visit the";
-    Send "following URL:";
-    Send "";
-    Send $url;
-    Send "";
-    Send "This is your private URL. Do not give it to anyone else because";
-    Send "they could use it to vote for you.";
-    Send "";
-    Send "The election has been announced to end $election_end.";
-    Send "To view the results of the election once it is closed, visit:";
-    Send "http://$thishost$civs_bin_path/results?id=$election_id";
-    Send "";
-    Send "For more information about the Condorcet Internet Voting Service, see";
-    Send "$civs_url.";
-    Send "."; ConsumeSMTP;
-  }
-}
+SendKeys(@new_addresses);
 
 Send "quit";
 close(SMTP);

@@ -1,19 +1,23 @@
+use CGI qw(:standard);
 use POSIX qw(strftime);
+use Digest::MD5 qw(md5_hex);
+use Time::HiRes qw(gettimeofday);
 
 $home = "@CIVSDATADIR@";
 $thishost = "@THISHOST@";
 $civs_bin_path = "@CIVSBINURL@";
-$civs_log = $home."/log";
+$civs_log = $home.'/log';
 $civs_url = "@CIVSURL@";
-$last_election_id_file = $home."/last_election_id";
-$private_host_id_file = $home."/private_host_id";
-$lockfile = $home."/global_lock";
-$local_debug = 0;
+$nonce_seed_file = $home.'/nonce_seed';
+$private_host_id_file = $home.'/private_host_id';
+$lockfile = $home.'/global_lock';
+$local_debug = 1;
 $cr = "\r\n";
+$generated_header = 0;
 
 sub GetPrivateHostID {
     if (!open(HOSTID, $private_host_id_file)) {
-	&HTML_Header;
+	&HTML_Header("Configuration error");
         print h1("Error"),
 	      p("Unable to access the server's private key"),
 	      end_html();
@@ -25,9 +29,11 @@ sub GetPrivateHostID {
 }
 
 sub HTML_Header {
-    local $title = $_[0];
-    print header(), start_html(-title => $title,
-			       -style => {'src' => "@CIVSURL@/style.css"});
+    my $title = $_[0];
+    if (!$generated_header) {
+	print header(), start_html(-title => $title,
+				   -style => {'src' => "@CIVSURL@/style.css"});
+    }
 }
 
 sub CIVS_Header {
@@ -55,8 +61,32 @@ print "
 sub Log {
     $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open(CIVS_LOG, ">>$civs_log");
-    print CIVS_LOG $now." ".remote_addr()." ".$_[0]."\n";
+    print CIVS_LOG $now.' '.remote_addr().' '.$_[0].$cr;
     close(CIVS_LOG);
+}
+
+# SecureNonce() is an unpredictable nonce that cannot
+# be predicted from the future state of the system (except
+# for data derived from the nonce itself).
+sub SecureNonce {
+    GetPrivateHostID;
+    open(LOCK, $lockfile);
+    flock LOCK, LOCK_EX;
+
+    open(NONCEFILE, "<$nonce_seed_file");
+    my $seed = <NONCEFILE>;
+    chomp $seed;
+    close(NONCEFILE);
+    my $ret = substr($seed, 0, 16);
+
+    $seed = md5_hex(gettimeofday(),$seed);
+
+    open(NONCEFILE, ">$nonce_seed_file");
+    print NONCEFILE $seed.$cr;
+    close(NONCEFILE);
+    flock LOCK, LOCK_UN;
+    close(LOCK);
+    return $ret;
 }
 
 # From the Perl Cookbook, p. 121

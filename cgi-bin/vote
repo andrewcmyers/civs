@@ -20,8 +20,10 @@ $thisurl = $civs_bin_path."/vote";
 # 4. To reorder the choices from their default order (case 1, case 2 variants
 #    where C1-Cn are already defined)
 
-$voter = param('voter');
-$voter_key = param('voter_key');
+$voter = param('voter'); # nearly obsolete
+$old_voter_key = param('voter_key'); # nearly obsolete
+$voter_key = param('key');
+$old_access_control = ($voter_key eq '');
 
 HTML_Header("CIVS Voting");
 
@@ -132,6 +134,8 @@ if ($sort_choices ne '' || param('AddWritein') ne '') {
 	    $rank[$i] = 0;
 	}
     }
+# probably should use fisher_yates_shuffle routine in
+# civs_common.
     for ($i = 0; $i < $num_choices - 1; $i++) {
 	$j = rand($num_choices - $i - 1) + 1;
 	$temp = $choice_index[$i];
@@ -213,14 +217,13 @@ if (param('Load')) {
     $loaded_choices = 'yes';
 }
 
-print "<p>Welcome, $voter! ";
-print "This page allows you to vote on <b>".escapeHTML($title)."</b></p>
-<p>$description</p>
+print p("This page allows you to vote on ".b($title).'.').$cr;
+print p($description).$cr;
 
-Only the $winners_text will win the election and be selected.<br>
+print p("Only the $winners_text will win the election and be selected.<br>
 The election ends <b>$election_end</b>.
 The election supervisor is $name (<tt>$email_addr</tt>).
-Contact the election supervisor if you need help.</p>";
+Contact the election supervisor if you need help.").$cr;
 
 if ($proportional ne 'yes') {
     print "<p>Please rank the following choices by assigning
@@ -265,7 +268,7 @@ if ($proportional ne 'yes') {
     </p>";
 }
 
-if ($ballot_reporting) {
+if ($ballot_reporting eq 'yes') {
 	print p(b("Ballot reporting is enabled for this election. ")
 	        . "Your ballot (the rankings you assign to candidates) "
 		. "will be made public when the election is closed. "
@@ -296,8 +299,9 @@ print '<table border="1" cellpadding="5" cellspacing="0"><tr>
 	</td>
        </tr>';
 
-print hidden('voter', $voter);
-print hidden('voter_key', $voter_key);
+print hidden('voter', $voter); # nearly obsolete
+print hidden('voter_key', $old_voter_key); # nearly obsolete
+print hidden('key', $key);
 print hidden('id', $election_id);
 
 print "\n<!-- Current rankings:\n";

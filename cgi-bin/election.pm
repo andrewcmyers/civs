@@ -43,6 +43,26 @@ $ballot_reporting = $edata{'ballot_reporting'};
 
 # utility routines
 
+sub ExtractVoterKeys {
+    my $s = $edata{'voter_keys'};
+    my @a = split /[\r\n]+/, $s;
+    my $k;
+    foreach $k (@a) {
+	$voter_keys{$k} = 1;
+    }
+}
+
+ExtractVoterKeys;
+
+sub SaveVoterKeys {
+    my $s = '';
+    my $k;
+    foreach $k (keys %voter_keys) {
+	$s .= ($k.$cr);
+    }
+    $edata{'voter_keys'} = $s;
+}
+
 sub LockElection {
     if (!sysopen(ELOCK, $lockfile, O_CREAT|O_RDWR)) {
 	print h1("Error");
@@ -140,11 +160,19 @@ sub CheckVoterKey {
     if ($private_host_id eq '') {
 	GetPrivateHostID;
     }
-    $voter_key_check = substr(md5_hex("voter".$private_host_id.$election_id.$voter), 0, 16);
-    if ($voter_key_check ne $voter_key) {
-	Log("Invalid voter key $voter_key presented by $voter for election $election_id, expected $voter_key_check");
-	print h1("Error"), p("Your voter key is invalid, $voter. You should have received a correct URL by email."), end_html();
-	exit 0;
+    if ($voter_key eq '' && $old_voter_key ne '') {
+	$voter_key_check = substr(md5_hex("voter".$private_host_id.$election_id.$voter), 0, 16);
+	if ($voter_key_check ne $old_voter_key) {
+	    Log("Invalid voter key $old_voter_key presented by $voter for election $election_id, expected $voter_key_check");
+	    print h1("Error"), p("Your voter key is invalid, $voter. You should have received a correct URL by email."), end_html();
+	    exit 0;
+	}
+    } else {
+	if (!$voter_keys{$voter_key}) {
+	    print h1("Error"), p("Your voter key is invalid.
+	    You should have received a correct URL by email."), end_html();
+	    exit 0;
+	}
     }
 }
 
@@ -201,6 +229,59 @@ sub ElectionLog {
     }
     print ELECTION_LOG $now." ".remote_addr()." ".$log_msg."\n";
     close ELECTION_LOG;
+}
+
+# Construct new voter keys for all of the voters sent in @_.
+# Send all of the voters their keys, with logging to STDOUT.
+# And record the keys in the database.
+sub SendKeys {
+    if (!($local_debug)) { ConnectMail; }
+    my @addresses = @_;
+    my $v, $voter_key, $url;
+    foreach $v (@_) {
+	$voter_key = SecureNonce();
+	$voter_keys{$voter_key} = 1;
+	$url =
+	"http://$thishost$civs_bin_path/vote?id=$election_id&key=$voter_key";
+	if ($local_debug) {
+	    print "voter link: <a href=\"$url\">$url</a>\n";
+	} else {
+	    print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
+	    Send "mail from: $email_addr"; ConsumeSMTP;
+	    Send "rcpt to: $v"; ConsumeSMTP;
+	    Send "data"; ConsumeSMTP;
+	    Send "From: $email_addr (Condorcet Internet Voting Service)";
+	    Send "To: $v";
+	    Send "Subject: CIVS Election now available for voting: $title";
+	    Send "";
+	    Send "A Condorcet Internet Voting Service election named $title has been created.";
+	    Send "You have been designated as a voter by the election supervisor,";
+	    Send "$name ($email_addr). If you would like to vote, please visit the";
+	    Send "following URL:";
+	    Send "";
+	    Send "$url";
+	    Send "";
+	    Send "This is your private URL. Do not give it to anyone else because";
+	    Send "they could use it to vote for you. Your privacy will not be violated";
+	    Send "by voting. The voting service does not keep track of your email address";
+	    Send "or release any information about whether or how you have voted.";
+	    Send "";
+	    Send "The election has been announced to end $election_end.";
+	    Send "To view the results of the election once it is closed, visit:";
+	    Send "http://$thishost$civs_bin_path/results?id=$election_id";
+	    Send "";
+	    Send "For more information about the Condorcet Internet Voting Service, see";
+	    Send "$civs_url.";
+	    Send "."; ConsumeSMTP;
+	}
+    }
+    SaveVoterKeys;
+
+    if (!($local_debug)) {
+	Send "quit";
+	close(SMTP);
+    }
+    print "Done.$cr</pre>$cr";
 }
 
 1; # ok!

@@ -65,7 +65,8 @@ TestAndCreateDir $CIVSDATADIR/elections;
 	echo "See the INSTALL file for more information.";
 	echo "";
     fi
+
+    touch $CIVSDATADIR/nonce_seed
+    chmod ugo+w $CIVSDATADIR/nonce_seed
     
 echo "Install completed.  Check for any errors reported above.";
-
-
