@@ -109,7 +109,7 @@ Send "rcpt to: $email_addr"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
 Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
 Send "To: $email_addr ($name)";
-Send "Subject: CIVS election created ($election_id)";
+Send "Subject: CIVS election created: $title ($election_id)";
 Send "";
 Send "This email acknowledges the creation of a new election,";
 Send "$title. You have been designated as the supervisor of this";
