@@ -359,7 +359,7 @@ print "<pre>";
 # requires: $beaten[0..$num_beaten-1] is a set of 
 #   committees known to be beaten (or matched) transitively by c
 	    $iters++;
-	    if ($iters > 500) return; # truncate runaway search
+	    if ($iters > 500) { return; } # truncate runaway search
 
 	    local $curr_comm = $_[0];
 	    local @curr_comm = split /,/, $curr_comm;
