@@ -10,20 +10,22 @@
 
 <body>
 
-<table border="0" width="100%" cellspacing="0" cellpadding="7">
-  <tr>
-    <td width="100%" bgcolor="#000080" valign="top" nowrap>
-      <h1><font color=white face=sans-serif>&nbsp;Condorcet Internet Voting
-      Service</font></h1>
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>&nbsp;Condorcet Internet Voting
+      Service</h1>
     </td>
-    <td bgcolor=#000080 width=0% nowrap valign=top><a href="@CIVSURL@"><font color=white face=sans-serif>CIVS Home</font></a></td>
+    <td width=0% nowrap valign=top><a href="@CIVSURL@">CIVS Home</a></td>
   </tr>
   <tr>
-    <td width="100%" bgcolor="#000080" valign="top" nowrap colspan=2>
-      <h2 align="center"><font color=white face=sans-serif>Election creation</font></h2>
+    <td width="100%" valign="top" nowrap colspan=2>
+      <h2 align="center">Create a New Election</h2>
     </td>
   </tr>
+</tbody>
 </table>
+
 <p>This web page allows you to create a new CIVS election. You will be   
 the supervisor of the election you create.</p>                          
 
@@ -33,7 +35,7 @@ the supervisor of the election you create.</p>
     action="/cgi-bin/andru/civs/create_election"
     enctype="multipart/form-data"
     name="CreateElection">
-  <table>
+  <table class="form">
   <tr>
     <td>Name of the election (e.g., <b>The Democratic Primary</b>):</td>
     <td><input type="text" name="title" size="50"></td>

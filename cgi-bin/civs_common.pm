@@ -26,16 +26,16 @@ sub HTML_Header {
 
 sub CIVS_Header {
 print "
-<table border=0 width=100% cellspacing=0 cellpadding=7>
+<table border=0 width=100% cellspacing=0 cellpadding=7 class=\"banner\">
   <tr>
-    <td width=100% bgcolor=#000080 valign=top nowrap>
-    <h1><font color=white face=sans-serif>&nbsp;Condorcet Internet Voting Service</font></h1>
+    <td width=100% valign=top nowrap>
+    <h1>&nbsp;Condorcet Internet Voting Service</h1>
     </td>
-    <td bgcolor=#000080 width=0% nowrap valign=top><a href=$civs_url><font color=white face=sans-serif>CIVS Home</font></a></td>
+    <td width=0% nowrap valign=top><a href=$civs_url>CIVS Home</a></td>
   </tr>
   <tr>
-    <td width=100% bgcolor=#000080 valign=top nowrap colspan=2>
-    <h2 align=center><font color=white face=sans-serif>$_[0]</font></h2>
+    <td width=100% valign=top nowrap colspan=2>
+    <h2 align=center>$_[0]</h2>
     </td>
   </tr>
 </table>
