@@ -12,7 +12,11 @@ $local_debug = 0;
 $cr = "\r\n";
 
 sub GetPrivateHostID {
-    open(HOSTID, $private_host_id_file);
+    if (!open(HOSTID, $private_host_id_file)) {
+	print STDERR "Server has no private ID defined;";
+	print "Server has no private ID defined;";
+	exit 1;
+    }
     $private_host_id=<HOSTID>;
     chomp $private_host_id;
     close(HOSTID);
