@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+  <meta http-equiv="Content-Type" content="text/html">
+  <title>CIVS Ranked Pairs</title>
+  <link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+</head>
+
+<body>
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>&nbsp;Condorcet Internet Voting
+      Service</h1>
+    </td>
+    <td width=0% nowrap valign=top align=right>
+	<a href="@CIVSURL@">CIVS Home</a><br>
+	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
+	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" valign="top" nowrap colspan=2>
+      <h2 align="center">The CIVS Ranked Pairs algorithm</h2>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<h2>Introduction</h2>
+
+<p>CIVS currently supports two algorithms for Condorcet completion.
+These algorithms are relevant when there is a cycle in the preferences
+given by the voters. If there is no cycle, all Condorcet algorithms
+will arrive at the same ranking. Cycles do happen, but in practice,
+cycles involving the top-ranked choice seem to be relatively rare.
+There, if the goal of the election is simply to pick the top choice,
+it usually doesn't matter which algorithm is used.</p>
+
+<p>The completion algorithms
+supported by CIVS are the Beatpath Winner algorithm,
+also known as Cloneproof Schwartz Sequential Dropping, and
+a variation of the Ranked Pairs algorithm called CIVS Ranked Pairs
+here. This page describes the CIVS ranked pairs algorithm.</p>
+
+<h2>Algorithm</h2>
+
+<p>The CIVS ranked pairs algorithm here is closely related to previous
+algorithms such as
+<a href="http://en.wikipedia.org/wiki/Ranked_Pairs">
+Tideman's Ranked Pairs</a>
+and (especially) Eppley's
+<a href="http://alumnus.caltech.edu/~seppley/">Maximize Affirmed Majorities</a>.
+In these algorithms, each of the pairwise preferences in the preference matrix
+is considered in in the order of the strength of the preference, and either
+<i>kept</i> (or: <i>affirmed</i>) if it does not create cycles, or else ignored.
+
+
+<h3>Affirming preferences</h3>
+
+<p>
+In the CIVS ranked
+pairs algorithm (as in MAM), one preference is stronger than another if it has
+more votes in favor, or if the number of votes in favor are equal, if the
+preference has fewer votes against.  Of course, it is entirely possible that
+two preferences have exactly the same number of votes in favor and against.
+Like MAM and unlike Tideman, the ordering of preferences does not take margins
+into account.
+
+The major difference between CIVS Ranked Pairs and MAM is that a preference is
+kept exactly when it does not create any <i>new</i> cycles when considered in
+conjunction with <i>strictly stronger</i>, kept preferences. Thus, preferences
+of equal strength may be kept even though in conjunction they produce a new
+cycle, as long as individually they do not.
+</p>
+
+<h3>Ranking the choices</h3>
+
+<p>After considering all preferences, any choices involved in a cycle of kept
+preferences are considered to have tied with each other.  There is no
+tie-breaking mechanism, as in MAM; the algorithm is deterministic.  The
+algorithm for ranking the various choices is to successively identify the
+Schwartz sets defined by the graph of kept preferences. The top-ranked choices
+are the Schwartz set: the smallest set of choices such that no choices outside
+the set are preferred to any in the set. After these choices are removed from
+the graph, the second tier of choices are the Schwartz set in the new graph,
+and so on. Typically, the Schwartz set consists of a single choice at
+every level; ties can only occur if there are preferences of equal strength.
+</p>
+
+</body></html>

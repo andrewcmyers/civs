@@ -41,6 +41,7 @@ if ($nwin_param && $nwin_param > 0 &&
 	$num_winners = 0+$nwin_param;
 }
 my $algorithm = param('algorithm');
+if ($algorithm eq '') { $algorithm = 'beatpath_winner'; }
 
 print '<form method="GET"
 	action="'.$thisurl.'"
