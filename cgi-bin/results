@@ -46,7 +46,7 @@ if ($public ne 'yes') {
 print "Actual votes cast: $num_votes", br();
 print "Number of winning choices: $num_winners", br();
 if ($proportional eq 'yes') {
-    my $url = 'http://'.$thishost.$civs_url."/proportional.html";
+    my $url = $civs_url.'/proportional.html';
     print "This election implements <a href=\"$url\">proportional representation</a>. ";
     if ($use_combined_weights) {
 	print " The <a href=\"$url#combinedweights\">combined-weights criterion</a>";

@@ -271,7 +271,7 @@ sub SendKeys {
 	    Send "http://$thishost$civs_bin_path/results?id=$election_id";
 	    Send "";
 	    Send "For more information about the Condorcet Internet Voting Service, see";
-	    Send "$civs_url.";
+	    Send "http://$thishost$civs_url.";
 	    Send "."; ConsumeSMTP;
 	}
     }
