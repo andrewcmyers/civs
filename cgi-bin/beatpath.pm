@@ -39,32 +39,27 @@ sub clean_matrix {
 # Requires: $n is the size of the matrix, and @matrix is
 # already clean.
 # Implementation: computes the transitive closure with weights, using
-#   the Floyd-Warshall algorithm, but with min = max, + = min
+#   the Floyd-Warshall algorithm, but with min = max, + = min. Runtime
+#   is O(n^3).
+
+sub min {
+    if ($_[0] < $_[1]) {
+	return $_[0];
+    } else {
+	return $_[1];
+    }
+}
 
 sub transitive_closure {
-  local @save = @matrix;
-
-  for ($k = 0; $k < $n; $k++) {
-    for ($i = 0; $i < $n; $i++) {
-      for ($j = 0; $j < $n; $j++) {
+  for (local $k = 0; $k < $n; $k++) {
+    for (local $i = 0; $i < $n; $i++) {
+      for (local $j = 0; $j < $n; $j++) {
 # consider going from i to j via k
-	local $s1 = $matrix[$i][$j];
-	local $s2 = $matrix[$j][$k];
-	local $s = $s1;
-	if ($s > $s2) { $s = $s2; }
-# s = min(s1, s2)
-# note: if one of s1 or s2 is 0, s will be too -- so can ignore this case
+	local $s = min($matrix[$i][$k], $matrix[$k][$j]);
 	if ($s > $matrix[$i][$j]) {
-	    $matrix2[$i][$j] = $s;
-	} else {
-	    $matrix2[$i][$j] = $matrix[$i][$j]
+	    $matrix[$i][$j] = $s;
 	}
-# matrix2[i][j] = max(matrix[i][j]
-      }
-    }
-    for ($i = 0; $i < $n; $i++) {
-      for ($j = 0; $j < $n; $j++) {
-	$matrix[$i][$j] = $matrix2[$i][$j];
+# m_ij = max(m_ij, min(s1,s2))
       }
     }
   }
