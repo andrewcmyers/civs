@@ -65,7 +65,13 @@ if (!IsStarted) {
 }
 
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
-print "Total authorized voters: $num_auth", br();
+if (IsStarted or $num_auth > 0) {
+	$num_auth_string = "$num_auth"
+} else {
+	$waiting = $#addresses + 1;
+	$num_auth_string = "0 ($waiting voters will be authorized when the election is started)";
+}
+print "Total authorized voters: $num_auth_string", br();
 $num_votes += 0;
 print "Actual votes cast so far: $num_votes", br();
 print "Election ends $election_end", br();
@@ -86,6 +92,12 @@ if ($proportional eq 'yes') {
     }
 }
 
+if ($ballot_reporting eq 'yes') {
+    print 'Detailed anonymized ballot reporting is enabled.', br();
+} else {
+    print 'Detailed anonymized ballot reporting is disabled.', br();
+}
+ 
 print h2('Description:'), p($description);
 print h2("Candidates");
 if ($num_winners == 1) {

@@ -69,12 +69,10 @@ if (param('Vote') ne '') {
     if ($proportional eq 'yes') {
 	$vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
     } else {
-	$vdata{$voter_key} = 'voted';  # Only fact of voting is recorded
+	$vdata{$voter_key} = $vote;  # MRC: Record vote for detailed ballot info
     }
 
-    open(LOG, ">>$election_log");
-    print LOG "Election: $title ($election_id) : Recorded vote from voter key $voter_key\n";
-    close(LOG);
+    ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
 
 # Now, update matrix.
 # Note: vdata{"2.3"} contains the number of votes where
@@ -265,6 +263,14 @@ if ($proportional ne 'yes') {
     against each other. More
     information is <a href=\"$civs_url/proportional.html\">available</a>.
     </p>";
+}
+
+if ($ballot_reporting) {
+	print p(b("Ballot reporting is enabled for this election. ")
+	        . "Your ballot (the rankings you assign to candidates) "
+		. "will be made public when the election is closed. "
+	        . "However, your ballot will be anonymized: "
+		. "no personally identifying information will appear.");
 }
 
 print '<form method="POST"

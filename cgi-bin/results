@@ -13,6 +13,8 @@ use IO::Handle;
 
 $thisurl = $civs_bin_path."/results";
 
+$detailed = param('detailed');
+
 HTML_Header("CIVS Election Results");
 use election;
 
@@ -41,12 +43,34 @@ if (IsStopped) {
     print "Election has not yet ended.$cr";
 }
 
-sub print_nonprop_results {
-# print_nonprop_results: print the results of the ordinary
-# (nonproportional) beatpath algorithm. Assumes that matrix[j][k]
-# contains the ordinary preferences and that closure_matrix[j][j]
-# contains the results from the beatpath closure.
+print h2('Election description'), p($description);
 
+&ComputeNonproportionalResults;   # needed regardless of the election type
+
+if ($proportional eq 'yes') {
+    &PrintProportionalResults;
+} else { 
+    &PrintNonproportionalResults;
+}
+
+
+print end_html();
+
+untie %edata;
+untie %vdata;
+
+exit 0;
+
+
+sub PrintNonproportionalDetails {
+# Print the detailed results of the ordinary
+# (nonproportional) beatpath algorithm. 
+
+    print h2("Detailed results");
+
+    $summary_url = "$thisurl?id=$election_id";
+    print p(&details_bookmark . a({-href=>"$summary_url"}, "Hide details"));
+	
     local $j, $jj, $k, $kk;
     print h2("Preference matrix");
     print p("The following matrix shows the number of ballots on
@@ -127,91 +151,141 @@ sub print_nonprop_results {
 	print "</tr>\n";
     }
     print "</table>";
+
+    print h2('Ballot report');
+
+    if ($ballot_reporting eq 'yes') {
+	@voters = split /\n/, $vdata{'recorded_voters'};
+	if ($#voters > 0) {
+		@headings = @choices;
+		@rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
+
+		$i = 1;
+	
+		fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
+		foreach $voter_key (@voters) {
+		    # recorded_vote is a comma separated list of the ranks
+		    # that the voter assigned to candidates.  Element i of the list
+		    # corresponds to candidate i.
+		    $recorded_vote = $vdata{$voter_key}; 
+		    @row = split /,/, $recorded_vote;
+		    unshift @row, "$i. ";
+		    $i++;
+		    push @rows, td(\@row);
+		}
+
+		print table({-class=>'matrix'},
+			Tr(\@rows));
+		print p("Ballots are shown in a randomly generated order.");
+		print p(a({-href=>"http://$thishost$civs_bin_path/download_ballots?id=$election_id"},"Download ballots") . " as a CSV.");
+        } else {
+		print p("No ballots were cast in this election.");
+	}
+    } else {
+	print p("Detailed ballot reporting is not enabled for this election.");
+    }
+
 }
 
-print h2('Election instructions'), p($description);
-
-if ($proportional ne 'yes') {
-
-# Compute condorcet winner and set up $matrix
-$condorcet_winner = -1;
-for ($j = 0; $j < $num_choices; $j++) {
-    if ($condorcet_winner < 0) { $condorcet_winner = $j; }
-    for ($k = 0; $k < $num_choices; $k++) {
-	$n = $vdata{"$j.$k"} + 0;
-	$matrix[$j][$k] = $n;
-	if ($j != $k) {
-	    $m = $vdata{"$k.$j"} + 0;
-	    if ($n <= $m && $condorcet_winner == $j) {
-		$condorcet_winner = -1; # can't be this one
+sub ComputeNonproportionalResults {
+	# Compute condorcet winner and set up $matrix and $beatpath
+	$condorcet_winner = -1;
+	for ($j = 0; $j < $num_choices; $j++) {
+	    if ($condorcet_winner < 0) { $condorcet_winner = $j; }
+	    for ($k = 0; $k < $num_choices; $k++) {
+		$n = $vdata{"$j.$k"} + 0;
+		$matrix[$j][$k] = $n;
+		if ($j != $k) {
+		    $m = $vdata{"$k.$j"} + 0;
+		    if ($n <= $m && $condorcet_winner == $j) {
+			$condorcet_winner = -1; # can't be this one
+		    }
+		}
 	    }
 	}
-    }
-}
 
-print h2("Condorcet winner");
-if ($condorcet_winner >= 0) {
-    print p('The Condorcet winner of this election is '.
-            strong($choices[$condorcet_winner]));
-} else {
-    print p('This election had no Condorcet winner.').$cr;
-}
-
-print "<pre>";
-$beatpath::n = $num_choices;
-for ($j = 0; $j < $num_choices; $j++) {
-    for ($k = 0; $k < $num_choices; $k++) {
-	$beatpath::matrix[$j][$k] = $matrix[$j][$k];
-    }
-}
-&beatpath::rank_candidates();
-@result = @beatpath::result;
-@closure_matrix = @beatpath::closure_matrix;
-print "</pre>";
-
-print h2('Ranking of the choices').$cr;
-print p('Winning choices are shown in bold.');
-
-$had_tie = 0;
-print "<ol>";
-$j = 0;
-for ($rank = 0; $rank <= $#result; $rank++) {
-    @winner = @{$result[$rank]};
-    print '<li value="'.($j+1).'">';
-    $ranksize = $#winner + 1;
-    if ($ranksize > 1) {
-	print "<i>Tied</i>:<br>";
-    }
-    if ($num_seen < $num_winners &&
-	$num_seen + $ranksize > $num_winners) {
-	$tie = 1;
-	$had_tie = 1;
-    } else {
-	$tie = 0;
-    }
-    for ($i = 0; $i <= $#winner; $i++) {
-	if ($i > 0) { print "<br>"; }
-	if ($tie) { print "<font color=red>"; }
-	if ($num_seen < $num_winners) {
-	    print b($choices[$winner[$i]]);
-	} else {
-	    print $choices[$winner[$i]];
+	$beatpath::n = $num_choices;
+	for ($j = 0; $j < $num_choices; $j++) {
+	    for ($k = 0; $k < $num_choices; $k++) {
+		$beatpath::matrix[$j][$k] = $matrix[$j][$k];
+	    }
 	}
-	$choice_rank[$winner[$i]] = $j;
-	$choice_index[$j++] = $winner[$i];
-	if ($tie) { print "</font>"; }
-    }
-    $num_seen += $#winner + 1;
-    print '</li>';
-}
-print "</ol>";
-if ($had_tie) {
-    print p("Choices shown in red have tied for being selected. You may wish to select among them randomly.");
+	&beatpath::rank_candidates();
+	@result = @beatpath::result;
+	@closure_matrix = @beatpath::closure_matrix;
+
 }
 
-print_nonprop_results;
+sub PrintNonproportionalResults {
+	print h2("Condorcet winner");
+	if ($condorcet_winner >= 0) {
+	    print p('The Condorcet winner of this election is '.
+		    strong($choices[$condorcet_winner]));
+	} else {
+	    print p('This election had no Condorcet winner.').$cr;
+	}
 
-} else { # proportional representation 'algorithm'
+	print h2('Ranking of the choices').$cr;
+	print p('Winning choices are shown in bold.');
+
+	$had_tie = 0;
+	print "<ol>";
+	$j = 0;
+	for ($rank = 0; $rank <= $#result; $rank++) {
+	    @winner = @{$result[$rank]};
+	    print '<li value="'.($j+1).'">';
+	    $ranksize = $#winner + 1;
+	    if ($ranksize > 1) {
+		print "<i>Tied</i>:<br>";
+	    }
+	    if ($num_seen < $num_winners &&
+		$num_seen + $ranksize > $num_winners) {
+		$tie = 1;
+		$had_tie = 1;
+	    } else {
+		$tie = 0;
+	    }
+	    for ($i = 0; $i <= $#winner; $i++) {
+		if ($i > 0) { print "<br>"; }
+		if ($tie) { print "<font color=red>"; }
+		if ($num_seen < $num_winners) {
+		    print b($choices[$winner[$i]]);
+		} else {
+		    print $choices[$winner[$i]];
+		}
+		$choice_rank[$winner[$i]] = $j;
+		$choice_index[$j++] = $winner[$i];
+		if ($tie) { print "</font>"; }
+	    }
+	    $num_seen += $#winner + 1;
+	    print '</li>';
+	}
+	print "</ol>";
+	if ($had_tie) {
+	    print p("Choices shown in red have tied for being selected. You may wish to select among them randomly.");
+	}
+
+	print hr();
+	if ($detailed) {
+		&PrintNonproportionalDetails;
+	} else {
+		$details_url = "$thisurl?id=$election_id" . '&detailed=1#details';
+		$link = a({-href=>"$details_url"}, "Detailed results") 
+		        . " are also available.";
+		print p($bookmark.$link);
+	}
+}
+
+sub details_bookmark {
+	return a({-name=>"details"}, "");
+}
+
+############################################################
+# Proportional Results
+############################################################
+
+sub PrintProportionalResults {
+# proportional representation 'algorithm'
 # first sort the choices by the ordinary election algorithm
     @voter_keys = split /[\r\n]+/, $recorded_voters;
     print "<pre>";
@@ -800,13 +874,5 @@ print "<pre>";
 	     election defines the &ldquo;individual preference
 	     order&rdquo; used above.');
 
-    print_nonprop_results;
+    &PrintNonproportionalResults;
 }
-
-
-print end_html();
-
-untie %edata;
-untie %vdata;
-
-exit 0;

@@ -13,9 +13,11 @@ $cr = "\r\n";
 
 sub GetPrivateHostID {
     if (!open(HOSTID, $private_host_id_file)) {
-	print STDERR "Server has no private ID defined;";
-	print "Server has no private ID defined;";
-	exit 1;
+	&HTML_Header;
+        print h1("Error"),
+	      p("Unable to access the server's private key"),
+	      end_html();
+	exit 0;
     }
     $private_host_id=<HOSTID>;
     chomp $private_host_id;
@@ -55,6 +57,18 @@ sub Log {
     open(CIVS_LOG, ">>$civs_log");
     print CIVS_LOG $now." ".remote_addr()." ".$_[0]."\n";
     close(CIVS_LOG);
+}
+
+# From the Perl Cookbook, p. 121
+# Generate a random permutation of @array in place.
+sub fisher_yates_shuffle {
+    my $array = shift;
+    my $i;
+    for ($i = @$array; --$i; ) {
+	my $j = int rand ($i+1);
+	next if $i == $j;
+	@$array[$i,$j] = @$array[$j,$i];
+    }
 }
 
 1; # ok!

@@ -98,6 +98,14 @@ if ($weight_interpretation eq 'combined_weights') {
 }
 $edata{'use_combined_weights'} = $use_combined_weights;
 
+$ballot_reporting = param('ballot_reporting');
+if ($ballot_reporting eq '') {
+    $ballot_reporting = 'no';
+} else {
+    $ballot_reporting = 'yes';
+}
+$edata{'ballot_reporting'} = $ballot_reporting;
+
 HTML_Header("CIVS Election Creation");
 CIVS_Header("Election created: $title");
 

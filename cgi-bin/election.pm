@@ -1,3 +1,5 @@
+use POSIX qw(strftime);
+
 $election_id = param('id');
 $election_id =~ s/\.//g;
 $election_id =~ s/\///g;
@@ -37,11 +39,17 @@ $num_choices = $#choices + 1;
 $num_auth = $edata{'num_auth'};
 $num_votes = $vdata{'num_votes'};
 $recorded_voters = $vdata{'recorded_voters'};
+$ballot_reporting = $edata{'ballot_reporting'};
 
 # utility routines
 
 sub LockElection {
-    sysopen(ELOCK, $lockfile, O_CREAT|O_RDWR);
+    if (!sysopen(ELOCK, $lockfile, O_CREAT|O_RDWR)) {
+	print h1("Error");
+	print p("Did not have write access to acquire an election lock"), 
+	      end_html();
+	exit 0;
+    }
     flock ELOCK, LOCK_EX;
 }
 sub UnlockElection {
@@ -135,7 +143,7 @@ sub CheckVoterKey {
     $voter_key_check = substr(md5_hex("voter".$private_host_id.$election_id.$voter), 0, 16);
     if ($voter_key_check ne $voter_key) {
 	Log("Invalid voter key $voter_key presented by $voter for election $election_id, expected $voter_key_check");
-	print h1("Error"), p("Your voter key is invalid. You should have received a correct URL by email."), end_html();
+	print h1("Error"), p("Your voter key is invalid, $voter. You should have received a correct URL by email."), end_html();
 	exit 0;
     }
 }
@@ -146,9 +154,7 @@ sub CheckNotVoted {
 	print p("A vote has already been cast using your voter key.");
 	PointToResults;
 	print end_html();
-	open(LOG, ">>$election_log");
-	print LOG "Election: $title ($election_id) : Saw second vote from voter $voter, voter key $voter_key\n";
-	close(LOG);
+	ElectionLog("Election: $title ($election_id) : Saw second vote from voter $voter, voter key $voter_key");
 	exit 0;
     }
 }
@@ -160,15 +166,17 @@ sub CheckControlKey {
     if ($control_key ne $control_key_check) {
 	print h1("Error"), p("Invalid key. You should have received a correct URL for controlling the election by email. This error has been logged.");
 	print end_html();
-	open(LOG, ">>$election_log");
-	print LOG "Election: $title ($election_id) : invalid attempt to close election (wrong key)\n";
-	close(LOG);
+	ElectionLog("Election: $title ($election_id) : invalid attempt to close election (wrong key)");
 	exit 0;
     }
 }
 
+sub IsWellFormedElectionID {
+    return $election_id =~ m/^E_[0123456789abcdef]+/;
+}
+
 sub CheckElectionID {
-    if (!($election_id =~ m/^E_[0123456789abcdef]+/)) {
+    if (!IsWellFormedElectionID) {
 	if ($election_id ne '') {
 	    print h1("Invalid election identifier");
 	    print p("The election identifier \"$election_id\" is not valid.\n");
@@ -176,8 +184,23 @@ sub CheckElectionID {
 	    $election_id = '';
 	}
 	print end_html();
-	exit 1;
+	exit 0;
     }
+}
+
+# Log the string provided
+sub ElectionLog {
+    $log_msg = shift;
+    chomp($log_msg);
+    $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
+    if (!open ELECTION_LOG, ">>$election_log") {
+        print h1("Error"),
+	      p("Unable to append to the election log."),
+	      end_html();
+	exit 0;
+    }
+    print ELECTION_LOG $now." ".remote_addr()." ".$log_msg."\n";
+    close ELECTION_LOG;
 }
 
 1; # ok!

@@ -38,7 +38,7 @@ TestAndCreateDir $CIVSDATADIR/elections;
     done
 
     for f in add_voters beatpath.pm civs_common.pm close control \
-	create_election election.pm mail.pm results \
+        create_election download_ballots election.pm mail.pm results \
 	start_election vote
     do
 	#echo "copying cgi-bin/$f"

@@ -5,7 +5,7 @@ a:hover      { color: #0000FF; background-color: transparent }
 body, table, p, ul, li  { font-family: Arial, helvetica, sans-serif; font-size: 12pt;  color: #000000 }
 
 
-body { background-color: #c0e0ff }
+body { background-color: #ccffff }
 table { background-color: #d0e8ff }
 table.matrix { background-color: #d0e8ff }
 table.form { background-color: transparent }
