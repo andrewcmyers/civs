@@ -437,10 +437,12 @@ sub SendKeys {
 		    print "voter link: <a href=\"$url\">$url</a>\n";
 		} else {
 		    print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
-	    	Send "mail from: $email_addr"; ConsumeSMTP;
+	    	    Send "mail from: $civs_supervisor"; ConsumeSMTP;
 		    Send "rcpt to: $v"; ConsumeSMTP;
 		    Send "data"; ConsumeSMTP;
-		    Send "From: $email_addr (Condorcet Internet Voting Service)";
+		    Send "From: $email_addr ($name, CIVS election supervisor)";
+		    Send "Sender: $civs_supervisor";
+		    Send "Reply-To: $email_addr";
 		    Send "To: $v";
 		    Send "Subject: CIVS Election now available for voting: $title";
 		    Send "";
