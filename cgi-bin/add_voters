@@ -28,7 +28,7 @@ CIVS_Header("Adding voters");
 
 my $control_key = param('key');    
 CheckControlKey($control_key);
-my $authorization_key = param('authorization_key');
+my $authorization_key = param('akey');
 CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 if (!IsStarted || IsStopped) {
@@ -46,7 +46,7 @@ print "$num_added voter(s) added\n";
 print "Done.\n</pre>\n";
 
 my $url = "$civs_bin_path/control?id=$election_id&key=$control_key";
-$url .= "&authorization_key=$authorization_key" if defined($authorization_key);
+$url .= "&akey=$authorization_key" if defined($authorization_key);
 print p("<a href=\"$url\">Go back to election control</a>");
 
 $edata{'num_auth'} += $num_added;

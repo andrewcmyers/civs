@@ -15,7 +15,7 @@ CIVS_Header('Start election');
 use election;
 my $max_voters = 1000;
 my $control_key = param('key');   
-my $authorization_key = param('authorization_key');
+my $authorization_key = param('akey');
 
 CheckElectionID;
 CheckControlKey($control_key);
@@ -41,7 +41,7 @@ my $num_added = SendKeys($authorization_key, \@addresses);
 
 print "Done.\n</pre>\n";
 
-print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key&authorization_key=$authorization_key\">Go back to election control</a>");
+print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key&akey=$authorization_key\">Go back to election control</a>");
 
 # Destroy record of voter addresses so we can't
 # figure out who voted for what.

@@ -28,7 +28,7 @@ use election;
 my $voter = param('voter'); # nearly obsolete
 my $old_voter_key = param('voter_key'); # nearly obsolete
 my $voter_key = param('key');
-my $authorization_key = param('authorization_key');
+my $authorization_key = param('akey');
 
 HTML_Header("CIVS Voting");
 
@@ -164,7 +164,7 @@ print hidden('voter', $voter); # nearly obsolete
 print hidden('voter_key', $old_voter_key); # nearly obsolete
 print hidden('key', $voter_key);
 print hidden('id', $election_id);
-print hidden('authorization_key', $authorization_key);
+print hidden('akey', $authorization_key);
 
 print "\n<!-- Current rankings:\n";
 for (my $i = 0; $i < $num_choices; $i++) {

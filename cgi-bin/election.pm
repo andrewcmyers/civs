@@ -385,7 +385,7 @@ sub SendKeys {
 		my $url = "";
 		if ($public eq 'yes') {
 			$url = "http://$thishost$civs_bin_path/vote?id=$election_id";
-			$url .= "&authorization_key=$authorization_key"
+			$url .= "&akey=$authorization_key"
 				if (&ElectionUsesAuthorizationKey);
 		} else {
 			if (&ElectionUsesAuthorizationKey) {

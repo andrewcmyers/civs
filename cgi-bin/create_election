@@ -112,7 +112,7 @@ my $control_key = substr(md5_hex("control".$private_host_id.$election_id), 0, 16
 my $authorization_key = substr(md5_hex("authorization".$private_host_id.$election_id), 0, 16);
 $edata{'hash_authorization_key'} = substr(md5_hex($authorization_key), 0, 16);
 
-my $url = "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key&authorization_key=$authorization_key";
+my $url = "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key&akey=$authorization_key";
 
 if (!($local_debug)) {
 
@@ -134,7 +134,7 @@ Send "";
 if ($public eq 'yes') {
     Send "Because this is an open election, voters may be directed to the following URL:";
     Send "";
-    Send "http://$thishost$civs_bin_path/vote?id=$election_id&authorization_key=$authorization_key";
+    Send "http://$thishost$civs_bin_path/vote?id=$election_id&akey=$authorization_key";
     Send "";
 }
 Send "For more information about the Condorcet Internet Voting Service, see";

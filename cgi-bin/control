@@ -16,7 +16,7 @@ HTML_Header("CIVS Election Control");
 use election;
 
 my $control_key = param('key');    
-my $authorization_key = param('authorization_key');
+my $authorization_key = param('akey');
 
 CIVS_Header("Election control");
 
@@ -34,7 +34,7 @@ if (!IsStarted) {
     print '<p>The election has not yet started. Press this button to start it: ';
     print hidden('id', $election_id);
     print hidden('key', $control_key);
-    print hidden('authorization_key', $authorization_key)
+    print hidden('akey', $authorization_key)
 		if defined($authorization_key);
     print '<input type="submit" value="Start election" name="start">';
     print '</p></form>';
@@ -68,7 +68,7 @@ if (!IsStarted) {
     }
     if ($public eq 'yes') {
 		my $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
-		$url .= "&authorization_key=$authorization_key" 
+		$url .= "&akey=$authorization_key" 
 			if defined($authorization_key);
 		print p("This is an open election. Voting URL:
 	        <tt><a href=\"$url\">$url</a></tt>").$cr;
@@ -149,7 +149,7 @@ print "<form method=POST
 	     name=\"AddVoters\">\n";
 print hidden('id', $election_id);
 print hidden('key', $control_key);
-print hidden('authorization_key', $authorization_key)
+print hidden('akey', $authorization_key)
 	if defined($authorization_key);
 print p('<textarea rows="2" name="new_addresses" cols="50"></textarea>');
 print p('Upload file: <input id=new_addresses_file type=file name="new_addresses_file">');
