@@ -120,6 +120,7 @@ sub rank_candidates {
     my $denied_report = '';
 
     my @pairs = ();
+    my @strongest_defeat = ();
     my @affirmed, my @committed, my @current, my @saved_current;
     for (my $j = 0; $j < $num_choices; $j++) {
 	for (my $k = 0; $k < $num_choices; $k++) {
@@ -197,6 +198,10 @@ sub rank_candidates {
 		}
 	    }
 	    # print pre("  affirmed.");
+	    if ($strongest_defeat[$loser] eq '') {
+		$strongest_defeat[$loser] = $pair_ref;
+		# print pre("Strongest defeat for $lname is $winvotes-$losevotes");
+	    }
 	} else {
 	    if (!$denied_any) {
 		$denied_report .=
@@ -226,6 +231,14 @@ sub rank_candidates {
 			if ($affirmed[$j][$i] > $affirmed[$i][$j]) {
 			    $won = 0;
 			    last;
+			}
+			if ($affirmed[$j][$i] && $affirmed[$i][$j]) {
+			    $b = $strongest_defeat[$i];
+			    $a = $strongest_defeat[$j];
+			    if (&order_pairs > 0) {
+				$won = 0;
+				last;
+			    }
 			}
 		    }
 		}
