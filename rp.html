@@ -31,20 +31,28 @@
 
 <p>
 In ranked preference voting systems, there is the possibility that preference
-cycles exist. For example, it is possible that on a majority of ballots, choice
-A is preferred to choice B; on a majority of ballots, B is preferred to C; and
-on a majority of ballots C is preferred to A. Fortunately, cycles involving the
-top-ranked candidate don't seem to happen And there are good methods for
-resolving these cycles, called <i>completion rules</i>.  If the goal of
-the election is simply to pick the top choice, It usually doesn't matter which
-rule is used.
+cycles exist. For example, it is possible that on most ballots, choice
+A is preferred to choice B, on most ballots B is preferred to C, and
+on most ballots C is preferred to A. Fortunately, cycles involving the
+top-ranked candidate don't seem to happen often. And there are good methods for
+resolving these cycles, called <i>Condorcet completion rules</i>.
+If the goal of the
+election is simply to pick the top choice, It usually doesn't matter which rule
+is used.
+</p>
+
+<p>
+In the CIVS election result report, the color coding of the final
+preference matrix tells you whether a completion rule was needed. If
+there are no red cells above the diagonal (or green cells below it),
+then there were no cycles for a completion rule to resolve, so it
+doesn't matter which rule is used.
 </p>
 
 <h2>Supported completion rules</h3>
 
-<p>CIVS currently supports three rules for Condorcet completion.  If there
-is no cycle, all completion rules will arrive at the same ranking.  The
-completion rules supported by CIVS are <b>Beatpath Winner</b>, also known
+<p>CIVS currently supports three rules for Condorcet completion:
+<b>Beatpath Winner</b>, also known
 as <a href="http://electionmethods.org/CondorcetEx.htm"> Cloneproof Schwartz
 Sequential Dropping</a>, <a href="http://alumnus.caltech.edu/~seppley/">
 Maximize Affirmed Majorities</a> (MAM), and a deterministic variant of MAM
@@ -54,13 +62,10 @@ called <b>CIVS Ranked Pairs</b>. CIVS Ranked Pairs is described below.
 <p>
 CIVS does not impose a completion rule; in fact, anyone viewing
 the results of an election can see what the results would have been with
-an of the rules. It is probably a good idea for the election supervisor
+each of the rules. It is probably a good idea for the election supervisor
 to decide on an rule ahead of time. On the other hand, all three
 rules usually agree with each other, especially on the ranking of
-the first few choices. The color coding of the final preference matrix
-tells you whether a completion rule was needed. If there are no red
-cells above the diagonal (or green cells below it), then there were
-no cycles for a completion rule to resolve.
+the first few choices.
 </p>
 
 <p>
@@ -108,7 +113,7 @@ into account.
 
 <p>
 The major difference between CIVS Ranked Pairs and MAM is
-the rule on when a preferent is kept. A preference is
+the rule on when to keep a preference. A preference is
 kept exactly when it does not create any <i>new</i> cycles when considered in
 conjunction with <i>strictly stronger</i>, kept preferences. Thus, preferences
 of equal strength may be kept even though in conjunction they produce a new
