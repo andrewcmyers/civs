@@ -33,6 +33,12 @@ if ($public ne 'yes') {
 
 print h2($title);
 
+my $nwin_param = param('num_winners');
+if ($nwin_param && $nwin_param > 0 &&
+    $nwin_param < $num_choices) {
+	$num_winners = 0+$nwin_param;
+}
+
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
 print "Announced end of election: $election_end", br();
 if (IsStopped) {

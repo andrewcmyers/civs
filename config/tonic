@@ -7,3 +7,4 @@ CIVSBINURL='/cgi-bin/andru/civs'
 SUPERVISOR='andru@cs.cornell.edu'
 CIVSURL='/civs'
 SMTPHOST='smtp.cs.cornell.edu'
+LOCALDEBUG=1
