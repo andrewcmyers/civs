@@ -331,23 +331,28 @@ sub PrintRP {
 	print p("The following is the result of running 
 	the ranked pairs/winning votes completion
 	algorithm.");
+	STDOUT->flush();
 
         (my $rref, my $ciref, my $denied_any,
 	 my $allowed_cycle, my $denied_report) = 
 	    rp::rank_candidates([@matrix], $num_choices, [@choices]);
 	#print pre("Done ranking");
 
-	if (!$allowed_cycle && !$denied_any) {
-	    print p('All preferences were affirmed. All
-	    reasonable Condorcet completion algorithms will
-	    agree on the ranking obtained.');
-	}
-
 	PrintRanking $rref;
 	PrintMatrix $num_choices, [@matrix], [@choices], $ciref, 0;
 
+	if (!$allowed_cycle && !$denied_any) {
+	    print p('All preferences were affirmed. All
+	    reasonable Condorcet completion algorithms will
+	    agree with this ranking.');
+	}
+
 	if ($denied_any) {
-	    print $denied_report;
+	    # print $denied_report;
+	    print p('The presence of a green entry below
+	    the diagonal (and a corresponding red one above)
+	    means that a preference was ignored because
+	    it conflicted with other, stronger preferences.');
 	}
     }
 }

@@ -176,15 +176,12 @@ sub rank_candidates {
 	    $denied_report .=
 		(li("The $pair[2]&ndash;$pair[3] preference for $wname"
 				." over $lname."));
-	    print pre("denied.");
+	    # print pre("denied.");
 	}
 	STDOUT->flush();
     }
 
     if ($denied_any) { $denied_report .= '</ul>'; }
-
-    print $denied_report;
-    STDOUT->flush();
 
     my $num_ranked = 0;
     my @ignore, my @ordering, my @rp_choice_index;
