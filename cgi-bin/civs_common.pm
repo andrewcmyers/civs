@@ -16,7 +16,7 @@ BEGIN {
                       $civs_bin_path $civs_log $civs_url $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error
                       &unique_elements &civs_hash &system_load &CheckLoad
-		      &timeout);
+		      &timeout &AdmissionControl);
 }
 
 # The local_debug flag must be declared before the call to set_message (in
@@ -226,11 +226,43 @@ sub system_load {
 sub CheckLoad {
     my $load = system_load + 0;
     if ($load >= 10.0) {
-	HTML_Header("CIVS Voting");
+	HTML_Header('CIVS server busy');
 	CIVS_Header('CIVS server busy');
 	print p("Sorry, the CIVS web server is very busy right now and
 	    cannot handle more requests. Please try again a little later.");
 	exit 0;
+    }
+}
+
+sub AdmissionControl {
+    if ($local_debug) { return 1; }
+    my $sin;
+    my $port = 32001;
+    my $maxthreads = 10;
+    if (!($local_debug)) {
+	my $proto = getprotobyname('tcp');
+	socket(SMTP, &PF_INET, &SOCK_STREAM, $proto) || print "can't open socket: $!\n";
+	if ($port eq '') { exit 1; }
+	my $iaddr = gethostbyname('localhost') || print "no such host\n";
+	if ($iaddr eq '') { exit 1; }
+	$sin = pack_sockaddr_in($port, $iaddr);
+    }
+    if (!connect(LOCKSERV, $sin)) {
+	print "Starting the lock server\n";
+	system("$home/lockserv $port $maxthreads &");
+	sleep(1);
+	connect(LOCKSERV, $sin) || print "Can't start it!?\n";
+    }
+    my $success = <LOCKSERV>;
+    close(LOCKSERV);
+    if ($success eq '') {
+	HTML_Header('CIVS server busy');
+	CIVS_Header('CIVS server busy');
+	print p("Sorry, the CIVS system has too many active users right now.
+		 Please try again in a few minutes.");
+	exit 0;
+    } else {
+	return 1; # gained admission
     }
 }
 

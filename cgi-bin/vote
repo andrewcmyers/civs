@@ -15,6 +15,7 @@ my $thisurl = $civs_bin_path."/vote";
 
 # CheckLoad;
 # AdmissionControl;
+
 timeout(10);
 
 use election;
@@ -125,7 +126,7 @@ if ($proportional ne 'yes' || !$use_combined_ratings) {
 		choice, and so on. ';
 	print '</p>';
     }
-    print "<a href=\"$civs_url\">(More information on Concorcet election
+    print "<a href=\"$civs_url\">(More information on Condorcet election
     methods)</a></p>", $cr, $cr;
 } else {
     print '<p>This election is decided using an experimental
