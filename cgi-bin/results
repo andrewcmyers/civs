@@ -41,49 +41,44 @@ if (IsStopped) {
     print "Election has not yet ended.\n";
 }
 
-print h2('Description'), p($description);
+print h2('Election instructions'), p($description);
 
-print h2("Candidates and vote matrix");
-print p("The following matrix shows the number of ballots on which candidates beat other candidates, considered pairwise.");
-print "<table>\n";
-
+# Compute condorcet winner and set up $matrix
 $condorcet_winner = -1;
-print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
 for ($j = 0; $j < $num_choices; $j++) {
-    print "<td width=20px>".($j+1).".</td>";
-}
-print "</tr>\n";
-for ($j = 0; $j < $num_choices; $j++) {
-    print "<tr>";
-    print "<td>".($j+1).". ".$choices[$j]."</td>\n";
-    print "<td width=40px>&nbsp;</td>\n";
     if ($condorcet_winner < 0) { $condorcet_winner = $j; }
     for ($k = 0; $k < $num_choices; $k++) {
 	$n = $vdata{"$j.$k"} + 0;
 	$matrix[$j][$k] = $n;
-	print "<td><tt>";
-	if ($j == $k) {
-	    print "- ";
-	} else {
-	    print $n. " ";
+	if ($j != $k) {
 	    $m = $vdata{"$k.$j"} + 0;
 	    if ($n <= $m && $condorcet_winner == $j) {
 		$condorcet_winner = -1; # can't be this one
 	    }
 	}
-	print "</tt></td>";
     }
-    print "</tr>\n";
 }
-print "</table>";
+
+print h2("Condorcet winner");
+if ($condorcet_winner >= 0) {
+    print p("The Condorcet winner of this election is ".
+            strong($choices[$condorcet_winner]));
+} else {
+    print p("This election had no Condorcet winner.\n");
+}
 
 print h2("Ranking of the candidates\n");
 print p("Winning choices are shown in bold.");
 print "<pre>";
 $beatpath::n = $num_choices;
-@beatpath::matrix = @matrix;
+for ($j = 0; $j < $num_choices; $j++) {
+    for ($k = 0; $k < $num_choices; $k++) {
+	$beatpath::matrix[$j][$k] = $matrix[$j][$k];
+    }
+}
 &beatpath::rank_candidates();
 @result = @beatpath::result;
+@closure_matrix = @beatpath::closure_matrix;
 print "</pre>";
 
 $num_seen = 0;
@@ -120,13 +115,70 @@ if ($had_tie) {
     print p("Candidates shown in red have tied for being selected. You may wish to select among them randomly.");
 }
 
-print h2("Condorcet winner");
-if ($condorcet_winner >= 0) {
-    print p("The Condorcet winner of this election is ".strong($choices[$condorcet_winner]));
-} else {
-    print p("This election had no Condorcet winner.\n");
-}
 
+print h2("Candidates and vote matrix");
+print p("The following matrix shows the number of ballots on which candidates beat other candidates, considered pairwise.");
+print "<table>\n";
+
+print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+for ($j = 0; $j < $num_choices; $j++) {
+    print "<td width=20px>".($j+1).".</td>";
+}
+print "</tr>\n";
+for ($j = 0; $j < $num_choices; $j++) {
+    print "<tr>";
+    print "<td>".($j+1).". ".$choices[$j]."</td>\n";
+    print "<td width=40px>&nbsp;</td>\n";
+    for ($k = 0; $k < $num_choices; $k++) {
+	print "<td><tt>";
+	if ($j == $k) {
+	    print "- ";
+	} else {
+	    print $matrix[$j][$k]. " ";
+	}
+	print "</tt></td>";
+    }
+    print "</tr>\n";
+}
+print "</table>";
+
+print h2("Beatpath closure matrix");
+print p("
+The following matrix shows the strength of the strongest
+beatpath connecting each pair of candidates. Candidate 1 is preferred
+to candidate 2 if there is a better beatpath leading from 1 to 2
+than any leading from 2 to 1.
+");
+print "<table>\n";
+
+print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+for ($j = 0; $j < $num_choices; $j++) {
+    print "<td width=20px>".($j+1).".</td>";
+}
+print "</tr>\n";
+for ($j = 0; $j < $num_choices; $j++) {
+    print "<tr>";
+    print "<td>".($j+1).". ".$choices[$j]."</td>\n";
+    print "<td width=40px>&nbsp;</td>\n";
+    for ($k = 0; $k < $num_choices; $k++) {
+	print "<td><tt>";
+	if ($j == $k) {
+	    print "-";
+	} else {
+	    $w = $closure_matrix[$j][$k];
+	    $l = $closure_matrix[$k][$j];
+	    if ($w > $l) {
+		if ($l != 0) { print "$w-$l"; }
+		else { print "$w" }
+	    } else {
+		print ".";
+	    }
+	}
+	print "</tt></td>";
+    }
+    print "</tr>\n";
+}
+print "</table>";
 
 print end_html();
 

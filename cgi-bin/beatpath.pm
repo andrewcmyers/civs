@@ -15,7 +15,7 @@ package beatpath;
 
 ######
 
-# clean_matrix: Clean the matrix @m by removing
+# clean_matrix: Clean the matrix @matrix by removing
 # the minimal element of every symmetric pair
 # of elements, setting it to zero.
 sub clean_matrix {

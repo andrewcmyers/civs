@@ -128,14 +128,12 @@ if (param('AddWritein') ne '' && $writeins eq 'yes') {
 
 if (param('Load')) {
 # load rankings from saved file
-    print '<pre>';
     $rankings_file = param('rankings_file');
+    for ($i = 0; $i < $num_choices; $i++) { $rank[$i] = $num_choices; }
     while (<$rankings_file>) { if (m/^<!-- Current rankings/) { last; }}
     while (<$rankings_file>) {
 	if (m/^-->/) { last; }
-	print $_;
 	($index, $name, $rank) = m/([0-9]+) "([^"]*)" ([0-9]+)/;
-	# print "index: $index name: $name rank: $rank\n";
 	if ($rank < 1) { $rank = 1; }
 	if ($rank > $num_choices) { $rank = $num_choices; }
 	for ($i = 0; $i < $num_choices; $i++) {
@@ -147,7 +145,8 @@ if (param('Load')) {
 	    }
 	}
     }
-    print '</pre>';
+    for ($i = 0; $i < $num_choices; $i++) { @iota[$i] = $i; }
+    @choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
     $loaded_choices = 'yes';
 }
 
@@ -201,11 +200,8 @@ for ($i = 0; $i < $num_choices; $i++) {
 print "-->\n";
 
 for ($i = 0; $i < $num_choices; $i++) {
-    if ($sort_choices ne '') {
+    if ($sort_choices ne '' || $loaded_choices ne '') {
 	$k = $choice_index[$i];
-	$selected = $rank[$k];
-    } elsif ($loaded_choices ne '') {
-	$k = $i;
 	$selected = $rank[$k];
     } else {
 	$k = $i;
@@ -243,7 +239,7 @@ print '<input type="file" id=rankings_file type=file name="rankings_file">';
 print '&nbsp; <input type="submit" id=load_rankings_file value="Load" name="Load">';
 print '<br>(To save a voting page, click "Sort" to collect
     your rankings and then just save this web page in your browser)</p>';
-print p('Reset all rankings: <input type="reset" value="Reset" name="Vote">');
+print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
 
 print "</form>\n";
 
