@@ -1,0 +1,110 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Condorcet Internet Voting Service</title>
+</head>
+
+<body>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tr>
+    <td width="100%" bgcolor="#000080" valign="top" nowrap>
+      <h1><font color=white face=sans-serif>&nbsp;Condorcet Internet Voting
+      Service</font></h1>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" bgcolor="#000080" valign="top" nowrap>
+      <h2 align="center"><font color=white
+      face=sans-serif>Proportional Representation</font></h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+CIVS now supports an experimental mode in which it can be
+used to select multiple candidates while enforcing
+proportional representation. That is, a set of voters can
+only influence the selection of a fraction of the selected
+candidates that is proportional to the number of voters.
+</p>
+<h2>Overview</h2>
+<p>
+For example, suppose that 60% of the voters want candidates
+<i>A</i>, <i>B</i>, <i>C</i>, <i>D</i>, and <i>E</i>, in that order, and 40% want <i>X</i>, <i>Y</i>, <i>Z</i>, <i>U</i>, and <i>V</i>.
+Ordinary Concorcet voting will rank
+<i>A</i>, <i>B</i>, <i>C</i>, <i>D</i>, and <i>E</i> higher
+than the other five candidates, because a majority likes
+them better. For some tasks, this is the right way to run
+the election. However, if the election is selecting a
+five-person committee to
+represent the whole population, 40% would have no representation
+at all. The proportional representation algorithm used by
+CIVS would elect the candidates <i>A</i>, <i>B</i>, <i>C</i>, <i>X</i>, and
+<i>Y</i>, achieving
+perfect proportional representation.
+</p>
+<p>
+From the voter's perspective there is only one difference
+between proportional representation mode and ordinary
+voting: instead of ranking the candidates, the voter gives
+a <b>weight</b> to each candidate. The voting algorithm
+assumes that the voter's goal is to maximize the total weight
+of selected candidates. Weights make it possible to compare
+sets of candidates with different cardinality. For example,
+suppose that a voter wants candidates <i>A</i>, <i>B</i>,
+and <i>C</i>, in that
+order, but would end up (because of the other voters'
+preferences) choosing between <i>A</i> and the pair of
+<i>B</i>, <i>C</i>. The
+algorithm can't tell just from the rankings whether the
+voter would prefer to have just the better candidate
+<i>A</i> or 
+greater representation under <i>B</i>, <i>C</i>. If <i>A</i> is given a weight of
+10 and <i>B</i> and <i>C</i> have weights 8 and 6, then the voting
+algorithm will (on the voter's behalf) work towards electing
+<i>B</i>+<i>C</i> in preference to <i>A</i>, because 14 &gt; 10.
+</p><p>
+<h2>Algorithm</h2>
+The algorithm used is a generalization of ordinary Condorcet
+voting. The basic idea is to lift preferences expressed on
+individual candidates to preferences on whole committees of
+<i>k</i> members,
+then run the usual Condorcet algorithm to pick the ``best''
+committee. The trick is to lift the preferences in a way
+that doesn't simply let a majority dictate the composition
+of the committee.
+
+We say that a given voter has an <i>f</i>-preference for
+possible committee <i>A </i> over another, <i>B</i>,
+if voter prefers <i>A</i> to <i>B</i> when considering only
+the <i>f</i> most preferred candidates on each committee.
+We can compare any two possible committees for all values of
+<i>f</i> from 1 to <i>k</i> by determining for each voter
+whether they have an <i>f</i> preference for one of the two
+committees over the other, and summing up the number of
+voters with a preference for one and the number with a
+preference for the other. Suppose that the number of voters
+with a preference for committee 1 is <i>v</i> and there are
+<i>n</i> voters overall. Then an <i>f</i> preference for
+committee 1 is <b>valid</b> if
+&lceil;<i>vk</i>/<i>n</i>&rceil; &ge; <i>f</i>.
+Invalid preferences are simply ignored. To decide whether
+committee 1 is preferred over committee 2, we find the
+largest <i>v</i> such that <i>v</i> voters have a valid
+preference for one of the two committees. This <i>v</i>
+becomes the strength of the preference in the ordinary
+Condorcet sense. For <i>k</i>=1, this voting
+algorithm is simply the ordinary Condorcet algorithm. For
+larger <i>k</i>, it yields proportional results. In the
+above example, the 60% have no valid preference for
+<i>ABCDE</i> over <i>ABCXY</i> because their maximum
+preference is a 3-preference. The 40%, on the other hand,
+have a valid 2-preference for the second result, so this is
+the winning committee, as desire.
+</p>
+</body>
+</html>
