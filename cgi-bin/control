@@ -120,7 +120,7 @@ print h2("Add voters");
 
 print p("Enter e-mail addresses of voters, one per line. These
 may be new voters or existing voters who have not voted yet.
-Giving the e-mail address of an already existing voter will not
+Giving the e-mail address of an already existing voter will
 let that voter vote twice.");
 print "<form method=POST
 	     action=$civs_bin_path/add_voters
