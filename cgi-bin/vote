@@ -13,8 +13,7 @@ use IO::Handle;
 
 my $thisurl = $civs_bin_path."/vote";
 
-my $cmd = "exec $home/timeout 10 $$ 2>&1 1>/dev/null &";
-system($cmd);
+timeout(10);
 
 use election;
 
@@ -373,12 +372,12 @@ sub AddWritein {
     my $p = ProjectName($writein);
     my $ok = 1;
     for (my $i = 0; $i < $num_choices; $i++) {
-		if (ProjectName($choices[$i]) eq $p) {
-		    print p(b("Sorry, the name of the write-in is too similar ",
-					  "to an existing choice\n"));
-		    $ok = 0;
-		    last;
-		}
+	if (ProjectName($choices[$i]) eq $p) {
+	    print p(b("Sorry, the name of the write-in is too similar ",
+				    "to an existing choice\n"));
+	    $ok = 0;
+	    last;
+	}
     }
     if ($ok) {
 		$choices = $choices . "\n" . $writein;

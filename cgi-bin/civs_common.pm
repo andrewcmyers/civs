@@ -2,6 +2,7 @@ package civs_common;  # should be CIVS, or perhaps CIVS::Common
 
 use strict;
 use warnings;
+use POSIX ":sys_wait_h";
 
 # Export the package interface
 BEGIN {
@@ -14,7 +15,7 @@ BEGIN {
                       &SecureNonce &fisher_yates_shuffle $home $thishost
                       $civs_bin_path $civs_log $civs_url $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error
-                      &unique_elements &civs_hash);
+                      &unique_elements &civs_hash &timeout);
 }
 
 # The local_debug flag must be declared before the call to set_message (in
@@ -213,5 +214,24 @@ sub unique_elements {
 	return @uniq;
 }
 
+sub timeout {
+    my $wait_time = $_[0];
+    my $pid = fork();
+    my $signaled = 0;
+    if ($pid == 0) { return; }
+    my $t = time();
+    while (1) {
+	my $kid = waitpid(-1, WNOHANG);
+	if ($kid > 0) { last; }
+	if ($signaled && time() - $t > $wait_time)  {
+	    kill($pid, 15);
+
+	    print p('Sorry, computation terminated because
+		    it ran too long. System load may be too high'), $cr;
+	}
+	sleep(1);
+    }
+    exit(0);
+}
 
 1; # ok!

@@ -70,18 +70,18 @@ $edata{'proportional'} = $proportional;
 my $choices = param('choices');
 my $choices_file = upload('choices_file');
 if (defined($choices_file)) {
-	while (<$choices_file>) {
+    while (<$choices_file>) {
     	$choices .= $_;
-	}
+    }
 }
 $edata{'choices'} = $choices;
 
 my $addresses = param('addresses');
 my $addresses_file = upload('addresses_file');
 if (defined($addresses_file)) {
-	while (<$addresses_file>) {
+    while (<$addresses_file>) {
     	$addresses .= $_;
-	}
+    }
 }
 $edata{'addresses'} = $addresses;
 

@@ -16,8 +16,7 @@ use IO::Handle;
 my $thisurl = $civs_bin_path."/results";
 my $detailed = param('detailed');
 
-my $cmd = "exec $home/timeout 30 $$ 2>&1 1>/dev/null &";
-system($cmd);
+timeout(20);
 
 HTML_Header('CIVS Election Results', 'results.js');
 use election;
