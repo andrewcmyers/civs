@@ -26,6 +26,7 @@ public class HTMLWriter {
 	public void print(int i) {
 		print(Integer.toString(i));
 	}
+	/* Output s with quotes around it. */
 	public void printq(String s) {
 		print("\"");
 		print(s);
@@ -74,7 +75,7 @@ public class HTMLWriter {
 					writer.print("\r\n");
 					if (i+1 < s.length() &&
 							(int) c + (int) s.charAt(i+1) == 23)
-						i++;
+						i++; // catch \r\n and consume both.
 					breakLine();					
 					break;
 				default:

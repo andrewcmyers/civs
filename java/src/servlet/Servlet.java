@@ -20,4 +20,10 @@ abstract public class Servlet extends HttpServlet {
 
       rw.close();
   }
+  
+  /** These servlets currently do not distinguish between GET and POST requests. */
+  public void doPost(HttpServletRequest req, HttpServletResponse res)
+    throws IOException, ServletException {
+  	  doGet(req, res);
+  }
 }

@@ -39,7 +39,7 @@ Subst() {
 	    -e 's|@ADDTOPATH@|'$ADDTOPATH'|'
 }
 
-for f in html/*.html
+for f in html/*.html html/*.css html/*.js
 do
     Subst $f $HTMLDIR
 done

@@ -1,0 +1,58 @@
+a            { text-decoration: none }
+a:link       { color: #339966; background-color: transparent; font-weight: bold }
+a:visited    { color: #009999; background-color: transparent; font-weight: bold }
+a:hover      { color: #0000FF; background-color: transparent }
+body, table, p, ul, li, td  { font-family: Arial, helvetica, sans-serif;
+			      font-size: "100%";  color: "black" }
+th              { font-family: Arial, helvetica, sans-serif;
+                  color: white;
+		  background-color: #000080;
+		  border-color: #000080;
+		  font-weight: bold }
+
+body { background-color: #d0ffe8 }
+table { background-color: #e0fff0 }
+table.matrix { background-color: #e0f0ff }
+table.form { background-color: transparent }
+div.emphasized { background-color: #ffffd0; padding: 3; border-style: solid; border-width: 1; border-color: black }
+
+p, ul, li {background-color: transparent}
+
+h1, h2, h3   { font-family: Trebuchet MS, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
+
+table.banner a:link { color: white }
+table.banner a:visited { color: white }
+table.banner a:hover { color: yellow }
+
+table.banner { background-color: #008000 }
+table.banner h1 { color: white }
+table.banner h2 { color: white }
+
+/* used for mathematics */
+.math        { color: black; font-family: Times New Roman, serif;
+	       background-color: transparent }
+.symbol      { font-family: Symbol, symbol }
+
+h1  { font-size: 180%; }
+h2  { font-size: 140%; }
+h3  { font-size: 120%; }
+form, input, textarea { font-size: 100%; }
+pre, xmp { font-family: Courier New, Courier, monospace; margin-left: 1em;
+	   font-size: 90% }
+kbd, tt, code { font-family: Courier New, Courier, monospace; font-size: 90% }
+td { font-family: Arial, helvetica, sans-serif; font-size: 100%; }
+
+td.recitation { background-color: #FFF0d0 }
+
+td.win { font-family: Courier New, courier, fixed; text-align:center;
+	 background-color: #d0ffd0; font-weight: bold }
+td.tie { font-family: Courier New, courier, fixed; text-align:center;
+	 background-color: #ffffd0; font-weight: bold }
+td.lose { font-family: Courier New, courier, fixed; text-align:center;
+	  background-color: #ffd0d0; font-weight: bold }
+td.count { text-align: center; font-family: Courier New, courier, fixed }
+th.choice { text-align: left }
+table.matrix th { background-color: transparent; color: black }
+table.links { border-color: black; border-style: solid; border-width: 1 }
+
+tr.selected { background-color: #ffffd0 }
