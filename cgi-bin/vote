@@ -177,7 +177,7 @@ for ($i = 0; $i < $num_choices; $i++) {
 print "</table>\n";
 print '<p>Click here to sort the choices by their current rank:
        <input type="submit" value="Sort choices" name="SortChoices"></p>';
-if ($writeins ne '') {
+if ($writeins eq 'yes') {
     print '<p>Write in a new choice: <input type="text" size="60" name="writein">';
     print '<input type="submit" value="Add write-in" name="AddWritein"></p>';
 }
