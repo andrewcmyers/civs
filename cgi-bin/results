@@ -30,17 +30,29 @@ if ($public ne 'yes') {
 print h2($title);
 
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
-if ($public ne 'yes') {
-    print "Total authorized voters: $num_auth", br();
-}
 $num_votes += 0;
-print "Actual votes cast: $num_votes", br();
 print "Announced end of election: $election_end", br();
 if (IsStopped) {
     $close_time = $vdata{'close_time'};
-    print "Actual time election ended: $close_time$cr";
+    print "Actual time election ended: $close_time", br();
 } else {
-    print "Election has not yet ended.$cr";
+    print 'Election has not yet ended.', br();
+}
+if ($public ne 'yes') {
+    print "Total authorized voters: $num_auth", br();
+} else {
+    print "This is an open election.", br();
+}
+print "Actual votes cast: $num_votes", br();
+print "Number of winning choices: $num_winners", br();
+if ($proportional eq 'yes') {
+    print 'This election implements proportional representation. ';
+    if ($use_combined_weights) {
+	print ' The combined-weights criterion';
+    } else {
+	print ' The best-candidate criterion';
+    }
+    print ' is used to identify each voter\'s preferred set of choices.';
 }
 
 print h2('Election description'), p($description);
@@ -138,76 +150,76 @@ if (!param('MAM')) {
 } else {
     print a({-name=>'MAM'},h2('Simple MAM report'));
 
-print p("The following is the result of running a partial
-implementation of the 
-<a href=\"http://alumnus.caltech.edu/~seppley/MAM%20procedure%20definition.htm\">
-Maximize Affirmed Majorities algorithm</a>
-on the ballots.
-This process is more computationally intensive than
-Beatpath Winner and it may be necessary to wait for
-a minute or two for the results").$cr;
-    STDOUT->flush();
-@pairs = ();
-for (my $j = 0; $j < $num_choices; $j++) {
-    for (my $k = 0; $k < $num_choices; $k++) {
-	$affirmed[$j][$k] = 0;
-	if ($matrix[$j][$k] > $matrix[$k][$j]) {
-	    push @pairs, [($j, $k, $matrix[$j][$k], $matrix[$k][$j])];
-	}
-    }
-}
-sub order_pairs {
-    @pair_a = @{$a};
-    @pair_b = @{$b};
-    if ($pair_a[2] != $pair_b[2]) {
-	return $pair_b[2] <=> $pair_a[2];
-    } else {
-	return $pair_a[3] <=> $pair_b[3];
-    }
-}
-@pairs = sort order_pairs @pairs;
-
-$denied_any = 0;
-
-foreach $pair_ref (@pairs) {
-    @pair = @{$pair_ref};
-    $winner = $pair[0];
-    $loser = $pair[1];
-    $beatpath::n = $num_choices;
+    print p("The following is the result of running a partial
+    implementation of the 
+    <a href=\"http://alumnus.caltech.edu/~seppley/MAM%20procedure%20definition.htm\">
+    Maximize Affirmed Majorities algorithm</a>
+    on the ballots.
+    This process is more computationally intensive than
+    Beatpath Winner and it may be necessary to wait for
+    a minute or two for the results").$cr;
+	STDOUT->flush();
+    @pairs = ();
     for (my $j = 0; $j < $num_choices; $j++) {
 	for (my $k = 0; $k < $num_choices; $k++) {
-	    $beatpath::matrix[$j][$k] = $affirmed[$j][$k];
+	    $affirmed[$j][$k] = 0;
+	    if ($matrix[$j][$k] > $matrix[$k][$j]) {
+		push @pairs, [($j, $k, $matrix[$j][$k], $matrix[$k][$j])];
+	    }
 	}
     }
-    $beatpath::matrix[$winner][$loser] = $pair[2];
-    my $cycle = beatpath::transitive_closure();
-    if (!$cycle) {
-	$affirmed[$winner][$loser] = $pair[2];
-    } else {
-	if (!$denied_any) {
-	    print p('Some voter preferences were ignored because they conflict with
-	    other, stronger preferences:').$cr;
-	    print '<ul>';
-	    $denied_any = 1;
+    sub order_pairs {
+	@pair_a = @{$a};
+	@pair_b = @{$b};
+	if ($pair_a[2] != $pair_b[2]) {
+	    return $pair_b[2] <=> $pair_a[2];
+	} else {
+	    return $pair_a[3] <=> $pair_b[3];
 	}
-	$wname = $choices[$winner];
-	$lname = $choices[$loser];
-	print li("The $pair[2]&ndash;$pair[3] preference for $wname over $lname").$cr;
     }
-    STDOUT->flush();
-}
-if ($denied_any) { print '</ul>'; }
+    @pairs = sort order_pairs @pairs;
+
+    $denied_any = 0;
+
+    foreach $pair_ref (@pairs) {
+	@pair = @{$pair_ref};
+	$winner = $pair[0];
+	$loser = $pair[1];
+	$beatpath::n = $num_choices;
+	for (my $j = 0; $j < $num_choices; $j++) {
+	    for (my $k = 0; $k < $num_choices; $k++) {
+		$beatpath::matrix[$j][$k] = $affirmed[$j][$k];
+	    }
+	}
+	$beatpath::matrix[$winner][$loser] = $pair[2];
+	my $cycle = beatpath::transitive_closure();
+	if (!$cycle) {
+	    $affirmed[$winner][$loser] = $pair[2];
+	} else {
+	    if (!$denied_any) {
+		print p('Some voter preferences were ignored because they conflict with
+		other, stronger preferences:').$cr;
+		print '<ul>';
+		$denied_any = 1;
+	    }
+	    $wname = $choices[$winner];
+	    $lname = $choices[$loser];
+	    print li("The $pair[2]&ndash;$pair[3] preference for $wname over $lname").$cr;
+	}
+	STDOUT->flush();
+    }
+    if ($denied_any) { print '</ul>'; }
 
  # print "</pre>";
- if ($denied_any) {
-    print p('The following matrix reports all the preferences that were
-    affirmed. Any disagreement between MAM and Beatpath
-    Winner (if any) shows up as non-zero entries below the diagonal.
-    Note that this implementation does not correctly break ties.');
- } else {
-    print p('All preferences were affirmed. The results of
-    running MAM agree with Beatpath Winner.');
- }
+    if ($denied_any) {
+	print p('The following matrix reports all the preferences that were
+	affirmed. Any disagreement between MAM and Beatpath
+	Winner (if any) shows up as non-zero entries below the diagonal.
+	Note that this implementation does not correctly break ties.');
+    } else {
+	print p('All preferences were affirmed. The results of
+	running MAM agree with Beatpath Winner.');
+    }
 
     PrintMatrix $num_choices, [@affirmed], [@choices], [@choice_index], 1;
 } # if MAM
@@ -416,12 +428,14 @@ sub PrintProportionalResults {
     }
     print "</ol>";
 
-    if ($nonprop_details) {
-	print "<h2>Log of search for best result set</h2>";
+    $prop_details = 0;
+
+    if ($prop_details) {
+	print '<h2>Log of search for best result set</h2>'.$cr;
     }
+    STDOUT->flush();
 
-
-    if ($nonprop_details) {
+    if ($prop_details) {
 	print '<pre>';
     }
     if ($num_votes != $#voter_keys + 1) {
@@ -538,13 +552,17 @@ sub PrintProportionalResults {
 	#   for (my $i = 0; $i < $depth; $i++) {
 	#     print " ";
 	#   }
-	    print $msg;
+	    if ($prop_details) {
+		print $msg;
+	    }
 	}
 
 	sub compare_sets {
-# compare_sets compares $curr_comm and $new_comm and returns
+# compare_sets compares two sets and returns
 # 1 if the latter is better.
-	    #print "$curr_comm vs. $new_comm (@new_comm): ";
+	    my $curr_comm = $_[0];
+	    my $new_comm = $_[1];
+	    # dprint flatten(renumber($curr_comm)).' vs. '.flatten(renumber($new_comm)).":$cr";
 	    my $bestpref = 0;
 	    my $bestipref = 0;
 	    my $bestjpref = 0;
@@ -565,7 +583,9 @@ sub PrintProportionalResults {
 	    $weaktally2{$curr_comm}{$new_comm} = $jpref;
 
 	    if ($bestjpref > $bestipref) {
-		# dprint "$new_comm is preferred to $curr_comm, $bestjpref&ndash;$bestipref\n";
+		dprint flatten(renumber($new_comm)).' is preferred to '.
+		       flatten(renumber($curr_comm)).
+		", $bestjpref&ndash;$bestipref$cr";
 		if ($recurse) {
 		    my $save_full_search = $full_search;
 		    visit($new_comm);
@@ -576,9 +596,9 @@ sub PrintProportionalResults {
 		if ($jpref > $ipref
 		    # || ($full_search && $jpref == $ipref)
 		    ) {
-		    # dprint "$new_comm is (weakly) preferred to $curr_comm, $jpref&ndash;$ipref\n";
+		    dprint "$new_comm is (weakly) preferred to $curr_comm, $jpref&ndash;$ipref\n";
 		    # if ($jpref == $ipref) {
-			# dprint "  ...exploring because a cycle has been detected\n";
+		    # dprint "  ...exploring because a cycle has been detected\n";
 		    # }
 		    if ($recurse) {
 			my $save_full_search = $full_search;
@@ -611,7 +631,7 @@ sub PrintProportionalResults {
 	    if ($visited{$curr_comm}) {
 		if ($full_search) { $depth--; return; }
 		if (!$full_search) {
-		    if ($nonprop_details) {
+		    if ($prop_details) {
 		    dprint "$curr_comm is in a cycle (in the Schwartz set?)\n";
 		    }
 		    $full_search = 1;
@@ -621,7 +641,7 @@ sub PrintProportionalResults {
 		$committee[$cci] = $curr_comm;
 		$cindex{$curr_comm} = $cci;
 		$mcomm = flatten(renumber($curr_comm));
-		if ($nonprop_details) {
+		if ($prop_details) {
 		    dprint "<b>Considering set: $mcomm (#$#committee)</b>\n";
 		}
 		$visited{$curr_comm} = 1;
@@ -659,7 +679,7 @@ sub PrintProportionalResults {
 			    $new_comm = flatten @new_comm;
 			    if (
 				!$visited{$new_comm} &&
-				compare_sets) {
+				compare_sets($curr_comm, $new_comm)) {
 				# if (!$full_search)
 				{ $done = 1; }
 # If this committee isn't in the Schwartz set then there is
@@ -672,13 +692,13 @@ sub PrintProportionalResults {
 		} # for i
 		if (!$done && $added) {
 		    $mcomm = flatten(renumber($curr_comm));
-		    if ($nonprop_details) {
+		    if ($prop_details) {
 			dprint "$mcomm beats all nearby unvisited sets\n";
 		    }
 		}
 	    } # if change
 	    $beaten[$cci] = $save_beaten;
-	    # dprint "<b>Done with $curr_comm</b>\n";
+	    dprint "<b>Done with ".flatten(renumber($curr_comm))."</b>\n";
 	    $depth--;
 	}
 	visit($curr_comm);
@@ -696,25 +716,42 @@ sub PrintProportionalResults {
 	    # }
 	# }
     } # if need to pick winners
-    if ($nonprop_details) {
-	print "</pre>";
-    }
+    if ($prop_details) { print "</pre>"; }
 
     if ($iters > 500) {
 	print p(b('Search for best committees failed.
 	Results are likely to be incorrect.'));
     }
-    if ($nonprop_details) {
-	print '<pre>'.b('Acquiring any missing preference information...').$cr;
+# add some obvious contenders: all but one of the top num_choices+1
+    if ($prop_details) {
+	print "<pre>Adding obvious contenders:\n";
     }
+    for (my $j = 0; $j <= $num_winners; $j++) {
+	@a = ();
+	for (my $k = 0; $k <= $num_winners; $k++) {
+	    if ($j != $k) { push @a, $choice_index[$k]; }
+	}
+	my $comm = flatten @a;
+	if (!$visited{$comm}) {
+	    push @committee, $comm;
+	    if ($prop_details) {
+		print 'added '.flatten(renumber($comm)).$cr;
+	    }
+	    $num_visited++;
+	}
+    }
+    dprint '</pre>'.b('Acquiring any missing preference information...<pre>').$cr;
+    STDOUT->flush();
     $recurse = 0;
     $divisor = 1;
     while ($divisor < $num_votes) { $divisor *= 10; }
+
+
     for (my $j = 0; $j <= $#committee; $j++) {
 	for (my $k = 0; $k < $j; $k++) {
 	    $curr_comm = $committee[$j];
 	    $new_comm = $committee[$k];
-	    compare_sets;
+	    compare_sets($curr_comm, $new_comm);
 	    my $jk = $tally1{$curr_comm}{$new_comm};
 	    my $kj = $tally2{$curr_comm}{$new_comm};
 	    $beatpath::matrix[$j][$k] = $cmatrix[$j][$k] = $jk;
@@ -726,7 +763,7 @@ sub PrintProportionalResults {
 		    $weaktally2{$curr_comm}{$new_comm}/$divisor;
 	}
     }
-    if ($nonprop_details) {
+    if ($prop_details) {
 	print '</pre>';
     }
     $beatpath::n = $#committee + 1;
@@ -745,7 +782,7 @@ sub PrintProportionalResults {
     $num_unbeaten = $#cwinner + 1;
     if ($num_unbeaten == 1) {
 	print h2("Winning set of choices".$cr);
-	print p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> Condorcet winner of this election was the following set of choices:");
+	print p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> winner of this election was the following set of choices:");
     } else {
 	print h2("Winning sets of choices$cr");
 	print p("There were $num_unbeaten unbeaten sets:$cr");
@@ -784,6 +821,7 @@ sub PrintProportionalResults {
              reporting maximal valid proportional preferences.
 	     Fractions indicate nonproportional preferences, which
 	     help break ties in proportional preference.');
+    STDOUT->flush();
     
     for ($j = 0; $j <= $#committee; $j++) {
 	$comm_choices[$j] = '('.flatten(renumber($committee[$j])).')';
@@ -795,11 +833,12 @@ sub PrintProportionalResults {
 	    beatpath matrix. Choice 1 is preferred
 	    to choice 2 if there is a better beatpath leading from 1 to 2
 	    than any leading from 2 to 1.");
+    STDOUT->flush();
 
     PrintMatrix $#committee+1, [@committee_cmatrix], [@comm_choices], [@comm_choice_index], 1;
 
     print hr();
-    print '<a name="comparison">';
+    print '<a name="comparison"></a>';
     print h2("Pairwise comparison");
 
     print p("You can compare any two sets of choices.
@@ -849,7 +888,7 @@ sub PrintProportionalResults {
 	print h3("$ccname vs. $ncname");
 	$recurse = 0;
 	print '<pre>';
-	compare_sets;
+	compare_sets($curr_comm, $new_comm);
 	print '</pre>';
 
 	$t1 = $tally1{$curr_comm}{$new_comm};
@@ -879,8 +918,8 @@ sub PrintProportionalResults {
 	print '</p>';
 	print p(b("Note:").' Nonproportional preferences are relevant only if there is a tie in proportional preferences.');
     }
-    print '</a>';
     print "<hr>\n";
+    STDOUT->flush();
     print h2('Nonproportional election');
     print p('The following gives the details of how the election
              would have resulted if run on single choices, without
