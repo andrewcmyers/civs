@@ -7,4 +7,5 @@ CIVSBINURL='/cgi-bin/andru/civs'
 SUPERVISOR='andru@cs.cornell.edu'
 CIVSURL='/civs'
 SMTPHOST='smtp.cs.cornell.edu'
+ADDTOPATH=':\\cygdrive\\c\\cygwin\\bin'
 LOCALDEBUG=1

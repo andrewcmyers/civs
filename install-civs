@@ -18,7 +18,7 @@ fi
 
 echo "Read settings file"
 
-make -s gettimeofday timeout
+make -s gettimeofday timeout lockserv
 
 TestAndCreateDir $HTMLDIR;
 TestAndCreateDir $CGIBINDIR;
@@ -38,7 +38,8 @@ TestAndCreateDir $CIVSDATADIR/elections;
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
-		 -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
+	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
+	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	< $f > "${HTMLDIR}/$f"
     done
 
@@ -55,7 +56,8 @@ TestAndCreateDir $CIVSDATADIR/elections;
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
-		 -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
+	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
+	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	 	 < "cgi-bin/$f" > "$CGIBINDIR/$f"
 	chmod a+x "${CGIBINDIR}/$f";
     done
@@ -93,6 +95,11 @@ TestAndCreateDir $CIVSDATADIR/elections;
 	cp timeout.exe $CIVSDATADIR/timeout.exe;
     else
 	cp timeout $CIVSDATADIR/timeout
+    fi
+    if [ -e lockserv.exe ]; then 
+	cp lockserv.exe $CIVSDATADIR/lockserv.exe;
+    else
+	cp lockserv $CIVSDATADIR/lockserv
     fi
 	
 echo "Install completed.  Check for any errors reported above.";

@@ -3,6 +3,7 @@ package civs_common;  # should be CIVS, or perhaps CIVS::Common
 use strict;
 use warnings;
 use POSIX ":sys_wait_h";
+use Socket;
 
 # Export the package interface
 BEGIN {
@@ -17,6 +18,7 @@ BEGIN {
                       $lockfile $private_host_id &Fatal_CIVS_Error
                       &unique_elements &civs_hash &system_load &CheckLoad
 		      &timeout &AdmissionControl);
+    $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
 # The local_debug flag must be declared before the call to set_message (in
@@ -234,27 +236,28 @@ sub CheckLoad {
     }
 }
 
+our $admission_socket = $home.'/admission_control';
+
 sub AdmissionControl {
-    if ($local_debug) { return 1; }
-    my $sin;
-    my $port = 32001;
+    # if ($local_debug) { return 1; }
     my $maxthreads = 10;
-    if (!($local_debug)) {
-	my $proto = getprotobyname('tcp');
-	socket(SMTP, &PF_INET, &SOCK_STREAM, $proto) || print "can't open socket: $!\n";
-	if ($port eq '') { exit 1; }
-	my $iaddr = gethostbyname('localhost') || print "no such host\n";
-	if ($iaddr eq '') { exit 1; }
-	$sin = pack_sockaddr_in($port, $iaddr);
+    if (!socket(ADMCTRL, &AF_UNIX, &SOCK_STREAM, 0)) {
+	HTML_Header('Cannot create Unix domain socket');
+	print p("can't open socket: $!\n");
+	exit 1;
     }
-    if (!connect(LOCKSERV, $sin)) {
-	print "Starting the lock server\n";
-	system("$home/lockserv $port $maxthreads &");
+    my $sa = pack_sockaddr_un($admission_socket);
+    if (!connect ADMCTRL, $sa) {
+	print pre("Starting the admission control lock server\n");
+	unlink($admission_socket);
+	system("$home/lockserv $admission_socket $maxthreads &");
 	sleep(1);
-	connect(LOCKSERV, $sin) || print "Can't start it!?\n";
+	if (!connect(ADMCTRL, $sa)) {
+	    print "Can't start it!?\n";
+	    exit 1;
+	}
     }
-    my $success = <LOCKSERV>;
-    close(LOCKSERV);
+    my $success = <ADMCTRL>;
     if ($success eq '') {
 	HTML_Header('CIVS server busy');
 	CIVS_Header('CIVS server busy');
