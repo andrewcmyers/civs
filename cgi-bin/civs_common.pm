@@ -10,7 +10,11 @@ BEGIN {
 
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
-    @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log &SecureNonce &fisher_yates_shuffle $home $thishost $civs_bin_path $civs_log $civs_url $local_debug $cr $lockfile $private_host_id &Fatal_CIVS_Error &unique_elements);
+    @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log
+                      &SecureNonce &fisher_yates_shuffle $home $thishost
+                      $civs_bin_path $civs_log $civs_url $local_debug $cr
+                      $lockfile $private_host_id &Fatal_CIVS_Error
+                      &unique_elements &civs_hash);
 }
 
 # The local_debug flag must be declared before the call to set_message (in
@@ -75,7 +79,7 @@ our $html_header_printed = 0;
 &init;
 
 sub init {
-	# Nothing to do here for now.
+ &GetPrivateHostID;
 }
 
 sub GetPrivateHostID {
@@ -171,6 +175,11 @@ sub SecureNonce {
     flock LOCK, &LOCK_UN;
     close(LOCK);
     return $ret;
+}
+
+# Generate a cryptographic hash of the arguments.
+sub civs_hash {
+    return substr(md5_hex(@_),0,16);
 }
 
 # From the Perl Cookbook, p. 121

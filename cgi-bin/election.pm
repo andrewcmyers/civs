@@ -25,7 +25,7 @@ BEGIN {
 	$title $email_addr $description $num_winners $addresses @addresses
 	$election_end $public $writeins $proportional $use_combined_ratings
 	$choices @choices $num_choices $num_auth $num_votes $recorded_voters
-	$ballot_reporting $authorization_key %authorized_voters
+	$ballot_reporting $authorization_key %used_voter_keys
 	%voter_keys %edata %vdata);
 }
 
@@ -43,7 +43,11 @@ our $election_id = '';
 our ($election_dir, $started_file, $stopped_file, $election_data, $election_log, $vote_data, $election_lock);
 
 our (%edata, %vdata);
-our ($name, $title, $email_addr, $description, $num_winners, $addresses, @addresses, $election_end, $public, $writeins, $proportional, $use_combined_ratings, $choices, @choices, $num_choices, $num_auth, $num_votes, $recorded_voters, $ballot_reporting, $authorization_key, %voter_keys, %authorized_voters);
+our ($name, $title, $email_addr, $description, $num_winners, $addresses,
+     @addresses, $election_end, $public, $writeins, $proportional,
+     $use_combined_ratings, $choices, @choices, $num_choices, $num_auth,
+     $num_votes, $recorded_voters, $ballot_reporting, $authorization_key,
+     %voter_keys, %used_voter_keys);
 
 # Non-exported variables
 my ($db_is_open, $election_is_locked);
@@ -89,11 +93,12 @@ sub init {
 	$ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = "";
 	%voter_keys = ();
 	&LoadHash('voter_keys', \%voter_keys);
-	%authorized_voters = ();
-	&LoadHash('authorized_voters', \%authorized_voters);
+ 	&LoadHash('used_voter_keys', \%used_voter_keys);
 }
 
 END {
+	&SaveHash('voter_keys', \%voter_keys);
+ 	&SaveHash('used_voter_keys', \%used_voter_keys);
 	&CloseDatabase;
     &UnlockElection;
 }
@@ -240,12 +245,7 @@ sub CheckVoterKey {
     my ($voter_key, $old_voter_key, $voter) = @_;
  
     if ($old_voter_key and !$voter_key) {
-   		if ($private_host_id eq '') {
-			GetPrivateHostID;
-	    }
-   
-    	my $voter_key_check = substr(md5_hex("voter".$private_host_id
-				.$election_id.$voter), 0, 16);
+    	my $voter_key_check = civs_hash("voter".$private_host_id.$election_id.$voter);
 		if ($voter_key_check ne $old_voter_key) {
 		    Log("Invalid voter key $old_voter_key presented by $voter " .
 				"for election $election_id, expected $voter_key_check");
@@ -255,7 +255,7 @@ sub CheckVoterKey {
 		    exit 0;
 		}
     } else {
-		if (!$voter_keys{$voter_key}) {
+		if (!$voter_keys{civs_hash($voter_key)}) {
 		    print h1("Error"), p("Your voter key is invalid. ", 
   	    		"You should have received a correct URL by email."),
        			end_html();	
@@ -264,9 +264,11 @@ sub CheckVoterKey {
     }
 }
 
+
+
 sub CheckNotVoted {
 	my ($voter_key, $old_voter_key, $voter) = @_;
-    if ($vdata{$voter_key}) {
+    if ($used_voter_keys{civs_hash($voter_key)}) {
 		print h1("Already voted");
 		print p("A vote has already been cast using your voter key.");
 		PointToResults;
@@ -282,15 +284,30 @@ sub CheckNotVoted {
     }
 }
 
+sub ControlKeyError {
+   	print h1("Error"),
+          p("Invalid key. You should have received a correct URL for
+             controlling the election by email. This error has been logged.");
+   	print end_html();
+   	ElectionLog("Election: $title ($election_id) : invalid attempt to close
+                 election (wrong key)");
+   	exit 0;
+}
+
 sub CheckControlKey {
     my $control_key = shift; 
-    GetPrivateHostID;
-    my $control_key_check = substr(md5_hex("control".$private_host_id.$election_id), 0, 16);
-    if ($control_key ne $control_key_check) {
-	print h1("Error"), p("Invalid key. You should have received a correct URL for controlling the election by email. This error has been logged.");
-	print end_html();
-	ElectionLog("Election: $title ($election_id) : invalid attempt to close election (wrong key)");
-	exit 0;
+    
+    if (defined($edata{'hash_control_key'})) {
+        my $hash_control_key = civs_hash($control_key);
+        my $hash_control_key_check = $edata{'hash_control_key'};
+        if ($hash_control_key ne $hash_control_key_check) {
+            &ControlKeyError;
+        }
+    } else {
+        my $control_key_check = civs_hash("control".$private_host_id.$election_id);
+        if ($control_key ne $control_key_check) {
+            &ControlKeyError;
+        }
     }
 }
 
@@ -314,7 +331,7 @@ sub CheckAuthorizationKey {
 		# we've already checked the second case, assume the first.
 		return 0;
 	}
-	my $hash_authorization_key = substr(md5_hex($authorization_key), 0, 16);
+	my $hash_authorization_key = civs_hash($authorization_key);
 	my $hash_authorization_key_check = $edata{'hash_authorization_key'};
 	return $hash_authorization_key eq $hash_authorization_key_check;
 }
@@ -371,6 +388,17 @@ sub ElectionLog {
     close ELECTION_LOG;
 }
 
+# Generate a voter key as the hash of the voter's email,
+# the election's authorization key, and the server's private key.
+# Assumes that the authorization key has been validated.
+sub GenerateVoterKey {
+    my $voter_email = shift;
+    my $authorization_key = shift;
+    my $voter_key = civs_hash($voter_email, $authorization_key,
+        $private_host_id);
+    return $voter_key;
+}
+
 # Construct new voter keys for all of the voters sent in @_.
 # Send all of the voters their keys, with logging to STDOUT.
 # And record the keys in the database.
@@ -381,28 +409,25 @@ sub SendKeys {
 	my $num_added = 0;
     if (!($local_debug)) { ConnectMail; }
     foreach my $v (@addresses) {
-		my $url = "";
+        my $url = "";
 		if ($public eq 'yes') {
 			$url = "http://$thishost$civs_bin_path/vote?id=$election_id";
 			$url .= "&akey=$authorization_key"
 				if (&ElectionUsesAuthorizationKey);
 		} else {
-			if (&ElectionUsesAuthorizationKey) {
-				my $address_hash = substr(md5_hex($v,$authorization_key),0,16);
-				if ($authorized_voters{$address_hash}) {
-					# This email address has already been added to the election
-					print "Voter \"$v\" is already an authorized voter.\n";
-					next;
-				} else {
-					$authorized_voters{$address_hash} = 1;
-				}
+			my $voter_key = GenerateVoterKey($v, $authorization_key);
+            my $hash_voter_key = civs_hash($voter_key);
+            if ($voter_keys{$hash_voter_key}) {
+                # This email address has already been added to the election
+				print "Voter \"$v\" is already an authorized voter. ",
+                      "The voter's key will be resent to the voter. ";
+			} else {
+    			$voter_keys{$hash_voter_key} = 1;
+           		$num_added++;
 			}
-			my $voter_key = SecureNonce();
-			$voter_keys{$voter_key} = 1;
-			$url = "http://$thishost$civs_bin_path/vote?id=$election_id"
+    		$url = "http://$thishost$civs_bin_path/vote?id=$election_id"
 			         ."&key=$voter_key";
 		}
-		$num_added++;
 
 		if ($local_debug) {
 		    print "voter link: <a href=\"$url\">$url</a>\n";
@@ -436,9 +461,6 @@ sub SendKeys {
 		    Send "."; ConsumeSMTP;
 		}
     }
-    SaveHash('voter_keys', \%voter_keys);
-	SaveHash('authorized_voters', \%authorized_voters);
-
     if (!($local_debug)) {
     	CloseMail;
     }

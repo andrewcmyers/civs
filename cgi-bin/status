@@ -1,0 +1,69 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use civs_common;
+use CGI qw(:standard);
+use File::stat;
+use DB_File;
+undef $/;
+
+&HTML_Header("CIVS Server Status");
+&CIVS_Header("Server Status");
+
+my @rows = ();
+push @rows, th(['ID', 'Title', 'Supervisor', 'Public/Private', '# Authorized',
+                '# Votes', 'Started?', 'Stopped?', 'Uses auth. key?',
+                'Last updated']);
+
+my $elections_dir = $home."/elections/";
+opendir(DIR, $elections_dir) or die "Can't open directory $elections_dir: $!";
+while (defined(my $file = readdir(DIR))) {
+    next if $file =~/^\.\.?$/;    # skip . and ..
+    next unless -d "$elections_dir/$file";   # skip non-directories
+    next unless $file =~ m/^E_[0123456789abcdef]+/;   # skip non-elections
+    
+    my $election_dir = "$elections_dir/$file";
+    my $election_data = $election_dir."/election_data";
+    my $vote_data = $election_dir."/vote_data";
+    my $started_file = $election_dir."/started";
+	my $stopped_file = $election_dir."/stopped";
+
+    my (%edata, %vdata);
+    tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
+    tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
+
+    my $name = $edata{'name'};
+	my $title = $edata{'title'};
+    my $email_addr = $edata{'email_addr'};
+	my $public = ($edata{'public'} eq 'yes') ? "Public" : "Private";
+    my $num_auth = $edata{'num_auth'};
+	my $num_votes = $vdata{'num_votes'};
+    my $started = (-e $started_file) ? "Yes" : "No";
+    my $stopped = (-e $stopped_file) ? "Yes" : "No";
+    my $auth_key = (defined($edata{'hash_authorization_key'})) ? "Yes" : "No";
+    my $st = stat($vote_data);
+    my $last_update = 'N/A';
+    $last_update = localtime($st->mtime) if defined($st);
+
+    push @rows, Tr(td([$file,
+                       $title,
+                       "$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
+                       $public,
+                       $num_auth,
+                       $num_votes,
+                       $started,
+                       $stopped,
+                       $auth_key,
+                       $last_update
+                       ]));
+
+    untie %edata;
+    untie %vdata;
+}
+
+print table({}, @rows);
+            
+print end_html();
+
+

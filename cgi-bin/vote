@@ -53,7 +53,7 @@ if ($public ne 'yes') {
 	    $voter = "voter";           
 	} else {
 		CheckAuthorizationKeyForVoting($authorization_key);
-		$voter_key = substr(md5_hex(remote_addr(),$authorization_key), 0, 16);
+		$voter_key = civs_hash(remote_addr(),$authorization_key);
 	}
 }
 CheckNotVoted($voter_key, $old_voter_key, $voter);
@@ -248,9 +248,18 @@ sub ProcessVote {
 		$rank[$i] = $rank;
     }
     
-    $vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
-    
+    # Record vote, but not voter
+    my $voter_ballot_release_key = SecureNonce();
+    my $ballot_key = civs_hash($voter_key, $voter_ballot_release_key);
+    $vdata{$ballot_key} = $vote;
+    $vdata{'num_votes'}++;
+    $used_voter_keys{civs_hash($voter_key)} = 1;
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
+    if ($recorded_voters) {
+		$vdata{'recorded_voters'} = $recorded_voters . "\n".  $ballot_key;
+    } else {
+		$vdata{'recorded_voters'} = $ballot_key;
+    }
 
 	# Now, update matrix.
 	# Note: vdata{"2.3"} contains the number of votes where
@@ -268,14 +277,11 @@ sub ProcessVote {
 		    }	
 		}
     }
-    $vdata{'num_votes'}++;
-    if ($recorded_voters) {
-		$vdata{'recorded_voters'} = $recorded_voters . "\n".  $voter_key;
-    } else {
-		$vdata{'recorded_voters'} = $voter_key;
-    }
 
-    print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.\n");
+    print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.");
+    
+    # This is code to be enabled later, when we implement ballot checking.
+    #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
 
     PointToResults;
     print end_html();

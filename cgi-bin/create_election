@@ -108,9 +108,10 @@ CIVS_Header("Election created: $title");
 # print pre("public = $public");
 print "<pre>";
 
-my $control_key = substr(md5_hex("control".$private_host_id.$election_id), 0, 16);
-my $authorization_key = substr(md5_hex("authorization".$private_host_id.$election_id), 0, 16);
-$edata{'hash_authorization_key'} = substr(md5_hex($authorization_key), 0, 16);
+my $control_key = SecureNonce();
+my $authorization_key = SecureNonce();
+$edata{'hash_control_key'} = civs_hash($control_key);
+$edata{'hash_authorization_key'} = civs_hash($authorization_key);
 
 my $url = "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key&akey=$authorization_key";
 
