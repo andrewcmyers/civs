@@ -49,6 +49,8 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $num_votes, $recorded_voters, $ballot_reporting, $authorization_key,
      %voter_keys, %used_voter_keys);
 
+our $civs_supervisor = '@SUPERVISOR@';
+
 # Non-exported variables
 my ($db_is_open, $election_is_locked);
 
@@ -424,7 +426,7 @@ sub SendKeys {
             if ($voter_keys{$hash_voter_key}) {
                 # This email address has already been added to the election
 				print "Voter \"$v\" is already an authorized voter. ",
-                      "The voter's key will be resent to the voter. ";
+                      "The voter's key will be resent to the voter.\n";
 			} else {
     			$voter_keys{$hash_voter_key} = 1;
            		$num_added++;

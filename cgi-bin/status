@@ -14,7 +14,7 @@ undef $/;
 &CIVS_Header("Server Status");
 
 my @rows = ();
-push @rows, th(['ID', 'Title', 'Supervisor', 'Public/Private', '# Authorized',
+push @rows, th(['Title', 'Supervisor', 'Public/Private', '# Authorized',
                 '# Votes', 'Started?', 'Stopped?', 'Uses auth. key?',
                 'Last updated']);
 
@@ -48,9 +48,8 @@ while (defined(my $file = readdir(DIR))) {
     my $last_update = 'N/A';
     $last_update = localtime($st->mtime) if defined($st);
 
-    push @rows, Tr(td([a({-href=>'http://www5.cs.cornell.edu/cgi-bin/andru/civs/results?id='.$file}, $file),
+    push @rows, Tr(td([a({-href=>'http://www5.cs.cornell.edu/cgi-bin/andru/civs/results?id='.$file}, small($title)),
     #push @rows, Tr(td([$file,
-                       $title,
                        "$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
                        $public,
                        $num_auth,
@@ -58,7 +57,7 @@ while (defined(my $file = readdir(DIR))) {
                        $started,
                        $stopped,
                        $auth_key,
-                       $last_update
+                       small($last_update)
                        ]));
 
     untie %edata;
