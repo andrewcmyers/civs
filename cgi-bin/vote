@@ -120,7 +120,7 @@ if (param("AddWritein") ne '') {
 }
 
 print "<p>Welcome, $voter! ";
-print "This page allows you to vote on <b>$title</b></p>
+print "This page allows you to vote on <b>".escapeHTML($title)."</b></p>
 <p>$description</p>
 
 Only the $winners_text will win the election and be selected.<br>
