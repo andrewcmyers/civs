@@ -9,8 +9,7 @@ package servlet;
 /**
  * @author andru
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * A Page is an entire HTML page.
  */
 public class Page extends Node {
 	Head head;

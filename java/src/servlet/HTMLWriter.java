@@ -31,7 +31,17 @@ public class HTMLWriter {
 	public void print(String s) {
 		pos += s.length();
 	}
-
+	public void print(int i) {
+		String s = Integer.toString(i);
+	}
+	public void printq(String s) {
+		print("\"");
+		print(s);
+		print("\"");
+	}
+	public void printq(int i) {
+		printq(Integer.toString(i));
+	}
 	public void breakLine() {
 		writer.print("\n");
 		for (int i = 0; i < indent; i++) {

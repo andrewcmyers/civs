@@ -9,10 +9,11 @@ package servlet;
 /**
  * @author andru
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * A container is an HTML form that starts with a
+ * begin tag and ends with an end tag. This class has
+ * package scope to prevent arbitrary use.
  */
-public class Container extends Node {
+class Container extends Node {
 	String tag;
 	Node contents;
 	
