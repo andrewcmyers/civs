@@ -8,7 +8,7 @@ $civs_url = "@CIVSURL@";
 $last_election_id_file = $home."/last_election_id";
 $private_host_id_file = $home."/private_host_id";
 $lockfile = $home."/global_lock";
-$local_debug = 1;
+$local_debug = 0;
 
 sub GetPrivateHostID {
     open(HOSTID, $private_host_id_file);
@@ -39,7 +39,7 @@ print "
 sub Log {
     $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open(CIVS_LOG, ">>$civs_log");
-    print CIVS_LOG $now." ".$_[0]."\n";
+    print CIVS_LOG $now." ".remote_addr()." ".$_[0]."\n";
     close(CIVS_LOG);
 }
 

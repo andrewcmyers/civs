@@ -40,8 +40,8 @@ if (!IsStarted) {
     print '<p>The election is in progress. Press this button to end it: ';
     print hidden('id', $election_id);
     print hidden('key', $control_key);
-    print '<input type="submit" value="End election" name="close">';
-    print '</p></form>';
+    print '<input type="submit" value="End election" name="close">'."\n";
+    print '</p></form>'."\n";
 
     if ($writeins eq 'yes') {
 	if (param('nowriteins') ne '') {
@@ -56,7 +56,8 @@ if (!IsStarted) {
 		    button to stop allowing new write-ins.',
 		    hidden('id', $election_id),
 		    hidden('key', $control_key),
-		'<input type="submit" value="No write-ins" name="nowriteins">');
+		'<input type="submit" value="Disallow write-ins" name="nowriteins">');
+	    print "</form>\n";
 	}
     }
 } else {

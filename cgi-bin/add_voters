@@ -39,7 +39,7 @@ if (!($local_debug)) { ConnectMail; }
 
 foreach $v (@new_addresses) {
   $voter_key = substr(md5_hex("voter".$private_host_id.$election_id.$v), 0, 16);
-  $url = "http://$thishost$civs_bin_path/vote?id=$election_id&voter=$v&voter_key=$voter_key";
+  $url = "http://$thishost$civs_bin_path/vote?id=$election_id&voter=".CGI::escape($v)."&voter_key=$voter_key";
   print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
   if ($local_debug) {
     print "link: <a href=\"$url\">$url</a>\n";
@@ -56,7 +56,7 @@ foreach $v (@new_addresses) {
     Send "$name ($email_addr). If you would like to vote, please visit the";
     Send "following URL:";
     Send "";
-    Send "$url";
+    Send $url;
     Send "";
     Send "This is your private URL. Do not give it to anyone else because";
     Send "they could use it to vote for you.";
@@ -74,6 +74,8 @@ foreach $v (@new_addresses) {
 Send "quit";
 close(SMTP);
 print "Done.\n</pre>\n";
+
+print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key\">Go back to election control</a>");
 
 $num_new_voters = $#new_addresses + 1;
 $edata{'num_auth'} += $num_new_voters;

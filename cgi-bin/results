@@ -384,7 +384,7 @@ print "<pre>";
 		if ($beaten[$b] && !$borm[$cci][$b]) {
 		    $change = 1;
 		    $borm[$cci][$b] = 1;
-		    print "$committee[$cci] beats $committee[$b]\n";
+		    # print "$committee[$cci] beats $committee[$b]\n";
 		}
 	    }
 	    if ($change) {

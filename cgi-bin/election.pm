@@ -133,6 +133,7 @@ sub CheckVoterKey {
     }
     $voter_key_check = substr(md5_hex("voter".$private_host_id.$election_id.$voter), 0, 16);
     if ($voter_key_check ne $voter_key) {
+	Log("Invalid voter key $voter_key presented by $voter, expected $voter_key_check");
 	print h1("Error"), p("Your voter key is invalid. You should have received a correct URL by email."), end_html();
 	exit 0;
     }
