@@ -597,15 +597,15 @@ print "<pre>";
 	print "</tr>\n";
     }
     print "</table>";
-    print h2("Comparison");
+    print h2("Pairwise comparison");
 
     local $max = $num_choices-1;
-    print p("The following form allows comparison of any two sets of choices.
+    print p("You can compare any two sets of choices.
     Just enter the numbers of the choices (from 0 to $max) in each set, with the
     numbers of one set's choices in the left column and the numbers of the other's
     in the right column.");
     print '<form method="POST"
-	    action="'.$thisurl.'"
+	    action="'.$thisurl.'#comparison"
 	    enctype="multipart/form-data"
 	    name="CompareSets">';
 
@@ -633,6 +633,7 @@ print "<pre>";
     print '<input type="submit" value="Compare sets" name="Compare">';
     print '</form>';
     if ($comparison_request) {
+	print '<a name="comparison">';
 	for (local $i = 1; $i <= $num_winners; $i++) {
 	    $curr_comm[$i-1] = param("L$i");
 	    $new_comm[$i-1] = param("R$i");
@@ -674,6 +675,7 @@ print "<pre>";
 	}
 	print '</p>';
 	print p(b("Note:").' Nonproportional preferences are relevant only if there is a tie in proportional preferences.');
+	print '</a>';
     }
 }
 
