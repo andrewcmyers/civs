@@ -37,7 +37,7 @@ sub ConnectMail {
     if (connect(SMTP, $sin)) {
 	print STDERR "SMTP Connection established\n";
 	ConsumeSMTP;
-	Send "helo www5.cs.cornell.edu";
+	Send 'helo @THISHOST@';
 	ConsumeSMTP;
     } else {
 	print STDERR "Can't connect\n";
