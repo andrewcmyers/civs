@@ -19,8 +19,8 @@ package beatpath;
 # the minimal element of every symmetric pair
 # of elements, setting it to zero.
 sub clean_matrix {
-  for (my $i = 0; $i < $n; $i++) {
-    for (my $j = 0; $j < $n; $j++) {
+  for (local $i = 0; $i < $n; $i++) {
+    for (local $j = 0; $j < $n; $j++) {
 	if ($matrix[$i][$j] == $matrix[$j][$i]) {
 	    $matrix[$i][$j] = $matrix[$j][$i] = 0;
 	} elsif ($matrix[$i][$j] < $matrix[$j][$i]) {
@@ -40,7 +40,7 @@ sub clean_matrix {
 # already clean.
 
 sub transitive_closure {
-  my @save = @matrix;
+  local @save = @matrix;
 
   # compute transitive closure with weights
 
@@ -51,9 +51,9 @@ sub transitive_closure {
       for ($j = 0; $j < $n; $j++) {
 	for ($k = 0; $k < $n; $k++) {
 # consider going from i to k via j
-	  my $s1 = $matrix[$i][$j];
-	  my $s2 = $matrix[$j][$k];
-	  my $s = $s1;
+	  local $s1 = $matrix[$i][$j];
+	  local $s2 = $matrix[$j][$k];
+	  local $s = $s1;
 	  if ($s > $s2) { $s = $s2; }
 # note: if one of s1 or s2 is 0, s will be too -- so can ignore this case
 	  if ($s > $matrix[$i][$k]) {
@@ -73,10 +73,11 @@ sub transitive_closure {
 # are considered both as possible winners and as beaters.
 sub winners {
   @winner = ();
-  for (my $i = 0; $i < $n; $i++) {
+
+  for (local $i = 0; $i < $n; $i++) {
     if (!$ignore[$i]) {
-      my $won = 1;
-      for (my $j = 0; $j < $n; $j++) {
+      local $won = 1;
+      for (local $j = 0; $j < $n; $j++) {
 	if (!$ignore[$j]) {
 	  if ($matrix[$j][$i] > $matrix[$i][$j]) {
 	    $won = 0;
@@ -91,6 +92,32 @@ sub winners {
   }
 }
 
+# Return the loser or losers in @losers, according to
+# the transitive beatpath closure of @matrix. These
+# are the candidates that don't beat anyone. Candidates whose
+# corresponding entry in @ignore is 1 are ignored, others
+# are considered both as possible losers and as beaters.
+sub losers {
+  @loser = ();
+  for (local $i = 0; $i < $n; $i++) {
+    if (!$ignore[$i]) {
+      local $won_any = 0;
+      for (local $j = 0; $j < $n; $j++) {
+	if (!$ignore[$j]) {
+	  if ($matrix[$i][$j] > $matrix[$j][$i]) {
+	    $won_any = 1;
+	    last;
+	  }
+	}
+      }
+      if (!$won_any) {
+	push @loser, $i
+      }
+    }
+  }
+}
+
+
 # Rank the $n candidates using the raw
 # information in $matrix, according to
 # the beatpath winner criterion. Place
@@ -98,20 +125,23 @@ sub winners {
 # is an array containing the highest ranked
 # candidates and so on.
 sub rank_candidates {
-  my @save_matrix = @matrix;
+  local @save_matrix = @matrix;
   clean_matrix();
   transitive_closure();
 
   local $num_ranked = 0;
+  losers();
+  foreach $j (@loser) { $ignore[$j] = 1; }
+  $num_ranked += $#loser + 1;
   @result = ();
   while ($num_ranked < $n) {
     winners();
     push @result, [@winner];
-    for (local $i = 0; $i <= $#winner; $i++) {
-      $ignore[$winner[$i]] = 1;
-    }
+    foreach $j (@winner) { $ignore[$j] = 1; }
     $num_ranked += $#winner + 1;
   }
+  push @result, [@loser];
+  @closure_matrix = @matrix;
   @matrix = @save_matrix;
 }
 

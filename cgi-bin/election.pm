@@ -2,6 +2,8 @@ $election_id = param('id');
 $election_id =~ s/\.//g;
 $election_id =~ s/\///g;
 
+# set up filename paths
+
 $election_dir = $home."/elections/".$election_id;
 $started_file = $election_dir."/started";
 $stopped_file = $election_dir."/stopped";
@@ -9,8 +11,13 @@ $election_data = $election_dir."/election_data";
 $election_log = $election_dir."/vote_log";
 $vote_data = $election_dir."/vote_data";
 $election_lock = $election_dir."/lock";
+
+# open databases
+
 $db = tie %edata, "DB_File", $election_data, O_RDWR, 0666, $DB_HASH;
 $vdb = tie %vdata, "DB_File", $vote_data, O_CREAT|O_RDWR, 0666, $DB_HASH;
+
+# extract data from databases
 
 $name = $edata{'name'};
 $title = $edata{'title'};
@@ -27,6 +34,8 @@ $choices = $edata{'choices'};
 $num_choices = $#choices + 1;
 $num_auth = $edata{'num_auth'};
 $num_votes = $vdata{'num_votes'};
+
+# utility routines
 
 sub LockElection {
     sysopen(ELOCK, $lockfile, O_CREAT|O_RDWR);
