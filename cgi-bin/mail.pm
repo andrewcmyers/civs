@@ -17,7 +17,7 @@ BEGIN {
 }
 
 # Package imports
-use vars qw($local_debug);	# TODO: local_debug needs to be exported from civs_common
+use civs_common;
 use Socket;
 
 # Non-exported package globals
@@ -25,7 +25,10 @@ our $sin;
 our $verbose;
 
 # Package initialization code
-INIT {
+
+&init;
+
+sub init {
 	if (!($local_debug)) {
 		my $proto = getprotobyname('tcp');
 		socket(SMTP, &PF_INET, &SOCK_STREAM, $proto) || print "can't open socket: $!\n";
