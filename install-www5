@@ -1,0 +1,7 @@
+PERL="/usr/bin/perl"
+HTMLDEST='/www5/andru/public_html/civs'
+CGIBINDIR='/www5/andru/public_cgi-bin/civs'
+THISHOST='www5.cs.cornell.edu'
+CIVSDATADIR='/www5/andru/civs'
+CIVSBINURL='/cgi-bin/andru/civs'
+CIVSURL='/~andru/civs'

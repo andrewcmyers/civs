@@ -1,0 +1,41 @@
+#!/bin/sh
+
+if test $# -ne 1
+then
+  echo "Usage: install-civs <settings-file>"
+  exit 1
+fi
+
+. $1 || exit 1
+
+echo "Read settings file"
+
+    for f in civs_create index public_elections proportional sec_priv
+    do
+	echo "copying $f.html"
+	sed  -e 's|@PERL@|'$PERL'|' \
+	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
+	     -e 's|@THISHOST@|'$THISHOST'|' \
+	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
+	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
+	     -e 's|@CIVSURL@|'$CIVSURL'|' \
+	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
+	< $f.html > "${HTMLDIR}/$f.html"
+    done
+
+    for f in add_voters beatpath.pm civs_common.pm close control \
+	create_election election.pm mail.pm results \
+	start_election vote
+    do
+	echo "copying cgi-bin/$f"
+	sed  -e 's|@PERL@|'$PERL'|' \
+	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
+	     -e 's|@THISHOST@|'$THISHOST'|' \
+	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
+	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
+	     -e 's|@CIVSURL@|'$CIVSURL'|' \
+	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
+	< "cgi-bin/$f" > "$CGIBINDIR/$f"
+    done

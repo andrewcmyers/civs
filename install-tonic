@@ -1,0 +1,9 @@
+PERL="c:/cygwin/bin/perl"
+HTMLDIR='/cygdrive/c/htdocs/civs'
+CGIBINDIR='/cygdrive/c/cgi-bin/andru/civs'
+THISHOST='localhost'
+CIVSDATADIR='/cygdrive/c/andru/civs'
+CIVSBINURL='/cgi-bin/andru/civs'
+SUPERVISOR='andru@cs.cornell.edu'
+CIVSURL='/civs'
+SMTPHOST='smtp.cs.cornell.edu'
