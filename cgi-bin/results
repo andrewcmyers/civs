@@ -51,7 +51,7 @@ sub print_nonprop_results {
     print h2("Preference matrix");
     print p("The following matrix shows the number of ballots on
     which choices beat other choices, considered pairwise.");
-    print "<table>\n";
+    print '<table class="matrix">';
 
     print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
     for ($jj = 0; $jj < $num_choices; $jj++) {
@@ -67,21 +67,19 @@ sub print_nonprop_results {
 	print "<td width=40px>&nbsp;</td>\n";
 	for ($kk = 0; $kk < $num_choices; $kk++) {
 	    $k = $choice_index[$kk];
-	    print "<td class=count>";
 	    if ($j == $k) {
-		print "- ";
+		print '<td class="count">-</td>';
 	    } else {
 		if ($matrix[$j][$k] > $matrix[$k][$j]) {
-		    print '<span class="win">';
+		    print '<td class="win">';
 		} elsif ($matrix[$j][$k] == $matrix[$k][$j]) {
-		    print '<span class="tie">';
+		    print '<td class="tie">';
 		} else {
-		    print '<span class="lose">';
+		    print '<td class="lose">';
 		}
 		print $matrix[$j][$k];
-		print ' </span>';
+		print "</td>";
 	    }
-	    print "</td>";
 	}
 	print "</tr>\n";
     }
@@ -94,7 +92,7 @@ sub print_nonprop_results {
     to choice 2 if there is a better beatpath leading from 1 to 2
     than any leading from 2 to 1.
     ");
-    print "<table>\n";
+    print '<table class="matrix">'.$cr;
 
     print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
     for ($jj = 0; $jj < $num_choices; $jj++) {
@@ -110,22 +108,21 @@ sub print_nonprop_results {
 	print "<td width=40px>&nbsp;</td>\n";
 	for ($kk = 0; $kk < $num_choices; $kk++) {
 	    $k = $choice_index[$kk];
-	    print "<td class=count>";
 	    if ($j == $k) {
-		print "-";
+		print '<td class="count">-';
 	    } else {
 		$w = $closure_matrix[$j][$k];
 		$l = $closure_matrix[$k][$j];
 		if ($w > $l) {
-		    print '<span class="win">';
+		    print '<td class="win">';
 		} elsif ($w == $l) {
-		    print '<span class="tie">';
+		    print '<td class="tie">';
 		} else {
-		    print '<span class="lose">';
+		    print '<td class="lose">';
 		}
-		if ($w != 0) { print $w.'</span>'; } else { print "</span>."; }
+		if ($w != 0) { print $w; } else { print "."; }
+		print '</td>';
 	    }
-	    print "</td>";
 	}
 	print "</tr>\n";
     }
@@ -635,7 +632,7 @@ print "<pre>";
              reporting maximal valid proportional preferences.
 	     Fractions indicate nonproportional preferences, which
 	     help break ties in proportional preference.');
-    print "<table>$cr";
+    print "<table class=\"matrix\">$cr";
     print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
     for ($j = 0; $j <= $#committee; $j++) {
 	print "<th width=20px>".($j+1).".</td>";
@@ -649,21 +646,19 @@ print "<pre>";
 	print "<td width=40px>&nbsp;</td>\n";
 	for ($kk = 0; $kk <= $#committee; $kk++) {
 	    $k = $comm_choice_index[$kk];
-	    print "<td class=count>";
 	    if ($j != $k) {
 		if ($cmatrix[$j][$k] > $cmatrix[$k][$j]) {
-		    print '<span class="win">';
+		    print '<td class="win">';
 		} elsif ($cmatrix[$j][$k] == $cmatrix[$k][$j]) {
-		    print '<span class="tie">';
+		    print '<td class="tie">';
 		} else {
-		    print '<span class="lose">';
+		    print '<td class="lose">';
 		}
 		print $cmatrix[$j][$k];
-		print '</span>';
+		print '</td>';
 	    } else {
-		print '-';
+		print '<td class="count">-</td>';
 	    }
-	    print "</td>";
 	}
 	print "</tr>\n";
     }
@@ -675,10 +670,10 @@ print "<pre>";
 	    to choice 2 if there is a better beatpath leading from 1 to 2
 	    than any leading from 2 to 1.");
 
-    print "<table>\n";
-    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+    print '<table class="matrix">';
+    print '<tr><td>&nbsp;</td><td>&nbsp;</td>';
     for ($j = 0; $j <= $#committee; $j++) {
-	print "<th width=20px>".($j+1).".</th>";
+	print '<th width=20px>'.($j+1).'.</th>';
     }
     print "</tr>\n";
     for ($jj = 0; $jj <= $#committee; $jj++) {
@@ -689,28 +684,27 @@ print "<pre>";
 	print "<td width=40px>&nbsp;</td>\n";
 	for ($kk = 0; $kk <= $#committee; $kk++) {
 	    $k = $comm_choice_index[$kk];
-	    print "<td class=count>";
 	    # print "(".$matrix[$j][$k].") ";
 	    if ($j == $k) {
-		print "-";
+		print '<td class="count">-</td>';
 	    } else {
 		$w = $committee_cmatrix[$j][$k];
 		$l = $committee_cmatrix[$k][$j];
 		if ($w > $l) {
-		    print '<span class="win">';
+		    print '<td class="win">';
 		} elsif ($w == $l) {
-		    print '<span class="tie">';
+		    print '<td class="tie">';
 		} else {
-		    print '<span class="lose">';
+		    print '<td class="lose">';
 		}
 		if ($w > $l) {
 		    print "$w";
 		} else {
-		    if ($w != 0) { print $w.'</span>'; }
-		    else { print "</span>."; }
+		    if ($w != 0) { print $w; }
+		    else { print "."; }
 		}
+		print "</td>";
 	    }
-	    print "</td>";
 	}
 	print "</tr>\n";
     }

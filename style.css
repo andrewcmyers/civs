@@ -6,7 +6,8 @@ body, table, p, ul, li  { font-family: Arial, helvetica, sans-serif; font-size: 
 
 
 body { background-color: #c0e0ff }
-table { background-color: #e0f0ff }
+table { background-color: #d0e8ff }
+table.matrix { background-color: #d0e8ff }
 table.form { background-color: transparent }
 div.emphasized { background-color: #ffffd0 }
 
@@ -22,8 +23,6 @@ table.banner { background-color: #000080 }
 table.banner h1 { color: white }
 table.banner h2 { color: white }
 
-td.count { text-align: center; font-family: Courier New, courier, fixed }
-th.choice { text-align: left }
 
 /* Use this style to highlite changes to problem sets */
 .change      { color: #000000; background-color: #99CCFF }
@@ -51,6 +50,11 @@ td { font-family: Arial, helvetica, sans-serif; font-size: 11pt; }
 
 td.recitation { background-color: #FFF0d0 }
 
-span.win { color: #004000; font-weight: bold }
-span.tie { color: #606000; font-weight: bold }
-span.lose { color: #400000; font-weight: bold }
+td.win { font-family: Courier New, courier, fixed; text-align:center;
+	background-color: #d0ffd0; font-weight: bold }
+td.tie { font-family: Courier New, courier, fixed; text-align:center;
+	background-color: #ffffd0; font-weight: bold }
+td.lose { font-family: Courier New, courier, fixed; text-align:center;
+	background-color: #ffd0d0; font-weight: bold }
+td.count { text-align: center; font-family: Courier New, courier, fixed }
+th.choice { text-align: left }
