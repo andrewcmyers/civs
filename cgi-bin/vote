@@ -183,7 +183,7 @@ for (my $i = 0; $i < $num_choices; $i++) {
     my $selected = $rank[$k];
     my $choice = $choices[$k];
     if ($js_ui) {
-	print "<tr onClick=\"select_row(this, event.shiftKey);\"><td><b>$choice</b></td>\n";
+	print "<tr onClick=\"select_row(this, event.shiftKey||event.ctrlKey);\"><td><b>$choice</b></td>\n";
     } else {
 	print "<tr><td><b>$choice</b></td>\n";
     }
