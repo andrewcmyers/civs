@@ -45,7 +45,14 @@ close(LOCK);
 $election_dir = $home."/elections/".$election_id;
 $election_data = $election_dir."/election_data";
 
-mkdir($election_dir);
+if (!mkdir($election_dir)) {
+    HTML_Header("CIVS Election Creation");
+    CIVS_Header();
+    print h1("Error");
+    print p("The election directory is not writeable");
+    print end_html();
+    exit 0;
+}
 
 $db = tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 

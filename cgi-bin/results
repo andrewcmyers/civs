@@ -156,7 +156,7 @@ sub PrintNonproportionalDetails {
 
     if ($ballot_reporting eq 'yes') {
 	@voters = split /\n/, $vdata{'recorded_voters'};
-	if ($#voters > 0) {
+	if ($#voters >= 0) {
 		@headings = @choices;
 		@rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
 
