@@ -530,10 +530,6 @@ sub PrintProportionalResults {
 	}
     }
     #print "num choices = $num_choices, num winners = $num_winners\n";
-    for (my $i = 0; $i < $num_winners && $i < $num_choices; $i++) {
-	$curr_comm[$i] = $choice_index[$i];
-    }
-    @curr_comm = sort @curr_comm;
 
     if ($num_choices > $num_winners) {
 # need to throw out some choices...
@@ -553,12 +549,18 @@ sub PrintProportionalResults {
 	    for (my $i = 0; $i < $num_winners; $i++) { $in{$c[$i]} = 1; }
 	}
 	$change = 1;
-	$curr_comm = flatten @curr_comm;
 
 # @committee is the array of all visited committees
 # %cindex is the index of committees
 # $borm[ci1][ci2] is whether comm with index ci2 beats or matches
 #    (transitively) the one with ci2
+
+	my @curr_comm, $curr_comm;
+	for (my $i = 0; $i < $num_winners && $i < $num_choices; $i++) {
+	    $curr_comm[$i] = $choice_index[$i];
+	}
+	@curr_comm = sort @curr_comm;
+	$curr_comm = flatten @curr_comm;
 
 	$iters = 0;
 	$full_search = 0;
@@ -774,8 +776,8 @@ sub PrintProportionalResults {
 
     for (my $j = 0; $j <= $#committee; $j++) {
 	for (my $k = 0; $k < $j; $k++) {
-	    $curr_comm = $committee[$j];
-	    $new_comm = $committee[$k];
+	    my $curr_comm = $committee[$j];
+	    my $new_comm = $committee[$k];
 	    compare_sets($curr_comm, $new_comm);
 	    my $jk = $tally1{$curr_comm}{$new_comm};
 	    my $kj = $tally2{$curr_comm}{$new_comm};

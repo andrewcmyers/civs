@@ -5,7 +5,7 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>Condorcet Internet Voting Service</title>
-<link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body>
@@ -34,13 +34,15 @@ the source tree often contains code that has not yet been pushed to the server.
 See the README file for restrictions on use.
 </p>
 
-<ul><li>June 14, 2004: A couple of race conditions were fixed that apparently led
+<ul>
+<li>June 28, 2004: Michael Clarkson implemented the new voting and authorization protocol.</li>
+<li>June 14, 2004: A couple of race conditions were fixed that apparently led
 to the failure of one high-load (about 2000 voters) election. Also, fixed a bug in reporting results in
 proportional mode (a set could appear more than once).
 </li>
 <li>June 6, 2004: Added tooltips to the result matrices, which makes it easier to
 see what each number represents. Michael Clarkson also cleaned up the code a fair
-amount.
+amount (modernized Perl idioms).
 </li>
 <li>May 31, 2004: Added MAM comparison mode under detailed results.</li>
 <li>May 27, 2004: Michael Clarkson added detailed ballot reporting.</li>
