@@ -159,6 +159,7 @@ sub rank_candidates {
 		die "Shouldn't get here.\n";
 	    }
 # in MAM mode we shouldn't get here, and sorting should ensure <= 0
+	    # print pre("  same bunch!");
 	    $bunch_index++;
 	}
 	$last_pair = $pair_ref;
@@ -176,7 +177,7 @@ sub rank_candidates {
 		$loser, $num_choices;
 
 	if ($cycle && $bunch_index != 0) {
-	    # print pre("trying again.");
+	    # print pre("creates a cycle, trying alone.");
 # We have a cycle when considered with others in bunch but
 # maybe not when considered alone. Try again only
 # considering the strictly stronger preferences.
