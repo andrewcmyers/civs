@@ -1,24 +1,42 @@
 package rp;
 
 use CGI qw(:standard);
+use civs_common;
 use strict;
+
+our $mam; # whether MAM tiebreaking is used
+
+our @rvh; # Random voter hierarchy; used only for MAM tiebreaking.
+          #   Contains 1's and 0's that encode a total order
+	  #   on the choices.
 
 # Note: MAM would pick a random ballot and use it to resolve ties in
 # order_pairs. Here we don't try to achieve a total
 # ordering, but instead group identical-strength pairs into
 # "bunches".
 sub order_pairs {
-	my @pair_a = @{$a};
-	my @pair_b = @{$b};
-	if ($pair_a[2] != $pair_b[2]) {
-		return $pair_b[2] <=> $pair_a[2];
-	} else {
-		return $pair_a[3] <=> $pair_b[3];
+    my @pair_a = @{$a};
+    my @pair_b = @{$b};
+    if ($pair_a[2] != $pair_b[2]) {
+	return $pair_b[2] <=> $pair_a[2];
+    } elsif ($pair_a[3] != $pair_b[3]) {
+	return $pair_a[3] <=> $pair_b[3];
+    } elsif ($mam) {
+	my $y = $pair_b[3];
+	my $w = $pair_a[3];
+	if ($w != $y && $rvh[$w][$y] != $rvh[$y][$w]) {
+	    return ($rvh[$w][$y] - $rvh[$y][$w]);
 	}
+	my $x = $pair_b[2];
+	my $z = $pair_a[2];
+	return ($rvh[$x][$z] - $rvh[$z][$x]);
+    } else {
+	return 0;
+    }
 }
 
 # Compute the transitive closure using the Floyd-Warshall
-# algorithm. These are only used for debugging purposes.
+# algorithm. This is only used for debugging purposes.
 sub Floyd_Warshall {
   (my $mref, my $n) = @_;
   my $update = 0;
@@ -39,6 +57,39 @@ sub Floyd_Warshall {
   return $update;
 }
  
+# TransitiveClosure(m, winner, loser, n) adds the preference
+# for winner over loser to the nxn matrix m and computes the
+# transitive closure (in m). If this creates any new cycles,
+# returns 1, otherwise 0. It uses a worklist algorithm because
+# that is faster than a full Floyd-Warshall when the matrix
+# is already pretty much done.
+sub TransitiveClosure {
+    my ($mref, my $winner, my $loser, my $num_choices) = @_;
+    my $cycle = 0;
+    my @worklist = ([($winner, $loser)]);
+    while ($#worklist >= 0) {
+	my $pair = shift @worklist;
+	my $winner = $pair->[0];
+	my $loser = $pair->[1];
+	if ($mref->[$winner][$loser]) { next; }
+	$mref->[$winner][$loser] = 1;
+	if ($winner == $loser) { $cycle = 1; next; }
+	#print pre("Saw a new cycle: $choices[$loser] vs. $choices[$winner]\n");
+	#if ($mref->[$loser][$winner]) { $cycle = 1; next; }
+	for (my $j = 0; $j < $num_choices; $j++) {
+	    if ($mref->[$loser][$j]) {
+		push @worklist, [($winner, $j)];
+	    }
+	    if ($mref->[$j][$winner]) {
+		push @worklist, [($j, $loser)];
+	    }
+	}
+    }
+# 	    if (Floyd_Warshall($mref, $num_choices)) {
+#		print pre("oops - transitive closure failed");
+#	    }
+    return $cycle;
+}
 # rank_candidates(mref, num_choices) uses a ranked-pairs
 # algorithm to ranks the "num_choices" choices
 # according to the preference matrix in "mref". It returns
@@ -72,12 +123,11 @@ sub rank_candidates {
     }
     @pairs = sort order_pairs @pairs;
 
-    my $prev_win = 0;    # The strength of the previously considered winner
-    my $prev_lose = 0;   # The strength of the previously considered loser
+    my $last_pair = 'none'; # reference to the last pair considered
     my $bunch_index = 0; # Which of several identical-strength pairs this is.
                          # Typically zero.
 #
-# XXX Should copy 2-D arrays with $a[$i] = [@{$a[$i]}]
+# Note: Copying 2-D arrays with $a[$i] = [@{$b[$i]}] isn't any faster.
 #
     foreach my $pair_ref (@pairs) {
 	my @pair = @{$pair_ref};
@@ -86,19 +136,23 @@ sub rank_candidates {
 	my $lname = $choices[$loser];
 	#print pre("Considering the $winvotes-$losevotes pref for $wname over $lname");
 	#STDOUT->flush();
-	if ($winvotes != $prev_win || $losevotes != $prev_lose) {
+	$a = $last_pair; $b = $pair_ref;
+	if ($last_pair eq 'none' || &order_pairs() < 0) {
 # new bunch: commit the affirmed prefs from the previous bunch
 	    for (my $j = 0; $j < $num_choices; $j++) {
 		for (my $k = 0; $k < $num_choices; $k++) {
 		    $committed[$j][$k] = $affirmed[$j][$k];
 		}
 	    }
-	    $prev_win = $winvotes;
-	    $prev_lose = $losevotes;
 	    $bunch_index = 0;
 	} else {
+	    if ($mam && ($last_pair ne 'none' && &order_pairs() != 0)) {
+		die "Shouldn't get here.\n";
+	    }
+# in MAM mode we shouldn't get here, and sorting should ensure <= 0
 	    $bunch_index++;
 	}
+	$last_pair = $pair_ref;
 
 	for (my $j = 0; $j < $num_choices; $j++) {
 	    for (my $k = 0; $k < $num_choices; $k++) {
@@ -108,41 +162,9 @@ sub rank_candidates {
 # we take a preference if it doesn't create a new cycle when
 # considered in combination with all strictly stronger
 
-	sub TransitiveClosure {
-# TransitiveClosure(m, winner, loser) adds the preference
-# for winner over loser to the matrix and computes the
-# transitive closure. If this creates any new cycles,
-# returns 1 else 0. It uses a worklist algorithm because
-# that is faster than a full Floyd-Warshall when the matrix
-# is already pretty much done.
-	    my ($mref, my $winner, my $loser) = @_;
-	    my $cycle = 0;
-	    my @worklist = ([($winner, $loser)]);
-	    while ($#worklist >= 0) {
-		my $pair = shift @worklist;
-		my $winner = $pair->[0];
-		my $loser = $pair->[1];
-		if ($mref->[$winner][$loser]) { next; }
-		$mref->[$winner][$loser] = 1;
-		if ($winner == $loser) { $cycle = 1; next; }
-		#print pre("Saw a new cycle: $choices[$loser] vs. $choices[$winner]\n");
-		#if ($mref->[$loser][$winner]) { $cycle = 1; next; }
-		for (my $j = 0; $j < $num_choices; $j++) {
-		    if ($mref->[$loser][$j]) {
-			push @worklist, [($winner, $j)];
-		    }
-		    if ($mref->[$j][$winner]) {
-			push @worklist, [($j, $loser)];
-		    }
-		}
-	    }
-# 	    if (Floyd_Warshall($mref, $num_choices)) {
-#		print pre("oops - transitive closure failed");
-#	    }
-	    return $cycle;
-	}
 
-	my $cycle = TransitiveClosure [@current], $winner, $loser;
+	my $cycle = TransitiveClosure [@current], $winner,
+		$loser, $num_choices;
 
 	if ($cycle && $bunch_index != 0) {
 	    # print pre("trying again.");
@@ -210,6 +232,59 @@ sub rank_candidates {
 
     return ([@result], [@rp_choice_index],
 	    $denied_any, $allowed_cycle, $denied_report);
+}
+
+# create_rvh(ballots, num_choices): using a list of ballots, randomly select
+# ballots until a total order is constructed on all
+# candidates (or as much of an order as can be constructed,
+# anyway).
+sub create_RVH {
+    my $num_choices = $_[1];
+    foreach my $ballot (@{$_[0]}) {
+	# print "$ballot\n";
+	my @row = split /,/, $ballot;
+	if ($#row != $num_choices-1) {
+	    # print "Bad ballot, skipping: ".$ballot."\n";
+	    next;
+	}
+	for (my $i = 0; $i < $num_choices; $i++) {
+	    if ($row[$i] eq 'No opinion') { next; }
+	    for (my $j = 0; $j < $num_choices; $j++) {
+		if ($row[$j] eq 'No opinion') { next; }
+		if ($row[$i] < $row[$j] &&
+		    !$rvh[$i][$j] &&
+		    !$rvh[$j][$i]) {
+# a chance to try adding a preference for i over j
+		    my @temp;
+		    for (my $i = 0; $i < $num_choices; $i++) {
+			for (my $j = 0; $j < $num_choices; $j++) {
+			    $temp[$i][$j] = $rvh[$i][$j];
+			}
+		    }
+		    my $cycle =
+			TransitiveClosure([@temp], $i, $j, $num_choices);
+		    if (!$cycle) {
+			# print "Adding pref to RVH: $i over $j\n";
+			my $complete = 1;
+			for (my $i = 0; $i < $num_choices; $i++) {
+			    for (my $j = 0; $j < $num_choices; $j++) {
+				$rvh[$i][$j] = $temp[$i][$j];
+				if ($complete && $i < $j && $temp[$i][$j] == 0 &&
+				    $temp[$j][$i] == 0) {
+# $i isn't related to $j yet... keep going
+				    # print "No relation yet between $i and $j\n";
+				    $complete = 0;
+				}
+			    }
+			}
+			if ($complete) {
+			    return;
+			}
+		    }
+		}
+	    }
+	}
+    }
 }
 
 1;

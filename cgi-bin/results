@@ -95,30 +95,40 @@ if ($proportional eq 'yes') {
 }
 my $bw_checked = '';
 my $rp_checked = '';
+my $mam_checked = '';
 if ($algorithm eq 'civs_ranked_pairs') {
     $rp_checked = 'checked';
+} elsif ($algorithm eq 'mam') {
+    $mam_checked = 'checked';
 } else {
     $bw_checked = 'checked';
 }
 
-print ('Condorcet completion algorithm:
-	    <input type="radio"
-              name="algorithm"
-	      onClick="newSettings()"
-              value="beatpath_winner" '.
-	      $bw_checked.
-	    '>
-	    <a href="'.$civs_url.'/rp.html">Beatpath Winner/SSD</a>
-	    <input type="radio"
-	      name="algorithm",
-	      onClick="newSettings()"
-	      value="civs_ranked_pairs"'.
-	      $rp_checked.
-	    '>
-	    <a href="'.$civs_url.'/rp.html">CIVS Ranked Pairs</a>');
+print STDOUT 'Condorcet completion algorithm:
+    <input type="radio"
+	name="algorithm"
+	onClick="newSettings()"
+	value="beatpath_winner" ',
+	$bw_checked,
+    '>
+    <a href="',$civs_url,'/rp.html">Beatpath Winner/SSD</a>
+    <input type="radio"
+	name="algorithm",
+	onClick="newSettings()"
+	value="civs_ranked_pairs"',
+	$rp_checked,
+    '>',
+    '<a href="',$civs_url,'/rp.html">CIVS Ranked Pairs</a>',
+    '<input type="radio"
+	name="algorithm",
+	onClick="newSettings()"
+	value="mam"',
+	$mam_checked,
+    '>',
+    '<a href="http://alumnus.caltech.edu/~seppley/">MAM</a>';
 
   # print '&nbsp;<input type="submit" name="submit" value="Update display options">';
-print '</form>'.$cr;
+print '</form>',$cr;
 
 print h2('Election description'), p($description);
 
@@ -136,7 +146,8 @@ if ($proportional eq 'yes') {
 
     print h2("Ranking of the choices");
 
-    if ($algorithm eq 'civs_ranked_pairs') {
+    if ($algorithm eq 'civs_ranked_pairs' ||
+	$algorithm eq 'mam') {
 	&PrintRP;
     } else {
 	&PrintBW;
@@ -366,9 +377,22 @@ sub details_bookmark {
 sub PrintRP {
 	STDOUT->flush();
 
+	if ($algorithm eq 'mam') {
+	    $rp::mam = 1;
+	    my @voters = split /\n/, $vdata_copy{'recorded_voters'};
+	    my @ballots = ();
+	    fisher_yates_shuffle(\@voters);  # permute @voters for randomness
+	    foreach my $voter_key (@voters) {
+		my $ballot = $vdata_copy{$voter_key}; 
+		push @ballots, $ballot;
+	    }
+	    &rp::create_RVH(\@ballots, $num_choices);
+	} else {
+	    $rp::mam = 0;
+	}
         (my $rref, my $ciref, my $denied_any,
 	 my $allowed_cycle, my $denied_report) = 
-	    rp::rank_candidates([@matrix], $num_choices, [@choices]);
+	    &rp::rank_candidates([@matrix], $num_choices, [@choices]);
 	#print pre("Done ranking");
 
 	PrintRanking $rref;
