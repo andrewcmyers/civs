@@ -1,10 +1,10 @@
 use POSIX qw(strftime);
 
-$home = "/www5/andru/civs";
-$thishost = "www5.cs.cornell.edu";
-$civs_bin_path = "/cgi-bin/andru/civs";
+$home = "@CIVSDIR@";
+$thishost = "@THISHOST@";
+$civs_bin_path = "@CIVSBINPATH@";
 $civs_log = $home."/log";
-$civs_url = "http://www5.cs.cornell.edu/~andru/civs";
+$civs_url = "@CIVSURL@";
 $last_election_id_file = $home."/last_election_id";
 $private_host_id_file = $home."/private_host_id";
 $lockfile = $home."/global_lock";

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -I/www5/andru/public_cgi-bin/civs
+#!@PERL@ -I@CGIBINDIR@
 
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);

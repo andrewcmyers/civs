@@ -1,0 +1,23 @@
+#!/bin/sh
+PERL="/usr/bin/perl"
+
+if test -d "$1"
+then
+    for f in add_voters beatpath.pm civs_common.pm close control \
+	create_election election.pm mail.pm results \
+	start_election vote
+    do
+	echo "copying $f"
+	sed \
+  	    -e 's|@PERL@|/usr/bin/perl|' \
+	    -e 's|@CGIBINDIR@|/www5/andru/public_cgi-bin/civs|' \
+	    -e 's|@THISHOST@|www5.cs.cornell.edu|' \
+	    -e 's|@CIVSDIR@|/www5/andru/civs|' \
+	    -e 's|@CIVSBINPATH@|/cgi-bin/andru/civs|' \
+	    -e 's|@CIVSURL@|http://www5.cs.cornell.edu/~andru/civs|' \
+	"$f" > "$1/$f"
+    done
+
+else
+    echo "usage: install <destdir>"
+fi
