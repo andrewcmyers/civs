@@ -103,25 +103,7 @@ sub SaveVoterKeys {
     $edata{'voter_keys'} = $s;
 }
 
-sub ExtractVoterKeys {
-    my $s = $edata{'voter_keys'};
-    my @a = split /[\r\n]+/, $s;
-    my $k;
-    foreach $k (@a) {
-	$voter_keys{$k} = 1;
-    }
-}
-
-ExtractVoterKeys;
-
-sub SaveVoterKeys {
-    my $s = '';
-    my $k;
-    foreach $k (keys %voter_keys) {
-	$s .= ($k.$cr);
-    }
-    $edata{'voter_keys'} = $s;
-}
+&ExtractVoterKeys;
 
 sub LockElection {
     if (!sysopen(ELOCK, $election_lock, &O_CREAT | &O_RDWR)) {
