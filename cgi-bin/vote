@@ -57,6 +57,8 @@ if (param('Vote') ne '') {
 # print "num_choices = $num_choices\n";
     for ($i = 0; $i < $num_choices; $i++) {
 	$rank = param('C'.$i);
+	if ($rank < 0) { $rank = 0; } # must be proportional
+	if ($rank > 999) { $rank = 999; } # must be proportional
 	if ($vote eq '') {
 	    $vote = $rank;
 	} else {
@@ -76,7 +78,7 @@ if (param('Vote') ne '') {
 
 # Now, update matrix.
 # Note: vdata{"2.3"} contains the number of votes where
-# candidate 2 beats candidate 3 (i.e., has lower
+# choice 2 beats choice 3 (i.e., has lower
 # numbered rank)
     if ($proportional ne 'yes') {
 	for ($j = 0; $j < $num_choices; $j++) {
@@ -186,10 +188,13 @@ if ($proportional ne 'yes') {
     each choice a rank, where a lower rank means that you
     prefer that choice more. For example, it would make
     sense to give your top choice (or choices) the rank 1.
-    You may give candidates the same rank if you have no
+    You may give choices the same rank if you have no
     preference between them. You do not have to use all the
     possible ranks. All choices are currently given the
-    lowest possible rank.  </p> <p>For more information on
+    lowest possible rank. Note that &ldquo;No opinion&rdquo;
+    is not the same as the lowest possible rank; it genuinely
+    expresses no opinion.
+    </p> <p>For more information on
     how the Condorcet voting system works, <a
     href=$civs_url>click here</a></p>\n\n";
 } else {
@@ -202,7 +207,10 @@ if ($proportional ne 'yes') {
     selected choices to be as large as possible. All choices
     are currently given a weight of zero, meaning that you
     have no interest in seeing them selected. Weights cannot
-    be negative. More
+    be negative or larger than 999.
+    It doesn't help you to make your weights larger
+    than other voters' weights; your weights are only compared
+    against each other. More
     information is <a href=\"$civs_url/proportional.html\">available</a>.
     </p>";
 }

@@ -191,7 +191,7 @@ print "</table>";
 
 } else { # proportional representation 'algorithm'
     print "<h2>Candidates</h2>";
-    print "<ol type=A>";
+    print "<ol start=0>";
     for ($j = 0; $j < $num_choices; $j++) {
 	print "<li> ".$choices[$j]."</li>\n";
     }

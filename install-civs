@@ -12,7 +12,7 @@ echo "Read settings file"
 
     for f in civs_create index public_elections proportional sec_priv
     do
-	echo "copying $f.html"
+	echo "copying $f.html to $HTMLDIR/$f.html"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
 	     -e 's|@THISHOST@|'$THISHOST'|' \
