@@ -110,6 +110,17 @@ if ($sort_choices ne '') {
 	$rank[$i] = param('C'.$i);
     }
     @choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
+} else { # randomize
+    for ($i = 0; $i < $num_choices; $i++) {
+	$choice_index[$i] = $i;
+	$rank[$i] = $num_choices;
+    }
+    for ($i = 0; $i < $num_choices - 1; $i++) {
+	$j = rand($num_choices - $i - 1) + 1;
+	$temp = $choice_index[$i];
+	$choice_index[$i] = $choice_index[$j];
+	$choice_index[$j] = $temp;
+    }
 }
 
 if (param('AddWritein') ne '' && $writeins eq 'yes') {
@@ -190,23 +201,14 @@ print "\n<!-- Current rankings:\n";
 for ($i = 0; $i < $num_choices; $i++) {
     $name = $choices[$i];
     $name =~ s/"/ /;
-    if ($sort_choices ne '' || $loaded_choices ne '') {
-	$selected = $rank[$i];
-    } else {
-	$selected = $num_choices;
-    }
+    $selected = $rank[$i];
     print "$i \"$choices[$i]\" $selected\n";
 }
 print "-->\n";
 
 for ($i = 0; $i < $num_choices; $i++) {
-    if ($sort_choices ne '' || $loaded_choices ne '') {
-	$k = $choice_index[$i];
-	$selected = $rank[$k];
-    } else {
-	$k = $i;
-	$selected = $num_choices;
-    }
+    $k = $choice_index[$i];
+    $selected = $rank[$k];
     $choice = $choices[$k];
     print "<tr><td><b>$choice</b></td><td>&nbsp;</td>\n";
     print "<td><select size=1 name=\"C$k\">\n";
@@ -243,9 +245,11 @@ print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
 
 print "</form>\n";
 
-print p("If you have already voted, you may see
-    <a href=\"http://$thishost$civs_bin_path/results?id=$election_id\">
-    the results of the election.</a>");
+if ($public eq 'yes') {
+    print p("If you have already voted, you may see
+	<a href=\"http://$thishost$civs_bin_path/results?id=$election_id\">
+	the results of the election.</a>");
+}
 
 print end_html();
 untie %edata;

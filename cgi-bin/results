@@ -84,6 +84,7 @@ print "</pre>";
 $num_seen = 0;
 $had_tie = 0;
 print "<ol>";
+$j = 0;
 for ($rank = 0; $rank <= $#result; $rank++) {
     @winner = @{$result[$rank]};
     print "<li>";
@@ -106,6 +107,7 @@ for ($rank = 0; $rank <= $#result; $rank++) {
 	} else {
 	    print $choices[$winner[$i]];
 	}
+	$choice_index[$j++] = $winner[$i];
 	if ($tie) { print "</font>"; }
     }
     $num_seen += $#winner + 1;
@@ -125,11 +127,13 @@ for ($j = 0; $j < $num_choices; $j++) {
     print "<td width=20px>".($j+1).".</td>";
 }
 print "</tr>\n";
-for ($j = 0; $j < $num_choices; $j++) {
+for ($jj = 0; $jj < $num_choices; $jj++) {
+    $j = $choice_index[$jj];
     print "<tr>";
-    print "<td>".($j+1).". ".$choices[$j]."</td>\n";
+    print "<td>".($jj+1).". ".$choices[$j]."</td>\n";
     print "<td width=40px>&nbsp;</td>\n";
-    for ($k = 0; $k < $num_choices; $k++) {
+    for ($kk = 0; $kk < $num_choices; $kk++) {
+	$k = $choice_index[$kk];
 	print "<td><tt>";
 	if ($j == $k) {
 	    print "- ";
@@ -156,11 +160,13 @@ for ($j = 0; $j < $num_choices; $j++) {
     print "<td width=20px>".($j+1).".</td>";
 }
 print "</tr>\n";
-for ($j = 0; $j < $num_choices; $j++) {
+for ($jj = 0; $jj < $num_choices; $jj++) {
+    $j = $choice_index[$jj];
     print "<tr>";
-    print "<td>".($j+1).". ".$choices[$j]."</td>\n";
+    print "<td>".($jj+1).". ".$choices[$j]."</td>\n";
     print "<td width=40px>&nbsp;</td>\n";
-    for ($k = 0; $k < $num_choices; $k++) {
+    for ($kk = 0; $kk < $num_choices; $kk++) {
+	$k = $choice_index[$kk];
 	print "<td><tt>";
 	if ($j == $k) {
 	    print "-";

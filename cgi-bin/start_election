@@ -13,6 +13,8 @@ STDOUT->flush();
 
 use election;
 
+$max_voters = 1000;
+
 CheckElectionID;
 CheckControlKey;
 
@@ -30,8 +32,8 @@ STDOUT->flush();
 
 print "<pre>\n";
 
-if ($#addresses > 100) {
-    print h2("Sorry, more than 100 voters are currently not allowed\n");
+if ($#addresses > $max_voters) {
+    print h2("Sorry, more than $max_voters voters are currently not allowed\n");
     exit 1;
 }
 
