@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use civs_common;
+
 use CGI qw(:standard);
 use File::stat;
 use DB_File;
@@ -46,7 +47,8 @@ while (defined(my $file = readdir(DIR))) {
     my $last_update = 'N/A';
     $last_update = localtime($st->mtime) if defined($st);
 
-    push @rows, Tr(td([$file,
+    push @rows, Tr(td([a({-href=>'http://www5.cs.cornell.edu/cgi-bin/andru/civs/results?id='.$file}, $file),
+    #push @rows, Tr(td([$file,
                        $title,
                        "$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
                        $public,

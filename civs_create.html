@@ -73,7 +73,8 @@ the supervisor of the election you create.</p>
   <p align="left"><textarea rows="5" name="choices" cols="60"></textarea>&nbsp;&nbsp;</p>
   <p align="left"><input id=choices_file type=file name="choices_file"></p>
   <p>How many choices will win the election: <input type="text" name="num_winners" size="5" value="1"></p>
-  <p>The e-mail addresses of the voters, one per line (more voters can be added later):</p>
+  <p>The e-mail addresses of voters, one per line
+  (more voters can be added later):</p>
   <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
   <p><input id=addresses_file type=file name="addresses_file"></p>
   <p><input id=public type="checkbox" name="public" value="yes">
@@ -86,11 +87,11 @@ the supervisor of the election you create.</p>
   (<a href="proportional.html">What is this?</a>)</br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If using proportional representation,
   voters are assumed to be trying to maximize:
-  <input type="radio" name="weight_interpretation"
+  <input type="radio" name="rating_interpretation"
        value="best_choice"
-       checked> weight of best choice
-  <input type="radio" name="weight_interpretation"
-  value="combined_weights"> combined weights of selected choices<br>
+       checked> rating of best choice
+  <input type="radio" name="rating_interpretation"
+  value="combined_ratings"> combined ratings (weights) of selected choices<br>
   <input id=ballot_reporting type = "checkbox" name="ballot_reporting" value="yes">
   Enable detailed anonymized ballot reporting.  Places a button on the results
   page that allows anyone to view the rankings (but <em>not</em> any 
