@@ -23,6 +23,10 @@ CIVS_Header("Election Results: $title");
 CheckElectionID;
 CheckStarted;
 
+our %vdata_copy = %vdata;
+
+UnlockElection;
+
 if ($public ne 'yes') {
     CheckStopped;
 }
@@ -32,7 +36,7 @@ print h2($title);
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
 print "Announced end of election: $election_end", br();
 if (IsStopped) {
-    my $close_time = $vdata{'close_time'};
+    my $close_time = $vdata_copy{'close_time'};
     print "Actual time election ended: $close_time", br();
 } else {
     print 'Election has not yet ended.', br();
@@ -147,7 +151,7 @@ sub PrintNonproportionalDetails {
     print h2('Ballot report');
 
     if ($ballot_reporting eq 'yes') {
-		my @voters = split /\n/, $vdata{'recorded_voters'};
+		my @voters = split /\n/, $vdata_copy{'recorded_voters'};
 		if ($#voters >= 0) {
 			my @headings = @choices;
 			my @rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
@@ -159,7 +163,7 @@ sub PrintNonproportionalDetails {
 		    	# recorded_vote is a comma separated list of the ranks
 			    # that the voter assigned to candidates.  Element i of the list
 			    # corresponds to candidate i.
-			    my $recorded_vote = $vdata{$voter_key}; 
+			    my $recorded_vote = $vdata_copy{$voter_key}; 
 		    	my @row = split /,/, $recorded_vote;
 			    unshift @row, "$i. ";
 			    $i++;
@@ -184,10 +188,10 @@ sub ComputeNonproportionalResults {
 	for (my $j = 0; $j < $num_choices; $j++) {
 	    if ($condorcet_winner < 0) { $condorcet_winner = $j; }
 	    for (my $k = 0; $k < $num_choices; $k++) {
-			my $n; $n = $vdata{"$j.$k"} or $n = 0;
+			my $n; $n = $vdata_copy{"$j.$k"} or $n = 0;
 			$matrix[$j][$k] = $n;
 			if ($j != $k) {
-			    my $m; $m = $vdata{"$k.$j"} or $m = 0;
+			    my $m; $m = $vdata_copy{"$k.$j"} or $m = 0;
 			    if ($n <= $m && $condorcet_winner == $j) {
 					$condorcet_winner = -1; # can't be this one
 			    }
@@ -382,7 +386,7 @@ sub PrintProportionalResults {
 	    my $skj = 0;
 	    for (my $v = 0; $v < $num_votes; $v++) {
 		my $voter_key = $voter_keys[$v];
-		my $ratings = $vdata{$voter_key};
+		my $ratings = $vdata_copy{$voter_key};
 		my @ratings = split /,/, $ratings;
 		my $wj = $ratings[$j];
 		my $wk = $ratings[$k];
@@ -466,7 +470,7 @@ sub PrintProportionalResults {
 #   represented as strings.
 	my ($f, $v, $i, $j) = @_;
 	$voter_key = $voter_keys[$v];
-	$ratings = $vdata{$voter_key};
+	$ratings = $vdata_copy{$voter_key};
 	@ratings = split /,/, $ratings;
 
 	# print "Voter: $ratings considering $i vs. $j\n";

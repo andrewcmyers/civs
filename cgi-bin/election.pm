@@ -126,6 +126,8 @@ sub LockElection {
     flock ELOCK, &LOCK_EX;
 }
 sub UnlockElection {
+    untie %edata;
+    untie %vdata;
     flock ELOCK, &LOCK_UN;
     close(ELOCK);
 }
