@@ -41,8 +41,8 @@ CheckNotStopped;
 if ($public ne 'yes') {
     CheckVoterKey;
 } else {
-    $voter_key = remote_addr();
-    $voter = "voter";
+    $voter_key = remote_addr(); # XXX should make the voter key the hash and
+    $voter = "voter";           # the voter the remote address
 }
 CheckNotVoted;
 

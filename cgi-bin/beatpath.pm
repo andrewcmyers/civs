@@ -110,7 +110,6 @@ sub rank_candidates {
     foreach $j (@winner) { $ignore[$j] = 1; }
     $num_ranked += $#winner + 1;
   }
-  push @result, [@loser];
   @closure_matrix = @matrix;
   @matrix = @save_matrix;
 }
