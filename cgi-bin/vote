@@ -1,8 +1,8 @@
-#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/civs
 
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
-use icvs_common;
+use civs_common;
 use DB_File;
 use mail;
 
@@ -33,7 +33,7 @@ if ($num_winners == 1) {
 
 use election;
 
-ICVS_Header("$title");
+CIVS_Header("$title");
 
 CheckElectionID;
 CheckStarted;
@@ -132,7 +132,7 @@ lower rank means that you prefer that choice more. For example, it would make
 sense to give your top choice (or choices) the rank 1. You may give candidates
 the same rank if you have no preference between them. You do not have to use all
 the possible ranks. All choices are currently given the lowest possible rank.</p>
-<p>For more information on how the Condorcet voting system works, <a href=$icvs_url>click here</a></p>\n\n";
+<p>For more information on how the Condorcet voting system works, <a href=$civs_url>click here</a></p>\n\n";
 print '<form method="POST"
         action="'.$thisurl.'"
         enctype="multipart/form-data"

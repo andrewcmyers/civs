@@ -1,9 +1,9 @@
-#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/civs
 
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
-use icvs_common;
+use civs_common;
 use DB_File;
 use mail;
 use beatpath;
@@ -17,7 +17,7 @@ $thisurl = $civs_bin_path."/results";
 print header(), start_html("Condorcet Internet Voting Service");
 use election;
 
-ICVS_Header("Election Results");
+CIVS_Header("Election Results");
 
 CheckElectionID;
 CheckStarted;

@@ -1,8 +1,8 @@
-#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/civs
 
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
-use icvs_common;
+use civs_common;
 use DB_File;
 use mail;
 
@@ -22,7 +22,7 @@ while (<$new_addresses_file>) {
 @new_addresses = split /[\r\n]+/, $new_addresses;
 
 print header(), start_html("Condorcet Internet Voting Service");
-ICVS_Header("Adding voters");
+CIVS_Header("Adding voters");
 
 CheckControlKey;
 
@@ -62,7 +62,7 @@ foreach $v (@new_addresses) {
     Send "http://$thishost$civs_bin_path/results?id=$election_id";
     Send "";
     Send "For more information about the Condorcet Internet Voting Service, see";
-    Send "$icvs_url.";
+    Send "$civs_url.";
     Send "."; ConsumeSMTP;
 }
 

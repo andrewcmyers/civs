@@ -1,8 +1,8 @@
-#!/usr/bin/perl -I/www5/andru/public_cgi-bin/icvs
+#!/usr/bin/perl -I/www5/andru/public_cgi-bin/civs
 
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
-use icvs_common;
+use civs_common;
 use DB_File;
 use mail;
 
@@ -16,7 +16,7 @@ use election;
 
 untie %edata;
 
-ICVS_Header("Stopping election");
+CIVS_Header("Stopping election");
 
 LockElection;
 
