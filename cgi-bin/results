@@ -280,7 +280,7 @@ print "<pre>";
     }
     #print "num choices = $num_choices, num winners = $num_winners\n";
     for ($i = 0; $i < $num_winners && $i < $num_choices; $i++) {
-	$curr_comm[$i] = $i + $num_choices - $num_winners - 1;
+	$curr_comm[$i] = $i + $num_choices - $num_winners;
     }
 
     if ($num_choices > $num_winners) {
