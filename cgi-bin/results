@@ -213,7 +213,6 @@ sub ComputeNonproportionalResults {
 	&beatpath::rank_candidates();
 	@result = @beatpath::result;
 	@closure_matrix = @beatpath::closure_matrix;
-
 }
 
 sub PrintNonproportionalResults {
@@ -234,7 +233,7 @@ sub PrintNonproportionalResults {
 	print "<ol>";
 	$j = 0;
 	for ($rank = 0; $rank <= $#result; $rank++) {
-	    @winner = @{$result[$rank]};
+	    my @winner = @{$result[$rank]};
 	    print '<li value="'.($j+1).'">';
 	    $ranksize = $#winner + 1;
 	    if ($ranksize > 1) {
@@ -287,7 +286,6 @@ sub details_bookmark {
 ############################################################
 
 sub PrintProportionalResults {
-# proportional representation 'algorithm'
 # first sort the choices by the ordinary election algorithm
     @voter_keys = split /[\r\n]+/, $recorded_voters;
     for (my $j = 0; $j < $num_choices; $j++) {
@@ -326,10 +324,11 @@ sub PrintProportionalResults {
     #@closure_matrix = @beatpath::closure_matrix;
     $j = 0;
     for ($rank = 0; $rank <= $#result; $rank++) {
-	@winner = @{$result[$rank]};
+	my @winner = @{$result[$rank]};
 	for ($i = 0; $i <= $#winner; $i++) {
-	    $choice_index[$j++] = $winner[$i];
-	    $choice_rank[$winner[$i]] = $j;
+	    $choice_index[$j] = $winner[$i];
+	    $choice_rank[$winner[$i]] = $j + 1;
+	    $j++;
 	}
     }
     #print_nonprop_results;
@@ -668,17 +667,18 @@ sub PrintProportionalResults {
     }
     $beatpath::n = $#committee + 1;
     &beatpath::rank_candidates();
-    @result = @beatpath::result;
+    @cresult = @beatpath::result;
     @committee_cmatrix = @beatpath::closure_matrix;
     $j = 0;
-    for ($rank = 0; $rank <= $#result; $rank++) {
-	@winner = @{$result[$rank]};
-	for ($i = 0; $i <= $#winner; $i++) {
-	    $comm_choice_index[$j++] = $winner[$i];
+    my @cwinner;
+    for ($rank = 0; $rank <= $#cresult; $rank++) {
+	@cwinner = @{$cresult[$rank]};
+	for ($i = 0; $i <= $#cwinner; $i++) {
+	    $comm_choice_index[$j++] = $cwinner[$i];
 	}
     }
-    @winner = @{$result[0]};
-    $num_unbeaten = $#winner + 1;
+    @cwinner = @{$cresult[0]};
+    $num_unbeaten = $#cwinner + 1;
     if ($num_unbeaten == 1) {
 	print h2("Winning set of choices".$cr);
 	print p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> Condorcet winner of this election was the following set of choices:");
@@ -689,7 +689,7 @@ sub PrintProportionalResults {
     print '<table><tr>';
     for ($i = 0; $i < $num_unbeaten; $i++) {
 	print '<td><ol>';
-	@mapped_comm = renumber($committee[$winner[$i]]);
+	@mapped_comm = renumber($committee[$cwinner[$i]]);
 	for ($j = 0; $j < $num_winners; $j++) {
 	    $j1 = $mapped_comm[$j];
 	    $j2 = $choice_index[$j1 - 1];
@@ -814,7 +814,7 @@ sub PrintProportionalResults {
     if (param('Compare') ne '') {
 	$comparison_request = 1;
     }
-    @curr_comm = split /,/, $committee[$winner[0]];
+    @curr_comm = split /,/, $committee[$cwinner[0]];
     print '<tr><th width=40px>Set 1</th><th width=40px>Set 2</th></tr>';
     for (my $i = 1; $i <= $num_winners; $i++) {
 	my $besti = $curr_comm[$i-1];
