@@ -25,7 +25,7 @@ public class Nonce {
 		try { System.out.println("Initializing MD5");
 		      md = MessageDigest.getInstance("MD5"); }
 		  catch (NoSuchAlgorithmException e) {
-		  	System.out.println("Cannot create an MD5 digester.");
+		  	throw new ServletException("Cannot construct MD5 digests.");
 		  }
 		initialize_seed();
 	}
