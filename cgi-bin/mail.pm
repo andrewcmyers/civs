@@ -4,7 +4,9 @@ use IO::Handle;
 $proto = getprotobyname('tcp');
 socket(SMTP, PF_INET, SOCK_STREAM, $proto) || print "can't open socket\n";
 $port = getservbyname('smtp', 'tcp') || print "can't get port\n";
+if ($port eq '') { exit 1; }
 $iaddr = gethostbyname('smtp.cs.cornell.edu') || print "no such host\n";
+if ($iaddr eq '') { exit 1; }
 $sin = pack_sockaddr_in($port, $iaddr);
 
 # connect(SMTP, $sin) || print "Can't connect\n";
