@@ -173,8 +173,7 @@ sub rank_candidates {
 # considered in combination with all strictly stronger
 
 
-	my $cycle = TransitiveClosure [@current], $winner,
-		$loser, $num_choices;
+	my $cycle = TransitiveClosure [@current], $winner, $loser, $num_choices;
 
 	if ($cycle && $bunch_index != 0) {
 	    # print pre("creates a cycle, trying alone.");
@@ -188,7 +187,7 @@ sub rank_candidates {
 		    $temp[$j][$k] = $committed[$j][$k];
 		}
 	    }
-	    $cycle = TransitiveClosure [@temp], $winner, $loser;
+	    $cycle = TransitiveClosure [@temp], $winner, $loser, $num_choices;
 	    if (!$cycle) { $allowed_cycle = 1; }
 	}
 	if (!$cycle) {
@@ -272,7 +271,7 @@ sub create_RVH {
 			}
 		    }
 		    my $cycle =
-			TransitiveClosure([@temp], $i, $j, $num_choices);
+			TransitiveClosure [@temp], $i, $j, $num_choices;
 		    if (!$cycle) {
 			# print pre("Adding pref to RVH: $i over $j\n");
 			my $complete = 1;
