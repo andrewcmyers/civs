@@ -132,7 +132,7 @@ function do_make_tie() {
     if (num_selected < 2) {
 	alert("Not enough choices were selected. "+
 	      "Shift-click to select two or more choices");
-	return false;
+	return;
     }
     for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) set_rank(i, min_rank);
@@ -145,7 +145,7 @@ function do_move_up () {
     if (num_selected < 1) {
 	alert("No choices were selected. "+
 	      "Click (or shift-click) to select choices");
-	return false;
+	return;
     }
     if (min_rank == 1) return;
     var new_rank = min_rank - 1;
@@ -171,7 +171,7 @@ function do_move_down () {
     if (num_selected < 1) {
 	alert("No choices were selected. "+
 	      "Click (or shift-click) to select choices");
-	return false;
+	return;
     }
     if (max_rank == num_choices + 1) return;
     var new_rank = max_rank + 1;
@@ -195,6 +195,11 @@ function do_move_down () {
 
 function do_move_top() {
     var min_rank = min_selected_rank();
+    if (num_selected < 1) {
+	alert("No choices were selected. "+
+	      "Click (or shift-click) to select choices");
+	return;
+    }
     if (min_rank <= cur_top) cur_top = 1;
     scan_ranks();
     var collision = have_rank[min_rank];
@@ -210,6 +215,11 @@ function do_move_top() {
 }
 function do_move_bottom() {
     var max_rank = max_selected_rank();
+    if (num_selected < 1) {
+	alert("No choices were selected. "+
+	      "Click (or shift-click) to select choices");
+	return;
+    }
     if (max_rank >= cur_bot) cur_bot = num_choices;
     scan_ranks();
     var collision = have_rank[max_rank];
