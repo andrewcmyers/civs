@@ -99,7 +99,7 @@ if ($proportional ne 'yes') {
     expresses no opinion.
     </p> <p>For more information on
     how the Condorcet voting system works, <a
-    href=$civs_url>click here</a></p>\n\n";
+    href=\"$civs_url\">click here</a></p>\n\n";
 } else {
     print '<p>This election is decided using an experimental
     Condorcet-based algorithm designed to provide proportional

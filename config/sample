@@ -1,6 +1,6 @@
 # This is a sample CIVS config file, for use with the install-civs script.
 
-# The address of the web server that is hosting CIVS
+# The address of the web server that is hosting CIVS (may include port number)
 THISHOST='MyServer.MyUniversity.edu'
 
 # The email address of the election server supervisor.  This should
@@ -34,7 +34,5 @@ CIVSDATADIR='/home/username/civs'
 # I.e., the scripts will be found at http://$THISHOST$CIVSBINURL.
 CIVSBINURL='/cgi-bin/test/civs'
 
-# The full URL to the homepage of the CIVS server.
-CIVSURL='http://MyServer.MyUniversity.edu/~username/civs'
-
-
+# The URL to the homepage of the CIVS server, relative to http://$THISHOST
+CIVSURL='/~username/civs'

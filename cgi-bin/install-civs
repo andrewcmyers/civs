@@ -11,10 +11,10 @@ then
 	sed \
   	    -e 's|@PERL@|/usr/bin/perl|' \
 	    -e 's|@CGIBINDIR@|/www5/andru/public_cgi-bin/civs|' \
-	    -e 's|@THISHOST@|www5.cs.cornell.edu|' \
 	    -e 's|@CIVSDIR@|/www5/andru/civs|' \
 	    -e 's|@CIVSBINPATH@|/cgi-bin/andru/civs|' \
-	    -e 's|@CIVSURL@|http://www5.cs.cornell.edu/~andru/civs|' \
+	    -e 's|@CIVSURL@|/~andru/civs|' \
+	    -e 's|@THISHOST@|www5.cs.cornell.edu|' \
 	"$f" > "$1/$f"
     done
 

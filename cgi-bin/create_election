@@ -139,7 +139,7 @@ if ($public eq 'yes') {
     Send "";
 }
 Send "For more information about the Condorcet Internet Voting Service, see";
-Send "  $civs_url.\r\n";
+Send "  http://$thishost$civs_url.\r\n";
 Send "."; ConsumeSMTP;
 CloseMail;
 
