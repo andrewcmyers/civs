@@ -559,7 +559,7 @@ sub PrintProportionalResults {
 	for (my $i = 0; $i < $num_winners && $i < $num_choices; $i++) {
 	    $curr_comm[$i] = $choice_index[$i];
 	}
-	@curr_comm = sort @curr_comm;
+	@curr_comm = sort { $a <=> $b } @curr_comm;
 	$curr_comm = flatten @curr_comm;
 
 	$iters = 0;
@@ -756,7 +756,7 @@ sub PrintProportionalResults {
 	for (my $k = 0; $k <= $num_winners; $k++) {
 	    if ($j != $k) { push @a, $choice_index[$k]; }
 	}
-	@a = sort @a;
+	@a = sort {$a <=> $b} @a;
 	my $comm = flatten @a;
 	if (!$visited{$comm}) {
 	    push @committee, $comm;
