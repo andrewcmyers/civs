@@ -13,17 +13,20 @@ BEGIN {
 
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
-    @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys
+    @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys 
+    &CheckAuthorizationKeyForAddingVoter &CheckAuthorizationKeyForVoting
 	&LockElection &UnlockElection &StartElection &IsStarted
 	&CheckStarted &PointToResults &IsStopped &CheckNotStopped
 	&CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey
 	&IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
+	&ElectionUsesAuthorizationKey
 	$election_id $election_dir $started_file $stopped_file
 	$election_data $election_log $vote_data $election_lock $name
 	$title $email_addr $description $num_winners $addresses @addresses
 	$election_end $public $writeins $proportional $use_combined_ratings
 	$choices @choices $num_choices $num_auth $num_votes $recorded_voters
-	$ballot_reporting %voter_keys %edata %vdata);
+	$ballot_reporting $authorization_key %authorized_voters
+	%voter_keys %edata %vdata);
 }
 
 # Package imports
@@ -37,10 +40,13 @@ use DB_File;
 
 # Declare exported variables
 our $election_id = '';
-our ($election_dir, $started_file, $stopped_file, $election_data,
-	$election_log, $vote_data, $election_lock);
+our ($election_dir, $started_file, $stopped_file, $election_data, $election_log, $vote_data, $election_lock);
+
 our (%edata, %vdata);
-our ($name, $title, $email_addr, $description, $num_winners, $addresses, @addresses, $election_end, $public, $writeins, $proportional, $use_combined_ratings, $choices, @choices, $num_choices, $num_auth, $num_votes, $recorded_voters, $ballot_reporting, %voter_keys);
+our ($name, $title, $email_addr, $description, $num_winners, $addresses, @addresses, $election_end, $public, $writeins, $proportional, $use_combined_ratings, $choices, @choices, $num_choices, $num_auth, $num_votes, $recorded_voters, $ballot_reporting, $authorization_key, %voter_keys, %authorized_voters);
+
+# Non-exported variables
+my ($db_is_open, $election_is_locked);
 
 &init;
 
@@ -59,12 +65,7 @@ sub init {
 	$election_lock = $election_dir."/lock";
 
 	&LockElection;
-
-	# open databases
-	tie %edata, "DB_File", $election_data, &O_RDWR, 0666, $DB_HASH
-		or die "Unable to tie election db=$election_data: $!\n";
-	tie %vdata, "DB_File", $vote_data, &O_CREAT|&O_RDWR, 0666, $DB_HASH
-		or die "Unable to tie voter db=$vote_data: $!\n";
+	&OpenDatabase;
 
 	# Extract data from databases
 	$name = $edata{'name'};
@@ -77,7 +78,7 @@ sub init {
 	$election_end = $edata{'election_end'};
 	$public = $edata{'public'};
 	$writeins = $edata{'writeins'};
-	$proportional = $edata{'proportional'};
+	$proportional = $edata{'proportional'} or $proportional = "";
 	$use_combined_ratings = $edata{'use_combined_ratings'};
 	$choices = $edata{'choices'} or $choices = "";
 	@choices = split /[\r\n]+/, $choices;
@@ -85,51 +86,75 @@ sub init {
 	$num_auth = $edata{'num_auth'};
 	$num_votes = $vdata{'num_votes'} or $num_votes = 0;
 	$recorded_voters = $vdata{'recorded_voters'};
-	$ballot_reporting = $edata{'ballot_reporting'};
+	$ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = "";
 	%voter_keys = ();
-	&ExtractVoterKeys;
+	&LoadHash('voter_keys', \%voter_keys);
+	%authorized_voters = ();
+	&LoadHash('authorized_voters', \%authorized_voters);
 }
 
 END {
-    untie %edata;
-    untie %vdata;
+	&CloseDatabase;
     &UnlockElection;
 }
 
 # utility routines
 
-sub ExtractVoterKeys {
+sub LoadHash {
+	my $hash_name = shift;
+	my $hash_ref = shift;
     my $s;
-    $s = $edata{'voter_keys'} or $s = "";
+    $s = $edata{$hash_name} or $s = "";
     my @a = split /[\r\n]+/, $s;
     foreach my $k (@a) {
-	$voter_keys{$k} = 1;
+		$$hash_ref{$k} = 1;
     }
 }
 
-sub SaveVoterKeys {
+sub SaveHash {
+	my $hash_name = shift;
+	my $hash_ref = shift;
     my $s = '';
     my $k;
-    foreach $k (keys %voter_keys) {
-	$s .= ($k.$cr);
+    foreach $k (keys %{$hash_ref}) {
+		$s .= ($k.$cr);
     }
-    $edata{'voter_keys'} = $s;
+    $edata{$hash_name} = $s;
 }
 
 sub LockElection {
     if (!sysopen(ELOCK, $election_lock, &O_CREAT | &O_RDWR)) {
-	print h1("Error");
-	print p("Did not have write access to acquire an election lock"), 
+		print h1("Error");
+		print p("Did not have write access to acquire an election lock"), 
 	      end_html();
-	exit 0;
+		exit 0;
     }
     flock ELOCK, &LOCK_EX;
+	$election_is_locked = 1;
 }
+
+sub OpenDatabase {
+	tie %edata, "DB_File", $election_data, &O_RDWR, 0666, $DB_HASH
+		or die "Unable to tie election db=$election_data: $!\n";
+	tie %vdata, "DB_File", $vote_data, &O_CREAT|&O_RDWR, 0666, $DB_HASH
+		or die "Unable to tie voter db=$vote_data: $!\n";
+	$db_is_open = 1;
+}
+
+sub CloseDatabase {
+	if ($db_is_open) {
+	    untie %edata;
+	    untie %vdata;
+		$db_is_open = 0;
+	}
+}
+
 sub UnlockElection {
-    untie %edata;
-    untie %vdata;
-    flock ELOCK, &LOCK_UN;
-    close(ELOCK);
+	if ($election_is_locked) {
+	    flock ELOCK, &LOCK_UN;
+    	close(ELOCK);
+		$election_is_locked = 0;
+	}
 }
 
 sub StartElection {
@@ -269,6 +294,51 @@ sub CheckControlKey {
     }
 }
 
+sub ElectionUsesAuthorizationKey {
+	return (defined($edata{'hash_authorization_key'}));
+}
+
+sub CheckAuthorizationKey {
+	my $authorization_key = shift;
+	if (!&ElectionUsesAuthorizationKey) {
+		# if the hash doesn't exist in the database, then this is
+		# an election that was created before authorization keys
+		# were added to the CIVS design.  In order to keep those elections
+		# running, we'll go ahead and let the key check pass. 
+		return 1;
+	}
+	if (!defined($authorization_key)) {
+		# if the key is undefined, then the CGI script didn't receive
+		# the parameter.  That's either an authorization violation,
+		# or an old election that didn't use an auth. key.  Since
+		# we've already checked the second case, assume the first.
+		return 0;
+	}
+	my $hash_authorization_key = substr(md5_hex($authorization_key), 0, 16);
+	my $hash_authorization_key_check = $edata{'hash_authorization_key'};
+	return $hash_authorization_key eq $hash_authorization_key_check;
+}
+
+sub CheckAuthorizationKeyForAddingVoter {
+	my $authorization_key = shift;
+	if (!CheckAuthorizationKey($authorization_key)) {	
+		print h1("Error"), p("Invalid key. You should have received a correct URL for controlling the election by email. This error has been logged.");
+		print end_html();
+		ElectionLog("Election: $title ($election_id) : invalid attempt to add voter (wrong key)");
+		exit 0;
+	}
+}
+
+sub CheckAuthorizationKeyForVoting {
+	my $authorization_key = shift;
+	if (!CheckAuthorizationKey($authorization_key)) {	
+		print h1("Error"), p("Invalid key. You should have received a correct URL for voting in the election. This error has been logged.");
+		print end_html();
+		ElectionLog("Election: $title ($election_id) : invalid attempt to add voter (wrong key)");
+		exit 0;
+	}
+}
+
 sub IsWellFormedElectionID {
     return $election_id =~ m/^E_[0123456789abcdef]+/;
 }
@@ -305,51 +375,77 @@ sub ElectionLog {
 # Send all of the voters their keys, with logging to STDOUT.
 # And record the keys in the database.
 sub SendKeys {
-    my @addresses = @_;
+    my $authorization_key = shift;
+	my $addresses_ref = shift;
+	my @addresses = @{$addresses_ref};
+	# TODO: eliminate any duplicates from @addresses
+	my $num_added = 0;
     if (!($local_debug)) { ConnectMail; }
-    foreach my $v (@_) {
-	my $voter_key = SecureNonce();
-	$voter_keys{$voter_key} = 1;
-	my $url =
-	"http://$thishost$civs_bin_path/vote?id=$election_id&key=$voter_key";
-	if ($local_debug) {
-	    print "voter link: <a href=\"$url\">$url</a>\n";
-	} else {
-	    print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
-	    Send "mail from: $email_addr"; ConsumeSMTP;
-	    Send "rcpt to: $v"; ConsumeSMTP;
-	    Send "data"; ConsumeSMTP;
-	    Send "From: $email_addr (Condorcet Internet Voting Service)";
-	    Send "To: $v";
-	    Send "Subject: CIVS Election now available for voting: $title";
-	    Send "";
-	    Send "A Condorcet Internet Voting Service election named $title has been created.";
-	    Send "You have been designated as a voter by the election supervisor,";
-	    Send "$name ($email_addr). If you would like to vote, please visit the";
-	    Send "following URL:";
-	    Send "";
-	    Send "$url";
-	    Send "";
-	    Send "This is your private URL. Do not give it to anyone else because";
-	    Send "they could use it to vote for you. Your privacy will not be violated";
-	    Send "by voting. The voting service does not keep track of your email address";
-	    Send "or release any information about whether or how you have voted.";
-	    Send "";
-	    Send "The election has been announced to end $election_end.";
-	    Send "To view the results of the election once it is closed, visit:";
-	    Send "http://$thishost$civs_bin_path/results?id=$election_id";
-	    Send "";
-	    Send "For more information about the Condorcet Internet Voting Service, see";
-	    Send "http://$thishost$civs_url.";
-	    Send "."; ConsumeSMTP;
-	}
+    foreach my $v (@addresses) {
+		my $url = "";
+		if ($public eq 'yes') {
+			$url = "http://$thishost$civs_bin_path/vote?id=$election_id";
+			$url .= "&authorization_key=$authorization_key"
+				if (&ElectionUsesAuthorizationKey);
+		} else {
+			if (&ElectionUsesAuthorizationKey) {
+				my $address_hash = substr(md5_hex($v,$authorization_key),0,16);
+				if ($authorized_voters{$address_hash}) {
+					# This email address has already been added to the election
+					print "Voter \"$v\" is already an authorized voter.\n";
+					next;
+				} else {
+					$authorized_voters{$address_hash} = 1;
+				}
+			}
+			my $voter_key = SecureNonce();
+			$voter_keys{$voter_key} = 1;
+			$url = "http://$thishost$civs_bin_path/vote?id=$election_id"
+			         ."&key=$voter_key";
+		}
+		$num_added++;
+
+		if ($local_debug) {
+		    print "voter link: <a href=\"$url\">$url</a>\n";
+		} else {
+		    print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
+	    	Send "mail from: $email_addr"; ConsumeSMTP;
+		    Send "rcpt to: $v"; ConsumeSMTP;
+		    Send "data"; ConsumeSMTP;
+		    Send "From: $email_addr (Condorcet Internet Voting Service)";
+		    Send "To: $v";
+		    Send "Subject: CIVS Election now available for voting: $title";
+		    Send "";
+		    Send "A Condorcet Internet Voting Service election named $title has been created.";
+		    Send "You have been designated as a voter by the election supervisor,";
+		    Send "$name ($email_addr). If you would like to vote, please visit the";
+		    Send "following URL:";
+		    Send "";
+		    Send "$url";
+		    Send "";
+		    Send "This is your private URL. Do not give it to anyone else because";
+		    Send "they could use it to vote for you. Your privacy will not be violated";
+		    Send "by voting. The voting service does not keep track of your email address";
+		    Send "or release any information about whether or how you have voted.";
+		    Send "";
+		    Send "The election has been announced to end $election_end.";
+		    Send "To view the results of the election once it is closed, visit:";
+		    Send "http://$thishost$civs_bin_path/results?id=$election_id";
+		    Send "";
+		    Send "For more information about the Condorcet Internet Voting Service, see";
+		    Send "http://$thishost$civs_url.";
+		    Send "."; ConsumeSMTP;
+		}
     }
-    SaveVoterKeys;
+    SaveHash('voter_keys', \%voter_keys);
+	SaveHash('authorized_voters', \%authorized_voters);
 
     if (!($local_debug)) {
     	CloseMail;
     }
-    print "Done.$cr</pre>$cr";
+	STDOUT->flush();
+
+	return $num_added;
 }
 
 1; # ok!

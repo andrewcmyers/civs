@@ -10,7 +10,7 @@ BEGIN {
 
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
-    @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log &SecureNonce &fisher_yates_shuffle $home $thishost $civs_bin_path $civs_log $civs_url $local_debug $cr $lockfile $private_host_id);
+    @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log &SecureNonce &fisher_yates_shuffle $home $thishost $civs_bin_path $civs_log $civs_url $local_debug $cr $lockfile $private_host_id &Fatal_CIVS_Error);
 }
 
 # Package constructor
@@ -23,11 +23,12 @@ BEGIN {
 	# It makes sense for every CGI script in CIVS to 
 	# "use civs_common;" as its first action.
 	use IO::Handle;
-	use CGI::Carp qw(carpout);
+	use CGI::Carp qw(carpout set_message fatalsToBrowser);
 	open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or 
 		die "Unable to open @CIVSDATADIR@/cgi-log: $!\n";
 	autoflush CGILOG;
 	carpout(\*CGILOG);
+	set_message(\&Fatal_CIVS_Error);
 }
 
 END {
@@ -42,13 +43,13 @@ use Fcntl qw(:flock);
 # use Time::HiRes qw(gettimeofday);
 
 # Exported package globals
+our $local_debug = "@LOCALDEBUG@";
 our $home = "@CIVSDATADIR@";
 our $thishost = "@THISHOST@";
 our $civs_bin_path = "@CIVSBINURL@";
 our $civs_log = $home.'/log';
 our $civs_url = "@CIVSURL@";
 our $lockfile = $home.'/global_lock';
-our $local_debug = 0;
 our $cr = "\r\n";
 our $private_host_id = '';
 
@@ -56,6 +57,14 @@ our $private_host_id = '';
 our $generated_header = 0;
 our $private_host_id_file = $home.'/private_host_id';
 our $nonce_seed_file = $home.'/nonce_seed';
+our $civs_header_printed = 0;
+our $html_header_printed = 0;
+
+&init;
+
+sub init {
+	# Nothing to do here for now.
+}
 
 sub GetPrivateHostID {
     if (!open(HOSTID, $private_host_id_file)) {
@@ -76,12 +85,18 @@ sub HTML_Header {
 	print header(), start_html(-title => $title,
 				   -style => {'src' => "@CIVSURL@/style.css"});
     }
+	$html_header_printed = 1;
 }
 
 sub CIVS_Header {
-print "
-<table border=0 width=100% cellspacing=0 cellpadding=7 class=\"banner\">
-  <tr>
+print 
+ "<table border=0 width=100% cellspacing=0 cellpadding=7 class=\"banner\">";
+if ($local_debug) {
+	print "<tr><td width=100% align=center bgcolor=yellow colspan=2>",
+	      "LOCAL DEBUG MODE</td></tr>";
+}	
+print 
+ "<tr>
     <td width=100% valign=top nowrap>
     <h1>&nbsp;Condorcet Internet Voting Service</h1>
     </td>
@@ -97,6 +112,18 @@ print "
   </tr>
 </table>
 ";
+	$civs_header_printed = 1;
+}
+
+sub Fatal_CIVS_Error {
+	&HTML_Header("CIVS Error") unless $html_header_printed;
+	&CIVS_Header("Error") unless $civs_header_printed;
+	
+	print h2("Error"),
+	      p("CIVS is unable to process your request.");
+	print pre(@_) if $local_debug;
+	print end_html();
+	exit 0;
 }
 
 # Log the string provided

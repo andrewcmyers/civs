@@ -15,9 +15,11 @@ CIVS_Header('Start election');
 use election;
 my $max_voters = 1000;
 my $control_key = param('key');   
+my $authorization_key = param('authorization_key');
 
 CheckElectionID;
 CheckControlKey($control_key);
+CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 if (IsStarted) {
     print h1("Error");
@@ -30,19 +32,20 @@ StartElection;
 print p('The election '.strong($title).' has been started.'.$cr);
 
 print '<pre>'.$cr;
-
 if ($#addresses > $max_voters) {
     print h2("Sorry, more than $max_voters voters are currently not allowed\n");
     exit 1;
 }
 
-SendKeys @addresses;
+my $num_added = SendKeys($authorization_key, \@addresses);
 
-print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key\">Go back to election control</a>");
+print "Done.\n</pre>\n";
+
+print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key&authorization_key=$authorization_key\">Go back to election control</a>");
 
 # Destroy record of voter addresses so we can't
 # figure out who voted for what.
-$edata{'num_auth'} = $#addresses + 1;
+$edata{'num_auth'} = $num_added;
 $edata{'addresses'} = "";
 
 print end_html();

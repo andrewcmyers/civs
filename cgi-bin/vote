@@ -28,6 +28,7 @@ use election;
 my $voter = param('voter'); # nearly obsolete
 my $old_voter_key = param('voter_key'); # nearly obsolete
 my $voter_key = param('key');
+my $authorization_key = param('authorization_key');
 
 HTML_Header("CIVS Voting");
 
@@ -46,10 +47,16 @@ CheckNotStopped;
 if ($public ne 'yes') {
     CheckVoterKey($voter_key, $old_voter_key, $voter);
 } else {
-    $voter_key = remote_addr(); # XXX should make the voter key the hash and
-    $voter = "voter";           # the voter the remote address
+	if (!&ElectionUsesAuthorizationKey) {
+		# for backwards compatibility
+		$voter_key = remote_addr(); 
+	    $voter = "voter";           
+	} else {
+		CheckAuthorizationKeyForVoting($authorization_key);
+		$voter_key = substr(md5_hex(remote_addr(),$authorization_key), 0, 16);
+	}
 }
-CheckNotVoted($voter_key, $voter);
+CheckNotVoted($voter_key, $old_voter_key, $voter);
 
 my $sort_choices = param('SortChoices');
 my $add_writein = param('AddWritein');
@@ -157,6 +164,7 @@ print hidden('voter', $voter); # nearly obsolete
 print hidden('voter_key', $old_voter_key); # nearly obsolete
 print hidden('key', $voter_key);
 print hidden('id', $election_id);
+print hidden('authorization_key', $authorization_key);
 
 print "\n<!-- Current rankings:\n";
 for (my $i = 0; $i < $num_choices; $i++) {

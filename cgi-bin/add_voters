@@ -28,6 +28,8 @@ CIVS_Header("Adding voters");
 
 my $control_key = param('key');    
 CheckControlKey($control_key);
+my $authorization_key = param('authorization_key');
+CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 if (!IsStarted || IsStopped) {
     print h1("Error"), p("Sorry, voters can only be added to an election in progress.");
@@ -38,16 +40,18 @@ print "<pre>\n";
 GetPrivateHostID;
 
 # Send all of the voters their keys
-SendKeys(@new_addresses);
+my $num_added = SendKeys($authorization_key, \@new_addresses);
 
+print "$num_added voter(s) added\n";
 print "Done.\n</pre>\n";
 
-print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key\">Go back to election control</a>");
+my $url = "$civs_bin_path/control?id=$election_id&key=$control_key";
+$url .= "&authorization_key=$authorization_key" if defined($authorization_key);
+print p("<a href=\"$url\">Go back to election control</a>");
 
-my $num_new_voters = $#new_addresses + 1;
-$edata{'num_auth'} += $num_new_voters;
+$edata{'num_auth'} += $num_added;
 
 print end_html();
-Log("$num_new_voters new voters added to $title ($election_id)");
+Log("$num_auth new voters added to $title ($election_id)");
 
 exit 0;

@@ -25,7 +25,7 @@ CheckStarted;
 
 our %vdata_copy = %vdata;
 
-UnlockElection;
+&UnlockElection;
 
 if ($public ne 'yes') {
     CheckStopped;

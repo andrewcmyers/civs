@@ -18,7 +18,7 @@ fi
 
 echo "Read settings file"
 
-make gettimeofday
+make -s gettimeofday
 
 TestAndCreateDir $HTMLDIR;
 TestAndCreateDir $CGIBINDIR;
@@ -36,12 +36,13 @@ TestAndCreateDir $CIVSDATADIR/elections;
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
+		 -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	< $f > "${HTMLDIR}/$f"
     done
 
     for f in add_voters beatpath.pm civs_common.pm close control \
         create_election download_ballots election.pm mail.pm results \
-	start_election vote
+		start_election vote
     do
 	#echo "copying cgi-bin/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \
@@ -52,24 +53,39 @@ TestAndCreateDir $CIVSDATADIR/elections;
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
-	< "cgi-bin/$f" > "$CGIBINDIR/$f"
+		 -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
+	 	 < "cgi-bin/$f" > "$CGIBINDIR/$f"
 	chmod a+x "${CGIBINDIR}/$f";
     done
 
     if [ ! -s $CIVSDATADIR/private_host_id ]; then
-	echo "*********************************************";
-	echo "                 WARNING                     ";
-	echo "*********************************************";
-	echo "";
-	echo "No private key exists for the server!";
-	echo "";
-	echo "You must create the file $CIVSDATADIR/private_host_id";
-	echo "See the INSTALL file for more information.";
-	echo "";
+		echo "*********************************************";
+		echo "                 WARNING                     ";
+		echo "*********************************************";
+		echo "";
+		echo "No private key exists for the server!";
+		echo "";
+		echo "Creating a private key using the openssl pseudo-random number";
+		echo "generator.  If you want more randomness than this, you will";
+		echo "need to create your own key.  See the INSTALL file for more";
+		echo "information."
+		echo "";
+		openssl rand -base64 32 -out $CIVSDATADIR/private_host_id;
+		echo "*********************************************";
     fi
+
+	if [ ! -s $CIVSDATADIR/nonce_seed ]; then
+		echo "Seeding the CIVS nonce generator.";
+		openssl rand -base64 32 -out $CIVSDATADIR/nonce_seed;
+	fi
 
     touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
     chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
-    cp gettimeofday $CIVSDATADIR/gettimeofday
-    
+	
+	if [ -e gettimeofday.exe ]; then 
+		cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
+	else
+    	cp gettimeofday $CIVSDATADIR/gettimeofday
+	fi
+	
 echo "Install completed.  Check for any errors reported above.";

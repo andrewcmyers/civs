@@ -16,11 +16,13 @@ HTML_Header("CIVS Election Control");
 use election;
 
 my $control_key = param('key');    
+my $authorization_key = param('authorization_key');
 
 CIVS_Header("Election control");
 
 CheckElectionID;
 CheckControlKey($control_key);
+CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 print h1("Election: $title");
 
@@ -32,6 +34,8 @@ if (!IsStarted) {
     print '<p>The election has not yet started. Press this button to start it: ';
     print hidden('id', $election_id);
     print hidden('key', $control_key);
+    print hidden('authorization_key', $authorization_key)
+		if defined($authorization_key);
     print '<input type="submit" value="Start election" name="start">';
     print '</p></form>';
 } elsif (!IsStopped) {
@@ -46,28 +50,31 @@ if (!IsStarted) {
     print '</p></form>'."\n";
 
     if ($writeins eq 'yes') {
-	if (param('nowriteins')) {
-	    $edata{'writeins'} = $writeins = 'no';
-	    print p('Write-in choices have been disabled');
-	} else {
-	    print "<form method=POST
-			action=$civs_bin_path/control
-			enctype=\"multipart/form-data\"
-			name=\"Nowriteins\">\n";
-	    print p('Write-in choices are currently allowed. Press this
-		    button to stop allowing new write-ins.',
-		    hidden('id', $election_id),
-		    hidden('key', $control_key),
-		'<input type="submit" value="Disallow write-ins" name="nowriteins">');
-	    print "</form>\n";
-	}
+		if (param('nowriteins')) {
+	    	$edata{'writeins'} = $writeins = 'no';
+		    print p('Write-in choices have been disabled');
+		} else {
+	    	print "<form method=POST
+				action=$civs_bin_path/control
+				enctype=\"multipart/form-data\"
+				name=\"Nowriteins\">\n";
+		    print p('Write-in choices are currently allowed. Press this
+			    button to stop allowing new write-ins.',
+			    hidden('id', $election_id),
+		    	hidden('key', $control_key),
+			'<input type="submit" value="Disallow write-ins" name="nowriteins">');
+		    print "</form>\n";
+		}
     }
     if ($public eq 'yes') {
-	my $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
-	print p("This is an open election. Voting URL:
+		my $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
+		$url .= "&authorization_key=$authorization_key" 
+			if defined($authorization_key);
+		print p("This is an open election. Voting URL:
 	        <tt><a href=\"$url\">$url</a></tt>").$cr;
     }
-} else {
+} else {    
+	&CloseDatabase;
     print p("The election has ended. <a href=\"$civs_bin_path/results?id=$election_id\">Election results</a> are available.");
 }
 
@@ -123,16 +130,27 @@ print "</ul>";
 
 print h2("Add voters");
 
+my $duplicate_effect;
+if (&ElectionUsesAuthorizationKey) {
+	$duplicate_effect = b("will not");
+} else {
+	$duplicate_effect = b("will");
+}
+
 print p("Enter e-mail addresses of voters, one per line. These
 may be new voters or existing voters who have not voted yet.
-Giving the e-mail address of an already existing voter will
-let that voter vote twice.");
+In a standard election, giving the e-mail address of an already 
+existing voter $duplicate_effect let that voter vote twice.
+In an open election, only a token attempt is made to prevent
+multiple voting.");
 print "<form method=POST
 	     action=$civs_bin_path/add_voters
 	     enctype=\"multipart/form-data\"
 	     name=\"AddVoters\">\n";
 print hidden('id', $election_id);
 print hidden('key', $control_key);
+print hidden('authorization_key', $authorization_key)
+	if defined($authorization_key);
 print p('<textarea rows="2" name="new_addresses" cols="50"></textarea>');
 print p('Upload file: <input id=new_addresses_file type=file name="new_addresses_file">');
 print '<input type="submit" value="Add voters" name="add">';
