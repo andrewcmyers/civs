@@ -108,7 +108,7 @@ print ('Condorcet completion algorithm:
               value="beatpath_winner" '.
 	      $bw_checked.
 	    '>
-	    <a href="http://electionmethods.org/CondorcetEx.htm">Beatpath Winner/SSD</a>
+	    <a href="'.$civs_url.'/rp.html">Beatpath Winner/SSD</a>
 	    <input type="radio"
 	      name="algorithm",
 	      onClick="newSettings()"

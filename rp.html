@@ -38,21 +38,21 @@ There, if the goal of the election is simply to pick the top choice,
 it usually doesn't matter which algorithm is used.</p>
 
 <p>The completion algorithms
-supported by CIVS are the Beatpath Winner algorithm,
+supported by CIVS are the <b>Beatpath Winner</b> algorithm,
 also known as <a href="http://electionmethods.org/CondorcetEx.htm">
 Cloneproof Schwartz Sequential Dropping</a>, and
-a variation of the Ranked Pairs algorithm called <b>CIVS Ranked Pairs</b>
+a variant of the Ranked Pairs algorithm called <b>CIVS Ranked Pairs</b>
 here. This page describes the CIVS ranked pairs algorithm.</p>
 
 <h2>Algorithm</h2>
 
-<p>The CIVS ranked pairs algorithm here is a deterministic
+<p>The CIVS Ranked Pairs algorithm is a deterministic
 variant of Eppley's
 <a href="http://alumnus.caltech.edu/~seppley/">Maximize
 Affirmed Majorities</a>,
 and is also related to other algorithms such as
 <a href="http://en.wikipedia.org/wiki/Ranked_Pairs">
-Tideman/Ranked Pairs</a>.
+Tideman Ranked Pairs</a>.
 In these algorithms, each of the pairwise preferences in the preference matrix
 is considered in in the order of the strength of the preference, and either
 <b>kept</b> (<b>affirmed</b>) if it does not create cycles, or else ignored.
@@ -68,11 +68,12 @@ two preferences have exactly the same number of votes in favor and against.
 Like MAM and unlike Tideman, the ordering of preferences does not take margins
 into account.
 
-The major difference between CIVS Ranked Pairs and MAM is that a preference is
+The major difference between CIVS Ranked Pairs and MAM is
+the rule on when a preferent is kept. A preference is
 kept exactly when it does not create any <i>new</i> cycles when considered in
 conjunction with <i>strictly stronger</i>, kept preferences. Thus, preferences
 of equal strength may be kept even though in conjunction they produce a new
-cycle, as long as individually they do not.
+cycle, as long as <i>individually</i> they do not.
 </p>
 
 <h3>Ranking the choices</h3>
