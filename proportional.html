@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <td width="100%" bgcolor="#000080" valign="top" nowrap="nowrap">
-      <h2 align="center"><font color="white" face="sans-serif">Proportional Representation</font></h2>
+      <h2 align="center"><font color="white" face="sans-serif">Proportional Representation in CIVS</font></h2>
     </td>
   </tr>
 </tbody>
@@ -29,7 +29,7 @@
 <p>
 CIVS now supports an experimental mode in which it can be
 used to select multiple candidates while enforcing
-proportional representation. That is, a set of voters can
+proportional representation. Roughly speaking, a set of voters can
 only influence the selection of a fraction of the selected
 candidates that is proportional to the number of voters.
 </p>
@@ -83,9 +83,10 @@ committee 1 is preferred over committee 2, we find the
 largest <i>f</i> such that <i>v</i> voters have a valid
 <i>f</i>-preference for one of the two committees. This <i>v</i>
 becomes the strength of the preference in the ordinary
-Condorcet sense. If there is no valid <i>f</i>-preference
-for one committee over the other, then full <i>k</i>-preference
-is used to break the tie. This allows majorities to break ties
+Condorcet sense; this is called the <i>proportional preference</i> here.
+If there is no proportional preference
+for one committee over the other, then the full <i>k</i>-preference
+(the <i>nonproportional preference</i>) is used to break the tie. This rule allows majorities to break ties
 in cases where the minority is indifferent.</p>
 <p>For <i>k</i>=1, this voting
 scheme is simply the ordinary Condorcet scheme. For
@@ -117,6 +118,18 @@ minority has less than 1/3, then we can view the majority as consisting
 of two blocs deserving representation, and both larger than the minority.
 So in that case the right result is <i>AB</i>, which is achieved because
 a 2/3 majority has a valid 2-preference in this case.
+</p>
+<p>
+When the fraction
+of voters in each bloc don't match perfectly with the attainable fractions
+of seats, there is always some unfairness because some voters will be
+overrepresented and some underrepresented. Using a <i>k+1</i> factor
+balances this unfairness so that a voter is overrepresented by at most
+a (<i>k</i>+1)/<i>k</i> factor. In the example just given, at the 1/3
+point the majority (2/3) bloc has 50% (3/2) overrepresentation if it wins and
+the minority (1/3) bloc also has 50% overrepresentation if it wins.
+Using a different criterion for when a proportional preference is valid
+would result in a higher level of overrepresentation in some cases.
 </p>
 
 <h2>Determining a voter's preference<br>
@@ -158,19 +171,19 @@ the choose function. The storage overhead is
 prohibitive for large <i>n</i> and <i>k</i>.
 </p>
 
-<p>The current technique for identifying the winning committee is
-less expensive but incomplete. The current implementation
-performs a local search through the space of committees
-to identify the Schwartz set of committees: all
-committees that are beaten only by other committees in the
-set. (However, the correctness of the algorithm depends on a currently
-unproved conjecture: that if improvement of a committee is
-possible, it can be done by replacing one member at a time.)
-Currently the entire Schwartz set is reported; if there is
-more than one committee in the set it is necessary to run
-a Condorcet completion algorithm on the Schwartz set.
-As a result, the output of the system in this mode must be currently
-be interpreted with some caution.
+<p>The current technique for identifying the winning committee is less
+expensive but incomplete. The current implementation performs a local
+search through the space of committees to identify the Schwartz set of
+committees: all committees that are beaten only by other committees in
+the set. (However, the correctness of the algorithm depends on a
+currently unproved conjecture: that if improvement of a committee is
+possible, it can be done by replacing one member at a time.) The
+beatpath winner algorithm is run using all committees explored during
+the search for the Schwartz set. An interactive form also allows
+comparison of any two sets.  However, the output of the system in this
+mode must be currently be interpreted with some caution: while no
+counterexamples have been found, there is no proof that it always finds
+the winning committee according to the above criteria.
 </p>
 
 </body></html>
