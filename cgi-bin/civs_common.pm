@@ -100,7 +100,7 @@ sub HTML_Header {
     if (!$generated_header) {
 	print header(), start_html(-title => $title,
 				   -style => {'src' => "@CIVSURL@/style.css"},
-				   -script => $_[1]);
+				   -script => {'src' => "@CIVSURL@/civs.js"});
     }
     $html_header_printed = 1;
 }

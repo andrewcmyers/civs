@@ -16,13 +16,7 @@ use IO::Handle;
 my $thisurl = $civs_bin_path."/results";
 my $detailed = param('detailed');
 
-my $JSCRIPT=<<END;
-function newSettings() {
-    document.changeSettings.submit();
-}
-END
-
-HTML_Header("CIVS Election Results", $JSCRIPT);
+HTML_Header("CIVS Election Results");
 use election;
 
 CIVS_Header("Election Results: $title");
