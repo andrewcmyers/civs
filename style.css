@@ -51,3 +51,6 @@ td { font-family: Arial, helvetica, sans-serif; font-size: 11pt; }
 
 td.recitation { background-color: #FFF0d0 }
 
+span.win { color: #004000; font-weight: bold }
+span.tie { color: #606000; font-weight: bold }
+span.lose { color: #400000; font-weight: bold }

@@ -71,7 +71,15 @@ sub print_nonprop_results {
 	    if ($j == $k) {
 		print "- ";
 	    } else {
-		print $matrix[$j][$k]. " ";
+		if ($matrix[$j][$k] > $matrix[$k][$j]) {
+		    print '<span class="win">';
+		} elsif ($matrix[$j][$k] == $matrix[$k][$j]) {
+		    print '<span class="tie">';
+		} else {
+		    print '<span class="lose">';
+		}
+		print $matrix[$j][$k];
+		print ' </span>';
 	    }
 	    print "</td>";
 	}
@@ -109,11 +117,13 @@ sub print_nonprop_results {
 		$w = $closure_matrix[$j][$k];
 		$l = $closure_matrix[$k][$j];
 		if ($w > $l) {
-		    print "$w";
+		    print '<span class="win">';
+		} elsif ($w == $l) {
+		    print '<span class="tie">';
 		} else {
-		    if ($w != 0) { print "$w"; }
-		    else { print "."; }
+		    print '<span class="lose">';
 		}
+		if ($w != 0) { print $w.'</span>'; } else { print "</span>."; }
 	    }
 	    print "</td>";
 	}
@@ -641,7 +651,15 @@ print "<pre>";
 	    $k = $comm_choice_index[$kk];
 	    print "<td class=count>";
 	    if ($j != $k) {
+		if ($cmatrix[$j][$k] > $cmatrix[$k][$j]) {
+		    print '<span class="win">';
+		} elsif ($cmatrix[$j][$k] == $cmatrix[$k][$j]) {
+		    print '<span class="tie">';
+		} else {
+		    print '<span class="lose">';
+		}
 		print $cmatrix[$j][$k];
+		print '</span>';
 	    } else {
 		print '-';
 	    }
@@ -679,10 +697,17 @@ print "<pre>";
 		$w = $committee_cmatrix[$j][$k];
 		$l = $committee_cmatrix[$k][$j];
 		if ($w > $l) {
+		    print '<span class="win">';
+		} elsif ($w == $l) {
+		    print '<span class="tie">';
+		} else {
+		    print '<span class="lose">';
+		}
+		if ($w > $l) {
 		    print "$w";
 		} else {
-		    if ($w != 0) { print "$w"; }
-		    else { print "."; }
+		    if ($w != 0) { print $w.'</span>'; }
+		    else { print "</span>."; }
 		}
 	    }
 	    print "</td>";
