@@ -364,15 +364,17 @@ sub OrderChoices {
 			@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
 		}
 	} else { # randomize
-		for (my $i = 0; $i < $num_choices; $i++) {
-			$choice_index[$i] = $i;
-			if ($proportional eq 'yes' && $use_combined_ratings) {
-				$rank[$i] = 0;
-			} else {
-				$rank[$i] = $num_choices;
-			}
-		}
+	    for (my $i = 0; $i < $num_choices; $i++) {
+		    $choice_index[$i] = $i;
+		    if ($proportional eq 'yes' && $use_combined_ratings) {
+			    $rank[$i] = 0;
+		    } else {
+			    $rank[$i] = $num_choices;
+		    }
+	    }
+	    if ($shuffle ne 'no') {
 		fisher_yates_shuffle(\@choice_index);
+	    }
 	}
 }
 

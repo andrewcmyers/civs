@@ -53,5 +53,6 @@ td.lose { font-family: Courier New, courier, fixed; text-align:center;
 td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
 table.matrix th { background-color: transparent; color: black }
+table.links { border-color: black; border-style: solid; border-width: 1 }
 
 tr.selected { background-color: #ffffd0 }

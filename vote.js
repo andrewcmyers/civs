@@ -61,6 +61,7 @@ function resort_row(i) {
     return (i < j);
 }
 
+// stably sort rows by their rank
 function sort_rows() {
     read_rows();
     //alert("sorting the rows of " + preftable);
@@ -69,9 +70,11 @@ function sort_rows() {
 	permut[i] = i;
     }
     function compare(m,n) {
-	if (rank[m] == rank[n]) return 0;
 	if (rank[m] < rank[n]) return -1;
 	if (rank[m] > rank[n]) return 1;
+	if (m < n) return -1; // make it stable, please!
+	if (m > n) return 1;
+	return 0;
     }
     permut.sort(compare);
     diag = "";

@@ -71,18 +71,20 @@ the supervisor of the election you create.</p>
   <p>Enter the names of all the choices (candidates),
      one per line, or upload a file containing all the choices:</p>
   <p align="left"><textarea rows="5" name="choices" cols="60"></textarea>&nbsp;&nbsp;</p>
-  <p align="left"><input id=choices_file type=file name="choices_file"></p>
+  <p align="left"><input type=file name="choices_file"></p>
   <p>How many choices will win the election: <input type="text" name="num_winners" size="5" value="1"></p>
   <p>The e-mail addresses of voters, one per line
   (more voters can be added later):</p>
   <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
-  <p><input id=addresses_file type=file name="addresses_file"></p>
-  <p><input id=public type="checkbox" name="public" value="yes">
+  <p><input type=file name="addresses_file"></p>
+  <p><input type="checkbox" name="public" value="yes">
   Make this a public election (voters can add themselves.
   <strong>Warning:</strong> there is only a token attempt to prevent multiple voting).<br>
-  <input id=writeins type="checkbox" name="writeins" value="yes">
+  <input type="checkbox" name="writeins" value="yes">
   Allow voters to write in new choices.<br>
-  <input id=proportional type="checkbox" name="proportional" value="yes">
+  <input type="checkbox" name="shuffle" value="no">
+  Present choices on voting page in exactly the given order.<br>
+  <input type="checkbox" name="proportional" value="yes">
   Enforce proportional representation.
   (<a href="proportional.html">What is this?</a>)</br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If using proportional representation,
@@ -92,7 +94,7 @@ the supervisor of the election you create.</p>
        checked> rank of best choice
   <input type="radio" name="rating_interpretation"
   value="combined_ratings"> combined weights of selected choices<br>
-  <input id=ballot_reporting type = "checkbox" name="ballot_reporting" value="yes">
+  <input type = "checkbox" name="ballot_reporting" value="yes">
   Enable detailed anonymous ballot reporting.  Places a button on the results
   page that allows anyone to view the rankings (but <em>not</em> any 
   personally identifying information about voters) on each ballot cast.

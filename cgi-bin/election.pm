@@ -23,7 +23,7 @@ BEGIN {
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
-    $election_end $public $writeins $proportional $use_combined_ratings
+    $election_end $public $writeins $shuffle $proportional $use_combined_ratings
     $choices @choices $num_choices $num_auth $num_votes $recorded_voters
     $ballot_reporting $authorization_key %used_voter_keys
     %voter_keys %edata %vdata);
@@ -47,7 +47,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      @addresses, $election_end, $public, $writeins, $proportional,
      $use_combined_ratings, $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $authorization_key,
-     %voter_keys, %used_voter_keys);
+     $shuffle, %voter_keys, %used_voter_keys);
 
 our $civs_supervisor = '@SUPERVISOR@';
 
@@ -90,6 +90,7 @@ sub init {
     @choices = split /[\r\n]+/, $choices;
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
+    $shuffle = $edata{'shuffle'};
     $num_votes = $vdata{'num_votes'} or $num_votes = 0;
     $recorded_voters = $vdata{'recorded_voters'};
     $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = "";
@@ -443,7 +444,8 @@ sub SendKeys {
             Send "rcpt to: $v"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
             Send "From: $email_addr ($name, CIVS election supervisor)";
-            Send "Sender: $civs_supervisor";
+            Send "Sender: $email_addr";
+            Send "Errors-To: $email_addr";
             Send "Reply-To: $email_addr";
             Send "To: $v";
             Send "Subject: CIVS Election now available for voting: $title";

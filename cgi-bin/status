@@ -47,6 +47,7 @@ while (defined(my $file = readdir(DIR))) {
     my $st = stat($vote_data);
     my $last_update = 'N/A';
     $last_update = localtime($st->mtime) if defined($st);
+    $title = "\"$title\"";
 
     push @rows, Tr(td([a({-href=>'http://www5.cs.cornell.edu/cgi-bin/andru/civs/results?id='.$file}, small($title)),
     #push @rows, Tr(td([$file,

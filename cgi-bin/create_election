@@ -58,7 +58,12 @@ if (!defined($writeins) or $writeins eq '') {
 } else {
     $writeins = 'yes';
 }
+my $shuffle = param('shuffle');
+if (!defined($shuffle) or $shuffle eq '') {
+    $shuffle = 'yes'; # shuffle by default
+}
 $edata{'writeins'} = $writeins;
+$edata{'shuffle'} = param('shuffle');
 my $proportional = param('proportional');
 if (!defined($proportional) or $proportional eq '') {
     $proportional = 'no';
