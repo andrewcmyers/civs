@@ -279,7 +279,7 @@ print "<pre>";
     }
     #print "num choices = $num_choices, num winners = $num_winners\n";
     for ($i = 0; $i < $num_winners && $i < $num_choices; $i++) {
-	$curr_comm[$i] = $num_choices - $i - 1;
+	$curr_comm[$i] = $i;
     }
 
     if ($num_choices > $num_winners) {
@@ -358,6 +358,8 @@ print "<pre>";
     print "</pre>";
     print "<h2>Winning set of choices</h2>\n";
     if ($successful) {
+	print p("The following winners are not listed in any
+	particular order.");
 	print "<ol>";
 	for ($i = 0; $i < $num_winners; $i++) {
 	    print "<li> ".$choices[$curr_comm[$i]]."\n";
