@@ -34,10 +34,15 @@ if ($public ne 'yes') {
 print h2($title);
 
 my $nwin_param = param('num_winners');
+my $real_nwin = $num_winners;
 if ($nwin_param && $nwin_param > 0 &&
     $nwin_param < $num_choices) {
 	$num_winners = 0+$nwin_param;
 }
+print '<form method="GET"
+	action="'.$thisurl.'"
+	enctype="multipart/form-data"
+	name="ChangeNumWinners">';
 
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
 print "Announced end of election: $election_end", br();
@@ -53,7 +58,14 @@ if ($public ne 'yes') {
     print "This is an public election.", br();
 }
 print "Actual votes cast: $num_votes", br();
-print "Number of winning choices: $num_winners", br();
+print 'Number of winning choices: ';
+print '<input type="text" size=2
+	name="num_winners" value="'.$num_winners.'">';
+print hidden('id', $election_id);
+if ($real_nwin != $num_winners) {
+    print "&nbsp;(Election actually has $real_nwin winners)";
+}
+print br();
 if ($proportional eq 'yes') {
     my $url = $civs_url.'/proportional.html';
     print "This election implements <a href=\"$url\">proportional representation</a>. ";
@@ -64,6 +76,7 @@ if ($proportional eq 'yes') {
     }
     print ' is used to identify each voter\'s preferred set of choices.';
 }
+print '</form>';
 
 print h2('Election description'), p($description);
 
