@@ -15,7 +15,8 @@ BEGIN {
                       &SecureNonce &fisher_yates_shuffle $home $thishost
                       $civs_bin_path $civs_log $civs_url $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error
-                      &unique_elements &civs_hash &timeout);
+                      &unique_elements &civs_hash &system_load &CheckLoad
+		      &timeout);
 }
 
 # The local_debug flag must be declared before the call to set_message (in
@@ -214,6 +215,25 @@ sub unique_elements {
 	return @uniq;
 }
 
+sub system_load {
+    open(LOADAVG, "</proc/loadavg");
+    my $line = <LOADAVG>;
+    close(LOADAVG);
+    (my $one, my $five, my $fifteen) = ($line =~ m/^([^ ]+) ([^ ]+) ([^ ]+)/);
+    return $one;
+}
+
+sub CheckLoad {
+    my $load = system_load + 0;
+    if ($load >= 10.0) {
+	HTML_Header("CIVS Voting");
+	CIVS_Header('CIVS server busy');
+	print p("Sorry, the CIVS web server is very busy right now and
+	    cannot handle more requests. Please try again a little later.");
+	exit 0;
+    }
+}
+
 sub timeout {
     my $wait_time = $_[0];
     my $pid = fork();
@@ -222,16 +242,19 @@ sub timeout {
     my $t = time();
     while (1) {
 	my $kid = waitpid(-1, WNOHANG);
-	if ($kid > 0) { last; }
-	if ($signaled && time() - $t > $wait_time)  {
-	    kill($pid, 15);
+	if ($kid > 0) { exit(0); }
+	if (!$signaled && time() - $t > $wait_time)  {
+	    kill 15, $pid;
+	    sleep(1);
+	    kill 9, $pid;
 
 	    print p('Sorry, computation terminated because
-		    it ran too long. System load may be too high'), $cr;
+		    it ran too long. System load may be too high or
+		    computing election results may be too expensive.'), $cr;
+	    exit(0);
 	}
 	sleep(1);
     }
-    exit(0);
 }
 
 1; # ok!

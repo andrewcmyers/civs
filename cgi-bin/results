@@ -16,6 +16,7 @@ use IO::Handle;
 my $thisurl = $civs_bin_path."/results";
 my $detailed = param('detailed');
 
+CheckLoad;
 timeout(20);
 
 HTML_Header('CIVS Election Results', 'results.js');

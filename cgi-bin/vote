@@ -13,6 +13,7 @@ use IO::Handle;
 
 my $thisurl = $civs_bin_path."/vote";
 
+CheckLoad;
 timeout(10);
 
 use election;
