@@ -3,8 +3,11 @@
 use strict;
 use warnings;
 
+use admctrl;
+
 use civs_common;
 use CGI qw(:standard);
+
 use Digest::MD5 qw(md5_hex);
 use DB_File;
 
@@ -12,11 +15,6 @@ use Socket;
 use IO::Handle;
 
 my $thisurl = $civs_bin_path."/vote";
-
-# CheckLoad;
-AdmissionControl;
-
-timeout(10);
 
 use election;
 
@@ -291,12 +289,13 @@ sub ProcessVote {
     
     # Record vote, but not voter
     my $voter_ballot_release_key = SecureNonce();
-    GetPrivateHostID;
+    &GetPrivateHostID;
     my $ballot_key = civs_hash($voter_ballot_release_key,
 			       $private_host_id);
     $vdata{$ballot_key} = $vote;
     $vdata{'num_votes'}++;
     $used_voter_keys{civs_hash($voter_key)} = 1;
+    &SyncVoterKeys;
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
     if ($recorded_voters) {
 	$vdata{'recorded_voters'} = $recorded_voters . "\n".  $ballot_key;
@@ -309,16 +308,16 @@ sub ProcessVote {
 	# choice 2 beats choice 3 (i.e., has lower
 	# numbered rank)
     for (my $j = 0; $j < $num_choices; $j++) {
-		for (my $k = 0; $k < $num_choices; $k++) {
-		    my $jk = $vdata{"$j.$k"};
-			$jk = 0 if (!defined($jk));
-	    	if ($rank[$j] ne 'No opinion' &&
-				$rank[$k] ne 'No opinion' &&
-				$rank[$j] < $rank[$k]) 
-			{
-				$vdata{"$j.$k"} = $jk + 1;
-		    }	
-		}
+	for (my $k = 0; $k < $num_choices; $k++) {
+	    my $jk = $vdata{"$j.$k"};
+	       $jk = 0 if (!defined($jk));
+	if ($rank[$j] ne 'No opinion' &&
+			$rank[$k] ne 'No opinion' &&
+			$rank[$j] < $rank[$k]) 
+		{
+			$vdata{"$j.$k"} = $jk + 1;
+	    }	
+	}
     }
 
     print p("Thank you. Your vote for <strong>$title</strong> has been

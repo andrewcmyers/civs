@@ -3,22 +3,25 @@
 use strict;
 use warnings;
 
+use admctrl;
+
 use civs_common;
 use CGI qw(:standard);
-use Digest::MD5 qw(md5_hex);
+use Socket;
+use IO::Handle;
 use POSIX qw(strftime);
+
+
+use Digest::MD5 qw(md5_hex);
 use DB_File;
 use beatpath;
 use rp;
-use Socket;
-use IO::Handle;
 
 my $thisurl = $civs_bin_path."/results";
 my $detailed = param('detailed');
 
 # CheckLoad;
-AdmissionControl;
-timeout(30);
+# timeout(30);
 
 HTML_Header('CIVS Election Results', 'results.js');
 use election;

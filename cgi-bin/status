@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use admctrl;
 use civs_common;
 
 use CGI qw(:standard);

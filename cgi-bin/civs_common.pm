@@ -16,8 +16,7 @@ BEGIN {
                       &SecureNonce &fisher_yates_shuffle $home $thishost
                       $civs_bin_path $civs_log $civs_url $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error
-                      &unique_elements &civs_hash &system_load &CheckLoad
-		      &timeout &AdmissionControl);
+                      &unique_elements &civs_hash &system_load &CheckLoad);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -233,64 +232,6 @@ sub CheckLoad {
 	print p("Sorry, the CIVS web server is very busy right now and
 	    cannot handle more requests. Please try again a little later.");
 	exit 0;
-    }
-}
-
-our $admission_socket = $home.'/elections/admission_control';
-
-sub AdmissionControl {
-    # if ($local_debug) { return 1; }
-    my $maxthreads = 10;
-    if (!socket(ADMCTRL, &AF_UNIX, &SOCK_STREAM, 0)) {
-	HTML_Header('Cannot create Unix domain socket');
-	print p("can't open socket: $!\n");
-	exit 1;
-    }
-    my $sa = pack_sockaddr_un($admission_socket);
-    if (!connect ADMCTRL, $sa) {
-	HTML_Header("Starting admission control");
-	unlink($admission_socket);
-	print pre("$home/pgrp $home/lockserv $admission_socket $maxthreads");
-	system("$home/pgrp $home/lockserv $admission_socket $maxthreads");
-	sleep(1);
-	if (!connect(ADMCTRL, $sa)) {
-	    print "Can't start it!?\n";
-	    exit 1;
-	}
-	chmod 0777, $admission_socket;
-    }
-    my $success = <ADMCTRL>;
-    if ($success eq '') {
-	HTML_Header('CIVS server busy');
-	CIVS_Header('CIVS server busy');
-	print p("Sorry, the CIVS system has too many active users right now.
-		 Please try again in a few minutes.");
-	exit 0;
-    } else {
-	return 1; # gained admission
-    }
-}
-
-sub timeout {
-    my $wait_time = $_[0];
-    my $pid = fork();
-    my $signaled = 0;
-    if ($pid == 0) { return; }
-    my $t = time();
-    while (1) {
-	my $kid = waitpid(-1, WNOHANG);
-	if ($kid > 0) { exit(0); }
-	if (!$signaled && time() - $t > $wait_time)  {
-	    kill 15, $pid;
-	    sleep(1);
-	    kill 9, $pid;
-
-	    print p('Sorry, computation terminated because
-		    it ran too long. System load may be too high or
-		    computing election results may be too expensive.'), $cr;
-	    exit(0);
-	}
-	sleep(1);
     }
 }
 

@@ -25,6 +25,8 @@ TestAndCreateDir $CGIBINDIR;
 TestAndCreateDir $CIVSDATADIR;
 TestAndCreateDir $CIVSDATADIR/elections;
 
+rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
+
     for f in civs_create.html index.html public_elections.html \
 	proportional.html sec_priv.html acks.html changelog.html \
 	rp.html style.css results.js vote.js
@@ -45,7 +47,7 @@ TestAndCreateDir $CIVSDATADIR/elections;
 
     for f in add_voters beatpath.pm civs_common.pm close control \
         create_election download_ballots election.pm mail.pm results \
-		start_election vote rp.pm
+		start_election vote rp.pm admctrl.pm
     do
 	#echo "copying cgi-bin/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \

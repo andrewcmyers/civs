@@ -19,7 +19,7 @@ BEGIN {
 	&CheckStarted &PointToResults &IsStopped &CheckNotStopped
 	&CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey
 	&IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
-	&ElectionUsesAuthorizationKey
+	&ElectionUsesAuthorizationKey &SyncVoterKeys
 	$election_id $election_dir $started_file $stopped_file
 	$election_data $election_log $vote_data $election_lock $name
 	$title $email_addr $description $num_winners $addresses @addresses
@@ -97,22 +97,26 @@ sub init {
 }
 
 END {
-	&SaveHash('voter_keys', \%voter_keys);
- 	&SaveHash('used_voter_keys', \%used_voter_keys);
-	&CloseDatabase;
+    &SyncVoterKeys();
+    &CloseDatabase;
     &UnlockElection;
 }
 
 # utility routines
 
+sub SyncVoterKeys {
+    &SaveHash('voter_keys', \%voter_keys);
+    &SaveHash('used_voter_keys', \%used_voter_keys);
+}
+
 sub LoadHash {
-	my $hash_name = shift;
-	my $hash_ref = shift;
+    my $hash_name = shift;
+    my $hash_ref = shift;
     my $s;
     $s = $edata{$hash_name} or $s = "";
     my @a = split /[\r\n]+/, $s;
     foreach my $k (@a) {
-		$$hash_ref{$k} = 1;
+	$$hash_ref{$k} = 1;
     }
 }
 
@@ -267,31 +271,31 @@ sub CheckVoterKey {
 
 
 sub CheckNotVoted {
-	my ($voter_key, $old_voter_key, $voter) = @_;
+    my ($voter_key, $old_voter_key, $voter) = @_;
     if ($used_voter_keys{civs_hash($voter_key)}) {
-		print h1("Already voted");
-		print p("A vote has already been cast using your voter key.");
-		PointToResults;
-		print end_html();
-		if ($voter_key) {
-			ElectionLog("Election: $title ($election_id) : Saw second vote "
-					. "from voter key $voter_key");
-		} else {
-			ElectionLog("Election: $title ($election_id) : Saw second vote "
-					. "from (voter,key) = ($voter, $old_voter_key)");
-		}
-		exit 0;
+	print h1("Already voted");
+	print p("A vote has already been cast using your voter key.");
+	PointToResults;
+	print end_html();
+	if ($voter_key) {
+	    ElectionLog("Election: $title ($election_id) : Saw second vote "
+			    . "from voter key $voter_key");
+	} else {
+	    ElectionLog("Election: $title ($election_id) : Saw second vote "
+			    . "from (voter,key) = ($voter, $old_voter_key)");
+	}
+	exit 0;
     }
 }
 
 sub ControlKeyError {
-   	print h1("Error"),
-          p("Invalid key. You should have received a correct URL for
-             controlling the election by email. This error has been logged.");
-   	print end_html();
-   	ElectionLog("Election: $title ($election_id) : invalid attempt to close
-                 election (wrong key)");
-   	exit 0;
+    print h1("Error"),
+	p("Invalid key. You should have received a correct URL for
+	    controlling the election by email. This error has been logged.");
+    print end_html();
+    ElectionLog("Election: $title ($election_id) : invalid attempt to close
+		election (wrong key)");
+    exit 0;
 }
 
 sub CheckControlKey {
