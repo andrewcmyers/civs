@@ -924,6 +924,7 @@ sub PrintProportionalResults {
     }
     print '</table>';
     print hidden('id', $election_id);
+    print hidden('num_winners', $num_winners);
     print '<input type="submit" value="Compare sets" name="Compare">';
     print '</form>';
     if ($comparison_request) {

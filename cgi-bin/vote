@@ -250,15 +250,18 @@ sub ProcessVote {
     
     # Record vote, but not voter
     my $voter_ballot_release_key = SecureNonce();
-    my $ballot_key = civs_hash($voter_key, $voter_ballot_release_key);
+    GetPrivateHostID;
+    my $ballot_key = civs_hash($voter_ballot_release_key,
+    			       $authorization_key,
+			       $private_host_id);
     $vdata{$ballot_key} = $vote;
     $vdata{'num_votes'}++;
     $used_voter_keys{civs_hash($voter_key)} = 1;
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
     if ($recorded_voters) {
-		$vdata{'recorded_voters'} = $recorded_voters . "\n".  $ballot_key;
+	$vdata{'recorded_voters'} = $recorded_voters . "\n".  $ballot_key;
     } else {
-		$vdata{'recorded_voters'} = $ballot_key;
+	$vdata{'recorded_voters'} = $ballot_key;
     }
 
 	# Now, update matrix.
@@ -278,7 +281,9 @@ sub ProcessVote {
 		}
     }
 
-    print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.");
+    print p("Thank you. Your vote for <strong>$title</strong> has been
+	successfully cast. Your voter receipt is
+	<code>$election_id/$voter_ballot_release_key</code>.");
     
     # This is code to be enabled later, when we implement ballot checking.
     #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
