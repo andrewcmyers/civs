@@ -329,6 +329,7 @@ print "<pre>";
 	    }
 	    #print "best f-preference tally yields $bestipref to $bestjpref\n";
 	    if ($bestjpref > $bestipref) {
+		print "  $new_comm is preferred $bestjpref&ndash;$bestipref\n";
 		$tally{$curr_comm}{$new_comm} =
 		    "$bestipref,$bestjpref";
 		local $save_full_search = $full_search;
@@ -341,7 +342,11 @@ print "<pre>";
 		$weaktally{$curr_comm}{$new_comm} =
 		    "$ipref,$jpref";
 		if ($jpref > $ipref ||
-		    $full_search && $jpref == $ipref) {
+		    ($full_search && $jpref == $ipref)) {
+		    print "  $new_comm is (weakly) preferred $bestjpref&ndash;$bestipref\n";
+		    if ($jpref == $ipref) {
+			print "  ...exploring because a cycle has been detected\n";
+		    }
 		    local $save_full_search = $full_search;
 		    visit($new_comm);
 		    $full_search = $save_full_search;
@@ -364,8 +369,11 @@ print "<pre>";
 	    local $curr_comm = $_[0];
 	    local @curr_comm = split /,/, $curr_comm;
 	    local $cci;
+	    local $added = 0;
 	    if ($visited{$curr_comm}) {
-		print "$curr_comm is in a cycle (in the Schwartz set?)\n";
+		if (!$full_search) {
+		print "  $curr_comm is in a cycle (in the Schwartz set?)\n";
+		}
 		$full_search = 1;
 	    } else {
 		$cci = $#committee + 1;
@@ -373,6 +381,7 @@ print "<pre>";
 		$cindex{$curr_comm} = $cci;
 		print "<b>Considering set: $curr_comm (#$#committee)</b>\n";
 		$visited{$curr_comm} = 1;
+		$added = 1;
 	    }
 	    $cci = $cindex{$curr_comm};
 	    local $change = 0;
@@ -388,6 +397,9 @@ print "<pre>";
 		}
 	    }
 	    if ($change) {
+		if (!$added) {
+		    print "Change to beaten info, revisiting from $curr_comm\n";
+		}
 		local @new_comm;
 		compute_in;
 		local $done = 0;
@@ -408,7 +420,7 @@ print "<pre>";
 			}
 		    } # for j
 		} # for i
-		if (!$done) {
+		if (!$done && $added) {
 		    print "$curr_comm beats all nearby sets\n";
 		}
 	    } # if change
