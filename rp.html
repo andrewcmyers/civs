@@ -39,28 +39,29 @@ it usually doesn't matter which algorithm is used.</p>
 
 <p>The completion algorithms
 supported by CIVS are the Beatpath Winner algorithm,
-also known as Cloneproof Schwartz Sequential Dropping, and
-a variation of the Ranked Pairs algorithm called CIVS Ranked Pairs
+also known as <a href="http://electionmethods.org/CondorcetEx.htm">
+Cloneproof Schwartz Sequential Dropping</a>, and
+a variation of the Ranked Pairs algorithm called <b>CIVS Ranked Pairs</b>
 here. This page describes the CIVS ranked pairs algorithm.</p>
 
 <h2>Algorithm</h2>
 
-<p>The CIVS ranked pairs algorithm here is closely related to previous
-algorithms such as
+<p>The CIVS ranked pairs algorithm here is a deterministic
+variant of Eppley's
+<a href="http://alumnus.caltech.edu/~seppley/">Maximize
+Affirmed Majorities</a>,
+and is also related to other algorithms such as
 <a href="http://en.wikipedia.org/wiki/Ranked_Pairs">
-Tideman's Ranked Pairs</a>
-and (especially) Eppley's
-<a href="http://alumnus.caltech.edu/~seppley/">Maximize Affirmed Majorities</a>.
+Tideman/Ranked Pairs</a>.
 In these algorithms, each of the pairwise preferences in the preference matrix
 is considered in in the order of the strength of the preference, and either
-<i>kept</i> (or: <i>affirmed</i>) if it does not create cycles, or else ignored.
-
+<b>kept</b> (<b>affirmed</b>) if it does not create cycles, or else ignored.
 
 <h3>Affirming preferences</h3>
 
 <p>
 In the CIVS ranked
-pairs algorithm (as in MAM), one preference is stronger than another if it has
+pairs algorithm, as in MAM, one preference is stronger than another if it has
 more votes in favor, or if the number of votes in favor are equal, if the
 preference has fewer votes against.  Of course, it is entirely possible that
 two preferences have exactly the same number of votes in favor and against.

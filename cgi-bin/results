@@ -16,7 +16,13 @@ use IO::Handle;
 my $thisurl = $civs_bin_path."/results";
 my $detailed = param('detailed');
 
-HTML_Header("CIVS Election Results");
+my $JSCRIPT=<<END;
+function newSettings() {
+    document.changeSettings.submit();
+}
+END
+
+HTML_Header("CIVS Election Results", $JSCRIPT);
 use election;
 
 CIVS_Header("Election Results: $title");
@@ -46,8 +52,8 @@ if ($algorithm eq '') { $algorithm = 'beatpath_winner'; }
 print '<form method="GET"
 	action="'.$thisurl.'"
 	enctype="multipart/form-data"
-	name="ChangeSettings">';
-print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
+	name="changeSettings">';
+print escapeHTML("Election supervisor: $name ("), tt($email_addr).')', br();
 print "Announced end of election: $election_end", br();
 if (IsStopped) {
     my $close_time = $vdata_copy{'close_time'};
@@ -65,6 +71,7 @@ print "Actual votes cast: $num_votes", br();
     print 'Number of winning choices: ';
     print '<input type="text" size=2
 	    name="num_winners"
+	    onChange="newSettings()"
 	    value="'.$num_winners.'">';
     print hidden('id', $election_id);
     if ($real_nwin != $num_winners) {
@@ -93,21 +100,24 @@ if ($algorithm eq 'civs_ranked_pairs') {
 } else {
     $bw_checked = 'checked';
 }
+
 print ('Condorcet completion algorithm:
 	    <input type="radio"
               name="algorithm"
-              value="beatpath_winner"'.
+	      onClick="newSettings()"
+              value="beatpath_winner" '.
 	      $bw_checked.
 	    '>
 	    <a href="http://electionmethods.org/CondorcetEx.htm">Beatpath Winner/SSD</a>
 	    <input type="radio"
 	      name="algorithm",
+	      onClick="newSettings()"
 	      value="civs_ranked_pairs"'.
 	      $rp_checked.
 	    '>
 	    <a href="'.$civs_url.'/rp.html">CIVS Ranked Pairs</a>');
 
-  print '&nbsp;<input type="submit" name="submit" value="Update display options">';
+  # print '&nbsp;<input type="submit" name="submit" value="Update display options">';
 print '</form>'.$cr;
 
 print h2('Election description'), p($description);

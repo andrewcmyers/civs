@@ -99,9 +99,10 @@ sub HTML_Header {
     my $title = $_[0];
     if (!$generated_header) {
 	print header(), start_html(-title => $title,
-				   -style => {'src' => "@CIVSURL@/style.css"});
+				   -style => {'src' => "@CIVSURL@/style.css"},
+				   -script => $_[1]);
     }
-	$html_header_printed = 1;
+    $html_header_printed = 1;
 }
 
 sub CIVS_Header {
