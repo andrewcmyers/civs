@@ -165,6 +165,7 @@ sub PrintNonproportionalDetails {
     my $summary_url = "$thisurl?id=$election_id";
     print p(&details_bookmark . a({-href=>"$summary_url"}, "Hide details"));
 	
+    if (0) {
     my ($j, $jj, $k, $kk);
     print h2("Beatpath closure matrix");
     print p("
@@ -175,9 +176,8 @@ sub PrintNonproportionalDetails {
     ");
 
     PrintMatrix $num_choices, [@closure_matrix], [@choices], [@choice_index], 1;
+    }
 
-	&PrintRP;
-	
     print h2('Ballot report');
 
     if ($ballot_reporting eq 'yes') {
@@ -305,6 +305,8 @@ sub PrintNonproportionalResults {
 	which choices beat other choices, considered pairwise.");
 	PrintMatrix $num_choices, [@matrix], [@choices], [@choice_index], 0;
 	print hr();
+	&PrintRP;
+	
 	if ($detailed) {
 		&PrintNonproportionalDetails;
 	} else {
@@ -322,7 +324,7 @@ sub details_bookmark {
 sub PrintRP {
     if (!param('RP')) {
 	my $link =
-	a({-href=>"$thisurl?id=$election_id&detailed=1&RP=1#RP"},
+	a({-href=>"$thisurl?id=$election_id&RP=1#RP"},
 		'Compare with ranked pairs results (may be time-consuming)');
 	print p($link);
     } else {
