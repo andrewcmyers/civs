@@ -307,6 +307,7 @@ print "<pre>";
 # $borm[ci1][ci2] is whether comm with index ci2 beats or matches
 #    (transitively) the one with ci2
 
+	$iters = 0;
 	$full_search = 0;
 	sub compare_sets {
 # compare_sets compares $curr_comm and $new_comm and returns
@@ -357,6 +358,8 @@ print "<pre>";
 #   or matches c2.
 # requires: $beaten[0..$num_beaten-1] is a set of 
 #   committees known to be beaten (or matched) transitively by c
+	    $iters++;
+	    if ($iters > 500) return; # truncate runaway search
 
 	    local $curr_comm = $_[0];
 	    local @curr_comm = split /,/, $curr_comm;
