@@ -46,8 +46,8 @@ print "Number of winning choices: $num_winners", br();
 if ($proportional eq 'yes') {
     my $url = $civs_url.'/proportional.html';
     print "This election implements <a href=\"$url\">proportional representation</a>. ";
-    if ($use_combined_weights) {
-	print " The <a href=\"$url#combinedweights\">combined-weights criterion</a>";
+    if ($use_combined_ratings) {
+	print " The <a href=\"$url#combinedratings\">combined-ratings criterion</a>";
     } else {
 	print " The <a href=\"$url#bestcandidate\">best-candidate criterion</a>";
     }
@@ -366,10 +366,10 @@ sub PrintProportionalResults {
 	    my $skj = 0;
 	    for (my $v = 0; $v < $num_votes; $v++) {
 		my $voter_key = $voter_keys[$v];
-		my $weights = $vdata{$voter_key};
-		my @weights = split /,/, $weights;
-		my $wj = $weights[$j];
-		my $wk = $weights[$k];
+		my $ratings = $vdata{$voter_key};
+		my @ratings = split /,/, $ratings;
+		my $wj = $ratings[$j];
+		my $wk = $ratings[$k];
 		if ($wj > $wk) { $sjk++; }
 		if ($wk > $wj) { $skj++; }
 	    }
@@ -450,10 +450,10 @@ sub PrintProportionalResults {
 #   represented as strings.
 	my ($f, $v, $i, $j) = @_;
 	$voter_key = $voter_keys[$v];
-	$weights = $vdata{$voter_key};
-	@weights = split /,/, $weights;
+	$ratings = $vdata{$voter_key};
+	@ratings = split /,/, $ratings;
 
-	# print "Voter: $weights considering $i vs. $j\n";
+	# print "Voter: $ratings considering $i vs. $j\n";
 
 	@c1 = split /,/, $i;
 	@c2 = split /,/, $j;
@@ -461,8 +461,8 @@ sub PrintProportionalResults {
         $sum = 0;
 	my $k;
 	for ($k = 0; $k < $num_winners; $k++) {
-	    @w1[$k] = $weights[$c1[$k]];
-	    @w2[$k] = $weights[$c2[$k]];
+	    @w1[$k] = $ratings[$c1[$k]];
+	    @w2[$k] = $ratings[$c2[$k]];
 	}
 	@w1 = sort {$a <=> $b} @w1;
 	@w2 = sort {$a <=> $b} @w2;
@@ -470,10 +470,10 @@ sub PrintProportionalResults {
 	for ($k = 1; $k <= $f; $k++) {
 	    $sum1 += $w1[$num_winners - $k];
 	    $sum2 += $w2[$num_winners - $k];
-	    if ($sum1 != $sum2 && !$use_combined_weights) { last; }
+	    if ($sum1 != $sum2 && !$use_combined_ratings) { last; }
 	}
 	#print "Results before trimming are @w1 and @w2\n";
-	#print "Admissible weight totals are $sum1, $sum2\n";
+	#print "Admissible rating totals are $sum1, $sum2\n";
 	if ($sum1 > $sum2) { return -1; }
 	elsif ($sum1 < $sum2) { return 1; }
 	else { return 0; }
@@ -830,15 +830,22 @@ sub PrintProportionalResults {
     }
     PrintMatrix $#committee+1, [@cmatrix], [@comm_choices], [@comm_choice_index], 0;
 
-    print h2('Beatpath closure matrix');
-    print p("The following is the corresponding
-	    beatpath matrix. Choice 1 is preferred
-	    to choice 2 if there is a better beatpath leading from 1 to 2
-	    than any leading from 2 to 1.");
-    STDOUT->flush();
+    if ($detailed) {
+	print h2('<a name="committee_beatpath">Beatpath closure matrix</a>');
+	print p('The following is the corresponding
+		beatpath matrix. Choice 1 is preferred
+		to choice 2 if there is a better beatpath leading from 1 to 2
+		than any leading from 2 to 1.');
+	STDOUT->flush();
 
-    PrintMatrix $#committee+1, [@committee_cmatrix], [@comm_choices], [@comm_choice_index], 1;
+	PrintMatrix $#committee+1, [@committee_cmatrix], [@comm_choices], [@comm_choice_index], 1;
 
+    } else {
+	    $details_url = "$thisurl?id=$election_id" . '&detailed=1#committee_beatpath';
+	    $link = a({-href=>"$details_url"},
+		'Detailed results are also available.');
+	    print p($bookmark.$link);
+    }
     print hr();
     print '<a name="comparison"></a>';
     print h2("Pairwise comparison");

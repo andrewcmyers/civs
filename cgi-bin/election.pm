@@ -13,7 +13,17 @@ BEGIN {
 
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
-    @EXPORT      = qw(&init &ExtractVoterKeys &SaveVoterKeys &LockElection &UnlockElection &StartElection &IsStarted &CheckStarted &PointToResults &IsStopped &CheckNotStopped &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys $election_id $election_dir $started_file $stopped_file $election_data $election_log $vote_data $election_lock $name $title $email_addr $description $num_winners $addresses @addresses $election_end $public $writeins $proportional $use_combined_weights $choices @choices $num_choices $num_auth $num_votes $recorded_voters $ballot_reporting %voter_keys %edata %vdata);
+    @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys
+	&LockElection &UnlockElection &StartElection &IsStarted
+	&CheckStarted &PointToResults &IsStopped &CheckNotStopped
+	&CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey
+	&IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
+	$election_id $election_dir $started_file $stopped_file
+	$election_data $election_log $vote_data $election_lock $name
+	$title $email_addr $description $num_winners $addresses @addresses
+	$election_end $public $writeins $proportional $use_combined_ratings
+	$choices @choices $num_choices $num_auth $num_votes $recorded_voters
+	$ballot_reporting %voter_keys %edata %vdata);
 }
 
 # Package imports
@@ -30,7 +40,7 @@ our $election_id = '';
 our ($election_dir, $started_file, $stopped_file, $election_data,
 	$election_log, $vote_data, $election_lock);
 our (%edata, %vdata);
-our ($name, $title, $email_addr, $description, $num_winners, $addresses, @addresses, $election_end, $public, $writeins, $proportional, $use_combined_weights, $choices, @choices, $num_choices, $num_auth, $num_votes, $recorded_voters, $ballot_reporting, %voter_keys);
+our ($name, $title, $email_addr, $description, $num_winners, $addresses, @addresses, $election_end, $public, $writeins, $proportional, $use_combined_ratings, $choices, @choices, $num_choices, $num_auth, $num_votes, $recorded_voters, $ballot_reporting, %voter_keys);
 
 &init;
 
@@ -66,7 +76,7 @@ sub init {
 	$public = $edata{'public'};
 	$writeins = $edata{'writeins'};
 	$proportional = $edata{'proportional'};
-	$use_combined_weights = $edata{'use_combined_weights'};
+	$use_combined_ratings = $edata{'use_combined_ratings'};
 	$choices = $edata{'choices'} or $choices = "";
 	@choices = split /[\r\n]+/, $choices;
 	$num_choices = $#choices + 1;

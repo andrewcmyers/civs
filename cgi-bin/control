@@ -87,9 +87,9 @@ if ($writeins eq 'yes') {
 }
 
 if ($proportional eq 'yes') {
-    if ($use_combined_weights) {
+    if ($use_combined_ratings) {
 	print 'This election uses the proportional representation
-	    algorithm with the combined-weights voter criterion.',br();
+	    algorithm with the combined-ratings voter criterion.',br();
     } else {
 	print 'This election uses the proportional representation
 	    algorithm with the best-candidate voter criterion.',br();

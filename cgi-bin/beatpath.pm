@@ -38,7 +38,7 @@ sub clean_matrix {
 # or 0 if there is none.
 # Requires: $n is the size of the matrix, and @matrix is
 # already clean.
-# Implementation: computes the transitive closure with weights, using
+# Implementation: computes the transitive closure with ratings, using
 #   the Floyd-Warshall algorithm, but with min = max, + = min. Runtime
 #   is O(n^3).
 
