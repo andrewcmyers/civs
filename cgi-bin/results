@@ -61,6 +61,55 @@ untie %vdata;
 
 exit 0;
 
+sub PrintMatrix {
+    my $n = $_[0];
+    my @m = @{$_[1]};
+    my @choices = @{$_[2]};
+    my @choice_index = @{$_[3]};
+    my $zerodot = $_[4];
+
+    my $jj, $j1, $j, $k, $kk, $w, $l;
+
+    print '<table class="matrix">'.$cr;
+    print '<tr><td>&nbsp;</td><td>&nbsp;</td>';
+    for ($jj = 0; $jj < $n; $jj++) {
+	$j1 = $jj + 1;
+	print '<th width=20px>'.$j1.'.</th>';
+    }
+    print '</tr>'.$cr;
+    for ($jj = 0; $jj < $n; $jj++) {
+	$j = $choice_index[$jj];
+	$j1 = $jj + 1;
+	print '<tr>';
+	print '<th align=left>'.$j1.'.&nbsp;'.$choices[$j].'</th>'.$cr;
+	print "<td width=40px>&nbsp;</td>\n";
+	for ($kk = 0; $kk < $n; $kk++) {
+	    $k = $choice_index[$kk];
+	    if ($j == $k) {
+		print '<td class="count">-';
+	    } else {
+		$w = $m[$j][$k];
+		$l = $m[$k][$j];
+		if ($w > $l) {
+		    print '<td class="win">';
+		} elsif ($w == $l) {
+		    print '<td class="tie">';
+		} else {
+		    print '<td class="lose">';
+		}
+		if ($zerodot && $w == 0) {
+		    print '.';
+		} else {
+		    print $w;
+		}
+		print '</td>';
+	    }
+	}
+	print '</tr>'.$cr;
+    }
+    print '</table>'.$cr;
+}
+
 
 sub PrintNonproportionalDetails {
 # Print the detailed results of the ordinary
@@ -79,41 +128,8 @@ sub PrintNonproportionalDetails {
     to choice 2 if there is a better beatpath leading from 1 to 2
     than any leading from 2 to 1.
     ");
-    print '<table class="matrix">'.$cr;
 
-    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
-    for ($jj = 0; $jj < $num_choices; $jj++) {
-	$j1 = $jj + 1;
-	print "<th width=20px>".$j1.".</th>";
-    }
-    print "</tr>\n";
-    for ($jj = 0; $jj < $num_choices; $jj++) {
-	$j = $choice_index[$jj];
-	$j1 = $jj + 1;
-	print "<tr>";
-	print "<th align=left>".$j1.". ".$choices[$j]."</th>\n";
-	print "<td width=40px>&nbsp;</td>\n";
-	for ($kk = 0; $kk < $num_choices; $kk++) {
-	    $k = $choice_index[$kk];
-	    if ($j == $k) {
-		print '<td class="count">-';
-	    } else {
-		$w = $closure_matrix[$j][$k];
-		$l = $closure_matrix[$k][$j];
-		if ($w > $l) {
-		    print '<td class="win">';
-		} elsif ($w == $l) {
-		    print '<td class="tie">';
-		} else {
-		    print '<td class="lose">';
-		}
-		if ($w != 0) { print $w; } else { print "."; }
-		print '</td>';
-	    }
-	}
-	print "</tr>\n";
-    }
-    print "</table>";
+    PrintMatrix $num_choices, [@closure_matrix], [@choices], [@choice_index], 1;
 
 if (!param('MAM')) {
     $link = a({-href=>"$thisurl?id=$election_id&detailed=1&MAM=1#MAM"},
@@ -183,45 +199,17 @@ foreach $pair_ref (@pairs) {
 if ($denied_any) { print '</ul>'; }
 
  # print "</pre>";
- print p('The following matrix reports all the preferences that were
- affirmed. Any disagreement between MAM and Beatpath Winner will show
- up as non-zero entries below the diagonal. Note that this implementation
- does not break ties in the way specified by Stephen Eppley.');
-    print '<table class="matrix">'.$cr;
+ if ($denied_any) {
+    print p('The following matrix reports all the preferences that were
+    affirmed. Any disagreement between MAM and Beatpath
+    Winner (if any) shows up as non-zero entries below the diagonal.
+    Note that this implementation does not correctly break ties.');
+ } else {
+    print p('All preferences were affirmed. The results of
+    running MAM agree with Beatpath Winner.');
+ }
 
-    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
-    for ($jj = 0; $jj < $num_choices; $jj++) {
-	$j1 = $jj + 1;
-	print "<th width=20px>".$j1.".</th>";
-    }
-    print "</tr>\n";
-    for ($jj = 0; $jj < $num_choices; $jj++) {
-	$j = $choice_index[$jj];
-	$j1 = $jj + 1;
-	print "<tr>";
-	print "<th align=left>".$j1.". ".$choices[$j]."</th>\n";
-	print "<td width=40px>&nbsp;</td>\n";
-	for ($kk = 0; $kk < $num_choices; $kk++) {
-	    $k = $choice_index[$kk];
-	    if ($j == $k) {
-		print '<td class="count">-';
-	    } else {
-		$w = $affirmed[$j][$k];
-		$l = $affirmed[$k][$j];
-		if ($w > $l) {
-		    print '<td class="win">';
-		} elsif ($w == $l) {
-		    print '<td class="tie">';
-		} else {
-		    print '<td class="lose">';
-		}
-		if ($w != 0) { print $w; } else { print "."; }
-		print '</td>';
-	    }
-	}
-	print "</tr>\n";
-    }
-    print "</table>";
+    PrintMatrix $num_choices, [@affirmed], [@choices], [@choice_index], 1;
 } # if MAM
 
     print h2('Ballot report');
@@ -341,41 +329,7 @@ sub PrintNonproportionalResults {
 	print h2("Preference matrix");
 	print p("The following matrix shows the number of ballots on
 	which choices beat other choices, considered pairwise.");
-	print '<table class="matrix">';
-
-	print '<tr><td>&nbsp;</td><td>&nbsp;</td>';
-	for ($jj = 0; $jj < $num_choices; $jj++) {
-	    $j = $jj + 1;
-	    print "<th width=20px>".$j.".</th>";
-	}
-	print "</tr>\n";
-	for ($jj = 0; $jj < $num_choices; $jj++) {
-	    $j = $choice_index[$jj];
-	    $j1 = $jj + 1;
-	    print "<tr>";
-	    print "<th align=left>".$j1.". ".$choices[$j]."</th>\n";
-	    print "<td width=40px>&nbsp;</td>\n";
-	    for ($kk = 0; $kk < $num_choices; $kk++) {
-		$k = $choice_index[$kk];
-		if ($j == $k) {
-		    print '<td class="count">-</td>';
-		} else {
-		    if ($matrix[$j][$k] > $matrix[$k][$j]) {
-			print '<td class="win">';
-		    } elsif ($matrix[$j][$k] == $matrix[$k][$j]) {
-			print '<td class="tie">';
-		    } else {
-			print '<td class="lose">';
-		    }
-		    print $matrix[$j][$k];
-		    print "</td>";
-		}
-	    }
-	    print "</tr>\n";
-	}
-	print "</table>";
-
-
+	PrintMatrix $num_choices, [@matrix], [@choices], [@choice_index], 0;
 	print hr();
 	if ($detailed) {
 		&PrintNonproportionalDetails;
@@ -830,37 +784,11 @@ sub PrintProportionalResults {
              reporting maximal valid proportional preferences.
 	     Fractions indicate nonproportional preferences, which
 	     help break ties in proportional preference.');
-    print "<table class=\"matrix\">$cr";
-    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+    
     for ($j = 0; $j <= $#committee; $j++) {
-	print "<th width=20px>".($j+1).".</td>";
+	$comm_choices[$j] = '('.flatten(renumber($committee[$j])).')';
     }
-    print "</tr>$cr";
-    for ($jj = 0; $jj <= $#committee; $jj++) {
-	$j = $comm_choice_index[$jj];
-	$cname = flatten(renumber($committee[$j]));
-	print "<tr>";
-	print "<th class=choice>".($jj+1).".&nbsp;(".$cname.")</td>\n";
-	print "<td width=40px>&nbsp;</td>\n";
-	for ($kk = 0; $kk <= $#committee; $kk++) {
-	    $k = $comm_choice_index[$kk];
-	    if ($j != $k) {
-		if ($cmatrix[$j][$k] > $cmatrix[$k][$j]) {
-		    print '<td class="win">';
-		} elsif ($cmatrix[$j][$k] == $cmatrix[$k][$j]) {
-		    print '<td class="tie">';
-		} else {
-		    print '<td class="lose">';
-		}
-		print $cmatrix[$j][$k];
-		print '</td>';
-	    } else {
-		print '<td class="count">-</td>';
-	    }
-	}
-	print "</tr>\n";
-    }
-    print "</table>";
+    PrintMatrix $#committee+1, [@cmatrix], [@comm_choices], [@comm_choice_index], 0;
 
     print h2('Beatpath closure matrix');
     print p("The following is the corresponding
@@ -868,45 +796,8 @@ sub PrintProportionalResults {
 	    to choice 2 if there is a better beatpath leading from 1 to 2
 	    than any leading from 2 to 1.");
 
-    print '<table class="matrix">';
-    print '<tr><td>&nbsp;</td><td>&nbsp;</td>';
-    for ($j = 0; $j <= $#committee; $j++) {
-	print '<th width=20px>'.($j+1).'.</th>';
-    }
-    print "</tr>\n";
-    for ($jj = 0; $jj <= $#committee; $jj++) {
-	$j = $comm_choice_index[$jj];
-	$cname = flatten(renumber($committee[$j]));
-	print "<tr>";
-	print "<th class=\"choice\">".($jj+1).".&nbsp;(".$cname.")</th>\n";
-	print "<td width=40px>&nbsp;</td>\n";
-	for ($kk = 0; $kk <= $#committee; $kk++) {
-	    $k = $comm_choice_index[$kk];
-	    # print "(".$matrix[$j][$k].") ";
-	    if ($j == $k) {
-		print '<td class="count">-</td>';
-	    } else {
-		$w = $committee_cmatrix[$j][$k];
-		$l = $committee_cmatrix[$k][$j];
-		if ($w > $l) {
-		    print '<td class="win">';
-		} elsif ($w == $l) {
-		    print '<td class="tie">';
-		} else {
-		    print '<td class="lose">';
-		}
-		if ($w > $l) {
-		    print "$w";
-		} else {
-		    if ($w != 0) { print $w; }
-		    else { print "."; }
-		}
-		print "</td>";
-	    }
-	}
-	print "</tr>\n";
-    }
-    print "</table></p>";
+    PrintMatrix $#committee+1, [@committee_cmatrix], [@comm_choices], [@comm_choice_index], 1;
+
     print hr();
     print '<a name="comparison">';
     print h2("Pairwise comparison");
@@ -920,7 +811,7 @@ sub PrintProportionalResults {
 	    enctype="multipart/form-data"
 	    name="CompareSets">';
 
-    print  '<table>';
+    print '<table>';
     if (param('Compare') ne '') {
 	$comparison_request = 1;
     }
