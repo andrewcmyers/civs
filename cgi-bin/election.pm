@@ -103,8 +103,6 @@ sub SaveVoterKeys {
     $edata{'voter_keys'} = $s;
 }
 
-&ExtractVoterKeys;
-
 sub LockElection {
     if (!sysopen(ELOCK, $election_lock, &O_CREAT | &O_RDWR)) {
 	print h1("Error");
