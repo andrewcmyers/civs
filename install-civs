@@ -10,9 +10,9 @@ fi
 
 echo "Read settings file"
 
-    for f in civs_create index public_elections proportional sec_priv
+    for f in civs_create.html index.html public_elections.html proportional.html sec_priv.html style.css
     do
-	echo "copying $f.html to $HTMLDIR/$f.html"
+	echo "copying $f to $HTMLDIR/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
 	     -e 's|@THISHOST@|'$THISHOST'|' \
@@ -21,7 +21,7 @@ echo "Read settings file"
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
-	< $f.html > "${HTMLDIR}/$f.html"
+	< $f > "${HTMLDIR}/$f"
     done
 
     for f in add_voters beatpath.pm civs_common.pm close control \

@@ -11,7 +11,7 @@ use IO::Handle;
 
 $thisurl = $civs_bin_path."/close";
 
-print header(), start_html("Condorcet Internet Voting Service");
+HTML_Header("CIVS: Stopping Election");
 use election;
 
 untie %edata;

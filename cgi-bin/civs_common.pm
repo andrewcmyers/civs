@@ -18,6 +18,12 @@ sub GetPrivateHostID {
     close(HOSTID);
 }
 
+sub HTML_Header {
+    $title = $_[0];
+    print header(), start_html(-title => $title,
+			       -style => {'src' => "@CIVSURL@/style.css"});
+}
+
 sub CIVS_Header {
 print "
 <table border=0 width=100% cellspacing=0 cellpadding=7>
@@ -25,7 +31,7 @@ print "
     <td width=100% bgcolor=#000080 valign=top nowrap>
     <h1><font color=white face=sans-serif>&nbsp;Condorcet Internet Voting Service</font></h1>
     </td>
-    <td bgcolor=#000080 width=0% nowrap><a href=$civs_url><font color=white face=sans-serif>CIVS Home</font></a></td>
+    <td bgcolor=#000080 width=0% nowrap valign=top><a href=$civs_url><font color=white face=sans-serif>CIVS Home</font></a></td>
   </tr>
   <tr>
     <td width=100% bgcolor=#000080 valign=top nowrap colspan=2>

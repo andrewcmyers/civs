@@ -13,7 +13,7 @@ use IO::Handle;
 
 $thisurl = $civs_bin_path."/results";
 
-print header(), start_html("Condorcet Internet Voting Service");
+HTML_Header("CIVS Election Results");
 use election;
 
 CIVS_Header("Election Results");

@@ -14,6 +14,7 @@ $thisurl = $civs_bin_path."/create_election";
 $email_addr = param('email_addr');
 if (!($email_addr =~ m/.\@./)) {
     print header(), start_html("Invalid email address");
+    HTML_Header("CIVS Election Creation");
     CIVS_Header();
     print h1("Invalid email address");
     print p("The address \"$email_addr\" is not acceptable");
@@ -89,7 +90,7 @@ while (<$addresses_file>) {
 }
 $edata{'addresses'} = $addresses;
 
-print header(), start_html("Election creation result");
+HTML_Header("CIVS Election Creation");
 CIVS_Header("Election created: $title");
 
 # print pre("public = $public");

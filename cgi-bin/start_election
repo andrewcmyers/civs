@@ -7,7 +7,7 @@ use Digest::MD5 qw(md5_hex);
 use civs_common;
 use mail;
 
-print header(), start_html('Condorcet Internet Voting Service');
+HTML_Header("CIVS start election");
 CIVS_Header('Start election');
 STDOUT->flush();
 

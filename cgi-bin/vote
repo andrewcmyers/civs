@@ -23,7 +23,7 @@ $thisurl = $civs_bin_path."/vote";
 $voter = param('voter');
 $voter_key = param('voter_key');
 
-print header(), start_html("Condorcet Internet Voting Service");
+HTML_Header("CIVS Voting");
 
 if ($num_winners == 1) {
     $winners_text = "(1) favorite choice";

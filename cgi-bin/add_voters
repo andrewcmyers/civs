@@ -21,7 +21,7 @@ while (<$new_addresses_file>) {
 }
 @new_addresses = split /[\r\n]+/, $new_addresses;
 
-print header(), start_html("Condorcet Internet Voting Service");
+HTML_Header("CIVS: Adding Voters");
 CIVS_Header("Adding voters");
 
 CheckControlKey;
