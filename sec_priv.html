@@ -48,9 +48,9 @@ in cleartext on the server: the names of
 the choices and the description of the election.
 However, using only information stored on the
 server it is not possible to determine who the voters are or how they voted.
-Even if one guesses who a voter is, for closed elections it
+Even if one guesses who a voter is, for private elections it
 is not possible to determine whether that individual is a
-voter or whether or how they voted. For open elections, it
+voter or whether or how they voted. For public elections, it
 is not possible to determine how a voter voted, and it is
 only possible to know whether a voter voted if one has
 the authorization key for the election.
@@ -67,16 +67,16 @@ believed to be met.
 
 <h2>Election types</h2>
 
-CIVS supports both <i>closed</i> and <i>open</i> elections.
-In closed elections the election supervisor specifies the
-list of voters; in open elections there is no list of voters
+CIVS supports both <i>public</i> and <i>private</i> elections.
+In private elections the election supervisor specifies the
+list of voters; in public elections there is no list of voters
 and anyone receiving the appropriate election URL is able to vote.
-A closed election offers much stronger security and
-authenticity guarantees. In particular, in open elections
+A private election offers much stronger security and
+authenticity guarantees. In particular, in public elections
 the IP address of the voter is used to determine whether
 that voter has already cast a vote. A malicious voter can
 easily cast multiple votes, and this is as good as one can
-reasonably expect an open election to be. For closed
+reasonably expect an public election to be. For private
 elections, voters receive a unique key by e-mail that
 permits them to vote just once. Further attempts to vote
 will be rejected.
@@ -106,7 +106,8 @@ when they are made available, but little else.
 </li>
 <li>For each election there is a <i>control key</i>
 that gives the ability to control the election as
-supervisor. This key is mailed to the supervisor when the
+supervisor. It is generated using the private host key.
+This key is mailed to the supervisor when the
 election is created.</li>
 <li>For each election there is also an <i>authorization key</i>
 that gives the ability to add new voters to the election
@@ -201,9 +202,9 @@ It sends <i>v</i> to the e-mail address <i>e</i>.
 The server forgets <i>e</i>.
 </ol>
 
-<h2>Open election protocol</h2>
+<h2>Public election protocol</h2>
 
-An open election works similarly to a closed election.
+An public election works similarly to a private election.
 The difference is that every voter has the power to
 add himself as a voter: the URL generated at election
 creation time includes the authorization key. The voter's IP
@@ -211,8 +212,8 @@ address is used instead of the voter's e-mail address as the
 definition of true identity.
 
 <h3>Election creation</h3>
-The election creation protocol for open elections is the
-same as for closed elections except that voters are not
+The election creation protocol for public elections is the
+same as for private elections except that voters are not
 added. The supervisor is provided with
 a voting URL that includes the election id and the
 authorization key. The supervisor can then distribute this
@@ -248,7 +249,7 @@ This enables later checking that the ballot was cast
 properly.
 </ol>
 
-Because the IP address in an open election is hashed using
+Because the IP address in an public election is hashed using
 the authorization key, server compromise does not enable the
 attacker to determine the IP addresses by dictionary attack.
 Of course, if the attacker has obtained the authorization

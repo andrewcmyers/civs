@@ -70,7 +70,7 @@ if (!IsStarted) {
 		my $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
 		$url .= "&akey=$authorization_key" 
 			if defined($authorization_key);
-		print p("This is an open election. Voting URL:
+		print p("This is an public election. Voting URL:
 	        <tt><a href=\"$url\">$url</a></tt>").$cr;
     }
 } else {    
@@ -139,9 +139,9 @@ if (&ElectionUsesAuthorizationKey) {
 
 print p("Enter e-mail addresses of voters, one per line. These
 may be new voters or existing voters who have not voted yet.
-In a standard election, giving the e-mail address of an already 
+In a private election, giving the e-mail address of an already 
 existing voter $duplicate_effect let that voter vote twice.
-In an open election, only a token attempt is made to prevent
+In a public election, only a token attempt is made to prevent
 multiple voting.");
 print "<form method=POST
 	     action=$civs_bin_path/add_voters

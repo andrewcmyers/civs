@@ -42,9 +42,9 @@ if (IsStopped) {
     print 'Election has not yet ended.', br();
 }
 if ($public ne 'yes') {
-    print "Total authorized voters: $num_auth", br();
+    print "Private election ($num_auth authorized voters)", br();
 } else {
-    print "This is an open election.", br();
+    print "This is an public election.", br();
 }
 print "Actual votes cast: $num_votes", br();
 print "Number of winning choices: $num_winners", br();
