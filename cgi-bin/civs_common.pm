@@ -10,8 +10,20 @@ BEGIN {
 
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
-    @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log &SecureNonce &fisher_yates_shuffle $home $thishost $civs_bin_path $civs_log $civs_url $local_debug $cr $lockfile $private_host_id &Fatal_CIVS_Error);
+    @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log &SecureNonce &fisher_yates_shuffle $home $thishost $civs_bin_path $civs_log $civs_url $local_debug $cr $lockfile $private_host_id &Fatal_CIVS_Error &unique_elements);
 }
+
+# The local_debug flag must be declared before the call to set_message (in
+# the package constructor, below), since the message handler uses 
+# local_debug.  The declaration has to be outside of the constructor block,
+# however, so that the flag has the correct (package-global) scope.  The
+# initialization of the flag, on the other hand, has to be inside
+# the constructor, so that it is executed before any errors are encountered
+# in parsing the rest of the file.  Complicated enough?
+# The same holds for the other variables involved in printing fatal
+# errors to the browser.
+our $local_debug;
+
 
 # Package constructor
 BEGIN {
@@ -29,6 +41,7 @@ BEGIN {
 	autoflush CGILOG;
 	carpout(\*CGILOG);
 	set_message(\&Fatal_CIVS_Error);
+	$local_debug = "@LOCALDEBUG@";
 }
 
 END {
@@ -43,7 +56,6 @@ use Fcntl qw(:flock);
 # use Time::HiRes qw(gettimeofday);
 
 # Exported package globals
-our $local_debug = "@LOCALDEBUG@";
 our $home = "@CIVSDATADIR@";
 our $thishost = "@THISHOST@";
 our $civs_bin_path = "@CIVSBINURL@";
@@ -172,5 +184,17 @@ sub fisher_yates_shuffle {
 	@$array[$i,$j] = @$array[$j,$i];
     }
 }
+
+# From the Perl Cookbook, p. 102
+# Return the unique elements from a list.
+sub unique_elements {
+	my %seen = ();
+	my @uniq = ();
+	foreach my $item (@_) {
+		push(@uniq, $item) unless $seen{$item}++;
+	}
+	return @uniq;
+}
+
 
 1; # ok!

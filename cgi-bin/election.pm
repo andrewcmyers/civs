@@ -377,8 +377,7 @@ sub ElectionLog {
 sub SendKeys {
     my $authorization_key = shift;
 	my $addresses_ref = shift;
-	my @addresses = @{$addresses_ref};
-	# TODO: eliminate any duplicates from @addresses
+	my @addresses =  &unique_elements( @{$addresses_ref} );
 	my $num_added = 0;
     if (!($local_debug)) { ConnectMail; }
     foreach my $v (@addresses) {
