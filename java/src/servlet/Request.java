@@ -23,7 +23,7 @@ public class Request {
 		return request.getParameter("do");
 	}
 	/** Return the associated session, or null if there is none. */
-	public Session session() {
+	public servlet.Session session() {
 		String session_name = request.getParameter("session");
 		if (session_name == null) return null;
 		try {

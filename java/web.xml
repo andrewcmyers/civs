@@ -12,6 +12,10 @@
 	<param-name>CIVSDATADIR</param-name>
 	<param-value>@CIVSDATADIR@</param-value>
       </init-param>
+      <init-param>
+	<param-name>style_sheet</param-name>
+	<param-value>@STYLESHEET@</param-value>
+      </init-param>
     </servlet>
     <servlet-mapping>
       <servlet-name>civs</servlet-name>

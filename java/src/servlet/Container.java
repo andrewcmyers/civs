@@ -16,8 +16,15 @@ class Container extends Node {
 		contents = n;
 	}
 	
+	protected void writeOptions(HTMLWriter p) {
+		// default: no options.
+	}
+	
 	public void write(HTMLWriter p) {
-		p.print("<" + tag + ">");
+		p.print("<");
+		p.print(tag);
+		writeOptions(p);
+		p.print(">");
 		p.begin();
 		contents.write(p);
 		p.end();

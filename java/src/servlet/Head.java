@@ -7,12 +7,12 @@ public class Head extends Node {
 	String title;
 	String styleFile;
 	
-	public Head(String t) {
-		this(t, null);
-	}
-	public Head(String t, String sf) {
+	/** Create a page head. Non-public to allow servlet to control
+	 *  creation through the createHead() method.
+	 */	 
+	Head(String t, String s) {
 		title = t;
-		styleFile = sf;
+		styleFile = s;
 	}
 
 	public void write(HTMLWriter w) {
@@ -22,8 +22,11 @@ public class Head extends Node {
 		w.escape(title);
 		w.print("</title>");
 		w.breakLine();
+		
 		if (styleFile != null) {
-			w.print("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + styleFile + "\"");
+			w.print("<link rel=\"stylesheet\" type=\"text/css\" href=");
+			w.printq(styleFile);
+			w.print(" type=\"text/css\">");
 			w.breakLine();
 		}
 		w.print("</head>");

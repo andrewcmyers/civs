@@ -13,15 +13,15 @@ public final class Main extends Servlet {
 		
 	}
 	
-	public Page get(Request request) throws ServletException {
-		Session session = request.session();
-		String action = request.action();
-		if (session == null) {
-			// XXX check whether this is an acceptable way to start session
-			session = new Session(this);
-		}
+	public void initialize() {
+		addSessionStart("create");
+		addSessionStart("vote");
+	}
 
-		Page p = new Page(new Head("CIVS Test page"),
+	public Page get(Request request) throws ServletException {
+
+
+		Page p = new Page(createHead("CIVS Test page"),
 			            new Body(
 			            	new NodeList(
 			            		new Header(1, "A Test Servlet"),

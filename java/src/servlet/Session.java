@@ -16,7 +16,7 @@ public class Session {
 	String name() {
 		return name;
 	}
-	public Session(Servlet srv) {
+	Session(Servlet srv) {
 		servlet = srv;
 		name = srv.nonce.generate();		
 	}

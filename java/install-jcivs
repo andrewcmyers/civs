@@ -39,7 +39,8 @@ Subst() {
 	    -e 's|@SUPERVISOR@|'"$SUPERVISOR"'|' \
 	    -e 's|@SMTPHOST@|'"$SMTPHOST"'|' \
 	    -e 's|@LOCALDEBUG@|'"$LOCALDEBUG"'|' \
-	    -e 's|@ADDTOPATH@|'"$ADDTOPATH"'|'
+	    -e 's|@ADDTOPATH@|'"$ADDTOPATH"'|' \
+	    -e 's|@STYLESHEET@|'"$STYLESHEET"'|'
 }
 
 for f in html/*.html html/*.css html/*.js
