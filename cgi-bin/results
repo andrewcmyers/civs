@@ -527,11 +527,12 @@ print "<pre>";
 	printSchwartz;
     }
     print h2('Preference matrix');
-    print p('This is the simple voting preference matrix.
-	     Fractions indicate weak preferences where
+    print p('This is the voting preference matrix,
+             reporting maximal valid <i>f</i>-preferences.
+	     Fractions indicate weak preferences, for which
 	     a majority is allowed to express preferences beyond
 	    its usual proportional representation because the minority
-	    is indifferent');
+	    is indifferent.');
     print "<table>\n";
     print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
     for ($j = 0; $j <= $#committee; $j++) {
