@@ -63,6 +63,8 @@ $edata{'public'} = $public;
 $writeins = param('writeins');
 if ($writeins eq '') {
     $writeins = 'no';
+} else {
+    $writeins = 'yes';
 }
 $edata{'writeins'} = $writeins;
 $choices = param('choices');

@@ -99,7 +99,8 @@ if (param('Vote') ne '') {
 }
 
 # Not processing a vote. Either this is an initial vote page
-# or we've been asked to resort the choices.
+# or we've been asked to resort the choices, or a write-in
+# has been provided.
 
 $sort_choices = param('SortChoices');
 if ($sort_choices ne '') {
@@ -111,12 +112,18 @@ if ($sort_choices ne '') {
     @choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
 }
 
-if (param("AddWritein") ne '') {
+if (param("AddWritein") ne '' && $writeins eq 'yes') {
     $writein = param('writein');
     $choices = $choices . "\n" . $writein;
-    @choices[$num_choices] = $writein;
+    $index = $num_choices;
     $num_choices++;
+    @choices[$index] = $writein;
     $edata{'choices'} = $choices;
+#   Now update the vote matrix so that this write-in is
+#   ranked last by every voter so far.
+    for ($j = 0; $j < $index; $j++) {
+	$vdata{"$j.$index"} += $num_votes;
+    }
 }
 
 print "<p>Welcome, $voter! ";
@@ -133,16 +140,23 @@ sense to give your top choice (or choices) the rank 1. You may give candidates
 the same rank if you have no preference between them. You do not have to use all
 the possible ranks. All choices are currently given the lowest possible rank.</p>
 <p>For more information on how the Condorcet voting system works, <a href=$civs_url>click here</a></p>\n\n";
+
 print '<form method="POST"
         action="'.$thisurl.'"
         enctype="multipart/form-data"
         name="CastVote">';
 
 print '<table border="1" cellpadding="5" cellspacing="0"><tr>
-	<td bgcolor="#000080" bordercolor="#000080"><b><font color=white face=sans-serif>Choice</font></b></td>
-	<td width="40" bgcolor="#000080" bordercolor="#000080">&nbsp;</td>
-	<td bgcolor="#000080" bordercolor="#000080"><b><font color=white face=sans-serif>Rank</font></b></td>
-    </tr>';
+	<td bgcolor="#000080" bordercolor="#000080">
+	  <b><font color=white face=sans-serif>Choice</font></b>
+	</td>
+	<td width="40" bgcolor="#000080" bordercolor="#000080">
+	  &nbsp;
+	</td>
+	<td bgcolor="#000080" bordercolor="#000080">
+          <b><font color=white face=sans-serif>Rank</font></b>
+	</td>
+       </tr>';
 
 print hidden('voter', $voter);
 print hidden('voter_key', $voter_key);

@@ -14,7 +14,6 @@ $thisurl = $civs_bin_path."/control";
 print header(), start_html("Condorcet Internet Voting Service");
 use election;
 
-untie %edata;
 
 CIVS_Header("Election control");
 
@@ -43,17 +42,38 @@ if (!IsStarted) {
     print hidden('key', $control_key);
     print '<input type="submit" value="End election" name="close">';
     print '</p></form>';
+
+    if ($writeins eq 'yes') {
+	if (param('nowriteins') ne '') {
+	    $edata{'writeins'} = $writeins = 'no';
+	    print p('Write-in choices have been disabled');
+	} else {
+	    print "<form method=POST
+			action=$civs_bin_path/control
+			enctype=\"multipart/form-data\"
+			name=\"Nowriteins\">\n";
+	    print p('Write-in choices are currently allowed. Press this
+		    button to stop allowing new write-ins.',
+		    hidden('id', $election_id),
+		    hidden('key', $control_key),
+		'<input type="submit" value="No write-ins" name="nowriteins">');
+	}
+    }
 } else {
     print p("The election has ended. <a href=\"$civs_bin_path/results?id=$election_id\">Election results</a> are available.");
 }
-
-
 
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
 print "Total authorized voters: $num_auth", br();
 $num_votes += 0;
 print "Actual votes cast so far: $num_votes", br();
 print "Election ends $election_end", br();
+
+if ($writeins eq 'yes') {
+    print 'Write-in choices are allowed.', br();
+} else {
+    print 'Write-in choices are not allowed.', br();
+}
 
 print h2('Description:'), p($description);
 print h2("Candidates");
@@ -89,4 +109,5 @@ print '</form>';
 print end_html();
 
 untie %vdata;
+untie %edata;
 exit 0;
