@@ -1,5 +1,8 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use strict;
+use warnings;
+
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -11,14 +14,16 @@ use election;
 
 LockElection;
 
-$thisurl = $civs_bin_path."/add_voters";
+my $thisurl = $civs_bin_path."/add_voters";
 
-$new_addresses = param('new_addresses');
-$new_addresses_file = param('new_addresses_file');
-while (<$new_addresses_file>) {
-    $new_addresses .= $_;
+my $new_addresses = param('new_addresses');
+my $new_addresses_file = upload('new_addresses_file');
+if (defined($new_addresses_file)) {
+	while (<$new_addresses_file>) {
+    	$new_addresses .= $_;
+	}
 }
-@new_addresses = split /[\r\n]+/, $new_addresses;
+my @new_addresses = split /[\r\n]+/, $new_addresses;
 
 HTML_Header("CIVS: Adding Voters");
 CIVS_Header("Adding voters");
@@ -27,7 +32,7 @@ my $control_key = param('key');
 CheckControlKey($control_key);
 
 if (!IsStarted || IsStopped) {
-    print h1(Error), p("Sorry, voters can only be added to an election in progress.");
+    print h1("Error"), p("Sorry, voters can only be added to an election in progress.");
     exit 0;
 }
 
@@ -41,7 +46,7 @@ print "Done.\n</pre>\n";
 
 print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key\">Go back to election control</a>");
 
-$num_new_voters = $#new_addresses + 1;
+my $num_new_voters = $#new_addresses + 1;
 $edata{'num_auth'} += $num_new_voters;
 
 print end_html();

@@ -1,5 +1,8 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use strict;
+use warnings;
+
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -7,7 +10,7 @@ use DB_File;
 use Socket;
 use IO::Handle;
 
-$thisurl = $civs_bin_path."/control";
+my $thisurl = $civs_bin_path."/control";
 
 HTML_Header("CIVS Election Control");
 use election;
@@ -43,7 +46,7 @@ if (!IsStarted) {
     print '</p></form>'."\n";
 
     if ($writeins eq 'yes') {
-	if (param('nowriteins') ne '') {
+	if (param('nowriteins')) {
 	    $edata{'writeins'} = $writeins = 'no';
 	    print p('Write-in choices have been disabled');
 	} else {
@@ -60,7 +63,7 @@ if (!IsStarted) {
 	}
     }
     if ($public eq 'yes') {
-	$url = "http://$thishost$civs_bin_path/vote?id=$election_id";
+	my $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
 	print p("This is an open election. Voting URL:
 	        <tt><a href=\"$url\">$url</a></tt>").$cr;
     }
@@ -69,10 +72,11 @@ if (!IsStarted) {
 }
 
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
-if (IsStarted or $num_auth > 0) {
+my $num_auth_string;
+if (IsStarted or $num_auth) {
 	$num_auth_string = "$num_auth"
 } else {
-	$waiting = $#addresses + 1;
+	my $waiting = $#addresses + 1;
 	$num_auth_string = "0 ($waiting voters will be authorized when the election is started)";
 }
 print "Total authorized voters: $num_auth_string", br();
@@ -104,6 +108,7 @@ if ($ballot_reporting eq 'yes') {
  
 print h2('Description:'), p($description);
 print h2("Candidates");
+my $wintxt;
 if ($num_winners == 1) {
     $wintxt = "candidate";
 } else {
@@ -111,7 +116,7 @@ if ($num_winners == 1) {
 }
 print p("The top $wintxt will win the election.");
 print "<ul>";
-for ($j = 0; $j < $num_choices; $j++) {
+for (my $j = 0; $j < $num_choices; $j++) {
     print li($choices[$j]);
 }
 print "</ul>";

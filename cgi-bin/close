@@ -1,5 +1,8 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use strict;
+use warnings;
+
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -8,7 +11,7 @@ use DB_File;
 use Socket;
 use IO::Handle;
 
-$thisurl = $civs_bin_path."/close";
+my $thisurl = $civs_bin_path."/close";
 
 HTML_Header("CIVS: Stopping Election");
 use election;
@@ -24,7 +27,7 @@ CheckStarted;
 CheckControlKey($control_key);
 CheckNotStopped;
 
-if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL)) {
+if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
     print h1("Error"), p("Was not able to stop the election");
 } else {
     print STOPPED "stopped\n"; close(STOPPED);

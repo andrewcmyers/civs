@@ -46,7 +46,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses, @addres
 
 sub init {
 	# Get election ID
-	$election_id = param('id');
+	$election_id = param('id') or die "No election ID found in input\n";
 	&IsWellFormedElectionID or die "Ill-formed election ID: $election_id\n";
 	
 	# Set up filename paths
@@ -208,34 +208,46 @@ The election has been announced to end $election_end.");
 
 sub CheckVoterKey {
     my ($voter_key, $old_voter_key, $voter) = @_;
-    if ($private_host_id eq '') {
-	GetPrivateHostID;
-    }
-    
-    if ($voter_key eq '' && $old_voter_key ne '') {
-	my $voter_key_check = substr(md5_hex("voter".$private_host_id.$election_id.$voter), 0, 16);
-	if ($voter_key_check ne $old_voter_key) {
-	    Log("Invalid voter key $old_voter_key presented by $voter for election $election_id, expected $voter_key_check");
-	    print h1("Error"), p("Your voter key is invalid, $voter. You should have received a correct URL by email."), end_html();
-	    exit 0;
-	}
+ 
+    if ($old_voter_key and !$voter_key) {
+   		if ($private_host_id eq '') {
+			GetPrivateHostID;
+	    }
+   
+    	my $voter_key_check = substr(md5_hex("voter".$private_host_id
+				.$election_id.$voter), 0, 16);
+		if ($voter_key_check ne $old_voter_key) {
+		    Log("Invalid voter key $old_voter_key presented by $voter " .
+				"for election $election_id, expected $voter_key_check");
+			print h1("Error"), p("Your voter key is invalid, $voter. ",
+				"You should have received a correct URL by email."), 
+	    		end_html();
+		    exit 0;
+		}
     } else {
-	if (!$voter_keys{$voter_key}) {
-	    print h1("Error"), p("Your voter key is invalid.
-	    You should have received a correct URL by email."), 
-	    exit 0;
-	}
+		if (!$voter_keys{$voter_key}) {
+		    print h1("Error"), p("Your voter key is invalid. ", 
+  	    		"You should have received a correct URL by email."),
+       			end_html();	
+		    exit 0;
+		}
     }
 }
 
 sub CheckNotVoted {
-	my ($voter_key, $voter) = @_;
+	my ($voter_key, $old_voter_key, $voter) = @_;
     if ($vdata{$voter_key}) {
 		print h1("Already voted");
 		print p("A vote has already been cast using your voter key.");
 		PointToResults;
 		print end_html();
-		ElectionLog("Election: $title ($election_id) : Saw second vote from voter $voter, voter key $voter_key");
+		if ($voter_key) {
+			ElectionLog("Election: $title ($election_id) : Saw second vote "
+					. "from voter key $voter_key");
+		} else {
+			ElectionLog("Election: $title ($election_id) : Saw second vote "
+					. "from (voter,key) = ($voter, $old_voter_key)");
+		}
 		exit 0;
     }
 }

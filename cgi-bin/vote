@@ -1,5 +1,8 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use strict;
+use warnings;
+
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -8,26 +11,27 @@ use DB_File;
 use Socket;
 use IO::Handle;
 
-$thisurl = $civs_bin_path."/vote";
+my $thisurl = $civs_bin_path."/vote";
 
 use election;
 
-# There are four different ways to enter this script.
+# There are many different ways to enter this script.
 # 1. As the initial page one uses to cast a vote in a private election
 #    (with id, voter, voter_key defined)
 # 2. As the initial page one uses to cast a vote in a public election (id
 #    defined, no voter/voter_key)
 # 3. To actually cast a vote (old process_vote): Vote is defined, as are C1-Cn.
-# 4. To reorder the choices from their default order (case 1, case 2 variants
-#    where C1-Cn are already defined)
+# 4. To sort the choices
+# 5. To add a writein
+# 6. To reload a set of rankings
 
 my $voter = param('voter'); # nearly obsolete
 my $old_voter_key = param('voter_key'); # nearly obsolete
 my $voter_key = param('key');
-my $old_access_control = ($voter_key eq '');
 
 HTML_Header("CIVS Voting");
 
+my $winners_text;
 if ($num_winners == 1) {
     $winners_text = "(1) favorite choice";
 } else {
@@ -47,178 +51,30 @@ if ($public ne 'yes') {
 }
 CheckNotVoted($voter_key, $voter);
 
-if (param('Vote') ne '') {
-# process the vote!
+my $sort_choices = param('SortChoices');
+my $add_writein = param('AddWritein');
+my $vote = param('Vote');
+my $load = param('Load');
 
-    $vote = '';
-    $i=0;
+if ($vote) {
+	&ProcessVote;     # prints out confirmation; call does not return
+} 
 
-# Record the vote (note that vdata is
-# indexed by voter key, preserving anonymity.)
-# print "num_choices = $num_choices\n";
-    for ($i = 0; $i < $num_choices; $i++) {
-	$rank = param('C'.$i);
-	if ($rank < 0) { $rank = 0; } # must be proportional
-	if ($rank > 999) { $rank = 999; } # must be proportional
-	if ($vote eq '') {
-	    $vote = $rank;
-	} else {
-	    $vote = $vote.",".$rank
-	}
-	$rank[$i] = $rank;
-    }
-    
-    LockElection;
-    
-    $vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
-    
-    ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
+my (@rank, @choice_index, @iota);
+&OrderChoices;
 
-# Now, update matrix.
-# Note: vdata{"2.3"} contains the number of votes where
-# choice 2 beats choice 3 (i.e., has lower
-# numbered rank)
-    for ($j = 0; $j < $num_choices; $j++) {
-	for ($k = 0; $k < $num_choices; $k++) {
-	    $jk = $vdata{"$j.$k"};
-	    if ($rank[$j] ne 'No opinion' &&
-		$rank[$k] ne 'No opinion' &&
-		$rank[$j] < $rank[$k]) {
-		$vdata{"$j.$k"} = $jk + 1;
-	    }
-	}
-    }
-    $vdata{'num_votes'}++;
-    if ($recorded_voters eq '') {
-	$vdata{'recorded_voters'} = $voter_key;
-    } else {
-	$vdata{'recorded_voters'} = $recorded_voters . "\n".  $voter_key;
-    }
-
-    UnlockElection;
-
-    print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.\n");
-
-    PointToResults;
-    print end_html();
-
-    exit 0;
+if ($add_writein and $writeins eq 'yes') {
+	&AddWritein;
 }
 
-# Not processing a vote. Either this is an initial vote page
-# or we've been asked to resort the choices, or a write-in
-# has been provided.
-
-$sort_choices = param('SortChoices');
-if ($sort_choices ne '' || param('AddWritein') ne '') {
-    for ($i = 0; $i < $num_choices; $i++) {
-	$rank = param('C'.$i);
-	@iota[$i] = $i;
-	$rank[$i] = param('C'.$i);
-    }
-    if ($proportional ne 'yes') {
-	@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
-    } else {
-	@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
-    }
-} else { # randomize
-    for ($i = 0; $i < $num_choices; $i++) {
-	$choice_index[$i] = $i;
-	if ($proportional ne 'yes') {
-	    $rank[$i] = $num_choices;
-	} else {
-	    $rank[$i] = 0;
-	}
-    }
-# probably should use fisher_yates_shuffle routine in
-# civs_common.
-    for ($i = 0; $i < $num_choices - 1; $i++) {
-	$j = rand($num_choices - $i - 1) + 1;
-	$temp = $choice_index[$i];
-	$choice_index[$i] = $choice_index[$j];
-	$choice_index[$j] = $temp;
-    }
-}
-
-sub CanonicalizeName {
-# Strip leading whitespace and
-# remove all nonprintable characters
-    my $name = $_[0];
-    $name =~ s/^(\s)+//;
-    $name =~ s/(\s)+$//;
-    return $name;
-}
-
-sub ProjectName {
-# ProjectName(name) is a version of the name that is canonical but
-# also has all characters turned to lowercase and no whitespace.
-# This is useful for detecting similar names.
-    my $name = $_[0];
-    $name =~ s/[^\w]//g; # remove all nonalphanumeric characters
-    $name = lc $name;
-    return $name;
-}
-
-if (param('AddWritein') ne '' && $writeins eq 'yes') {
-    my $writein = param('writein');
-    $writein = CanonicalizeName($writein);
-    my $p = ProjectName($writein);
-    my $ok = 1;
-    for (my $i = 0; $i < $num_choices; $i++) {
-	if (ProjectName($choices[$i]) eq $p) {
-	    print p(b("Sorry, the name of the write-in is too similar to an existing choice\n"));
-	    $ok = 0;
-	    last;
-	}
-    }
-    if ($ok) {
-	$choices = $choices . "\n" . $writein;
-	$choice_index[$num_choices] = $num_choices;
-	$rank[$num_choices] = $num_choices;
-	$index = $num_choices;
-	$choices[$index] = $writein;
-	$num_choices++;
-	$edata{'choices'} = $choices;
-#   Now update the vote matrix so that this write-in is
-#   ranked last by every voter so far.
-	for (my $j = 0; $j < $num_choices - 1; $j++) {
-	    $vdata{"$j.$index"} += $num_votes;
-	}
-    }
-}
-
-if (param('Load')) {
-# load rankings from saved file
-    $rankings_file = param('rankings_file');
-    for ($i = 0; $i < $num_choices; $i++) { $rank[$i] = $num_choices; }
-    while (<$rankings_file>) { if (m/^<!-- Current rankings/) { last; }}
-    while (<$rankings_file>) {
-	if (m/^-->/) { last; }
-	($index, $name, $rank) = m/([0-9]+) "([^"]*)" ([0-9]+)/;
-	if ($rank < 1) { $rank = 1; }
-	if ($rank > $num_choices) { $rank = $num_choices; }
-	for ($i = 0; $i < $num_choices; $i++) {
-	    $cname = $choices[$i];
-	    $cname =~ s/"/ /;
-	    if ($cname eq $name) {
-		# print "Setting choice $i to rank $rank\n";
-		$rank[$i] = $rank;
-	    }
-	}
-    }
-    for ($i = 0; $i < $num_choices; $i++) { @iota[$i] = $i; }
-    if ($proportional ne 'yes') {
-	@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
-    } else {
-	@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
-    }
-    $loaded_choices = 'yes';
+if ($load) {
+	&Load;
 }
 
 print p("Please vote on the election ".b($title).'.').$cr;
 print p($description).$cr;
 
-print p("Only the $winners_text will win the election and be selected.<br>
+print p("Only the $winners_text will win the election and be selected.<p>
 The election ends <b>$election_end</b>.
 The election supervisor is $name (<tt>$email_addr</tt>).
 Contact the election supervisor if you need help.").$cr;
@@ -268,9 +124,9 @@ if ($proportional ne 'yes') {
 
 if ($ballot_reporting eq 'yes') {
 	print p(b("Ballot reporting is enabled for this election. ")
-	        . "Your ballot (the rankings you assign to candidates) "
+	    . "Your ballot (the rankings you assign to candidates) "
 		. "will be made public when the election is closed. "
-	        . "However, your ballot will be anonymized: "
+	    . "However, your ballot will be anonymized: "
 		. "no personally identifying information will appear.");
 }
 
@@ -279,7 +135,7 @@ print '<form method="POST"
         enctype="multipart/form-data"
         name="CastVote">';
 
-$rating = 'Rank';
+my $rating = 'Rank';
 if ($proportional eq 'yes') {
     $rating = 'Weight';
 }
@@ -299,30 +155,30 @@ print '<table border="1" cellpadding="5" cellspacing="0"><tr>
 
 print hidden('voter', $voter); # nearly obsolete
 print hidden('voter_key', $old_voter_key); # nearly obsolete
-print hidden('key', $key);
+print hidden('key', $voter_key);
 print hidden('id', $election_id);
 
 print "\n<!-- Current rankings:\n";
-for ($i = 0; $i < $num_choices; $i++) {
+for (my $i = 0; $i < $num_choices; $i++) {
     $name = $choices[$i];
     $name =~ s/"/ /;
-    $selected = $rank[$i];
+    my $selected = $rank[$i];
     print "$i \"$choices[$i]\" $selected\n";
 }
 print "-->\n";
 
-for ($i = 0; $i < $num_choices; $i++) {
-    $k = $choice_index[$i];
-    $selected = $rank[$k];
-    $choice = $choices[$k];
+for (my $i = 0; $i < $num_choices; $i++) {
+    my $k = $choice_index[$i];
+    my $selected = $rank[$k];
+    my $choice = $choices[$k];
     print "<tr><td><b>$choice</b></td><td>&nbsp;</td>\n";
     if ($proportional ne 'yes') {
 	print "<td><select size=1 name=\"C$k\">\n";
-	for ($j = 1; $j <= $num_choices; $j++) {
+	for (my $j = 1; $j <= $num_choices; $j++) {
 	    if ($j == $selected) {
-		print "  <option selected>$j</option>\n";
+			print "  <option selected>$j</option>\n";
 	    } else {
-		print "  <option>$j</option>\n";
+			print "  <option>$j</option>\n";
 	    }
 	}
 	if ($selected eq "No opinion") {
@@ -365,3 +221,175 @@ if ($public eq 'yes') {
 print end_html();
 
 exit 0;
+
+sub ProcessVote {
+    my $vote = '';
+
+	# Record the vote (note that vdata is
+	# indexed by voter key, preserving anonymity.)
+	# print "num_choices = $num_choices\n";
+    for (my $i = 0; $i < $num_choices; $i++) {
+		my $rank = param('C'.$i);
+		if ($rank < 0) { $rank = 0; } # must be proportional
+		if ($rank > 999) { $rank = 999; } # must be proportional
+		if ($vote eq '') {
+	    	$vote = $rank;
+		} else {
+		    $vote = $vote.",".$rank
+		}
+		$rank[$i] = $rank;
+    }
+    
+    LockElection;
+    
+    $vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
+    
+    ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
+
+	# Now, update matrix.
+	# Note: vdata{"2.3"} contains the number of votes where
+	# choice 2 beats choice 3 (i.e., has lower
+	# numbered rank)
+    for (my $j = 0; $j < $num_choices; $j++) {
+		for (my $k = 0; $k < $num_choices; $k++) {
+		    my $jk = $vdata{"$j.$k"};
+			$jk = 0 if (!defined($jk));
+	    	if ($rank[$j] ne 'No opinion' &&
+				$rank[$k] ne 'No opinion' &&
+				$rank[$j] < $rank[$k]) 
+			{
+				$vdata{"$j.$k"} = $jk + 1;
+		    }	
+		}
+    }
+    $vdata{'num_votes'}++;
+    if ($recorded_voters) {
+		$vdata{'recorded_voters'} = $recorded_voters . "\n".  $voter_key;
+    } else {
+		$vdata{'recorded_voters'} = $voter_key;
+    }
+
+    UnlockElection;
+
+    print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.\n");
+
+    PointToResults;
+    print end_html();
+
+    exit 0
+}
+
+sub CanonicalizeName {
+# Strip leading whitespace and
+# remove all nonprintable characters
+    my $name = $_[0];
+    $name =~ s/^(\s)+//;
+    $name =~ s/(\s)+$//;
+    return $name;
+}
+
+sub ProjectName {
+# ProjectName(name) is a version of the name that is canonical but
+# also has all characters turned to lowercase and no whitespace.
+# This is useful for detecting similar names.
+    my $name = $_[0];
+    $name =~ s/[^\w]//g; # remove all nonalphanumeric characters
+    $name = lc $name;
+    return $name;
+}
+
+sub OrderChoices {
+	if ($sort_choices || $add_writein) {
+		for (my $i = 0; $i < $num_choices; $i++) {
+			my $rank = param('C'.$i);
+			$iota[$i] = $i;
+			$rank[$i] = param('C'.$i);
+		}
+		if ($proportional ne 'yes') {
+			@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
+		} else {
+			@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
+		}
+	} else { # randomize
+		for (my $i = 0; $i < $num_choices; $i++) {
+			$choice_index[$i] = $i;
+			if ($proportional ne 'yes') {
+				$rank[$i] = $num_choices;
+			} else {
+				$rank[$i] = 0;
+			}
+		}
+		fisher_yates_shuffle(\@choice_index);
+	}
+}
+
+sub AddWritein {
+	# This function has a race condition.  The effect of two concurrent 
+	# writeins is not clear.  Nor is the effect of a concurrent writein
+	# and vote, or even request for the candidate list.
+    my $writein = param('writein');
+    $writein = CanonicalizeName($writein);
+    my $p = ProjectName($writein);
+    my $ok = 1;
+    for (my $i = 0; $i < $num_choices; $i++) {
+		if (ProjectName($choices[$i]) eq $p) {
+		    print p(b("Sorry, the name of the write-in is too similar ",
+					  "to an existing choice\n"));
+		    $ok = 0;
+		    last;
+		}
+    }
+    if ($ok) {
+		$choices = $choices . "\n" . $writein;
+		$choice_index[$num_choices] = $num_choices;
+		$rank[$num_choices] = $num_choices;
+		my $index = $num_choices;
+		$choices[$index] = $writein;
+		$num_choices++;
+
+		# Now update the vote matrix so that this write-in is
+		# ranked last by every voter so far.
+		for (my $j = 0; $j < $num_choices - 1; $j++) {
+		    $vdata{"$j.$index"} = $num_votes;
+		}
+
+    }
+}
+
+sub Load {
+	# load rankings from saved file
+    my $rankings_file = upload('rankings_file');
+	if (!defined($rankings_file)) {
+		# should probably print an error: the file failed to upload correctly
+		return;
+	}
+    for (my $i = 0; $i < $num_choices; $i++) { 
+		$rank[$i] = $num_choices; 
+	}
+    while (<$rankings_file>) { 
+		last if (m/^<!-- Current rankings/);
+	}
+    while (<$rankings_file>) {
+		last if (m/^-->/);
+		my ($index, $name, $rank) = m/([0-9]+) "([^"]*)" ([0-9]+)/;
+		$rank = 1 if ($rank < 1);
+		$rank = $num_choices if ($rank > $num_choices);
+		for (my $i = 0; $i < $num_choices; $i++) {
+	    	my $cname = $choices[$i];
+		    $cname =~ s/"/ /;
+		    if ($cname eq $name) {
+				# print "Setting choice $i to rank $rank\n";
+				$rank[$i] = $rank;
+	    	}
+		}
+    }
+    for (my $i = 0; $i < $num_choices; $i++) { 
+		$iota[$i] = $i; 
+	}
+    if ($proportional ne 'yes') {
+		@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
+    } else {
+		@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
+    }
+    my $loaded_choices = 'yes';
+}
