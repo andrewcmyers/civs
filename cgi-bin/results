@@ -60,6 +60,7 @@ print h2('Election description'), p($description);
 # These variables are global to the results computations.
 my ($condorcet_winner);
 my (@result, @matrix, @closure_matrix, @choice_index, @choice_rank);
+my (%visited); 
 
 &ComputeNonproportionalResults;   # needed regardless of the election type
 
