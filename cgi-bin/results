@@ -307,7 +307,7 @@ print "<pre>";
 # $borm[ci1][ci2] is whether comm with index ci2 beats or matches
 #    (transitively) the one with ci2
 
-	$found_schwartz = 0;
+	$full_search = 0;
 	sub compare_sets {
 # compare_sets compares $curr_comm and $new_comm and returns
 # 1 if the latter is better.
@@ -330,7 +330,9 @@ print "<pre>";
 	    if ($bestjpref > $bestipref) {
 		$tally{$curr_comm}{$new_comm} =
 		    "$bestipref,$bestjpref";
+		local $save_full_search = $full_search;
 		visit($new_comm);
+		$full_search = $save_full_search;
 		return 1;
 	    } elsif ($bestjpref == $bestipref) {
 		kPref(0, $curr_comm, $new_comm);
@@ -338,8 +340,10 @@ print "<pre>";
 		$weaktally{$curr_comm}{$new_comm} =
 		    "$ipref,$jpref";
 		if ($jpref > $ipref ||
-		    $found_schwartz && $jpref == $ipref) {
+		    $full_search && $jpref == $ipref) {
+		    local $save_full_search = $full_search;
 		    visit($new_comm);
+		    $full_search = $save_full_search;
 		    return 1;
 		}
 	    }
@@ -357,10 +361,9 @@ print "<pre>";
 	    local $curr_comm = $_[0];
 	    local @curr_comm = split /,/, $curr_comm;
 	    local $cci;
-	    local $schwartz = 0;
-	    if ($found_schwartz) { $schwartz = 1; }
 	    if ($visited{$curr_comm}) {
 		print "$curr_comm is in a cycle (in the Schwartz set?)\n";
+		$full_search = 1;
 	    } else {
 		$cci = $#committee + 1;
 		$committee[$cci] = $curr_comm;
@@ -393,7 +396,7 @@ print "<pre>";
 			if (!$in{$j}) {
 			    local %save_in = %in;
 			    if (compare_sets) {
-				if (!$schwartz) { $done = 1; }
+				if (!$full_search) { $done = 1; }
 # if this committee isn't in the Schwartz set then there is
 # no reason to compare to any more committees, because we
 # already found at least one that is better than this one.
@@ -403,8 +406,7 @@ print "<pre>";
 		    } # for j
 		} # for i
 		if (!$done) {
-		    $found_schwartz = 1;
-		    print "$curr_comm is unbeaten by nearby sets\n";
+		    print "$curr_comm beats all nearby sets\n";
 		}
 	    } # if change
 	    $beaten[$cci] = $save_beaten;
