@@ -152,6 +152,106 @@ sub PrintNonproportionalDetails {
     }
     print "</table>";
 
+    print h2('Simple MAM report');
+
+print p("This is the result of running a partial
+implementation of the Maximize Affirmed Majorities algorithm
+on the ballots. This implementation does not break
+ties correctly as specified by Stephen Eppley.").$cr;
+#print "<pre>";
+#print "Entering MAM$cr";
+@pairs = ();
+for (my $j = 0; $j < $num_choices; $j++) {
+    for (my $k = 0; $k < $num_choices; $k++) {
+	if ($matrix[$j][$k] > $matrix[$k][$j]) {
+	    push @pairs, [($j, $k, $matrix[$j][$k], $matrix[$k][$j])];
+	}
+    }
+}
+sub order_pairs {
+    @pair_a = @{$a};
+    @pair_b = @{$b};
+    if ($pair_a[2] != $pair_b[2]) {
+	return $pair_b[2] <=> $pair_a[2];
+    } else {
+	return $pair_a[3] <=> $pair_b[3];
+    }
+}
+@pairs = sort order_pairs @pairs;
+
+@affirmed = ();
+
+sub cycle {
+    for (my $j = 0; $j < $num_choices; $j++) {
+	for (my $k = 0; $k < $j; $k++) {
+	    if ($beatpath::matrix[$j][$k] > 0 &&
+		$beatpath::matrix[$k][$j] > 0) {
+		# print("Found cycle with $j, $k\n");
+		return 1; }
+	}
+    }
+    return 0;
+}
+
+foreach $pair_ref (@pairs) {
+    @pair = @{$pair_ref};
+    #print "$pair[2]-$pair[3]: $pair[0] vs. $pair[1]$cr";
+    $winner = $pair[0];
+    $loser = $pair[1];
+    for (my $j = 0; $j < $num_choices; $j++) {
+	for (my $k = 0; $k < $num_choices; $k++) {
+	    $trial[$j][$k] = $affirmed[$j][$k];
+	}
+    }
+    $trial[$winner][$loser] = $pair[2];
+    $beatpath::matrix = $trial;
+    $beatpath::transitive_closure;
+    if (!cycle) {
+	$affirmed[$winner][$loser] = $pair[2];
+	#print ("affirmed\n");
+    } else {
+	#print ("denied\n");
+    }
+}
+
+# print "</pre>";
+    print '<table class="matrix">'.$cr;
+
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+    for ($jj = 0; $jj < $num_choices; $jj++) {
+	$j1 = $jj + 1;
+	print "<th width=20px>".$j1.".</th>";
+    }
+    print "</tr>\n";
+    for ($jj = 0; $jj < $num_choices; $jj++) {
+	$j = $choice_index[$jj];
+	$j1 = $jj + 1;
+	print "<tr>";
+	print "<th align=left>".$j1.". ".$choices[$j]."</th>\n";
+	print "<td width=40px>&nbsp;</td>\n";
+	for ($kk = 0; $kk < $num_choices; $kk++) {
+	    $k = $choice_index[$kk];
+	    if ($j == $k) {
+		print '<td class="count">-';
+	    } else {
+		$w = $affirmed[$j][$k];
+		$l = $affirmed[$k][$j];
+		if ($w > $l) {
+		    print '<td class="win">';
+		} elsif ($w == $l) {
+		    print '<td class="tie">';
+		} else {
+		    print '<td class="lose">';
+		}
+		if ($w != 0) { print $w; } else { print "."; }
+		print '</td>';
+	    }
+	}
+	print "</tr>\n";
+    }
+    print "</table>";
+
+
     print h2('Ballot report');
 
     if ($ballot_reporting eq 'yes') {
