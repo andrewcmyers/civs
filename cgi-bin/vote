@@ -213,7 +213,7 @@ if (param('Load')) {
     $loaded_choices = 'yes';
 }
 
-print p("This page allows you to vote on ".b($title).'.').$cr;
+print p("Please vote on the election ".b($title).'.').$cr;
 print p($description).$cr;
 
 print p("Only the $winners_text will win the election and be selected.<br>
@@ -259,8 +259,8 @@ if ($proportional ne 'yes') {
     be negative or larger than 999.
     It doesn't help you to make your weights larger
     than other voters' weights; your weights are only compared
-    against each other. More
-    information is <a href=\"$civs_url/proportional.html\">available</a>.
+    against each other.
+    <a href=\"$civs_url/proportional.html\">[See more information]</a>.
     </p>";
 }
 
