@@ -1,0 +1,79 @@
+#!/bin/bash
+
+TestAndCreateDir() {
+    if [ ! -d $1 ]; then
+	#echo "Directory $1 does not exist. Creating it.";
+        mkdir $1;
+    fi
+}
+
+
+if test $# -ne 1
+then
+  echo "Usage: install-jcivs <settings-file>";
+  exit 1;
+fi
+
+. $1 || exit 1
+
+echo "Read settings file $1"
+
+TestAndCreateDir $HTMLDIR;
+TestAndCreateDir $SERVLETDIR;
+TestAndCreateDir $CLASSDIR;
+TestAndCreateDir $CIVSDATADIR;
+TestAndCreateDir $CIVSDATADIR/elections;
+
+Subst() {
+    set base=`basename $1`
+    sed  < "$1" \
+	 > "$2/$base" \
+	    -e 's|@HTMLDIR@|'$HTMLDIR'|'\
+	    -e 's|@THISHOST@|'$THISHOST'|' \
+	    -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
+	    -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
+	    -e 's|@CIVSURL@|'$CIVSURL'|' \
+	    -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+	    -e 's|@SMTPHOST@|'$SMTPHOST'|' \
+	    -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
+	    -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
+}
+
+for f in civs_create.html index.html public_elections.html \
+    proportional.html sec_priv.html acks.html changelog.html
+do
+    Subst $f $HTMLDIR
+done
+
+set webinf=$SERVLETDIR/WEB-INF
+set classes=$webinf/classes
+
+Subst web.xml $webinf
+cp -r classes/civs $classes
+cp -r classes/servlet $classes
+
+if [ ! -s $CIVSDATADIR/private_host_id ]; then
+    echo "*********************************************";
+    echo "                 WARNING                     ";
+    echo "*********************************************";
+    echo "";
+    echo "No private key exists for the server!";
+    echo "";
+    echo "Creating a private key using the openssl pseudo-random number";
+    echo "generator.  If you want more randomness than this, you will";
+    echo "need to create your own key.  See the INSTALL file for more";
+    echo "information."
+    echo "";
+    openssl rand -base64 32 -out $CIVSDATADIR/private_host_id;
+    echo "*********************************************";
+fi
+
+if [ ! -s $CIVSDATADIR/nonce_seed ]; then
+    echo "Seeding the CIVS nonce generator.";
+    openssl rand -base64 32 -out $CIVSDATADIR/nonce_seed;
+fi
+
+touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log
+chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log
+	
+echo "Install completed.  Check for any errors reported above.";

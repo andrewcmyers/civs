@@ -1,9 +1,3 @@
-/*
- * Created on Mar 8, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package servlet;
 
 import java.util.Stack;
@@ -25,7 +19,6 @@ public class HTMLWriter {
 	public HTMLWriter(PrintWriter p) {
 		writer = p;
 	}
-
 	public void print(String s) {
 		pos += s.length();
 		writer.print(s);
