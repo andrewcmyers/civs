@@ -136,7 +136,8 @@ sub Fatal_CIVS_Error {
 	&CIVS_Header("Error") unless $civs_header_printed;
 	
 	print h2("Error"),
-	      p("CIVS is unable to process your request.");
+	      p("CIVS is unable to process your request
+	      because of an internal error.");
 	print pre(@_) if $local_debug;
 	print end_html();
 	exit 0;

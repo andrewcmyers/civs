@@ -42,7 +42,7 @@ TestAndCreateDir $CIVSDATADIR/elections;
 
     for f in add_voters beatpath.pm civs_common.pm close control \
         create_election download_ballots election.pm mail.pm results \
-		start_election vote
+		start_election vote rp.pm
     do
 	#echo "copying cgi-bin/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \

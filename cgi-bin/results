@@ -9,6 +9,7 @@ use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use DB_File;
 use beatpath;
+use rp;
 use Socket;
 use IO::Handle;
 
@@ -241,7 +242,7 @@ sub ComputeNonproportionalResults {
 }
 
 sub PrintRanking {
-    my $result = @{$_[0]};
+    my @result = @{$_[0]};
     my $had_tie = 0;
     print "<ol>";
     my $j = 0;
@@ -325,181 +326,29 @@ sub PrintRP {
 		'Compare with ranked pairs results (may be time-consuming)');
 	print p($link);
     } else {
-	print a({-name=>'RP'},h2('Simple RP report'));
+	print a({-name=>'RP'},h2('Ranked Pairs report'));
 
 	print p("The following is the result of running 
 	the ranked pairs/winning votes completion
-	algorithm. This process is more computationally intensive than
-	Beatpath Winner").$cr;
-	STDOUT->flush();
+	algorithm.");
 
-# XXX The following code should be factored out into a file
-# XXX RP.pm. The only annoyance is returning the data on
-# XXX ignored preferences.
-	my @pairs = ();
-	my @affirmed, my @committed, my @current, my @saved_current;
-	for (my $j = 0; $j < $num_choices; $j++) {
-	    for (my $k = 0; $k < $num_choices; $k++) {
-		$committed[$j][$k] = 0;
-		$affirmed[$j][$k] = 0;
-		if ($matrix[$j][$k] > $matrix[$k][$j]) {
-		    push @pairs, [($j, $k, $matrix[$j][$k], $matrix[$k][$j])];
-		}
-	    }
+        (my $rref, my $ciref, my $denied_any,
+	 my $allowed_cycle, my $denied_report) = 
+	    rp::rank_candidates([@matrix], $num_choices, [@choices]);
+	#print pre("Done ranking");
+
+	if (!$allowed_cycle && !$denied_any) {
+	    print p('All preferences were affirmed. All
+	    reasonable Condorcet completion algorithms will
+	    agree on the ranking obtained.');
 	}
-# XXX MAM would pick a random ballot and use it to resolve ties in
-# XXX order_pairs. Is this better?
-	sub order_pairs {
-		my @pair_a = @{$a};
-		my @pair_b = @{$b};
-		if ($pair_a[2] != $pair_b[2]) {
-			return $pair_b[2] <=> $pair_a[2];
-		} else {
-			return $pair_a[3] <=> $pair_b[3];
-		}
-	}
-	@pairs = sort order_pairs @pairs;
 
-	my $denied_any = 0;  # whether any preferences had to be denied
-	my $prev_win = 0;    # the strength of the previously considered winner
-	my $prev_lose = 0;   # the strength of the previously considered loser
-	my $bunch_index = 0; # which of several identical-strength pairs this is. Typically zero.
-#
-# XXX Should copy 2-D arrays with $a[$i] = [@{$a[$i]}]
-#
-	foreach my $pair_ref (@pairs) {
-	    my @pair = @{$pair_ref};
-	    my $winner = $pair[0];
-	    my $loser = $pair[1];
-	    my $wname = $choices[$winner];
-	    my $lname = $choices[$loser];
-	    my $winvotes = $pair[2];
-	    my $losevotes = $pair[3];
-	    # print pre("Considering the $winvotes-$losevotes pref for $wname over $lname");
-	    if ($winvotes != $prev_win || $losevotes != $prev_lose) {
-# new bunch: commit the affirmed prefs from the previous bunch
-		for (my $j = 0; $j < $num_choices; $j++) {
-		    for (my $k = 0; $k < $num_choices; $k++) {
-			$committed[$j][$k] = $affirmed[$j][$k];
-		    }
-		}
-		$prev_win = $pair[2];
-		$prev_lose = $pair[3];
-		$bunch_index = 0;
-	    } else {
-		$bunch_index++;
-	    }
+	PrintRanking $rref;
+	PrintMatrix $num_choices, [@matrix], [@choices], $ciref, 0;
 
-	    for (my $j = 0; $j < $num_choices; $j++) {
-		for (my $k = 0; $k < $num_choices; $k++) {
-		    $current[$j][$k] = $affirmed[$j][$k];
-		}
-	    }
-# we take a preference if it doesn't create a new cycle when
-# considered in combination with all strictly stronger
-
-	    sub TransitiveClosure {
-# TransitiveClosure(m, winner, loser) adds the preference
-# for winner over loser to the matrix and computes the
-# transitive closure. If this creates any new cycles,
-# returns 1 else 0.
-		my $mref = $_[0];
-		my $winner = $_[1];
-		my $loser = $_[2];
-		my $cycle = 0;
-		my @worklist = ([($winner, $loser)]);
-		$mref->[$winner][$loser] = 1;
-		while ($#worklist >= 0) {
-		    my $pr = shift @worklist;
-		    my $winner = $pr->[0];
-		    my $loser = $pr->[1];
-		    if ($mref->[$winner][$loser]) { next; }
-		    $mref->[$winner][$loser] = 1;
-		    if ($mref->[$loser][$winner]) { $cycle = 1; }
-		    for (my $j = 0; $j < $num_choices; $j++) {
-			if ($mref->[$loser][$j]) {
-			    push @worklist, [($winner, $j)];
-			}
-			if ($mref->[$j][$winner]) {
-			    push @worklist, [($j, $loser)];
-			}
-		    }
-		}
-		return $cycle;
-	    }
-
-	    my $cycle = TransitiveClosure [@current], $winner, $loser;
-
-	    if ($cycle && $bunch_index != 0) {
-# We have a cycle when considered with others in bunch but
-# maybe not when considered alone. Try again only
-# considering the strictly stronger preferences.
-		$cycle = 0;
-		my @temp;
-		for (my $j = 0; $j < $num_choices; $j++) {
-		    for (my $k = 0; $k < $num_choices; $k++) {
-			$temp[$j][$k] = $committed[$j][$k];
-		    }
-		}
-		$cycle = TransitiveClosure [@temp], $winner, $loser;
-	    }
-	    if (!$cycle) {
-		for (my $j = 0; $j < $num_choices; $j++) {
-		    for (my $k = 0; $k < $num_choices; $k++) {
-			$affirmed[$j][$k] = $current[$j][$k];
-		    }
-		}
-	    } else {
-		if (!$denied_any) {
-		    print p('Some voter preferences were ignored because they 
-			     conflict with other, stronger preferences:').$cr;
-		    print '<ul>';
-		    $denied_any = 1;
-		}
-		print li("The $pair[2]&ndash;$pair[3] preference for $wname 
-				over $lname").$cr;
-	    }
-	    STDOUT->flush();
-	}
-	if ($denied_any) { print '</ul>'; }
-# XXX End of putative RP.pm
-	# print "</pre>";
 	if ($denied_any) {
-	    print p('The following matrix reports all the preferences that were
-	    affirmed. Any disagreement between Ranked
-	    Pairs and Beatpath
-	    Winner (if any) shows up as non-zero entries below the diagonal.
-	    Note that this implementation does not correctly break ties.');
-	} else {
-	    print p('All preferences were affirmed. The result of
-		    Ranked Pairs agrees with that of Beatpath Winner.');
+	    print $denied_report;
 	}
-	my $num_ranked = 0;
-	my @ignore, my @ordering, my @rp_choice_index;
-	while ($num_ranked < $num_choices) {
-	    my @winner = ();
-	    for (my $i = 0; $i < $num_choices; $i++) {
-		if (!$ignore[$i]) {
-		    my $won = 1;
-		    for (my $j = 0; $j < $num_choices; $j++) {
-			if (!$ignore[$j]) {
-			    if ($affirmed[$j][$i] > $affirmed[$i][$j]) {
-				$won = 0;
-				last;
-			    }
-			}
-		    }
-		    if ($won) {
-			push @winner, $i;
-			$rp_choice_index[$num_ranked++] = $i;
-		    }
-		}
-	    }
-	    push @result, [@winner];
-	    foreach my $j (@winner) { $ignore[$j] = 1; }
-	}
-
-	PrintMatrix $num_choices, [@matrix], [@choices], [@rp_choice_index], 1;
     }
 }
 
