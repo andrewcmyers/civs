@@ -41,7 +41,10 @@ if (IsStopped) {
     print "Election has not yet ended.\n";
 }
 
+
 print h2('Election instructions'), p($description);
+
+if ($proportional ne 'yes') {
 
 # Compute condorcet winner and set up $matrix
 $condorcet_winner = -1;
@@ -185,6 +188,186 @@ for ($jj = 0; $jj < $num_choices; $jj++) {
     print "</tr>\n";
 }
 print "</table>";
+
+} else { # proportional representation 'algorithm'
+    print "<h2>Candidates</h2>";
+    print "<ol type=A>";
+    for ($j = 0; $j < $num_choices; $j++) {
+	print "<li> ".$choices[$j]."</li>\n";
+    }
+    print "</ol>";
+
+    print "<h2>Log of search for best result set</h2>";
+
+    @voter_keys = split /[\r\n]+/, $recorded_voters;
+
+print "<pre>";
+    if ($num_votes != $#voter_keys + 1) {
+	print "Warning: discrepancy between number of
+	recorded voters and number of recorded votes!";
+    }
+# A committee is represented either as an array of integers
+# or as a string containing a comma-separated series of integers,
+# where those integers are 0-based indices into the @choices array.
+# In either case the indices are sorted in ascending order.
+
+    sub kPrefVoter {
+# kPrefVoter(f, v, c1, c2) is 1 if voter with index $v
+#   has a f-preference for committee c1, 1 if a f-preference
+#   for committee c2, and 0 otherwise. Choices are indexed in
+#   0..$num_choices-1, voters in 0..$num_votes. c1 and c2 are
+#   represented as strings.
+	local ($f, $v, $i, $j) = @_;
+	$voter_key = $voter_keys[$v];
+	$weights = $vdata{$voter_key};
+	@weights = split /,/, $weights;
+
+	# print "Voter: $weights considering $i vs. $j\n";
+
+	@c1 = split /,/, $i;
+	@c2 = split /,/, $j;
+
+        $sum = 0;
+	local $k;
+	for ($k = 0; $k < $num_winners; $k++) {
+	    @w1[$k] = $weights[$c1[$k]];
+	    @w2[$k] = $weights[$c2[$k]];
+	}
+	@w1 = sort @w1;
+	@w2 = sort @w2;
+	$sum1 = $sum2 = 0;
+	for ($k = 1; $k <= $f; $k++) {
+	    $sum1 += $w1[$num_winners - $k];
+	    $sum2 += $w2[$num_winners - $k];
+	}
+	#print "Results before trimming are @w1 and @w2\n";
+	#print "Admissible weight totals are $sum1, $sum2\n";
+	if ($sum1 > $sum2) { return -1; }
+	elsif ($sum1 < $sum2) { return 1; }
+	else { return 0; }
+    }
+
+    sub kPref {
+# kPref(f, c1, c2) sets $ipref to the number of voters with
+# a f-preference for committee c1, and $jpref to the number of
+# voters with a k-preference for committee c2.  c1 and c2
+# are represented as strings. If there is no valid k-preference
+# both $ipref and $jpref are set to zero.
+	local ($f, $i, $j) = @_;
+	#print "Comparing $i to $j at $f-preference.\n";
+	local ($icnt, $jcnt) = (0,0);
+	for ($v = 0; $v < $num_votes; $v++) {
+	    if ($f == 0) {
+		$c = kPrefVoter($num_winners, $v, $i, $j);
+	    } else {
+		$c = kPrefVoter($f, $v, $i, $j);
+	    }
+	    if ($c == -1) { $icnt++; }
+	    elsif ($c == 1) { $jcnt++; }
+	}
+	#print "Simple count yields $icnt, $jcnt\n";
+# now throw out invalid f-preferences
+	$ipref = $icnt; $jpref = $jcnt;
+	if ($f != 0 && $ipref > 0 && POSIX::ceil($ipref * $num_winners / $num_votes) < $f) {
+	    #print "Pref 1 is invalid\n";
+	    $ipref = 0;
+	}
+	if ($f != 0 && $jpref > 0 && POSIX::ceil($jpref * $num_winners / $num_votes) < $f) {
+	    #print "Pref 2 is invalid\n";
+	    $jpref = 0;
+	}
+    }
+    #print "num choices = $num_choices, num winners = $num_winners\n";
+    for ($i = 0; $i < $num_winners && $i < $num_choices; $i++) {
+	$curr_comm[$i] = $num_choices - $i - 1;
+    }
+
+    if ($num_choices > $num_winners) {
+# need to throw out some choices...
+
+	sub flatten {
+	    local $ret = $_[0];
+	    for (local $i = 1; $i <= $#_; $i++) {
+		$ret .= "," . $_[$i];
+	    }
+	    return $ret;
+	}
+	sub compute_in {
+	    local $i;
+	    for ($i = 0; $i < $num_choices; $i++) { $in{$i} = 0; }
+	    for ($i = 0; $i < $num_winners; $i++) { $in{$curr_comm[$i]} = 1; }
+	}
+	compute_in;
+	$change = 1;
+	$curr_comm = flatten @curr_comm;
+	print "<b>Current set = $curr_comm</b>\n";
+	for ($iters = 0; $iters < 500 && $change; $iters++) {
+	    $change = 0;
+# $in{i} is whether choice i is in curr_comm
+
+	    for ($i = 0; $i < $num_winners; $i++) {
+# try improving each current member
+		for ($j = 0; $j < $num_choices; $j++) {
+		    @new_comm = @curr_comm;
+# try replacing with each choice not currently in the committee
+		    if (!$in{$j}) {
+			# print "Replacing $new_comm[$i] with $j at index $i\n";
+			$new_comm[$i] = $j;
+			@new_comm = sort @new_comm;
+			$new_comm = flatten @new_comm;
+			print "$curr_comm vs. $new_comm: ";
+			$bestpref = 0;
+			$bestipref = 0;
+			$bestjpref = 0;
+			for ($f = 1; $f <= $num_winners; $f++) {
+			    kPref($f, $curr_comm, $new_comm);
+			    #print "Result is $ipref, $jpref\n";
+			    if ($ipref > $bestpref) {
+				$bestpref = $bestipref = $ipref;
+			    }
+			    if ($jpref > $bestpref) {
+				$bestpref = $bestjpref = $jpref;
+			    }
+			}
+			print "best f-preference tally yields $bestipref to $bestjpref\n";
+			if ($bestjpref == $bestipref) {
+			    print "<b>Tie: Checking out full preferences</b>\n";
+			    kPref(0, $curr_comm, $new_comm);
+			    $bestipref = $ipref;
+			    $bestjpref = $jpref;
+			    print "Full tally is $bestipref to $bestjpref\n";
+			}
+			if ($bestjpref > $bestipref) {
+			    print "<b>Current set = $new_comm</b>\n";
+			    $change = 1;
+			    @curr_comm = @new_comm;
+			    $curr_comm = $new_comm;
+			    compute_in;
+			}
+		    } else {
+			# print "$j is already in the committee\n";
+		    }
+		}
+	    }
+	}
+	if ($iters < 500) {
+	    print "<b>Search completed successfully</b>\n";
+	    $successful = 1;
+	}
+    }
+    print "</pre>";
+    print "<h2>Winning set of choices</h2>\n";
+    if ($successful) {
+	print "<ol>";
+	for ($i = 0; $i < $num_winners; $i++) {
+	    print "<li> ".$choices[$curr_comm[$i]]."\n";
+	}
+	print "</ol>";
+    } else {
+	print p("No winning set of choices was found.");
+    }
+}
+
 
 print end_html();
 

@@ -38,13 +38,17 @@ if ($#addresses > $max_voters) {
 }
 
 GetPrivateHostID;
-ConnectMail;
+if (!($local_debug)) { ConnectMail; }
 
 # Send all of the voters their keys
 
 foreach $v (@addresses) {
     $voter_key = substr(md5_hex("voter".$private_host_id.$election_id.$v), 0, 16);
+    $url = "http://$thishost$civs_bin_path/vote?id=$election_id&voter=$v&voter_key=$voter_key";
     print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
+  if ($local_debug) {
+    print "link: <a href=\"$url\">$url</a>\n";
+  } else {
     Send "mail from: $email_addr"; ConsumeSMTP;
     Send "rcpt to: $v"; ConsumeSMTP;
     Send "data"; ConsumeSMTP;
@@ -57,7 +61,7 @@ foreach $v (@addresses) {
     Send "$name ($email_addr). If you would like to vote, please visit the";
     Send "following URL:";
     Send "";
-    Send "http://$thishost$civs_bin_path/vote?id=$election_id&voter=$v&voter_key=$voter_key";
+    Send "$url";
     Send "";
     Send "This is your private URL. Do not give it to anyone else because";
     Send "they could use it to vote for you. Your privacy will not be violated";
@@ -71,10 +75,13 @@ foreach $v (@addresses) {
     Send "For more information about the Condorcet Internet Voting Service, see";
     Send "$civs_url.";
     Send "."; ConsumeSMTP;
+  }
 }
 
-Send "quit";
-close(SMTP);
+if (!($local_debug)) {
+    Send "quit";
+    close(SMTP);
+}
 print "Done.\n</pre>\n";
 
 print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key\">Go back to election control</a>");

@@ -41,8 +41,8 @@ the supervisor of the election you create.</p>
   <p>Your e-mail address: <input type="text" name="email_addr" size="20"></p>
   <p>The day and time when you plan to stop the election:
     <input type="text" name="election_end" size="30"></p>
-  <p>Enter the names of all the choices (candidates), one per line, or upload a file
-     containing all the choices:</p>
+  <p>Enter the names of all the choices (candidates),
+     one per line, or upload a file containing all the choices:</p>
   <p align="left"><textarea rows="5" name="choices" cols="60"></textarea>&nbsp;&nbsp;</p>
   <p align="left"><input id=choices_file type=file name="choices_file"></p>
   <p>How many choices will win the election: <input type="text" name="num_winners" size="5" value="1"></p>
@@ -50,9 +50,13 @@ the supervisor of the election you create.</p>
   <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
   <p><input id=addresses_file type=file name="addresses_file"></p>
   <p><input id=public type="checkbox" name="public" value="yes">
-  Make this an open election (voters can add themselves. Warning: there is little attempt to prevent multiple voting).<br>
+  Make this an open election (voters can add themselves.
+  Warning: there is only a token attempt to prevent multiple voting).<br>
   <input id=writeins type="checkbox" name="writeins" value="yes">
-  Allow voters to write in new choices.</p>
+  Allow voters to write in new choices.<br>
+  <input id=proportional type="checkbox" name="proportional" value="yes">
+  Enforce proportional representation. (<a
+  href="proportional.html">What is this?</a>)</p>
   <p>Make sure your e-mail address is correct because election information will
   be mailed to you. Voters will not be informed of the election's
   existence until you respond to this e-mail message to show that your address

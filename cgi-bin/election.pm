@@ -29,11 +29,13 @@ $addresses = $edata{'addresses'};
 $election_end = $edata{'election_end'};
 $public = $edata{'public'};
 $writeins = $edata{'writeins'};
+$proportional = $edata{'proportional'};
 $choices = $edata{'choices'};
 @choices = split /[\r\n]+/, $choices;
 $num_choices = $#choices + 1;
 $num_auth = $edata{'num_auth'};
 $num_votes = $vdata{'num_votes'};
+$recorded_voters = $vdata{'recorded_voters'};
 
 # utility routines
 
@@ -113,7 +115,7 @@ sub CheckNotStopped {
 }
 
 sub CheckStopped {
-    if (!IsStopped()) {
+    if (!IsStopped() && (!$localdebug)) {
 	print h1("Election not yet closed");
 	print p(
 "This election (<strong>$title</strong>) has not yet been closed

@@ -67,6 +67,14 @@ if ($writeins eq '') {
     $writeins = 'yes';
 }
 $edata{'writeins'} = $writeins;
+$proportional = param('proportional');
+if ($proportional eq '') {
+    $proportional = 'no';
+} else {
+    $proportional = 'yes';
+}
+$edata{'proportional'} = $proportional;
+
 $choices = param('choices');
 $choices_file = param('choices_file');
 while (<$choices_file>) {
@@ -89,11 +97,16 @@ print "<pre>";
 
 $control_key = substr(md5_hex("control".$private_host_id.$election_id), 0, 16);
 
+$url = "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key";
+
+if (!($local_debug)) {
+
 ConnectMail;
-Send "mail from: andru\@cs.cornell.edu"; ConsumeSMTP;
+$civs_supervisor = '@SUPERVISOR@';
+Send "mail from: $civs_supervisor"; ConsumeSMTP;
 Send "rcpt to: $email_addr"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
-Send "From: andru\@cs.cornell.edu (Condorcet Internet Voting Service)";
+Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
 Send "To: $email_addr ($name)";
 Send "Subject: CIVS election created ($election_id)";
 Send "";
@@ -101,7 +114,7 @@ Send "This email acknowledges the creation of a new election,";
 Send "$title. You have been designated as the supervisor of this";
 Send "election. To start and stop the election, please use the following URL:";
 Send "";
-Send "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key";
+Send "$url";
 Send "";
 if ($public eq 'yes') {
     Send "Because this is an open election, voters may be directed to the following URL:";
@@ -119,6 +132,13 @@ print "</pre>\n";
 
 print p("Mail has been sent to the address you provided (<tt>$email_addr</tt>).");
 print p("Click on the URL in that email to start the election: <strong>$title</strong>.");
+
+} else { # debugging mode
+print p("Here is the URL to control the new election:");
+print
+pre("<a href=\"$url\">$url</a>");
+
+}
 
 print end_html();
 Log("Election $title ($election_id) created by $email_addr");

@@ -1,13 +1,14 @@
 use POSIX qw(strftime);
 
-$home = "@CIVSDIR@";
+$home = "@CIVSDATADIR@";
 $thishost = "@THISHOST@";
-$civs_bin_path = "@CIVSBINPATH@";
+$civs_bin_path = "@CIVSBINURL@";
 $civs_log = $home."/log";
 $civs_url = "@CIVSURL@";
 $last_election_id_file = $home."/last_election_id";
 $private_host_id_file = $home."/private_host_id";
 $lockfile = $home."/global_lock";
+$local_debug = 1;
 
 sub GetPrivateHostID {
     open(HOSTID, $private_host_id_file);

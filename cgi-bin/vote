@@ -64,8 +64,11 @@ if (param('Vote') ne '') {
 	}
 	$rank[$i] = $rank;
     }
-    #$vdata{$voter_key} = $vote;  # Vote is recorded but not actual voter
-    $vdata{$voter_key} = 'voted';  # Only fact of voting is recorded
+    if ($proportional eq 'yes') {
+	$vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
+    } else {
+	$vdata{$voter_key} = 'voted';  # Only fact of voting is recorded
+    }
 
     open(LOG, ">>$election_log");
     print LOG "Election: $title ($election_id) : Recorded vote from voter key $voter_key\n";
@@ -75,23 +78,30 @@ if (param('Vote') ne '') {
 # Note: vdata{"2.3"} contains the number of votes where
 # candidate 2 beats candidate 3 (i.e., has lower
 # numbered rank)
-    for ($j = 0; $j < $num_choices; $j++) {
-	for ($k = 0; $k < $num_choices; $k++) {
-	    $jk = $vdata{"$j.$k"};
-	    if ($rank[$j] ne 'No opinion' &&
-		$rank[$k] ne 'No opinion' &&
-		$rank[$j] < $rank[$k]) {
-		$vdata{"$j.$k"} = $jk + 1;
+    if ($proportional ne 'yes') {
+	for ($j = 0; $j < $num_choices; $j++) {
+	    for ($k = 0; $k < $num_choices; $k++) {
+		$jk = $vdata{"$j.$k"};
+		if ($rank[$j] ne 'No opinion' &&
+		    $rank[$k] ne 'No opinion' &&
+		    $rank[$j] < $rank[$k]) {
+		    $vdata{"$j.$k"} = $jk + 1;
+		}
 	    }
 	}
     }
     $vdata{'num_votes'}++;
-
-    print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.\n");
+    if ($recorded_voters eq '') {
+	$vdata{'recorded_voters'} = $voter_key;
+    } else {
+	$vdata{'recorded_voters'} = $recorded_voters . "\n".  $voter_key;
+    }
 
     untie %edata;
     untie %vdata;
     UnlockElection;
+
+    print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.\n");
 
     PointToResults;
     print end_html();
@@ -168,19 +178,44 @@ print "This page allows you to vote on <b>".escapeHTML($title)."</b></p>
 
 Only the $winners_text will win the election and be selected.<br>
 The election ends <b>$election_end</b>.
-The election supervisor is $name (<tt>$email_addr</tt>). Contact the election supervisor if you need help.</p>
+The election supervisor is $name (<tt>$email_addr</tt>).
+Contact the election supervisor if you need help.</p>";
 
-<p>Please rank the following choices by assigning each choice a rank, where a
-lower rank means that you prefer that choice more. For example, it would make
-sense to give your top choice (or choices) the rank 1. You may give candidates
-the same rank if you have no preference between them. You do not have to use all
-the possible ranks. All choices are currently given the lowest possible rank.</p>
-<p>For more information on how the Condorcet voting system works, <a href=$civs_url>click here</a></p>\n\n";
+if ($proportional ne 'yes') {
+    print "<p>Please rank the following choices by assigning
+    each choice a rank, where a lower rank means that you
+    prefer that choice more. For example, it would make
+    sense to give your top choice (or choices) the rank 1.
+    You may give candidates the same rank if you have no
+    preference between them. You do not have to use all the
+    possible ranks. All choices are currently given the
+    lowest possible rank.  </p> <p>For more information on
+    how the Condorcet voting system works, <a
+    href=$civs_url>click here</a></p>\n\n";
+} else {
+    print "<p>This election is decided using an experimental
+    Condorcet-based algorithm designed to provide proportional
+    representation. Please give each of the following choices a
+    <b>weight</b> that expresses how much you want the
+    choice to be one of the winners. It is assumed by the
+    voting algorithm that you want the sum of weights of
+    selected choices to be as large as possible. All choices
+    are currently given a weight of zero, meaning that you
+    have no interest in seeing them selected. Weights cannot
+    be negative. More
+    information is <a href=\"$civs_url/proportional.html\">available</a>.
+    </p>";
+}
 
 print '<form method="POST"
         action="'.$thisurl.'"
         enctype="multipart/form-data"
         name="CastVote">';
+
+$rating = 'Rank';
+if ($proportional eq 'yes') {
+    $rating = 'Weight';
+}
 
 print '<table border="1" cellpadding="5" cellspacing="0"><tr>
 	<td bgcolor="#000080" bordercolor="#000080">
@@ -190,7 +225,8 @@ print '<table border="1" cellpadding="5" cellspacing="0"><tr>
 	  &nbsp;
 	</td>
 	<td bgcolor="#000080" bordercolor="#000080">
-          <b><font color=white face=sans-serif>Rank</font></b>
+          <b><font color=white
+	  face=sans-serif>'.$rating.'</font></b>
 	</td>
        </tr>';
 
@@ -212,20 +248,25 @@ for ($i = 0; $i < $num_choices; $i++) {
     $selected = $rank[$k];
     $choice = $choices[$k];
     print "<tr><td><b>$choice</b></td><td>&nbsp;</td>\n";
-    print "<td><select size=1 name=\"C$k\">\n";
-    for ($j = 1; $j <= $num_choices; $j++) {
-	if ($j == $selected) {
-	    print "  <option selected>$j</option>\n";
-	} else {
-	    print "  <option>$j</option>\n";
+    if ($proportional ne 'yes') {
+	print "<td><select size=1 name=\"C$k\">\n";
+	for ($j = 1; $j <= $num_choices; $j++) {
+	    if ($j == $selected) {
+		print "  <option selected>$j</option>\n";
+	    } else {
+		print "  <option>$j</option>\n";
+	    }
 	}
-    }
-    if ($selected eq "No opinion") {
-	print "  <option selected>No opinion</option>";
+	if ($selected eq "No opinion") {
+	    print "  <option selected>No opinion</option>";
+	} else {
+	    print "  <option>No opinion</option>";
+	}
+	print "</select></td>\n";
     } else {
-	print "  <option>No opinion</option>";
+	print "<td><input type=\"text\" name=\"C$k\" size=\"3\" value=\"0\"></td>";
     }
-    print "</select></td></tr>\n";
+    print "</tr>\n";
 }
 print "</table>\n";
 print p('<input type="submit" value="Vote!" name="Vote">');
