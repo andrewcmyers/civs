@@ -48,7 +48,7 @@ sub print_nonprop_results {
 # contains the results from the beatpath closure.
 
     local $j, $jj, $k, $kk;
-    print h2("Choices and vote matrix");
+    print h2("Preference matrix");
     print p("The following matrix shows the number of ballots on
     which choices beat other choices, considered pairwise.");
     print "<table>\n";
@@ -170,10 +170,10 @@ print "<ol>";
 $j = 0;
 for ($rank = 0; $rank <= $#result; $rank++) {
     @winner = @{$result[$rank]};
-    print "<li>";
+    print '<li value="'.($j+1).'">';
     $ranksize = $#winner + 1;
     if ($ranksize > 1) {
-	print "Tied:<br>";
+	print "<i>Tied</i>:<br>";
     }
     if ($num_seen < $num_winners &&
 	$num_seen + $ranksize > $num_winners) {
@@ -195,6 +195,7 @@ for ($rank = 0; $rank <= $#result; $rank++) {
 	if ($tie) { print "</font>"; }
     }
     $num_seen += $#winner + 1;
+    print '</li>';
 }
 print "</ol>";
 if ($had_tie) {
