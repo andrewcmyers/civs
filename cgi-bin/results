@@ -234,8 +234,8 @@ print "<pre>";
 	    @w1[$k] = $weights[$c1[$k]];
 	    @w2[$k] = $weights[$c2[$k]];
 	}
-	@w1 = sort @w1;
-	@w2 = sort @w2;
+	@w1 = sort {$a <=> $b} @w1;
+	@w2 = sort {$a <=> $b} @w2;
 	$sum1 = $sum2 = 0;
 	for ($k = 1; $k <= $f; $k++) {
 	    $sum1 += $w1[$num_winners - $k];
@@ -309,14 +309,23 @@ print "<pre>";
 
 	$iters = 0;
 	$full_search = 0;
+	$depth = 0;
+	sub dprint {
+	    local $msg = $_[0];
+	    for (local $i = 0; $i < $depth; $i++) {
+		print " ";
+	    }
+	    print $msg;
+	}
+
 	sub compare_sets {
 # compare_sets compares $curr_comm and $new_comm and returns
 # 1 if the latter is better.
 	    #print "Replacing $new_comm[$i] with $j at index $i\n";
 	    $new_comm[$i] = $j;
-	    @new_comm = sort @new_comm;
+	    @new_comm = sort {$a <=> $b} @new_comm ;
 	    $new_comm = flatten @new_comm;
-	    # print "$curr_comm vs. $new_comm: ";
+	    # print "$curr_comm vs. $new_comm (@new_comm): ";
 	    local $bestpref = 0;
 	    local $bestipref = 0;
 	    local $bestjpref = 0;
@@ -329,7 +338,7 @@ print "<pre>";
 	    }
 	    #print "best f-preference tally yields $bestipref to $bestjpref\n";
 	    if ($bestjpref > $bestipref) {
-		print "  $new_comm is preferred $bestjpref&ndash;$bestipref\n";
+		dprint "$new_comm is preferred $bestjpref&ndash;$bestipref\n";
 		$tally{$curr_comm}{$new_comm} =
 		    "$bestipref,$bestjpref";
 		local $save_full_search = $full_search;
@@ -343,9 +352,9 @@ print "<pre>";
 		    "$ipref,$jpref";
 		if ($jpref > $ipref ||
 		    ($full_search && $jpref == $ipref)) {
-		    print "  $new_comm is (weakly) preferred $bestjpref&ndash;$bestipref\n";
+		    dprint "  $new_comm is (weakly) preferred $bestjpref&ndash;$bestipref\n";
 		    if ($jpref == $ipref) {
-			print "  ...exploring because a cycle has been detected\n";
+			dprint "  ...exploring because a cycle has been detected\n";
 		    }
 		    local $save_full_search = $full_search;
 		    visit($new_comm);
@@ -365,21 +374,23 @@ print "<pre>";
 #   committees known to be beaten (or matched) transitively by c
 	    $iters++;
 	    if ($iters > 500) { return; } # truncate runaway search
+	    $depth++;
 
 	    local $curr_comm = $_[0];
 	    local @curr_comm = split /,/, $curr_comm;
 	    local $cci;
 	    local $added = 0;
 	    if ($visited{$curr_comm}) {
+		# if ($full_search) { $depth--; return; }
 		if (!$full_search) {
-		print "  $curr_comm is in a cycle (in the Schwartz set?)\n";
+		    dprint "$curr_comm is in a cycle (in the Schwartz set?)\n";
+		    $full_search = 1;
 		}
-		$full_search = 1;
 	    } else {
 		$cci = $#committee + 1;
 		$committee[$cci] = $curr_comm;
 		$cindex{$curr_comm} = $cci;
-		print "<b>Considering set: $curr_comm (#$#committee)</b>\n";
+		dprint "<b>Considering set: $curr_comm (#$#committee)</b>\n";
 		$visited{$curr_comm} = 1;
 		$added = 1;
 	    }
@@ -398,7 +409,7 @@ print "<pre>";
 	    }
 	    if ($change) {
 		if (!$added) {
-		    print "Change to beaten info, revisiting from $curr_comm\n";
+		    dprint "Change to beaten info, revisiting from $curr_comm\n";
 		}
 		local @new_comm;
 		compute_in;
@@ -421,10 +432,12 @@ print "<pre>";
 		    } # for j
 		} # for i
 		if (!$done && $added) {
-		    print "$curr_comm beats all nearby sets\n";
+		    dprint "$curr_comm beats all nearby sets\n";
 		}
 	    } # if change
 	    $beaten[$cci] = $save_beaten;
+	    dprint "<b>Done with $curr_comm</b>\n";
+	    $depth--;
 	}
 	visit($curr_comm);
 
@@ -457,6 +470,9 @@ print "<pre>";
 	    }
 	}
 	print '</tr></table>';
+    }
+    if ($iters > 500) {
+	print p(b("Search failed."));
     }
     if ($num_unbeaten == 1) {
 	print p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> Condorcet winner of this election was the following set of choices, which are not listed
