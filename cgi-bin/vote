@@ -80,15 +80,13 @@ if (param('Vote') ne '') {
 # Note: vdata{"2.3"} contains the number of votes where
 # choice 2 beats choice 3 (i.e., has lower
 # numbered rank)
-    if ($proportional ne 'yes') {
-	for ($j = 0; $j < $num_choices; $j++) {
-	    for ($k = 0; $k < $num_choices; $k++) {
-		$jk = $vdata{"$j.$k"};
-		if ($rank[$j] ne 'No opinion' &&
-		    $rank[$k] ne 'No opinion' &&
-		    $rank[$j] < $rank[$k]) {
-		    $vdata{"$j.$k"} = $jk + 1;
-		}
+    for ($j = 0; $j < $num_choices; $j++) {
+	for ($k = 0; $k < $num_choices; $k++) {
+	    $jk = $vdata{"$j.$k"};
+	    if ($rank[$j] ne 'No opinion' &&
+		$rank[$k] ne 'No opinion' &&
+		$rank[$j] < $rank[$k]) {
+		$vdata{"$j.$k"} = $jk + 1;
 	    }
 	}
     }
