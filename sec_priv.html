@@ -5,7 +5,7 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>Condorcet Internet Voting Service</title>
-<link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body>
@@ -26,25 +26,34 @@
 </tbody>
 </table>
 
+<h2>Summary</h2>
+
 <p>The Condorcet Internet Voting Service is designed to protect the security and
-privacy of participants:
+privacy of participants. Some important guarantees it offers
+include the following:
 <ul>
-<li>No e-mail addresses are released to any third party. The e-mail address
+<li>No e-mail addresses are released to any third party.  The e-mail address
 of the election supervisor is made known to the designated voters.
 <li>The identity of a voter is known only to the election supervisor
 and the individual voter. The election supervisor knows how many voters
 cast votes, but has no other information about whether or how a given voter
 voted.
-<li>E-mail addresses of voters are destroyed immediately after the election
+<li>E-mail addresses of voters are erased immediately after the election
 begins.
 <li>The election supervisor can determine whether a voter has voted
 only with the permission of the voter and only after the election has ended.
-<li>Once a private election is complete, only the following information
-is retained: the name of the election, the choices offered, the identity of the supervisor
-and the matrix of votes cast. The identity of all voters is destroyed.
-<li>The election supervisor receives a digitally signed statement
-containing the list of all voters and an indication of whether they
-have voted. (Not yet implemented)
+<li>There is considerable protection against people
+who break into the CIVS server. Some information is stored
+in cleartext on the server: the names of
+the choices and the description of the election.
+However, using only information stored on the
+server it is not possible to determine who the voters are or how they voted.
+Even if one guesses who a voter is, for closed elections it
+is not possible to determine whether that individual is a
+voter or whether or how they voted. For open elections, it
+is not possible to determine how a voter voted, and it is
+only possible to know whether a voter voted if one has
+the authorization key for the election.
 <!-- <li>
 Voters receive a receipt that
 enables them to check that their vote was cast correctly. (Not yet implemented)
@@ -52,6 +61,196 @@ The issue is that there is also value in preventing voters from proving how they
 voted on the issue. Technical issues remain to be resolved about how
 to reconcile these integrity and repudiation properties. -->
 </ul>
+
+The remainder of this document describes why these goals are
+believed to be met.
+
+<h2>Election types</h2>
+
+CIVS supports both <i>closed</i> and <i>open</i> elections.
+In closed elections the election supervisor specifies the
+list of voters; in open elections there is no list of voters
+and anyone receiving the appropriate election URL is able to vote.
+A closed election offers much stronger security and
+authenticity guarantees. In particular, in open elections
+the IP address of the voter is used to determine whether
+that voter has already cast a vote. A malicious voter can
+easily cast multiple votes, and this is as good as one can
+reasonably expect an open election to be. For closed
+elections, voters receive a unique key by e-mail that
+permits them to vote just once. Further attempts to vote
+will be rejected. If a voter claims that they did not receive
+the e-mail, the supervisor can send them a new key without
+fear that this will enable the voter to vote twice (assuming
+the same e-mail address is used!)
+
+CIVS sends various information by e-mail. It assumes that
+e-mail is a secure medium. If your e-mail is compromised,
+this would permit the attacker to impersonate you as a voter
+or as an election supervisor.
+
+<h2>Keys</h2>
+
+CIVS works by generating several different keys that serve
+as capabilities. These keys are generated using a
+combination of random noise and secure hashing.
+<ul>
+<li>The server has a <i>private host key</i>
+that is used to authenticate data from the
+server. Compromising the private host key gives only limited
+ability to violate the privacy of CIVS voters. The private
+host key can be set automatically using random data or
+defined by the service manager.
+</li>
+<li>For each election there is a <i>control key</i>
+that gives the ability to control the election as
+supervisor. This key is mailed to the supervisor when the
+election is created. The control key is stored on the
+server.</li>
+<li>For each election there is also an <i>authorization key</i>
+that gives the ability to add new voters to the election
+(and to check whether a voter is already enabled.)
+The authorization key is also mailed to the supervisor at
+the beginning of the election. However, it is
+<strong>not</strong> stored on the server, thus protecting
+the anonymity of voters.</li>
+<li>Each voter receives a <i>voter key</i> that gives the
+right to vote on the election. Voter keys are stored on the
+server but cannot be used to find the identity of the voter.
+</ul>
+
+<h2>Closed election protocol</h2>
+
+<h3>Election creation</h3>
+<ol>
+<li>The supervisor requests the creation of a new election,
+providing the election description and a list of voter
+e-mail addresses. These addresses are (temporarily) stored
+on the server.
+<li>The server generates three fresh nonces to use as the
+election identifier, as the authorization key for this election,
+as the control key. All three are sent to the supervisor in
+e-mail in a URL.
+<li>The election identifier and control key are stored on
+the server; the server stores the MD5 hash of the
+authorization key and then forgets the authorization key.
+<li>The supervisor uses the URL in the email to start the
+election.  This proves that that the supervisor presented a
+real e-mail address.
+<li>The server checks the provided authorization key and
+control key to make sure they match the stored data. For the
+authorization key it compares the hash of the key against
+the stored hash.
+<li>For each e-mail address, it performs the steps described
+below under <a href="#adding"><strong>Adding
+voters</strong></a>. This results in unique voter keys being
+e-mailed to the voter e-mail addresses, the creation of
+a list of (hashed) authorized e-mail addresses, and the
+creation of a list of valid voter keys.
+<li>The cleartext voter e-mail addresses are now forgotten by the server.
+</ol>
+
+<h3>Voting</h3>
+<ol>
+<li>The voter sends the server a ballot <i>b</i> that
+includes the voter key <i>v</i>.
+<li>The server checks whether the voter key is in the set
+of valid keys, and whether a ballot has already been cast
+using the voter key. It reports an error if appropriate.
+<li>The server records the
+binding (<i>v</i>, <i>b</i>). Because <i>v</i> is
+unconnected to the e-mail address of the voter, the
+information on the server doesn't allow the identity of the
+voter to be determined from the ballot.
+</ol>
+
+<a name="adding"><h3>Adding a voter</h3></a>
+Given an e-mail address <i>e</i>, the server performs the
+following steps when a voter is added (either during
+election creation or later from the election control page):
+
+<ol>
+<li>
+A voter can only be added by presenting the authorization
+key <i>a</i>, which is known by the supervisor but not stored on the
+server. It is, however, available at election creation time.
+The server stores {<i>a</i>}<sub>MD5</sub> to allow checking
+whether the correct authorization key is presented.
+<li>
+The server computes <i>x</i> = {<i>e</i>,
+<i>a</i>}<sub>MD5</sub>, which is a secure proxy for the
+e-mail address; it does not permit either
+direct computation of the e-mail address or (in the absence
+of the authorization key) a dictionary attack to find the e-mail
+address.
+<li>
+The server looks up <i>x</i> in the current set of
+(hashed) authorized e-mail addresses. If it is already there, it
+reports an error; otherwise, <i>x</i> is added to the set of
+authorized addresses.
+<li>
+The server forgets <i>a</i> and <i>x</i>.
+<li>
+The server generates a fresh nonce <i>v</i> to use as the
+voter key, and records it in the set of valid voter keys.
+<li>
+It sends <i>v</i> to the e-mail address <i>e</i>.
+<li>
+The server forgets <i>e</i>.
+</ol>
+
+<h2>Open election protocol</h2>
+
+An open election works similarly to a closed election.
+The difference is that every voter has the power to
+add himself as a voter: the URL generated at election
+creation time includes the authorization key. The voter's IP
+address is used instead of the voter's e-mail address as the
+definition of true identity.
+
+<h3>Election creation</h3>
+The election creation protocol for open elections is the
+same as for closed elections except that voters are not
+added. The supervisor is provided with
+a voting URL that includes the election id and the
+authorization key. The supervisor can then distribute this
+URL through whatever out-of-band mechanism they deem
+appropriate.
+
+<h3>Voting</h3>
+<ol>
+<li>The voter sends the server a ballot <i>b</i> that
+includes the voter IP address <i>IP</i> and the
+authorization key.
+<li>
+The server computes <i>x</i> = {<i>IP</i>,
+<i>a</i>}<sub>MD5</sub> as the secure proxy for the voter's
+identity. (Secure only in the sense that it does not permit
+the voter's identity to be determined.)
+<li>
+The server adds this <i>x</i> to the set of voters who have
+already voted. If it is already in the set,
+the server reports an error. Note that this check does not
+defend against malicious voters who vote from multiple IP
+addresses; such voters are, unfortunately, not uncommon.
+<li>
+The server forgets <i>x</i> and <i>IP</i>.
+<li>
+The server generates a fresh nonce <i>v</i> to use as the
+voter key.
+<li>
+The server records the ballot indexed by the voter key.
+<li>
+The server reports the voter key <i>v</i> to the voter.
+This enables later checking that the ballot was cast
+properly.
+</ol>
+
+Because the IP address in an open election is hashed using
+the authorization key, server compromise does not enable the
+attacker to determine the IP addresses by dictionary attack.
+Of course, if the attacker has obtained the authorization
+key for that election, a dictionary attack becomes possible.
 
 </body>
 
