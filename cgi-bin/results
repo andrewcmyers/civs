@@ -16,7 +16,7 @@ use IO::Handle;
 my $thisurl = $civs_bin_path."/results";
 my $detailed = param('detailed');
 
-HTML_Header("CIVS Election Results");
+HTML_Header('CIVS Election Results', 'results.js');
 use election;
 
 CIVS_Header("Election Results: $title");
@@ -118,6 +118,7 @@ print STDOUT 'Condorcet completion rule:
 	$mam_checked,
     '> MAM';
     print '&nbsp;&nbsp;&nbsp; <a href="',$civs_url,'/rp.html">(What is this?)</a>';
+    print '&nbsp;<input type="submit" id="recomplete" value="Update">';
 
   # print '&nbsp;<input type="submit" name="submit" value="Update display options">';
 print '</form>',$cr;

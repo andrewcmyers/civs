@@ -25,7 +25,9 @@ TestAndCreateDir $CGIBINDIR;
 TestAndCreateDir $CIVSDATADIR;
 TestAndCreateDir $CIVSDATADIR/elections;
 
-    for f in civs_create.html index.html public_elections.html proportional.html sec_priv.html acks.html changelog.html rp.html style.css
+    for f in civs_create.html index.html public_elections.html \
+	proportional.html sec_priv.html acks.html changelog.html \
+	rp.html style.css results.js vote.js
     do
 	#echo "copying $f to $HTMLDIR/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \

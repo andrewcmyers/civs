@@ -96,11 +96,17 @@ sub GetPrivateHostID {
 }
 
 sub HTML_Header {
-    my $title = $_[0];
+    (my $title, my $js) = @_;
     if (!$generated_header) {
+      if ($js eq '') {
+	print header(), start_html(-title => $title,
+				   -style => {'src' => "@CIVSURL@/style.css"});
+      } else {
 	print header(), start_html(-title => $title,
 				   -style => {'src' => "@CIVSURL@/style.css"},
-				   -script => {'src' => "@CIVSURL@/civs.js"});
+				   -script => {'src' => "@CIVSURL@/$js"},
+				   -onLoad => "setup()");
+      }
     }
     $html_header_printed = 1;
 }
