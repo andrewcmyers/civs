@@ -370,6 +370,8 @@ sub PrintMAM {
 no strict;
 no warnings;
 
+our %visited;
+
 sub PrintProportionalResults {
 # first sort the choices by the ordinary election algorithm
     @voter_keys = split /[\r\n]+/, $recorded_voters;
@@ -527,6 +529,7 @@ sub PrintProportionalResults {
     for (my $i = 0; $i < $num_winners && $i < $num_choices; $i++) {
 	$curr_comm[$i] = $choice_index[$i];
     }
+    @curr_comm = sort @curr_comm;
 
     if ($num_choices > $num_winners) {
 # need to throw out some choices...
@@ -639,7 +642,7 @@ sub PrintProportionalResults {
 	    my $cci;
 	    my $added = 0;
 	    if ($visited{$comm}) {
-		print "already visited: $comm\n";
+		dprint "already visited: $comm\n";
 		if ($full_search) { $depth--; return; }
 		if (!$full_search) {
 		    if ($prop_details) {
@@ -656,6 +659,7 @@ sub PrintProportionalResults {
 		    dprint "<b>Considering set: $mcomm ($comm)</b>\n";
 		}
 		$visited{$comm} = 1;
+		dprint "setting visited: $comm\n";
 		$added = 1;
 	    }
 	    $cci = $cindex{$comm};
@@ -734,7 +738,7 @@ sub PrintProportionalResults {
     if ($prop_details) { print "</pre>"; }
 
     if ($iters > 500) {
-	print p(b('Search for best committees failed.
+	print p(b('Search for best set of choices failed.
 	Results are likely to be incorrect.'));
     }
 # add some obvious contenders: all but one of the top num_choices+1
@@ -746,11 +750,12 @@ sub PrintProportionalResults {
 	for (my $k = 0; $k <= $num_winners; $k++) {
 	    if ($j != $k) { push @a, $choice_index[$k]; }
 	}
+	@a = sort @a;
 	my $comm = flatten @a;
 	if (!$visited{$comm}) {
 	    push @committee, $comm;
 	    if ($prop_details) {
-		print 'added '.flatten(renumber($comm)).$cr;
+		print 'added '.flatten(renumber($comm))." ($comm)".$cr;
 	    }
 	    $num_visited++;
 	}
@@ -826,10 +831,10 @@ sub PrintProportionalResults {
     }
     $num_visited = $#committee + 1;
 
-    print p("There are $combinations possible committees that can be
-      formed using $num_winners of the $num_choices choices. Of these,
-      $num_visited committees were considered thoroughly, comparing against 
-      the $num_seen nearby (similar) committees that differ
+    print p("There are $combinations possible sets of $num_winners choices
+    that can be formed by selecting from the $num_choices choices. Of these,
+      $num_visited sets were considered thoroughly, comparing against 
+      the $num_seen nearby (similar) sets that differ
       in just one choice.$cr");
 
 
@@ -847,8 +852,8 @@ sub PrintProportionalResults {
     if ($detailed) {
 	print h2('<a name="committee_beatpath">Beatpath closure matrix</a>');
 	print p('The following is the corresponding
-		beatpath matrix. Choice 1 is preferred
-		to choice 2 if there is a better beatpath leading from 1 to 2
+		beatpath matrix. Sets of choices 1 is preferred
+		to sets of choices 2 if there is a better beatpath leading from 1 to 2
 		than any leading from 2 to 1.');
 	STDOUT->flush();
 
