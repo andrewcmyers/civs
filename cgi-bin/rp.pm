@@ -4,11 +4,15 @@ use CGI qw(:standard);
 use civs_common;
 use strict;
 
-our $mam; # whether MAM tiebreaking is used
+our $mam; # whether MAM tiebreaking is to be used.
+          # Otherwise, uses the deterministic CIVS Ranked Pairs
+          # algorithm.
 
 our @rvh; # Random voter hierarchy; used only for MAM tiebreaking.
           #   Contains 1's and 0's that encode a total order
 	  #   on the choices.
+our $tiebreak = 0;
+          # whether the RVH was used to order majorities
 
 # Note: MAM would pick a random ballot and use it to resolve ties in
 # order_pairs. Here we don't try to achieve a total
@@ -22,13 +26,18 @@ sub order_pairs {
     } elsif ($pair_a[3] != $pair_b[3]) {
 	return $pair_a[3] <=> $pair_b[3];
     } elsif ($mam) {
-	my $y = $pair_b[3];
-	my $w = $pair_a[3];
+	my $x = $pair_b[0];
+	my $y = $pair_b[1];
+	my $z = $pair_a[0];
+	my $w = $pair_a[1];
+	$tiebreak = 1;
+	# print pre("Using MAM ordering extension\n");
+	# print pre("$x-$y vs $z-$w\n");
+	# print pre("matrix elements: ". $rvh[$w][$y]. " ". $rvh[$y][$w] . " ". 
+		  # $rvh[$x][$z]. " ". $rvh[$z][$x]);
 	if ($w != $y && $rvh[$w][$y] != $rvh[$y][$w]) {
 	    return ($rvh[$w][$y] - $rvh[$y][$w]);
 	}
-	my $x = $pair_b[2];
-	my $z = $pair_a[2];
 	return ($rvh[$x][$z] - $rvh[$z][$x]);
     } else {
 	return 0;
@@ -134,7 +143,7 @@ sub rank_candidates {
 	(my $winner, my $loser, my $winvotes, my $losevotes) = @{$pair_ref};
 	my $wname = $choices[$winner];
 	my $lname = $choices[$loser];
-	#print pre("Considering the $winvotes-$losevotes pref for $wname over $lname");
+	# print pre("Considering the $winvotes-$losevotes pref for $wname over $lname");
 	#STDOUT->flush();
 	$a = $last_pair; $b = $pair_ref;
 	if ($last_pair eq 'none' || &order_pairs() < 0) {
@@ -187,7 +196,7 @@ sub rank_candidates {
 		    $affirmed[$j][$k] = $current[$j][$k];
 		}
 	    }
-	    # print pre("affirmed.");
+	    # print pre("  affirmed.");
 	} else {
 	    if (!$denied_any) {
 		$denied_report .=
@@ -198,7 +207,7 @@ sub rank_candidates {
 	    $denied_report .=
 		(li("The $pair[2]&ndash;$pair[3] preference for $wname"
 				." over $lname."));
-	    # print pre("denied.");
+	    # print pre("  denied.");
 	}
 	STDOUT->flush();
     }
@@ -264,7 +273,7 @@ sub create_RVH {
 		    my $cycle =
 			TransitiveClosure([@temp], $i, $j, $num_choices);
 		    if (!$cycle) {
-			# print "Adding pref to RVH: $i over $j\n";
+			# print pre("Adding pref to RVH: $i over $j\n");
 			my $complete = 1;
 			for (my $i = 0; $i < $num_choices; $i++) {
 			    for (my $j = 0; $j < $num_choices; $j++) {
@@ -277,9 +286,7 @@ sub create_RVH {
 				}
 			    }
 			}
-			if ($complete) {
-			    return;
-			}
+			if ($complete) { return; }
 		    }
 		}
 	    }

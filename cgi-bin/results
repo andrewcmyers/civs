@@ -407,7 +407,6 @@ sub PrintRP {
 	    reasonable Condorcet completion algorithms will
 	    agree with this ranking.');
 	}
-
 	if ($denied_any) {
 	    # print $denied_report;
 	    print p('The presence of a green entry below
@@ -415,6 +414,17 @@ sub PrintRP {
 	    means that a preference was ignored because
 	    it conflicted with other, stronger preferences.');
 	}
+	if ($algorithm eq 'mam') {
+	    if ($rp::tiebreak) {
+		print p('Random tie breaking was used to
+		arrive at this ordering, as per the MAM
+		algorithm.');
+	    } else {
+		print p('No random tie breaking was needed to
+		arrive at this ordering.');
+	    }
+	}
+
 }
 
 ############################################################

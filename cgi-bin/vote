@@ -56,7 +56,10 @@ if ($public ne 'yes') {
 	$voter_key = civs_hash(remote_addr(),$authorization_key);
     }
 }
-CheckNotVoted($voter_key, $old_voter_key, $voter);
+
+if (!$local_debug) {
+    CheckNotVoted($voter_key, $old_voter_key, $voter);
+}
 
 my $sort_choices = param('SortChoices');
 my $add_writein = param('AddWritein');
