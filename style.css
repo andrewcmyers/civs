@@ -1,0 +1,53 @@
+a            { text-decoration: none }
+a:link       { color: #339966; background-color: transparent; font-weight: bold }
+a:visited    { color: #009999; background-color: transparent; font-weight: bold }
+a:hover      { color: #0000FF; background-color: transparent }
+body, table, p, ul, li  { font-family: Arial, helvetica, sans-serif; font-size: 12pt;  color: #000000 }
+
+
+body { background-color: #c0e0ff }
+table { background-color: #e0f0ff }
+table.form { background-color: transparent }
+div.emphasized { background-color: #ffffd0 }
+
+p, ul, li {background-color: transparent}
+
+h1, h2, h3   { font-family: Trebuchet MS, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
+
+table.banner a:link { color: white }
+table.banner a:visited { color: white }
+table.banner a:hover { color: yellow }
+
+table.banner { background-color: #000080 }
+table.banner h1 { color: white }
+table.banner h2 { color: white }
+
+td.count { text-align: center; font-family: Courier New, courier, fixed }
+th.choice { text-align: left }
+
+/* Use this style to highlite changes to problem sets */
+.change      { color: #000000; background-color: #99CCFF }
+
+/* Use this style to highlight HW items appearing in the schedule */
+.hw { color: #800000; font-weight:bold }
+
+/* The following are used to highlite SML code */
+.comment     { color: #CC0000; background-color: transparent; font-weight: bold }
+.string      { color: #339966; background-color: transparent}
+.keyword     { color: #0000CC; background-color: transparent; font-weight: bold; font-size: 11pt }
+.codeback    { color: #000000; background-color: #dddddd; line-height: 14px }
+.ampm        {font-variant: small-caps}
+
+/* used for mathematics */
+.math        { color: black; font-family: Times New Roman, serif; font-size: 12pt; background-color: transparent }
+.symbol      { font-family: Symbol, symbol }
+
+h1  { font-size: 20pt; }
+h2  { font-size: 16pt; }
+h3  { font-size: 12pt; }
+pre, xmp { font-family: Courier New, Courier, monospace; margin-left: 1em; font-size: 11pt }
+kbd, tt, code { font-family: Courier New, Courier, monospace; font-size: 11pt }
+td { font-family: Arial, helvetica, sans-serif; font-size: 11pt; }
+
+td.recitation { background-color: #FFF0d0 }
+
