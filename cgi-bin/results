@@ -84,7 +84,8 @@ if ($proportional eq 'yes') {
     my $url = $civs_url.'/proportional.html';
     print "This election implements <a href=\"$url\">proportional representation</a>. ";
     if ($use_combined_ratings) {
-	print " The <a href=\"$url#combinedratings\">combined-ratings criterion</a>";
+	print " The <a
+	href=\"$url#combinedratings\">combined-wieghts criterion</a>";
     } else {
 	print " The <a href=\"$url#bestcandidate\">best-candidate criterion</a>";
     }
@@ -559,7 +560,7 @@ sub PrintProportionalResults {
 	$ratings = $vdata_copy{$voter_key};
 	@ratings = split /,/, $ratings;
 
-	# print "Voter: $ratings considering $i vs. $j\n";
+	#print "Voter: $ratings considering $i vs. $j with $f-pref\n";
 
 	@c1 = split /,/, $i;
 	@c2 = split /,/, $j;
@@ -669,15 +670,21 @@ sub PrintProportionalResults {
 	    my $new_comm = $_[1];
 	    # dprint flatten(renumber($curr_comm)).' vs. '.flatten(renumber($new_comm)).":$cr";
 	    my $bestpref = 0;
+	    my $bestpreffor = 0;
+	    my $bestprefagainst = $num_choices;
 	    my $bestipref = 0;
 	    my $bestjpref = 0;
 	    $seen{$curr_comm} = $seen{$new_comm} = 1;
 	    for (my $f = 1; $f <= $num_winners; $f++) {
 		kPref($f, $curr_comm, $new_comm);
-		if ($ipref > $bestpref) { $bestipref = $ipref; }
-		if ($jpref > $bestpref) { $bestjpref = $jpref; }
-		if ($bestipref > $bestpref) { $bestpref = $bestipref; }
-		if ($bestjpref > $bestpref) { $bestpref = $bestjpref; }
+		if ($ipref >= $bestpreffor && $jpref <= $bestprefagainst) {
+		    $bestpreffor = $bestipref = $ipref;
+		    $bestprefagainst = $bestjpref = $jpref;
+		}
+		if ($jpref >= $bestpreffor && $ipref <= $bestprefagainst) {
+		    $bestpreffor = $bestjpref = $jpref;
+		    $bestprefagainst = $bestipref = $ipref;
+		}
 	    }
 	    # print "best f-preference tally: $bestipref to $bestjpref\n";
 	    $tally1{$curr_comm}{$new_comm} = $bestipref;

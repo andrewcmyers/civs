@@ -137,15 +137,15 @@ would result in a higher level of overrepresentation in some cases.
 one committee over another. In proportional representation mode, there
 is only one difference from the voter's perspective: instead of ranking
 the candidates, the voter gives
-a nonnegative <b>rating</b> (or <b>weight</b>) to each candidate. The voting algorithm
+a nonnegative <b>weight</b> to each candidate. The voting algorithm
 decides which of two committees would be preferred by a candidate using
-one of two criteria, <i>combined ratings</i> or <i>best candidate</i>:
+one of two criteria, <i>combined weights</i> or <i>best candidate</i>:
 
 <p>
 <a name="combinedrating">
-<strong>Combined ratings.</strong>
+<strong>Combined weights.</strong>
 </a>
-The voter's goal is to maximize the sum of ratings
+The voter's goal is to maximize the sum of weights
 of selected candidates. This is an appropriate criterion for elections where
 the quality of all the candidates is important to the voters, such as
 the election of an actual committee that will be voting on some issues.
@@ -159,10 +159,12 @@ preferences) choosing between <i>A</i> and the pair
 algorithm can't tell just from the rankings whether the
 voter would prefer to have the better candidate
 <i>A</i> or 
-greater representation under <i>BC</i>. Using ratings this can be determined: if <i>A</i> is given a rating of
-10 and <i>B</i> and <i>C</i> have ratings 8 and 6 respectively, then the voting
+greater representation under <i>BC</i>. Using weights this
+can be determined: if <i>A</i> is given a weight of
+10 and <i>B</i> and <i>C</i> have weights 8 and 6 respectively, then the voting
 algorithm will (on the voter's behalf) work towards electing
-<i>BC</i> in preference to <i>A</i>, because 14 &gt; 10. However, if <i>B</i> and <i>C</i> were instead given ratings 4 and 2, the voter would have expressed that <i>A</i> is preferred to <i>BC</i> because 6 &lt; 10.<br>
+<i>BC</i> in preference to <i>A</i>, because 14 &gt; 10.
+However, if <i>B</i> and <i>C</i> were instead given weights 4 and 2, the voter would have expressed that <i>A</i> is preferred to <i>BC</i> because 6 &lt; 10.<br>
 </p>
 
 <p>
@@ -173,9 +175,9 @@ With this criterion, the voter's goal is to get a single very good candidate
 elected possible, and the quality of other elected candidates is a strictly
 secondary consideration.  This is appropriate for an election where the voter
 really only cares about the best candidate: for example, the selection of a
-set of entree dishes for a menu, where the voter will probably only eat one of
+set of entree dishes for a menu, where the voter will only eat one of
 the entrees.  Here, two committees are compared using their best candidates
-(according to the voter) other candidates are considered only if the voter has
+(according to the voter); other candidates are considered only if the voter has
 no preference between the best candidates. In the examples above, <i>A</i>
 would be preferred to <i>BC</i> in either case, because <i>A</i> is preferred
 to <i>B</i>.</p>

@@ -13,7 +13,8 @@ use IO::Handle;
 
 my $thisurl = $civs_bin_path."/vote";
 
-CheckLoad;
+# CheckLoad;
+# AdmissionControl;
 timeout(10);
 
 use election;
@@ -99,44 +100,50 @@ The election ends <b>$election_end</b>.
 The election supervisor is $name (<tt>$email_addr</tt>).
 Contact the election supervisor if you need help.").$cr;
 
-if ($proportional ne 'yes') {
-    print "<p>Please rank the following choices by assigning
-    each choice a rank, where a smaller-numbered rank means that you
+if ($proportional ne 'yes' || !$use_combined_ratings) {
+    print "<p>Please give each of the following choices
+    a rank, where a smaller-numbered rank means that you
     prefer that choice more. For example, it would make
     sense to give your top choice (or choices) the rank 1.
     You may give choices the same rank if you have no
     preference between them. You do not have to use all the
     possible ranks. All choices are initially given the
-    lowest possible rank. Note that &ldquo;No opinion&rdquo;
+    lowest possible rank. <b>Note:</b> &ldquo;No opinion&rdquo;
     is <i>not</i> the same as the lowest possible rank; it genuinely
-    expresses no opinion.
-    <a href=\"$civs_url\">(More information on Concorcet election
+    expresses no opinion.</p>";
+
+    if ($proportional eq 'yes') {
+	print '<p>This election is decided using an experimental
+	Condorcet-based algorithm designed to provide proportional
+	representation.';
+	print ' It is assumed by the voting algorithm that you want
+		the ranking of your most preferred
+		<i>winning</i> choice to be as
+		high as possible, and if two sets of winning choices
+		agree on the choice you prefer most, then you
+		would decide between them using the second most preferred
+		choice, and so on. ';
+	print '</p>';
+    }
+    print "<a href=\"$civs_url\">(More information on Concorcet election
     methods)</a></p>", $cr, $cr;
 } else {
     print '<p>This election is decided using an experimental
     Condorcet-based algorithm designed to provide proportional
     representation.';
+
     print 'Please give each of the following choices a
-    <b>rating</b> that expresses how much you want the
-    choice to be one of the winners.';
-    if ($use_combined_ratings) {
-	print ' It is assumed by the voting algorithm that you want
-		the sum of ratings of selected choices to be as large
-		as possible. You can interpret ratings as weights.';
-    } else {
-	print ' It is assumed by the voting algorithm that you want
-		the rating of your most preferred selected choice to be as
-		high as possible, and if two sets of selected choices
-		agree on the selected choice you prefer most, then you
-		would decide between them using the second most preferred
-		choice, and so on. ';
-    }
+    <b>weight</b> that expresses how much you want that
+    choice to be part of the winning set of choices.';
+    print ' It is assumed by the voting algorithm that you want
+	    the sum of weights of winning choices to be as large
+	    as possible.';
     print "All choices
-    are currently given a rating of zero, meaning that you
-    have no interest in seeing them selected. Ratings cannot
-    be negative or larger than 999.
-    It doesn't help you to make your ratings larger
-    than other voters' ratings; your ratings are only compared
+    are currently given a weight of zero, meaning that you
+    have no interest in seeing them win.
+    Weights cannot be negative or larger than 999.
+    It doesn't help you to make your weights larger
+    than other voters' weights, because your weights are only compared
     against each other.
     <a href=\"$civs_url/proportional.html\">[See more information]</a>.
     </p>";
@@ -151,8 +158,8 @@ if ($ballot_reporting eq 'yes') {
 }
 
 my $rating = 'Rank';
-if ($proportional eq 'yes') {
-    $rating = 'Rating';
+if ($proportional eq 'yes' && $use_combined_ratings) {
+    $rating = 'Weight';
 }
 
 print '<form method="POST"
@@ -200,10 +207,12 @@ for (my $i = 0; $i < $num_choices; $i++) {
 			print "  <option>$j</option>\n";
 	    }
 	}
-	if ($selected eq "No opinion") {
-	    print "  <option selected>No opinion</option>";
-	} else {
-	    print "  <option>No opinion</option>";
+	if ($proportional ne 'yes') {
+	    if ($selected eq "No opinion") {
+		print "  <option selected>No opinion</option>";
+	    } else {
+		print "  <option>No opinion</option>";
+	    }
 	}
 	print "</select></td>\n";
     } else {
@@ -265,15 +274,18 @@ sub ProcessVote {
 	# indexed by voter key, preserving anonymity.)
 	# print "num_choices = $num_choices\n";
     for (my $i = 0; $i < $num_choices; $i++) {
-		my $rank = param('C'.$i);
-		if ($rank < 0) { $rank = 0; } # must be proportional
-		if ($rank > 999) { $rank = 999; } # must be proportional
-		if ($vote eq '') {
-	    	$vote = $rank;
-		} else {
-		    $vote = $vote.",".$rank
-		}
-		$rank[$i] = $rank;
+	my $rank = param('C'.$i);
+	if ($proportional && !$use_combined_ratings) {
+	    $rank = $num_choices - $rank; # invert
+	}
+	if ($rank < 0) { $rank = 0; } # must be proportional
+	if ($rank > 999) { $rank = 999; } # must be proportional
+	if ($vote eq '') {
+	$vote = $rank;
+	} else {
+	    $vote = $vote.",".$rank
+	}
+	$rank[$i] = $rank;
     }
     
     # Record vote, but not voter
