@@ -30,6 +30,7 @@ $election_end = $edata{'election_end'};
 $public = $edata{'public'};
 $writeins = $edata{'writeins'};
 $proportional = $edata{'proportional'};
+$use_combined_weights = $edata{'use_combined_weights'};
 $choices = $edata{'choices'};
 @choices = split /[\r\n]+/, $choices;
 $num_choices = $#choices + 1;

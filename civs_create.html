@@ -78,15 +78,26 @@ the supervisor of the election you create.</p>
   <input id=writeins type="checkbox" name="writeins" value="yes">
   Allow voters to write in new choices.<br>
   <input id=proportional type="checkbox" name="proportional" value="yes">
-  Enforce proportional representation. (<a
-  href="proportional.html">What is this?</a>)</p>
+  Enforce proportional representation.
+  (<a href="proportional.html">What is this?</a>)</br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If using proportional representation,
+  voters are assumed to be trying to maximize:
+  <input type="radio" name="weight_interpretation"
+       value="best_choice"
+       checked> weight of best choice
+  <input type="radio" name="weight_interpretation"
+       value="combined_weights"> combined weights of selected choices
+  </p>
+
 <div class="emphasized">
   <p>Make sure your e-mail address is correct because election information will
   be mailed to you. Voters will not be informed of the election's
   existence until you respond to this e-mail message to show that your address
   is good.</p>
   </div>
-  <p><input type="submit" value="Create election" name="submit"><input type="reset" value="Reset" name="reset"></p>
+  <p><input type="submit" value="Create election" name="submit">
+  &nbsp;&nbsp;&nbsp;
+  <input type="reset" value="Clear form" name="reset"></p>
 </form>
 </body>
 

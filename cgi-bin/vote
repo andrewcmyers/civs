@@ -239,13 +239,24 @@ if ($proportional ne 'yes') {
     how the Condorcet voting system works, <a
     href=$civs_url>click here</a></p>\n\n";
 } else {
-    print "<p>This election is decided using an experimental
+    print '<p>This election is decided using an experimental
     Condorcet-based algorithm designed to provide proportional
     representation. Please give each of the following choices a
     <b>weight</b> that expresses how much you want the
-    choice to be one of the winners. It is assumed by the
-    voting algorithm that you want the sum of weights of
-    selected choices to be as large as possible. All choices
+    choice to be one of the winners.';
+    if ($use_combined_weights) {
+	print ' It is assumed by the voting algorithm that you want
+		the sum of weights of selected choices to be as large
+		as possible. ';
+    } else {
+	print ' It is assumed by the voting algorithm that you want
+		the weight of your most preferred selected choice to be as
+		large as possible, and if two sets of selected choices
+		agree on the selected choice you prefer most, then you
+		would decide between them using the second most preferred
+		choice, and so on. ';
+    }
+    print "All choices
     are currently given a weight of zero, meaning that you
     have no interest in seeing them selected. Weights cannot
     be negative or larger than 999.

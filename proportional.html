@@ -137,8 +137,16 @@ one committee over another. In proportional representation mode, there
 is only one difference from the voter's perspective: instead of ranking
 the candidates, the voter gives
 a nonnegative <b>weight</b> to each candidate. The voting algorithm
-assumes that the voter's goal is to maximize the total weight
-of selected candidates. Weights make it possible to compare
+decides which of two committees would be preferred by a candidate using
+one of two criteria, <i>combined weights</i> or <i>best candidate</i>:
+
+<p>
+<strong>Combined weights.</strong>
+The voter's goal is to maximize the total weight
+of selected candidates. This is an appropriate criterion for elections where
+the quality of all the candidates is important to the voters, such as
+the election of an actual committee that will be voting on some issues.
+Weights make it possible to compare
 sets of candidates with different cardinality. For example,
 suppose that a voter wants candidates <i>A</i>, <i>B</i>,
 and <i>C</i>, in that
@@ -152,24 +160,36 @@ greater representation under <i>BC</i>. Using weights this can be determined: if
 10 and <i>B</i> and <i>C</i> have weights 8 and 6 respectively, then the voting
 algorithm will (on the voter's behalf) work towards electing
 <i>BC</i> in preference to <i>A</i>, because 14 &gt; 10. However, if <i>B</i> and <i>C</i> were instead given weights 4 and 2, the voter would have expressed that <i>A</i> is preferred to <i>BC</i> because 6 &lt; 10.<br>
-
 </p>
 
+<p>
+<strong>Best candidate.</strong>
+With this criterion, the voter's goal is to get a single very good candidate
+elected possible, and the quality of other elected candidates is a strictly
+secondary consideration.  This is appropriate for an election where the voter
+really only cares about the best candidate: for example, the selection of a
+set of entree dishes for a menu, where the voter will probably only eat one of
+the entrees.  Here, two committees are compared using their best candidates
+(according to the voter) other candidates are considered only if the voter has
+no preference between the best candidates. In the examples above, <i>A</i>
+would be preferred to <i>BC</i> in either case, because <i>A</i> is preferred
+to <i>B</i>.</p>
 
 <h2>Algorithm</h2>
 
 <p>
-The difficulty with the scheme described above is that in
-its brute-force form it requires computing a preference
-matrix for all <i>f</i> in 1..<i>k</i>, and the matrix has size
-<b>C</b>(<i>c</i>,<i>k</i>)&times;<b>C</b>(<i>c</i>,<i>k</i>)
-where <i>c</i> is the number of candidates and <b>C</b> is
-the choose function. The storage overhead is
-prohibitive for large <i>n</i> and <i>k</i>.
+The voting scheme described above can be evaluated in
+a brute-force form by computing a preference
+matrix for all <i>f</i> in 1..<i>k</i>, where the matrix has size
+<b>C</b>(<i>c</i>,<i>k</i>)&times;<b>C</b>(<i>c</i>,<i>k</i>),
+where <i>c</i> is the number of candidates, and <b>C</b> is
+the choose function. The storage and computational overhead of
+a brute-force compuation is prohibitive for even moderately
+large <i>n</i> and <i>k</i>.
 </p>
 
 <p>The current technique for identifying the winning committee is less
-expensive but incomplete. The current implementation performs a local
+expensive but may be incomplete. The current implementation performs a local
 search through the space of committees to identify the Schwartz set of
 committees: all committees that are beaten only by other committees in
 the set. (However, the correctness of the algorithm depends on a

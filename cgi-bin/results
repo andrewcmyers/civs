@@ -320,6 +320,7 @@ print "<pre>";
 	for ($k = 1; $k <= $f; $k++) {
 	    $sum1 += $w1[$num_winners - $k];
 	    $sum2 += $w2[$num_winners - $k];
+	    if ($sum1 != $sum2 && !$use_combined_weights) { last; }
 	}
 	#print "Results before trimming are @w1 and @w2\n";
 	#print "Admissible weight totals are $sum1, $sum2\n";

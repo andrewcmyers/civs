@@ -76,6 +76,16 @@ if ($writeins eq 'yes') {
     print 'Write-in choices are not allowed.', br();
 }
 
+if ($proportional eq 'yes') {
+    if ($use_combined_weights) {
+	print 'This election uses the proportional representation
+	    algorithm with the combined-weights voter criterion.',br();
+    } else {
+	print 'This election uses the proportional representation
+	    algorithm with the best-candidate voter criterion.',br();
+    }
+}
+
 print h2('Description:'), p($description);
 print h2("Candidates");
 if ($num_winners == 1) {
