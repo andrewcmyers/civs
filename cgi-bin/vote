@@ -64,14 +64,15 @@ if (param('Vote') ne '') {
 	}
 	$rank[$i] = $rank;
     }
-    $vdata{$voter_key} = $vote;
+    #$vdata{$voter_key} = $vote;  # Vote is recorded but not actual voter
+    $vdata{$voter_key} = 'voted';  # Only fact of voting is recorded
 
     open(LOG, ">>$election_log");
     print LOG "Election: $title ($election_id) : Recorded vote from voter key $voter_key\n";
     close(LOG);
 
 # Now, update matrix.
-# Note: vdate{"2.3"} contains the number of votes where
+# Note: vdata{"2.3"} contains the number of votes where
 # candidate 2 beats candidate 3 (i.e., has lower
 # numbered rank)
     for ($j = 0; $j < $num_choices; $j++) {

@@ -55,17 +55,17 @@ sub transitive_closure {
     for (local $i = 0; $i < $n; $i++) {
       for (local $j = 0; $j < $n; $j++) {
 # consider going from i to j via k
+# m_ij = max(m_ij, min(s1,s2))
 	local $s = min($matrix[$i][$k], $matrix[$k][$j]);
 	if ($s > $matrix[$i][$j]) {
 	    $matrix[$i][$j] = $s;
 	}
-# m_ij = max(m_ij, min(s1,s2))
       }
     }
   }
 }
  
-# Return the winner or winners in @winners, according to
+# Return the winner or winners in @winner, according to
 # the transitive beatpath closure of @matrix. These
 # are the candidates that are unbeaten. Candidates whose
 # corresponding entry in @ignore is 1 are ignored, others
@@ -90,32 +90,6 @@ sub winners {
   }
 }
 
-# Return the loser or losers in @losers, according to
-# the transitive beatpath closure of @matrix. These
-# are the candidates that don't beat anyone. Candidates whose
-# corresponding entry in @ignore is 1 are ignored, others
-# are considered both as possible losers and as beaters.
-sub losers {
-  @loser = ();
-  for (local $i = 0; $i < $n; $i++) {
-    if (!$ignore[$i]) {
-      local $won_any = 0;
-      for (local $j = 0; $j < $n; $j++) {
-	if (!$ignore[$j]) {
-	  if ($matrix[$i][$j] > $matrix[$j][$i]) {
-	    $won_any = 1;
-	    last;
-	  }
-	}
-      }
-      if (!$won_any) {
-	push @loser, $i
-      }
-    }
-  }
-}
-
-
 # Rank the $n candidates using the raw
 # information in $matrix, according to
 # the beatpath winner criterion. Place
@@ -128,8 +102,6 @@ sub rank_candidates {
   transitive_closure();
 
   local $num_ranked = 0;
-  losers();
-  foreach $j (@loser) { $ignore[$j] = 1; }
   $num_ranked += $#loser + 1;
   @result = ();
   while ($num_ranked < $n) {
