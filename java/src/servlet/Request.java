@@ -9,19 +9,30 @@ import javax.servlet.http.HttpServletRequest;
  * and requests that are part of an existing session.
  */
 public class Request {
+	Servlet servlet;
 	HttpServletRequest request;
-	public Request(HttpServletRequest req) {
+	public Request(Servlet srv, HttpServletRequest req) {
+		servlet = srv;
 		request = req;
 	}
 	public String getParam(Input inp) {
 		String name = inp.getName();
 		return request.getParameter(name);
 	}
-	boolean startsSession() {
+	public String action() {
+		return request.getParameter("do");
+	}
+	/** Return the associated session, or null if there is none. */
+	public Session session() {
 		String session_name = request.getParameter("session");
-		Session session = findSession(session_name)
-		  catch (BadSession e) {
-		  	return false;		  
-		  }
+		if (session_name == null) return null;
+		try {
+			return servlet.findSession(session_name);
+		} catch (SessionNotFound exc) {
+			return null;
+		}
+	}
+	public HttpServletRequest expose() {
+		return request;
 	}
 }

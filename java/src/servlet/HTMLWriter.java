@@ -11,6 +11,7 @@ import java.io.PrintWriter;
  */
 public class HTMLWriter {
 	int indent = 0;
+	boolean noindent = false;
 	int pos = 0;
 	Stack s = new Stack();
 
@@ -37,8 +38,10 @@ public class HTMLWriter {
 	}
 	public void breakLine() {
 		writer.print("\r\n");
-		for (int i = 0; i < indent; i++) {
-			writer.print(" ");
+		if (!noindent) {
+			for (int i = 0; i < indent; i++) {
+				writer.print(" ");
+			}
 		}
 		pos = indent;
 	}
@@ -51,6 +54,11 @@ public class HTMLWriter {
 	public void end() {
 		indent = ((Integer)s.pop()).intValue();
 	}
+	
+	public void noindent(boolean b) {
+		noindent = b;
+	}
+	
 	public void close() {
 		writer.close();
 	}
@@ -72,7 +80,6 @@ public class HTMLWriter {
 					break;
 			    case '\r':
 				case '\n':
-					writer.print("\r\n");
 					if (i+1 < s.length() &&
 							(int) c + (int) s.charAt(i+1) == 23)
 						i++; // catch \r\n and consume both.

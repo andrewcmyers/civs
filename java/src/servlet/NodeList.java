@@ -12,8 +12,7 @@ public class NodeList extends Node {
 	public NodeList(Node n1) {
 		first = n1;
 		rest = null;
-	}
-	
+	}	
 	public NodeList(Node n1, Node n2) {
 		first = n1;
 		rest = new NodeList(n2);	

@@ -1,9 +1,10 @@
 #!/bin/bash
 
 TestAndCreateDir() {
-    if [ ! -d $1 ]; then
-	#echo "Directory $1 does not exist. Creating it.";
-        mkdir $1;
+    # echo "Checking for directory $1"
+    if test ! -d "$1"; then
+	echo "Directory $1 does not exist. Creating it.";
+        mkdir "$1";
     fi
 }
 
@@ -18,38 +19,42 @@ fi
 
 echo "Read settings file $1."
 
-TestAndCreateDir $HTMLDIR;
-TestAndCreateDir $SERVLETDIR;
-TestAndCreateDir $CLASSDIR;
-TestAndCreateDir $CIVSDATADIR;
-TestAndCreateDir $CIVSDATADIR/elections;
+TestAndCreateDir "$SERVLETDIR";
+TestAndCreateDir "$HTMLDIR";
+TestAndCreateDir "$CIVSDATADIR";
+TestAndCreateDir "$CIVSDATADIR/elections";
+
+CIVSDATADIR=`echo $CIVSDATADIR | sed -e 's@\\\\@\\\\\\\\@g' \
+                                     -e 's@ @\\\\ @g'` || exit 1
 
 Subst() {
     base="`basename $1`"
     sed  < "$1" \
 	 > "$2/$base" \
-	    -e 's|@HTMLDIR@|'$HTMLDIR'|'\
-	    -e 's|@THISHOST@|'$THISHOST'|' \
-	    -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
-	    -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
-	    -e 's|@CIVSURL@|'$CIVSURL'|' \
-	    -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
-	    -e 's|@SMTPHOST@|'$SMTPHOST'|' \
-	    -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
-	    -e 's|@ADDTOPATH@|'$ADDTOPATH'|'
+	    -e 's|@HTMLDIR@|'"$HTMLDIR"'|'\
+	    -e 's|@THISHOST@|'"$THISHOST"'|' \
+	    -e 's|@CIVSDATADIR@|'"$CIVSDATADIR"'|' \
+	    -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|' \
+	    -e 's|@CIVSURL@|'"$CIVSURL"'|' \
+	    -e 's|@SUPERVISOR@|'"$SUPERVISOR"'|' \
+	    -e 's|@SMTPHOST@|'"$SMTPHOST"'|' \
+	    -e 's|@LOCALDEBUG@|'"$LOCALDEBUG"'|' \
+	    -e 's|@ADDTOPATH@|'"$ADDTOPATH"'|'
 }
 
 for f in html/*.html html/*.css html/*.js
 do
-    Subst $f $HTMLDIR
+    Subst $f "$HTMLDIR"
 done
 
-webinf=$SERVLETDIR/WEB-INF
-classes=$webinf/classes
+webinf="$SERVLETDIR/WEB-INF"
+TestAndCreateDir "$webinf"
+classes="$webinf/classes"
+TestAndCreateDir "$classes"
 
-Subst web.xml $webinf
-cp -r classes/civs $classes
-cp -r classes/servlet $classes
+Subst web.xml "$webinf"
+cp -r classes/civs "$classes"
+cp -r classes/servlet "$classes"
 
 if [ ! -s $CIVSDATADIR/private_host_id ]; then
     echo "*********************************************";

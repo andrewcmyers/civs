@@ -8,6 +8,10 @@
     <servlet>
       <servlet-name>civs</servlet-name>
       <servlet-class>civs.Main</servlet-class>
+      <init-param>
+	<param-name>CIVSDATADIR</param-name>
+	<param-value>@CIVSDATADIR@</param-value>
+      </init-param>
     </servlet>
     <servlet-mapping>
       <servlet-name>civs</servlet-name>
@@ -50,9 +54,4 @@
       <session-timeout>30</session-timeout>    <!-- 30 minutes -->
     </session-config>
 
-    <env-entry>
-      <env-entry-name>CIVSDATADIR</env-entry-name>
-      <env-entry-value>@CIVSDATADIR@</env-entry-value>
-      <env-entry-type>java.lang.String</env-entry-type>
-    </env-entry>
 </web-app>
