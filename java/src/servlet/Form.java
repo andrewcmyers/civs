@@ -2,14 +2,13 @@ package servlet;
 
 /** A Form contains Inputs and generates requests. */
 public class Form extends Container {
-	String action;
+	Action action;
 	String servlet_url;
-	String session_name;
-	Form(Node n, String action_, Session session) {
+	Form(Node n, Action action_, Servlet srv) {
 		super("form", n);
 		action = action_;
-		session_name = session.name();
-		servlet_url = session.servlet().url();
+		servlet_url = srv.url();
+		srv.addAction(action);
 	}
 	public void writeOptions(HTMLWriter p) {
 		p.print(" ");
@@ -19,16 +18,21 @@ public class Form extends Container {
 		p.print("enctype=\"multipart/form-data\"");
 		p.breakLine();
 		p.print("action=");
-		p.printq(servlet_url + "/" + action);
+		p.printq(servlet_url);
 		p.end();		
 	}
+	
+	void hidden(HTMLWriter p, String name, String value) {
+		p.print("<input type=\"hidden\" name=");
+		p.printq(name);
+		p.print(" value=");
+		p.printq(value);
+		p.print(" />");
+	}
+	
 	public void writeContents(HTMLWriter p) {
-		contents.write(p);
-		p.breakLine();
-		p.print("<input type=\"hidden\" name=\"session\" value=");
-		p.printq(session_name);
-		p.print("/>");
-		p.breakLine();
-		p.print("<input type=\"submit\" value=\"Submit\">");
+		contents.write(p); p.breakLine();
+		hidden(p, "action", action.name.toHex()); p.breakLine();
+		p.print("<input type=\"submit\" value=\"Submit\" />");
 	}
 }

@@ -7,5 +7,8 @@ package servlet;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class SessionNotFound extends Exception {
-	
+	public final String name;
+	public SessionNotFound(String n) {
+		name = n;
+	}
 }

@@ -78,21 +78,15 @@ public class HTMLWriter {
 				case '>':
 					print("&gt;");
 					break;
-			    case '\r':
-				case '\n':
-					if (i+1 < s.length() &&
-							(int) c + (int) s.charAt(i+1) == 23)
-						i++; // catch \r\n and consume both.
-					breakLine();					
-					break;
 				default:
 					int code = (int)c;
-				    if (code >= 0x20 && code <= 0x7E || code >= 0xA0 && code <= 0xFF) {
+				    if (code >= 0x20 && code <= 0x7E) {
 				    	writer.print(c);
 				    	pos++;				    
 				    } else {
 				    	writer.print("&#");
 				    	writer.print(code);
+				    	writer.print(";");
 				    }
 				    break;
 			}		

@@ -4,16 +4,18 @@ import java.util.HashMap;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.util.Set;
-import java.util.HashSet;
 
+import java.util.Map;
+
+/** A servlet contains the information that is shared across users and sessions.
+ * It converts between the Java HttpServlet request processing style and this one. */
+ 
 abstract public class Servlet extends HttpServlet {
 
 	Nonce nonce;
 	String hostID; // a secret identifier used to construct nonces, sign msgs, etc.
 	int concurrent_requests;
-	HashMap sessions; // map from session ids to Sessions
-	Set start_actions;
+	Map actions;
 	String style_sheet_url;
 	boolean initialized = false;
 		
@@ -31,7 +33,7 @@ abstract public class Servlet extends HttpServlet {
 	public final void init(ServletConfig sc) throws ServletException {
 		super.init(sc);
 		nonce = new Nonce(this);
-		start_actions = new HashSet();
+		actions = new HashMap();
 		
 		initialize();
 	}
@@ -44,15 +46,12 @@ abstract public class Servlet extends HttpServlet {
 						new Body(body));
 	}
 	
-	public final Node createForm(String action, Node body, Session session) {
-		return new Form(body, action, session);
+	public final Node createForm(Action action, Node body) {
+		return new Form(body, action, this);
 	}
-	public abstract Page get(Session session, Request req)
-	  throws ServletException;
-	
+		
 	public final void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws IOException, ServletException {
-		boolean ok = true;
 		increment_req_cnt();
 		try {
 			response.setContentType("text/html");
@@ -60,20 +59,48 @@ abstract public class Servlet extends HttpServlet {
 			Request req = new Request(this, request);
 			PrintWriter rw = response.getWriter();
 			
-			servlet.Session session = req.session();
-			String action = req.action();
-			if (session == null) {
-				if (start_actions.contains(action)) {
-					session = new Session(this);
-				} else {
-					Node n = reportError("Access violation", "No Session",
-							"Request (" + action + ") has no session identifier.");
+			String request_name = req.request_name();
+			
+			servlet.Action action = null;
+			
+			if (request_name == null) {				
+				String action_name_s = req.action_name();
+				if (action_name_s == null) {
+					Node n = reportError("Access violation", "Improper request",
+					"The request includes no action identifier");
 					n.write(new HTMLWriter(rw));
-					ok = false;
+				} else {
+					Name action_name = null;
+					boolean ok = true;
+					try {
+					   action_name = new Name(action_name_s);
+					} catch (IllegalArgumentException e) {
+						Node n = reportError("Access violation", "Invalid action",
+						"The action identifier " + action_name_s + " is ill-formed (" + e + ").");
+						n.write(new HTMLWriter(rw));
+						ok = false;
+					}
+					// decode hex
+					if (ok && actions.containsKey(action_name)) {
+						action = (Action) actions.get(action_name);
+					} else {
+						Node n = reportError("Access violation", "Invalid Action",
+								"The action identifier in the request is invalid: \"" + action_name_s + "\"");
+						n.write(new HTMLWriter(rw));
+					}
 				}
-			}
-			if (ok) {
-				Node n = get(session, req);
+			} else {
+				if (actions.containsKey(request_name)) {
+					action = (Action) actions.get(request_name);
+				} else {
+					Node n = reportError("Access violation", "Invalid Request",
+							"The request operation is invalid: \"" + request_name + "\"");
+					n.write(new HTMLWriter(rw));
+				}
+			}				
+	
+			if (action != null) {
+				Node n = action.invoke(req);
 				
 				if (n != null) {
 					n.write(new HTMLWriter(rw));
@@ -112,16 +139,15 @@ abstract public class Servlet extends HttpServlet {
 	
 	public abstract String getPrivateHostID() throws ServletException;
 	
-	public final Session findSession(String name) throws SessionNotFound {
-		Object o = sessions.get(name);
-		if (o == null) throw new SessionNotFound();
-		return (Session)o;
+	final void addAction(Action a) {
+		Name n = a.name;
+		actions.put(n, a);
 	}
 	
 	/** Set up this action as a way to create a new session.  Means that
 	 * these actions can be invoked from "outside" the system, as a URL.
 	 */
-	public final void addSessionStart(String action) {
-		start_actions.add(action);
+	public final void addStartAction(String action_name, Action action) {
+		actions.put(action_name, action);
 	}
 }

@@ -31,6 +31,6 @@ public class TextInput extends Input {
 		p.print(" value=");
 		p.printq(initial_text);
 		p.end();
-		p.print(">");
+		p.print(" />");
 	}
 }

@@ -19,20 +19,23 @@ public class Request {
 		String name = inp.getName();
 		return request.getParameter(name);
 	}
-	public String action() {
-		return request.getParameter("do");
+	public String action_name() {
+		return request.getParameter("action");
 	}
-	/** Return the associated session, or null if there is none. */
-	public servlet.Session session() {
+	public String request_name() {
+		return request.getParameter("request");
+	}
+	
+	/** Return the associated session, or null if there is none.
+	 * Initial requests do not reference a session. 
+	public servlet.Session session() throws SessionNotFound {
 		String session_name = request.getParameter("session");
 		if (session_name == null) return null;
-		try {
-			return servlet.findSession(session_name);
-		} catch (SessionNotFound exc) {
-			return null;
-		}
+		return servlet.findSession(session_name);
 	}
+	
 	public HttpServletRequest expose() {
 		return request;
 	}
+	*/
 }

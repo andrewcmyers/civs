@@ -9,11 +9,10 @@ import javax.servlet.ServletException;
 /**
  * @author andru
  * 
- * Support for generating random nonces.
- * Should this be all static or should there be a different Nonce
- * per servlet or per session? */
+ * Support for generating random nonces. A Nonce objects is
+ * a generator for nonces.
+ **/
 public class Nonce {
-	private String name;
 	private Servlet servlet;
 	private byte[] seed;
 	MessageDigest md;
@@ -29,17 +28,19 @@ public class Nonce {
 		  	System.out.println("Cannot create an MD5 digester.");
 		  }
 		initialize_seed();
-		name = generate();
 	}
-	/** The name of the nonce as a string. */
-	public String name() { return name;	}
-	/** Generate a random string that can be used as a nonce. */
-	public String generate() {
+	
+	/** Generate a pseudo-random sequence of bytes that
+	 * can be used as a nonce. */
+	public Name generate() {
 		md.reset();
 		md.update(seed);
-		byte[] result = md.digest();
-		seed = result;
-		return new String(result);
+		seed = md.digest();
+		byte[] result = new byte[8];
+		for (int i = 0; i < 8; i++) {
+			result[i] = seed[i];
+		}
+		return new Name(result);
 	}
 	void addRandom() throws IOException {		
 		char sep = File.separatorChar;
