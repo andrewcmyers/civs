@@ -1,18 +1,31 @@
 #!/bin/sh
 
+TestAndCreateDir() {
+    if [ ! -d $1 ]; then
+	#echo "Directory $1 does not exist. Creating it.";
+        mkdir $1;
+    fi
+}
+
+
 if test $# -ne 1
 then
-  echo "Usage: install-civs <settings-file>"
-  exit 1
+  echo "Usage: install-civs <settings-file>";
+  exit 1;
 fi
 
 . $1 || exit 1
 
 echo "Read settings file"
 
+TestAndCreateDir $HTMLDIR;
+TestAndCreateDir $CGIBINDIR;
+TestAndCreateDir $CIVSDATADIR;
+TestAndCreateDir $CIVSDATADIR/elections;
+
     for f in civs_create.html index.html public_elections.html proportional.html sec_priv.html style.css
     do
-	echo "copying $f to $HTMLDIR/$f"
+	#echo "copying $f to $HTMLDIR/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
 	     -e 's|@THISHOST@|'$THISHOST'|' \
@@ -28,7 +41,7 @@ echo "Read settings file"
 	create_election election.pm mail.pm results \
 	start_election vote
     do
-	echo "copying cgi-bin/$f"
+	#echo "copying cgi-bin/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
 	     -e 's|@THISHOST@|'$THISHOST'|' \
@@ -38,4 +51,21 @@ echo "Read settings file"
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
 	< "cgi-bin/$f" > "$CGIBINDIR/$f"
+	chmod a+x "${CGIBINDIR}/$f";
     done
+
+    if [ ! -s $CIVSDATADIR/private_host_id ]; then
+	echo "*********************************************";
+	echo "                 WARNING                     ";
+	echo "*********************************************";
+	echo "";
+	echo "No private key exists for the server!";
+	echo "";
+	echo "You must create the file $CIVSDATADIR/private_host_id";
+	echo "See the INSTALL file for more information.";
+	echo "";
+    fi
+    
+echo "Install completed.  Check for any errors reported above.";
+
+

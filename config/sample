@@ -1,0 +1,40 @@
+# This is a sample CIVS config file, for use with the install-civs script.
+
+# The address of the web server that is hosting CIVS
+THISHOST='MyServer.MyUniversity.edu'
+
+# The email address of the election server supervisor.  This should
+# probably be YOUR address.
+SUPERVISOR='username@MyUniversity.edu'
+
+# The address of the SMTP server that CIVS will use to send email.
+# This server must be willing to accept email from $SUPERVISOR.
+SMTPHOST='smtp.cs.cornell.edu'
+
+# The filesystem path on the web server to the Perl interpreter
+PERL='/usr/bin/perl'
+
+# The filesystem path on the web server to the directory containing 
+# the CIVS HTML files, and the directory containing the CGI scripts.  
+# Probably these will not be the same directory.
+# These example directory names assume that the CIVS
+# installation is under user <username>, that the web server
+# recognizes public_html as a source for web documents, and that
+# the web server is willing to run CGI scripts from public_cgi-bin.
+HTMLDIR='/home/username/public_html/civs'
+CGIBINDIR='/home/username/public_cgi-bin/civs'
+
+# The filesystem path on the web server to the directory containing
+# the CIVS data for each election.  This directory contains the server's
+# private key, all the ballots cast in elections, etc.  So it would be
+# advisable for this *not* to be publicly accessible.
+CIVSDATADIR='/home/username/civs'
+
+# The URL path to the CIVS CGI scripts.  This is relative to $THISHOST.
+# I.e., the scripts will be found at http://$THISHOST$CIVSBINURL.
+CIVSBINURL='/cgi-bin/test/civs'
+
+# The full URL to the homepage of the CIVS server.
+CIVSURL='http://MyServer.MyUniversity.edu/~username/civs'
+
+

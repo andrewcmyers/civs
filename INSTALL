@@ -1,0 +1,34 @@
+Condorcet Internet Voting System
+Version 2.1
+Copyright 2004, Andrew C. Myers
+
+INSTALLATION INSTRUCTIONS
+
+1. Create a configuration file.  You will find it helpful to use 
+   config/sample as a template.  The configuration file specifies
+   certain constants that localize the CIVS installation to your system:
+   file system paths, URLs, email addresses, server names, etc.
+
+2. Run the install script.  Assuming your working directory is the CIVS install
+   directory, you would do this by invoking:
+
+      ./install-civs config/my_config_file
+
+   Of course, you would replace "my_config_file" with the name of the file
+   you created in step 1.
+
+   Check for any errors reported by the install script and try to correct them.
+   The most likely warning that the install script will report is that
+   the $CIVSDATADIR/private_host_id file does not exist.  The data in
+   this file acts as the server's private key.  There is no requirement
+   on the format of this file.  It is suggested that you fill it
+   with some number of randomly-generated bits, but English text will
+   suffice.  
+
+3. Test the server installation by browsing to $CIVSURL, creating an election,
+   adding yourself as a voter, opening the election, voting in the election,
+   closing the election, and viewing the results.
+
+
+Good luck!
+
