@@ -13,7 +13,6 @@ use IO::Handle;
 
 $thisurl = $civs_bin_path."/results";
 
-
 print header(), start_html("Condorcet Internet Voting Service");
 use election;
 
@@ -21,6 +20,7 @@ CIVS_Header("Election Results");
 
 CheckElectionID;
 CheckStarted;
+
 if ($public ne 'yes') {
     CheckStopped;
 }
@@ -280,7 +280,7 @@ print "<pre>";
     }
     #print "num choices = $num_choices, num winners = $num_winners\n";
     for ($i = 0; $i < $num_winners && $i < $num_choices; $i++) {
-	$curr_comm[$i] = $i;
+	$curr_comm[$i] = $i + $num_choices - $num_winners - 1;
     }
 
     if ($num_choices > $num_winners) {
@@ -306,6 +306,45 @@ print "<pre>";
 # %cindex is the index of committees
 # $borm[ci1][ci2] is whether comm with index ci2 beats or matches
 #    (transitively) the one with ci2
+
+	$found_schwartz = 0;
+	sub compare_sets {
+# compare_sets compares $curr_comm and $new_comm and returns
+# 1 if the latter is better.
+	    #print "Replacing $new_comm[$i] with $j at index $i\n";
+	    $new_comm[$i] = $j;
+	    @new_comm = sort @new_comm;
+	    $new_comm = flatten @new_comm;
+	    # print "$curr_comm vs. $new_comm: ";
+	    local $bestpref = 0;
+	    local $bestipref = 0;
+	    local $bestjpref = 0;
+	    for (local $f = 1; $f <= $num_winners; $f++) {
+		kPref($f, $curr_comm, $new_comm);
+		if ($ipref > $bestpref) { $bestipref = $ipref; }
+		if ($jpref > $bestpref) { $bestjpref = $jpref; }
+		if ($bestipref > $bestpref) { $bestpref = $bestipref; }
+		if ($bestjpref > $bestpref) { $bestpref = $bestjpref; }
+	    }
+	    #print "best f-preference tally yields $bestipref to $bestjpref\n";
+	    if ($bestjpref > $bestipref) {
+		$tally{$curr_comm}{$new_comm} =
+		    "$bestipref,$bestjpref";
+		visit($new_comm);
+		return 1;
+	    } elsif ($bestjpref == $bestipref) {
+		kPref(0, $curr_comm, $new_comm);
+		#print "weak pref: $ipref to $jpref\n";
+		$weaktally{$curr_comm}{$new_comm} =
+		    "$ipref,$jpref";
+		if ($jpref > $ipref ||
+		    $found_schwartz && $jpref == $ipref) {
+		    visit($new_comm);
+		    return 1;
+		}
+	    }
+	    return 0;
+	}
 	sub visit {
 # visit(c): visit all the committees that beat
 #   or match c, where b is a set of committees
@@ -318,11 +357,15 @@ print "<pre>";
 	    local $curr_comm = $_[0];
 	    local @curr_comm = split /,/, $curr_comm;
 	    local $cci;
-	    if (!$visited{$curr_comm}) {
+	    local $schwartz = 0;
+	    if ($found_schwartz) { $schwartz = 1; }
+	    if ($visited{$curr_comm}) {
+		print "$curr_comm is in a cycle (in the Schwartz set?)\n";
+	    } else {
 		$cci = $#committee + 1;
 		$committee[$cci] = $curr_comm;
 		$cindex{$curr_comm} = $cci;
-		print "<b>Considering set: $curr_comm ($#committee)</b>\n";
+		print "<b>Considering set: $curr_comm (#$#committee)</b>\n";
 		$visited{$curr_comm} = 1;
 	    }
 	    $cci = $cindex{$curr_comm};
@@ -341,57 +384,27 @@ print "<pre>";
 	    if ($change) {
 		local @new_comm;
 		compute_in;
-		for (local $i = 0; $i < $num_winners; $i++) {
+		local $done = 0;
+		for (local $i = 0; $i < $num_winners && !$done; $i++) {
 # try improving each current member
-		    for (local $j = 0; $j < $num_choices; $j++) {
+		    for (local $j = 0; $j < $num_choices && !$done; $j++) {
 			@new_comm = @curr_comm;
 # try replacing with each choice not currently in the committee
 			if (!$in{$j}) {
-			    #print "Replacing $new_comm[$i] with $j at index $i\n";
-			    $new_comm[$i] = $j;
-			    @new_comm = sort @new_comm;
-			    $new_comm = flatten @new_comm;
-			    #print "$curr_comm vs. $new_comm: ";
-			    local $bestpref = 0;
-			    local $bestipref = 0;
-			    local $bestjpref = 0;
-			    for (local $f = 1; $f <= $num_winners; $f++) {
-				kPref($f, $curr_comm, $new_comm);
-				#print "...result is $ipref, $jpref\n";
-				if ($ipref > $bestpref) {
-				    $bestipref = $ipref;
-				}
-				if ($jpref > $bestpref) {
-				    $bestjpref = $jpref;
-				}
-				if ($bestipref > $bestpref) {
-				    $bestpref = $bestipref;
-				}
-				if ($bestjpref > $bestpref) {
-				    $bestpref = $bestjpref;
-				}
+			    local %save_in = %in;
+			    if (compare_sets) {
+				if (!$found_schwartz || !$schwartz) { $done = 1; }
 			    }
-			    #print "best f-preference tally yields $bestipref to $bestjpref\n";
-			    if ($bestjpref >= $bestipref) {
-				$tally{$curr_comm}{$new_comm} =
-				    "$bestipref,$bestjpref";
-				if ($bestjpref == $bestipref) {
-				    kPref(0, $curr_comm, $new_comm);
-				    #print "weak pref: $ipref to $jpref\n";
-				    $weaktally{$curr_comm}{$new_comm} =
-					"$ipref,$jpref";
-				    if ($jpref > $ipref) {
-					visit($new_comm);
-				    }
-				} else {
-				    visit($new_comm);
-				}
-			    }
+			    %in = %save_in;
 			} else { # in the committee
 			    # print "$j is already in the committee\n";
 			}
 		    } # for j
 		} # for i
+		if (!$done) {
+		    $found_schwartz = 1;
+		    print "$curr_comm is unbeaten by nearby sets\n";
+		}
 	    } # if change
 	    $beaten[$cci] = $save_beaten;
 	}
@@ -419,8 +432,8 @@ print "<pre>";
 	    if ($unbeaten[$i]) {
 		@curr_comm = split /,/, $committee[$i];
 		print "<td><ol>";
-		for ($i = 0; $i < $num_winners; $i++) {
-		    print "<li> ".$choices[$curr_comm[$i]]."\n";
+		for ($j = 0; $j < $num_winners; $j++) {
+		    print "<li> ".$choices[$curr_comm[$j]]."\n";
 		}
 		print "</ol></td>";
 	    }
@@ -428,12 +441,12 @@ print "<pre>";
 	print '</tr></table>';
     }
     if ($num_unbeaten == 1) {
-	print p("The Condorcet winner of this election was
+	print p("The (apparent) Condorcet winner of this election was
 	the following set of choices, which are not listed
 	in any particular order:");
 	printSchwartz;
     } else {
-	print p("There were several unbeaten committees:\n");
+	print p("There were several unbeaten sets:\n");
 	printSchwartz;
 	print p("A Condorcet completion algorithm needs to
 		be run to choose among them. This is not yet
