@@ -393,11 +393,12 @@ print "<pre>";
 			if (!$in{$j}) {
 			    local %save_in = %in;
 			    if (compare_sets) {
-				if (!$found_schwartz || !$schwartz) { $done = 1; }
+				if (!$schwartz) { $done = 1; }
+# if this committee isn't in the Schwartz set then there is
+# no reason to compare to any more committees, because we
+# already found at least one that is better than this one.
 			    }
 			    %in = %save_in;
-			} else { # in the committee
-			    # print "$j is already in the committee\n";
 			}
 		    } # for j
 		} # for i
@@ -441,8 +442,7 @@ print "<pre>";
 	print '</tr></table>';
     }
     if ($num_unbeaten == 1) {
-	print p("The (apparent) Condorcet winner of this election was
-	the following set of choices, which are not listed
+	print p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> Condorcet winner of this election was the following set of choices, which are not listed
 	in any particular order:");
 	printSchwartz;
     } else {

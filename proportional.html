@@ -140,18 +140,15 @@ prohibitive for large <i>n</i> and <i>k</i>.
 
 <p>The current technique for identifying the winning committee is
 less expensive but incomplete. The current implementation
-performs a local search through the space of committees until one
-is found that beats all "nearby" committees, where one committee
-is "nearby" another committee if the two differ only by the replacement
-of one member with another. From an arbitrary starting committee, 
-a new nearby committee is selected if it beats the current committee. This
-process is repeated until a committee is found that beats all nearby
-committees.  I conjecture that this strategy will
-always find the best committee if one exists. However, this conjecture
-remains unproved. The current algorithm is unable to deal with cycles
-among committees, either, and at the least it is necessary to run
-a Condorcet completion algorithm on the Schwartz set (at least some
-members of which I conjecture this algorithm will find.)
+performs a local search through the space of committees
+to identify the Schwartz set of committees: all
+committees that are beaten only by other committees in the
+set. (However, the correctness of the algorithm depends on a currently
+unproved conjecture: that if improvement of a committee is
+possible, it can be done by replacing one member at a time.)
+Currently the entire Schwartz set is reported; if there is
+more than one committee in the set it is necessary to run
+a Condorcet completion algorithm on the Schwartz set.
 As a result, the output of the system in this mode must be currently
 be interpreted with some caution.
 </p>
