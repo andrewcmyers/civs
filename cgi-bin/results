@@ -169,7 +169,7 @@ sub PrintNonproportionalDetails {
 
     PrintMatrix $num_choices, [@closure_matrix], [@choices], [@choice_index], 1;
 
-	&PrintMAM;
+	&PrintRP;
 	
     print h2('Ballot report');
 
@@ -307,17 +307,18 @@ sub details_bookmark {
 	return a({-name=>"details"}, "");
 }
 
-sub PrintMAM {
-    if (!param('MAM')) {
-	my $link = a({-href=>"$thisurl?id=$election_id&detailed=1&MAM=1#MAM"},
-		'Compare with MAM results (may be time-consuming)');
+sub PrintRP {
+    if (!param('RP')) {
+	my $link =
+	a({-href=>"$thisurl?id=$election_id&detailed=1&RP=1#RP"},
+		'Compare with ranked pairs results (may be time-consuming)');
 	print p($link);
     } else {
-	print a({-name=>'MAM'},h2('Simple MAM report'));
+	print a({-name=>'RP'},h2('Simple RP report'));
 
 	print p("The following is the result of running a partial
 	implementation of the 
-	<a href=\"http://alumnus.caltech.edu/~seppley/MAM%20procedure%20definition.htm\">
+	<a href=\"http://alumnus.caltech.edu/~seppley/RP%20procedure%20definition.htm\">
 	Maximize Affirmed Majorities algorithm</a>
 	on the ballots.
 	This process is more computationally intensive than
@@ -381,12 +382,13 @@ sub PrintMAM {
 	# print "</pre>";
 	if ($denied_any) {
 		print p('The following matrix reports all the preferences that were
-		affirmed. Any disagreement between MAM and Beatpath
+		affirmed. Any disagreement between Ranked
+		Pairs and Beatpath
 		Winner (if any) shows up as non-zero entries below the diagonal.
 		Note that this implementation does not correctly break ties.');
 	} else {
 		print p('All preferences were affirmed. The results of
-			running MAM agree with Beatpath Winner.');
+			running Ranked Pairs agree with Beatpath Winner.');
 	}
 
 	PrintMatrix $num_choices, [@affirmed], [@choices], [@choice_index], 1;

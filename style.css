@@ -42,8 +42,8 @@ table.banner h2 { color: white }
 	       background-color: transparent }
 .symbol      { font-family: Symbol, symbol }
 
-h1  { font-size: 240%; }
-h2  { font-size: 160%; }
+h1  { font-size: 180%; }
+h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
 pre, xmp { font-family: Courier New, Courier, monospace; margin-left: 1em;

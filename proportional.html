@@ -26,16 +26,15 @@
 </tbody>
 </table>
 
+<h2>Overview</h2>
 
 <p>
-CIVS now supports an experimental mode in which it can be
+CIVS supports an experimental mode in which it can be
 used to select multiple candidates while enforcing
 proportional representation. Roughly speaking, a set of voters can
 only influence the selection of a fraction of the selected
 candidates that is proportional to the number of voters.
 </p>
-
-<h2>Overview</h2>
 
 <p>
 For example, suppose that 60% of the voters want candidates
@@ -53,14 +52,13 @@ CIVS would elect the candidates <i>A</i>, <i>B</i>, <i>C</i>, <i>X</i>, and
 perfect proportional representation.
 </p>
 
-<h2>Determining the winning committee<br>
-</h2>
+<h2>Determining the winning committee</h2>
 
 The rule used is a generalization of ordinary Condorcet
-voting. The basic idea is to lift preferences expressed on
-individual candidates to preferences on whole committees of
-<i>k</i> members,
-then use the Condorcet criterion to pick the &ldquo;best&rdquo;
+voting. First, preferences expressed on
+individual candidates are lifted to obtain preferences on whole committees of
+<i>k</i> members. Then
+Condorcet methods are used to pick the &ldquo;best&rdquo;
 committee. The trick is to lift the preferences in a way
 that doesn't simply let a majority dictate the composition
 of the committee.
@@ -94,16 +92,16 @@ scheme is simply the ordinary Condorcet scheme. For
 larger <i>k</i>, it yields proportional results. In the
 above example, the 60% have no valid preference for
 <i>ABCDE</i> over <i>ABCXY</i> because their maximum
-valid preference is a 3-preference (3/6 &lt; 60% &lt; 4/6).
+valid preference is a 3-preference (3/6 &le; 60% &lt; 4/6).
 The 40%, on the other hand, have a valid 2-preference for the second result
-(because 2/6 &lt; 40% &lt; 3/6), so this is the winning committee,
+(because 2/6 &le; 40% &lt; 3/6), so <i>ABCXY</i> is the winning committee,
 as desired.</p>
 
 <p>The factor (<i>k</i>+1) may be surprising in the validity condition,
 but it actually agrees with proportional representation voting schemes
 developed elsewhere; it is analogous to the
 <a href="http://www.encyclopedia4u.com/d/droop-quota.html">
-Droop quota</a> used by many STV elections.
+Droop quota</a> used by many STV election methods.
 Suppose the factor were changed to
 <i>k</i>. In that case, a set of voters would be
 unable to influence the selection of a candidate unless they were large
@@ -133,16 +131,15 @@ Using a different criterion for when a proportional preference is valid
 would result in a higher level of overrepresentation in some cases.
 </p>
 
-<h2>Determining a voter's preference<br>
-</h2>
+<h2>Determining a voter's preference</h2>
 
-<p>There is still the question of how to decide whether a voter prefers
+<p>There is also the question of how to decide whether a voter prefers
 one committee over another. In proportional representation mode, there
 is only one difference from the voter's perspective: instead of ranking
 the candidates, the voter gives
 a nonnegative <b>rating</b> (or <b>weight</b>) to each candidate. The voting algorithm
 decides which of two committees would be preferred by a candidate using
-one of two criteria, <i>combined rating</i> or <i>best candidate</i>:
+one of two criteria, <i>combined ratings</i> or <i>best candidate</i>:
 
 <p>
 <a name="combinedrating">
