@@ -96,11 +96,11 @@ as capabilities. These keys are generated using a
 combination of random noise and secure hashing.
 <ul>
 <li>The server has a <i>private host key</i>
-that is used to authenticate data from the
-server. Compromising the private host key gives only limited
-ability to violate the privacy of CIVS voters. The private
-host key can be set automatically using random data or
-defined by the service manager.
+that is a secret input to the nonce generation process.
+The private host key can be set automatically using random data or
+defined by the service manager at installation time.
+Compromising the private host key is not very useful to an
+attacker (it was in the older CIVS protocol).
 </li>
 <li>For each election there is a <i>control key</i>
 that gives the ability to control the election as
