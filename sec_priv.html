@@ -185,7 +185,7 @@ information on the server doesn't allow the identity of the
 voter to be determined from the ballot.
 <li>
 The server reports the receipt <i>r</i> to the voter and
-forgets the receipt. This enables later checking that the
+then forgets <i>r</i>. This enables later checking that the
 ballot was cast properly, but only with the participation
 of the voter.
 </ol>
@@ -216,11 +216,10 @@ The server looks up {<i>v</i>}<sub>MD5</sub> in the current set of
 reports an error; otherwise, {<i>v</i>}<sub>MD5</sub> is added
 to the set of voter keys.
 <li>
-The server forgets <i>a</i> and <i>x</i>.
+It sends <i>v</i> to the e-mail address <i>e</i>, so the
+voter can later use it to vote.
 <li>
-It sends <i>v</i> to the e-mail address <i>e</i>.
-<li>
-The server forgets <i>e</i> and <i>v</i>.
+The server forgets <i>a</i>, <i>e</i> and <i>v</i>.
 </ol>
 
 <h2>Public election protocol</h2>
@@ -271,7 +270,7 @@ As in private elections, the server records the ballot indexed
 by the hash of the the receipt and the private host key.
 <li>
 The server reports the receipt <i>r</i> to the voter and
-forgets the receipt. This enables later checking that the
+then forgets <i>r</i>. This enables later checking that the
 ballot was cast properly, but only with the participation
 of the voter.
 </ol>
@@ -343,6 +342,10 @@ and the network are trusted components of the system.
 is nothing that a malicious voter can do to damage confidentiality
 or integrity.  In a public election, a malicious voter can vote
 multiple times by using a different IP address for each vote.
+If a voter in a private election
+claims that they did not receive their voter key,
+the same key can be reissued without giving them the ability
+to vote more than once.
 <li><strong>Malicious election supervisor.</strong>  A malicious 
 supervisor is capable of violating confidentiality and integrity
 in limited ways.  The supervisor cannot learn how or whether
@@ -363,7 +366,8 @@ which is normally not allowed for private elections.  In a public
 election for which the intruder knows the authorization key
 (perhaps because he is a voter in it), the intruder could guess
 IP addresses and query whether that IP address has voted.
-The intruder cannot learn how any voter has voted, however.
+The intruder cannot learn how any voter has voted unless the
+voter provides the intruder with his ballot receipt.
 <li><strong>Intruder with read-write access.</strong> Clearly, such
 an intruder can arbitrarily corrupt the integrity of ballots
 that have been cast.  He can also hijack control of an election,
@@ -371,12 +375,12 @@ becoming supervisor, by installing new control and authorization
 keys.  However, he cannot learn how previous or future voters 
 have voted, because these ballots are protected by a nonce 
 (the receipt).
-<li><strong>Election supervisor who is also an intruder
+<!-- <li><strong>Election supervisor who is also an intruder
 	    with read-write access.</strong>
-<li><strong>Malicious CIVS server operator.</strong>
+<li><strong>Malicious CIVS server operator.</strong> -->
 </ul>
 
-<i>(This section under construction)</i>
+<i>(This section still under construction)</i>
 
 </body>
 </html>
