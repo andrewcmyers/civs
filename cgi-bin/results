@@ -99,11 +99,11 @@ sub PrintMatrix {
 		$w = $m[$j][$k];
 		$l = $m[$k][$j];
 		if ($w > $l) {
-		    print '<td class="win">';
+		    print "<td class=\"win\" title=\"$choices[$j] beats $choices[$k] $w&ndash;$l\">";
 		} elsif ($w == $l) {
-		    print '<td class="tie">';
+		    print "<td class=\"tie\" title=\"$choices[$j] ties $choices[$k] $w&ndash;$l\">";
 		} else {
-		    print '<td class="lose">';
+		    print "<td class=\"lose\" title=\"$choices[$j] loses to $choices[$k] $w&ndash;$l\">";
 		}
 		if ($zerodot && $w == 0) {
 		    print '.';
