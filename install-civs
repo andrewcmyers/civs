@@ -68,8 +68,8 @@ TestAndCreateDir $CIVSDATADIR/elections;
 	echo "";
     fi
 
-    touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log
-    chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log
+    touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
+    chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
     cp gettimeofday $CIVSDATADIR/gettimeofday
     
 echo "Install completed.  Check for any errors reported above.";

@@ -1,5 +1,8 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use strict;
+use warnings;
+
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -8,9 +11,9 @@ use mail;
 use Socket;
 use IO::Handle;
 
-$thisurl = $civs_bin_path."/create_election";
+my $thisurl = $civs_bin_path."/create_election";
 
-$email_addr = param('email_addr');
+my $email_addr = param('email_addr');
 if (!($email_addr =~ m/.\@./)) {
     print header(), start_html("Invalid email address");
     HTML_Header("CIVS Election Creation");
@@ -21,9 +24,9 @@ if (!($email_addr =~ m/.\@./)) {
     exit 0;
 }
 
-$election_id = 'E_'.SecureNonce();
-$election_dir = $home.'/elections/'.$election_id;
-$election_data = $election_dir.'/election_data';
+my $election_id = 'E_'.SecureNonce();
+my $election_dir = $home.'/elections/'.$election_id;
+my $election_data = $election_dir.'/election_data';
 
 if (!mkdir($election_dir)) {
     HTML_Header("CIVS Election Creation");
@@ -34,58 +37,64 @@ if (!mkdir($election_dir)) {
     exit 0;
 }
 
-$db = tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
+my %edata;
+tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 
 ##### read form data
-$edata{'title'} = $title = param('title');
+$edata{'title'} = my $title = param('title');
 $edata{'description'} = param('description');
-$edata{'name'} = $name = param('name');
+$edata{'name'} = my $name = param('name');
 $edata{'email_addr'} = param('email_addr');
 $edata{'num_winners'} = param('num_winners');
 $edata{'election_end'} = param('election_end');
-$public = param('public');
-if ($public eq '') {
+my $public = param('public');
+if (!defined($public) or $public eq '') {
     $public = "no";
 }
 $edata{'public'} = $public;
-$writeins = param('writeins');
-if ($writeins eq '') {
+my $writeins = param('writeins');
+if (!defined($writeins) or $writeins eq '') {
     $writeins = 'no';
 } else {
     $writeins = 'yes';
 }
 $edata{'writeins'} = $writeins;
-$proportional = param('proportional');
-if ($proportional eq '') {
+my $proportional = param('proportional');
+if (!defined($proportional) or $proportional eq '') {
     $proportional = 'no';
 } else {
     $proportional = 'yes';
 }
 $edata{'proportional'} = $proportional;
 
-$choices = param('choices');
-$choices_file = param('choices_file');
-while (<$choices_file>) {
-    $choices .= $_;
+my $choices = param('choices');
+my $choices_file = upload('choices_file');
+if (defined($choices_file)) {
+	while (<$choices_file>) {
+    	$choices .= $_;
+	}
 }
 $edata{'choices'} = $choices;
 
-$addresses = param('addresses');
-$addresses_file = param('addresses_file');
-while (<$addresses_file>) {
-    $addresses .= $_;
+my $addresses = param('addresses');
+my $addresses_file = upload('addresses_file');
+if (defined($addresses_file)) {
+	while (<$addresses_file>) {
+    	$addresses .= $_;
+	}
 }
 $edata{'addresses'} = $addresses;
 
-$rating_interpretation = param('rating_interpretation');
-if ($rating_interpretation eq 'combined_ratings') {
+my $rating_interpretation = param('rating_interpretation');
+my $use_combined_ratings;
+if (defined($rating_interpretation) and $rating_interpretation eq 'combined_ratings') {
     $use_combined_ratings = 1;
 } else {
     $use_combined_ratings = 0;
 }
 $edata{'use_combined_ratings'} = $use_combined_ratings;
 
-$ballot_reporting = param('ballot_reporting');
+my $ballot_reporting = param('ballot_reporting');
 if ($ballot_reporting eq '') {
     $ballot_reporting = 'no';
 } else {
@@ -99,14 +108,14 @@ CIVS_Header("Election created: $title");
 # print pre("public = $public");
 print "<pre>";
 
-$control_key = substr(md5_hex("control".$private_host_id.$election_id), 0, 16);
+my $control_key = substr(md5_hex("control".$private_host_id.$election_id), 0, 16);
 
-$url = "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key";
+my $url = "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key";
 
 if (!($local_debug)) {
 
 ConnectMail;
-$civs_supervisor = '@SUPERVISOR@';
+my $civs_supervisor = '@SUPERVISOR@';
 Send "mail from: $civs_supervisor"; ConsumeSMTP;
 Send "rcpt to: $email_addr"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
