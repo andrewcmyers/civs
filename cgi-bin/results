@@ -821,7 +821,7 @@ sub PrintProportionalResults {
 	for (my $j = 0; $j < $num_winners; $j++) {
 	    $j1 = $mapped_comm[$j];
 	    $j2 = $choice_index[$j1 - 1];
-	    print "<li value=\"$j1\"> $choices[$j2]".$cr;
+	    print "<li value=\"$j1\"> <b>$choices[$j2]</b>".$cr;
 	}
 	print '</ol></td>';
     }

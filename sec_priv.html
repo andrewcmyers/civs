@@ -67,6 +67,7 @@ believed to be met.
 
 <h2>Election types</h2>
 
+<p>
 CIVS supports both <i>public</i> and <i>private</i> elections.
 In private elections the election supervisor specifies the
 list of voters; in public elections there is no list of voters
@@ -81,14 +82,21 @@ elections, voters receive a unique key by e-mail that
 permits them to vote just once. Further attempts to vote
 will be rejected. Voters can also be reissued voter keys without
 giving them the ability to vote again.
+</p>
 
+<p>
 CIVS sends various information by e-mail. It assumes that
-e-mail is a secure medium. If your e-mail is compromised,
+e-mail is a secure, reliable medium. If your e-mail is compromised,
 this would permit the attacker to impersonate you as a voter
-or as an election supervisor.
+or as an election supervisor. If e-mail is unreliable, voter
+keys could be lost in the mail. However, voter keys can be
+reissued without creating the possibility that a voter gets
+an extra vote.
+</p>
 
 <h2>Keys</h2>
 
+<p>
 CIVS works by generating several different keys that serve
 as capabilities. These 64-bit keys are generated using a
 combination of random noise and secure hashing.
@@ -126,6 +134,7 @@ not stored on the server and cannot be used to determine
 how a voter voted.
 </li>
 </ul>
+</p>
 
 <h2>Private election protocol</h2>
 
@@ -218,14 +227,17 @@ The server forgets <i>e</i> and <i>v</i>.
 
 <h2>Public election protocol</h2>
 
+<p>
 An public election works similarly to a private election.
 The difference is that every voter has the power to
 add himself as a voter: the URL generated at election
 creation time includes the authorization key. The voter's IP
 address is used instead of the voter's e-mail address as the
 definition of true identity.
+</p>
 
 <h3>Election creation</h3>
+<p>
 The election creation protocol for public elections is the
 same as for private elections except that voters are not
 added. The supervisor is provided with
@@ -233,6 +245,7 @@ a voting URL that includes the election id and the
 authorization key. The supervisor can then distribute this
 URL through whatever out-of-band mechanism they deem
 appropriate.
+</p>
 
 <h3>Voting</h3>
 <ol>
@@ -267,12 +280,14 @@ server (because <i>a</i>, <i>r</i>, and server access are all
 needed to find the right ballot.)
 </ol>
 
+<p>
 Because the IP address in an public election is hashed using
 the authorization key, server compromise does not enable the
 attacker to determine the IP addresses by dictionary attack.
 Of course, if the attacker has obtained the authorization
 key for that election (perhaps because the attacker is a voter in
 the election), a dictionary attack becomes possible.
+</p>
 
 <h2>Data Storage</h2>
 
@@ -320,44 +335,46 @@ Each voter possesses the following.
 
 <h2>Attacks</h2>
 
+<p>
 This section describes what attacks might be mounted by
 attackers with various capabilities and how effectively
 the system defends against them.  We assume here that email
 and the network are trusted components of the system.
+</p>
 
 <ul>
-		<li><strong>Malicious voter.</strong>  In a private election, there
-		is nothing that a malicious voter can do to damage confidentiality
-		or integrity.  In a public election, a malicious voter can vote
-		multiple times by using a different IP address for each vote.
-		<li><strong>Malicious election supervisor.</strong>  A malicious 
-		supervisor is capable of violating confidentiality and integrity
-		in limited ways.  The supervisor cannot learn how or whether
-		a voter voted through normal use of CIVS.  However, a supervisor
-		could create an election and invite only one voter to vote in it.
-		Similarly, the supervisor could invite himself to vote many times
-		by providing different email addresses that he controls.  Both
-		problems can be mitigated if the election ID and the voting population
-		are common knowledge.  In the former case, this prevents a
-		voter from being tricked into voting in the election; in the latter,
-		the number of extra votes cast by the supervisor may be detected.
-		<li><strong>Intruder with read-only access.</strong>
-		Very little information is stored in cleartext on the server.
-		An intruder could learn email addresses, if he manages to 
-		read the election data before the election is started.  He could
-		also learn elections results while an election is in progress,
-		which is normally not allowed for private elections.  In a public 
-		election for which the intruder knows the authorization key
-		(perhaps because he is a voter in it), the intruder could guess
-		IP addresses and query whether that IP address has voted.
-		The intruder cannot learn how any voter has voted, however.
-		<li><strong>Intruder with read-write access.</strong> Clearly, such
-		an intruder can arbitrarily corrupt the integrity of ballots
-		that have been cast.  He can also hijack control of an election,
-		becoming supervisor, by installing new control and authorization 
-		keys.  However, he cannot learn how previous or future voters 
-		have voted, because these ballots are protected by a nonce 
-		(the receipt).
+<li><strong>Malicious voter.</strong>  In a private election, there
+is nothing that a malicious voter can do to damage confidentiality
+or integrity.  In a public election, a malicious voter can vote
+multiple times by using a different IP address for each vote.
+<li><strong>Malicious election supervisor.</strong>  A malicious 
+supervisor is capable of violating confidentiality and integrity
+in limited ways.  The supervisor cannot learn how or whether
+a voter voted through normal use of CIVS.  However, a supervisor
+could create an election and invite only one voter to vote in it.
+Similarly, the supervisor could invite himself to vote many times
+by providing different email addresses that he controls.  Both
+problems can be mitigated if the election ID and the voting population
+are common knowledge.  In the former case, this prevents a
+voter from being tricked into voting in the election; in the latter,
+the number of extra votes cast by the supervisor may be detected.
+<li><strong>Intruder with read-only access.</strong>
+Very little information is stored in cleartext on the server.
+An intruder could learn email addresses, if he manages to 
+read the election data before the election is started.  He could
+also learn elections results while an election is in progress,
+which is normally not allowed for private elections.  In a public 
+election for which the intruder knows the authorization key
+(perhaps because he is a voter in it), the intruder could guess
+IP addresses and query whether that IP address has voted.
+The intruder cannot learn how any voter has voted, however.
+<li><strong>Intruder with read-write access.</strong> Clearly, such
+an intruder can arbitrarily corrupt the integrity of ballots
+that have been cast.  He can also hijack control of an election,
+becoming supervisor, by installing new control and authorization 
+keys.  However, he cannot learn how previous or future voters 
+have voted, because these ballots are protected by a nonce 
+(the receipt).
 <li><strong>Election supervisor who is also an intruder
 	    with read-write access.</strong>
 <li><strong>Malicious CIVS server operator.</strong>
