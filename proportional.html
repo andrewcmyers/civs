@@ -68,12 +68,12 @@ greater representation under <i>B</i>, <i>C</i>. If <i>A</i> is given a weight o
 algorithm will (on the voter's behalf) work towards electing
 <i>B</i>+<i>C</i> in preference to <i>A</i>, because 14 &gt; 10.
 </p><p>
-<h2>Algorithm</h2>
-The algorithm used is a generalization of ordinary Condorcet
+<h2>Determining the winner</h2>
+The rule used is a generalization of ordinary Condorcet
 voting. The basic idea is to lift preferences expressed on
 individual candidates to preferences on whole committees of
 <i>k</i> members,
-then run the usual Condorcet algorithm to pick the ``best''
+then use the Condorcet criterion to pick the ``best''
 committee. The trick is to lift the preferences in a way
 that doesn't simply let a majority dictate the composition
 of the committee.
@@ -97,14 +97,35 @@ committee 1 is preferred over committee 2, we find the
 largest <i>v</i> such that <i>v</i> voters have a valid
 preference for one of the two committees. This <i>v</i>
 becomes the strength of the preference in the ordinary
-Condorcet sense. For <i>k</i>=1, this voting
-algorithm is simply the ordinary Condorcet algorithm. For
+Condorcet sense.</p>
+<p>For <i>k</i>=1, this voting
+scheme is simply the ordinary Condorcet scheme because
+of the ceiling operation. For
 larger <i>k</i>, it yields proportional results. In the
 above example, the 60% have no valid preference for
 <i>ABCDE</i> over <i>ABCXY</i> because their maximum
 preference is a 3-preference. The 40%, on the other hand,
 have a valid 2-preference for the second result, so this is
-the winning committee, as desire.
+the winning committee, as desired.
+</p>
+<h2>Algorithm</h2>
+<p>
+The difficulty with the scheme described above is that in
+its brute-force form it requires computing a preference
+matrix for all <i>f</i> in 1..<i>k</i>, and the matrix has size
+<b>C</b>(<i>c</i>,<i>k</i>)&times;<b>C</b>(<i>c</i>,<i>k</i>)
+where <i>c</i> is the number of candidates and <b>C</b> is
+the choose function. Thus, the storage overhead is
+prohibitive. However, the information in the ordinary
+preference matrix seems to be insufficient to reconstruct 
+these larger matrices.
+</p>
+<p>
+Suppose we have the winning committee. Is there a way to
+determine that it beats all comers without computing
+preferences? This seems particularly difficult because
+determining the winner may require considering long
+beatpaths.
 </p>
 </body>
 </html>
