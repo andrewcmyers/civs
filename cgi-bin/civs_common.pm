@@ -1,7 +1,7 @@
 use CGI qw(:standard);
 use POSIX qw(strftime);
 use Digest::MD5 qw(md5_hex);
-use Time::HiRes qw(gettimeofday);
+# use Time::HiRes qw(gettimeofday);
 
 $home = "@CIVSDATADIR@";
 $thishost = "@THISHOST@";
@@ -11,7 +11,7 @@ $civs_url = "@CIVSURL@";
 $nonce_seed_file = $home.'/nonce_seed';
 $private_host_id_file = $home.'/private_host_id';
 $lockfile = $home.'/global_lock';
-$local_debug = 1;
+$local_debug = 0;
 $cr = "\r\n";
 $generated_header = 0;
 
@@ -79,7 +79,8 @@ sub SecureNonce {
     close(NONCEFILE);
     my $ret = substr($seed, 0, 16);
 
-    $seed = md5_hex(gettimeofday(),$seed);
+    $timeofday = `$home/gettimeofday`;
+    $seed = md5_hex($private_host_id,$timeofday,$seed);
 
     open(NONCEFILE, ">$nonce_seed_file");
     print NONCEFILE $seed.$cr;

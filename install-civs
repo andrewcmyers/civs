@@ -18,6 +18,8 @@ fi
 
 echo "Read settings file"
 
+gmake gettimeofday
+
 TestAndCreateDir $HTMLDIR;
 TestAndCreateDir $CGIBINDIR;
 TestAndCreateDir $CIVSDATADIR;
@@ -68,5 +70,6 @@ TestAndCreateDir $CIVSDATADIR/elections;
 
     touch $CIVSDATADIR/nonce_seed
     chmod ugo+w $CIVSDATADIR/nonce_seed
+    cp gettimeofday $CIVSDATADIR/gettimeofday
     
 echo "Install completed.  Check for any errors reported above.";
