@@ -60,6 +60,11 @@ if (!IsStarted) {
 	    print "</form>\n";
 	}
     }
+    if ($public eq 'yes') {
+	$url = "http://$thishost$civs_bin_path/vote?id=$election_id";
+	print p("This is an open election. Voting URL:
+	        <tt><a href=\"$url\">$url</a></tt>").$cr;
+    }
 } else {
     print p("The election has ended. <a href=\"$civs_bin_path/results?id=$election_id\">Election results</a> are available.");
 }
