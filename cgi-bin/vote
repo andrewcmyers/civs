@@ -13,6 +13,9 @@ use IO::Handle;
 
 my $thisurl = $civs_bin_path."/vote";
 
+my $cmd = "exec $home/timeout 10 $$ 2>&1 1>/dev/null &";
+system($cmd);
+
 use election;
 
 # There are many different ways to enter this script.
@@ -31,7 +34,7 @@ my $voter_key = param('key');
 my $authorization_key = param('akey');
 
 my $js_ui = 1;
-if ($proportional eq 'yes') { $js_ui = 0; }
+if ($proportional eq 'yes' && $use_combined_ratings) { $js_ui = 0; }
 
 if ($js_ui) {
     HTML_Header('CIVS Voting', 'vote.js');
@@ -112,7 +115,8 @@ if ($proportional ne 'yes') {
 } else {
     print '<p>This election is decided using an experimental
     Condorcet-based algorithm designed to provide proportional
-    representation. Please give each of the following choices a
+    representation.';
+    print 'Please give each of the following choices a
     <b>rating</b> that expresses how much you want the
     choice to be one of the winners.';
     if ($use_combined_ratings) {
@@ -187,7 +191,7 @@ for (my $i = 0; $i < $num_choices; $i++) {
     } else {
 	print "<tr><td><b>$choice</b></td>\n";
     }
-    if ($proportional ne 'yes') {
+    if ($proportional ne 'yes' || !$use_combined_ratings) {
 	print "<td><select size=1 name=\"C$k\" onChange=\"sort_rows()\">\n";
 	for (my $j = 1; $j <= $num_choices; $j++) {
 	    if ($j == $selected) {
@@ -231,35 +235,18 @@ print p('<input type="submit" value="Vote!" name="Vote">');
 print '<p id="sort_button"> Sort the choices by their current rank:
        <input type="submit" value="Sort" name="SortChoices"></p>';
 
-print "</form>\n";
-
 if ($writeins eq 'yes') {
-print '<form method="POST"
-        action="'.$thisurl.'"
-        enctype="multipart/form-data"
-        name="Writein">';
-print hidden('key', $voter_key);
-print hidden('id', $election_id);
-print hidden('akey', $authorization_key);
     print '<p>Write in a new choice: <input type="text" size="60" name="writein">';
     print '<input type="submit" value="Add write-in" name="AddWritein"></p>';
-    print '</form>';
 }
-print '<form method="POST"
-        action="'.$thisurl.'"
-        enctype="multipart/form-data"
-        name="LoadBallot">';
-print hidden('key', $voter_key);
-print hidden('id', $election_id);
-print hidden('akey', $authorization_key);
 print '<p>Read rankings from a saved voting page: ';
 print '<input type="file" id=rankings_file type=file name="rankings_file">';
 print '&nbsp; <input type="submit" id=load_rankings_file value="Load" name="Load">';
-print '</form>';
 #print '<br>(To save a voting page, click "Sort" to collect
 #    your rankings and then just save this web page in your browser)</p>';
 # print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
 
+print "</form>\n";
 
 if ($public eq 'yes') {
     print p("If you have already voted, you may see
@@ -394,19 +381,19 @@ sub AddWritein {
 		}
     }
     if ($ok) {
-	$choices = $choices . "\n" . $writein;
-	$choice_index[$num_choices] = $num_choices;
-	$rank[$num_choices] = $num_choices;
-	my $index = $num_choices;
-	$choices[$index] = $writein;
-	$num_choices++;
-	$edata{'choices'} = $choices;
+		$choices = $choices . "\n" . $writein;
+		$choice_index[$num_choices] = $num_choices;
+		$rank[$num_choices] = $num_choices;
+		my $index = $num_choices;
+		$choices[$index] = $writein;
+		$num_choices++;
+		$edata{'choices'} = $choices;
 
-	# Now update the vote matrix so that this write-in is
-	# ranked last by every voter so far.
-	for (my $j = 0; $j < $num_choices - 1; $j++) {
-	    $vdata{"$j.$index"} = $num_votes;
-	}
+		# Now update the vote matrix so that this write-in is
+		# ranked last by every voter so far.
+		for (my $j = 0; $j < $num_choices - 1; $j++) {
+		    $vdata{"$j.$index"} = $num_votes;
+		}
     }
 }
 
@@ -424,26 +411,26 @@ sub Load {
 		last if (m/^<!-- Current rankings/);
 	}
     while (<$rankings_file>) {
-	last if (m/^-->/);
-	my ($index, $name, $rank) = m/([0-9]+) "([^"]*)" ([0-9]+)/;
-	$rank = 1 if ($rank < 1);
-	$rank = $num_choices if ($rank > $num_choices);
-	for (my $i = 0; $i < $num_choices; $i++) {
-	    my $cname = $choices[$i];
-		$cname =~ s/"/ /;
-		if ($cname eq $name) {
-			    # print "Setting choice $i to rank $rank\n";
-			    $rank[$i] = $rank;
-	    }
-	}
+		last if (m/^-->/);
+		my ($index, $name, $rank) = m/([0-9]+) "([^"]*)" ([0-9]+)/;
+		$rank = 1 if ($rank < 1);
+		$rank = $num_choices if ($rank > $num_choices);
+		for (my $i = 0; $i < $num_choices; $i++) {
+	    	my $cname = $choices[$i];
+		    $cname =~ s/"/ /;
+		    if ($cname eq $name) {
+				# print "Setting choice $i to rank $rank\n";
+				$rank[$i] = $rank;
+	    	}
+		}
     }
     for (my $i = 0; $i < $num_choices; $i++) { 
 		$iota[$i] = $i; 
 	}
     if ($proportional ne 'yes') {
-	@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
+		@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
     } else {
-	@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
+		@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
     }
     my $loaded_choices = 'yes';
 }

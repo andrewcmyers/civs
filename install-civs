@@ -18,7 +18,7 @@ fi
 
 echo "Read settings file"
 
-make -s gettimeofday
+make -s gettimeofday timeout
 
 TestAndCreateDir $HTMLDIR;
 TestAndCreateDir $CGIBINDIR;
@@ -61,19 +61,19 @@ TestAndCreateDir $CIVSDATADIR/elections;
     done
 
     if [ ! -s $CIVSDATADIR/private_host_id ]; then
-		echo "*********************************************";
-		echo "                 WARNING                     ";
-		echo "*********************************************";
-		echo "";
-		echo "No private key exists for the server!";
-		echo "";
-		echo "Creating a private key using the openssl pseudo-random number";
-		echo "generator.  If you want more randomness than this, you will";
-		echo "need to create your own key.  See the INSTALL file for more";
-		echo "information."
-		echo "";
-		openssl rand -base64 32 -out $CIVSDATADIR/private_host_id;
-		echo "*********************************************";
+	echo "*********************************************";
+	echo "                 WARNING                     ";
+	echo "*********************************************";
+	echo "";
+	echo "No private key exists for the server!";
+	echo "";
+	echo "Creating a private key using the openssl pseudo-random number";
+	echo "generator.  If you want more randomness than this, you will";
+	echo "need to create your own key.  See the INSTALL file for more";
+	echo "information."
+	echo "";
+	openssl rand -base64 32 -out $CIVSDATADIR/private_host_id;
+	echo "*********************************************";
     fi
 
 	if [ ! -s $CIVSDATADIR/nonce_seed ]; then
@@ -84,10 +84,15 @@ TestAndCreateDir $CIVSDATADIR/elections;
     touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
     chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
 	
-	if [ -e gettimeofday.exe ]; then 
-		cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
-	else
-    	cp gettimeofday $CIVSDATADIR/gettimeofday
-	fi
+    if [ -e gettimeofday.exe ]; then 
+	cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
+    else
+	cp gettimeofday $CIVSDATADIR/gettimeofday
+    fi
+    if [ -e timeout.exe ]; then 
+	cp timeout.exe $CIVSDATADIR/timeout.exe;
+    else
+	cp timeout $CIVSDATADIR/timeout
+    fi
 	
 echo "Install completed.  Check for any errors reported above.";
