@@ -5,6 +5,52 @@ var preftable;
 var prefsection;
 var num_choices;
 
+// Move the element of a currently at index i so it is just
+// before the element currently at index j, while keeping
+// all other elements in the same relative order. if
+// j=num_choices then the element is put at the end.
+function move_elem_to(a, i, j) {
+    if (i == j) return;
+    //alert("moving " + i + " to " + j);
+    var src = a[i];
+    if (i < j) {
+	// move elems from i+1 to j-1 up one
+	for (var k=i; k < j-1; k++) a[k] = a[k+1];
+	a[j-1] = src;
+    } else {
+	// move elems from j to i-1 down one
+	for (var k=i; k > j; k--) a[k] = a[k-1];
+	a[j] = src;
+    }
+}
+
+// return true if the row needed to be moved, false
+// otherwise.
+function resort_row(i) {
+    // figure out where it goes (j)
+    var j = 0;
+    while (j < num_choices && (j == i || rank[j] < rank[i])) {
+	j++;
+    }
+    if (i == j) {
+	return false;
+    }
+
+    // fix UI
+    if (j == num_choices) {
+	prefsection.appendChild(rows[i]);
+    } else {
+	prefsection.insertBefore(rows[i], rows[j]);
+    }
+
+    // now fix rows, rank, and selected
+    move_elem_to(rows, i, j);
+    move_elem_to(rank, i, j);
+    move_elem_to(selected, i, j);
+
+    return true;
+}
+
 function sort_rows() {
     read_rows();
     //alert("sorting the rows of " + preftable);
@@ -120,11 +166,15 @@ function max_selected_rank() {
     }
     return cur;
 }
+
+// return true if it had to be moved
 function set_rank(i, r) {
     //alert("Setting rank of " + i + " to " + r);
+    if (rank[i] == r) return false;
     rank[i] = r;
     var s = rows[i].getElementsByTagName("select")[0];
     s.selectedIndex = r - 1;
+    return resort_row(i);
 }
 
 function do_make_tie() {
@@ -135,9 +185,9 @@ function do_make_tie() {
 	return;
     }
     for (var i = 0; i < num_choices; i++) {
-	if (selected[i]) set_rank(i, min_rank);
+	if (selected[i])
+	    if (set_rank(i, min_rank)) i--;
     }
-    sort_rows();
 }
 
 function do_move_up () {
@@ -158,12 +208,12 @@ function do_move_up () {
     }
     for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) {
-	    set_rank(i, new_rank);
-	} else if (collision && rank[i] == new_rank) {
-	    set_rank(i, rank[i] + 1);
+	    if (set_rank(i, new_rank)) i--;
+	} else if (collision && rank[i] == new_rank &&
+	                        rank[i] < num_choices) {
+	    if (set_rank(i, rank[i] + 1)) i--;
 	}
     }
-    sort_rows();
 }
 
 function do_move_down () {
@@ -185,12 +235,12 @@ function do_move_down () {
     }
     for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) {
-	    set_rank(i, new_rank);
-	} else if (collision && rank[i] == new_rank) {
-	    set_rank(i, rank[i] - 1);
+	    if (set_rank(i, new_rank)) i--;
+	} else if (collision && rank[i] == new_rank &&
+	                        new_rank != num_choices + 1) {
+	    if (set_rank(i, rank[i] - 1)) i--;
 	}
     }
-    sort_rows();
 }
 
 function do_move_top() {
@@ -205,13 +255,14 @@ function do_move_top() {
     var collision = have_rank[min_rank];
     for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) {
-	    set_rank(i, cur_top);
-	} else if (collision && rank[i] >= cur_top && rank[i] < min_rank) {
-	    set_rank(i, rank[i] + 1);
+	    if (set_rank(i, cur_top)) i--;
+	} else if (collision && rank[i] >= cur_top &&
+		    rank[i] < min_rank &&
+		    rank[i] < num_choices) {
+	    if (set_rank(i, rank[i] + 1)) i--;
 	}
     }
     cur_top++;
-    sort_rows();
 }
 function do_move_bottom() {
     var max_rank = max_selected_rank();
@@ -223,14 +274,13 @@ function do_move_bottom() {
     if (max_rank >= cur_bot) cur_bot = num_choices;
     scan_ranks();
     var collision = have_rank[max_rank];
-    for (var i = num_choices-1; i >= 0; i--) {
+    for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) {
-	    if (rank[i] >= cur_bot) cur_bot = num_choices;
-	    set_rank(i, cur_bot);
-	} else if (collision && rank[i] <= cur_bot && rank[i] > max_rank) {
-	    set_rank(i, rank[i] - 1);
+	    if (set_rank(i, cur_bot)) i--;
+	} else if (collision && rank[i] <= cur_bot
+			     && rank[i] > max_rank) {
+	    if (set_rank(i, rank[i] - 1)) i--;
 	}
     }
     cur_bot--;
-    sort_rows();
 }

@@ -232,9 +232,9 @@ if ($writeins eq 'yes') {
 print '<p>Read rankings from a saved voting page: ';
 print '<input type="file" id=rankings_file type=file name="rankings_file">';
 print '&nbsp; <input type="submit" id=load_rankings_file value="Load" name="Load">';
-print '<br>(To save a voting page, click "Sort" to collect
-    your rankings and then just save this web page in your browser)</p>';
-print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
+#print '<br>(To save a voting page, click "Sort" to collect
+#    your rankings and then just save this web page in your browser)</p>';
+# print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
 
 print "</form>\n";
 
