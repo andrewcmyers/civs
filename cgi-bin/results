@@ -174,10 +174,10 @@ for ($jj = 0; $jj < $num_choices; $jj++) {
 	    $w = $closure_matrix[$j][$k];
 	    $l = $closure_matrix[$k][$j];
 	    if ($w > $l) {
-		if ($l != 0) { print "$w-$l"; }
-		else { print "$w" }
+		print "$w";
 	    } else {
-		print ".";
+		if ($w != 0) { print "$w"; }
+		else { print "."; }
 	    }
 	}
 	print "</tt></td>";
