@@ -71,7 +71,7 @@ sub PrintNonproportionalDetails {
     $summary_url = "$thisurl?id=$election_id";
     print p(&details_bookmark . a({-href=>"$summary_url"}, "Hide details"));
 	
-    local $j, $jj, $k, $kk;
+    my $j, $jj, $k, $kk;
     print h2("Preference matrix");
     print p("The following matrix shows the number of ballots on
     which choices beat other choices, considered pairwise.");
@@ -217,12 +217,14 @@ sub ComputeNonproportionalResults {
 }
 
 sub PrintNonproportionalResults {
-	print h2("Condorcet winner");
-	if ($condorcet_winner >= 0) {
-	    print p('The Condorcet winner of this election is '.
-		    strong($choices[$condorcet_winner]));
-	} else {
-	    print p('This election had no Condorcet winner.').$cr;
+	if ($proportional ne 'yes') {
+	    print h2("Condorcet winner");
+	    if ($condorcet_winner >= 0) {
+		print p('The Condorcet winner of this election is '.
+			strong($choices[$condorcet_winner]));
+	    } else {
+		print p('This election had no Condorcet winner.').$cr;
+	    }
 	}
 
 	print h2('Ranking of the choices').$cr;
@@ -288,18 +290,17 @@ sub PrintProportionalResults {
 # proportional representation 'algorithm'
 # first sort the choices by the ordinary election algorithm
     @voter_keys = split /[\r\n]+/, $recorded_voters;
-    print "<pre>";
-    for (local $j = 0; $j < $num_choices; $j++) {
+    for (my $j = 0; $j < $num_choices; $j++) {
 	$choice_index[$j] = $j;
-	for (local $k = 0; $k < $j; $k++) {
-	    local $sjk = 0;
-	    local $skj = 0;
-	    for (local $v = 0; $v < $num_votes; $v++) {
-		local $voter_key = $voter_keys[$v];
-		local $weights = $vdata{$voter_key};
-		local @weights = split /,/, $weights;
-		local $wj = $weights[$j];
-		local $wk = $weights[$k];
+	for (my $k = 0; $k < $j; $k++) {
+	    my $sjk = 0;
+	    my $skj = 0;
+	    for (my $v = 0; $v < $num_votes; $v++) {
+		my $voter_key = $voter_keys[$v];
+		my $weights = $vdata{$voter_key};
+		my @weights = split /,/, $weights;
+		my $wj = $weights[$j];
+		my $wk = $weights[$k];
 		if ($wj > $wk) { $sjk++; }
 		if ($wk > $wj) { $skj++; }
 	    }
@@ -331,15 +332,14 @@ sub PrintProportionalResults {
 	    $choice_rank[$winner[$i]] = $j;
 	}
     }
-    print "</pre>";
     #print_nonprop_results;
 # Now we're ready to report the choices
 
     sub renumber {
 # convert a committee into the rank-ordered form
-	local @comm = split /,/, $_[0];
-	local @mapped;
-	for (local $j = 0; $j < $num_winners; $j++) {
+	my @comm = split /,/, $_[0];
+	my @mapped;
+	for (my $j = 0; $j < $num_winners; $j++) {
 	    $mapped[$j] = $choice_rank[$comm[$j]];
 	}
 	@mapped = sort {$a <=> $b} @mapped;
@@ -353,10 +353,14 @@ sub PrintProportionalResults {
     }
     print "</ol>";
 
-    print "<h2>Log of search for best result set</h2>";
+    if ($nonprop_details) {
+	print "<h2>Log of search for best result set</h2>";
+    }
 
 
-print "<pre>";
+    if ($nonprop_details) {
+	print '<pre>';
+    }
     if ($num_votes != $#voter_keys + 1) {
 	print "Warning: discrepancy between number of
 	recorded voters and number of recorded votes!";
@@ -372,7 +376,7 @@ print "<pre>";
 #   for committee c2, and 0 otherwise. Choices are indexed in
 #   0..$num_choices-1, voters in 0..$num_votes. c1 and c2 are
 #   represented as strings.
-	local ($f, $v, $i, $j) = @_;
+	my ($f, $v, $i, $j) = @_;
 	$voter_key = $voter_keys[$v];
 	$weights = $vdata{$voter_key};
 	@weights = split /,/, $weights;
@@ -383,7 +387,7 @@ print "<pre>";
 	@c2 = split /,/, $j;
 
         $sum = 0;
-	local $k;
+	my $k;
 	for ($k = 0; $k < $num_winners; $k++) {
 	    @w1[$k] = $weights[$c1[$k]];
 	    @w2[$k] = $weights[$c2[$k]];
@@ -409,9 +413,9 @@ print "<pre>";
 # voters with a k-preference for committee c2.  c1 and c2
 # are represented as strings. If there is no valid k-preference
 # both $ipref and $jpref are set to zero.
-	local ($f, $i, $j) = @_;
+	my ($f, $i, $j) = @_;
 	#print "Comparing $i to $j at $f-preference. ";
-	local ($icnt, $jcnt) = (0,0);
+	my ($icnt, $jcnt) = (0,0);
 	for ($v = 0; $v < $num_votes; $v++) {
 	    if ($f == 0) {
 		$c = kPrefVoter($num_winners, $v, $i, $j);
@@ -443,14 +447,14 @@ print "<pre>";
 # XXX This all needs to be reimplemented more carefully
 
 	sub flatten {
-	    local $ret = $_[0];
-	    for (local $i = 1; $i <= $#_; $i++) {
+	    my $ret = $_[0];
+	    for (my $i = 1; $i <= $#_; $i++) {
 		$ret .= "," . $_[$i];
 	    }
 	    return $ret;
 	}
 	sub compute_in {
-	    local $i;
+	    my $i;
 	    for ($i = 0; $i < $num_choices; $i++) { $in{$i} = 0; }
 	    for ($i = 0; $i < $num_winners; $i++) { $in{$curr_comm[$i]} = 1; }
 	}
@@ -467,8 +471,8 @@ print "<pre>";
 	$depth = 0;
 	$recurse = 1;
 	sub dprint {
-	    local $msg = $_[0];
-	#   for (local $i = 0; $i < $depth; $i++) {
+	    my $msg = $_[0];
+	#   for (my $i = 0; $i < $depth; $i++) {
 	#     print " ";
 	#   }
 	    print $msg;
@@ -478,11 +482,11 @@ print "<pre>";
 # compare_sets compares $curr_comm and $new_comm and returns
 # 1 if the latter is better.
 	    #print "$curr_comm vs. $new_comm (@new_comm): ";
-	    local $bestpref = 0;
-	    local $bestipref = 0;
-	    local $bestjpref = 0;
+	    my $bestpref = 0;
+	    my $bestipref = 0;
+	    my $bestjpref = 0;
 	    $seen{$curr_comm} = $seen{$new_comm} = 1;
-	    for (local $f = 1; $f <= $num_winners; $f++) {
+	    for (my $f = 1; $f <= $num_winners; $f++) {
 		kPref($f, $curr_comm, $new_comm);
 		if ($ipref > $bestpref) { $bestipref = $ipref; }
 		if ($jpref > $bestpref) { $bestjpref = $jpref; }
@@ -500,7 +504,7 @@ print "<pre>";
 	    if ($bestjpref > $bestipref) {
 		# dprint "$new_comm is preferred to $curr_comm, $bestjpref&ndash;$bestipref\n";
 		if ($recurse) {
-		    local $save_full_search = $full_search;
+		    my $save_full_search = $full_search;
 		    visit($new_comm);
 		    $full_search = $save_full_search;
 		}
@@ -514,7 +518,7 @@ print "<pre>";
 			# dprint "  ...exploring because a cycle has been detected\n";
 		    # }
 		    if ($recurse) {
-			local $save_full_search = $full_search;
+			my $save_full_search = $full_search;
 			visit($new_comm);
 			$full_search = $save_full_search;
 		    }
@@ -537,14 +541,16 @@ print "<pre>";
 	    if ($iters > 500) { return; } # truncate runaway search
 	    $depth++;
 
-	    local $curr_comm = $_[0];
-	    local @curr_comm = split /,/, $curr_comm;
-	    local $cci;
-	    local $added = 0;
+	    my $curr_comm = $_[0];
+	    my @curr_comm = split /,/, $curr_comm;
+	    my $cci;
+	    my $added = 0;
 	    if ($visited{$curr_comm}) {
 		if ($full_search) { $depth--; return; }
 		if (!$full_search) {
+		    if ($nonprop_details) {
 		    dprint "$curr_comm is in a cycle (in the Schwartz set?)\n";
+		    }
 		    $full_search = 1;
 		}
 	    } else {
@@ -552,15 +558,17 @@ print "<pre>";
 		$committee[$cci] = $curr_comm;
 		$cindex{$curr_comm} = $cci;
 		$mcomm = flatten(renumber($curr_comm));
-		dprint "<b>Considering set: $mcomm (#$#committee)</b>\n";
+		if ($nonprop_details) {
+		    dprint "<b>Considering set: $mcomm (#$#committee)</b>\n";
+		}
 		$visited{$curr_comm} = 1;
 		$added = 1;
 	    }
 	    $cci = $cindex{$curr_comm};
-	    local $change = 0;
-	    local $save_beaten = $beaten[$cci];
+	    my $change = 0;
+	    my $save_beaten = $beaten[$cci];
 	    $beaten[$cci] = 1;
-	    for (local $b = 0; $b <= $#committee; $b++) {
+	    for (my $b = 0; $b <= $#committee; $b++) {
 # check if any new beaten info has shown up and add to @borm
 # if so.
 		if ($beaten[$b] && !$borm[$cci][$b]) {
@@ -571,18 +579,18 @@ print "<pre>";
 	    }
 	    if ($change) {
 		if (!$added) {
-		    dprint "Change to beaten info, revisiting from $curr_comm\n";
+		    # dprint "Change to beaten info, revisiting from $curr_comm\n";
 		}
-		local @new_comm;
+		my @new_comm;
 		compute_in;
-		local $done = 0;
-		for (local $i = 0; $i < $num_winners && !$done; $i++) {
+		my $done = 0;
+		for (my $i = 0; $i < $num_winners && !$done; $i++) {
 # try improving each current member
-		    for (local $j = 0; $j < $num_choices && !$done; $j++) {
+		    for (my $j = 0; $j < $num_choices && !$done; $j++) {
 			@new_comm = @curr_comm;
 # try replacing with each choice not currently in the committee
 			if (!$in{$j}) {
-			    local %save_in = %in;
+			    my %save_in = %in;
 			    $new_comm[$i] = $j;
 			    @new_comm = sort {$a <=> $b} @new_comm ;
 			    $new_comm = flatten @new_comm;
@@ -601,7 +609,9 @@ print "<pre>";
 		} # for i
 		if (!$done && $added) {
 		    $mcomm = flatten(renumber($curr_comm));
-		    dprint "$mcomm beats all nearby unvisited sets\n";
+		    if ($nonprop_details) {
+			dprint "$mcomm beats all nearby unvisited sets\n";
+		    }
 		}
 	    } # if change
 	    $beaten[$cci] = $save_beaten;
@@ -623,22 +633,27 @@ print "<pre>";
 	    # }
 	# }
     } # if need to pick winners
-    print "</pre>";
+    if ($nonprop_details) {
+	print "</pre>";
+    }
 
     if ($iters > 500) {
-	print p(b("Search failed."));
+	print p(b('Search for best committees failed.
+	Results are likely to be incorrect.'));
     }
-    print '<pre>'.b('Acquiring any missing preference information...').$cr;
+    if ($nonprop_details) {
+	print '<pre>'.b('Acquiring any missing preference information...').$cr;
+    }
     $recurse = 0;
     $divisor = 1;
     while ($divisor < $num_votes) { $divisor *= 10; }
-    for (local $j = 0; $j <= $#committee; $j++) {
-	for (local $k = 0; $k < $j; $k++) {
+    for (my $j = 0; $j <= $#committee; $j++) {
+	for (my $k = 0; $k < $j; $k++) {
 	    $curr_comm = $committee[$j];
 	    $new_comm = $committee[$k];
 	    compare_sets;
-	    local $jk = $tally1{$curr_comm}{$new_comm};
-	    local $kj = $tally2{$curr_comm}{$new_comm};
+	    my $jk = $tally1{$curr_comm}{$new_comm};
+	    my $kj = $tally2{$curr_comm}{$new_comm};
 	    $beatpath::matrix[$j][$k] = $cmatrix[$j][$k] = $jk;
 	    $beatpath::matrix[$k][$j] = $cmatrix[$k][$j] = $kj;
 
@@ -648,7 +663,9 @@ print "<pre>";
 		    $weaktally2{$curr_comm}{$new_comm}/$divisor;
 	}
     }
-    print '</pre>';
+    if ($nonprop_details) {
+	print '</pre>';
+    }
     $beatpath::n = $#committee + 1;
     &beatpath::rank_candidates();
     @result = @beatpath::result;
@@ -662,33 +679,29 @@ print "<pre>";
     }
     @winner = @{$result[0]};
     $num_unbeaten = $#winner + 1;
-    sub printSchwartz {
-	print '<table><tr>';
-	for ($i = 0; $i < $num_unbeaten; $i++) {
-	    print "<td><ol>";
-	    @mapped_comm = renumber($committee[$winner[$i]]);
-	    for ($j = 0; $j < $num_winners; $j++) {
-		$j1 = $mapped_comm[$j];
-		$j2 = $choice_index[$j1 - 1];
-		print "<li value=\"$j1\"> $choices[$j2]".$cr;
-	    }
-	    print "</ol></td>";
-	}
-	print '</tr></table>';
-    }
     if ($num_unbeaten == 1) {
 	print h2("Winning set of choices".$cr);
 	print p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> Condorcet winner of this election was the following set of choices:");
-	printSchwartz;
     } else {
 	print h2("Winning sets of choices$cr");
 	print p("There were $num_unbeaten unbeaten sets:$cr");
-	printSchwartz;
     }
+    print '<table><tr>';
+    for ($i = 0; $i < $num_unbeaten; $i++) {
+	print '<td><ol>';
+	@mapped_comm = renumber($committee[$winner[$i]]);
+	for ($j = 0; $j < $num_winners; $j++) {
+	    $j1 = $mapped_comm[$j];
+	    $j2 = $choice_index[$j1 - 1];
+	    print "<li value=\"$j1\"> $choices[$j2]".$cr;
+	}
+	print '</ol></td>';
+    }
+    print '</tr></table>';
     print h2('Preference matrix');
-    local $combinations = 1;
-    local $num_seen = 0;
-    for (local $i = 0; $i < $num_winners; $i++) {
+    my $combinations = 1;
+    my $num_seen = 0;
+    for (my $i = 0; $i < $num_winners; $i++) {
 	$combinations = $combinations * ($num_choices - $i);
     }
     foreach $k (keys %seen) {
@@ -700,7 +713,7 @@ print "<pre>";
       formed using $num_winners of the $num_choices choices. Of these,
       $num_visited committees were considered thoroughly, comparing against 
       the $num_seen nearby (similar) committees that differ
-      in just one choice.\n");
+      in just one choice.$cr");
 
 
     print p('This is the voting preference matrix,
@@ -803,9 +816,9 @@ print "<pre>";
     }
     @curr_comm = split /,/, $committee[$winner[0]];
     print '<tr><th width=40px>Set 1</th><th width=40px>Set 2</th></tr>';
-    for (local $i = 1; $i <= $num_winners; $i++) {
-	local $besti = $curr_comm[$i-1];
-	local $li, $ri;
+    for (my $i = 1; $i <= $num_winners; $i++) {
+	my $besti = $curr_comm[$i-1];
+	my $li, $ri;
 	if ($comparison_request) {
 	    $li = param("L$i");
 	    $ri = param("R$i");
@@ -821,7 +834,7 @@ print "<pre>";
     print '<input type="submit" value="Compare sets" name="Compare">';
     print '</form>';
     if ($comparison_request) {
-	for (local $i = 1; $i <= $num_winners; $i++) {
+	for (my $i = 1; $i <= $num_winners; $i++) {
 	    $curr_comm[$i-1] = $choice_index[param("L$i") - 1];
 	    $new_comm[$i-1] = $choice_index[param("R$i") - 1];
 	}

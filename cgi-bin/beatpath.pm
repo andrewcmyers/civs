@@ -19,8 +19,8 @@ package beatpath;
 # the minimal element of every symmetric pair
 # of elements, setting it to zero.
 sub clean_matrix {
-  for (local $i = 0; $i < $n; $i++) {
-    for (local $j = 0; $j < $n; $j++) {
+  for (my $i = 0; $i < $n; $i++) {
+    for (my $j = 0; $j < $n; $j++) {
 	if ($matrix[$i][$j] == $matrix[$j][$i]) {
 	    $matrix[$i][$j] = $matrix[$j][$i] = 0;
 	} elsif ($matrix[$i][$j] < $matrix[$j][$i]) {
@@ -51,12 +51,12 @@ sub min {
 }
 
 sub transitive_closure {
-  for (local $k = 0; $k < $n; $k++) {
-    for (local $i = 0; $i < $n; $i++) {
-      for (local $j = 0; $j < $n; $j++) {
+  for (my $k = 0; $k < $n; $k++) {
+    for (my $i = 0; $i < $n; $i++) {
+      for (my $j = 0; $j < $n; $j++) {
 # consider going from i to j via k
 # m_ij = max(m_ij, min(s1,s2))
-	local $s = min($matrix[$i][$k], $matrix[$k][$j]);
+	my $s = min($matrix[$i][$k], $matrix[$k][$j]);
 	if ($s > $matrix[$i][$j]) {
 	    $matrix[$i][$j] = $s;
 	}
@@ -72,10 +72,10 @@ sub transitive_closure {
 # are considered both as possible winners and as beaters.
 sub winners {
   @winner = ();
-  for (local $i = 0; $i < $n; $i++) {
+  for (my $i = 0; $i < $n; $i++) {
     if (!$ignore[$i]) {
-      local $won = 1;
-      for (local $j = 0; $j < $n; $j++) {
+      my $won = 1;
+      for (my $j = 0; $j < $n; $j++) {
 	if (!$ignore[$j]) {
 	  if ($matrix[$j][$i] > $matrix[$i][$j]) {
 	    $won = 0;
@@ -97,13 +97,13 @@ sub winners {
 # is an array containing the highest ranked
 # candidates and so on.
 sub rank_candidates {
-  local @save_matrix = @matrix;
-  local $j;
+  my @save_matrix = @matrix;
+  my $j;
   @ignore = ();
   clean_matrix();
   transitive_closure();
 
-  local $num_ranked = 0;
+  my $num_ranked = 0;
   @result = ();
   while ($num_ranked < $n) {
     winners();

@@ -68,11 +68,7 @@ if (param('Vote') ne '') {
 	}
 	$rank[$i] = $rank;
     }
-    if ($proportional eq 'yes') {
-	$vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
-    } else {
-	$vdata{$voter_key} = $vote;  # MRC: Record vote for detailed ballot info
-    }
+    $vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
 
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
 
@@ -147,7 +143,7 @@ if ($sort_choices ne '' || param('AddWritein') ne '') {
 sub CanonicalizeName {
 # Strip leading whitespace and
 # remove all nonprintable characters
-    local $name = $_[0];
+    my $name = $_[0];
     $name =~ s/^(\s)+//;
     $name =~ s/(\s)+$//;
     return $name;
@@ -157,18 +153,18 @@ sub ProjectName {
 # ProjectName(name) is a version of the name that is canonical but
 # also has all characters turned to lowercase and no whitespace.
 # This is useful for detecting similar names.
-    local $name = $_[0];
+    my $name = $_[0];
     $name =~ s/[^\w]//g; # remove all nonalphanumeric characters
     $name = lc $name;
     return $name;
 }
 
 if (param('AddWritein') ne '' && $writeins eq 'yes') {
-    local $writein = param('writein');
+    my $writein = param('writein');
     $writein = CanonicalizeName($writein);
-    local $p = ProjectName($writein);
-    local $ok = 1;
-    for (local $i = 0; $i < $num_choices; $i++) {
+    my $p = ProjectName($writein);
+    my $ok = 1;
+    for (my $i = 0; $i < $num_choices; $i++) {
 	if (ProjectName($choices[$i]) eq $p) {
 	    print p(b("Sorry, the name of the write-in is too similar to an existing choice\n"));
 	    $ok = 0;
@@ -183,7 +179,7 @@ if (param('AddWritein') ne '' && $writeins eq 'yes') {
 	$edata{'choices'} = $choices;
 #   Now update the vote matrix so that this write-in is
 #   ranked last by every voter so far.
-	for (local $j = 0; $j < $num_choices - 1; $j++) {
+	for (my $j = 0; $j < $num_choices - 1; $j++) {
 	    $vdata{"$j.$index"} += $num_votes;
 	}
     }
