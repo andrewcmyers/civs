@@ -179,17 +179,15 @@ using the voter key. It reports an error if appropriate.
 as the <i>voter receipt</i>.
 <li>
 The server records the ballot indexed by the hash of the
-voter receipt, the authorization key, and the private host
-key: {<i>r</i>,<i>a</i>, <i>k</i>}<sub>MD5</sub>. Thus
+voter receipt and the private host
+key: {<i>r</i>, <i>k</i>}<sub>MD5</sub>. Thus
 information on the server doesn't allow the identity of the
 voter to be determined from the ballot.
 <li>
 The server reports the receipt <i>r</i> to the voter and
 forgets the receipt. This enables later checking that the
 ballot was cast properly, but only with the participation
-of the election supervisor, the voter, and the CIVS
-server (because <i>a</i>, <i>r</i>, and <i>k</i> are all
-needed to find the right ballot.)
+of the voter.
 </ol>
 </ol>
 
@@ -269,16 +267,13 @@ The server forgets <i>x</i> and <i>IP</i>.
 The server generates a fresh nonce <i>r</i> to use as the
 voter receipt.
 <li>
-The server records the ballot indexed by the hash of the
-the receipt, the authorization key, and the private host
-key.
+As in private elections, the server records the ballot indexed
+by the hash of the the receipt and the private host key.
 <li>
 The server reports the receipt <i>r</i> to the voter and
 forgets the receipt. This enables later checking that the
 ballot was cast properly, but only with the participation
-of the election supervisor, the voter, and the CIVS
-server (because <i>a</i>, <i>r</i>, and <i>k</i> are all
-needed to find the right ballot.)
+of the voter.
 </ol>
 
 <p>

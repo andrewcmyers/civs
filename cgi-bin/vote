@@ -252,7 +252,6 @@ sub ProcessVote {
     my $voter_ballot_release_key = SecureNonce();
     GetPrivateHostID;
     my $ballot_key = civs_hash($voter_ballot_release_key,
-    			       $authorization_key,
 			       $private_host_id);
     $vdata{$ballot_key} = $vote;
     $vdata{'num_votes'}++;
