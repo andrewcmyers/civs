@@ -8,6 +8,7 @@ $civs_url = "@CIVSURL@";
 $last_election_id_file = $home."/last_election_id";
 $private_host_id_file = $home."/private_host_id";
 $lockfile = $home."/global_lock";
+$cr = "\r\n";
 $local_debug = 0;
 
 sub GetPrivateHostID {

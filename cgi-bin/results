@@ -36,9 +36,9 @@ print "Actual votes cast: $num_votes", br();
 print "Announced end of election: $election_end", br();
 if (IsStopped) {
     $close_time = $vdata{'close_time'};
-    print "Actual time election ended: $close_time\n";
+    print "Actual time election ended: $close_time$cr";
 } else {
-    print "Election has not yet ended.\n";
+    print "Election has not yet ended.$cr";
 }
 
 
@@ -64,14 +64,14 @@ for ($j = 0; $j < $num_choices; $j++) {
 
 print h2("Condorcet winner");
 if ($condorcet_winner >= 0) {
-    print p("The Condorcet winner of this election is ".
+    print p('The Condorcet winner of this election is '.
             strong($choices[$condorcet_winner]));
 } else {
-    print p("This election had no Condorcet winner.\n");
+    print p('This election had no Condorcet winner.').$cr;
 }
 
-print h2("Ranking of the choices\n");
-print p("Winning choices are shown in bold.");
+print h2('Ranking of the choices').$cr;
+print p('Winning choices are shown in bold.');
 print "<pre>";
 $beatpath::n = $num_choices;
 for ($j = 0; $j < $num_choices; $j++) {
@@ -310,6 +310,7 @@ print "<pre>";
 	$iters = 0;
 	$full_search = 0;
 	$depth = 0;
+	$recurse = 1;
 	sub dprint {
 	    local $msg = $_[0];
 	    for (local $i = 0; $i < $depth; $i++) {
@@ -322,9 +323,6 @@ print "<pre>";
 # compare_sets compares $curr_comm and $new_comm and returns
 # 1 if the latter is better.
 	    #print "Replacing $new_comm[$i] with $j at index $i\n";
-	    $new_comm[$i] = $j;
-	    @new_comm = sort {$a <=> $b} @new_comm ;
-	    $new_comm = flatten @new_comm;
 	    # print "$curr_comm vs. $new_comm (@new_comm): ";
 	    local $bestpref = 0;
 	    local $bestipref = 0;
@@ -336,29 +334,34 @@ print "<pre>";
 		if ($bestipref > $bestpref) { $bestpref = $bestipref; }
 		if ($bestjpref > $bestpref) { $bestpref = $bestjpref; }
 	    }
-	    #print "best f-preference tally yields $bestipref to $bestjpref\n";
+	    # print "best f-preference tally yields $bestipref to $bestjpref\n";
+	    $tally1{$curr_comm}{$new_comm} = $bestipref;
+	    $tally2{$curr_comm}{$new_comm} = $bestjpref;
 	    if ($bestjpref > $bestipref) {
-		dprint "$new_comm is preferred $bestjpref&ndash;$bestipref\n";
-		$tally{$curr_comm}{$new_comm} =
-		    "$bestipref,$bestjpref";
-		local $save_full_search = $full_search;
-		visit($new_comm);
-		$full_search = $save_full_search;
+		dprint "$new_comm is preferred to $curr_comm, $bestjpref&ndash;$bestipref\n";
+		if ($recurse) {
+		    local $save_full_search = $full_search;
+		    visit($new_comm);
+		    $full_search = $save_full_search;
+		}
 		return 1;
 	    } elsif ($bestjpref == $bestipref) {
 		kPref(0, $curr_comm, $new_comm);
 		#print "weak pref: $ipref to $jpref\n";
-		$weaktally{$curr_comm}{$new_comm} =
-		    "$ipref,$jpref";
-		if ($jpref > $ipref ||
-		    ($full_search && $jpref == $ipref)) {
-		    dprint "  $new_comm is (weakly) preferred $bestjpref&ndash;$bestipref\n";
+		$weaktally1{$curr_comm}{$new_comm} = $ipref;
+		$weaktally2{$curr_comm}{$new_comm} = $jpref;
+		if ($jpref > $ipref
+		    # || ($full_search && $jpref == $ipref)
+		    ) {
+		    dprint "$new_comm is (weakly) preferred to $curr_comm, $jpref&ndash;$ipref\n";
 		    if ($jpref == $ipref) {
 			dprint "  ...exploring because a cycle has been detected\n";
 		    }
-		    local $save_full_search = $full_search;
-		    visit($new_comm);
-		    $full_search = $save_full_search;
+		    if ($recurse) {
+			local $save_full_search = $full_search;
+			visit($new_comm);
+			$full_search = $save_full_search;
+		    }
 		    return 1;
 		}
 	    }
@@ -381,7 +384,7 @@ print "<pre>";
 	    local $cci;
 	    local $added = 0;
 	    if ($visited{$curr_comm}) {
-		# if ($full_search) { $depth--; return; }
+		if ($full_search) { $depth--; return; }
 		if (!$full_search) {
 		    dprint "$curr_comm is in a cycle (in the Schwartz set?)\n";
 		    $full_search = 1;
@@ -421,9 +424,15 @@ print "<pre>";
 # try replacing with each choice not currently in the committee
 			if (!$in{$j}) {
 			    local %save_in = %in;
-			    if (compare_sets) {
-				if (!$full_search) { $done = 1; }
-# if this committee isn't in the Schwartz set then there is
+			    $new_comm[$i] = $j;
+			    @new_comm = sort {$a <=> $b} @new_comm ;
+			    $new_comm = flatten @new_comm;
+			    if (
+				!$visited{$new_comm} &&
+				compare_sets) {
+				# if (!$full_search)
+				{ $done = 1; }
+# If this committee isn't in the Schwartz set then there is
 # no reason to compare to any more committees, because we
 # already found at least one that is better than this one.
 			    }
@@ -436,55 +445,156 @@ print "<pre>";
 		}
 	    } # if change
 	    $beaten[$cci] = $save_beaten;
-	    dprint "<b>Done with $curr_comm</b>\n";
+	    # dprint "<b>Done with $curr_comm</b>\n";
 	    $depth--;
 	}
 	visit($curr_comm);
 
-	$num_unbeaten = $#committee + 1;
-	for ($i = 0; $i <= $#committee; $i++) {
-	    $unbeaten[$i] = 1;
-	}
-	for ($i = 0; $i <= $#committee; $i++) {
-	    for ($j = 0; $j <= $#committee; $j++) {
-		if ($unbeaten[$i] && !$borm[$i][$j]) {
-		    $unbeaten[$i] = 0;
-		    $num_unbeaten--;
-		}
-	    }
-	}
+	# $num_unbeaten = $#committee + 1;
+	# for ($i = 0; $i <= $#committee; $i++) {
+	    # $unbeaten[$i] = 1;
+	# }
+	# for ($i = 0; $i <= $#committee; $i++) {
+	    # for ($j = 0; $j <= $#committee; $j++) {
+		# if ($unbeaten[$i] && !$borm[$i][$j]) {
+		    # $unbeaten[$i] = 0;
+		    # $num_unbeaten--;
+		# }
+	    # }
+	# }
     } # if need to pick winners
     print "</pre>";
-    print "<h2>Winning set of choices</h2>\n";
 
-    sub printSchwartz {
-	print '<table><tr>';
-	for ($i = 0; $i <= $#committee; $i++) {
-	    if ($unbeaten[$i]) {
-		@curr_comm = split /,/, $committee[$i];
-		print "<td><ol>";
-		for ($j = 0; $j < $num_winners; $j++) {
-		    print "<li> ".$choices[$curr_comm[$j]]."\n";
-		}
-		print "</ol></td>";
-	    }
-	}
-	print '</tr></table>';
-    }
     if ($iters > 500) {
 	print p(b("Search failed."));
     }
+    print '<pre>'.b('Acquiring additional preference information...').$cr;
+    $recurse = 0;
+    $divisor = 1;
+    while ($divisor < $num_votes) { $divisor *= 10; }
+    for (local $j = 0; $j <= $#committee; $j++) {
+	for (local $k = 0; $k < $j; $k++) {
+	    $curr_comm = $committee[$j];
+	    $new_comm = $committee[$k];
+	    compare_sets;
+	    local $jk = $tally1{$curr_comm}{$new_comm};
+	    local $kj = $tally2{$curr_comm}{$new_comm};
+	    $beatpath::matrix[$j][$k] = $matrix[$j][$k] = $jk;
+	    $beatpath::matrix[$k][$j] = $matrix[$k][$j] = $kj;
+
+	    if ($jk == $kj) {
+		$beatpath::matrix[$j][$k] = $matrix[$j][$k] =
+		    $weaktally1{$curr_comm}{$new_comm}/$divisor;
+		$beatpath::matrix[$k][$j] = $matrix[$k][$j] =
+		    $weaktally2{$new_comm}{$curr_comm}/$divisor;
+	    }
+	}
+    }
+    print '</pre>';
+    $beatpath::n = $#committee + 1;
+    &beatpath::rank_candidates();
+    @result = @beatpath::result;
+    @closure_matrix = @beatpath::closure_matrix;
+    $j = 0;
+    for ($rank = 0; $rank <= $#result; $rank++) {
+	@winner = @{$result[$rank]};
+	for ($i = 0; $i <= $#winner; $i++) {
+	    $choice_index[$j++] = $winner[$i];
+	}
+    }
+    @winner = @{$result[0]};
+    $num_unbeaten = $#winner + 1;
+    sub printSchwartz {
+	print '<table><tr>';
+	for ($i = 0; $i < $num_unbeaten; $i++) {
+	    print "<td><ol>";
+	    @curr_comm = split /,/, $committee[$winner[$i]];
+	    for ($j = 0; $j < $num_winners; $j++) {
+		print "<li value=\"$curr_comm[$j]\"> $choices[$curr_comm[$j]]$cr";
+	    }
+	    print "</ol></td>";
+	}
+	print '</tr></table>';
+    }
     if ($num_unbeaten == 1) {
+	print h2("Winning set of choices\n");
 	print p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> Condorcet winner of this election was the following set of choices, which are not listed
 	in any particular order:");
 	printSchwartz;
     } else {
-	print p("There were several unbeaten sets:\n");
+	print h2("Winning sets of choices\n");
+	print p("There were $num_unbeaten unbeaten sets:$cr");
 	printSchwartz;
-	print p("A Condorcet completion algorithm needs to
-		be run to choose among them. This is not yet
-		implemented\n");
     }
+    print h2('Preference matrix');
+    print p('This is the simple voting preference matrix.
+	     Fractional preferences correspond to weak preferences where
+	     a majority is allowed to express preferences beyond
+	    its usual proportional representation because the minority
+	    is indifferent');
+    print "<table>\n";
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+    for ($j = 0; $j <= $#committee; $j++) {
+	print "<td width=20px>".($j+1).".</td>";
+    }
+    print "</tr>\n";
+    for ($jj = 0; $jj <= $#committee; $jj++) {
+	$j = $choice_index[$jj];
+	print "<tr>";
+	print "<td>".($jj+1).". ".$committee[$j]."</td>\n";
+	print "<td width=40px>&nbsp;</td>\n";
+	for ($kk = 0; $kk <= $#committee; $kk++) {
+	    $k = $choice_index[$kk];
+	    print "<td><tt>";
+	    if ($j != $k) {
+		print $matrix[$j][$k];
+	    } else {
+		print '-';
+	    }
+	    print "</tt></td>";
+	}
+	print "</tr>\n";
+    }
+    print "</table>";
+
+    print h2('Beatpath closure matrix');
+    print p("The following is the beatpath matrix for the ".($#committee+1).
+	" sets of choices explored. Choice 1 is preferred
+	    to choice 2 if there is a better beatpath leading from 1 to 2
+	    than any leading from 2 to 1.");
+
+    print "<table>\n";
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td>";
+    for ($j = 0; $j <= $#committee; $j++) {
+	print "<td width=20px>".($j+1).".</td>";
+    }
+    print "</tr>\n";
+    for ($jj = 0; $jj <= $#committee; $jj++) {
+	$j = $choice_index[$jj];
+	print "<tr>";
+	print "<td>".($jj+1).". ".$committee[$j]."</td>\n";
+	print "<td width=40px>&nbsp;</td>\n";
+	for ($kk = 0; $kk <= $#committee; $kk++) {
+	    $k = $choice_index[$kk];
+	    print "<td><tt>";
+	    # print "(".$matrix[$j][$k].") ";
+	    if ($j == $k) {
+		print "-";
+	    } else {
+		$w = $closure_matrix[$j][$k];
+		$l = $closure_matrix[$k][$j];
+		if ($w > $l) {
+		    print "$w";
+		} else {
+		    if ($w != 0) { print "$w"; }
+		    else { print "."; }
+		}
+	    }
+	    print "</tt></td>";
+	}
+	print "</tr>\n";
+    }
+    print "</table>";
 }
 
 
