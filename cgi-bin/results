@@ -428,7 +428,7 @@ sub PrintProportionalResults {
     }
     print "</ol>";
 
-    $prop_details = 0;
+    $prop_details = 1;
 
     if ($prop_details) {
 	print '<h2>Log of search for best result set</h2>'.$cr;
@@ -531,6 +531,7 @@ sub PrintProportionalResults {
 	    return $ret;
 	}
 	sub compute_in {
+	    my $curr_comm = $_[0];
 	    my $i;
 	    for ($i = 0; $i < $num_choices; $i++) { $in{$i} = 0; }
 	    for ($i = 0; $i < $num_winners; $i++) { $in{$curr_comm[$i]} = 1; }
@@ -642,7 +643,7 @@ sub PrintProportionalResults {
 		$cindex{$curr_comm} = $cci;
 		$mcomm = flatten(renumber($curr_comm));
 		if ($prop_details) {
-		    dprint "<b>Considering set: $mcomm (#$#committee)</b>\n";
+		    dprint "<b>Considering set: $mcomm ($curr_comm)</b>\n";
 		}
 		$visited{$curr_comm} = 1;
 		$added = 1;
@@ -664,8 +665,8 @@ sub PrintProportionalResults {
 		if (!$added) {
 		    # dprint "Change to beaten info, revisiting from $curr_comm\n";
 		}
-		my @new_comm;
-		compute_in;
+		my @new_comm, $new_comm;
+		compute_in $curr_com;
 		my $done = 0;
 		for (my $i = 0; $i < $num_winners && !$done; $i++) {
 # try improving each current member
@@ -677,6 +678,7 @@ sub PrintProportionalResults {
 			    $new_comm[$i] = $j;
 			    @new_comm = sort {$a <=> $b} @new_comm ;
 			    $new_comm = flatten @new_comm;
+			    dprint "Constructed $new_comm\n";
 			    if (
 				!$visited{$new_comm} &&
 				compare_sets($curr_comm, $new_comm)) {
@@ -687,6 +689,8 @@ sub PrintProportionalResults {
 # already found at least one that is better than this one.
 			    }
 			    %in = %save_in;
+			} else {
+			    print "Can't add $j, it's already in \n";
 			}
 		    } # for j
 		} # for i
@@ -724,7 +728,7 @@ sub PrintProportionalResults {
     }
 # add some obvious contenders: all but one of the top num_choices+1
     if ($prop_details) {
-	print "<pre>Adding obvious contenders:\n";
+	print '<pre>'.b('Adding obvious contenders:').$cr;
     }
     for (my $j = 0; $j <= $num_winners; $j++) {
 	@a = ();
