@@ -102,6 +102,12 @@ print end_html();
 
 exit 0;
 
+# PrintMatrix(n, m, choices, choice_index, zerodot)
+# generates HTML output for the n-by-n matrix m. The
+# names of the choices are found in @choices, and
+# order of the choices is defined by choice_index:
+# choice_index[i] is the index of the i'th choice
+# (in choices and m).
 sub PrintMatrix {
     my $n = $_[0];
     my @m = @{$_[1]};
@@ -117,34 +123,34 @@ sub PrintMatrix {
     }
     print '</tr>'.$cr;
     for (my $jj = 0; $jj < $n; $jj++) {
-		my $j = $choice_index[$jj];
-		my $j1 = $jj + 1;
-		print '<tr>';
-		print '<th align=left>'.$j1.'.&nbsp;'.$choices[$j].'</th>'.$cr;
-		print "<td width=40px>&nbsp;</td>\n";
-		for (my $kk = 0; $kk < $n; $kk++) {
-		    my $k = $choice_index[$kk];
-	    	if ($j == $k) {
-				print '<td class="count">-';
-		    } else {
-				my $w = $m[$j][$k];
-				my $l = $m[$k][$j];
-				if ($w > $l) {
-				    print "<td class=\"win\" title=\"$choices[$j] beats $choices[$k] $w&ndash;$l\">";
-				} elsif ($w == $l) {
-				    print "<td class=\"tie\" title=\"$choices[$j] ties $choices[$k] $w&ndash;$l\">";
-				} else {
-				    print "<td class=\"lose\" title=\"$choices[$j] loses to $choices[$k] $w&ndash;$l\">";
-				}
-				if ($zerodot && $w == 0) {
-				    print '.';
-				} else {
-				    print $w;
-				}
-				print '</td>';
-		    }
+	my $j = $choice_index[$jj];
+	my $j1 = $jj + 1;
+	print '<tr>';
+	print '<th align=left>'.$j1.'.&nbsp;'.$choices[$j].'</th>'.$cr;
+	print "<td width=40px>&nbsp;</td>\n";
+	for (my $kk = 0; $kk < $n; $kk++) {
+	    my $k = $choice_index[$kk];
+	if ($j == $k) {
+		print '<td class="count">-';
+	    } else {
+		my $w = $m[$j][$k];
+		my $l = $m[$k][$j];
+		if ($w > $l) {
+		    print "<td class=\"win\" title=\"$choices[$j] beats $choices[$k] $w&ndash;$l\">";
+		} elsif ($w == $l) {
+		    print "<td class=\"tie\" title=\"$choices[$j] ties $choices[$k] $w&ndash;$l\">";
+		} else {
+		    print "<td class=\"lose\" title=\"$choices[$j] loses to $choices[$k] $w&ndash;$l\">";
 		}
-		print '</tr>'.$cr;
+		if ($zerodot && $w == 0) {
+		    print '.';
+		} else {
+		    print $w;
+		}
+		print '</td>';
+	    }
+	}
+	print '</tr>'.$cr;
     }
     print '</table>'.$cr;
 }
@@ -231,6 +237,50 @@ sub ComputeNonproportionalResults {
 	&beatpath::rank_candidates();
 	@result = @beatpath::result;
 	@closure_matrix = @beatpath::closure_matrix;
+	@choice_index = @beatpath::choice_index;
+}
+
+sub PrintRanking {
+    my $result = @{$_[0]};
+    my $had_tie = 0;
+    print "<ol>";
+    my $j = 0;
+    my $num_seen = 0;
+    for (my $rank = 0; $rank <= $#result; $rank++) {
+	my @winner = @{$result[$rank]};
+	print '<li value="'.($j+1).'">';
+	my $ranksize = $#winner + 1;
+	if ($ranksize > 1) {
+		    print "<i>Tied</i>:<br>";
+	}
+	    my $tie;
+	if ($num_seen < $num_winners &&
+		    $num_seen + $ranksize > $num_winners) 
+	    {
+		    $tie = 1;
+		    $had_tie = 1;
+	} else {
+		    $tie = 0;
+	}
+	for (my $i = 0; $i <= $#winner; $i++) {
+		    if ($i > 0) { print "<br>"; }
+		    if ($tie) { print "<font color=red>"; }
+		    if ($num_seen < $num_winners) {
+			print b($choices[$winner[$i]]);
+		    } else {
+			print $choices[$winner[$i]];
+		    }
+		    $choice_rank[$winner[$i]] = $j++;
+		    if ($tie) { print "</font>"; }
+	}
+	$num_seen += $#winner + 1;
+	print '</li>';
+    }
+    print "</ol>";
+    if ($had_tie) {
+	print p("Choices shown in red have tied for being selected.
+		You may wish to select among them randomly.");
+    }
 }
 
 sub PrintNonproportionalResults {
@@ -247,47 +297,8 @@ sub PrintNonproportionalResults {
 	print h2('Ranking of the choices').$cr;
 	print p('Winning choices are shown in bold.');
 
-	my $had_tie = 0;
-	print "<ol>";
-	my $j = 0;
-	my $num_seen = 0;
-	for (my $rank = 0; $rank <= $#result; $rank++) {
-	    my @winner = @{$result[$rank]};
-	    print '<li value="'.($j+1).'">';
-	    my $ranksize = $#winner + 1;
-	    if ($ranksize > 1) {
-			print "<i>Tied</i>:<br>";
-	    }
-		my $tie;
-	    if ($num_seen < $num_winners &&
-			$num_seen + $ranksize > $num_winners) 
-		{
-			$tie = 1;
-			$had_tie = 1;
-	    } else {
-			$tie = 0;
-	    }
-	    for (my $i = 0; $i <= $#winner; $i++) {
-			if ($i > 0) { print "<br>"; }
-			if ($tie) { print "<font color=red>"; }
-			if ($num_seen < $num_winners) {
-			    print b($choices[$winner[$i]]);
-			} else {
-			    print $choices[$winner[$i]];
-			}
-			$choice_rank[$winner[$i]] = $j;
-			$choice_index[$j++] = $winner[$i];
-			if ($tie) { print "</font>"; }
-	    }
-	    $num_seen += $#winner + 1;
-	    print '</li>';
-	}
-	print "</ol>";
-	if ($had_tie) {
-	    print p("Choices shown in red have tied for being selected.
-	             You may wish to select among them randomly.");
-	}
-# I think this belongs in the main results section -- Andrew
+	PrintRanking [@result];
+
 	print h2("Preference matrix");
 	print p("The following matrix shows the number of ballots on
 	which choices beat other choices, considered pairwise.");
@@ -316,27 +327,28 @@ sub PrintRP {
     } else {
 	print a({-name=>'RP'},h2('Simple RP report'));
 
-	print p("The following is the result of running a partial
-	implementation of the 
-	<a href=\"http://alumnus.caltech.edu/~seppley/RP%20procedure%20definition.htm\">
-	Maximize Affirmed Majorities algorithm</a>
-	on the ballots.
-	This process is more computationally intensive than
-	Beatpath Winner and it may be necessary to wait for
-	a minute or two for the results").$cr;
+	print p("The following is the result of running 
+	the ranked pairs/winning votes completion
+	algorithm. This process is more computationally intensive than
+	Beatpath Winner").$cr;
 	STDOUT->flush();
+
+# XXX The following code should be factored out into a file
+# XXX RP.pm. The only annoyance is returning the data on
+# XXX ignored preferences.
 	my @pairs = ();
-	my @affirmed;
+	my @affirmed, my @committed, my @current, my @saved_current;
 	for (my $j = 0; $j < $num_choices; $j++) {
 	    for (my $k = 0; $k < $num_choices; $k++) {
+		$committed[$j][$k] = 0;
 		$affirmed[$j][$k] = 0;
 		if ($matrix[$j][$k] > $matrix[$k][$j]) {
 		    push @pairs, [($j, $k, $matrix[$j][$k], $matrix[$k][$j])];
 		}
 	    }
 	}
-# XXX should pick a random ballot and use it to resolve ties in
-# order_pairs
+# XXX MAM would pick a random ballot and use it to resolve ties in
+# XXX order_pairs. Is this better?
 	sub order_pairs {
 		my @pair_a = @{$a};
 		my @pair_b = @{$b};
@@ -348,22 +360,95 @@ sub PrintRP {
 	}
 	@pairs = sort order_pairs @pairs;
 
-	my $denied_any = 0;
-
+	my $denied_any = 0;  # whether any preferences had to be denied
+	my $prev_win = 0;    # the strength of the previously considered winner
+	my $prev_lose = 0;   # the strength of the previously considered loser
+	my $bunch_index = 0; # which of several identical-strength pairs this is. Typically zero.
+#
+# XXX Should copy 2-D arrays with $a[$i] = [@{$a[$i]}]
+#
 	foreach my $pair_ref (@pairs) {
 	    my @pair = @{$pair_ref};
 	    my $winner = $pair[0];
 	    my $loser = $pair[1];
-	    $beatpath::n = $num_choices;
+	    my $wname = $choices[$winner];
+	    my $lname = $choices[$loser];
+	    my $winvotes = $pair[2];
+	    my $losevotes = $pair[3];
+	    # print pre("Considering the $winvotes-$losevotes pref for $wname over $lname");
+	    if ($winvotes != $prev_win || $losevotes != $prev_lose) {
+# new bunch: commit the affirmed prefs from the previous bunch
+		for (my $j = 0; $j < $num_choices; $j++) {
+		    for (my $k = 0; $k < $num_choices; $k++) {
+			$committed[$j][$k] = $affirmed[$j][$k];
+		    }
+		}
+		$prev_win = $pair[2];
+		$prev_lose = $pair[3];
+		$bunch_index = 0;
+	    } else {
+		$bunch_index++;
+	    }
+
 	    for (my $j = 0; $j < $num_choices; $j++) {
 		for (my $k = 0; $k < $num_choices; $k++) {
-		    $beatpath::matrix[$j][$k] = $affirmed[$j][$k];
+		    $current[$j][$k] = $affirmed[$j][$k];
 		}
 	    }
-	    $beatpath::matrix[$winner][$loser] = $pair[2];
-	    my $cycle = beatpath::transitive_closure();
+# we take a preference if it doesn't create a new cycle when
+# considered in combination with all strictly stronger
+
+	    sub TransitiveClosure {
+# TransitiveClosure(m, winner, loser) adds the preference
+# for winner over loser to the matrix and computes the
+# transitive closure. If this creates any new cycles,
+# returns 1 else 0.
+		my $mref = $_[0];
+		my $winner = $_[1];
+		my $loser = $_[2];
+		my $cycle = 0;
+		my @worklist = ([($winner, $loser)]);
+		$mref->[$winner][$loser] = 1;
+		while ($#worklist >= 0) {
+		    my $pr = shift @worklist;
+		    my $winner = $pr->[0];
+		    my $loser = $pr->[1];
+		    if ($mref->[$winner][$loser]) { next; }
+		    $mref->[$winner][$loser] = 1;
+		    if ($mref->[$loser][$winner]) { $cycle = 1; }
+		    for (my $j = 0; $j < $num_choices; $j++) {
+			if ($mref->[$loser][$j]) {
+			    push @worklist, [($winner, $j)];
+			}
+			if ($mref->[$j][$winner]) {
+			    push @worklist, [($j, $loser)];
+			}
+		    }
+		}
+		return $cycle;
+	    }
+
+	    my $cycle = TransitiveClosure [@current], $winner, $loser;
+
+	    if ($cycle && $bunch_index != 0) {
+# We have a cycle when considered with others in bunch but
+# maybe not when considered alone. Try again only
+# considering the strictly stronger preferences.
+		$cycle = 0;
+		my @temp;
+		for (my $j = 0; $j < $num_choices; $j++) {
+		    for (my $k = 0; $k < $num_choices; $k++) {
+			$temp[$j][$k] = $committed[$j][$k];
+		    }
+		}
+		$cycle = TransitiveClosure [@temp], $winner, $loser;
+	    }
 	    if (!$cycle) {
-		$affirmed[$winner][$loser] = $pair[2];
+		for (my $j = 0; $j < $num_choices; $j++) {
+		    for (my $k = 0; $k < $num_choices; $k++) {
+			$affirmed[$j][$k] = $current[$j][$k];
+		    }
+		}
 	    } else {
 		if (!$denied_any) {
 		    print p('Some voter preferences were ignored because they 
@@ -371,27 +456,50 @@ sub PrintRP {
 		    print '<ul>';
 		    $denied_any = 1;
 		}
-		my $wname = $choices[$winner];
-		my $lname = $choices[$loser];
 		print li("The $pair[2]&ndash;$pair[3] preference for $wname 
 				over $lname").$cr;
 	    }
-	STDOUT->flush();
+	    STDOUT->flush();
 	}
 	if ($denied_any) { print '</ul>'; }
+# XXX End of putative RP.pm
 	# print "</pre>";
 	if ($denied_any) {
-		print p('The following matrix reports all the preferences that were
-		affirmed. Any disagreement between Ranked
-		Pairs and Beatpath
-		Winner (if any) shows up as non-zero entries below the diagonal.
-		Note that this implementation does not correctly break ties.');
+	    print p('The following matrix reports all the preferences that were
+	    affirmed. Any disagreement between Ranked
+	    Pairs and Beatpath
+	    Winner (if any) shows up as non-zero entries below the diagonal.
+	    Note that this implementation does not correctly break ties.');
 	} else {
-		print p('All preferences were affirmed. The results of
-			running Ranked Pairs agree with Beatpath Winner.');
+	    print p('All preferences were affirmed. The result of
+		    Ranked Pairs agrees with that of Beatpath Winner.');
+	}
+	my $num_ranked = 0;
+	my @ignore, my @ordering, my @rp_choice_index;
+	while ($num_ranked < $num_choices) {
+	    my @winner = ();
+	    for (my $i = 0; $i < $num_choices; $i++) {
+		if (!$ignore[$i]) {
+		    my $won = 1;
+		    for (my $j = 0; $j < $num_choices; $j++) {
+			if (!$ignore[$j]) {
+			    if ($affirmed[$j][$i] > $affirmed[$i][$j]) {
+				$won = 0;
+				last;
+			    }
+			}
+		    }
+		    if ($won) {
+			push @winner, $i;
+			$rp_choice_index[$num_ranked++] = $i;
+		    }
+		}
+	    }
+	    push @result, [@winner];
+	    foreach my $j (@winner) { $ignore[$j] = 1; }
 	}
 
-	PrintMatrix $num_choices, [@affirmed], [@choices], [@choice_index], 1;
+	PrintMatrix $num_choices, [@matrix], [@choices], [@rp_choice_index], 1;
     }
 }
 
@@ -434,6 +542,7 @@ sub PrintProportionalResults {
     }
     &beatpath::rank_candidates();
     @result = @beatpath::result;
+    @choice_index = @beatpath::choice_index;
     @closure_matrix = ();
     for (my $j = 0; $j < $num_choices; $j++) {
 	for (my $k = 0; $k < $num_choices; $k++) {
@@ -825,15 +934,9 @@ sub PrintProportionalResults {
     &beatpath::rank_candidates();
     @cresult = @beatpath::result;
     @committee_cmatrix = @beatpath::closure_matrix;
+    @comm_choice_index = @beatpath::choice_index;
     $j = 0;
-    my @cwinner;
-    for (my $rank = 0; $rank <= $#cresult; $rank++) {
-	@cwinner = @{$cresult[$rank]};
-	for (my $i = 0; $i <= $#cwinner; $i++) {
-	    $comm_choice_index[$j++] = $cwinner[$i];
-	}
-    }
-    @cwinner = @{$cresult[0]};
+    my @cwinner = @{$cresult[0]};
     $num_unbeaten = $#cwinner + 1;
     if ($num_unbeaten == 1) {
 	print h2("Winning set of choices".$cr);

@@ -69,7 +69,7 @@ sub transitive_closure {
 }
  
 # Return the winner or winners in @winner, according to
-# the transitive beatpath closure of @matrix. These
+# the transitive beatpath closure in @matrix. These
 # are the candidates that are unbeaten. Candidates whose
 # corresponding entry in @ignore is 1 are ignored, others
 # are considered both as possible winners and as beaters.
@@ -111,8 +111,10 @@ sub rank_candidates {
   while ($num_ranked < $n) {
     winners();
     push @result, [@winner];
-    foreach $j (@winner) { $ignore[$j] = 1; }
-    $num_ranked += $#winner + 1;
+    foreach $j (@winner) {
+	$ignore[$j] = 1;
+	$choice_index[$num_ranked++] = $j;
+    }
   }
   @closure_matrix = @matrix;
   @matrix = @save_matrix;
