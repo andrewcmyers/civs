@@ -81,7 +81,7 @@ sub init {
 	@choices = split /[\r\n]+/, $choices;
 	$num_choices = $#choices + 1;
 	$num_auth = $edata{'num_auth'};
-	$num_votes = $vdata{'num_votes'};
+	$num_votes = $vdata{'num_votes'} or $num_votes = 0;
 	$recorded_voters = $vdata{'recorded_voters'};
 	$ballot_reporting = $edata{'ballot_reporting'};
 	%voter_keys = ();

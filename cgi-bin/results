@@ -1,5 +1,8 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use strict;
+use warnings;
+
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -9,9 +12,8 @@ use beatpath;
 use Socket;
 use IO::Handle;
 
-$thisurl = $civs_bin_path."/results";
-
-$detailed = param('detailed');
+my $thisurl = $civs_bin_path."/results";
+my $detailed = param('detailed');
 
 HTML_Header("CIVS Election Results");
 use election;
@@ -28,10 +30,9 @@ if ($public ne 'yes') {
 print h2($title);
 
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
-$num_votes += 0;
 print "Announced end of election: $election_end", br();
 if (IsStopped) {
-    $close_time = $vdata{'close_time'};
+    my $close_time = $vdata{'close_time'};
     print "Actual time election ended: $close_time", br();
 } else {
     print 'Election has not yet ended.', br();
@@ -56,6 +57,10 @@ if ($proportional eq 'yes') {
 
 print h2('Election description'), p($description);
 
+# These variables are global to the results computations.
+my ($condorcet_winner);
+my (@result, @matrix, @closure_matrix, @choice_index, @choice_rank);
+
 &ComputeNonproportionalResults;   # needed regardless of the election type
 
 if ($proportional eq 'yes') {
@@ -76,44 +81,42 @@ sub PrintMatrix {
     my @choice_index = @{$_[3]};
     my $zerodot = $_[4];
 
-    my $jj, $j1, $j, $k, $kk, $w, $l;
-
     print '<table class="matrix">'.$cr;
     print '<tr><td>&nbsp;</td><td>&nbsp;</td>';
-    for ($jj = 0; $jj < $n; $jj++) {
-	$j1 = $jj + 1;
-	print '<th width=20px>'.$j1.'.</th>';
+    for (my $jj = 0; $jj < $n; $jj++) {
+		my $j1 = $jj + 1;
+		print '<th width=20px>'.$j1.'.</th>';
     }
     print '</tr>'.$cr;
-    for ($jj = 0; $jj < $n; $jj++) {
-	$j = $choice_index[$jj];
-	$j1 = $jj + 1;
-	print '<tr>';
-	print '<th align=left>'.$j1.'.&nbsp;'.$choices[$j].'</th>'.$cr;
-	print "<td width=40px>&nbsp;</td>\n";
-	for ($kk = 0; $kk < $n; $kk++) {
-	    $k = $choice_index[$kk];
-	    if ($j == $k) {
-		print '<td class="count">-';
-	    } else {
-		$w = $m[$j][$k];
-		$l = $m[$k][$j];
-		if ($w > $l) {
-		    print "<td class=\"win\" title=\"$choices[$j] beats $choices[$k] $w&ndash;$l\">";
-		} elsif ($w == $l) {
-		    print "<td class=\"tie\" title=\"$choices[$j] ties $choices[$k] $w&ndash;$l\">";
-		} else {
-		    print "<td class=\"lose\" title=\"$choices[$j] loses to $choices[$k] $w&ndash;$l\">";
+    for (my $jj = 0; $jj < $n; $jj++) {
+		my $j = $choice_index[$jj];
+		my $j1 = $jj + 1;
+		print '<tr>';
+		print '<th align=left>'.$j1.'.&nbsp;'.$choices[$j].'</th>'.$cr;
+		print "<td width=40px>&nbsp;</td>\n";
+		for (my $kk = 0; $kk < $n; $kk++) {
+		    my $k = $choice_index[$kk];
+	    	if ($j == $k) {
+				print '<td class="count">-';
+		    } else {
+				my $w = $m[$j][$k];
+				my $l = $m[$k][$j];
+				if ($w > $l) {
+				    print "<td class=\"win\" title=\"$choices[$j] beats $choices[$k] $w&ndash;$l\">";
+				} elsif ($w == $l) {
+				    print "<td class=\"tie\" title=\"$choices[$j] ties $choices[$k] $w&ndash;$l\">";
+				} else {
+				    print "<td class=\"lose\" title=\"$choices[$j] loses to $choices[$k] $w&ndash;$l\">";
+				}
+				if ($zerodot && $w == 0) {
+				    print '.';
+				} else {
+				    print $w;
+				}
+				print '</td>';
+		    }
 		}
-		if ($zerodot && $w == 0) {
-		    print '.';
-		} else {
-		    print $w;
-		}
-		print '</td>';
-	    }
-	}
-	print '</tr>'.$cr;
+		print '</tr>'.$cr;
     }
     print '</table>'.$cr;
 }
@@ -124,10 +127,10 @@ sub PrintNonproportionalDetails {
 
     print h2("Detailed results");
 
-    $summary_url = "$thisurl?id=$election_id";
+    my $summary_url = "$thisurl?id=$election_id";
     print p(&details_bookmark . a({-href=>"$summary_url"}, "Hide details"));
 	
-    my $j, $jj, $k, $kk;
+    my ($j, $jj, $k, $kk);
     print h2("Beatpath closure matrix");
     print p("
     The following matrix shows the strength of the strongest
@@ -138,143 +141,63 @@ sub PrintNonproportionalDetails {
 
     PrintMatrix $num_choices, [@closure_matrix], [@choices], [@choice_index], 1;
 
-if (!param('MAM')) {
-    $link = a({-href=>"$thisurl?id=$election_id&detailed=1&MAM=1#MAM"},
-		'Compare with MAM results (may be time-consuming)');
-    print p($link);
-} else {
-    print a({-name=>'MAM'},h2('Simple MAM report'));
-
-    print p("The following is the result of running a partial
-    implementation of the 
-    <a href=\"http://alumnus.caltech.edu/~seppley/MAM%20procedure%20definition.htm\">
-    Maximize Affirmed Majorities algorithm</a>
-    on the ballots.
-    This process is more computationally intensive than
-    Beatpath Winner and it may be necessary to wait for
-    a minute or two for the results").$cr;
-	STDOUT->flush();
-    @pairs = ();
-    for (my $j = 0; $j < $num_choices; $j++) {
-	for (my $k = 0; $k < $num_choices; $k++) {
-	    $affirmed[$j][$k] = 0;
-	    if ($matrix[$j][$k] > $matrix[$k][$j]) {
-		push @pairs, [($j, $k, $matrix[$j][$k], $matrix[$k][$j])];
-	    }
-	}
-    }
-    sub order_pairs {
-	@pair_a = @{$a};
-	@pair_b = @{$b};
-	if ($pair_a[2] != $pair_b[2]) {
-	    return $pair_b[2] <=> $pair_a[2];
-	} else {
-	    return $pair_a[3] <=> $pair_b[3];
-	}
-    }
-    @pairs = sort order_pairs @pairs;
-
-    $denied_any = 0;
-
-    foreach $pair_ref (@pairs) {
-	@pair = @{$pair_ref};
-	$winner = $pair[0];
-	$loser = $pair[1];
-	$beatpath::n = $num_choices;
-	for (my $j = 0; $j < $num_choices; $j++) {
-	    for (my $k = 0; $k < $num_choices; $k++) {
-		$beatpath::matrix[$j][$k] = $affirmed[$j][$k];
-	    }
-	}
-	$beatpath::matrix[$winner][$loser] = $pair[2];
-	my $cycle = beatpath::transitive_closure();
-	if (!$cycle) {
-	    $affirmed[$winner][$loser] = $pair[2];
-	} else {
-	    if (!$denied_any) {
-		print p('Some voter preferences were ignored because they conflict with
-		other, stronger preferences:').$cr;
-		print '<ul>';
-		$denied_any = 1;
-	    }
-	    $wname = $choices[$winner];
-	    $lname = $choices[$loser];
-	    print li("The $pair[2]&ndash;$pair[3] preference for $wname over $lname").$cr;
-	}
-	STDOUT->flush();
-    }
-    if ($denied_any) { print '</ul>'; }
-
- # print "</pre>";
-    if ($denied_any) {
-	print p('The following matrix reports all the preferences that were
-	affirmed. Any disagreement between MAM and Beatpath
-	Winner (if any) shows up as non-zero entries below the diagonal.
-	Note that this implementation does not correctly break ties.');
-    } else {
-	print p('All preferences were affirmed. The results of
-	running MAM agree with Beatpath Winner.');
-    }
-
-    PrintMatrix $num_choices, [@affirmed], [@choices], [@choice_index], 1;
-} # if MAM
-
+	&PrintMAM;
+	
     print h2('Ballot report');
 
     if ($ballot_reporting eq 'yes') {
-	@voters = split /\n/, $vdata{'recorded_voters'};
-	if ($#voters >= 0) {
-		@headings = @choices;
-		@rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
+		my @voters = split /\n/, $vdata{'recorded_voters'};
+		if ($#voters >= 0) {
+			my @headings = @choices;
+			my @rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
 
-		$i = 1;
+			my $i = 1;
 	
-		fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
-		foreach $voter_key (@voters) {
-		    # recorded_vote is a comma separated list of the ranks
-		    # that the voter assigned to candidates.  Element i of the list
-		    # corresponds to candidate i.
-		    $recorded_vote = $vdata{$voter_key}; 
-		    @row = split /,/, $recorded_vote;
-		    unshift @row, "$i. ";
-		    $i++;
-		    push @rows, td(\@row);
-		}
+			fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
+			foreach my $voter_key (@voters) {
+		    	# recorded_vote is a comma separated list of the ranks
+			    # that the voter assigned to candidates.  Element i of the list
+			    # corresponds to candidate i.
+			    my $recorded_vote = $vdata{$voter_key}; 
+		    	my @row = split /,/, $recorded_vote;
+			    unshift @row, "$i. ";
+			    $i++;
+			    push @rows, td(\@row);
+			}
 
-		print table({-class=>'matrix'},
-			Tr(\@rows));
-		print p("Ballots are shown in a randomly generated order.");
-		print p(a({-href=>"http://$thishost$civs_bin_path/download_ballots?id=$election_id"},"Download ballots") . " as a CSV.");
+			print table({-class=>'matrix'},
+				Tr(\@rows));
+			print p("Ballots are shown in a randomly generated order.");
+			print p(a({-href=>"http://$thishost$civs_bin_path/download_ballots?id=$election_id"},"Download ballots") . " as a CSV.");
         } else {
-		print p("No ballots were cast in this election.");
-	}
+			print p("No ballots were cast in this election.");
+		}
     } else {
-	print p("Detailed ballot reporting is not enabled for this election.");
+		print p("Detailed ballot reporting is not enabled for this election.");
     }
-
 }
 
 sub ComputeNonproportionalResults {
 	# Compute condorcet winner and set up $matrix and $beatpath
 	$condorcet_winner = -1;
-	for ($j = 0; $j < $num_choices; $j++) {
+	for (my $j = 0; $j < $num_choices; $j++) {
 	    if ($condorcet_winner < 0) { $condorcet_winner = $j; }
-	    for ($k = 0; $k < $num_choices; $k++) {
-		$n = $vdata{"$j.$k"} + 0;
-		$matrix[$j][$k] = $n;
-		if ($j != $k) {
-		    $m = $vdata{"$k.$j"} + 0;
-		    if ($n <= $m && $condorcet_winner == $j) {
-			$condorcet_winner = -1; # can't be this one
-		    }
-		}
+	    for (my $k = 0; $k < $num_choices; $k++) {
+			my $n; $n = $vdata{"$j.$k"} or $n = 0;
+			$matrix[$j][$k] = $n;
+			if ($j != $k) {
+			    my $m; $m = $vdata{"$k.$j"} or $m = 0;
+			    if ($n <= $m && $condorcet_winner == $j) {
+					$condorcet_winner = -1; # can't be this one
+			    }
+			}
 	    }
 	}
 
 	$beatpath::n = $num_choices;
-	for ($j = 0; $j < $num_choices; $j++) {
-	    for ($k = 0; $k < $num_choices; $k++) {
-		$beatpath::matrix[$j][$k] = $matrix[$j][$k];
+	for (my $j = 0; $j < $num_choices; $j++) {
+	    for (my $k = 0; $k < $num_choices; $k++) {
+			$beatpath::matrix[$j][$k] = $matrix[$j][$k];
 	    }
 	}
 	&beatpath::rank_candidates();
@@ -286,44 +209,47 @@ sub PrintNonproportionalResults {
 	if ($proportional ne 'yes') {
 	    print h2("Condorcet winner");
 	    if ($condorcet_winner >= 0) {
-		print p('The Condorcet winner of this election is '.
-			strong($choices[$condorcet_winner]));
+			print p('The Condorcet winner of this election is '.
+				strong($choices[$condorcet_winner]));
 	    } else {
-		print p('This election had no Condorcet winner.').$cr;
+			print p('This election had no Condorcet winner.').$cr;
 	    }
 	}
 
 	print h2('Ranking of the choices').$cr;
 	print p('Winning choices are shown in bold.');
 
-	$had_tie = 0;
+	my $had_tie = 0;
 	print "<ol>";
-	$j = 0;
-	for ($rank = 0; $rank <= $#result; $rank++) {
+	my $j = 0;
+	my $num_seen = 0;
+	for (my $rank = 0; $rank <= $#result; $rank++) {
 	    my @winner = @{$result[$rank]};
 	    print '<li value="'.($j+1).'">';
-	    $ranksize = $#winner + 1;
+	    my $ranksize = $#winner + 1;
 	    if ($ranksize > 1) {
-		print "<i>Tied</i>:<br>";
+			print "<i>Tied</i>:<br>";
 	    }
+		my $tie;
 	    if ($num_seen < $num_winners &&
-		$num_seen + $ranksize > $num_winners) {
-		$tie = 1;
-		$had_tie = 1;
+			$num_seen + $ranksize > $num_winners) 
+		{
+			$tie = 1;
+			$had_tie = 1;
 	    } else {
-		$tie = 0;
+			$tie = 0;
 	    }
-	    for ($i = 0; $i <= $#winner; $i++) {
-		if ($i > 0) { print "<br>"; }
-		if ($tie) { print "<font color=red>"; }
-		if ($num_seen < $num_winners) {
-		    print b($choices[$winner[$i]]);
-		} else {
-		    print $choices[$winner[$i]];
-		}
-		$choice_rank[$winner[$i]] = $j;
-		$choice_index[$j++] = $winner[$i];
-		if ($tie) { print "</font>"; }
+	    for (my $i = 0; $i <= $#winner; $i++) {
+			if ($i > 0) { print "<br>"; }
+			if ($tie) { print "<font color=red>"; }
+			if ($num_seen < $num_winners) {
+			    print b($choices[$winner[$i]]);
+			} else {
+			    print $choices[$winner[$i]];
+			}
+			$choice_rank[$winner[$i]] = $j;
+			$choice_index[$j++] = $winner[$i];
+			if ($tie) { print "</font>"; }
 	    }
 	    $num_seen += $#winner + 1;
 	    print '</li>';
@@ -341,10 +267,10 @@ sub PrintNonproportionalResults {
 	if ($detailed) {
 		&PrintNonproportionalDetails;
 	} else {
-		$details_url = "$thisurl?id=$election_id" . '&detailed=1#details';
-		$link = a({-href=>"$details_url"}, "Detailed results") 
+		my $details_url = "$thisurl?id=$election_id" . '&detailed=1#details';
+		my $link = a({-href=>"$details_url"}, "Detailed results") 
 		        . " are also available.";
-		print p($bookmark.$link);
+		print p($link);
 	}
 }
 
@@ -352,9 +278,96 @@ sub details_bookmark {
 	return a({-name=>"details"}, "");
 }
 
+sub PrintMAM {
+	if (!param('MAM')) {
+		my $link = a({-href=>"$thisurl?id=$election_id&detailed=1&MAM=1#MAM"},
+			'Compare with MAM results (may be time-consuming)');
+		print p($link);
+	} else {
+		print a({-name=>'MAM'},h2('Simple MAM report'));
+
+		print p("The following is the result of running a partial
+		implementation of the 
+		<a href=\"http://alumnus.caltech.edu/~seppley/MAM%20procedure%20definition.htm\">
+		Maximize Affirmed Majorities algorithm</a>
+		on the ballots.
+		This process is more computationally intensive than
+		Beatpath Winner and it may be necessary to wait for
+		a minute or two for the results").$cr;
+		STDOUT->flush();
+		my @pairs = ();
+		my @affirmed;
+		for (my $j = 0; $j < $num_choices; $j++) {
+			for (my $k = 0; $k < $num_choices; $k++) {
+				$affirmed[$j][$k] = 0;
+				if ($matrix[$j][$k] > $matrix[$k][$j]) {
+					push @pairs, [($j, $k, $matrix[$j][$k], $matrix[$k][$j])];
+				}
+			}
+		}
+		sub order_pairs {
+			my @pair_a = @{$a};
+			my @pair_b = @{$b};
+			if ($pair_a[2] != $pair_b[2]) {
+				return $pair_b[2] <=> $pair_a[2];
+			} else {
+				return $pair_a[3] <=> $pair_b[3];
+			}
+		}
+		@pairs = sort order_pairs @pairs;
+
+		my $denied_any = 0;
+
+		foreach my $pair_ref (@pairs) {
+			my @pair = @{$pair_ref};
+			my $winner = $pair[0];
+			my $loser = $pair[1];
+			$beatpath::n = $num_choices;
+			for (my $j = 0; $j < $num_choices; $j++) {
+				for (my $k = 0; $k < $num_choices; $k++) {
+					$beatpath::matrix[$j][$k] = $affirmed[$j][$k];
+				}
+			}
+			$beatpath::matrix[$winner][$loser] = $pair[2];
+			my $cycle = beatpath::transitive_closure();
+			if (!$cycle) {
+				$affirmed[$winner][$loser] = $pair[2];
+			} else {
+				if (!$denied_any) {
+					print p('Some voter preferences were ignored because they 
+							conflict with other, stronger preferences:').$cr;
+					print '<ul>';
+					$denied_any = 1;
+				}
+				my $wname = $choices[$winner];
+				my $lname = $choices[$loser];
+				print li("The $pair[2]&ndash;$pair[3] preference for $wname 
+						over $lname").$cr;
+			}
+		STDOUT->flush();
+		}
+		if ($denied_any) { print '</ul>'; }
+		# print "</pre>";
+		if ($denied_any) {
+			print p('The following matrix reports all the preferences that were
+			affirmed. Any disagreement between MAM and Beatpath
+			Winner (if any) shows up as non-zero entries below the diagonal.
+			Note that this implementation does not correctly break ties.');
+		} else {
+			print p('All preferences were affirmed. The results of
+				running MAM agree with Beatpath Winner.');
+		}
+
+		PrintMatrix $num_choices, [@affirmed], [@choices], [@choice_index], 1;
+	}
+}
+
 ############################################################
 # Proportional Results
 ############################################################
+
+no strict;
+no warnings;
 
 sub PrintProportionalResults {
 # first sort the choices by the ordinary election algorithm
@@ -379,24 +392,24 @@ sub PrintProportionalResults {
     }
 
     $beatpath::n = $num_choices;
-    for ($j = 0; $j < $num_choices; $j++) {
-	for ($k = 0; $k < $num_choices; $k++) {
+    for (my $j = 0; $j < $num_choices; $j++) {
+	for (my $k = 0; $k < $num_choices; $k++) {
 	    $beatpath::matrix[$j][$k] = $matrix[$j][$k];
 	}
     }
     &beatpath::rank_candidates();
     @result = @beatpath::result;
     @closure_matrix = ();
-    for ($j = 0; $j < $num_choices; $j++) {
-	for ($k = 0; $k < $num_choices; $k++) {
+    for (my $j = 0; $j < $num_choices; $j++) {
+	for (my $k = 0; $k < $num_choices; $k++) {
 	    $closure_matrix[$j][$k] = $beatpath::closure_matrix[$j][$k];
 	}
     }
     #@closure_matrix = @beatpath::closure_matrix;
     $j = 0;
-    for ($rank = 0; $rank <= $#result; $rank++) {
+    for (my $rank = 0; $rank <= $#result; $rank++) {
 	my @winner = @{$result[$rank]};
-	for ($i = 0; $i <= $#winner; $i++) {
+	for (my $i = 0; $i <= $#winner; $i++) {
 	    $choice_index[$j] = $winner[$i];
 	    $choice_rank[$winner[$i]] = $j + 1;
 	    $j++;
@@ -418,7 +431,7 @@ sub PrintProportionalResults {
 
     print "<h2>Choices (in individual preference order)</h2>";
     print "<ol>";
-    for ($j = 0; $j < $num_choices; $j++) {
+    for (my $j = 0; $j < $num_choices; $j++) {
 	print "<li> ".$choices[$choice_index[$j]]."</li>\n";
     }
     print "</ol>";
@@ -460,14 +473,14 @@ sub PrintProportionalResults {
 
         $sum = 0;
 	my $k;
-	for ($k = 0; $k < $num_winners; $k++) {
+	for (my $k = 0; $k < $num_winners; $k++) {
 	    @w1[$k] = $ratings[$c1[$k]];
 	    @w2[$k] = $ratings[$c2[$k]];
 	}
 	@w1 = sort {$a <=> $b} @w1;
 	@w2 = sort {$a <=> $b} @w2;
 	$sum1 = $sum2 = 0;
-	for ($k = 1; $k <= $f; $k++) {
+	for (my $k = 1; $k <= $f; $k++) {
 	    $sum1 += $w1[$num_winners - $k];
 	    $sum2 += $w2[$num_winners - $k];
 	    if ($sum1 != $sum2 && !$use_combined_ratings) { last; }
@@ -488,7 +501,7 @@ sub PrintProportionalResults {
 	my ($f, $i, $j) = @_;
 	#print "Comparing $i to $j at $f-preference. ";
 	my ($icnt, $jcnt) = (0,0);
-	for ($v = 0; $v < $num_votes; $v++) {
+	for (my $v = 0; $v < $num_votes; $v++) {
 	    if ($f == 0) {
 		$c = kPrefVoter($num_winners, $v, $i, $j);
 	    } else {
@@ -510,7 +523,7 @@ sub PrintProportionalResults {
 	}
     }
     #print "num choices = $num_choices, num winners = $num_winners\n";
-    for ($i = 0; $i < $num_winners && $i < $num_choices; $i++) {
+    for (my $i = 0; $i < $num_winners && $i < $num_choices; $i++) {
 	$curr_comm[$i] = $choice_index[$i];
     }
 
@@ -528,8 +541,8 @@ sub PrintProportionalResults {
 	sub compute_in {
 	    my @c = @{$_[0]};
 	    my $i;
-	    for ($i = 0; $i < $num_choices; $i++) { $in{$i} = 0; }
-	    for ($i = 0; $i < $num_winners; $i++) { $in{$c[$i]} = 1; }
+	    for (my $i = 0; $i < $num_choices; $i++) { $in{$i} = 0; }
+	    for (my $i = 0; $i < $num_winners; $i++) { $in{$c[$i]} = 1; }
 	}
 	$change = 1;
 	$curr_comm = flatten @curr_comm;
@@ -705,11 +718,11 @@ sub PrintProportionalResults {
 	visit($curr_comm);
 
 	# $num_unbeaten = $#committee + 1;
-	# for ($i = 0; $i <= $#committee; $i++) {
+	# for (my $i = 0; $i <= $#committee; $i++) {
 	    # $unbeaten[$i] = 1;
 	# }
-	# for ($i = 0; $i <= $#committee; $i++) {
-	    # for ($j = 0; $j <= $#committee; $j++) {
+	# for (my $i = 0; $i <= $#committee; $i++) {
+	    # for (my $j = 0; $j <= $#committee; $j++) {
 		# if ($unbeaten[$i] && !$borm[$i][$j]) {
 		    # $unbeaten[$i] = 0;
 		    # $num_unbeaten--;
@@ -774,9 +787,9 @@ sub PrintProportionalResults {
     @committee_cmatrix = @beatpath::closure_matrix;
     $j = 0;
     my @cwinner;
-    for ($rank = 0; $rank <= $#cresult; $rank++) {
+    for (my $rank = 0; $rank <= $#cresult; $rank++) {
 	@cwinner = @{$cresult[$rank]};
-	for ($i = 0; $i <= $#cwinner; $i++) {
+	for (my $i = 0; $i <= $#cwinner; $i++) {
 	    $comm_choice_index[$j++] = $cwinner[$i];
 	}
     }
@@ -790,10 +803,10 @@ sub PrintProportionalResults {
 	print p("There were $num_unbeaten unbeaten sets:$cr");
     }
     print '<table><tr>';
-    for ($i = 0; $i < $num_unbeaten; $i++) {
+    for (my $i = 0; $i < $num_unbeaten; $i++) {
 	print '<td><ol>';
 	@mapped_comm = renumber($committee[$cwinner[$i]]);
-	for ($j = 0; $j < $num_winners; $j++) {
+	for (my $j = 0; $j < $num_winners; $j++) {
 	    $j1 = $mapped_comm[$j];
 	    $j2 = $choice_index[$j1 - 1];
 	    print "<li value=\"$j1\"> $choices[$j2]".$cr;
@@ -807,7 +820,7 @@ sub PrintProportionalResults {
     for (my $i = 0; $i < $num_winners; $i++) {
 	$combinations = $combinations * ($num_choices - $i);
     }
-    foreach $k (keys %seen) {
+    foreach my $k (keys %seen) {
 	$num_seen++;
     }
     $num_visited = $#committee + 1;
@@ -825,7 +838,7 @@ sub PrintProportionalResults {
 	     help break ties in proportional preference.');
     STDOUT->flush();
     
-    for ($j = 0; $j <= $#committee; $j++) {
+    for (my $j = 0; $j <= $#committee; $j++) {
 	$comm_choices[$j] = '('.flatten(renumber($committee[$j])).')';
     }
     PrintMatrix $#committee+1, [@cmatrix], [@comm_choices], [@comm_choice_index], 0;
