@@ -1,10 +1,9 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
-use civs_common;
 use DB_File;
-use mail;
 
 use Socket;
 use IO::Handle;
@@ -24,7 +23,8 @@ while (<$new_addresses_file>) {
 HTML_Header("CIVS: Adding Voters");
 CIVS_Header("Adding voters");
 
-CheckControlKey;
+my $control_key = param('key');    
+CheckControlKey($control_key);
 
 if (!IsStarted || IsStopped) {
     print h1(Error), p("Sorry, voters can only be added to an election in progress.");
@@ -33,14 +33,10 @@ if (!IsStarted || IsStopped) {
 
 print "<pre>\n";
 GetPrivateHostID;
-if (!($local_debug)) { ConnectMail; }
 
 # Send all of the voters their keys
-
 SendKeys(@new_addresses);
 
-Send "quit";
-close(SMTP);
 print "Done.\n</pre>\n";
 
 print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key\">Go back to election control</a>");
@@ -50,7 +46,6 @@ $edata{'num_auth'} += $num_new_voters;
 
 print end_html();
 Log("$num_new_voters new voters added to $title ($election_id)");
-untie %edata;
 
 UnlockElection;
 

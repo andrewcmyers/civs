@@ -1,10 +1,9 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
-use civs_common;
 use DB_File;
-use mail;
 
 use Socket;
 use IO::Handle;
@@ -14,7 +13,7 @@ $thisurl = $civs_bin_path."/close";
 HTML_Header("CIVS: Stopping Election");
 use election;
 
-untie %edata;
+my $control_key = param('key');    
 
 CIVS_Header("Stopping election");
 
@@ -22,7 +21,7 @@ LockElection;
 
 CheckElectionID;
 CheckStarted;
-CheckControlKey;
+CheckControlKey($control_key);
 CheckNotStopped;
 
 if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL)) {
@@ -38,8 +37,6 @@ if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL)) {
 print end_html();
 
 $vdata{'close_time'} = localtime();
-
-untie %vdata;
 
 UnlockElection;
 

@@ -1,15 +1,16 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
-use civs_common;
 use DB_File;
-use mail;
 
 use Socket;
 use IO::Handle;
 
 $thisurl = $civs_bin_path."/vote";
+
+use election;
 
 # There are four different ways to enter this script.
 # 1. As the initial page one uses to cast a vote in a private election
@@ -20,10 +21,10 @@ $thisurl = $civs_bin_path."/vote";
 # 4. To reorder the choices from their default order (case 1, case 2 variants
 #    where C1-Cn are already defined)
 
-$voter = param('voter'); # nearly obsolete
-$old_voter_key = param('voter_key'); # nearly obsolete
-$voter_key = param('key');
-$old_access_control = ($voter_key eq '');
+my $voter = param('voter'); # nearly obsolete
+my $old_voter_key = param('voter_key'); # nearly obsolete
+my $voter_key = param('key');
+my $old_access_control = ($voter_key eq '');
 
 HTML_Header("CIVS Voting");
 
@@ -33,20 +34,18 @@ if ($num_winners == 1) {
     $winners_text = "($num_winners) favorite choices";
 }
 
-use election;
-
 CIVS_Header("$title");
 
 CheckElectionID;
 CheckStarted;
 CheckNotStopped;
 if ($public ne 'yes') {
-    CheckVoterKey;
+    CheckVoterKey($voter_key, $old_voter_key, $voter);
 } else {
     $voter_key = remote_addr(); # XXX should make the voter key the hash and
     $voter = "voter";           # the voter the remote address
 }
-CheckNotVoted;
+CheckNotVoted($voter_key, $voter);
 
 if (param('Vote') ne '') {
 # process the vote!
@@ -68,8 +67,11 @@ if (param('Vote') ne '') {
 	}
 	$rank[$i] = $rank;
     }
+    
+    LockElection;
+    
     $vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
-
+    
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
 
 # Now, update matrix.
@@ -93,8 +95,6 @@ if (param('Vote') ne '') {
 	$vdata{'recorded_voters'} = $recorded_voters . "\n".  $voter_key;
     }
 
-    untie %edata;
-    untie %vdata;
     UnlockElection;
 
     print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.\n");
@@ -363,6 +363,5 @@ if ($public eq 'yes') {
 }
 
 print end_html();
-untie %edata;
 
 exit 0;

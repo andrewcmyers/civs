@@ -1,21 +1,20 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use civs_common;
 use IO::Handle;
 use CGI qw(:standard);
 use DB_File;
 use Digest::MD5 qw(md5_hex);
-use civs_common;
-use mail;
 
 HTML_Header("CIVS start election");
 CIVS_Header('Start election');
 
 use election;
-
 $max_voters = 1000;
+my $control_key = param('key');   
 
 CheckElectionID;
-CheckControlKey;
+CheckControlKey($control_key);
 
 if (IsStarted) {
     print h1("Error");
@@ -38,15 +37,12 @@ SendKeys @addresses;
 
 print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key\">Go back to election control</a>");
 
-close(START);
-
 # Destroy record of voter addresses so we can't
 # figure out who voted for what.
 $edata{'num_auth'} = $#addresses + 1;
 $edata{'addresses'} = "";
 
 print end_html();
-untie %edata;
 
 Log("Election $title ($election_id) started");
 

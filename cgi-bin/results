@@ -1,13 +1,11 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
-use civs_common;
 use DB_File;
-use mail;
 use beatpath;
-
 use Socket;
 use IO::Handle;
 
@@ -69,9 +67,6 @@ if ($proportional eq 'yes') {
 
 print end_html();
 
-untie %edata;
-untie %vdata;
-
 exit 0;
 
 sub PrintMatrix {
@@ -122,7 +117,6 @@ sub PrintMatrix {
     }
     print '</table>'.$cr;
 }
-
 
 sub PrintNonproportionalDetails {
 # Print the detailed results of the ordinary
@@ -749,6 +743,7 @@ sub PrintProportionalResults {
     }
     dprint '</pre>'.b('Acquiring any missing preference information...<pre>').$cr;
     STDOUT->flush();
+
     $recurse = 0;
     $divisor = 1;
     while ($divisor < $num_votes) { $divisor *= 10; }

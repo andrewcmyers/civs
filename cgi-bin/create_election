@@ -1,11 +1,10 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
-use civs_common;
 use DB_File;
 use mail;
-
 use Socket;
 use IO::Handle;
 
@@ -130,8 +129,7 @@ if ($public eq 'yes') {
 Send "For more information about the Condorcet Internet Voting Service, see";
 Send "  $civs_url.\r\n";
 Send "."; ConsumeSMTP;
-Send "quit";
-close(SMTP);
+CloseMail;
 
 print "</pre>\n";
 

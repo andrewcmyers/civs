@@ -1,11 +1,9 @@
 #!@PERL@ -I@CGIBINDIR@
 
+use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
-use civs_common;
 use DB_File;
-use mail;
-
 use Socket;
 use IO::Handle;
 
@@ -14,11 +12,12 @@ $thisurl = $civs_bin_path."/control";
 HTML_Header("CIVS Election Control");
 use election;
 
+my $control_key = param('key');    
 
 CIVS_Header("Election control");
 
 CheckElectionID;
-CheckControlKey;
+CheckControlKey($control_key);
 
 print h1("Election: $title");
 
@@ -136,6 +135,4 @@ print '</form>';
 
 print end_html();
 
-untie %vdata;
-untie %edata;
 exit 0;
