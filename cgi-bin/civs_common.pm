@@ -236,7 +236,7 @@ sub CheckLoad {
     }
 }
 
-our $admission_socket = $home.'/admission_control';
+our $admission_socket = $home.'/elections/admission_control';
 
 sub AdmissionControl {
     # if ($local_debug) { return 1; }
@@ -248,14 +248,16 @@ sub AdmissionControl {
     }
     my $sa = pack_sockaddr_un($admission_socket);
     if (!connect ADMCTRL, $sa) {
-	print pre("Starting the admission control lock server\n");
+	HTML_Header("Starting admission control");
 	unlink($admission_socket);
-	system("$home/lockserv $admission_socket $maxthreads &");
+	print pre("$home/pgrp $home/lockserv $admission_socket $maxthreads");
+	system("$home/pgrp $home/lockserv $admission_socket $maxthreads");
 	sleep(1);
 	if (!connect(ADMCTRL, $sa)) {
 	    print "Can't start it!?\n";
 	    exit 1;
 	}
+	chmod 0777, $admission_socket;
     }
     my $success = <ADMCTRL>;
     if ($success eq '') {

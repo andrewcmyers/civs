@@ -276,7 +276,7 @@ sub ProcessVote {
 	# print "num_choices = $num_choices\n";
     for (my $i = 0; $i < $num_choices; $i++) {
 	my $rank = param('C'.$i);
-	if ($proportional && !$use_combined_ratings) {
+	if ($proportional eq 'yes' && !$use_combined_ratings) {
 	    $rank = $num_choices - $rank; # invert
 	}
 	if ($rank < 0) { $rank = 0; } # must be proportional
