@@ -240,8 +240,6 @@ sub ProcessVote {
 		$rank[$i] = $rank;
     }
     
-    LockElection;
-    
     $vdata{$voter_key} = $vote;  # Vote is recorded (but not voter)
     
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
@@ -268,8 +266,6 @@ sub ProcessVote {
     } else {
 		$vdata{'recorded_voters'} = $voter_key;
     }
-
-    UnlockElection;
 
     print p("Thank you. Your vote for <strong>$title</strong> has been successfully cast.\n");
 

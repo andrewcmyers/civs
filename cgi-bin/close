@@ -20,8 +20,6 @@ my $control_key = param('key');
 
 CIVS_Header("Stopping election");
 
-LockElection;
-
 CheckElectionID;
 CheckStarted;
 CheckControlKey($control_key);
@@ -40,7 +38,5 @@ if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
 print end_html();
 
 $vdata{'close_time'} = localtime();
-
-UnlockElection;
 
 exit 0;

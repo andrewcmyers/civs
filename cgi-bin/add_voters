@@ -12,8 +12,6 @@ use Socket;
 use IO::Handle;
 use election;
 
-LockElection;
-
 my $thisurl = $civs_bin_path."/add_voters";
 
 my $new_addresses = param('new_addresses');
@@ -51,7 +49,5 @@ $edata{'num_auth'} += $num_new_voters;
 
 print end_html();
 Log("$num_new_voters new voters added to $title ($election_id)");
-
-UnlockElection;
 
 exit 0;

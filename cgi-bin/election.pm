@@ -58,6 +58,8 @@ sub init {
 	$vote_data = $election_dir."/vote_data";
 	$election_lock = $election_dir."/lock";
 
+	&LockElection;
+
 	# open databases
 	tie %edata, "DB_File", $election_data, &O_RDWR, 0666, $DB_HASH
 		or die "Unable to tie election db=$election_data: $!\n";
@@ -91,6 +93,7 @@ sub init {
 END {
     untie %edata;
     untie %vdata;
+    &UnlockElection;
 }
 
 # utility routines
