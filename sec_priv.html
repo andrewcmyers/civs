@@ -79,7 +79,8 @@ easily cast multiple votes, and this is as good as one can
 reasonably expect an public election to be. For private
 elections, voters receive a unique key by e-mail that
 permits them to vote just once. Further attempts to vote
-will be rejected.
+will be rejected. Voters can also be reissued voter keys without
+giving them the ability to vote again.
 
 CIVS sends various information by e-mail. It assumes that
 e-mail is a secure medium. If your e-mail is compromised,
@@ -92,7 +93,7 @@ CIVS works by generating several different keys that serve
 as capabilities. These 64-bit keys are generated using a
 combination of random noise and secure hashing.
 <ul>
-<li>The server has a <i>private host key</i>
+<li>The server has a <i>private host key</i> <i>k</i>
 that is a secret input to the nonce generation process.
 The private host key can be set automatically using random data or
 defined by the service manager at installation time.
@@ -106,19 +107,24 @@ when they are made available, but little else.
 </li>
 <li>For each election there is a <i>control key</i>
 that gives the ability to control the election as
-supervisor. It is generated using the private host key.
+supervisor. It is generated as a random nonce.
 This key is mailed to the supervisor when the
-election is created.</li>
+election is created, and it is not stored on the server,
+providing some protection against misuse by intruders.
+</li>
 <li>For each election there is also an <i>authorization key</i>
-that gives the ability to add new voters to the election
+
 (and to check whether a voter is already enabled.)
 The authorization key is also mailed to the supervisor at
-the beginning of the election. However, it is
-<strong>not</strong> stored on the server, thus protecting
-the anonymity of voters.</li>
+the beginning of the election. Like the control key, the
+authorization key is <strong>not</strong> stored on the server,
+protecting the anonymity of voters.</li>
 <li>Each voter receives a unique <i>voter key</i> that gives the
-right to vote on the election. Voter keys are stored on the
-server but cannot be used to find the identity of the voter.
+right to vote on the election. Voter keys are computed using
+a secure hash of the voter's e-mail address, the authorization key,
+and the private host key. Voter keys are
+not stored on the server and cannot be used to determine
+which voter's ballot is which.
 </li>
 </ul>
 
@@ -132,25 +138,24 @@ e-mail addresses. These addresses are (temporarily) stored
 on the server.
 <li>The server generates three fresh nonces to use as the
 election identifier, as the authorization key for this election,
-as the control key. All three are sent to the supervisor in
+and as the control key. All three are sent to the supervisor in
 e-mail in a URL.
-<li>The election identifier and control key are stored on
-the server; the server stores the MD5 hash of the
-authorization key and then forgets the authorization key.
+<li>The election identifier is stored on
+the server; the server stores the MD5 hash of the control
+and authorization keys and then forgets the keys.
 <li>The supervisor uses the URL in the email to start the
 election.  This proves that that the supervisor presented a
 real e-mail address.
-<li>The server checks the provided authorization key and
-control key to make sure they match the stored data. For the
-authorization key it compares the hash of the key against
-the stored hash.
+<li>The server hashes the provided authorization key and
+control key to make sure they match the stored hashes.
 <li>For each e-mail address, it performs the steps described
 below under <a href="#adding"><strong>Adding
-voters</strong></a>. This results in unique voter keys being
-e-mailed to the voter e-mail addresses, the creation of
-a list of (hashed) authorized e-mail addresses, and the
-creation of a list of valid voter keys.
-<li>The cleartext voter e-mail addresses are now forgotten by the server.
+voters</strong></a>. This results in the creation of a list
+of valid voter keys, which are mailed to the corresponding
+e-mail addresses. The server stores the hashes of all of the
+voter keys.
+<li>The cleartext voter e-mail addresses and the
+corresponding voter keys are now forgotten by the server.
 </ol>
 
 <h3>Voting</h3>
@@ -160,11 +165,24 @@ includes the voter key <i>v</i>.
 <li>The server checks whether the voter key is in the set
 of valid keys, and whether a ballot has already been cast
 using the voter key. It reports an error if appropriate.
-<li>The server records the
-binding (<i>v</i>, <i>b</i>). Because <i>v</i> is
-unconnected to the e-mail address of the voter, the
+The server generates a fresh nonce <i>r</i> to use as the
+voter receipt.
+<li>The server generates a fresh nonce <i>r</i> that serves
+as the <i>voter receipt</i>.
+<li>
+The server records the ballot indexed by the hash of the
+voter receipt and the authorization key
+{<i>v</i>,<i>a</i>}<sub>MD5</sub>. Thus
 information on the server doesn't allow the identity of the
 voter to be determined from the ballot.
+<li>
+The server reports the receipt <i>r</i> to the voter and
+forgets the receipt. This enables later checking that the
+ballot was cast properly, but only with the participation
+of the election supervisor, the voter, and the CIVS
+operator (because <i>a</i>, <i>r</i>, and <i>k</i> are all
+needed to find the right ballot.)
+</ol>
 </ol>
 
 <a name="adding"><h3>Adding a voter</h3></a>
@@ -180,26 +198,23 @@ server. It is, however, available at election creation time.
 The server stores {<i>a</i>}<sub>MD5</sub> to allow checking
 whether the correct authorization key is presented.
 <li>
-The server computes <i>x</i> = {<i>e</i>,
-<i>a</i>}<sub>MD5</sub>, which is a secure proxy for the
-e-mail address; it does not permit either
+The server computes <i>v</i> = {<i>e</i>, <i>a</i>, <i>k</i>}<sub>MD5</sub>,
+which is the voter key. Possession of the key does not permit either
 direct computation of the e-mail address or (in the absence
 of the authorization key) a dictionary attack to find the e-mail
-address.
+address. The use of the private host key <i>k</i> prevents the
+supervisor from forging a voter's key.
 <li>
-The server looks up <i>x</i> in the current set of
-(hashed) authorized e-mail addresses. If it is already there, it
-reports an error; otherwise, <i>x</i> is added to the set of
-authorized addresses.
+The server looks up {<i>v</i>}<sub>MD5</sub> in the current set of
+(hashed) voter keys. If it is already there, it
+reports an error; otherwise, {<i>v</i>}<sub>MD5</sub> is added
+to the set of voter keys.
 <li>
 The server forgets <i>a</i> and <i>x</i>.
 <li>
-The server generates a fresh nonce <i>v</i> to use as the
-voter key, and records it in the set of valid voter keys.
-<li>
 It sends <i>v</i> to the e-mail address <i>e</i>.
 <li>
-The server forgets <i>e</i>.
+The server forgets <i>e</i> and <i>v</i>.
 </ol>
 
 <h2>Public election protocol</h2>
@@ -226,27 +241,31 @@ appropriate.
 includes the voter IP address <i>IP</i> and the
 authorization key.
 <li>
-The server computes <i>x</i> = {<i>IP</i>,
-<i>a</i>}<sub>MD5</sub> as the secure proxy for the voter's
-identity. (Secure only in the sense that it does not permit
+The server computes <i>x</i> = {<i>IP</i>, <i>a</i>,
+<i>k</i>}<sub>MD5</sub> as the voter key.
+(Secure in the sense that it does not permit
 the voter's identity to be determined.)
 <li>
-The server adds this <i>x</i> to the set of voters who have
-already voted. If it is already in the set,
+The server adds the hash of this <i>v</i> to the set of
+already used voter keys. If it is already in the set,
 the server reports an error. Note that this check does not
 defend against malicious voters who vote from multiple IP
 addresses; such voters are, unfortunately, not uncommon.
 <li>
 The server forgets <i>x</i> and <i>IP</i>.
 <li>
-The server generates a fresh nonce <i>v</i> to use as the
-voter key.
+The server generates a fresh nonce <i>r</i> to use as the
+voter receipt.
 <li>
-The server records the ballot indexed by the voter key.
+The server records the ballot indexed by the hash of the
+voter key and the receipt.
 <li>
-The server reports the voter key <i>v</i> to the voter.
-This enables later checking that the ballot was cast
-properly.
+The server reports the receipt <i>r</i> to the voter and
+forgets the receipt. This enables later checking that the
+ballot was cast properly, but only with the participation
+of the election supervisor, the voter, and the CIVS
+operator (because <i>a</i>, <i>r</i>, and server access are all
+needed to find the right ballot.)
 </ol>
 
 Because the IP address in an public election is hashed using
@@ -255,6 +274,23 @@ attacker to determine the IP addresses by dictionary attack.
 Of course, if the attacker has obtained the authorization
 key for that election, a dictionary attack becomes possible.
 
-</body>
+<h3>Attacks</h3>
 
+This section describes what attacks might be mounted by
+attackers with various capabilities and how effectively
+the system defends against them.
+
+<ul>
+<li><strong>Malicious voter</strong>
+<li><strong>Malicious election supervisor</strong>
+<li><strong>Intruder with read-only access</strong>
+<li><strong>Intruder with read-write access</strong>
+<li><strong>Election supervisor who is also an intruder
+	    with read-write access</strong>
+<li><strong>Malicious CIVS server operator</strong>
+</ul>
+
+<i>(This section under construction)</i>
+
+</body>
 </html>
