@@ -47,14 +47,14 @@ CheckNotStopped;
 if ($public ne 'yes') {
     CheckVoterKey($voter_key, $old_voter_key, $voter);
 } else {
-	if (!&ElectionUsesAuthorizationKey) {
-		# for backwards compatibility
-		$voter_key = remote_addr(); 
-	    $voter = "voter";           
-	} else {
-		CheckAuthorizationKeyForVoting($authorization_key);
-		$voter_key = civs_hash(remote_addr(),$authorization_key);
-	}
+    if (!&ElectionUsesAuthorizationKey) {
+	# for backwards compatibility
+	$voter_key = remote_addr(); 
+	$voter = "voter";           
+    } else {
+	CheckAuthorizationKeyForVoting($authorization_key);
+	$voter_key = civs_hash(remote_addr(),$authorization_key);
+    }
 }
 CheckNotVoted($voter_key, $old_voter_key, $voter);
 
@@ -64,18 +64,18 @@ my $vote = param('Vote');
 my $load = param('Load');
 
 if ($vote) {
-	&ProcessVote;     # prints out confirmation; call does not return
+    &ProcessVote;     # prints out confirmation; call does not return
 } 
 
 my (@rank, @choice_index, @iota);
 &OrderChoices;
 
 if ($add_writein and $writeins eq 'yes') {
-	&AddWritein;
+    &AddWritein;
 }
 
 if ($load) {
-	&Load;
+    &Load;
 }
 
 print p("Please vote on the election ".b($title).'.').$cr;
@@ -109,18 +109,18 @@ if ($proportional ne 'yes') {
     if ($use_combined_ratings) {
 	print ' It is assumed by the voting algorithm that you want
 		the sum of ratings of selected choices to be as large
-		as possible. ';
+		as possible. You can interpret ratings as weights.';
     } else {
 	print ' It is assumed by the voting algorithm that you want
 		the rating of your most preferred selected choice to be as
-		large as possible, and if two sets of selected choices
+		high as possible, and if two sets of selected choices
 		agree on the selected choice you prefer most, then you
 		would decide between them using the second most preferred
 		choice, and so on. ';
     }
     print "All choices
     are currently given a rating of zero, meaning that you
-    have no interest in seeing them selected. Weights cannot
+    have no interest in seeing them selected. Ratings cannot
     be negative or larger than 999.
     It doesn't help you to make your ratings larger
     than other voters' ratings; your ratings are only compared
@@ -144,7 +144,7 @@ print '<form method="POST"
 
 my $rating = 'Rank';
 if ($proportional eq 'yes') {
-    $rating = 'Weight';
+    $rating = 'Rating';
 }
 
 print '<table border="1" cellpadding="5" cellspacing="0"><tr>
@@ -281,8 +281,7 @@ sub ProcessVote {
     }
 
     print p("Thank you. Your vote for <strong>$title</strong> has been
-	successfully cast. Your voter receipt is
-	<code>$election_id/$voter_ballot_release_key</code>.");
+	successfully cast. Your voter receipt is ". code($election_id."/".$voter_ballot_release_key).".");
     
     # This is code to be enabled later, when we implement ballot checking.
     #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
@@ -360,13 +359,13 @@ sub AddWritein {
 		my $index = $num_choices;
 		$choices[$index] = $writein;
 		$num_choices++;
+		$edata{'choices'} = $choices;
 
 		# Now update the vote matrix so that this write-in is
 		# ranked last by every voter so far.
 		for (my $j = 0; $j < $num_choices - 1; $j++) {
 		    $vdata{"$j.$index"} = $num_votes;
 		}
-
     }
 }
 
