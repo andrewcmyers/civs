@@ -118,7 +118,7 @@ sub CheckStopped {
 	print p(
 "This election (<strong>$title</strong>) has not yet been closed
 by its supervisor, $name (<tt>$email_addr</tt>).
-The election has been announced to end on $election_end.");
+The election has been announced to end $election_end.");
 	PointToResults;
 	print end_html();
 	exit 0;
