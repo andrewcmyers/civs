@@ -80,12 +80,15 @@ with a preference for committee 1 is <i>v</i> and there are
 <i>n</i> voters overall. Then an <i>f</i>-preference for
 committee 1 is <b>valid</b> if
 &#8968;<i>vk</i>/<i>n</i>&#8969; &#8805; <i>f</i>.
-Invalid preferences are ignored in deciding the winner; to decide whether
+Invalid preferences are usually ignored in deciding the winner; to decide whether
 committee 1 is preferred over committee 2, we find the
-largest <i>f</i> such that <span style="font-style: italic;">v</span> voters have a valid
+largest <i>f</i> such that <i>v</i> voters have a valid
 <i>f</i>-preference for one of the two committees. This <i>v</i>
 becomes the strength of the preference in the ordinary
-Condorcet sense.
+Condorcet sense. If there is no valid <i>f</i>-preference
+for one committee over the other, then full <i>k</i>-preference
+is used to break the tie. This allows majorities to break ties
+in cases where the minority is indifferent.</p>
 <p>For <i>k</i>=1, this voting
 scheme is simply the ordinary Condorcet scheme because
 of the ceiling operation. For
