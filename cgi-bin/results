@@ -713,9 +713,8 @@ print "<pre>";
     print '<a name="comparison">';
     print h2("Pairwise comparison");
 
-    local $max = $num_choices-1;
     print p("You can compare any two sets of choices.
-    Just enter the numbers of the choices (from 0 to $max) in each set, with the
+    Just enter the numbers of the choices (from 1 to $num_choices) in each set, with the
     numbers of one set's choices in the left column and the numbers of the other's
     in the right column.");
     print '<form method="POST"
