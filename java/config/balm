@@ -1,7 +1,7 @@
 TOMCAT=/home/andru/jakarta-tomcat-5.5.7/webapps
-SERVLETDIR=$TOMCAT/civs
-HTMLDIR=$SERVLETDIR
-SERVLETNAME=civs
-CIVSDATADIR=/home/andru/upg/civs/java/data
-CIVSURL=http://balm.cs.cornell.edu:8080/civs
-SERVLETURL=${CIVSURL}/main
+SERVLET_DIR=$TOMCAT/civs
+HTML_DIR=$SERVLET_DIR
+SERVLET_NAME=civs
+CIVS_DATA_DIR=/home/andru/upg/civs/java/data
+CIVS_URL=http://balm.cs.cornell.edu:8080/civs
+SERVLET_URL=${CIVS_URL}/main
