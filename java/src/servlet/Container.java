@@ -29,13 +29,13 @@ class Container extends Node {
 		contents.write(p);
 	}
 	public void write(HTMLWriter p) {
+		p.begin();
+		p.indent(2);
 		p.print("<");
 		p.print(tag);
 		writeOptions(p);
 		p.print(">");
 		p.breakLine();
-		p.print("  ");
-		p.begin();
 		writeContents(p);
 		p.end();
 		p.breakLine();

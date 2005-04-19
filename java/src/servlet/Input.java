@@ -10,7 +10,7 @@ package servlet;
  * submitted.
  */
 public abstract class Input extends Node {
-	String name; 
+	String name;
 	Input(String name_) {
 		name = name_;
 	}

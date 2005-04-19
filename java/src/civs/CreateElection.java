@@ -11,14 +11,13 @@ import servlet.Paragraph;
 import servlet.Request;
 import servlet.Text;
 import servlet.TextInput;
+import servlet.TextArea;
 
 public class CreateElection extends CIVSAction {
 	public CreateElection(Main main) {
 		super(main);
 	}
 	
-
-
 	/* (non-Javadoc)
 	 * @see servlet.Session#handle(servlet.Request)
 	 */
@@ -27,6 +26,7 @@ public class CreateElection extends CIVSAction {
 		final Input name_inp = new TextInput("name", 20, "");
 		final Input email_addr_inp = new TextInput("email_addr", 20, "");
 		final Input election_end_inp = new TextInput("election_end", 20, "tomorrow at 5pm");
+		final Input voters_inp = new TextArea("voters", 5, 64, "<enter voter email addresses here>");
 		class FinishCreate extends CIVSAction {
 			FinishCreate() {
 				super(CreateElection.this.main);
@@ -44,7 +44,7 @@ public class CreateElection extends CIVSAction {
 						new Br(),
 						new Text("Name = " + name),
 						new Br(),
-						new Text("Email address = " + email_addr)));
+						new Text("Voter addresses = " + req.getParam(voters_inp))));
 			}
 		}
 		return main().createPage("CIVS Election Creation",
@@ -62,7 +62,8 @@ public class CreateElection extends CIVSAction {
 						 new NodeList(
 						 		new Text("Your email address: "), email_addr_inp, new Br()),						   		
 						 new NodeList(new Text("Day and time you plan to stop the election: "),
-						 		election_end_inp, new Br())								
+						 		election_end_inp, new Br()),
+					     new NodeList(new Text("Email addresses of voters"), voters_inp)	
 							))));
 
 	}

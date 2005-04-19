@@ -13,12 +13,16 @@ public class Form extends Container {
 	public void writeOptions(HTMLWriter p) {
 		p.print(" ");
 		p.begin();
-		p.print("method=\"GET\"");
+		p.print("method=POST");
+		// XXX Want to use POST here, but why doesn't this work?
 		p.breakLine();
-		p.print("enctype=\"multipart/form-data\"");
-		p.breakLine();
+		//p.print("enctype=\"multipart/form-data\"");
+		//p.breakLine();
 		p.print("action=");
 		p.printq(servlet_url);
+		p.breakLine();
+		p.print("name=");
+		p.printq(action.name.toHex());
 		p.end();		
 	}
 	

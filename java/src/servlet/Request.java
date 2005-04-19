@@ -25,6 +25,9 @@ public class Request {
 	public String request_name() {
 		return request.getParameter("request");
 	}
+	public String title() {
+		return request.getParameter("title");
+	}
 	
 	/** Return the associated session, or null if there is none.
 	 * Initial requests do not reference a session. 

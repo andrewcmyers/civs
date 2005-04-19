@@ -16,10 +16,10 @@ public class Head extends Node {
 	}
 
 	public void write(HTMLWriter w) {
+		w.begin();
+		w.indent(2);
 		w.print("<head>");
 		w.breakLine();
-		w.print("  ");
-		w.begin();
 		w.print("<title>");
 		w.escape(title);
 		w.print("</title>");

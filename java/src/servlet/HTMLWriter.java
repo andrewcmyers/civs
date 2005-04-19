@@ -45,6 +45,9 @@ public class HTMLWriter {
 		}
 		pos = indent;
 	}
+	public void indent(int n) {
+		indent += n;
+	}
 
 	public void begin() {
 		s.push(new Integer(indent));
@@ -90,6 +93,16 @@ public class HTMLWriter {
 				    }
 				    break;
 			}		
-		}	
+		}
+	}
+	/** Escape HTTP-special characters in s and
+	 * print the result.
+	 * @author andru
+	 * @param s the string to escape
+	 *
+	 */
+	public void HTTP_escape(String s) {
+		writer.print(s);
+		// XXX finish me		
 	}
 }

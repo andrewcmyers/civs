@@ -1,0 +1,7 @@
+TOMCAT='/cygdrive/c/Program Files/Apache Software Foundation/Tomcat 5.5/webapps'
+SERVLET_DIR="$TOMCAT/civs"
+HTML_DIR="$SERVLET_DIR"
+SERVLET_NAME=civs
+CIVS_DATA_DIR='c:\andru\upg\civs\java\data'
+STYLE_SHEET_URL='/civs/style.css'
+SERVLET_URL='/civs/main'

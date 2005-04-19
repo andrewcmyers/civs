@@ -1,7 +1,7 @@
 package servlet;
 import java.io.*;
+import java.util.Enumeration;
 import java.util.HashMap;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -55,19 +55,46 @@ abstract public class Servlet extends HttpServlet {
 		increment_req_cnt();
 		try {
 			response.setContentType("text/html");
+			if (request.getCharacterEncoding() == null)
+				request.setCharacterEncoding("ISO-8859-1");
 			
 			Request req = new Request(this, request);
 			PrintWriter rw = response.getWriter();
-			
 			String request_name = req.request_name();
 			
 			servlet.Action action = null;
+			if (false) { // debugging: dump parameter names
+				HTMLWriter p = new HTMLWriter(rw);
+				String params = "";
+				for (Enumeration i = request.getParameterNames(); i.hasMoreElements();) {
+					String name = (String)i.nextElement();
+					params += name;
+					params += "=";
+					params += request.getParameter(name);
+					params += "\n";
+				}
+						
+				createPage("params", new Pre(new Text(params))).write(p);
+			}
+			if (false) { // debugging: dump form data
+				HTMLWriter p = new HTMLWriter(rw);
+				String s = "";
+				BufferedReader in = request.getReader();
+				while (true) {
+					String ln = in.readLine();
+					if (ln == null) break;
+					s += ln;
+					s += '\n';
+				}
+				createPage("request", new Pre(new Text(s))).write(p);
+			}
+	
 			
 			if (request_name == null) {				
 				String action_name_s = req.action_name();
 				if (action_name_s == null) {
 					Node n = reportError("Access violation", "Improper request",
-					"The request includes no action identifier");
+					"The request includes no action identifier \"" + req.title() + "\"");
 					n.write(new HTMLWriter(rw));
 				} else {
 					Name action_name = null;
@@ -77,7 +104,8 @@ abstract public class Servlet extends HttpServlet {
 					} catch (IllegalArgumentException e) {
 						Node n = reportError("Access violation", "Invalid action",
 						"The action identifier " + action_name_s + " is ill-formed (" + e + ").");
-						n.write(new HTMLWriter(rw));
+						HTMLWriter p = new HTMLWriter(rw);
+						n.write(p);
 						ok = false;
 					}
 					// decode hex
@@ -85,7 +113,7 @@ abstract public class Servlet extends HttpServlet {
 						action = (Action) actions.get(action_name);
 					} else {
 						Node n = reportError("Access violation", "Invalid Action",
-								"The action identifier in the request is invalid: \"" + action_name_s + "\"");
+								"The action identifier in the request is invalid: <" + request + ">");
 						n.write(new HTMLWriter(rw));
 					}
 				}
@@ -94,14 +122,13 @@ abstract public class Servlet extends HttpServlet {
 					action = (Action) actions.get(request_name);
 				} else {
 					Node n = reportError("Access violation", "Invalid Request",
-							"The request operation is invalid: \"" + request_name + "\"");
+							"The requested operation is invalid: \"" + request_name + "\"");
 					n.write(new HTMLWriter(rw));
 				}
 			}				
 	
 			if (action != null) {
-				Node n = action.invoke(req);
-				
+				Node n = action.invoke(req);				
 				if (n != null) {
 					n.write(new HTMLWriter(rw));
 				} else {
@@ -112,7 +139,7 @@ abstract public class Servlet extends HttpServlet {
 					n.write(new HTMLWriter(rw));			
 				}
 			}
-			
+
 			rw.close();
 		}
 		finally { decrement_req_cnt(); }
