@@ -33,7 +33,7 @@ public final class Main extends Servlet {
 			Page p = createPage("CIVS Status",
 					new NodeList(
 							banner(),
-							new Header(2, "CIVS Server Status"),
+							new Header(2, new Text("CIVS Server Status")),
 							new Paragraph(new Text("The CIVS server is up and\n" +
 									"is now handling " + nr +
 									(nr > 1 ? " concurrent requests."
@@ -43,7 +43,7 @@ public final class Main extends Servlet {
 	}
 
 	public Node banner() {
-		return new Header(1, "Condorcet Internet Voting Service");
+		return new Header(1, new Text("Condorcet Internet Voting Service"));
 		// XXX Need tables for this.		
 	}
 	

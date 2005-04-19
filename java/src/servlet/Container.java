@@ -33,6 +33,8 @@ class Container extends Node {
 		p.indent(2);
 		p.print("<");
 		p.print(tag);
+		p.print("class=");
+		p.printq(class_);
 		writeOptions(p);
 		p.print(">");
 		p.breakLine();

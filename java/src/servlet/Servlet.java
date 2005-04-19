@@ -13,7 +13,6 @@ import java.util.Map;
 abstract public class Servlet extends HttpServlet {
 
 	Nonce nonce;
-	String hostID; // a secret identifier used to construct nonces, sign msgs, etc.
 	int concurrent_requests;
 	Map actions;
 	String style_sheet_url;
