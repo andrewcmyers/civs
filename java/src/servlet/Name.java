@@ -15,7 +15,7 @@ public class Name {
 	}
 	/** Construct a Name from a hex-encoded string. */
 	static int dehex(char c) {
-		if (c >= 0 && c <= '9') return (int)c - (int)'0';
+		if (c >= '0' && c <= '9') return (int)c - (int)'0'; 
 		else if (c >= 'A' && c <= 'F') return ((int)c - (int)'A') + 10;
 		else if (c >= 'a' && c <= 'f') return ((int)c - (int)'a') + 10;
 		else throw new IllegalArgumentException("Invalid hexadecimal character: " + c);
