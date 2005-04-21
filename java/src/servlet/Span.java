@@ -14,8 +14,4 @@ public class Span extends Container {
 		super("span", n);
 		this.class_ = class_;
 	}
-	protected void writeOptions(HTMLWriter p) {
-		p.print(" class=");
-		p.printq(class_);
-	}
 }

@@ -23,7 +23,7 @@ public class TextInput extends Input {
 	public void write(HTMLWriter p) {
 		p.print("<input");
 		p.begin();
-		p.print(" type=text ");
+		p.print(" type=text");
 		p.print(" name=");
 		p.printq(getName());
 		p.print(" size=");
