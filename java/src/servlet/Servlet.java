@@ -112,7 +112,7 @@ abstract public class Servlet extends HttpServlet {
 						action = (Action) actions.get(action_name);
 					} else {
 						Node n = reportError("Access violation", "Invalid Action",
-								"The action identifier in the request is invalid: <" + request + ">");
+								"The action identifier in the request is invalid: <" + action_name_s + ">");
 						n.write(new HTMLWriter(rw));
 					}
 				}

@@ -1,22 +1,12 @@
-/*
- * Created on Mar 14, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package servlet;
 
-/**
- * @author andru
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+/** An input that allows typing in a single line of text. Appropriate
+ * for most textual input. */
 public class TextInput extends Input {
 	int size;
 	String initial_text;
-    public TextInput(String name, int size, String initial) {
-    	super(name);
+    public TextInput(Servlet s, int size, String initial) {
+    	super(s);
     	this.size = size;
     	initial_text = initial;
     }

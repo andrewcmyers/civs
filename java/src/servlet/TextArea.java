@@ -11,8 +11,8 @@ public class TextArea extends Input {
 	int cols;
 	String initial_text;
 
-    public TextArea(String name, int rows, int cols, String initial) {
-    	super(name);
+    public TextArea(Servlet s, int rows, int cols, String initial) {
+    	super(s);
     	this.rows = rows;
     	this.cols = cols;
     	initial_text = initial;

@@ -14,11 +14,11 @@ import servlet.TextInput;
 import servlet.TextArea;
 
 public class CreateElection extends CIVSAction {
-	final Input title_inp = new TextInput("title", 50, "");
-	final Input name_inp = new TextInput("name", 20, "");
-	final Input email_addr_inp = new TextInput("email_addr", 20, "");
-	final Input election_end_inp = new TextInput("election_end", 20, "tomorrow at 5pm");
-	final Input voters_inp = new TextArea("voters", 5, 64, "<enter voter email addresses here>");
+	final Input title_inp = new TextInput(main, 50, "");
+	final Input name_inp = new TextInput(main, 20, "");
+	final Input email_addr_inp = new TextInput(main, 20, "");
+	final Input election_end_inp = new TextInput(main, 20, "tomorrow at 5pm");
+	final Input choices_inp = new TextArea(main, 4, 60, "");
 	
 	final FinishCreate finishCreate = new FinishCreate();
 	
@@ -46,7 +46,7 @@ public class CreateElection extends CIVSAction {
 						 		new Text("Your email address: "), email_addr_inp, new Br()),						   		
 						 new NodeList(new Text("Day and time you plan to stop the election: "),
 						 		election_end_inp, new Br()),
-					     new NodeList(new Text("Email addresses of voters"), voters_inp)	
+					     new NodeList(new Text("Names of the choices (candidates):"), choices_inp)	
 							))));
 	}
 	
@@ -67,7 +67,7 @@ public class CreateElection extends CIVSAction {
 					new Br(),
 					new Text("Name = " + name),
 					new Br(),
-					new Text("Voter addresses = " + req.getParam(voters_inp))));
+					new Text("Choices = " + req.getParam(choices_inp))));
 		}
 	}
 }
