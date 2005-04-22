@@ -7,17 +7,11 @@ package servlet;
  * begin tag and ends with an end tag. This class has
  * package scope to prevent arbitrary use.
  */
-class Container extends Node {
-	String tag;
+class Container extends Tag {
 	Node contents;
 	
 	Container(String tag_, Node n) {
-		this(tag_, n, null);
-	}
-	
-	Container(String tag_, Node n, String class_) {
-		super(class_);
-		tag = tag_;
+		super(tag_);
 		contents = n;
 	}
 	
@@ -29,16 +23,7 @@ class Container extends Node {
 		contents.write(p);
 	}
 	public void write(HTMLWriter p) {
-		p.begin();
-		p.indent(2);
-		p.print("<");
-		p.print(tag);
-		if (class_ != null) {
-			p.print("class=");
-			p.printq(class_);
-		}
-		writeOptions(p);
-		p.print(">");
+		super.write(p);
 		p.breakLine();
 		writeContents(p);
 		p.end();

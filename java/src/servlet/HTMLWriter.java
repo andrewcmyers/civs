@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 public class HTMLWriter {
 	int indent = 0;
 	boolean noindent = false;
+	String currentClass = null;
 	int pos = 0;
 	Stack s = new Stack();
 
@@ -104,5 +105,16 @@ public class HTMLWriter {
 	public void HTTP_escape(String s) {
 		writer.print(s);
 		// XXX finish me		
+	}
+	
+	String currentClass() {
+		return currentClass;
+	}
+	/**
+	 * @param class_
+	 */
+	void setClass(String class_) {
+		// TODO Auto-generated method stub
+		currentClass = class_;
 	}
 }

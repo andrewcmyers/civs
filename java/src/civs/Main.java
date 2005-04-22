@@ -47,8 +47,6 @@ public final class Main extends Servlet {
 		// XXX Need tables for this.		
 	}
 	
-
-	
 	/*	String q = request.expose().getQueryString();
 		String url = request.expose().getRequestURI();
 		String servletpath = request.expose().getServletPath();new Text("query string = " + q +
