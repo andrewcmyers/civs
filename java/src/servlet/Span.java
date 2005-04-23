@@ -11,7 +11,7 @@ package servlet;
 public class Span extends Container {
 	String class_;
 	public Span(String class_, Node n) {
-		super("span", n);
+		super("span", class_, n);
 		this.class_ = class_;
 	}
 }

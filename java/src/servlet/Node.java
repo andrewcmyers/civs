@@ -7,4 +7,11 @@ public abstract class Node {
 	
 	/** Write out HTML for this node to p. */
     public abstract void write(HTMLWriter p);
+    
+    /** Modify the current node to have HTML class c and
+     * return the node.
+     * @param c the new class
+     * @return
+     */
+
 }

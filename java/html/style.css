@@ -42,6 +42,9 @@ pre, xmp { font-family: Courier New, Courier, monospace; margin-left: 1em;
 kbd, tt, code { font-family: Courier New, Courier, monospace; font-size: 90% }
 td { font-family: Arial, helvetica, sans-serif; font-size: 100%; }
 
+td.desc { text-align: right; font-weight: bold }
+span.tiny { font-size: x-small }
+
 td.recitation { background-color: #FFF0d0 }
 
 td.win { font-family: Courier New, courier, fixed; text-align:center;

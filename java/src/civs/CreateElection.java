@@ -6,13 +6,16 @@ import servlet.Br;
 import servlet.CheckBox;
 import servlet.Header;
 import servlet.Input;
+import servlet.Node;
 import servlet.NodeList;
 import servlet.Page;
 import servlet.Paragraph;
 import servlet.Request;
+import servlet.Span;
 import servlet.TCell;
 import servlet.TRow;
 import servlet.Table;
+import servlet.Tag;
 import servlet.Text;
 import servlet.TextInput;
 import servlet.TextArea;
@@ -26,6 +29,9 @@ public class CreateElection extends CIVSAction {
 	final Input num_choices_inp = new TextInput(main, 3, "1");
 	final Input public_checkbox = new CheckBox(main, false);
 	final Input writein_checkbox = new CheckBox(main, false);
+	final Input shuffle_checkbox = new CheckBox(main, true);
+	final Input proportional_checkbox = new CheckBox(main, false);
+	final Input report_ballots_checkbox = new CheckBox(main, false);
 	
 	final FinishCreate finishCreate = new FinishCreate();
 	
@@ -36,42 +42,76 @@ public class CreateElection extends CIVSAction {
 	/* (non-Javadoc)
 	 * @see servlet.Session#handle(servlet.Request)
 	 */
+	
+	Node desc(String txt) {
+		Tag n = new TCell(new Text(txt));
+		n.setClass("desc");
+		return n;
+	}
+	
+	Node check_box_explained(Input b, String explanation) {
+		return new TCell(new NodeList(b,
+				new Span("tiny", new Text(explanation))));
+	}
+	Node typein_explained(Input b, String explanation) {
+		return new TCell(new NodeList(b,
+				new Br(),
+				new Span("tiny", new Text(explanation))));
+	}
+												
+	
 	public Page invoke(Request req) throws ServletException {
 		return main().createPage("CIVS Election Creation",
 		  new NodeList(main().banner(),
-		      new Header(2, new Text("Create Election")),
-			  new Paragraph(new Text("This web page allows you to create a new " +
-			  		"web election. You will be the supervisor of " +
-			  		"the election you create.")),
+		      new Header(2, "Create New Election"),
+			  new Paragraph(new Text("You will be the supervisor of the election you create.")),
 					main().createForm(finishCreate,
 					  new Table(null,
 					  		new NodeList(
 					  		  new TRow(new NodeList(
-						 		new TCell(new Text("Name of the election:")),
-								new TCell(title_inp))),
+						 		desc("Name of the election:"),
+								typein_explained(title_inp, "e.g., The Democratic Primary"))),
 							  new TRow(new NodeList(
-							  	new TCell(new Text("Your name:")),
-								new TCell(name_inp))),
+							  	desc("Your name:"),
+								typein_explained(name_inp,
+										"This is used to identify you in e-mails sent to voters"))),
 							  new TRow(new NodeList(
-							  	new TCell(new Text("Your email address:")),
-								new TCell(email_addr_inp))),
+							  	desc("E-mail address:"),
+								typein_explained(email_addr_inp,
+										"This is needed to send you the election control information"))),
 							  new TRow(new NodeList(
-							  	new TCell(new Text("Day and time you plan to stop the election:")),
-						 		new TCell(election_end_inp))),
+							  	desc("When you plan to stop the election:"),
+						 		typein_explained(election_end_inp,
+						 				"e.g., Friday at noon, April 5 at 5pm"))),
 							  new TRow(new NodeList(
-							  	new TCell(new Text("How many choices (candidates) will win the election:")),
+							  	desc("How many choices (candidates) will win:"),
 								new TCell(num_choices_inp))),
 							  new TRow(new NodeList(
-							  	new TCell(new Text("Names of the choices:")),
+							  	desc("Names of the choices:"),
 								new TCell(choices_inp))),
 							  new TRow(new NodeList(
-							    new TCell(new Text("Make this a public poll (voters can add themselves," +
-							  			  " and there is only a token attempt to prevent multiple voting")),
-								new TCell(public_checkbox))))
-							  .append(new TRow(new NodeList(
-							  	new TCell(new Text("Allow voters to write in new choices and change their vote")),
-								new TCell(writein_checkbox)))))
-							)));
+							    desc("Make this a public poll?"),
+								check_box_explained(public_checkbox,
+									"(Voters can add themselves," +
+								    " and there is only a token attempt to prevent multiple voting)")))
+							)
+							.append(new TRow(new NodeList(
+									desc("Allow write-ins?"),
+									check_box_explained(writein_checkbox,
+											"(Voters can add new choices (candidates) and revise their votes)"))))
+							.append(new TRow(new NodeList(
+							    desc("Shuffle choices?"),
+								check_box_explained(shuffle_checkbox,
+										"(The order of the choices is randomly permuted on each ballot)"))))
+							.append(new TRow(new NodeList(
+							  	desc("Proportional representation?"),
+								check_box_explained(proportional_checkbox,
+										"(An experimental mode that only makes sense when there is more than one winner)"))))
+							.append(new TRow(new NodeList(
+							  	desc("Anonymous ballot reporting?"),
+								check_box_explained(report_ballots_checkbox,
+										"Allow anyone to see the ballots cast, but with all personally identifying information removed.")))
+							)))));
 		}
 	
 	class FinishCreate extends CIVSAction {

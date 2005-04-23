@@ -11,7 +11,12 @@ public class Table extends Tag {
 	Node head, body;
 	
 	public Table(Node h, Node b) {
-		super("table");
+		super("table", null);
+		head = h;
+		body = b;	
+	}
+	public Table(String class_, Node h, Node b) {
+		super("table", class_);
 		head = h;
 		body = b;
 	}
@@ -19,7 +24,7 @@ public class Table extends Tag {
 	public void write(HTMLWriter p) {
 		p.begin();
 		p.indent(2);
-		p.print("<table>");
+		super.write(p);
 		if (head != null) {
 			p.print("<thead>");		
 			head.write(p);

@@ -6,9 +6,11 @@ package servlet;
  **/
 public class Tag extends Node {	
 	String tag;
+	String class_;
 	
-	Tag(String tagname) {
-		tag = tagname;
+	public Tag(String t, String c) {
+		tag = t;
+		class_ = c;
 	}
 
 	/* (non-Javadoc)
@@ -19,9 +21,13 @@ public class Tag extends Node {
 		p.indent(2);
 		p.print("<");
 		p.print(tag);
-		if (p.currentClass() != null) {
-			p.print("class=");
-			p.printq(p.currentClass());
+		if (class_ != null || p.currentClass() != null) {
+			p.print(" class=");
+			if (class_ != null) {
+				p.printq(class_);
+			} else {
+				p.printq(p.currentClass());
+			}
 			p.setClass(null);
 		}
 		writeOptions(p);
@@ -29,4 +35,9 @@ public class Tag extends Node {
 	}
 	
 	protected void writeOptions(HTMLWriter p) {}
+	
+    public Tag setClass(String c) {
+    	class_ = c;
+		return this;    	
+    }
 }

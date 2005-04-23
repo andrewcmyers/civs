@@ -11,7 +11,12 @@ class Container extends Tag {
 	Node contents;
 	
 	Container(String tag_, Node n) {
-		super(tag_);
+		super(tag_, null);
+		contents = n;
+	}
+	
+	Container(String tag_, String class_, Node n) {
+		super(tag_, class_);
 		contents = n;
 	}
 	
