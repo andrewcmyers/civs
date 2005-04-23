@@ -10,6 +10,8 @@ import servlet.Node;
 import servlet.NodeList;
 import servlet.Page;
 import servlet.Paragraph;
+import servlet.Radio;
+import servlet.RadioButton;
 import servlet.Request;
 import servlet.Span;
 import servlet.TCell;
@@ -32,6 +34,10 @@ public class CreateElection extends CIVSAction {
 	final Input shuffle_checkbox = new CheckBox(main, true);
 	final Input proportional_checkbox = new CheckBox(main, false);
 	final Input report_ballots_checkbox = new CheckBox(main, false);
+	Radio completion_method = new Radio(main);
+	final Input bpw = new RadioButton(completion_method, "beatpath_winner", true);
+	final Input crp = new RadioButton(completion_method, "civs_rp", false);
+	final Input mam = new RadioButton(completion_method, "MAM", false);
 	
 	final FinishCreate finishCreate = new FinishCreate();
 	
@@ -90,28 +96,39 @@ public class CreateElection extends CIVSAction {
 							  	desc("Names of the choices:"),
 								new TCell(choices_inp))),
 							  new TRow(new NodeList(
-							    desc("Make this a public poll?"),
+							    desc("Public poll?"),
 								check_box_explained(public_checkbox,
-									"(Voters can add themselves," +
-								    " and there is only a token attempt to prevent multiple voting)")))
+									"Voters can add themselves," +
+								    " and there is only a token attempt to prevent multiple voting")))
 							)
 							.append(new TRow(new NodeList(
 									desc("Allow write-ins?"),
 									check_box_explained(writein_checkbox,
-											"(Voters can add new choices (candidates) and revise their votes)"))))
+											"Voters can add new choices (candidates) and revise their votes"))))
 							.append(new TRow(new NodeList(
 							    desc("Shuffle choices?"),
 								check_box_explained(shuffle_checkbox,
-										"(The order of the choices is randomly permuted on each ballot)"))))
+										"The order of the choices is randomly permuted on each ballot"))))
 							.append(new TRow(new NodeList(
 							  	desc("Proportional representation?"),
 								check_box_explained(proportional_checkbox,
-										"(An experimental mode that only makes sense when there is more than one winner)"))))
+										"An experimental mode that only makes sense when there is more than one winner"))))
 							.append(new TRow(new NodeList(
 							  	desc("Anonymous ballot reporting?"),
 								check_box_explained(report_ballots_checkbox,
-										"Allow anyone to see the ballots cast, but with all personally identifying information removed.")))
-							)))));
+										"Allow anyone to see the ballots cast, but with all personally identifying information removed."))))
+							.append(new TRow(new NodeList(
+								desc("Condorcet completion method:"),
+								new TCell(new NodeList(bpw, new Text(" Beatpath Winner"),
+										     crp, new Text(" CIVS Ranked Pairs"),
+											 mam, new Text(" MAM"),
+											 new NodeList(new Br(),											 
+											 new Span("tiny",
+											   new Text("Three different methods for resolving circular orderings. " +
+											   		    "It usually doesn't matter which one is used because " +
+														"circularities are uncommon."))
+											 ))))))
+									))));
 		}
 	
 	class FinishCreate extends CIVSAction {

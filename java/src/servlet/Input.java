@@ -13,6 +13,10 @@ public abstract class Input extends Node {
 	Input(Servlet s) {
 		name = s.nonce.generate();
 	}
+	/** For use by radiobuttons, etc. */
+	Input(Name n) {
+		name = n;
+	}
 	public abstract void write(HTMLWriter p);
 	
 	/** The name of the input. */
