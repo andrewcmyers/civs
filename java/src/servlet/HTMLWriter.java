@@ -100,11 +100,12 @@ public class HTMLWriter {
 	 * print the result.
 	 * @author andru
 	 * @param s the string to escape
+	 * @deprecated because it's not finished yet
 	 *
 	 */
 	public void HTTP_escape(String s) {
 		writer.print(s);
-		// XXX finish me		
+		// XXX finish me	s	
 	}
 	
 	String currentClass() {
@@ -114,7 +115,6 @@ public class HTMLWriter {
 	 * @param class_
 	 */
 	void setClass(String class_) {
-		// TODO Auto-generated method stub
 		currentClass = class_;
 	}
 }

@@ -2,15 +2,15 @@ package servlet;
 
 /**
  * A Radio Button input. Any of the radio buttons may be queried to find
- * out the value of the buttion that was selected.
+ * out the value of the button that was selected.
  * 
  * @author andru
  *
  */
-public class RadioButton extends Input {
+public class RadioButton extends InputNode {
 	boolean checked;
-	public RadioButton(Radio r, String value, boolean checked_) {
-		super(r.name);		
+	public RadioButton(Input i, String value, boolean checked_) {
+		super(i);		
 		checked = checked_;
 	}
 	/* (non-Javadoc)
@@ -19,7 +19,7 @@ public class RadioButton extends Input {
 	public void write(HTMLWriter p) {
 		p.print("<input type=radio");
 		p.print(" name=");
-		p.printq(getName());
+		p.printq(input.getName());
 		if (checked) p.print(" checked");
 		p.print(" />");
 	}

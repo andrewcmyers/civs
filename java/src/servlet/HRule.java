@@ -3,7 +3,7 @@ package servlet;
 /**
  * @author andru
  *
- * A horizontal rule (<hr>)
+ * A horizontal rule: <hr>
  */
 public class HRule extends Node {
 

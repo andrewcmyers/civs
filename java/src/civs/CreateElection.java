@@ -2,42 +2,25 @@ package civs;
 
 import javax.servlet.ServletException;
 
-import servlet.Br;
-import servlet.CheckBox;
-import servlet.Header;
-import servlet.Input;
-import servlet.Node;
-import servlet.NodeList;
-import servlet.Page;
-import servlet.Paragraph;
-import servlet.Radio;
-import servlet.RadioButton;
-import servlet.Request;
-import servlet.Span;
-import servlet.TCell;
-import servlet.TRow;
-import servlet.Table;
-import servlet.Tag;
-import servlet.Text;
-import servlet.TextInput;
-import servlet.TextArea;
+import servlet.*;
 
 public class CreateElection extends CIVSAction {
-	final Input title_inp = new TextInput(main, 50, "");
-	final Input name_inp = new TextInput(main, 20, "");
-	final Input email_addr_inp = new TextInput(main, 20, "");
-	final Input election_end_inp = new TextInput(main, 20, "tomorrow at 5pm");
-	final Input choices_inp = new TextArea(main, 4, 60, "");
-	final Input num_choices_inp = new TextInput(main, 3, "1");
-	final Input public_checkbox = new CheckBox(main, false);
-	final Input writein_checkbox = new CheckBox(main, false);
-	final Input shuffle_checkbox = new CheckBox(main, true);
-	final Input proportional_checkbox = new CheckBox(main, false);
-	final Input report_ballots_checkbox = new CheckBox(main, false);
-	Radio completion_method = new Radio(main);
-	final Input bpw = new RadioButton(completion_method, "beatpath_winner", true);
-	final Input crp = new RadioButton(completion_method, "civs_rp", false);
-	final Input mam = new RadioButton(completion_method, "MAM", false);
+	final InputNode title_inp = new TextInput(main, 50, "");
+	final InputNode name_inp = new TextInput(main, 20, "");
+	final InputNode email_addr_inp = new TextInput(main, 20, "");
+	final InputNode election_end_inp = new TextInput(main, 20, "tomorrow at 5pm");
+	final InputNode choices_inp = new TextArea(main, 4, 60, "");
+	final InputNode num_choices_inp = new TextInput(main, 3, "1");
+	final CheckBox public_checkbox = new CheckBox(main, false);
+	final CheckBox writein_checkbox = new CheckBox(main, false);
+	final CheckBox shuffle_checkbox = new CheckBox(main, true);
+	final CheckBox proportional_checkbox = new CheckBox(main, false);
+	final CheckBox report_ballots_checkbox = new CheckBox(main, false);
+	Input completion_method = new Input(main);
+	final InputNode bpw = new RadioButton(completion_method, "beatpath_winner", true);
+	final InputNode crp = new RadioButton(completion_method, "civs_rp", false);
+	final InputNode mam = new RadioButton(completion_method, "MAM", false);
+	final InputNode names_chooser = new FileChooser(main);
 	
 	final FinishCreate finishCreate = new FinishCreate();
 	
@@ -55,11 +38,11 @@ public class CreateElection extends CIVSAction {
 		return n;
 	}
 	
-	Node check_box_explained(Input b, String explanation) {
+	Node check_box_explained(InputNode b, String explanation) {
 		return new TCell(new NodeList(b,
 				new Span("tiny", new Text(explanation))));
 	}
-	Node typein_explained(Input b, String explanation) {
+	Node typein_explained(InputNode b, String explanation) {
 		return new TCell(new NodeList(b,
 				new Br(),
 				new Span("tiny", new Text(explanation))));
@@ -80,27 +63,32 @@ public class CreateElection extends CIVSAction {
 							  new TRow(new NodeList(
 							  	desc("Your name:"),
 								typein_explained(name_inp,
-										"This is used to identify you in e-mails sent to voters"))),
+										"This is used to identify you in e-mails sent to voters."))),
 							  new TRow(new NodeList(
 							  	desc("E-mail address:"),
 								typein_explained(email_addr_inp,
-										"This is needed to send you the election control information"))),
+										"This is needed to send you the election control information." +
+										"If you have a spam service filtering your mail, make sure that " +
+										"it will not block mail from " + main.supervisor()))),
 							  new TRow(new NodeList(
 							  	desc("When you plan to stop the election:"),
 						 		typein_explained(election_end_inp,
 						 				"e.g., Friday at noon, April 5 at 5pm"))),
 							  new TRow(new NodeList(
-							  	desc("How many choices (candidates) will win:"),
-								new TCell(num_choices_inp))),
+							  	desc("Number of winners:"),
+								typein_explained(num_choices_inp,
+										"Any number of choices (candidates) may win the election."))),
 							  new TRow(new NodeList(
 							  	desc("Names of the choices:"),
 								new TCell(choices_inp))),
 							  new TRow(new NodeList(
+								desc("Or upload choice names:"),
+								new TCell(names_chooser))))
+							.append(new TRow(new NodeList(
 							    desc("Public poll?"),
 								check_box_explained(public_checkbox,
 									"Voters can add themselves," +
-								    " and there is only a token attempt to prevent multiple voting")))
-							)
+								    " and there is only a token attempt to prevent multiple voting"))))
 							.append(new TRow(new NodeList(
 									desc("Allow write-ins?"),
 									check_box_explained(writein_checkbox,
@@ -136,17 +124,28 @@ public class CreateElection extends CIVSAction {
 			super(CreateElection.this.main);
 		}
 		public Page invoke(Request req) {
-			String title = req.getParam(title_inp);
-			String name = req.getParam(name_inp);
-			String email_addr = req.getParam(email_addr_inp);
-			String election_end = req.getParam(election_end_inp);
+			// parse the request.
 			
-			return main.createPage("Test creation",
+			Election election = new Election();
+			election.id = "E_" + main.generateNonce();
+			election.allow_writeins = writein_checkbox.isChecked(req);
+			election.title = req.getParam(title_inp);
+			election.name = req.getParam(name_inp);
+			election.email = req.getParam(email_addr_inp);
+			election.ends = req.getParam(election_end_inp);
+			election.proportional = proportional_checkbox.isChecked(req);
+			election.shuffle = shuffle_checkbox.isChecked(req);
+			election.report_ballots = report_ballots_checkbox.isChecked(req);
+			
+			// install once we've successfully set everything up and sent mail.
+			main.elections.put(election.id, election);
+			
+			return main.createPage("Election creation successful",
 			   new NodeList(main().banner(),
 					new Header(2, new Text("Test election creation")),
-					new Text("Title = " + title),
+					new Text("Title = " + election.title),
 					new Br(),
-					new Text("Name = " + name),
+					new Text("Name = " + election.name),
 					new Br(),
 					new Text("Choices = " + req.getParam(choices_inp))));
 		}

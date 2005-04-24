@@ -1,13 +1,17 @@
 
 package servlet;
 
-public class CheckBox extends Input {
+public class CheckBox extends InputNode {
 	boolean checked;
+	Servlet servlet;
 	/**
-	 * @param s
+	 * @param s  The servlet.
+	 * @param checked_   Whether the checkbox should initially be checked.
+	 * @return 	  A new checkbox.
 	 */
 	public CheckBox(Servlet s, boolean checked_) {
-		super(s);
+		super(new Input(s));
+		servlet = s;
 		checked = checked_;
 	}
 
@@ -17,11 +21,17 @@ public class CheckBox extends Input {
 	public void write(HTMLWriter p) {
 		p.print("<input type=checkbox");
 		p.print(" name=");
-		p.printq(getName());
-		p.print(" value=");
-		if (checked) p.print("yes");
-		else p.print("no");
+		p.printq(input.getName());
+		p.print(" value=yes");
+		if (checked) p.print(" checked");
 		p.print(" />");
 	}
-
+	
+	/** 
+	 * @param r
+	 * @return whether this checkbox is checked.
+	 */
+	public boolean isChecked(Request r) {
+		return r.getParam(input).equals("yes");
+	}
 }

@@ -19,6 +19,9 @@ public class Request {
 		String name = inp.getName();
 		return request.getParameter(name);
 	}
+	public String getParam(InputNode n) {
+		return getParam(n.input);
+	}
 	public String action_name() {
 		return request.getParameter("action");
 	}

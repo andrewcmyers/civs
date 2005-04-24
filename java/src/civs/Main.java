@@ -2,6 +2,9 @@ package civs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import servlet.*;
 
 import javax.servlet.ServletException;
@@ -9,6 +12,7 @@ import javax.servlet.ServletException;
 public final class Main extends Servlet {
 	String hostID;
 	String dataDir;
+	Map elections = new HashMap(); // map from id -> Election
 	
 	public void initialize() {
 		addStartAction("create",  new CreateElection(this));
@@ -63,6 +67,10 @@ public final class Main extends Servlet {
 			}
 		}
 		return dataDir;
+	}
+	
+	public String supervisor() {
+		return initParameter("supervisor");
 	}
 	
 	public String getPrivateHostID() throws ServletException {

@@ -20,6 +20,10 @@
 	<param-name>servlet_url</param-name>
 	<param-value>/civs/main</param-value>
       </init-param>
+      <init-param>
+	<param-name>supervisor</param-name>
+	<param-value>andru@cs.cornell.edu</param-value>
+      </init-param>
     </servlet>
     <servlet-mapping>
       <servlet-name>civs</servlet-name>

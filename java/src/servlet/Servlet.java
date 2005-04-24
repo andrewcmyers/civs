@@ -170,6 +170,10 @@ abstract public class Servlet extends HttpServlet {
 		actions.put(n, a);
 	}
 	
+	public String generateNonce() {
+		return nonce.generate().toHex();
+	}
+	
 	/** Set up this action as a way to create a new session.  Means that
 	 * these actions can be invoked from "outside" the system, as a URL.
 	 */

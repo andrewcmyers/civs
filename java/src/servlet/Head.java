@@ -9,6 +9,8 @@ public class Head extends Node {
 	
 	/** Create a page head. Non-public to allow servlet to control
 	 *  creation through the createHead() method.
+	 * @param t The page title
+	 * @param styleFile The URL of the style file. May be null to signal absence.
 	 */	 
 	Head(String t, String s) {
 		title = t;

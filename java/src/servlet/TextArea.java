@@ -6,13 +6,13 @@ package servlet;
  * A TextArea is a multi-line text input with a fixed
  * number of rows and columns.
  */
-public class TextArea extends Input {
+public class TextArea extends InputNode {
 	int rows;
 	int cols;
 	String initial_text;
 
     public TextArea(Servlet s, int rows, int cols, String initial) {
-    	super(s);
+    	super(new Input(s));
     	this.rows = rows;
     	this.cols = cols;
     	initial_text = initial;
@@ -20,7 +20,7 @@ public class TextArea extends Input {
 	public void write(HTMLWriter p) {
 		p.print("<textarea");
 		p.print(" name=");
-		p.printq(getName());
+		p.printq(input.getName());
 		p.print(" rows=");
 		p.printq(rows);
 		p.print(" cols=");

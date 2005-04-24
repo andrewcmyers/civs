@@ -1,9 +1,3 @@
-/*
- * Created on Mar 13, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package civs;
 
 import java.io.Serializable;
@@ -31,12 +25,14 @@ public class Election implements Serializable {
 	transient String[] addresses; // email addresses of the voters
 	String[] choices;
 	transient Ballots ballots; // actual voters
-	String auth_key;
-	String control_key;
+	String auth_key_hash;
+	String control_key_hash;
 	boolean proportional;
 	boolean allow_writeins;
 	boolean allow_revotes;
 	int num_winners;
+	public boolean shuffle;
+	public boolean report_ballots;
 	
 	public String getId() { return id; }
 }
