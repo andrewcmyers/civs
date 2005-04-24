@@ -32,6 +32,7 @@ public class CheckBox extends InputNode {
 	 * @return whether this checkbox is checked.
 	 */
 	public boolean isChecked(Request r) {
+		if (r.getParam(input) == null) return false;
 		return r.getParam(input).equals("yes");
 	}
 }
