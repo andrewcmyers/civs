@@ -24,9 +24,16 @@ table.banner a:link { color: white }
 table.banner a:visited { color: white }
 table.banner a:hover { color: yellow }
 
-table.banner { background-color: #008000 }
+table.banner { background-color: #008000; border: 0; padding: 7 }
 table.banner h1 { color: white }
 table.banner h2 { color: white }
+
+td.bannertop { width: 100%; vertical-align: top; text-align: left; padding: 7 }
+td.bannerbottom { width: 100%; text-align: center }
+td.bannerright { width: 0%; white-space: nowrap; text-align: right }
+
+.submit { font-weight: bold; border-color: #c0ffc0;
+	background-color: #c0ffc0 }
 
 /* used for mathematics */
 .math        { color: black; font-family: Times New Roman, serif;

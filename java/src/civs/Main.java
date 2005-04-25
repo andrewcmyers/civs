@@ -11,7 +11,7 @@ import javax.servlet.ServletException;
 
 public final class Main extends Servlet {
 	String hostID;
-	String dataDir;
+
 	Map elections = new HashMap(); // map from id -> Election
 	
 	public void initialize() {
@@ -32,12 +32,11 @@ public final class Main extends Servlet {
 			super(s);
 			// TODO Auto-generated constructor stub
 		}
-		public Page invoke(Request req) {
+		public Page invoke(Request req) throws ServletException {
 			int nr = concurrentRequests();
 			Page p = createPage("CIVS Status",
 					new NodeList(
-							banner(),
-							new Header(2, new Text("CIVS Server Status")),
+							banner("CIVS Status"),
 							new Paragraph(new Text("The CIVS server is up and\n" +
 									"is now handling " + nr +
 									(nr > 1 ? " concurrent requests."
@@ -46,10 +45,50 @@ public final class Main extends Servlet {
 		}
 	}
 
-	public Node banner() {
-		return new Header(1, new Text("Condorcet Internet Voting Service"));
-		// XXX Need tables for this.		
+	public Node banner(String title) throws ServletException {
+		return new Table("banner", null, 
+				new NodeList(
+					new TRow(new NodeList(
+							new TCell("bannertop",
+									new Header(1, "Condorcet Internet Voting Service"), 1, false),
+							new TCell("bannerright",
+									new NodeList(
+											new Hyperlink(home(), new Text("CIVS Home")),
+											new Br(),
+											new Hyperlink(servlet_url() +
+													"?request=create", new Text("Create new election")),
+											new Br(),
+											new Hyperlink(home() + "/sec_priv.html",
+													new Text("About security and privacy"))),
+													1, false
+					))),
+					new TRow(new TCell("bannerbottom",
+							new Header(2, title), 2, false))
+				));
 	}
+								/*			
+		<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+		  <tbody><tr>
+		    <td width="100%" valign="top" nowrap>
+
+		      <h1>&nbsp;Condorcet Internet Voting
+		      Service</h1>
+		    </td>
+		    <td width=0% nowrap valign=top align=right>
+			<a href="/~andru/civs">CIVS Home</a><br>
+			<a href="/~andru/civs/civs_create.html">Create new election</a><br>
+			<a href="/~andru/civs/sec_priv.html">About security and privacy</a>
+		    </td>
+
+		  </tr>
+		  <tr>
+		    <td width="100%" valign="top" nowrap colspan=2>
+		      <h2 align="center">Create a New Election</h2>
+		    </td>
+		  </tr>
+		</tbody>
+		</table>
+		*/
 	
 	/*	String q = request.expose().getQueryString();
 		String url = request.expose().getRequestURI();
@@ -58,6 +97,18 @@ public final class Main extends Servlet {
 				"\nservletpath = " + servletpath +											
 	 */
 	
+	String servlet_url;
+	private String servlet_url() throws ServletException {
+		if (servlet_url == null) {
+			servlet_url = initParameter("servlet_url");
+			if (servlet_url == null) {
+				throw new ServletException("Can't determine the CIVS servlet url.\r\n" +
+						"Set the servlet_url parameter in the config file web.xml.");
+			}
+		}
+		return servlet_url;
+	}
+	String dataDir;
 	public String dataDir() throws ServletException {
 		if (dataDir == null) {
 			dataDir = initParameter("CIVS_data_dir");
@@ -67,6 +118,17 @@ public final class Main extends Servlet {
 			}
 		}
 		return dataDir;
+	}
+	String CIVS_home;
+	public String home() throws ServletException {
+		if (CIVS_home == null) {
+			CIVS_home = initParameter("CIVS_home");
+			if (CIVS_home == null ) {
+				throw new ServletException("Can't determine where the CIVS home url is.\r\n" +
+						"Set the CIVS_home parameter in the config file web.xml.");
+			}
+		}
+		return CIVS_home;
 	}
 	
 	public String supervisor() {

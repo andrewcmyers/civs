@@ -51,11 +51,12 @@ public class CreateElection extends CIVSAction {
 	
 	public Page invoke(Request req) throws ServletException {
 		return main().createPage("CIVS Election Creation",
-		  new NodeList(main().banner(),
-		      new Header(2, "Create New Election"),
-			  new Paragraph(new Text("You will be the supervisor of the election you create.")),
+		  new NodeList(main().banner("Create New Election"),
+	
+			  new Paragraph(new Text("Use the following form to create an election for which you are the supervisor. " +
+			  		" You will be able to authorize voters in a later step.")),
 					main().createForm(finishCreate,
-					  new Table(null,
+					  new NodeList(new Table(null,
 					  		new NodeList(
 					  		  new TRow(new NodeList(
 						 		desc("Name of the election:"),
@@ -67,9 +68,9 @@ public class CreateElection extends CIVSAction {
 							  new TRow(new NodeList(
 							  	desc("E-mail address:"),
 								typein_explained(email_addr_inp,
-										"This is needed to send you the election control information." +
-										"If you have a spam service filtering your mail, make sure that " +
-										"it will not block mail from " + main.supervisor()))),
+										"This is needed to send you the election control information. " +
+										"If a spam service filters your mail, make sure that " +
+										"it does not block mail from " + main.supervisor()))),
 							  new TRow(new NodeList(
 							  	desc("When you plan to stop the election:"),
 						 		typein_explained(election_end_inp,
@@ -116,33 +117,54 @@ public class CreateElection extends CIVSAction {
 											   		    "It usually doesn't matter which one is used because " +
 														"circularities are uncommon."))
 											 ))))))
-									))));
+									),
+							new SubmitButton(main, "Create election")))));
 		}
 	
 	class FinishCreate extends CIVSAction {
 		FinishCreate() {
 			super(CreateElection.this.main);
 		}
-		public Page invoke(Request req) {
+		String nonNullParam(InputNode i, Request r, String msg) {
+			String s = r.getParam(i);
+			if (s == null) throw new IllegalArgumentException(msg);
+			return s;
+		}
+		boolean isValidEmail(String email) {
+			return true;
+		}
+		public Page invoke(Request req) throws ServletException {
 			// parse the request.
+	      Election election = new Election();
+		  try {
 			
-			Election election = new Election();
 			election.id = "E_" + main.generateNonce();
 			election.allow_writeins = writein_checkbox.isChecked(req);
-			election.title = req.getParam(title_inp);
-			election.name = req.getParam(name_inp);
+			election.title = nonNullParam(title_inp, req, "election title");
+			election.name = nonNullParam(name_inp, req, "name");
 			election.email = req.getParam(email_addr_inp);
-			election.ends = req.getParam(election_end_inp);
+			if (election.email == null || !isValidEmail(election.email)) {
+				throw new IllegalArgumentException("e-mail address");
+			}
+			election.ends = nonNullParam(election_end_inp, req, "election end time");
 			election.proportional = proportional_checkbox.isChecked(req);
 			election.shuffle = shuffle_checkbox.isChecked(req);
 			election.report_ballots = report_ballots_checkbox.isChecked(req);
+						
+			
+		  } catch (IllegalArgumentException e) {
+		  	return main.createPage("CIVS: Failed election creation",
+		  			new NodeList(main().banner("Failed election creation"),
+		  					new Paragraph(new Text("The election was not created " +
+		  							"because of an invalid " + e.getMessage()))
+		  			));
+		  }
 			
 			// install once we've successfully set everything up and sent mail.
-			main.elections.put(election.id, election);
+		  main.elections.put(election.id, election);
 			
-			return main.createPage("Election creation successful",
-			   new NodeList(main().banner(),
-					new Header(2, new Text("Test election creation")),
+			return main.createPage("CIVS: Election created",
+			   new NodeList(main().banner("Election Created"),
 					new Text("Title = " + election.title),
 					new Br(),
 					new Text("Name = " + election.name),

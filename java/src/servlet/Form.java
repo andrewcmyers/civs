@@ -14,7 +14,6 @@ public class Form extends Container {
 		p.print(" ");
 		p.begin();
 		p.print("method=POST");
-		// XXX Want to use POST here, but why doesn't this work?
 		p.breakLine();
 		//p.print("enctype=\"multipart/form-data\"");
 		//p.breakLine();
@@ -36,7 +35,6 @@ public class Form extends Container {
 	
 	public void writeContents(HTMLWriter p) {
 		contents.write(p); p.breakLine();
-		hidden(p, "action", action.name.toHex()); p.breakLine();
-		p.print("<input type=\"submit\" value=\"Submit\" />");
+		hidden(p, "action", action.name.toHex());
 	}
 }

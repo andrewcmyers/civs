@@ -34,6 +34,5 @@ class Container extends Tag {
 		p.end();
 		p.breakLine();
 		p.print("</" + tag + ">");
-		p.breakLine();
 	}
 }

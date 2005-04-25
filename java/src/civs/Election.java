@@ -14,8 +14,8 @@ import java.io.Serializable;
  */
 public class Election implements Serializable {
 	String id;
-	boolean started;
-	boolean stopped;
+	boolean started = false;
+	boolean stopped = false;
 	
 	String title; // election title
 	String name;  // name of the election supervisor

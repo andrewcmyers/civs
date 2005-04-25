@@ -17,6 +17,10 @@
 	<param-value>@STYLE_SHEET_URL@</param-value>
       </init-param>
       <init-param>
+        <param-name>CIVS_home</param-name>
+	<param-value>/civs</param-value>
+      </init-param>
+      <init-param>
 	<param-name>servlet_url</param-name>
 	<param-value>/civs/main</param-value>
       </init-param>
