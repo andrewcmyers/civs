@@ -35,7 +35,6 @@ Subst() {
     sed  < "$1" \
 	 > "$2/$base" \
 	    -e 's|@HTML_DIR@|'"$HTML_DIR"'|'\
-	    -e 's|@THISHOST@|'"$THISHOST"'|' \
 	    -e 's|@CIVS_DATA_DIR@|'"$CIVS_DATA_DIR"'|' \
 	    -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|' \
 	    -e 's|@CIVSURL@|'"$CIVSURL"'|' \
@@ -44,6 +43,8 @@ Subst() {
 	    -e 's|@LOCALDEBUG@|'"$LOCALDEBUG"'|' \
 	    -e 's|@ADDTOPATH@|'"$ADDTOPATH"'|' \
 	    -e 's|@SERVLET_URL@|'"$SERVLET_URL"'|' \
+	    -e 's|@CIVS_HOME@|'"$CIVS_HOME"'|' \
+	    -e 's|@CIVS_HOME_EXTERNAL@|'"$CIVS_HOME_EXTERNAL"'|' \
 	    -e 's|@STYLE_SHEET_URL@|'"$STYLE_SHEET_URL"'|'
 }
 

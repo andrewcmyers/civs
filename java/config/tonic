@@ -1,7 +1,16 @@
 TOMCAT='/cygdrive/c/Program Files/Apache Software Foundation/Tomcat 5.5/webapps'
 SERVLET_DIR="$TOMCAT/civs"
+SUPERVISOR="andru@cs.cornell.edu"
 HTML_DIR="$SERVLET_DIR"
 SERVLET_NAME=civs
 CIVS_DATA_DIR='c:\andru\upg\civs\java\data'
 STYLE_SHEET_URL='/civs/style.css'
 SERVLET_URL='/civs/main'
+
+# This URL is used to refer to CIVS html pages from
+# within servlet output.
+CIVS_HOME='/civs'
+
+# This URL is used to refer to CIVS html pages from
+# everywhere else.
+CIVS_HOME_EXTERNAL='http://localhost:8080/civs'
