@@ -36,15 +36,15 @@ Subst() {
 	 > "$2/$base" \
 	    -e 's|@HTML_DIR@|'"$HTML_DIR"'|'\
 	    -e 's|@CIVS_DATA_DIR@|'"$CIVS_DATA_DIR"'|' \
-	    -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|' \
-	    -e 's|@CIVSURL@|'"$CIVSURL"'|' \
+	    -e 's|@CIVS_URL@|'"$CIVS_URL"'|' \
+	    -e 's|@CIVS_HOST@|'"$CIVS_HOST"'|' \
+	    -e 's|@LOCAL_DEBUG@|'"$LOCAL_DEBUG"'|' \
 	    -e 's|@SUPERVISOR@|'"$SUPERVISOR"'|' \
 	    -e 's|@SMTPHOST@|'"$SMTPHOST"'|' \
 	    -e 's|@LOCALDEBUG@|'"$LOCALDEBUG"'|' \
 	    -e 's|@ADDTOPATH@|'"$ADDTOPATH"'|' \
 	    -e 's|@SERVLET_URL@|'"$SERVLET_URL"'|' \
-	    -e 's|@CIVS_HOME@|'"$CIVS_HOME"'|' \
-	    -e 's|@CIVS_HOME_EXTERNAL@|'"$CIVS_HOME_EXTERNAL"'|' \
+	    -e 's|@SERVLET_HOST@|'"$SERVLET_HOST"'|' \
 	    -e 's|@STYLE_SHEET_URL@|'"$STYLE_SHEET_URL"'|'
 }
 

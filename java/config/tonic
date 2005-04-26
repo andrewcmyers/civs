@@ -1,16 +1,32 @@
-TOMCAT='/cygdrive/c/Program Files/Apache Software Foundation/Tomcat 5.5/webapps'
-SERVLET_DIR="$TOMCAT/civs"
-SUPERVISOR="andru@cs.cornell.edu"
-HTML_DIR="$SERVLET_DIR"
 SERVLET_NAME=civs
+
+# This must be in Cygwin format because it's used in
+# scripts.
+TOMCAT='/cygdrive/c/Program Files/Apache Software Foundation/Tomcat 5.5/webapps'
+
+SERVLET_DIR="$TOMCAT/$SERVLET_NAME"
+HTML_DIR="$SERVLET_DIR"
+
+# this must be in Windows format because it's used within
+# Java.
 CIVS_DATA_DIR='c:\andru\upg\civs\java\data'
-STYLE_SHEET_URL='/civs/style.css'
+
+# This URL is used to refer to the servlet from
+# within servlet output.
 SERVLET_URL='/civs/main'
+
+# This is the prefix to be prepended to SERVLET_URL to
+# find CIVS from everywhere else.
+SERVLET_HOST='http://localhost:8080'
 
 # This URL is used to refer to CIVS html pages from
 # within servlet output.
-CIVS_HOME='/civs'
+CIVS_URL="/$SERVLET_NAME"
 
-# This URL is used to refer to CIVS html pages from
-# everywhere else.
-CIVS_HOME_EXTERNAL='http://localhost:8080/civs'
+# This is the prefix to be prepended to CIVS_URL to
+# find CIVS from everywhere else.
+CIVS_HOST="$SERVLET_HOST"
+
+LOCAL_DEBUG=1
+SUPERVISOR="andru@cs.cornell.edu"
+STYLE_SHEET_URL="${CIVS_URL}"/style.css

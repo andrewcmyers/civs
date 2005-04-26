@@ -22,11 +22,7 @@ public class Nonce {
 	 * @throws IOException*/
 	public Nonce(Servlet srv) throws ServletException {
 		servlet = srv;
-		try { System.out.println("Initializing MD5");
-		      md = MessageDigest.getInstance("MD5"); }
-		  catch (NoSuchAlgorithmException e) {
-		  	throw new ServletException("Cannot construct MD5 digests.");
-		  }
+		md = newMD5Digest();
 		initialize_seed();
 	}
 	
@@ -36,11 +32,29 @@ public class Nonce {
 		md.reset();
 		md.update(seed);
 		seed = md.digest();
+		return digestToName(seed);
+		
+	}
+	public static Name digestToName(byte[] digest) {
 		byte[] result = new byte[8];
 		for (int i = 0; i < 8; i++) {
-			result[i] = seed[i];
+			result[i] = digest[i];
 		}
 		return new Name(result);
+	}
+	public static MessageDigest newMD5Digest() throws ServletException {
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new ServletException("Cannot construct MD5 digests.");
+		}
+		return md;
+	}
+	public static Name md5(String s) throws ServletException {
+		MessageDigest md = newMD5Digest();
+		md.update(s.getBytes());
+		return digestToName(md.digest());	
 	}
 	void addRandom() throws IOException {		
 		char sep = File.separatorChar;

@@ -2,6 +2,8 @@ package civs;
 
 import java.io.Serializable;
 
+import servlet.Name;
+
 /**
  * @author andru
  *
@@ -25,8 +27,8 @@ public class Election implements Serializable {
 	transient String[] addresses; // email addresses of the voters
 	String[] choices;
 	transient Ballots ballots; // actual voters
-	String auth_key_hash;
-	String control_key_hash;
+	Name auth_key_hash;
+	Name control_key_hash;
 	boolean proportional;
 	boolean allow_writeins;
 	boolean allow_revotes;

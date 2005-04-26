@@ -1,10 +1,14 @@
 package civs;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-
 import servlet.*;
 
 import javax.servlet.ServletException;
@@ -46,103 +50,113 @@ public final class Main extends Servlet {
 	}
 
 	public Node banner(String title) throws ServletException {
-		return new Table("banner", null, 
-				new NodeList(
-					new TRow(new NodeList(
-							new TCell("bannertop",
-									new Header(1, "Condorcet Internet Voting Service"), 1, false),
-							new TCell("bannerright",
-									new NodeList(
-											new Hyperlink(home(), new Text("CIVS Home")),
-											new Br(),
-											new Hyperlink(servlet_url() +
-													"?request=create", new Text("Create new election")),
-											new Br(),
-											new Hyperlink(home() + "/sec_priv.html",
-													new Text("About security and privacy"))),
-													1, false
-					))),
-					new TRow(new TCell("bannerbottom",
-							new Header(2, title), 2, false))
-				));
+		return new Table("banner", null, new NodeList(new TRow(new NodeList(
+				new TCell("bannertop", new Header(1,
+						"Condorcet Internet Voting Service"), 1, false),
+				new TCell("bannerright", new NodeList(new Hyperlink(civs_url(),
+						new Text("CIVS Home")), new Br(), new Hyperlink(
+						servlet_url() + "?request=create", new Text(
+								"Create new election")), new Br(),
+						new Hyperlink(civs_url() + "/sec_priv.html", new Text(
+								"About security and privacy"))), 1, false))),
+				new TRow(new TCell("bannerbottom", new Header(2, title), 2,
+						false))));
 	}
-								/*			
-		<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
-		  <tbody><tr>
-		    <td width="100%" valign="top" nowrap>
-
-		      <h1>&nbsp;Condorcet Internet Voting
-		      Service</h1>
-		    </td>
-		    <td width=0% nowrap valign=top align=right>
-			<a href="/~andru/civs">CIVS Home</a><br>
-			<a href="/~andru/civs/civs_create.html">Create new election</a><br>
-			<a href="/~andru/civs/sec_priv.html">About security and privacy</a>
-		    </td>
-
-		  </tr>
-		  <tr>
-		    <td width="100%" valign="top" nowrap colspan=2>
-		      <h2 align="center">Create a New Election</h2>
-		    </td>
-		  </tr>
-		</tbody>
-		</table>
-		*/
 	
-	/*	String q = request.expose().getQueryString();
-		String url = request.expose().getRequestURI();
-		String servletpath = request.expose().getServletPath();new Text("query string = " + q +
-				"\nurl = " + url +
-				"\nservletpath = " + servletpath +											
-	 */
-	
-	String servlet_url;
-	private String servlet_url() throws ServletException {
-		if (servlet_url == null) {
-			servlet_url = initParameter("servlet_url");
-			if (servlet_url == null) {
-				throw new ServletException("Can't determine the CIVS servlet url.\r\n" +
-						"Set the servlet_url parameter in the config file web.xml.");
-			}
+	Map servletParams = new HashMap();
+	String servletParam(String name, String what) throws ServletException {
+		if (servletParams.containsKey(name)) {
+			return (String)servletParams.get(name);			
 		}
-		return servlet_url;
+		String s = initParameter(name);
+		if (s == null) {
+			throw new ServletException("Can't determine " + what + ". Set the " + name +
+					"parameter in the configuration file web.xml.");
+		} else {
+			servletParams.put(name, s);
+			return s;
+		}
+		
 	}
-	String dataDir;
+	
+	String servlet_url() throws ServletException {
+		return servletParam("servlet_url", "the CIVS servlet url.");
+	}
+	
+	String servlet_host() throws ServletException {
+		return servletParam("servlet_host", "the CIVS servlet host");
+	}
+
 	public String dataDir() throws ServletException {
-		if (dataDir == null) {
-			dataDir = initParameter("CIVS_data_dir");
-			if (dataDir == null ) {
-				throw new ServletException("Can't determine where the CIVS data directory is.\r\n" +
-						"Set the CIVS_data_dir parameter in the config file web.xml.");
-			}
-		}
-		return dataDir;
+		return servletParam("CIVS_data_dir", "CIVS data directory");
 	}
-	String CIVS_home;
-	public String home() throws ServletException {
-		if (CIVS_home == null) {
-			CIVS_home = initParameter("CIVS_home");
-			if (CIVS_home == null ) {
-				throw new ServletException("Can't determine where the CIVS home url is.\r\n" +
-						"Set the CIVS_home parameter in the config file web.xml.");
-			}
-		}
-		return CIVS_home;
+	public String civs_url() throws ServletException {
+		return servletParam("CIVS_url", "the CIVS home URL");
 	}
 	
-	public String supervisor() {
-		return initParameter("supervisor");
+	public String supervisor() throws ServletException {
+		return servletParam("supervisor", "the supervisor e-mail address");
+	}
+
+	/** A global way to name the CIVS home. */
+	public String civs_host() throws ServletException {
+		return servletParam("CIVS_host", "the CIVS host");		
+	}
+	
+	private String local_debug;
+	boolean local_debug() throws ServletException {
+		String local_debug = servletParam("local_debug", "whether local debugging is turned on");
+		return local_debug.equals("1");
 	}
 	
 	public String getPrivateHostID() throws ServletException {
-		String f = dataDir() + File.separatorChar +	"private_host_id";
+		String f = dataDir() + File.separatorChar + "private_host_id";
 		try {
 			hostID = new String(Utils.fileContents(f));
-		}
-		catch (IOException exc) {
+		} catch (IOException exc) {
 			throw new ServletException("cannot open private host ID file " + f);
 		}
 		return hostID;
+	}
+
+	/** Find the election with id <code>id</code> and return it. Read from the data directory
+	 *  if this election is not yet in memory. Return null if no such election exists. 
+	 * @param id
+	 * @return the named election
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	public Election findElection(String id) throws ServletException {
+		try {
+			Election e = (Election) elections.get(id);
+			if (e != null) return e;
+			String filename = dataDir() + File.separatorChar + "elections" +
+								File.separatorChar + id;
+			FileInputStream f = new FileInputStream(new File(filename));
+			ObjectInputStream of = new ObjectInputStream(f);	
+			e = (Election) of.readObject();
+			of.close();
+			f.close();
+			return e;
+		}
+			catch (ClassNotFoundException exc) { return null; }
+			catch (IOException exc) {return null;}
+	}
+	
+	public void saveElection(Election e) throws ServletException {
+		try {
+			String filename = dataDir() + File.separatorChar + "elections" +
+			File.separatorChar + e.id;
+			FileOutputStream f = new FileOutputStream(filename, true);
+			ObjectOutputStream of = new ObjectOutputStream(f);
+			of.writeObject(e);
+			of.close();
+			f.close();
+			return;
+		} catch (FileNotFoundException exc) {
+			throw new ServletException("Cannot save election " + e.id + " (no output file)");
+		} catch (IOException exc) {
+			throw new ServletException("Cannot save election " + e.id + " (no object stream)");
+		}
 	}
 }

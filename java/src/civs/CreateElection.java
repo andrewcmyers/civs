@@ -5,12 +5,13 @@ import javax.servlet.ServletException;
 import servlet.*;
 
 public class CreateElection extends CIVSAction {
-	final InputNode title_inp = new TextInput(main, 50, "");
+	final InputNode title_inp = new TextInput(main, 60, "");
 	final InputNode name_inp = new TextInput(main, 20, "");
 	final InputNode email_addr_inp = new TextInput(main, 20, "");
 	final InputNode election_end_inp = new TextInput(main, 20, "tomorrow at 5pm");
-	final InputNode choices_inp = new TextArea(main, 4, 60, "");
+	final InputNode choices_inp = new TextArea(main, 3, 60, "");
 	final InputNode num_choices_inp = new TextInput(main, 3, "1");
+	final InputNode description_inp = new TextArea(main, 3, 60, "");
 	final CheckBox public_checkbox = new CheckBox(main, false);
 	final CheckBox writein_checkbox = new CheckBox(main, false);
 	final CheckBox shuffle_checkbox = new CheckBox(main, true);
@@ -23,7 +24,7 @@ public class CreateElection extends CIVSAction {
 	final InputNode names_chooser = new FileChooser(main);
 	
 	final FinishCreate finishCreate = new FinishCreate();
-	
+
 	public CreateElection(Main main) {
 		super(main);
 	}
@@ -46,17 +47,16 @@ public class CreateElection extends CIVSAction {
 		return new TCell(new NodeList(b,
 				new Br(),
 				new Span("tiny", new Text(explanation))));
-	}
-												
+	}												
 	
 	public Page invoke(Request req) throws ServletException {
 		return main().createPage("CIVS Election Creation",
 		  new NodeList(main().banner("Create New Election"),
 	
 			  new Paragraph(new Text("Use the following form to create an election for which you are the supervisor. " +
-			  		" You will be able to authorize voters in a later step.")),
+			  		" You will be able to authorize voters later.")),
 					main().createForm(finishCreate,
-					  new NodeList(new Table(null,
+					  new NodeList(new Table("createForm", null,
 					  		new NodeList(
 					  		  new TRow(new NodeList(
 						 		desc("Name of the election:"),
@@ -85,6 +85,8 @@ public class CreateElection extends CIVSAction {
 							  new TRow(new NodeList(
 								desc("Or upload choice names:"),
 								new TCell(names_chooser))))
+						    .append(new TRow(new NodeList(desc("Description of election:"),
+						    		new TCell(description_inp))))
 							.append(new TRow(new NodeList(
 							    desc("Public poll?"),
 								check_box_explained(public_checkbox,
@@ -142,6 +144,7 @@ public class CreateElection extends CIVSAction {
 			election.allow_writeins = writein_checkbox.isChecked(req);
 			election.title = nonNullParam(title_inp, req, "election title");
 			election.name = nonNullParam(name_inp, req, "name");
+			election.description = nonNullParam(description_inp, req, "election description");
 			election.email = req.getParam(email_addr_inp);
 			if (election.email == null || !isValidEmail(election.email)) {
 				throw new IllegalArgumentException("e-mail address");
@@ -150,8 +153,6 @@ public class CreateElection extends CIVSAction {
 			election.proportional = proportional_checkbox.isChecked(req);
 			election.shuffle = shuffle_checkbox.isChecked(req);
 			election.report_ballots = report_ballots_checkbox.isChecked(req);
-						
-			
 		  } catch (IllegalArgumentException e) {
 		  	return main.createPage("CIVS: Failed election creation",
 		  			new NodeList(main().banner("Failed election creation"),
@@ -159,17 +160,54 @@ public class CreateElection extends CIVSAction {
 		  							"because of an invalid " + e.getMessage()))
 		  			));
 		  }
-			
+		  String auth_key = main.generateNonce();
+		  String control_key = main.generateNonce();
+		  election.auth_key_hash = Nonce.md5(auth_key);
+		  election.control_key_hash = Nonce.md5(control_key);
+		  String control_url = main.servlet_host() + main.servlet_url() + "?request=control" +
+		  	"&auth=" + auth_key + "&ctrl=" + control_key;
+		  String home_url = main.civs_host() + main.civs_url();
+		  Node email = new NodeList(
+		  		new Paragraph(new NodeList(
+		  				new Text("A new CIVS election named "),
+		  				new Span("electionTitle", election.title),
+						new Text(" has been created. You have been designated the election " +
+								 " supervisor. To start and stop the election and to add " +
+								 " voters, use the following URL:"),
+						new Hyperlink(control_url, new Span("URL", control_url))
+		  		)),
+				new Paragraph(new NodeList(
+						new Text("For more information about the Condorcet Internet Voting Service, " +
+								 "visit "),
+						new Hyperlink(home_url, new Span("URL", home_url)),
+						new Text("."))));
+		  
+		  main.saveElection(election);
+		  if (!main.local_debug()) sendControlInfo(election);
+		    // send email
 			// install once we've successfully set everything up and sent mail.
 		  main.elections.put(election.id, election);
 			
 			return main.createPage("CIVS: Election created",
 			   new NodeList(main().banner("Election Created"),
-					new Text("Title = " + election.title),
-					new Br(),
-					new Text("Name = " + election.name),
-					new Br(),
-					new Text("Choices = " + req.getParam(choices_inp))));
+					new Paragraph(new NodeList(
+							new Text("The election "),
+							new Span("electionTitle", new Text(election.title)),
+							new Text(" has been created. E-mail containing election control information "),
+							(main.local_debug() ? new Text("would be")
+									: new Text("has been")), 
+							new Text(" sent to "),
+							new Span("emailAddr", new Text(election.email)),
+							new Text("."))
+							.append(main.local_debug()
+								?  new NodeList(new HRule(), new Text("E-mail:"), new Br(), email)
+								: (Node)(new HRule()))
+									)));
 		}
+	}
+	
+	void sendControlInfo(Election e) {
+		// XXX open a connection to the SMTP server...
+	
 	}
 }

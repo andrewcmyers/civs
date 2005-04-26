@@ -1,7 +1,7 @@
 a            { text-decoration: none }
-a:link       { color: #339966; background-color: transparent; font-weight: bold }
-a:visited    { color: #009999; background-color: transparent; font-weight: bold }
-a:hover      { color: #0000FF; background-color: transparent }
+a:link       { color: #339966; background-color: transparent; font-weight:bold }
+a:visited    { color: #009999; background-color: transparent; font-weight:bold }
+a:hover      { color: #0000ff; background-color: transparent }
 body, table, p, ul, li, td  { font-family: Arial, helvetica, sans-serif;
 			      font-size: "100%";  color: "black" }
 th              { font-family: Arial, helvetica, sans-serif;
@@ -12,9 +12,15 @@ th              { font-family: Arial, helvetica, sans-serif;
 
 body { background-color: #d0ffe8 }
 table { background-color: #e0fff0 }
-table.matrix { background-color: #e0f0ff }
-table.form { background-color: transparent }
-div.emphasized { background-color: #ffffd0; padding: 3; border-style: solid; border-width: 1; border-color: black }
+table.matrix {background-color: #e0f0ff}
+table.form {background-color: transparent}
+table.createForm {border-style: solid; border-color: #b0dfc8; border-width: 1}
+.emailAddr {font-family: Courier New, Courier, fixed}
+.electionTitle {font-weight: bold}
+.URL {font-family: Courier New, Courier, fixed}
+
+div.emphasized { background-color: #ffffd0;
+    padding: 3; border-style: solid; border-width: 1; border-color: black }
 
 p, ul, li {background-color: transparent}
 
@@ -32,8 +38,11 @@ td.bannertop { width: 100%; vertical-align: top; text-align: left; padding: 7 }
 td.bannerbottom { width: 100%; text-align: center }
 td.bannerright { width: 0%; white-space: nowrap; text-align: right }
 
-.submit { font-weight: bold; border-color: #c0ffc0;
-	background-color: #c0ffc0 }
+.submit { font-weight: bold; border-color: #c0ffc0; background-color: #c0ffc0 }
+table.createForm input { border-color: #c0ffc0; border-width: 1 }
+table.createForm textarea { border-color: #c0ffc0; border-width: 1 }
+table.createForm file { border-color: #c0ffc0; border-width: 1 }
+table.createForm checkbox { border-color: #c0ffc0; border-width: 1 }
 
 /* used for mathematics */
 .math        { color: black; font-family: Times New Roman, serif;

@@ -18,6 +18,5 @@ public class Br extends Node {
 	 */
 	public void write(HTMLWriter p) {
 		p.print("<br />");
-		p.breakLine();
 	}
 }

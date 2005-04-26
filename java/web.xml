@@ -17,16 +17,28 @@
 	<param-value>@STYLE_SHEET_URL@</param-value>
       </init-param>
       <init-param>
-        <param-name>CIVS_home</param-name>
-	<param-value>@CIVS_HOME@</param-value>
+        <param-name>CIVS_url</param-name>
+	<param-value>@CIVS_URL@</param-value>
+      </init-param>
+      <init-param>
+        <param-name>CIVS_host</param-name>
+	<param-value>@CIVS_HOST@</param-value>
       </init-param>
       <init-param>
 	<param-name>servlet_url</param-name>
 	<param-value>@SERVLET_URL@</param-value>
       </init-param>
       <init-param>
+	<param-name>servlet_host</param-name>
+	<param-value>@SERVLET_HOST@</param-value>
+      </init-param>
+      <init-param>
 	<param-name>supervisor</param-name>
 	<param-value>@SUPERVISOR@</param-value>
+      </init-param>
+      <init-param>
+	<param-name>local_debug</param-name>
+	<param-value>@LOCAL_DEBUG@</param-value>
       </init-param>
     </servlet>
     <servlet-mapping>

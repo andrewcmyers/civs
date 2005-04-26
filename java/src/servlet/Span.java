@@ -14,4 +14,12 @@ public class Span extends Container {
 		super("span", class_, n);
 		this.class_ = class_;
 	}
+	/** A useful version of the constructor that
+	 *  automatically constructs a text node.
+	 * @param class_
+	 * @param text
+	 */
+	public Span(String class_, String text) {
+		this(class_, new Text(text));
+	}
 }

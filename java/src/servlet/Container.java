@@ -31,8 +31,9 @@ class Container extends Tag {
 		super.write(p);
 		p.breakLine();
 		writeContents(p);
-		p.end();
+		p.indent(-2);
 		p.breakLine();
 		p.print("</" + tag + ">");
+		p.end();
 	}
 }

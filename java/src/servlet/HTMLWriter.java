@@ -69,6 +69,8 @@ public class HTMLWriter {
 	
 	/** Escape HTML special characters in s and
 	 * print the result. */
+	
+	static char[] hex = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 	public void escape(String s) {
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
@@ -100,12 +102,29 @@ public class HTMLWriter {
 	 * print the result.
 	 * @author andru
 	 * @param s the string to escape
-	 * @deprecated because it's not finished yet
-	 *
 	 */
-	public void HTTP_escape(String s) {
-		writer.print(s);
-		// XXX finish me	s	
+	public void escape_URI(String s) {
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			switch (c) {
+				case '"': print("%22");	break; // otherwise, messes up HTML			
+				case ' ': print("%20"); break; // may help pasting
+				case '%': print("%25"); break;
+				default:
+					int code = (int)c;
+				    if (code >= 0x21 && code <= 0x7E) {
+				    	writer.print(c);
+				    	pos++;				    
+				    } else {
+				    	// technically, codes 00-1f are not allowed in a URI, but they
+				    	// are escaped here anyway.
+				    	writer.print("%");
+				    	writer.print("" + hex[c / 16]);
+				    	writer.print("" + hex[c % 16]);
+				    }
+				    break;
+			}		
+		}	
 	}
 	
 	String currentClass() {

@@ -18,11 +18,13 @@ public class Form extends Container {
 		//p.print("enctype=\"multipart/form-data\"");
 		//p.breakLine();
 		p.print("action=");
-		p.printq(servlet_url);
+		p.print("\"");
+		p.escape_URI(servlet_url);
+		p.print("\"");
 		p.breakLine();
 		p.print("name=");
 		p.printq(action.name.toHex());
-		p.end();		
+		p.end();
 	}
 	
 	void hidden(HTMLWriter p, String name, String value) {
@@ -34,7 +36,9 @@ public class Form extends Container {
 	}
 	
 	public void writeContents(HTMLWriter p) {
-		contents.write(p); p.breakLine();
+		p.breakLine();
+		contents.write(p);
+		p.breakLine();
 		hidden(p, "action", action.name.toHex());
 	}
 }
