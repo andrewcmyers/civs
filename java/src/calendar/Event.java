@@ -1,7 +1,6 @@
 package calendar;
 
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An Event represents an entry in the calendar system.  A single Event object
@@ -18,8 +17,27 @@ public class Event implements Comparable {
   User creator;
 
   // Access control
-  Set timeReaders;  // Users who can read start/end time.
+  Set timeReaders;  // Users who can read start/end time and attendees.
   Set readers;      // Users who can read all details.
+
+  Event(Date date) {
+    this(date, date, null, null, Collections.EMPTY_SET, null,
+	Collections.EMPTY_SET, Collections.EMPTY_SET);
+  }
+
+  public Event(Date startTime, Date endTime, String name, String note,
+      Set attendees, User creator, Set timeReaders, Set readers) {
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.name = name;
+    this.note = note;
+    this.attendees = new HashSet(attendees);
+    this.creator = creator;
+    this.timeReaders = new HashSet(timeReaders);
+    this.readers = new HashSet(readers);
+
+    this.timeReaders.addAll(this.readers);
+  }
 
   /**
    * Compares Events by start time.
