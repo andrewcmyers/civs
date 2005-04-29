@@ -25,6 +25,7 @@ public class TextArea extends InputNode {
 		p.printq(rows);
 		p.print(" cols=");
 		p.printq(cols);
+		p.print(">");
 		p.escape(initial_text);
 		// what goes here in a textarea?
 		p.print("</textarea>");
