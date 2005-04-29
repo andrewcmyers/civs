@@ -1,8 +1,14 @@
 package civs;
 
+
 import java.io.Serializable;
+import java.util.Date;
+
+
+import javax.servlet.ServletException;
 
 import servlet.Name;
+
 
 /**
  * @author andru
@@ -16,17 +22,28 @@ import servlet.Name;
  */
 public class Election implements Serializable {
 	String id;
-	boolean started = false;
-	boolean stopped = false;
 	
+	synchronized void startElection(Main main) throws ServletException {
+		started = true;
+		main.saveElection(this);
+	}
+	synchronized void stopElection(Main main) throws ServletException {
+		stopped = true;
+		Date d = new Date();
+		String actual_end = d.toString();
+		main.saveElection(this);
+	}
+	
+//	(Mostly) fixed properties of the election.
 	String title; // election title
 	String name;  // name of the election supervisor
 	String email; // supervisor email
 	String description; // description of the election
 	String ends; // description of when the election ends.
-	transient String[] addresses; // email addresses of the voters
+	String actual_end; // when the election actually ended.
+
+	
 	String[] choices;
-	transient Ballots ballots; // actual voters
 	Name auth_key_hash;
 	Name control_key_hash;
 	boolean proportional;
@@ -36,5 +53,12 @@ public class Election implements Serializable {
 	public boolean shuffle;
 	public boolean report_ballots;
 	
-	public String getId() { return id; }
+	boolean started = false;
+	boolean stopped = false;
+	
+	String[] authorized_keys;
+		// The set of voter keys that have been authorized to vote.
+	transient Ballots ballots;
+		// actual votes cast
+	
 }

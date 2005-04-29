@@ -4,7 +4,7 @@ import javax.servlet.ServletException;
 
 import servlet.*;
 
-public class Vote extends Action {
+public class Vote extends CIVSAction {
 
 	Vote(Main main) {
 		super(main);

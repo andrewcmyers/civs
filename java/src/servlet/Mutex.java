@@ -2,7 +2,6 @@ package servlet;
 
 /**
  * @author andru
- * @deprecated Not currently in use.
  */
 public class Mutex {
 	boolean locked;

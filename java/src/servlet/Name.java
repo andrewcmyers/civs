@@ -1,11 +1,13 @@
 package servlet;
 
+import java.io.Serializable;
+
 /** A Name is a unique name that can be embedded into a web
  * page as ASCII characters. It is used instead of
  * String because strings have weird behavior because
  * they are made of chars.
  */
-public class Name {
+public class Name implements Serializable {
 	byte[] chars;
 	int hash_code;
 	/** Construct a Name from the raw byte data. */

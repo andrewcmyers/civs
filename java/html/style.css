@@ -18,6 +18,7 @@ table.createForm {border-style: solid; border-color: #b0dfc8; border-width: 1}
 .emailAddr {font-family: Courier New, Courier, fixed}
 .electionTitle {font-weight: bold}
 .URL {font-family: Courier New, Courier, fixed}
+.errormsg {font-size: 120%; font-weight: bold; color: red}
 
 div.emphasized { background-color: #ffffd0;
     padding: 3; border-style: solid; border-width: 1; border-color: black }

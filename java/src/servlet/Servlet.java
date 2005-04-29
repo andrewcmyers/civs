@@ -2,6 +2,10 @@ package servlet;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -48,18 +52,37 @@ abstract public class Servlet extends HttpServlet {
 	public final Node createForm(Action action, Node body) {
 		return new Form(body, action, this);
 	}
+	
+	/** checkLoad implements load checking for the servlet,
+	 * probably by comparing concurrentRequests() against some
+	 * specified maximum.
+	 * @return null if load is acceptable, or else the page to be returned as an
+	 * error message.
+	 */
+	protected Node checkLoad() {
+		return null;
+	}
 		
 	public final void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws IOException, ServletException {
 		increment_req_cnt();
+		
 		try {
 			response.setContentType("text/html");
 			if (request.getCharacterEncoding() == null)
 				request.setCharacterEncoding("ISO-8859-1");
+						
 			
 			Request req = new Request(this, request);
 			PrintWriter rw = response.getWriter();
 			String request_name = req.request_name();
+			
+			Node loadMsg = checkLoad();
+			if (loadMsg != null) {
+				loadMsg.write(new HTMLWriter(rw));
+				rw.close();
+				return;
+			}
 			
 			servlet.Action action = null;
 			if (false) { // debugging: dump parameter names
@@ -86,8 +109,7 @@ abstract public class Servlet extends HttpServlet {
 					s += '\n';
 				}
 				createPage("request", new Pre(new Text(s))).write(p);
-			}
-	
+			}	
 			
 			if (request_name == null) {				
 				String action_name_s = req.action_name();
@@ -144,7 +166,8 @@ abstract public class Servlet extends HttpServlet {
 		finally { decrement_req_cnt(); }
 	}
 	
-	protected Node reportError(String title, String header, String explanation) {
+	protected Page reportError(String title, String header, String explanation) 
+			throws ServletException {
 		return createPage(title, new NodeList(new Header(1, header),
 				new Paragraph(new Text(explanation))));
 	}
@@ -174,10 +197,57 @@ abstract public class Servlet extends HttpServlet {
 		return nonce.generate().toHex();
 	}
 	
+	/** This is an absolute URL to the servlet. */
+	public abstract String external_servlet_url() throws ServletException;
+	
 	/** Set up this action as a way to create a new session.  Means that
 	 * these actions can be invoked from "outside" the system, as a URL.
+	 * @param action_name A name that can be used externally to invoke this action.
 	 */
-	public final void addStartAction(String action_name, Action action) {
-		actions.put(action_name, action);
+	 // XXX should also be sent a set of Inputs?
+	public final void addStartAction(String requestName, Action action) {
+		actions.put(requestName, action); // XXX do we need args?
+	}
+	/** Construct a node that contains an invocation of this servlet with the
+	 * named request and the inputs provided.
+	 * @param action_name the name of the action (or the action itself?)
+	 * @param inputs : Input -> String
+	 * @return a new node.
+	 */
+	public final Node createRequest(String requestName, Map inputs, Node body) throws ServletException {
+		if (!actions.containsKey(requestName)) {
+			throw new ServletException("Tried to generate an unknown request: " + requestName);
+		}
+		// XXX check inputs against the request?
+		StringWriter w = new StringWriter();
+		w.write(external_servlet_url());
+		w.write("?request=");
+		w.write(HTMLWriter.escape_URI(requestName));
+		
+		if (inputs != null)
+		  for (Iterator i = inputs.entrySet().iterator(); i.hasNext();) {
+			Map.Entry entry = (Map.Entry)i.next();
+			Input inp = (Input) entry.getKey();
+			String val = (String) entry.getValue();
+			w.write("&");
+			w.write(inp.name);
+			w.write("=");
+			w.write(HTMLWriter.escape_URI(val));
+		  }
+		return new Hyperlink(w.toString(), body);
+	}
+	/** The set of input names used so far. Each input must have
+	 * a unique name, ensuring that the program doesn't receive
+	 * data on one input that was intended for another input with
+	 * a different label. */
+	Set inputNames = new HashSet();
+	
+	boolean hasInputName(String n) {
+		return inputNames.contains(n);
+	}
+	void addInputName(String n) {
+		if (inputNames.contains(n))
+			throw new IllegalArgumentException("Duplicate input name: " + n);
+		inputNames.add(n);
 	}
 }

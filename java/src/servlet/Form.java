@@ -19,7 +19,7 @@ public class Form extends Container {
 		//p.breakLine();
 		p.print("action=");
 		p.print("\"");
-		p.escape_URI(servlet_url);
+		p.print(HTMLWriter.escape_URI(servlet_url));
 		p.print("\"");
 		p.breakLine();
 		p.print("name=");

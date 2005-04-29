@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
  * by a user request. An action expects to receive some
  * parameters from the request.
  * 
- * Real servlets create subclasses of action to provide
+ * Servlets create subclasses of action to provide
  * request handling.
  */
 abstract public class Action {
@@ -18,4 +18,8 @@ abstract public class Action {
 		name = s.nonce.generate();
 	}
 	abstract public Page invoke(Request req) throws ServletException;
+
+	public String getName() {
+		return name.toHex();
+	}
 }

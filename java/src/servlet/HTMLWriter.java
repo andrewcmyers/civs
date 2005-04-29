@@ -2,6 +2,7 @@ package servlet;
 
 import java.util.Stack;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * @author andru
@@ -103,28 +104,29 @@ public class HTMLWriter {
 	 * @author andru
 	 * @param s the string to escape
 	 */
-	public void escape_URI(String s) {
+	public static String escape_URI(String s) {
+		StringWriter w = new StringWriter();
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			switch (c) {
-				case '"': print("%22");	break; // otherwise, messes up HTML			
-				case ' ': print("%20"); break; // may help pasting
-				case '%': print("%25"); break;
+				case '"': w.write("%22"); break; // otherwise, messes up HTML			
+				case ' ': w.write("%20"); break; // may help pasting
+				case '%': w.write("%25"); break;
 				default:
 					int code = (int)c;
 				    if (code >= 0x21 && code <= 0x7E) {
-				    	writer.print(c);
-				    	pos++;				    
+				    	w.write(c);		    
 				    } else {
 				    	// technically, codes 00-1f are not allowed in a URI, but they
 				    	// are escaped here anyway.
-				    	writer.print("%");
-				    	writer.print("" + hex[c / 16]);
-				    	writer.print("" + hex[c % 16]);
+				    	w.write("%");
+				    	w.append(hex[c / 16]);
+				    	w.append(hex[c % 16]);
 				    }
 				    break;
 			}		
-		}	
+		}
+		return w.toString();	
 	}
 	
 	String currentClass() {

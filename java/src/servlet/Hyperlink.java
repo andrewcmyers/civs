@@ -14,7 +14,7 @@ public class Hyperlink extends Container {
 	public void writeOptions(HTMLWriter p) {
 		p.print(" href=");
 		p.print("\"");
-		p.escape_URI(url);
+		p.print(HTMLWriter.escape_URI(url));
 		p.print("\"");
 	}
 }

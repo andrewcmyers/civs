@@ -1,5 +1,8 @@
 package civs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 
 import servlet.*;
@@ -51,8 +54,7 @@ public class CreateElection extends CIVSAction {
 	
 	public Page invoke(Request req) throws ServletException {
 		return main().createPage("CIVS Election Creation",
-		  new NodeList(main().banner("Create New Election"),
-	
+		  new NodeList(main().banner("Create New Election"),	
 			  new Paragraph(new Text("Use the following form to create an election for which you are the supervisor. " +
 			  		" You will be able to authorize voters later.")),
 					main().createForm(finishCreate,
@@ -164,8 +166,15 @@ public class CreateElection extends CIVSAction {
 		  String control_key = main.generateNonce();
 		  election.auth_key_hash = Nonce.md5(auth_key);
 		  election.control_key_hash = Nonce.md5(control_key);
-		  String control_url = main.servlet_host() + main.servlet_url() + "?request=control" +
-		  	"&auth=" + auth_key + "&ctrl=" + control_key;
+		  // XXX the control_url needs to be constructed via the servlet framework so the
+		  // various data can be tied to inputs.
+		  Map args = new HashMap();
+		  args.put(main.election_id, election.id);
+		  args.put(main.auth_key, auth_key);
+		  args.put(main.ctrl_key, control_key);
+		  Node control_url = main.createRequest("control", args,
+		  		new Text("Control election"));
+		  		
 		  String home_url = main.civs_host() + main.civs_url();
 		  Node email = new NodeList(
 		  		new Paragraph(new NodeList(
@@ -173,9 +182,8 @@ public class CreateElection extends CIVSAction {
 		  				new Span("electionTitle", election.title),
 						new Text(" has been created. You have been designated the election " +
 								 " supervisor. To start and stop the election and to add " +
-								 " voters, use the following URL:"),
-						new Hyperlink(control_url, new Span("URL", control_url))
-		  		)),
+								 " voters, click here:"),
+						control_url)),
 				new Paragraph(new NodeList(
 						new Text("For more information about the Condorcet Internet Voting Service, " +
 								 "visit "),

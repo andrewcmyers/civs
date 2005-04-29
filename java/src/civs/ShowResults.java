@@ -1,24 +1,11 @@
-/*
- * Created on Mar 27, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package civs;
 
 import javax.servlet.ServletException;
 
-import servlet.Action;
 import servlet.Page;
 import servlet.Request;
 
-/**
- * @author andru
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-public class ShowResults extends Action {
+public class ShowResults extends CIVSAction {
 
 	ShowResults(Main main) {
 		super(main);

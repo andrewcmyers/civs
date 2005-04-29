@@ -3,7 +3,6 @@ package calendar;
 import java.util.*;
 import servlet.*;
 import java.text.SimpleDateFormat;
-
 /**
  * A Calendar holds the persistent state of the entire calendar system.
  */

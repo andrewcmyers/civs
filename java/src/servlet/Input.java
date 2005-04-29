@@ -1,18 +1,39 @@
 package servlet;
 
+import javax.servlet.ServletException;
+
 /**
  * @author andru
  *
  */
 public class Input {
-	Name name;
+	String name;
+	SecurityLabel label;
+
+	/** Construct an input with an automatically generated name. */
 	// XXX Should take a label argument too.
 	public Input(Servlet s) {
-		name = s.nonce.generate();
+		name = "i" + s.nonce.generate().toHex();
+		s.addInputName(name);
 	}
 	
-	/** The name of the input. */
+	/** Construct an input with a given name. No two inputs in the same servlet
+	 * may have the same name. Throws an exception if they do.
+	 * @param s the servlet
+	 * @param n the name of the input
+	 * @throws ServletException
+	 */
+	public Input(String n, Servlet s) throws ServletException {
+		s.addInputName(n);
+		name = n;
+	}
+	
+	/** @return The name of the input. */
 	String getName() {
-		return "i" + name.toHex();
+		return name;
+	}
+	
+	public int hashCode() {
+		return name.hashCode();
 	}
 }

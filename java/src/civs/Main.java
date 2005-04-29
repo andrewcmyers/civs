@@ -16,14 +16,32 @@ import javax.servlet.ServletException;
 public final class Main extends Servlet {
 	String hostID;
 
+// XXX do we need a mutex to synchronize accesses to "elections"?	
 	Map elections = new HashMap(); // map from id -> Election
+	Mutex elections_lock = new Mutex();
+	
+	final Input ctrl_key = new Input("ctrl", this);
+	final Input auth_key = new Input("auth", this);
+	final Input election_id = new Input("id", this);
+	final Input voter_key = new Input("key", this);
+	
+	CIVSAction controlElection, vote, showResults, status, create;
+	
+	public Main() throws ServletException {}
 	
 	public void initialize() {
-		addStartAction("create",  new CreateElection(this));
-		addStartAction("status",  new DoStatus(this));
-		addStartAction("vote",    new Vote(this));
-		addStartAction("control", new ControlElection(this));
-		addStartAction("results", new ShowResults(this));
+		create = new CreateElection(this);
+		controlElection = new ControlElection(this);
+		vote = new Vote(this);
+		showResults = new ShowResults(this);
+		status = new DoStatus(this);
+		
+		addStartAction("status",  status);
+		addStartAction("create",  create);
+		addStartAction("vote",    vote);				// voter_key, election_id
+		addStartAction("control", controlElection);     // ctrl_key, auth_key, election_id
+		addStartAction("results", showResults);			// election_id
+		// XXX Do we need the inputs?
 	}
 	
 	// Should we create a new session for every request, or
@@ -31,22 +49,18 @@ public final class Main extends Servlet {
 	// requests from old forms (which may even be concurrent
 	// with new requests).
 	
-	class DoStatus extends Action {
-		public DoStatus(Servlet s) {
-			super(s);
-			// TODO Auto-generated constructor stub
-		}
+	class DoStatus extends CIVSAction {
+		public DoStatus(Main s) { super(s); }
 		public Page invoke(Request req) throws ServletException {
 			int nr = concurrentRequests();
-			Page p = createPage("CIVS Status",
+			return createPage("CIVS Status",
 					new NodeList(
 							banner("CIVS Status"),
 							new Paragraph(new Text("The CIVS server is up and\n" +
 									"is now handling " + nr +
 									(nr > 1 ? " concurrent requests."
 											: " request (this one).")))));
-			return p;
-		}
+			}
 	}
 
 	public Node banner(String title) throws ServletException {
@@ -54,13 +68,17 @@ public final class Main extends Servlet {
 				new TCell("bannertop", new Header(1,
 						"Condorcet Internet Voting Service"), 1, false),
 				new TCell("bannerright", new NodeList(new Hyperlink(civs_url(),
-						new Text("CIVS Home")), new Br(), new Hyperlink(
-						servlet_url() + "?request=create", new Text(
-								"Create new election")), new Br(),
+						new Text("CIVS Home")), new Br(),
+						  createRequest("create", null, new Text("Create new election")), new Br(),
 						new Hyperlink(civs_url() + "/sec_priv.html", new Text(
 								"About security and privacy"))), 1, false))),
 				new TRow(new TCell("bannerbottom", new Header(2, title), 2,
 						false))));
+	}
+	
+	public Page reportError(String title, String header, String message) throws ServletException {
+		return createPage("CIVS: " + title, new NodeList(banner(header),
+				new Paragraph(new Span("errormsg", new Text(message)))));
 	}
 	
 	Map servletParams = new HashMap();
@@ -75,11 +93,10 @@ public final class Main extends Servlet {
 		} else {
 			servletParams.put(name, s);
 			return s;
-		}
-		
+		}		
 	}
 	
-	String servlet_url() throws ServletException {
+	public String servlet_url() throws ServletException {
 		return servletParam("servlet_url", "the CIVS servlet url.");
 	}
 	
@@ -118,7 +135,34 @@ public final class Main extends Servlet {
 		}
 		return hostID;
 	}
+	/* (non-Javadoc)
+	 * @see servlet.Servlet#external_servlet_url()
+	 */
+	public String external_servlet_url() throws ServletException {
+		return servlet_host() + servlet_url();
+	}
 
+	public void saveElection(Election e) throws ServletException {
+		try {
+			String dirname =  dataDir() + File.separatorChar + "elections" +
+				File.separatorChar + e.id;
+			if (!new File(dirname).mkdir()) {
+				throw new ServletException("Election already exists: " + e.id);
+			}
+			String filename = dirname + File.separatorChar + "election";
+			FileOutputStream f = new FileOutputStream(filename, false);
+			ObjectOutputStream of = new ObjectOutputStream(f);
+			of.writeObject(this);
+			of.close();
+			f.close();
+			return;
+		} catch (FileNotFoundException exc) {
+			throw new ServletException("Cannot save election " + e.id + " (no output file)");
+		} catch (IOException exc) {
+			throw new ServletException("Cannot save election " + e.id + " (I/O exception)" + exc);
+		}
+	}
+	
 	/** Find the election with id <code>id</code> and return it. Read from the data directory
 	 *  if this election is not yet in memory. Return null if no such election exists. 
 	 * @param id
@@ -126,37 +170,40 @@ public final class Main extends Servlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
+	
 	public Election findElection(String id) throws ServletException {
+		String dirname = dataDir() + File.separatorChar + "elections" + File.separatorChar + id;
+		String filename = dirname + File.separatorChar + "election";
+	
 		try {
-			Election e = (Election) elections.get(id);
+			Election e;
+			synchronized (elections) {
+				e = (Election) elections.get(id);
+				// we don't try to lock down elections during the whole file read...
+				// it's possible for multiple threads to be trying to read the same
+				// elections file.
+			} 
+
 			if (e != null) return e;
-			String filename = dataDir() + File.separatorChar + "elections" +
-								File.separatorChar + id;
 			FileInputStream f = new FileInputStream(new File(filename));
 			ObjectInputStream of = new ObjectInputStream(f);	
 			e = (Election) of.readObject();
 			of.close();
 			f.close();
-			return e;
+						
+			// read ballots here
+			
+			synchronized (elections) {
+				Election e2 = (Election) elections.get(id);
+				if (e2 != null) {
+					// we had a race. Just return the one that was already read.
+					return e2;
+				}
+				elections.put(id, e);
+				return e;
+			}
 		}
-			catch (ClassNotFoundException exc) { return null; }
-			catch (IOException exc) {return null;}
-	}
-	
-	public void saveElection(Election e) throws ServletException {
-		try {
-			String filename = dataDir() + File.separatorChar + "elections" +
-			File.separatorChar + e.id;
-			FileOutputStream f = new FileOutputStream(filename, true);
-			ObjectOutputStream of = new ObjectOutputStream(f);
-			of.writeObject(e);
-			of.close();
-			f.close();
-			return;
-		} catch (FileNotFoundException exc) {
-			throw new ServletException("Cannot save election " + e.id + " (no output file)");
-		} catch (IOException exc) {
-			throw new ServletException("Cannot save election " + e.id + " (no object stream)");
-		}
+			catch (ClassNotFoundException exc) { throw new ServletException("Class not found");} 
+			catch (IOException exc) { throw new ServletException("I/O exception reading election from " + filename); }
 	}
 }
