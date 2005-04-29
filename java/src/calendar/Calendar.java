@@ -21,53 +21,75 @@ public class Calendar {
   static final int SECOND = java.util.Calendar.SECOND;
   static final int SUNDAY = java.util.Calendar.SUNDAY;
 
+  public static Event createTestSecretEvent() {
+      java.util.Calendar c = GregorianCalendar.getInstance();
+      Date start = c.getTime();
+      c.add(HOUR_OF_DAY, 1);
+      Date end = c.getTime();
+      Set attendees = new HashSet();
+      attendees.add(null);
+      Set readers = Collections.EMPTY_SET;
+      Set timeReaders = Collections.EMPTY_SET;
+      return new Event(start, end, "sekrit", "", attendees, null,
+  	  timeReaders, readers);      
+  }
+  public static Event createTestPartialSecretEvent() {
+      // A partially visible event.
+      java.util.Calendar c = GregorianCalendar.getInstance();
+      Date start = c.getTime();
+      c.add(HOUR_OF_DAY, 1);
+      Date end = c.getTime();
+      Set attendees = new HashSet();
+      attendees.add(null);
+      Set timeReaders = attendees;
+      Set readers = Collections.EMPTY_SET;
+      return (new Event(start, end, "sleep", "", attendees, null,
+  	  timeReaders, readers));      
+  }
+  public static Event createTestPublicEvent() {
+      // A totally visible event.
+      java.util.Calendar c = GregorianCalendar.getInstance();
+      Date start = c.getTime();
+      c.add(HOUR_OF_DAY, 1);
+      Date end = c.getTime();
+      Set attendees = new HashSet();
+      attendees.add(null);
+      Set timeReaders = Collections.EMPTY_SET;
+      Set readers = attendees;
+      return (new Event(start, end, "work", "", attendees, null,
+  	  timeReaders, readers));
+      
+  }
+  public static Event createTestMultidayEvent() {
+      // A multi-day event.
+      java.util.Calendar c = GregorianCalendar.getInstance();
+      c.add(DATE, -3);
+      Date start = c.getTime();
+      c.add(DATE, 6);
+      Date end = c.getTime();
+      Set timeReaders = Collections.EMPTY_SET;
+      Set attendees = new HashSet();
+      attendees.add(null);
+      Set readers = attendees;
+      return (new Event(start, end, "work", "", attendees, null,
+  	  timeReaders, readers));
+  }
   public Calendar() {
     users = new HashSet();
     events = new TreeSet();
 
     // XXX Add some events to test -- some ugly fragile code
 
-    // An invisible event.
-    java.util.Calendar c = GregorianCalendar.getInstance();
-    Date start = c.getTime();
-    c.add(HOUR_OF_DAY, 1);
-    Date end = c.getTime();
-    Set attendees = new HashSet();
-    attendees.add(null);
-    Set readers = Collections.EMPTY_SET;
-    Set timeReaders = Collections.EMPTY_SET;
-    events.add(new Event(start, end, "sekrit", "", attendees, null,
-	  timeReaders, readers));
-
-    // A partially visible event.
-    start = c.getTime();
-    c.add(HOUR_OF_DAY, 1);
-    end = c.getTime();
-    timeReaders = attendees;
-    readers = Collections.EMPTY_SET;
-    events.add(new Event(start, end, "sleep", "", attendees, null,
-	  timeReaders, readers));
-
-    // A totally visible event.
-    start = c.getTime();
-    c.add(HOUR_OF_DAY, 1);
-    end = c.getTime();
-    timeReaders = Collections.EMPTY_SET;
-    readers = attendees;
-    events.add(new Event(start, end, "work", "", attendees, null,
-	  timeReaders, readers));
-
-    // A multi-day event.
-    c.add(DATE, -3);
-    start = c.getTime();
-    c.add(DATE, 6);
-    end = c.getTime();
-    timeReaders = Collections.EMPTY_SET;
-    readers = attendees;
-    events.add(new Event(start, end, "work", "", attendees, null,
-	  timeReaders, readers));
+    events.add(createTestSecretEvent());
+    events.add(createTestPartialSecretEvent());
+    events.add(createTestPublicEvent());
+    events.add(createTestMultidayEvent());
   }
 
+  /**
+   * @@@@Should be moved. This is presentation code, and the Calendar class is
+   * a data object (i.e., will be stored in persistent storage.)
+   */
   synchronized Node monthToNode(User reader, User user, Date date) {
     java.util.Calendar c = GregorianCalendar.getInstance();
 
@@ -129,9 +151,19 @@ public class Calendar {
 	  Event e = (Event)it.previous();
 	  String name = "Busy";
 	  if (e.readers.contains(reader)) name = e.name;
-	  cell = new NodeList(
-	      new Text(timeSDF.format(e.startTime) + " " + name),
-	      cell);
+	      
+	  String eventText = timeSDF.format(e.startTime) + " " + name;
+	  boolean canEdit = false; // @@@@hack. SHould be checked
+	      
+	  if (canEdit) {
+	      // @@@ Need access to the servlet, and to the ShowCalendar action.
+//	      cell = new NodeList(new Hyperlink(new CreateEditEvent(main, this, this, e, false),
+//	                                        new Text(eventText)), cell);	      	      
+	  }
+	  else {
+	      cell = new NodeList(new Text(eventText), cell);	      
+	  }
+
 	  cell = new NodeList(new Br(), cell);
 	}
 
@@ -149,6 +181,7 @@ public class Calendar {
     for (int count = 0; count < 7; count++) {
       c.add(DATE, -1);
       curDate = c.getTime();
+      
       dowRow = new NodeList(new TCell(new Text(sdf.format(curDate))), dowRow);
     }
 
