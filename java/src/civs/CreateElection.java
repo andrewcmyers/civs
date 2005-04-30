@@ -55,7 +55,7 @@ public class CreateElection extends CIVSAction {
 	
 	public Page invoke(Request req) throws ServletException {
 		return main().createPage("CIVS Election Creation",
-		  new NodeList(main().banner("Create New Election"),	
+		  new NodeList(main().banner("Create New Election", req),	
 			  new Paragraph(new Text("Use the following form to create an election for which you are the supervisor. " +
 			  		" You will be able to authorize voters later.")),
 					main().createForm(finishCreate,
@@ -124,7 +124,7 @@ public class CreateElection extends CIVSAction {
 														"circularities are uncommon."))
 											 ))))))
 									),
-							new SubmitButton(main, "Create election")))));
+							new SubmitButton(main, "Create election")), req)));
 		}
 	
 	class FinishCreate extends CIVSAction {
@@ -194,7 +194,7 @@ public class CreateElection extends CIVSAction {
 		  }
 		  catch (IllegalArgumentException e) {
 		  	return main.createPage("CIVS: Failed election creation",
-		  			new NodeList(main().banner("Failed election creation"),
+		  			new NodeList(main().banner("Failed election creation", req),
 		  					new Paragraph(new Text("The election was not created " +
 		  							"because of an invalid " + e.getMessage()))
 		  			));
@@ -210,7 +210,7 @@ public class CreateElection extends CIVSAction {
 		  args.put(main.auth_key, auth_key);
 		  args.put(main.ctrl_key, control_key);
 		  Node control_url = main.createRequest("control", args,
-		  		new Text("Control election"));
+		  		new Text("Control election"), req);
 		  		
 		  String home_url = main.civs_host() + main.civs_url();
 		  Node email = new NodeList(
@@ -234,7 +234,7 @@ public class CreateElection extends CIVSAction {
 		  main.elections.put(election.id, election);
 			
 			return main.createPage("CIVS: Election created",
-			   new NodeList(main().banner("Election Created"),
+			   new NodeList(main().banner("Election Created", req),
 					new Paragraph(new NodeList(
 							new Text("The election "),
 							new Span("electionTitle", new Text(election.title)),

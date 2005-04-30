@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
  * initial requests that start a new session,
  * and requests that are part of an existing session.
  */
-public class Request {
-	Servlet servlet;
+public final class Request {
+	public final Servlet servlet;
 	HttpServletRequest request;
 	public Request(Servlet srv, HttpServletRequest req) {
 		servlet = srv;
@@ -31,17 +31,7 @@ public class Request {
 	public String title() {
 		return request.getParameter("title");
 	}
-	
-	/** Return the associated session, or null if there is none.
-	 * Initial requests do not reference a session. 
-	public servlet.Session session() throws SessionNotFound {
-		String session_name = request.getParameter("session");
-		if (session_name == null) return null;
-		return servlet.findSession(session_name);
+	public String servlet_url() {
+		return request.getServletPath();
 	}
-	
-	public HttpServletRequest expose() {
-		return request;
-	}
-	*/
 }

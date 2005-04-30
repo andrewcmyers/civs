@@ -49,8 +49,8 @@ abstract public class Servlet extends HttpServlet {
 						new Body(body));
 	}
 	
-	public final Node createForm(Action action, Node body) {
-		return new Form(body, action, this);
+	public final Node createForm(Action action, Node body, Request req) {
+		return new Form(body, action, req);
 	}
 	
 	/** checkLoad implements load checking for the servlet,
@@ -176,10 +176,6 @@ abstract public class Servlet extends HttpServlet {
 		return getServletConfig().getInitParameter(p);
 	}
 	
-	public final String url() {
-		return initParameter("servlet_url");
-	}
-	
 	/** These servlets currently do not distinguish between GET and POST requests. */
 	public final void doPost(HttpServletRequest req, HttpServletResponse res)
 	throws IOException, ServletException {
@@ -197,11 +193,9 @@ abstract public class Servlet extends HttpServlet {
 		return nonce.generate().toHex();
 	}
 	
-	/** This is an absolute URL to the servlet. */
-	public abstract String external_servlet_url() throws ServletException;
-	
 	/** Set up this action as a way to create a new session.  Means that
-	 * these actions can be invoked from "outside" the system, as a URL.
+	 * these actions can be invoked from "outside" the system, as a URL in a static
+	 * web page or email message.
 	 * @param action_name A name that can be used externally to invoke this action.
 	 */
 	 // XXX should also be sent a set of Inputs?
@@ -212,15 +206,17 @@ abstract public class Servlet extends HttpServlet {
 	 * named request and the inputs provided.
 	 * @param action_name the name of the action (or the action itself?)
 	 * @param inputs : Input -> String
+	 * @param req : the request that initiated this
 	 * @return a new node.
 	 */
-	public final Node createRequest(String requestName, Map inputs, Node body) throws ServletException {
+	public final Node createRequest(String requestName, Map inputs, Node body,
+			Request req) throws ServletException {
 		if (!actions.containsKey(requestName)) {
 			throw new ServletException("Tried to generate an unknown request: " + requestName);
 		}
 		// XXX check inputs against the request?
 		StringWriter w = new StringWriter();
-		w.write(external_servlet_url());
+		w.write(req.servlet_url());
 		w.write("?request=");
 		w.write(HTMLWriter.escape_URI(requestName));
 		

@@ -55,7 +55,7 @@ public final class Main extends Servlet {
 			int nr = concurrentRequests();
 			return createPage("CIVS Status",
 					new NodeList(
-							banner("CIVS Status"),
+							banner("CIVS Status", req),
 							new Paragraph(new Text("The CIVS server is up and\n" +
 									"is now handling " + nr +
 									(nr > 1 ? " concurrent requests."
@@ -63,21 +63,21 @@ public final class Main extends Servlet {
 			}
 	}
 
-	public Node banner(String title) throws ServletException {
+	public Node banner(String title, Request req) throws ServletException {
 		return new Table("banner", null, new NodeList(new TRow(new NodeList(
 				new TCell("bannertop", new Header(1,
 						"Condorcet Internet Voting Service"), 1, false),
 				new TCell("bannerright", new NodeList(new Hyperlink(civs_url(),
 						new Text("CIVS Home")), new Br(),
-						  createRequest("create", null, new Text("Create new election")), new Br(),
+						  createRequest("create", null, new Text("Create new election"), req), new Br(),
 						new Hyperlink(civs_url() + "/sec_priv.html", new Text(
 								"About security and privacy"))), 1, false))),
 				new TRow(new TCell("bannerbottom", new Header(2, title), 2,
 						false))));
 	}
 	
-	public Page reportError(String title, String header, String message) throws ServletException {
-		return createPage("CIVS: " + title, new NodeList(banner(header),
+	public Page reportError(Request req, String title, String header, String message) throws ServletException {
+		return createPage("CIVS: " + title, new NodeList(banner(header, req),
 				new Paragraph(new Span("errormsg", new Text(message)))));
 	}
 	

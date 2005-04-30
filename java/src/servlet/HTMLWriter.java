@@ -120,8 +120,8 @@ public class HTMLWriter {
 				    	// technically, codes 00-1f are not allowed in a URI, but they
 				    	// are escaped here anyway.
 				    	w.write("%");
-				    	w.append(hex[c / 16]);
-				    	w.append(hex[c % 16]);
+				    	w.write((int)hex[c / 16]);
+				    	w.write((int)hex[c % 16]);
 				    }
 				    break;
 			}		

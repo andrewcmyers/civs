@@ -13,8 +13,6 @@ public final class Main extends Servlet {
       ShowCalendar sc = new ShowCalendar(this);
       addStartAction("show", sc);
   }
-  
-  public abstract String servlet_url();
 
   public String getPrivateHostID() throws ServletException {
     return "";
@@ -25,7 +23,7 @@ public final class Main extends Servlet {
 
     public Page invoke(Request req) throws ServletException {
         Node content = cal.monthToNode(null, null, new java.util.Date());
-        content = new NodeList(content, new Paragraph(new Hyperlink(new DoCreateEvent(getServlet(), this), new Text("Create new event"))));
+        content = new NodeList(content, new Paragraph(new Hyperlink(req, new DoCreateEvent(getServlet(), this), new Text("Create new event"))));
 
       return createPage("My Calendar", content);
     }

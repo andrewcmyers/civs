@@ -138,13 +138,14 @@ public class CreateEditEvent extends Action {
         if (!readOnly) {
             entries = entries.append(new TRow(new TCell(new SubmitButton(main(), "Update event"))));
         }
-        entries = entries.append(new TRow(new TCell(new Hyperlink(new CancelEditEvent(getServlet()), readOnly?"Return":"Cancel"))));     
+        entries = entries.append(new TRow(new TCell(new Hyperlink(req, new CancelEditEvent(getServlet()),
+        		new Text(readOnly?"Return":"Cancel")))));     
         Node content;
         if (readOnly) {
             content = new Table(null, entries);
         }
         else {
-            content = main().createForm(new FinishEditEvent(main()), new Table(null, entries)); 
+            content = main().createForm(new FinishEditEvent(main()), new Table(null, entries), req); 
         }
         
         return main().createPage(title, new NodeList(new Text(title), content));        

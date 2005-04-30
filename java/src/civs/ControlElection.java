@@ -23,15 +23,15 @@ public class ControlElection extends CIVSAction {
 		Election election = main.findElection(election_id);
 		
 		if (election == null) {
-			return main.reportError("Illegal input", "Illegal Input", "Election not found, bad election id: " + election_id);
+			return main.reportError(req, "Illegal input", "Illegal Input", "Election not found, bad election id: " + election_id);
 		}
 		
 		if (!election.auth_key_hash.equals(Nonce.md5(auth_key))) {
-			return main.reportError("Invalid authorization key", "Invalid Authorization Key",
+			return main.reportError(req, "Invalid authorization key", "Invalid Authorization Key",
 					"The authorization key " + auth_key + " is incorrect."); 
 		}
 		if (!election.control_key_hash.equals(Nonce.md5(control_key))) {
-			return main.reportError("Invalid control key", "Invalid Control Key",
+			return main.reportError(req, "Invalid control key", "Invalid Control Key",
 					"The control key " + control_key + " is incorrect.");
 		}
 		String status;
@@ -92,8 +92,7 @@ public class ControlElection extends CIVSAction {
 				new TCell(new Text(options)))));
 		
 		return main.createPage("CIVS: Election Control",
-				new NodeList(main.banner("Election Control: " + election.title),
+				new NodeList(main.banner("Election Control: " + election.title, req),
 						new Table("electionControl", null, tableEntries)));
 	}
-
 }
