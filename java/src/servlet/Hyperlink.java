@@ -12,9 +12,9 @@ public class Hyperlink extends Container {
 		url = url_;
 	}
 	public Hyperlink(Request req, Action a, Node n) {
-		// XXX Steve: is this enough?
 		super("a", n);
-		url = req.servlet_url() + "?" + a.getName();	
+		url = req.servlet_url() + "?action=" + a.getName();	
+		req.servlet.addAction(a);
 	}
 	public void writeOptions(HTMLWriter p) {
 		p.print(" href=");

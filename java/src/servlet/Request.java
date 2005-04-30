@@ -32,6 +32,6 @@ public final class Request {
 		return request.getParameter("title");
 	}
 	public String servlet_url() {
-		return request.getServletPath();
+		return request.getContextPath() + request.getServletPath();
 	}
 }
