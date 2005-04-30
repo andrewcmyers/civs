@@ -10,7 +10,6 @@ import servlet.*;
 public class CreateEditEvent extends Action {
     private Event event;
     final private boolean readOnly;
-    final private Main main;
     final private Action successAction;
     final private Action cancelAction;
     
@@ -19,13 +18,12 @@ public class CreateEditEvent extends Action {
     private InputNode inpEnd;
     private TextArea inpNote;
     
-    public CreateEditEvent(Main main, 
+    public CreateEditEvent(Servlet servlet, 
                            Action successAction, 
                            Action cancelAction, 
                            Event event, 
                            boolean readOnly) {
-        super(main);
-        this.main = main;
+        super(servlet);
         this.successAction = successAction;
         this.cancelAction = cancelAction;
         this.event = event;
@@ -34,10 +32,6 @@ public class CreateEditEvent extends Action {
         this.recreateInputs(null);
     }
     
-
-    private Main main() { 
-        return this.main; 
-    }
 
     public Event getEvent() {
         return event;
@@ -136,7 +130,7 @@ public class CreateEditEvent extends Action {
         entries = entries.append(new TRow(new NodeList(desc("End:"), inpNode(inpEnd, DateUtil.dateToString(this.event.endTime), errors))));
         entries = entries.append(new TRow(new NodeList(desc("Note:"), inpNode(inpNote, this.event.note, errors))));
         if (!readOnly) {
-            entries = entries.append(new TRow(new TCell(new SubmitButton(main(), "Update event"))));
+            entries = entries.append(new TRow(new TCell(new SubmitButton(getServlet(), "Update event"))));
         }
         entries = entries.append(new TRow(new TCell(new Hyperlink(req, new CancelEditEvent(getServlet()),
         		new Text(readOnly?"Return":"Cancel")))));     
@@ -145,10 +139,10 @@ public class CreateEditEvent extends Action {
             content = new Table(null, entries);
         }
         else {
-            content = main().createForm(new FinishEditEvent(main()), new Table(null, entries), req); 
+            content = getServlet().createForm(new FinishEditEvent(getServlet()), new Table(null, entries), req); 
         }
         
-        return main().createPage(title, new NodeList(new Text(title), content));        
+        return getServlet().createPage(title, new NodeList(new Text(title), content));        
     }
     
     // helper methods for producing the output
@@ -172,10 +166,10 @@ public class CreateEditEvent extends Action {
             }
         }
         
-        this.inpName = new TextInput(main, 40, defaultName);
-        this.inpStart = new TextInput(main, 40, defaultStart);
-        this.inpEnd = new TextInput(main, 40, defaultEnd);
-        this.inpNote = new TextArea(main, 3, 40, defaultNote);        
+        this.inpName = new TextInput(getServlet(), 40, defaultName);
+        this.inpStart = new TextInput(getServlet(), 40, defaultStart);
+        this.inpEnd = new TextInput(getServlet(), 40, defaultEnd);
+        this.inpNote = new TextArea(getServlet(), 3, 40, defaultNote);        
     }
     private Node desc(String txt) {
         Tag n = new TCell(new Text(txt));

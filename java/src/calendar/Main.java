@@ -53,7 +53,7 @@ public final class Main extends Servlet {
 
     public Page invoke(Request req) throws ServletException {
         Event newEvent = defaultEvent(); 
-        CreateEditEvent createAction = new CreateEditEvent((Main)getServlet(), 
+        CreateEditEvent createAction = new CreateEditEvent(getServlet(), 
                                                            new ReceiveCreatedEvent(getServlet(), returnAction, newEvent),
                                                            returnAction,
                                                            newEvent, 
