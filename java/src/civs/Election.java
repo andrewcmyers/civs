@@ -41,7 +41,6 @@ public class Election implements Serializable {
 	String description; // description of the election
 	String ends; // description of when the election ends.
 	String actual_end; // when the election actually ended.
-
 	
 	String[] choices;
 	Name auth_key_hash;

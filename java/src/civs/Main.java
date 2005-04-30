@@ -152,7 +152,7 @@ public final class Main extends Servlet {
 			String filename = dirname + File.separatorChar + "election";
 			FileOutputStream f = new FileOutputStream(filename, false);
 			ObjectOutputStream of = new ObjectOutputStream(f);
-			of.writeObject(this);
+			of.writeObject(e);
 			of.close();
 			f.close();
 			return;

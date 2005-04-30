@@ -37,37 +37,63 @@ public class ControlElection extends CIVSAction {
 		String status;
 
 		if (election.stopped) {
-			status = "Ended.";
+			status = "Ended " + election.actual_end + " (was announced to end " +
+			   election.ends + ").";
 		} else {
-			status = "In progress.";
+			status = "In progress. Announced to end " + election.ends + ".";
+		}
+		NodeList choicesNode = new NodeList(new Text(election.choices[0]));
+		for (int i = 1; i < election.choices.length; i++) {
+			choicesNode = choicesNode.append(new Br()).append(new Text(election.choices[i]));
 		}
 		
+		NodeList tableEntries =
+			new NodeList(
+			  new TRow(new NodeList(
+				new TCell("desc", new Text("Election title:"), 1, false),
+				new TCell(new Text(election.title)))),
+			  new TRow(new NodeList(
+			  	new TCell("desc", new Text("Status:"), 1, false),
+				new TCell(new Text(status)))),
+			  new TRow(new NodeList(
+			  	new TCell("desc", new Text("Supervisor:"), 1, false),
+				new TCell(
+					new NodeList(
+						new Span("emailAddr", new Text(election.email)),
+						new Text("(" + election.name + ")"))))),
+			  new TRow(new NodeList(
+			  	new TCell("desc", new Text("Description:"), 1, false),
+				new TCell(new Text(election.description)))),
+			  new TRow(new NodeList(
+			  	new TCell("desc", new Text("Choices:"), 1, false),
+				new TCell(new Span("choicesList", choicesNode))))
+			);
+		String options = "";
+		
+		if (election.allow_writeins) {
+			options += "Write-ins allowed.";
+		} else {
+			options += "No write-ins allowed.";
+		}
+		if (election.allow_revotes) {
+			options += " Revotes allowed.";
+		}
+		if (election.proportional) {
+			options += " Proportional representation.";
+		}
+		if (election.shuffle) {
+			options += " Ballot entries shuffled.";
+		} else {
+			options += " No ballot shuffling.";
+		}
+
+		tableEntries = tableEntries.append(new TRow(new NodeList(
+				new TCell("desc", new Text("Options:"), 1, false),
+				new TCell(new Text(options)))));
+		
 		return main.createPage("CIVS: Election Control",
-				
 				new NodeList(main.banner("Election Control: " + election.title),
-					new Table("electionControl", null,
-						new NodeList(
-						  new TRow(new NodeList(
-							new TCell("desc", new Text("Election title:"), 1, true),
-							new TCell(new Text(election.title)))),
-						  new TRow(new NodeList(
-						  	new TCell("desc", new Text("Status:"), 1, true),
-							new TCell(new Text(status)))),
-						  new TRow(new NodeList(
-						  	new TCell("desc", new Text("Supervisor:"), 1, true),
-							new TCell(
-								new NodeList(
-									new Span("emailAddr", new Text(election.email)),
-									new Text("(" + election.name + ")"))))),
-						  new TRow(new NodeList(
-						  	new TCell("desc", new Text("Description:"), 1, true),
-							new TCell(new Text(election.description)))))),
-									
-					new Text("This page is supposed to let you control an election."),
-					new Pre(new Text("election id = " + election_id + "\r\n" +
-							 "auth_key = " + auth_key + "\r\n" +
-							 "control_key = " + control_key))
-                ));
+						new Table("electionControl", null, tableEntries)));
 	}
 
 }

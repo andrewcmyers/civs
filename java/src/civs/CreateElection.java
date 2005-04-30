@@ -2,6 +2,7 @@ package civs;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.ServletException;
 
@@ -13,7 +14,7 @@ public class CreateElection extends CIVSAction {
 	final InputNode email_addr_inp = new TextInput(main, 20, "");
 	final InputNode election_end_inp = new TextInput(main, 20, "tomorrow at 5pm");
 	final InputNode choices_inp = new TextArea(main, 3, 60, "");
-	final InputNode num_choices_inp = new TextInput(main, 3, "1");
+	final InputNode num_winners_inp = new TextInput(main, 3, "1");
 	final InputNode description_inp = new TextArea(main, 3, 60, "");
 	final CheckBox public_checkbox = new CheckBox(main, false);
 	final CheckBox writein_checkbox = new CheckBox(main, false);
@@ -61,7 +62,7 @@ public class CreateElection extends CIVSAction {
 					  new NodeList(new Table("createForm", null,
 					  		new NodeList(
 					  		  new TRow(new NodeList(
-						 		desc("Name of the election:"),
+						 		desc("Title of the election:"),
 								typein_explained(title_inp, "e.g., The Democratic Primary"))),
 							  new TRow(new NodeList(
 							  	desc("Your name:"),
@@ -79,11 +80,12 @@ public class CreateElection extends CIVSAction {
 						 				"e.g., Friday at noon, April 5 at 5pm"))),
 							  new TRow(new NodeList(
 							  	desc("Number of winners:"),
-								typein_explained(num_choices_inp,
+								typein_explained(num_winners_inp,
 										"Any number of choices (candidates) may win the election."))),
 							  new TRow(new NodeList(
 							  	desc("Names of the choices:"),
-								new TCell(choices_inp))),
+								typein_explained(choices_inp,
+										"Enter one choice per line."))),
 							  new TRow(new NodeList(
 								desc("Or upload choice names:"),
 								new TCell(names_chooser))))
@@ -134,8 +136,19 @@ public class CreateElection extends CIVSAction {
 			if (s == null) throw new IllegalArgumentException(msg);
 			return s;
 		}
+		String nonEmptyParam(InputNode i, Request r, String msg) {
+			String s = nonNullParam(i,r,msg);
+			if (s.matches("[ \t\r\n]*")) throw new IllegalArgumentException(msg);
+			return s;
+		}
 		boolean isValidEmail(String email) {
 			return true;
+		}
+		boolean validChoice(String c, Vector current) {
+			if (c.equals("")) return false;
+			if (current.contains(c)) return false;
+			if (c.matches("[ \t\r\n]*")) return false;
+			return true;			
 		}
 		public Page invoke(Request req) throws ServletException {
 			// parse the request.
@@ -144,9 +157,12 @@ public class CreateElection extends CIVSAction {
 			
 			election.id = "E_" + main.generateNonce();
 			election.allow_writeins = writein_checkbox.isChecked(req);
-			election.title = nonNullParam(title_inp, req, "election title");
-			election.name = nonNullParam(name_inp, req, "name");
+			election.title = nonEmptyParam(title_inp, req, "election title");
+			election.name = nonEmptyParam(name_inp, req, "name");
 			election.description = nonNullParam(description_inp, req, "election description");
+			if (election.description.matches("[ \t\r\n]*")) {
+				election.description = "(none)";
+			}
 			election.email = req.getParam(email_addr_inp);
 			if (election.email == null || !isValidEmail(election.email)) {
 				throw new IllegalArgumentException("e-mail address");
@@ -155,7 +171,28 @@ public class CreateElection extends CIVSAction {
 			election.proportional = proportional_checkbox.isChecked(req);
 			election.shuffle = shuffle_checkbox.isChecked(req);
 			election.report_ballots = report_ballots_checkbox.isChecked(req);
-		  } catch (IllegalArgumentException e) {
+			String[] choices1 = req.getParam(choices_inp).split("[\r\n][\r\n]*");
+			Vector choices2 = new Vector();
+			for (int i = 0; i < choices1.length; i++) {
+				if (validChoice(choices1[i], choices2)) {
+					choices2.add(choices1[i]);
+				}
+			}
+			
+			if (choices2.size() <= 1)
+				throw new IllegalArgumentException("list of choices");
+			election.choices = new String[choices2.size()];
+		    choices2.toArray(election.choices);
+			election.num_winners = Integer.parseInt(req.getParam(num_winners_inp));
+			if (election.num_winners < 1 ||
+					election.num_winners >= election.choices.length) {
+				throw new IllegalArgumentException("number of winners");
+			}
+		  }
+		  catch (NumberFormatException e) {
+		  	throw new IllegalArgumentException("number of winners");
+		  }
+		  catch (IllegalArgumentException e) {
 		  	return main.createPage("CIVS: Failed election creation",
 		  			new NodeList(main().banner("Failed election creation"),
 		  					new Paragraph(new Text("The election was not created " +
