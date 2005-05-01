@@ -15,38 +15,38 @@ import servlet.Servlet;
  */
 
 abstract public class Session {
-	Session parent;
-	Name name;
-	Servlet servlet;
-	
-	public final Name name() {
-		return name;
-	}
-	
-	/** Create a session.
-	 * 
-	 * @param parent_
-	 * This is the session from which this session derived, or null if this
-	 * is a start session.
-	 * @param srv
-	 * The servlet instance associated with the session.
-	 */
-	public Session(Session parent_, Servlet srv) {
-		parent = parent_;
-		servlet = srv;
-		//name = new Name(srv.nonce.generate());
-		//servlet.addSession(this);
-	}
-	public final boolean equals(Object s) {
-		if (s instanceof Session) {
-			Session s_ = (Session)s;
-			return s_.name() == name;
-		}
-		return false; 
-	}
-	public final int hashCode() {
-		return name.hashCode();
-	}
-	public Servlet servlet() { return servlet; }
-	
+    Session parent;
+    Name name;
+    Servlet servlet;
+    
+    public final Name name() {
+        return name;
+    }
+    
+    /** Create a session.
+     * 
+     * @param parent_
+     * This is the session from which this session derived, or null if this
+     * is a start session.
+     * @param srv
+     * The servlet instance associated with the session.
+     */
+    public Session(Session parent_, Servlet srv) {
+        parent = parent_;
+        servlet = srv;
+        //name = new Name(srv.nonce.generate());
+        //servlet.addSession(this);
+    }
+    public final boolean equals(Object s) {
+        if (s instanceof Session) {
+            Session s_ = (Session)s;
+            return s_.name() == name;
+        }
+        return false; 
+    }
+    public final int hashCode() {
+        return name.hashCode();
+    }
+    public Servlet servlet() { return servlet; }
+    
 }
