@@ -8,8 +8,8 @@ import java.util.Date;
 public class DateUtil {
     static final DateFormat df;
     static {
-        df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        df.setLenient(true);        
+      df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+      df.setLenient(true);        
     }
     public static String dateToString(Date date) {
         return df.format(date);

@@ -22,7 +22,9 @@ public final class Main extends Servlet {
 
     public Page invoke(Request req) throws ServletException {
         Node content = cal.monthToNode(null, null, new java.util.Date());
-        content = new NodeList(content, new Paragraph(new Hyperlink(req, new DoCreateEvent(getServlet(), this), new Text("Create new event"))));
+        content = new NodeList(content,
+	    new Paragraph(new Hyperlink(req, new DoCreateEvent(getServlet(),
+		  this), new Text("Create new event"))));
 
       return createPage("My Calendar", content);
     }
@@ -41,7 +43,8 @@ public final class Main extends Servlet {
       attendees.add(null);
       Set readers = attendees;
       Set timeReaders = Collections.EMPTY_SET;
-      return new Event(start, end, "", "", attendees, null, timeReaders, readers);
+      return new Event(start, end, "", "", attendees, null, timeReaders,
+	  readers);
   }
   
   class DoCreateEvent extends Action {
@@ -53,14 +56,13 @@ public final class Main extends Servlet {
 
     public Page invoke(Request req) throws ServletException {
         Event newEvent = defaultEvent(); 
-        CreateEditEvent createAction = new CreateEditEvent(getServlet(), 
-                                                           new ReceiveCreatedEvent(getServlet(), returnAction, newEvent),
-                                                           returnAction,
-                                                           newEvent, 
-                                                           false);
+	CreateEditEvent createAction = new CreateEditEvent(getServlet(),
+	    new ReceiveCreatedEvent(getServlet(), returnAction, newEvent),
+	    returnAction, newEvent, false);
         return createAction.invoke(req);
     }
   }
+
   class ReceiveCreatedEvent extends Action {
       private Action returnAction;
       private Event event;

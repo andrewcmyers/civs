@@ -85,9 +85,10 @@ public class CreateEditEvent extends Action {
                 endDate = DateUtil.stringToDate(endDateStr);
             }
             
-            if (startDate != null && endDate != null && endDate.before(startDate)) {
-                // report error
-                errors.put(inpEnd, "End date cannot be before start date.");
+	    if (startDate != null && endDate != null &&
+		endDate.before(startDate)) {
+	      // report error
+	      errors.put(inpEnd, "End date cannot be before start date.");
             }            
 
             // send user back to page if data not validated
@@ -125,24 +126,36 @@ public class CreateEditEvent extends Action {
     
     private Page producePage(Request req, HashMap errors) {
         String title = (readOnly?"View":"Edit")+" Event";
-        NodeList entries = new NodeList(new NodeList(desc("Name:"), inpNode(inpName, this.event.name, errors)));
-        entries = entries.append(new TRow(new NodeList(desc("Start:"), inpNode(inpStart, DateUtil.dateToString(this.event.startTime), errors))));
-        entries = entries.append(new TRow(new NodeList(desc("End:"), inpNode(inpEnd, DateUtil.dateToString(this.event.endTime), errors))));
-        entries = entries.append(new TRow(new NodeList(desc("Note:"), inpNode(inpNote, this.event.note, errors))));
+	NodeList entries = new NodeList(new NodeList(desc("Name:"),
+	      inpNode(inpName, this.event.name, errors)));
+	entries = entries.append(new TRow(new NodeList(desc("Start:"),
+		inpNode(inpStart, DateUtil.dateToString(this.event.startTime),
+		  errors))));
+	entries = entries.append(new TRow(new NodeList(desc("End:"),
+		inpNode(inpEnd, DateUtil.dateToString(this.event.endTime),
+		  errors))));
+	entries = entries.append(new TRow(new NodeList(desc("Note:"),
+		inpNode(inpNote, this.event.note, errors))));
         if (!readOnly) {
-            entries = entries.append(new TRow(new TCell(new SubmitButton(getServlet(), "Update event"))));
+	    entries =
+	      entries.append(new TRow(new TCell(new SubmitButton(getServlet(),
+			"Update event"))));
         }
-        entries = entries.append(new TRow(new TCell(new Hyperlink(req, new CancelEditEvent(getServlet()),
-        		new Text(readOnly?"Return":"Cancel")))));     
+        entries = entries.append(new TRow(new TCell(new Hyperlink(req,
+		  new CancelEditEvent(getServlet()),
+		  new Text(readOnly?"Return":"Cancel")))));     
         Node content;
         if (readOnly) {
             content = new Table(null, entries);
         }
         else {
-            content = getServlet().createForm(new FinishEditEvent(getServlet()), new Table(null, entries), req); 
+            content =
+	      getServlet().createForm(new FinishEditEvent(getServlet()),
+		  new Table(null, entries), req); 
         }
         
-        return getServlet().createPage(title, new NodeList(new Text(title), content));        
+	return getServlet().createPage(title, new NodeList(new Text(title),
+	      content));        
     }
     
     // helper methods for producing the output

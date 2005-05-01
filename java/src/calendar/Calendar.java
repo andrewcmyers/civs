@@ -77,12 +77,12 @@ public class Calendar {
     users = new HashSet();
     events = new TreeSet();
 
-    // XXX Add some events to test -- some ugly fragile code
-
-    events.add(createTestSecretEvent());
-    events.add(createTestPartialSecretEvent());
-    events.add(createTestPublicEvent());
-    events.add(createTestMultidayEvent());
+//    // XXX Add some events to test -- some ugly fragile code
+//
+//    events.add(createTestSecretEvent());
+//    events.add(createTestPartialSecretEvent());
+//    events.add(createTestPublicEvent());
+//    events.add(createTestMultidayEvent());
   }
 
   /**
@@ -107,8 +107,7 @@ public class Calendar {
     while (c.get(DAY_OF_WEEK) != SUNDAY) c.add(DATE, -1);
     Date beginDate = c.getTime();
 
-    // Get get end date -- the first Saturday on or after the end of the
-    // month.
+    // Get end date -- the first Sunday of the next month.
     c.setTime(date);
     c.set(DATE, 1);
     c.add(MONTH, 1);
@@ -155,9 +154,10 @@ public class Calendar {
 	  boolean canEdit = false; // @@@@hack. SHould be checked
 	      
 	  if (canEdit) {
-	      // @@@ Need access to the servlet, and to the ShowCalendar action.
-//	      cell = new NodeList(new Hyperlink(new CreateEditEvent(main, this, this, e, false),
-//	                                        new Text(eventText)), cell);	      	      
+	      // @@@ Need access to the servlet, and to the ShowCalendar
+	      // action.
+//	      cell = new NodeList(new Hyperlink(new CreateEditEvent(main, this,
+//		      this, e, false), new Text(eventText)), cell);	      	      
 	  }
 	  else {
 	      cell = new NodeList(new Text(eventText), cell);	      
