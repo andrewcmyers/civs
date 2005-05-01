@@ -11,10 +11,10 @@ package servlet;
  * this is not implemented.
  */
 public abstract class InputNode extends Node {
-	Input input;
-	InputNode(Input i) {
-		input = i;
-	}
-	
-	public abstract void write(HTMLWriter p);
+    Input input;
+    InputNode(Input i) {
+        input = i;
+    }
+    
+    public abstract void write(HTMLWriter p);
 }

@@ -9,30 +9,30 @@ import javax.servlet.http.HttpServletRequest;
  * and requests that are part of an existing session.
  */
 public final class Request {
-	public final Servlet servlet;
-	HttpServletRequest request;
-	public Request(Servlet srv, HttpServletRequest req) {
-		servlet = srv;
-		request = req;
-	}
-	public String getParam(Input inp) {
-		String name = inp.getName();
-		return request.getParameter(name);
-	}
-	public String getParam(InputNode n) {
-		return getParam(n.input);
-	}
-	public String action_name() {
-		return request.getParameter("action");
-	}
-	/** @deprecated */
-	public String request_name() {
-		return request.getParameter("request");
-	}
-	public String title() {
-		return request.getParameter("title");
-	}
-	public String servlet_url() {
-		return request.getContextPath() + request.getServletPath();
-	}
+    public final Servlet servlet;
+    HttpServletRequest request;
+    public Request(Servlet srv, HttpServletRequest req) {
+        servlet = srv;
+        request = req;
+    }
+    public String getParam(Input inp) {
+        String name = inp.getName();
+        return request.getParameter(name);
+    }
+    public String getParam(InputNode n) {
+        return getParam(n.input);
+    }
+    public String action_name() {
+        return request.getParameter("action");
+    }
+    /** @deprecated */
+    public String request_name() {
+        return request.getParameter("request");
+    }
+    public String title() {
+        return request.getParameter("title");
+    }
+    public String servlet_url() {
+        return request.getContextPath() + request.getServletPath();
+    }
 }

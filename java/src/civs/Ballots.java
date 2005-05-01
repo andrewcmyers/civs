@@ -11,13 +11,13 @@ import java.io.IOException;
  * the need to lock the file down during the casting of each vote.
  */
 public class Ballots {
-	Ballot[] recorded_votes;
-	String[] used_voter_keys;
-	Ballots(String datadir, Election e) throws IOException {
-		String dir = datadir + File.separatorChar +
-				          "elections" + File.separatorChar +
-				          e.id;
-		FileInputStream fs = new FileInputStream(new File(dir + File.separatorChar + "votes"));
-
-	}
+    Ballot[] recorded_votes;
+    String[] used_voter_keys;
+    Ballots(String datadir, Election e) throws IOException {
+        String dir = datadir + File.separatorChar +
+        "elections" + File.separatorChar +
+        e.id;
+        FileInputStream fs = new FileInputStream(new File(dir + File.separatorChar + "votes"));
+        
+    }
 }

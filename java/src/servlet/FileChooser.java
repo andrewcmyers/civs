@@ -7,17 +7,16 @@ package servlet;
  *
  */
 public class FileChooser extends InputNode {
-
-	public FileChooser(Servlet s) {
-		super(new Input(s));
-	}
-	/* (non-Javadoc)
-	 * @see servlet.Node#write(servlet.HTMLWriter)
-	 */
-	public void write(HTMLWriter p) {
-		p.print("<input type=file name=");
-		p.printq(input.getName());
-		p.print(" />");
-	}
-
+    
+    public FileChooser(Servlet s) {
+        super(new Input(s));
+    }
+    /* (non-Javadoc)
+     * @see servlet.Node#write(servlet.HTMLWriter)
+     */
+    public void write(HTMLWriter p) {
+        p.print("<input type=file name=");
+        p.printq(input.getName());
+        p.print(" />");
+    }
 }

@@ -5,8 +5,8 @@ package servlet;
  * @author andru
  */
 public class SecurityLabel {
-	String text;
-	
-	public SecurityLabel(String t) { text = t; }
-
+    String text;
+    
+    public SecurityLabel(String t) { text = t; }
+    
 }

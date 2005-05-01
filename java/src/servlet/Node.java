@@ -5,8 +5,8 @@ package servlet;
  *  somewhat pretty-printed style.
  *  */
 public abstract class Node {
-	
-	/** Write out HTML for this node to p. */
+    
+    /** Write out HTML for this node to p. */
     public abstract void write(HTMLWriter p);
     
     /** Modify the current node to have HTML class c and
@@ -14,5 +14,5 @@ public abstract class Node {
      * @param c the new class
      * @return
      */
-
+    
 }

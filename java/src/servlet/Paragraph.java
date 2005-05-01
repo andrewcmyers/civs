@@ -7,6 +7,6 @@ package servlet;
  */
 public class Paragraph extends Container {
     public Paragraph(Node n) {
-    	super("p", n);
+        super("p", n);
     }
 }

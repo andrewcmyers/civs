@@ -18,30 +18,30 @@ import javax.servlet.ServletException;
  * away eventually.
  */
 abstract public class Action {
-	public final Name name;
-	public final String ext_name;
-	public final Servlet servlet;
-	public final Date sunset;     // when this action expires
-	public Action(Servlet s) {
-		name = s.nonce.generate();
-		ext_name = name.toHex();
-		servlet = s;
-		sunset = null; // XXX how to decide this?
-	}
-	public Action(String n, Servlet s) {
-		name = null;
-		ext_name = n;
-		servlet = s;
-		sunset = null; // these are permanent
-	}
-	abstract public Page invoke(Request req) throws ServletException;
-
-	public String getName() {
-		if (name == null) return ext_name;
-		return name.toHex();
-	}
-	
-	public Servlet getServlet() {
-		return servlet;
-	}
+    public final Name name;
+    public final String ext_name;
+    public final Servlet servlet;
+    public final Date sunset;     // when this action expires
+    public Action(Servlet s) {
+        name = s.nonce.generate();
+        ext_name = name.toHex();
+        servlet = s;
+        sunset = null; // XXX how to decide this?
+    }
+    public Action(String n, Servlet s) {
+        name = null;
+        ext_name = n;
+        servlet = s;
+        sunset = null; // these are permanent
+    }
+    abstract public Page invoke(Request req) throws ServletException;
+    
+    public String getName() {
+        if (name == null) return ext_name;
+        return name.toHex();
+    }
+    
+    public Servlet getServlet() {
+        return servlet;
+    }
 }

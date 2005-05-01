@@ -8,32 +8,32 @@ package servlet;
  * package scope to prevent arbitrary use.
  */
 class Container extends Tag {
-	Node contents;
-	
-	Container(String tag_, Node n) {
-		super(tag_, null);
-		contents = n;
-	}
-	
-	Container(String tag_, String class_, Node n) {
-		super(tag_, class_);
-		contents = n;
-	}
-	
-	protected void writeOptions(HTMLWriter p) {
-		// default: no options.
-	}
-	
-	protected void writeContents(HTMLWriter p) {
-		contents.write(p);
-	}
-	public void write(HTMLWriter p) {
-		super.write(p);
-		p.breakLine();
-		writeContents(p);
-		p.indent(-2);
-		p.breakLine();
-		p.print("</" + tag + ">");
-		p.end();
-	}
+    Node contents;
+    
+    Container(String tag_, Node n) {
+        super(tag_, null);
+        contents = n;
+    }
+    
+    Container(String tag_, String class_, Node n) {
+        super(tag_, class_);
+        contents = n;
+    }
+    
+    protected void writeOptions(HTMLWriter p) {
+        // default: no options.
+    }
+    
+    protected void writeContents(HTMLWriter p) {
+        contents.write(p);
+    }
+    public void write(HTMLWriter p) {
+        super.write(p);
+        p.breakLine();
+        writeContents(p);
+        p.indent(-2);
+        p.breakLine();
+        p.print("</" + tag + ">");
+        p.end();
+    }
 }

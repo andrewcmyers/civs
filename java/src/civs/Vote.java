@@ -5,22 +5,22 @@ import javax.servlet.ServletException;
 import servlet.*;
 
 public class Vote extends CIVSAction {
-
-	Vote(Main main) {
-		super("vote", main);
-	}
-	
-	public Page handle(Request req) throws ServletException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see servlet.Action#invoke(servlet.Request)
-	 */
-	public Page invoke(Request req) throws ServletException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    
+    Vote(Main main) {
+        super("vote", main);
+    }
+    
+    public Page handle(Request req) throws ServletException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    /* (non-Javadoc)
+     * @see servlet.Action#invoke(servlet.Request)
+     */
+    public Page invoke(Request req) throws ServletException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
 }
