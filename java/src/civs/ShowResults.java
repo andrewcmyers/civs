@@ -8,7 +8,7 @@ import servlet.Request;
 public class ShowResults extends CIVSAction {
 
 	ShowResults(Main main) {
-		super(main);
+		super("results", main);
 	}
 	public Page handle(Request req) throws ServletException {
 		// TODO Auto-generated method stub

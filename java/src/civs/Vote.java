@@ -7,7 +7,7 @@ import servlet.*;
 public class Vote extends CIVSAction {
 
 	Vote(Main main) {
-		super(main);
+		super("vote", main);
 	}
 	
 	public Page handle(Request req) throws ServletException {

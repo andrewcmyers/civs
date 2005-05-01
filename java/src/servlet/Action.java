@@ -1,5 +1,7 @@
 package servlet;
 
+import java.util.Date;
+
 import javax.servlet.ServletException;
 
 /**
@@ -11,20 +13,26 @@ import javax.servlet.ServletException;
  * 
  * Servlets create subclasses of action to provide
  * request handling.
+ * 
+ * XXX Actions need some notion of timing out so we can throw them
+ * away eventually.
  */
 abstract public class Action {
 	public final Name name;
 	public final String ext_name;
 	public final Servlet servlet;
+	public final Date sunset;     // when this action expires
 	public Action(Servlet s) {
 		name = s.nonce.generate();
 		ext_name = name.toHex();
 		servlet = s;
+		sunset = null; // XXX how to decide this?
 	}
-	public Action(Servlet s, String n) {
+	public Action(String n, Servlet s) {
 		name = null;
 		ext_name = n;
 		servlet = s;
+		sunset = null; // these are permanent
 	}
 	abstract public Page invoke(Request req) throws ServletException;
 

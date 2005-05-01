@@ -10,8 +10,7 @@ public final class Main extends Servlet {
   Calendar cal = new Calendar();
 
   public void initialize() {
-      ShowCalendar sc = new ShowCalendar(this);
-      addStartAction("show", sc);
+      addAction(new ShowCalendar(this));
   }
 
   public String getPrivateHostID() throws ServletException {
@@ -19,7 +18,7 @@ public final class Main extends Servlet {
   }
 
   class ShowCalendar extends Action {
-    public ShowCalendar(Servlet s) { super(s); }
+    public ShowCalendar(Servlet s) { super("show", s); }
 
     public Page invoke(Request req) throws ServletException {
         Node content = cal.monthToNode(null, null, new java.util.Date());
@@ -29,20 +28,21 @@ public final class Main extends Servlet {
     }
   }
 
+
   /**
    * Returns a new Event, filled out with default values.
    */
   private Event defaultEvent() {
       java.util.Calendar c = GregorianCalendar.getInstance();
       Date start = c.getTime();
-      c.add(c.HOUR_OF_DAY, 1);
+      c.add(Calendar.HOUR_OF_DAY, 1);
       Date end = c.getTime();
       Set attendees = new HashSet();
       attendees.add(null);
       Set readers = attendees;
       Set timeReaders = Collections.EMPTY_SET;
       return new Event(start, end, "", "", attendees, null, timeReaders, readers);
-  }      
+  }
   
   class DoCreateEvent extends Action {
     private Action returnAction;

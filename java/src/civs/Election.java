@@ -23,15 +23,10 @@ import servlet.Name;
 public class Election implements Serializable {
 	String id;
 	
-	synchronized void startElection(Main main) throws ServletException {
-		started = true;
-		main.saveElection(this);
-	}
-	synchronized void stopElection(Main main) throws ServletException {
+	synchronized void stop(Main main) throws ServletException {
 		stopped = true;
-		Date d = new Date();
-		String actual_end = d.toString();
-		main.saveElection(this);
+		actual_end = new Date().toString();
+		main.saveElection(this, false);
 	}
 	
 //	(Mostly) fixed properties of the election.

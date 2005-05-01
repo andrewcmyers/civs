@@ -161,24 +161,14 @@ abstract public class Servlet extends HttpServlet {
 	
 	public abstract String getPrivateHostID() throws ServletException;
 	
-	final void addAction(Action a) {
-		Name n = a.name;
-		actions.put(n.toHex(), a);
+	public final void addAction(Action a) {
+		actions.put(a.ext_name, a);
 	}
 	
 	public String generateNonce() {
 		return nonce.generate().toHex();
 	}
 	
-	/** Set up this action as a way to create a new session.  Means that
-	 * these actions can be invoked from "outside" the system, as a URL in a static
-	 * web page or email message.
-	 * @param action_name A name that can be used externally to invoke this action.
-	 */
-	 // XXX should also be sent a set of Inputs?
-	public final void addStartAction(String action_name, Action action) {
-		actions.put(action_name, action); // XXX do we need args?
-	}
 	/** Construct a node that contains an invocation of this servlet with the
 	 * named request and the inputs provided.
 	 * @param action_name the name of the action (or the action itself?)

@@ -30,7 +30,7 @@ public class CreateElection extends CIVSAction {
 	final FinishCreate finishCreate = new FinishCreate();
 
 	public CreateElection(Main main) {
-		super(main);
+		super("create", main);
 	}
 	
 	/* (non-Javadoc)
@@ -228,7 +228,7 @@ public class CreateElection extends CIVSAction {
 						new Hyperlink(home_url, new Span("URL", home_url)),
 						new Text("."))));
 		  
-		  main.saveElection(election);
+		  main.saveElection(election, true);
 		  if (!main.local_debug()) sendControlInfo(election);
 		    // send email
 			// install once we've successfully set everything up and sent mail.

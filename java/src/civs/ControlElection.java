@@ -11,7 +11,7 @@ import servlet.*;
  */
 public class ControlElection extends CIVSAction {
 
-	ControlElection(Main main) { super(main); }
+	ControlElection(Main main) { super("control", main); }
 	
 	final InputNode voters_inp = new TextArea(main, 5, 60, "");
 	final InputNode voters_upload = new FileChooser(main);
@@ -38,6 +38,11 @@ public class ControlElection extends CIVSAction {
 			return main.reportError(req, "Invalid control key", "Invalid Control Key",
 					"The control key " + control_key + " is incorrect.");
 		}
+		
+		return electionReport(election, req);
+	}
+	
+	Page electionReport(Election election, Request req) throws ServletException {
 		String status;
 
 		if (election.stopped) {
@@ -98,21 +103,23 @@ public class ControlElection extends CIVSAction {
 		return main.createPage("CIVS: Election Control",
 			new NodeList(main.banner("Election Control: " + election.title, req),
 				new Table("electionControl", null, tableEntries),
-					main.createForm(new StopElection(main, election),
-						new SubmitButton(main, "End election"),
-						 				 req),
-					main.createForm(
-						new AddVoters(main, election),
-						new NodeList(
-							voters_inp, new Br(),
-							new Span("tiny", new Text("Enter one voter e-mail address per line " +
-									" or upload addresses from a file.")),
-							new Br(),
-							new NodeList(
-							voters_upload,
-							new Br(),
-							new SubmitButton(main, "Add voters"))),
-						req)));
+			    (!election.stopped) ?
+			    	new NodeList(
+			    		main.createForm(new StopElection(main, election),
+			    					new SubmitButton(main, "End election"), req),						
+						main.createForm(
+								new AddVoters(main, election),
+								new NodeList(
+										voters_inp, new Br(),
+										new Span("tiny", new Text("Enter one voter e-mail address per line " +
+										" or upload addresses from a file.")),
+										new Br(),
+										new NodeList(
+												voters_upload,
+												new Br(),
+												new SubmitButton(main, "Add voters"))),
+												req))
+					: (Node)new Text("")));
 	}
 	class StopElection extends CIVSAction {
 		Election election;
@@ -125,9 +132,9 @@ public class ControlElection extends CIVSAction {
 		 * @see servlet.Action#invoke(servlet.Request)
 		 */
 		public Page invoke(Request req) throws ServletException {
-			election.stopped = true;
-			return main.controlElection.invoke(req);
-		}	
+			election.stop(main);
+			return electionReport(election, req);
+		}
 	}
 	class AddVoters extends CIVSAction {
 		Election election;

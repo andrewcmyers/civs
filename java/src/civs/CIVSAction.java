@@ -14,6 +14,15 @@ abstract public class CIVSAction extends Action {
 		main = main_;
 	}
 	
+	/**
+	 * @param string
+	 * @param s
+	 */
+	public CIVSAction(String n, Main m) {
+		super(n, m);
+		main = m;
+	}
+
 	Main main() {
 		return main;
 	}

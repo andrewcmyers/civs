@@ -36,11 +36,11 @@ public final class Main extends Servlet {
 		showResults = new ShowResults(this);
 		status = new DoStatus(this);
 		
-		addStartAction("status",  status);
-		addStartAction("create",  create);
-		addStartAction("vote",    vote);				// voter_key, election_id
-		addStartAction("control", controlElection);     // ctrl_key, auth_key, election_id
-		addStartAction("results", showResults);			// election_id
+		addAction(status);
+		addAction(create);
+		addAction(vote);				// voter_key, election_id
+		addAction(controlElection);     // ctrl_key, auth_key, election_id
+		addAction(showResults);			// election_id
 		// XXX Do we need the inputs?
 	}
 	
@@ -50,7 +50,7 @@ public final class Main extends Servlet {
 	// with new requests).
 	
 	class DoStatus extends CIVSAction {
-		public DoStatus(Main s) { super(s); }
+		public DoStatus(Main s) { super("status", s); }
 		public Page invoke(Request req) throws ServletException {
 			int nr = concurrentRequests();
 			return createPage("CIVS Status",
@@ -142,11 +142,11 @@ public final class Main extends Servlet {
 		return servlet_host() + servlet_url();
 	}
 
-	public void saveElection(Election e) throws ServletException {
+	public void saveElection(Election e, boolean create) throws ServletException {
 		try {
 			String dirname =  dataDir() + File.separatorChar + "elections" +
 				File.separatorChar + e.id;
-			if (!new File(dirname).mkdir()) {
+			if (create && !new File(dirname).mkdir()) {
 				throw new ServletException("Election already exists: " + e.id);
 			}
 			String filename = dirname + File.separatorChar + "election";
