@@ -70,12 +70,10 @@ abstract public class Servlet extends HttpServlet {
 		try {
 			response.setContentType("text/html");
 			if (request.getCharacterEncoding() == null)
-				request.setCharacterEncoding("ISO-8859-1");
-						
+				request.setCharacterEncoding("ISO-8859-1");						
 			
 			Request req = new Request(this, request);
 			PrintWriter rw = response.getWriter();
-			String request_name = req.request_name();
 			
 			Node loadMsg = checkLoad();
 			if (loadMsg != null) {
@@ -111,54 +109,33 @@ abstract public class Servlet extends HttpServlet {
 				createPage("request", new Pre(new Text(s))).write(p);
 			}	
 			
-			if (request_name == null) {				
-				String action_name_s = req.action_name();
-				if (action_name_s == null) {
-					Node n = reportError("Access violation", "Improper request",
-					"The request includes no action identifier \"" + req.title() + "\"");
-					n.write(new HTMLWriter(rw));
-				} else {
-					Name action_name = null;
-					boolean ok = true;
-					try {
-					   action_name = new Name(action_name_s);
-					} catch (IllegalArgumentException e) {
-						Node n = reportError("Access violation", "Invalid action",
-						"The action identifier " + action_name_s + " is ill-formed (" + e + ").");
-						HTMLWriter p = new HTMLWriter(rw);
-						n.write(p);
-						ok = false;
-					}
-					// decode hex
-					if (ok && actions.containsKey(action_name)) {
-						action = (Action) actions.get(action_name);
-					} else {
-						Node n = reportError("Access violation", "Invalid Action",
-								"The action identifier in the request is invalid: <" + action_name_s + ">");
-						n.write(new HTMLWriter(rw));
-					}
-				}
+			String action_name = req.action_name();
+			if (action_name == null) {
+				Node n = reportError("Access violation", "Improper request",
+						"The request includes no action identifier \"" + req.title() + "\"");
+				n.write(new HTMLWriter(rw));
+				rw.close();
+				return;
+			}
+			
+			if (actions.containsKey(action_name)) {
+				action = (Action) actions.get(action_name);
 			} else {
-				if (actions.containsKey(request_name)) {
-					action = (Action) actions.get(request_name);
-				} else {
-					Node n = reportError("Access violation", "Invalid Request",
-							"The requested operation is invalid: \"" + request_name + "\"");
-					n.write(new HTMLWriter(rw));
-				}
-			}				
+				Node n = reportError("Access violation", "Invalid Action",
+					"The action identifier in the request is invalid: <" + action_name + ">");
+				n.write(new HTMLWriter(rw));
+				rw.close();
+				return;			
+			}
 	
-			if (action != null) {
-				Node n = action.invoke(req);				
-				if (n != null) {
-					n.write(new HTMLWriter(rw));
-				} else {
-					n = reportError("Error handling request",
-							"Error Handling Request",
+			Node n = action.invoke(req);				
+			if (n != null) {
+				n.write(new HTMLWriter(rw));
+			} else {
+				n = reportError("Error handling request", "Error Handling Request",
 							"The servlet did not generate any output for your request. " +
-					"This probably means that your request was ill-formed.");
-					n.write(new HTMLWriter(rw));			
-				}
+							"This probably means that your request was ill-formed.");
+				n.write(new HTMLWriter(rw));
 			}
 
 			rw.close();
@@ -186,7 +163,7 @@ abstract public class Servlet extends HttpServlet {
 	
 	final void addAction(Action a) {
 		Name n = a.name;
-		actions.put(n, a);
+		actions.put(n.toHex(), a);
 	}
 	
 	public String generateNonce() {
@@ -199,8 +176,8 @@ abstract public class Servlet extends HttpServlet {
 	 * @param action_name A name that can be used externally to invoke this action.
 	 */
 	 // XXX should also be sent a set of Inputs?
-	public final void addStartAction(String requestName, Action action) {
-		actions.put(requestName, action); // XXX do we need args?
+	public final void addStartAction(String action_name, Action action) {
+		actions.put(action_name, action); // XXX do we need args?
 	}
 	/** Construct a node that contains an invocation of this servlet with the
 	 * named request and the inputs provided.
@@ -209,16 +186,14 @@ abstract public class Servlet extends HttpServlet {
 	 * @param req : the request that initiated this
 	 * @return a new node.
 	 */
-	public final Node createRequest(String requestName, Map inputs, Node body,
+	public final Node createRequest(Action a, Map inputs, Node body,
 			Request req) throws ServletException {
-		if (!actions.containsKey(requestName)) {
-			throw new ServletException("Tried to generate an unknown request: " + requestName);
-		}
+
 		// XXX check inputs against the request?
 		StringWriter w = new StringWriter();
 		w.write(req.servlet_url());
-		w.write("?request=");
-		w.write(HTMLWriter.escape_URI(requestName));
+		w.write("?action=");
+		w.write(HTMLWriter.escape_URI(a.getName()));
 		
 		if (inputs != null)
 		  for (Iterator i = inputs.entrySet().iterator(); i.hasNext();) {

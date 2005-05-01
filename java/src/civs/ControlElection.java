@@ -12,6 +12,10 @@ import servlet.*;
 public class ControlElection extends CIVSAction {
 
 	ControlElection(Main main) { super(main); }
+	
+	final InputNode voters_inp = new TextArea(main, 5, 60, "");
+	final InputNode voters_upload = new FileChooser(main);
+	
 	public Page invoke(Request req) throws ServletException {
 		// How to prevent creation of bogus input objects? They need to be tied to the servlet so that
 		// only the servlet can use them?
@@ -44,7 +48,7 @@ public class ControlElection extends CIVSAction {
 		}
 		NodeList choicesNode = new NodeList(new Text(election.choices[0]));
 		for (int i = 1; i < election.choices.length; i++) {
-			choicesNode = choicesNode.append(new Br()).append(new Text(election.choices[i]));
+			choicesNode = choicesNode.append(new Text(", " + election.choices[i]));
 		}
 		
 		NodeList tableEntries =
@@ -92,7 +96,52 @@ public class ControlElection extends CIVSAction {
 				new TCell(new Text(options)))));
 		
 		return main.createPage("CIVS: Election Control",
-				new NodeList(main.banner("Election Control: " + election.title, req),
-						new Table("electionControl", null, tableEntries)));
+			new NodeList(main.banner("Election Control: " + election.title, req),
+				new Table("electionControl", null, tableEntries),
+					main.createForm(new StopElection(main, election),
+						new SubmitButton(main, "End election"),
+						 				 req),
+					main.createForm(
+						new AddVoters(main, election),
+						new NodeList(
+							voters_inp, new Br(),
+							new Span("tiny", new Text("Enter one voter e-mail address per line " +
+									" or upload addresses from a file.")),
+							new Br(),
+							new NodeList(
+							voters_upload,
+							new Br(),
+							new SubmitButton(main, "Add voters"))),
+						req)));
 	}
+	class StopElection extends CIVSAction {
+		Election election;
+	
+		StopElection(Main main, Election e) {
+			super(main);
+			election = e;
+		}
+		/* (non-Javadoc)
+		 * @see servlet.Action#invoke(servlet.Request)
+		 */
+		public Page invoke(Request req) throws ServletException {
+			election.stopped = true;
+			return main.controlElection.invoke(req);
+		}	
+	}
+	class AddVoters extends CIVSAction {
+		Election election;
+		AddVoters(Main main, Election e) {
+			super(main);
+			election = e;
+		}
+		/* (non-Javadoc)
+		 * @see servlet.Action#invoke(servlet.Request)
+		 */
+		public Page invoke(Request req) throws ServletException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	}
+
 }

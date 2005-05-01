@@ -51,6 +51,7 @@ public class Election implements Serializable {
 	int num_winners;
 	public boolean shuffle;
 	public boolean report_ballots;
+	public boolean open_poll;
 	
 	boolean started = false;
 	boolean stopped = false;

@@ -69,7 +69,7 @@ public final class Main extends Servlet {
 						"Condorcet Internet Voting Service"), 1, false),
 				new TCell("bannerright", new NodeList(new Hyperlink(civs_url(),
 						new Text("CIVS Home")), new Br(),
-						  createRequest("create", null, new Text("Create new election"), req), new Br(),
+						  createRequest(create, null, new Text("Create new election"), req), new Br(),
 						new Hyperlink(civs_url() + "/sec_priv.html", new Text(
 								"About security and privacy"))), 1, false))),
 				new TRow(new TCell("bannerbottom", new Header(2, title), 2,

@@ -25,6 +25,7 @@ public final class Request {
 	public String action_name() {
 		return request.getParameter("action");
 	}
+	/** @deprecated */
 	public String request_name() {
 		return request.getParameter("request");
 	}

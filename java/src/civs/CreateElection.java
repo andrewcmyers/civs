@@ -171,6 +171,7 @@ public class CreateElection extends CIVSAction {
 			election.proportional = proportional_checkbox.isChecked(req);
 			election.shuffle = shuffle_checkbox.isChecked(req);
 			election.report_ballots = report_ballots_checkbox.isChecked(req);
+			election.open_poll = public_checkbox.isChecked(req);
 			String[] choices1 = req.getParam(choices_inp).split("[\r\n][\r\n]*");
 			Vector choices2 = new Vector();
 			for (int i = 0; i < choices1.length; i++) {
@@ -209,7 +210,7 @@ public class CreateElection extends CIVSAction {
 		  args.put(main.election_id, election.id);
 		  args.put(main.auth_key, auth_key);
 		  args.put(main.ctrl_key, control_key);
-		  Node control_url = main.createRequest("control", args,
+		  Node control_url = main.createRequest(main.controlElection, args,
 		  		new Text("Control election"), req);
 		  		
 		  String home_url = main.civs_host() + main.civs_url();

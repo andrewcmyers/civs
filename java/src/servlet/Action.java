@@ -14,14 +14,22 @@ import javax.servlet.ServletException;
  */
 abstract public class Action {
 	public final Name name;
+	public final String ext_name;
 	public final Servlet servlet;
 	public Action(Servlet s) {
 		name = s.nonce.generate();
+		ext_name = name.toHex();
+		servlet = s;
+	}
+	public Action(Servlet s, String n) {
+		name = null;
+		ext_name = n;
 		servlet = s;
 	}
 	abstract public Page invoke(Request req) throws ServletException;
 
 	public String getName() {
+		if (name == null) return ext_name;
 		return name.toHex();
 	}
 	
