@@ -76,14 +76,18 @@ public class ShowCalendar extends CalendarAction {
 	    cell = cell.append(new Br());
 
 	    String name = "Busy";
-	    if (e.readers.contains(reader)) name = e.name;
+	    boolean canView = false;
+	    if (e.readers.contains(reader)) {
+	        name = e.name;
+	        canView = true;
+	    }
 		
 	    String eventText = timeSDF.format(e.startTime) + " " + name;
 
 	    boolean canEdit = user.equals(e.creator);
-	    if (canEdit) {
+	    if (canEdit || canView) {
 	      cell = cell.append(new Hyperlink(req,
-		    new CreateEditEvent(servlet, this, this, e, false),
+		    new CreateEditEvent(servlet, this, this, e, !canEdit, false),
 		    new Text(eventText)));
 	    } else {
 	      cell = cell.append(new Text(eventText));

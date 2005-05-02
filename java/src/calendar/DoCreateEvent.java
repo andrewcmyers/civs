@@ -33,7 +33,7 @@ public class DoCreateEvent extends CalendarAction {
       Event newEvent = defaultEvent(); 
       CreateEditEvent createAction = new CreateEditEvent(getServlet(),
 	  new ReceiveCreatedEvent(getServlet(), returnAction, newEvent),
-	  returnAction, newEvent, false);
+	  			  returnAction, newEvent, false, true);
       return createAction.invoke(req);
   }
 

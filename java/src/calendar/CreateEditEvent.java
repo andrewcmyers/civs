@@ -10,6 +10,7 @@ import servlet.*;
 public class CreateEditEvent extends Action {
     private Event event;
     final private boolean readOnly;
+    final private boolean isCreate;
     final private Action successAction;
     final private Action cancelAction;
     
@@ -22,12 +23,14 @@ public class CreateEditEvent extends Action {
                            Action successAction, 
                            Action cancelAction, 
                            Event event, 
-                           boolean readOnly) {
+                           boolean readOnly,
+                           boolean isCreate) {
         super(servlet);
         this.successAction = successAction;
         this.cancelAction = cancelAction;
         this.event = event;
         this.readOnly = readOnly;
+        this.isCreate = isCreate;
         
         this.recreateInputs(null);
     }
@@ -125,7 +128,7 @@ public class CreateEditEvent extends Action {
     }    
     
     private Page producePage(Request req, HashMap errors) {
-        String title = (readOnly?"View":"Edit")+" Event";
+        String title = (readOnly?"View":(isCreate?"Create":"Edit"))+" Event";
 	NodeList entries = new NodeList(new NodeList(desc("Name:"),
 	      inpNode(inpName, this.event.name, errors)));
 	entries = entries.append(new TRow(new NodeList(desc("Start:"),
@@ -139,7 +142,7 @@ public class CreateEditEvent extends Action {
         if (!readOnly) {
 	    entries =
 	      entries.append(new TRow(new TCell(new SubmitButton(getServlet(),
-			"Update event"))));
+			(isCreate?"Create":"Update")+" event"))));
         }
         entries = entries.append(new TRow(new TCell(new Hyperlink(req,
 		  new CancelEditEvent(getServlet()),
