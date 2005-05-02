@@ -8,7 +8,7 @@ public class Form extends Container {
         super("form", n);
         action = action_;
         servlet_url = req.servletURL();
-        req.servlet.addAction(action);
+        req.servlet.addAction(action, req);
     }
     public void writeOptions(HTMLWriter p) {
         p.print(" ");

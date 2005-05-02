@@ -18,7 +18,7 @@ abstract public class Servlet extends HttpServlet {
     
     Nonce nonce;
     int concurrent_requests;
-    Map actions;
+    Map startActions;
     String style_sheet_url;
     boolean initialized = false;
     
@@ -36,7 +36,7 @@ abstract public class Servlet extends HttpServlet {
     public final void init(ServletConfig sc) throws ServletException {
         super.init(sc);
         nonce = new Nonce(this);
-        actions = new HashMap();
+        startActions = new HashMap();
         
         initialize();
     }
@@ -116,25 +116,34 @@ abstract public class Servlet extends HttpServlet {
             if (action_name == null) {
                 action = this.defaultAction(req);                
             }
-            if (action_name == null && action == null) {
-                Node n = reportError("Access violation", "Improper request",
-                        "The request includes no action identifier \"" + req.title() + "\"");
-                n.write(new HTMLWriter(rw));
-                rw.close();
-                return;
+            if (action == null) {
+                // either action_name specified, or no default action
+                if (action_name == null) {
+                    Node n = reportError("Access violation", "Improper request",
+                                         "The request includes no action identifier \"" + req.title() + "\"");
+                    n.write(new HTMLWriter(rw));
+                    rw.close();
+                    return;
+                }
+                else {
+                    action = findAction(request, action_name);
+                }
+
+                if (action == null) {
+                    Node n = reportError("Access violation", "Invalid Action",
+                                         "The action identifier in the request is invalid: <" + action_name + ">");
+                    n.write(new HTMLWriter(rw));
+                    rw.close();
+                    return;			
+                }
             }
-            else if (action == null && actions.containsKey(action_name)) {
-                action = (Action) actions.get(action_name);
-            } 
-            else if (action == null) {
-                Node n = reportError("Access violation", "Invalid Action",
-                        "The action identifier in the request is invalid: <" + action_name + ">");
-                n.write(new HTMLWriter(rw));
-                rw.close();
-                return;			
+
+            // now action is not null
+            if (action.clearSessionActionsOnInvoke()) {
+                getSessionActions(request).clear();
             }
-            
             Node n = action.invoke(req);				
+
             if (n != null) {
                 n.write(new HTMLWriter(rw));
             } else {
@@ -149,6 +158,37 @@ abstract public class Servlet extends HttpServlet {
         finally { decrement_req_cnt(); }
     }
     
+    /**
+     * Given an action name, find the appropriate action.
+     * @param request
+     * @param action_name
+     * @return the action for the given action name
+     */
+    private Action findAction(HttpServletRequest request, String action_name) {
+        // first look in the session specific actions, then the start actions
+        Map sessionActions = getSessionActions(request);
+        if (sessionActions.containsKey(action_name)) {
+            return (Action)sessionActions.get(action_name);
+        }
+        if (startActions.containsKey(action_name)) {
+            return (Action)startActions.get(action_name);
+        }
+        return null;
+    }
+    /**
+     * Get the map of session actions
+     * @param request
+     * @return the map of session actions
+     */    
+    private Map getSessionActions(HttpServletRequest request) {
+        Map sessionActions = (Map)request.getSession(true).getAttribute("session_actions");
+        if (sessionActions == null) {
+            sessionActions = new HashMap();
+            request.getSession(true).setAttribute("session_actions", sessionActions);
+        }
+        
+        return sessionActions;
+    }
     /**
      * If the request does not specify an action name, and there is no default
      * action name, this method is called to get a default action to invoke. May return
@@ -191,8 +231,11 @@ abstract public class Servlet extends HttpServlet {
     
     public abstract String getPrivateHostID() throws ServletException;
 
-    public final void addAction(Action a) {
-        actions.put(a.ext_name, a);
+    public final void addAction(Action a, Request req) {
+        getSessionActions(req.request).put(a.ext_name, a);
+    }
+    public final void addStartAction(Action a) {
+        startActions.put(a.ext_name, a);
     }
     
     public String generateNonce() {

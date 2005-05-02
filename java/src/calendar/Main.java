@@ -24,7 +24,7 @@ public final class Main extends Servlet {
   }
 
   public void initialize() {
-    addAction(new ShowCalendar(this));
+    addStartAction(new ShowCalendar(this));
   }
   
 

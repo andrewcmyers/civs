@@ -34,11 +34,20 @@ abstract public class Action {
         servlet = s;
         sunset = null; // these are permanent
     }
+    
     abstract public Page invoke(Request req) throws ServletException;
     
     public String getName() {
         if (name == null) return ext_name;
         return name.toHex();
+    }
+    
+    /**
+     * Should the servlet clear all session actions just before invoking this action?
+     * The default is true, but subclasses may override on a per-action basis.
+     */
+    protected boolean clearSessionActionsOnInvoke() {
+        return true;
     }
     
     public Servlet getServlet() {

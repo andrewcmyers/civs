@@ -14,7 +14,7 @@ public class Hyperlink extends Container {
     public Hyperlink(Request req, Action a, Node n) {
         super("a", n);
         url = req.servletURL() + "?action=" + a.getName();	
-        req.servlet.addAction(a);
+        req.servlet.addAction(a, req);
     }
     public void writeOptions(HTMLWriter p) {
         p.print(" href=");

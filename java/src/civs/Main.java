@@ -36,11 +36,11 @@ public final class Main extends Servlet {
         showResults = new ShowResults(this);
         status = new DoStatus(this);
         
-        addAction(status);
-        addAction(create);
-        addAction(vote);				// voter_key, election_id
-        addAction(controlElection);     		// ctrl_key, auth_key, election_id
-        addAction(showResults);				// election_id
+        addStartAction(status);
+        addStartAction(create);
+        addStartAction(vote);				// voter_key, election_id
+        addStartAction(controlElection);     		// ctrl_key, auth_key, election_id
+        addStartAction(showResults);				// election_id
         // XXX Do we need the inputs?        
     }
     
