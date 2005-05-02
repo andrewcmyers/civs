@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 
 public final class Main extends Servlet {
   Calendar cal;
-  String servletHost;
   Map servletParams;
 
   // XXX - A dummy user until we figure out how we're representing users.
@@ -26,21 +25,12 @@ public final class Main extends Servlet {
 
   public void initialize() {
     addAction(new ShowCalendar(this));
-
-    try {
-      servletHost = servletParam("servlet_host", "the Calendar servlet host");
-    } catch (ServletException e) {
-      servletHost = e.getMessage();
-    }
   }
 
   public String getPrivateHostID() throws ServletException {
     return "";
   }
 
-  public String servletHost() {
-    return servletHost;
-  }
 
   String servletParam(String name, String what) throws ServletException {
     if (servletParams.containsKey(name)) {

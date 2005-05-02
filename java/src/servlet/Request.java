@@ -33,6 +33,8 @@ public final class Request {
         return request.getParameter("title");
     }
     public String servletURL() {
-        return servlet.servletHost() + request.getContextPath() + request.getServletPath();
+        return request.getRequestURL().toString();
+        // request.getRequestURL() is equivalent to the string below.
+        //return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + request.getServletPath();
     }
 }

@@ -25,8 +25,6 @@ public final class Main extends Servlet {
     final Input election_id = new Input("id", this);
     final Input voter_key = new Input("key", this);
     
-    String servlet_host;
-    
     CIVSAction controlElection, vote, showResults, status, create;
     
     public Main() throws ServletException {}
@@ -43,13 +41,7 @@ public final class Main extends Servlet {
         addAction(vote);				// voter_key, election_id
         addAction(controlElection);     		// ctrl_key, auth_key, election_id
         addAction(showResults);				// election_id
-        // XXX Do we need the inputs?
-        
-        try {
-            servlet_host = servletParam("servlet_host", "the CIVS servlet host");
-        } catch (ServletException e) {
-            servlet_host = e.getMessage();
-        }
+        // XXX Do we need the inputs?        
     }
     
     // Should we create a new session for every request, or
@@ -106,11 +98,6 @@ public final class Main extends Servlet {
     
     public String servlet_url() throws ServletException {
         return servletParam("servlet_url", "the CIVS servlet url.");
-    }
-    
-    public String servletHost() {
-        return servlet_host;
-        
     }
     
     public String dataDir() throws ServletException {

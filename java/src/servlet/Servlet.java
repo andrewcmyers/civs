@@ -160,8 +160,7 @@ abstract public class Servlet extends HttpServlet {
     }
     
     public abstract String getPrivateHostID() throws ServletException;
-    public abstract String servletHost();
-    
+
     public final void addAction(Action a) {
         actions.put(a.ext_name, a);
     }
