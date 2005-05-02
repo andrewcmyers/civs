@@ -111,16 +111,22 @@ abstract public class Servlet extends HttpServlet {
             
             String action_name = req.action_name();
             if (action_name == null) {
+                action_name = this.defaultActionName(req);
+            }
+            if (action_name == null) {
+                action = this.defaultAction(req);                
+            }
+            if (action_name == null && action == null) {
                 Node n = reportError("Access violation", "Improper request",
                         "The request includes no action identifier \"" + req.title() + "\"");
                 n.write(new HTMLWriter(rw));
                 rw.close();
                 return;
             }
-            
-            if (actions.containsKey(action_name)) {
+            else if (action == null && actions.containsKey(action_name)) {
                 action = (Action) actions.get(action_name);
-            } else {
+            } 
+            else if (action == null) {
                 Node n = reportError("Access violation", "Invalid Action",
                         "The action identifier in the request is invalid: <" + action_name + ">");
                 n.write(new HTMLWriter(rw));
@@ -143,6 +149,30 @@ abstract public class Servlet extends HttpServlet {
         finally { decrement_req_cnt(); }
     }
     
+    /**
+     * If the request does not specify an action name, and there is no default
+     * action name, this method is called to get a default action to invoke. May return
+     * null if there is no default action to invoke.
+     * 
+     * @param req
+     * @return the default action, used if the request does not specify an
+     *         action.
+     */
+    protected Action defaultAction(Request req) {
+        return null;
+    }
+    /**
+     * If the request does not specify an action name, 
+     * this method is called to get a default action name. May return
+     * null if there is no default action name.
+     * 
+     * @param req
+     * @return the default action name, used if the request does not specify an
+     *         action.
+     */
+    protected String defaultActionName(Request req) {
+        return null;
+    }
     protected Page reportError(String title, String header, String explanation) 
     throws ServletException {
         return createPage(title, new NodeList(new Header(1, header),
@@ -171,7 +201,6 @@ abstract public class Servlet extends HttpServlet {
     
     /** Construct a node that contains an invocation of this servlet with the
      * named request and the inputs provided.
-     * @param action_name the name of the action (or the action itself?)
      * @param inputs : Input -> String
      * @param req : the request that initiated this
      * @return a new node.

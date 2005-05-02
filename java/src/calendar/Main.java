@@ -26,7 +26,11 @@ public final class Main extends Servlet {
   public void initialize() {
     addAction(new ShowCalendar(this));
   }
+  
 
+    protected String defaultActionName(Request req) {
+        return "show";
+    }
   public String getPrivateHostID() throws ServletException {
     return "";
   }
