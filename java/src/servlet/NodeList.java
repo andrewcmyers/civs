@@ -70,4 +70,12 @@ public class NodeList extends Node {
             return new NodeList(first, new NodeList(n2));
         }
     }
+
+    public static final NodeList EMPTY =
+	new NodeList(new Text("")) {
+	    public void write(HTMLWriter w) { }
+	    public NodeList append(Node n) {
+		return new NodeList(n);
+	    }
+	};
 }

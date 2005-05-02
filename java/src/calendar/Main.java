@@ -1,87 +1,51 @@
 package calendar;
 
 import java.util.*;
-
 import servlet.*;
 
 import javax.servlet.ServletException;
 
 public final class Main extends Servlet {
-  Calendar cal = new Calendar();
+  Calendar cal;
+  String servletHost;
+  Map servletParams;
+
+  public Main() {
+    cal = new Calendar();
+    servletParams = new HashMap();
+  }
 
   public void initialize() {
-      addAction(new ShowCalendar(this));
+    addAction(new ShowCalendar(this));
+
+    try {
+      servletHost = servletParam("servlet_host", "the Calendar servlet host");
+    } catch (ServletException e) {
+      servletHost = e.getMessage();
+    }
   }
 
   public String getPrivateHostID() throws ServletException {
     return "";
   }
+
   public String servletHost() {
-      // TODO
-      return "XXX_FIXME_XXX";      
+    return servletHost;
   }
 
-  class ShowCalendar extends Action {
-    public ShowCalendar(Servlet s) { super("show", s); }
-
-    public Page invoke(Request req) throws ServletException {
-        Node content = cal.monthToNode(null, null, new java.util.Date());
-        content = new NodeList(content,
-	    new Paragraph(new Hyperlink(req, new DoCreateEvent(getServlet(),
-		  this), new Text("Create new event"))));
-
-      return createPage("My Calendar", content);
-    }
-  }
-
-
-  /**
-   * Returns a new Event, filled out with default values.
-   */
-  private Event defaultEvent() {
-      java.util.Calendar c = GregorianCalendar.getInstance();
-      Date start = c.getTime();
-      c.add(Calendar.HOUR_OF_DAY, 1);
-      Date end = c.getTime();
-      Set attendees = new HashSet();
-      attendees.add(null);
-      Set readers = attendees;
-      Set timeReaders = Collections.EMPTY_SET;
-      return new Event(start, end, "", "", attendees, null, timeReaders,
-	  readers);
-  }
-  
-  class DoCreateEvent extends Action {
-    private Action returnAction;
-    public DoCreateEvent(Servlet s, Action returnAction) {
-        super(s);
-        this.returnAction = returnAction;
+  String servletParam(String name, String what) throws ServletException {
+    if (servletParams.containsKey(name)) {
+      return (String)servletParams.get(name);
     }
 
-    public Page invoke(Request req) throws ServletException {
-        Event newEvent = defaultEvent(); 
-	CreateEditEvent createAction = new CreateEditEvent(getServlet(),
-	    new ReceiveCreatedEvent(getServlet(), returnAction, newEvent),
-	    returnAction, newEvent, false);
-        return createAction.invoke(req);
+    String s = initParameter(name);
+    if (s == null) {
+      throw new ServletException("Can't determine " + what + ".  Set the "
+	  + name + " parameter in the configuration file web.xml.");
+    } else {
+      servletParams.put(name, s);
+      return s;
     }
-  }
-
-  class ReceiveCreatedEvent extends Action {
-      private Action returnAction;
-      private Event event;
-      public ReceiveCreatedEvent(Servlet s, Action returnAction, Event event) {
-          super(s);
-          this.returnAction = returnAction;
-          this.event = event;
-      }
-      
-      public Page invoke(Request req) throws ServletException {
-          // This action is only invoked if the user successfully
-          // created the event. So add it to the calendar.
-          Main.this.cal.events.add(event);
-          return returnAction.invoke(req);
-      }      
   }
 }
 
