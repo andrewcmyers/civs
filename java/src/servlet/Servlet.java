@@ -119,8 +119,7 @@ abstract public class Servlet extends HttpServlet {
             if (action == null) {
                 // either action_name specified, or no default action
                 if (action_name == null) {
-                    Node n = reportError("Access violation", "Improper request",
-                                         "The request includes no action identifier \"" + req.title() + "\"");
+                    Node n = invalidActionRequested(req, action_name);
                     n.write(new HTMLWriter(rw));
                     rw.close();
                     return;
@@ -130,8 +129,7 @@ abstract public class Servlet extends HttpServlet {
                 }
 
                 if (action == null) {
-                    Node n = reportError("Access violation", "Invalid Action",
-                                         "The action identifier in the request is invalid: <" + action_name + ">");
+                    Node n = invalidActionRequested(req, action_name);
                     n.write(new HTMLWriter(rw));
                     rw.close();
                     return;			
@@ -149,13 +147,28 @@ abstract public class Servlet extends HttpServlet {
             } else {
                 n = reportError("Error handling request", "Error Handling Request",
                         "The servlet did not generate any output for your request. " +
-                "This probably means that your request was ill-formed.");
+                        "This probably means that your request was ill-formed.", req);
                 n.write(new HTMLWriter(rw));
             }
             
             rw.close();
         }
         finally { decrement_req_cnt(); }
+    }
+    
+    /**
+     * @return
+     * @throws ServletException
+     */
+    protected Node invalidActionRequested(Request req, String action_name) throws ServletException {
+        if (action_name == null) {
+            return reportError("Access violation", "Improper request",
+                               "The request includes no action identifier \"" + req.title() + "\"",
+                               req);
+        }
+        return reportError("Access violation", "Invalid Action",
+                           "The action identifier in the request is invalid: <" + action_name + ">",
+                           req);    
     }
     
     /**
@@ -213,10 +226,22 @@ abstract public class Servlet extends HttpServlet {
     protected String defaultActionName(Request req) {
         return null;
     }
-    protected Page reportError(String title, String header, String explanation) 
+    protected Page reportError(String title, String header, String explanation, Request request) 
     throws ServletException {
+        Node content = new Paragraph(new Text(explanation));
+        Action a = null;
+        String defaultActionName = defaultActionName(request);
+        if (defaultActionName != null) {            
+            a = findAction(request.request, defaultActionName);
+        }
+        if (a == null) {
+            a = defaultAction(request);
+        }
+        if (a != null) {
+            content = new NodeList(content, new Paragraph(new Hyperlink(request, a, new Text("Return"))));
+        }
         return createPage(title, new NodeList(new Header(1, header),
-                new Paragraph(new Text(explanation))));
+                content));
     }
     
     public final String initParameter(String p) {
