@@ -51,7 +51,7 @@ public class NodeList extends Node {
         first = a[0];
         NodeList next = null;
         for (int i = n-1; i>0; i--) {
-            next = new NodeList(a[i], rest);
+            next = new NodeList(a[i], next);
         }
         rest = next;
     }

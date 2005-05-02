@@ -74,13 +74,13 @@ public class Vote extends CIVSAction {
                             "it genuinely expresses no opinion."))),
                     main.createForm(castVote, req,
                           new NodeList(
-                            new Table("ballot", null,
-                              new NodeList(
-                                new TRow(new NodeList(
-                                  new TCell("choice", new Text("Choice"), 1, true),
-                                  new TCell("rank", new Text("Rank"), 1, true))),
-                                rows)),
-                                 new SubmitButton(main, "Cast vote"))
+                            new Table("ballot",
+                              new TRow(new NodeList(
+                                 new TCell("choice", new Text("Choice"), 1, true),
+                                 new TCell("rank", new Text("Rank"), 1, true)))
+                               .setClass("ballot"),
+                              rows).setCellSpacing(0),
+                            new SubmitButton(main, "Cast vote"))
                   )));
     }
     
