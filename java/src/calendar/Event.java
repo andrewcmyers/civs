@@ -20,6 +20,10 @@ public class Event implements Comparable {
   Set timeReaders;  // Users who can read start/end time and attendees.
   Set readers;      // Users who can read all details.
 
+  /**
+   * Constructor for creating an Event object to be used only for comparing
+   * the given Date against other Events.
+   */
   Event(Date date) {
     this(date, date, null, null, Collections.EMPTY_SET, null,
 	Collections.EMPTY_SET, Collections.EMPTY_SET);

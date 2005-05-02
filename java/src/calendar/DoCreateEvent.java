@@ -22,10 +22,10 @@ public class DoCreateEvent extends CalendarAction {
       c.add(Calendar.HOUR_OF_DAY, 1);
       Date end = c.getTime();
       Set attendees = new HashSet();
-      attendees.add(null);
+      attendees.add(Main.USER);
       Set readers = attendees;
       Set timeReaders = Collections.EMPTY_SET;
-      return new Event(start, end, "", "", attendees, null, timeReaders,
+      return new Event(start, end, "", "", attendees, Main.USER, timeReaders,
 	  readers);
   }
 

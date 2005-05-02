@@ -26,8 +26,8 @@ public class ShowCalendar extends CalendarAction {
 
   private Node monthView(Request req, Date date) {
     // XXX - where is this information stored?
-    User reader = null;
-    User user = null;
+    User reader = Main.USER;
+    User user = Main.USER;
 
     // Normalize the date argument to fall on midnight.
     date = DateUtil.toMidnight(date);
@@ -73,17 +73,18 @@ public class ShowCalendar extends CalendarAction {
 	for (Iterator it = subSet.iterator(); it.hasNext(); ) {
 	  Event e = (Event)it.next();
 	  if (e.timeReaders.contains(reader) && e.attendees.contains(user)) {
+	    cell = cell.append(new Br());
+
 	    String name = "Busy";
 	    if (e.readers.contains(reader)) name = e.name;
 		
 	    String eventText = timeSDF.format(e.startTime) + " " + name;
-	    boolean canEdit = false; // @@@@hack. SHould be checked
-		
-	    cell = cell.append(new Br());
+
+	    boolean canEdit = user.equals(e.creator);
 	    if (canEdit) {
-	      cell = new NodeList(new Hyperlink(req, new
-		    CreateEditEvent(servlet, this, this, e, false),
-		    new Text(eventText)), cell);
+	      cell = cell.append(new Hyperlink(req,
+		    new CreateEditEvent(servlet, this, this, e, false),
+		    new Text(eventText)));
 	    } else {
 	      cell = cell.append(new Text(eventText));
 	    }
