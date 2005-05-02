@@ -11,10 +11,6 @@ HTML_DIR="$SERVLET_DIR"
 # Java.
 CIVS_DATA_DIR='c:\andru\upg\civs\java\data'
 
-# This URL is used to refer to the servlet from
-# within servlet output.
-SERVLET_URL='/civs/main'
-
 # This is the prefix to be prepended to SERVLET_URL to
 # find CIVS from everywhere else.
 SERVLET_HOST='http://localhost:8080'

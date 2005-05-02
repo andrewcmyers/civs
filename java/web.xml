@@ -25,10 +25,6 @@
 	<param-value>@CIVS_HOST@</param-value>
       </init-param>
       <init-param>
-	<param-name>servlet_url</param-name>
-	<param-value>@SERVLET_URL@</param-value>
-      </init-param>
-      <init-param>
 	<param-name>servlet_host</param-name>
 	<param-value>@SERVLET_HOST@</param-value>
       </init-param>

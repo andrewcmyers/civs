@@ -106,8 +106,9 @@ public class ControlElection extends CIVSAction {
             String voteURL = main.createRequestURL(main.vote, args, req);
             tableEntries = tableEntries.append(new TRow(new NodeList(
                     new TCell("desc", new Text("Open poll:"), 1, false),
-                    new TCell(new NodeList(new Text("Direct voters to this URL: "),
-                            new Hyperlink(req, main.vote, new Text(voteURL)))))));
+                    new TCell(new NodeList(new Text("Direct voters to "),
+                            main.createRequest(main.vote, args, req, new Text(voteURL))))
+            )));
         }
         
         tableEntries = tableEntries.append(new TRow(new NodeList(
@@ -119,24 +120,25 @@ public class ControlElection extends CIVSAction {
             main.banner("Election Control: " + election.title, req),
             new Table("electionControl", null, tableEntries),
             (!election.stopped) ?
-                    new NodeList(
+              new NodeList(
                       main.createForm(
                         new StopElection(main, election),
-                        new NodeList(
+                        req, new NodeList(
                           new Hidden(main.auth_key, auth_key),
-                          new SubmitButton(main, "End election")), req),							
+                          new SubmitButton(main, "End election"))),							
                           main.createForm(
                             new AddVoters(main, election),
-                            new NodeList(
-                              voters_inp, new Br(),
-                              new Span("tiny", new Text("Enter one voter e-mail address per line " +
-                              " or upload addresses from a file.")),
-                              new Br(),
-                              new NodeList(
-                                voters_upload,
-                                new Br(),
-                                new SubmitButton(main, "Add voters"))),
-                                req))
+                            req,
+                                new NodeList(
+                                  voters_inp, new Br(),
+                                  new Span("tiny",
+                                          new Text("Enter one voter e-mail address per line " +
+                                                   " or upload addresses from a file.")),
+                                  new Br(),
+                                  new NodeList(
+                                    voters_upload,
+                                    new Br(),
+                                    new SubmitButton(main, "Add voters")))))
                                 : (Node)new Text("")));
     }
     class StopElection extends CIVSAction {

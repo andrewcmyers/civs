@@ -15,10 +15,13 @@ table { background-color: #e0fff0 }
 table.matrix {background-color: #e0f0ff}
 table.form {background-color: transparent}
 table.createForm {border-style: solid; border-color: #b0dfc8; border-width: 1}
+table.ballot {border-style: solid; border-color: #b0dfc8; border-width: 1}
+
 .emailAddr {font-family: Courier New, Courier, fixed}
 .electionTitle {font-weight: bold}
 .URL {font-family: Courier New, Courier, fixed}
 .errormsg {font-size: 120%; font-weight: bold; color: red}
+.emph {font-weight: bold}
 
 div.emphasized { background-color: #ffffd0;
     padding: 3; border-style: solid; border-width: 1; border-color: black }
@@ -39,7 +42,7 @@ td.bannertop { width: 100%; vertical-align: top; text-align: left; padding: 7 }
 td.bannerbottom { width: 100%; text-align: center }
 td.bannerright { width: 0%; white-space: nowrap; text-align: right }
 
-.submit { font-weight: bold; border-color: #c0ffc0; background-color: #c0ffc0 }
+.submit { font-weight: bold; border-color: #ffffc0; background-color: #ffffc0 }
 table.createForm input { border-color: #c0ffc0; border-width: 1 }
 table.createForm textarea { border-color: #c0ffc0; border-width: 1 }
 table.createForm file { border-color: #c0ffc0; border-width: 1 }

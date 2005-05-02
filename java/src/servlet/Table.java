@@ -31,6 +31,7 @@ public class Table extends Tag {
         p.breakLine();
         body.write(p);
         p.indent(-2);
+        p.breakLine();
         p.print("</tbody>");
         p.print("</table>");
         p.end();

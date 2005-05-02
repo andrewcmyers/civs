@@ -16,6 +16,10 @@ public final class Main extends Servlet {
   public String getPrivateHostID() throws ServletException {
     return "";
   }
+  public String servletHost() {
+      // TODO
+      return "XXX_FIXME_XXX";      
+  }
 
   class ShowCalendar extends Action {
     public ShowCalendar(Servlet s) { super("show", s); }

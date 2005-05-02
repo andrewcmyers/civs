@@ -9,6 +9,7 @@ import java.io.StringWriter;
  * 
  * A class for generating indented output. Has begin() and end() to indicate
  * structure. Does not try to optimize line breaking or anything fancy.
+ * XXX Currently inserts whitespace in places where it shouldn't.
  */
 public class HTMLWriter {
     int indent = 0;

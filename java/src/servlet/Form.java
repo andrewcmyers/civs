@@ -4,10 +4,10 @@ package servlet;
 public class Form extends Container {
     Action action;
     String servlet_url;
-    Form(Node n, Action action_, Request req) {
+    Form(Action action_, Request req, Node n) {
         super("form", n);
         action = action_;
-        servlet_url = req.servlet_url();
+        servlet_url = req.servletURL();
         req.servlet.addAction(action);
     }
     public void writeOptions(HTMLWriter p) {

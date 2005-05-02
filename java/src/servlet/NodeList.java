@@ -43,6 +43,18 @@ public class NodeList extends Node {
         rest = l;
     }
     
+    /** Create a NodeList from an array of Nodes.
+     * @param a
+     */
+    public NodeList(Node[] a) {
+        int n = a.length;
+        first = a[0];
+        NodeList next = null;
+        for (int i = n-1; i>0; i--) {
+            next = new NodeList(a[i], rest);
+        }
+        rest = next;
+    }
     public void write(HTMLWriter w) {
         NodeList n = this;
         while (n != null) {

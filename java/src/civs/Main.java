@@ -25,6 +25,8 @@ public final class Main extends Servlet {
     final Input election_id = new Input("id", this);
     final Input voter_key = new Input("key", this);
     
+    String servlet_host;
+    
     CIVSAction controlElection, vote, showResults, status, create;
     
     public Main() throws ServletException {}
@@ -39,9 +41,15 @@ public final class Main extends Servlet {
         addAction(status);
         addAction(create);
         addAction(vote);				// voter_key, election_id
-        addAction(controlElection);     // ctrl_key, auth_key, election_id
-        addAction(showResults);			// election_id
+        addAction(controlElection);     		// ctrl_key, auth_key, election_id
+        addAction(showResults);				// election_id
         // XXX Do we need the inputs?
+        
+        try {
+            servlet_host = servletParam("servlet_host", "the CIVS servlet host");
+        } catch (ServletException e) {
+            servlet_host = e.getMessage();
+        }
     }
     
     // Should we create a new session for every request, or
@@ -69,7 +77,7 @@ public final class Main extends Servlet {
                 "Condorcet Internet Voting Service"), 1, false),
                 new TCell("bannerright", new NodeList(new Hyperlink(civs_url(),
                         new Text("CIVS Home")), new Br(),
-                        createRequest(create, null, new Text("Create new election"), req), new Br(),
+                        createRequest(create, null, req, new Text("Create new election")), new Br(),
                         new Hyperlink(civs_url() + "/sec_priv.html", new Text(
                         "About security and privacy"))), 1, false))),
                         new TRow(new TCell("bannerbottom", new Header(2, title), 2,
@@ -100,8 +108,9 @@ public final class Main extends Servlet {
         return servletParam("servlet_url", "the CIVS servlet url.");
     }
     
-    String servlet_host() throws ServletException {
-        return servletParam("servlet_host", "the CIVS servlet host");
+    public String servletHost() {
+        return servlet_host;
+        
     }
     
     public String dataDir() throws ServletException {
@@ -138,9 +147,6 @@ public final class Main extends Servlet {
     /* (non-Javadoc)
      * @see servlet.Servlet#external_servlet_url()
      */
-    public String external_servlet_url() throws ServletException {
-        return servlet_host() + servlet_url();
-    }
     
     public void saveElection(Election e, boolean create) throws ServletException {
         try {

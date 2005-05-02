@@ -149,9 +149,8 @@ public class CreateEditEvent extends Action {
             content = new Table(null, entries);
         }
         else {
-            content =
-	      getServlet().createForm(new FinishEditEvent(getServlet()),
-		  new Table(null, entries), req); 
+            content = getServlet().createForm(new FinishEditEvent(getServlet()),
+		  req, new Table(null, entries)); 
         }
         
 	return getServlet().createPage(title, new NodeList(new Text(title),

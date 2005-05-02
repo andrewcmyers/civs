@@ -59,7 +59,7 @@ public class CreateElection extends CIVSAction {
 	        new Paragraph(new Text("Use the following form to create an election for which you are the supervisor. " +
 	          " You will be able to authorize voters later.")),
 	          main().createForm(finishCreate,
-	                  new NodeList(new Table("createForm", null,
+	                  req, new NodeList(new Table("createForm", null,
 	                          new NodeList(
 	                            new TRow(new NodeList(
 	                              desc("Title of the election:"),
@@ -130,7 +130,7 @@ public class CreateElection extends CIVSAction {
 			                                "because circularities are uncommon."))
 			                   ))))))
 	                  ),
-	                  new SubmitButton(main, "Create election")), req)));
+	                  new SubmitButton(main, "Create election")))));
 	}
 	
 	class FinishCreate extends CIVSAction {
@@ -217,22 +217,22 @@ public class CreateElection extends CIVSAction {
 		  args.put(main.auth_key, auth_key);
 		  args.put(main.ctrl_key, control_key);
 		  Node control_url = main.createRequest(main.controlElection, args,
-		  		new Text("Control election"), req);
+		  		req, new Text("Control election"));
 		  		
 		  String home_url = main.civs_host() + main.civs_url();
-		  Node email = new NodeList(
-		  		new Paragraph(new NodeList(
-		  				new Text("A new CIVS election named "),
-		  				new Span("electionTitle", election.title),
-						new Text(" has been created. You have been designated the election " +
-								 " supervisor. To start and stop the election and to add " +
-								 " voters, click here:"),
-						control_url)),
-				new Paragraph(new NodeList(
-						new Text("For more information about the Condorcet Internet Voting Service, " +
-								 "visit "),
-						new Hyperlink(home_url, new Span("URL", home_url)),
-						new Text("."))));
+		  Node email = new NodeList(		         
+		    new Paragraph(new NodeList(
+		      new Text("A new CIVS election named "),
+		      new Span("electionTitle", election.title),
+		      new Text(" has been created. You have been designated the election " +
+		               " supervisor. To start and stop the election and to add " +
+		      	       " voters, click here:"),
+		      control_url)),
+		    new Paragraph(new NodeList(new Node[] {
+		       new Text("For more information about the " +
+		                "Condorcet Internet Voting Service, visit "),
+                       new Hyperlink(home_url, new Span("URL", home_url)),
+                       new Text(".")})));
 		  
 		  main.saveElection(election, true);
 		  if (!main.local_debug()) sendControlInfo(election);
@@ -240,21 +240,22 @@ public class CreateElection extends CIVSAction {
 			// install once we've successfully set everything up and sent mail.
 		  main.elections.put(election.id, election);
 			
-			return main.createPage("CIVS: Election created",
-			   new NodeList(main().banner("Election Created", req),
-					new Paragraph(new NodeList(
-							new Text("The election "),
-							new Span("electionTitle", new Text(election.title)),
-							new Text(" has been created. E-mail containing election control information "),
-							(main.local_debug() ? new Text("would be")
-									: new Text("has been")), 
-							new Text(" sent to "),
-							new Span("emailAddr", new Text(election.email)),
-							new Text("."))
-							.append(main.local_debug()
-								?  new NodeList(new HRule(), new Text("E-mail:"), new Br(), email)
-								: (Node)(new HRule()))
-									)));
+		  return main.createPage("CIVS: Election created",
+	            new NodeList(main().banner("Election Created", req),
+	               new Paragraph(new NodeList(
+	                 new Text("The election "),
+	                 new Span("electionTitle", new Text(election.title)),
+	                 new Text(" has been created. E-mail containing election control information "),
+	                 (main.local_debug()
+	                    ? new Text("would be")
+	                    : new Text("has been")), 
+	                 new Text(" sent to "),
+	                 new Span("emailAddr", new Text(election.email)),
+	                 new Text("."))
+	                 .append(main.local_debug()
+	                         ?  new NodeList(new HRule(), new Text("E-mail:"), new Br(), email)
+	                         : (Node)(new HRule()))
+	               )));
 		}
 	}
 	

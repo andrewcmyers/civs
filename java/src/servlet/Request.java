@@ -32,7 +32,7 @@ public final class Request {
     public String title() {
         return request.getParameter("title");
     }
-    public String servlet_url() {
-        return request.getContextPath() + request.getServletPath();
+    public String servletURL() {
+        return servlet.servletHost() + request.getContextPath() + request.getServletPath();
     }
 }

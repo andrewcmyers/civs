@@ -49,8 +49,8 @@ abstract public class Servlet extends HttpServlet {
                 new Body(body));
     }
     
-    public final Node createForm(Action action, Node body, Request req) {
-        return new Form(body, action, req);
+    public final Node createForm(Action action, Request req, Node body) {
+        return new Form(action, req, body);
     }
     
     /** checkLoad implements load checking for the servlet,
@@ -160,6 +160,7 @@ abstract public class Servlet extends HttpServlet {
     }
     
     public abstract String getPrivateHostID() throws ServletException;
+    public abstract String servletHost();
     
     public final void addAction(Action a) {
         actions.put(a.ext_name, a);
@@ -176,8 +177,7 @@ abstract public class Servlet extends HttpServlet {
      * @param req : the request that initiated this
      * @return a new node.
      */
-    public final Node createRequest(Action a, Map inputs, Node body,
-            Request req) throws ServletException {
+    public final Node createRequest(Action a, Map inputs, Request req, Node body) throws ServletException {
         
         // XXX check inputs against the request?
         String url = createRequestURL(a, inputs, req);
@@ -186,7 +186,7 @@ abstract public class Servlet extends HttpServlet {
     
     public String createRequestURL(Action a, Map inputs, Request req) {
         StringWriter w = new StringWriter();
-        w.write(req.servlet_url());
+        w.write(req.servletURL());
         w.write("?action=");
         w.write(HTMLWriter.escape_URI(a.getName()));
         
