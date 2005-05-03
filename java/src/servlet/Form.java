@@ -1,7 +1,7 @@
 package servlet;
 
 /** A Form contains Inputs and generates requests. */
-public class Form extends Container {
+public class Form extends BlockContainer {
     Action action;
     String servlet_url;
     Form(Action action_, Request req, Node n) {

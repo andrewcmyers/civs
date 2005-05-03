@@ -11,6 +11,8 @@ public class Br extends Node {
      * @see servlet.Node#write(servlet.HTMLWriter)
      */
     public void write(HTMLWriter p) {
-        p.print("<br />");
+        p.allowBreak();
+        p.print("<br/>");
+        p.breakLine();
     }
 }

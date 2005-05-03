@@ -60,6 +60,13 @@ public class NodeList extends Node {
         while (n != null) {
             n.first.write(w);
             n = n.rest;
+        }
+    }
+    public void writeBroken(HTMLWriter w) {
+        NodeList n = this;
+        while (n != null) {
+            n.first.write(w);
+            n = n.rest;
             if (n != null) w.breakLine();
         }
     }

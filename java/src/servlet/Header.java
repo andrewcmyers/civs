@@ -1,6 +1,6 @@
 package servlet;
 
-public class Header extends Container {
+public class Header extends BlockContainer {
     int level;
     
     public Header(int level, Node contents) {

@@ -7,8 +7,8 @@ package servlet;
  * must occur within a form. There are several kinds
  * of Input nodes. Every input is associated with a
  * servlet. Input nodes should result in HTML decorations
- * that describe confidentiality requirements. Currently
- * this is not implemented.
+ * that describe confidentiality requirements.
+ * XXX Currently this last is not implemented.
  */
 public abstract class InputNode extends Node {
     Input input;

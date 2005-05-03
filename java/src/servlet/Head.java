@@ -19,8 +19,8 @@ public class Head extends Node {
     
     public void write(HTMLWriter w) {
         w.begin();
-        w.indent(2);
         w.print("<head>");
+        w.indent(2);
         w.breakLine();
         w.print("<title>");
         w.escape(title);
@@ -28,9 +28,12 @@ public class Head extends Node {
         
         if (styleFile != null) {
             w.breakLine();
-            w.print("<link rel=\"stylesheet\" type=\"text/css\" href=");
+            w.print("<link ");
+            w.begin();
+            w.print("rel=\"stylesheet\" type=\"text/css\" href=");
             w.printq(styleFile);
             w.print(" type=\"text/css\" />");
+            w.end();
         }
         w.end();
         w.breakLine();

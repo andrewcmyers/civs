@@ -33,8 +33,6 @@ public class Table extends Tag {
     }
     
     public void write(HTMLWriter p) {
-        p.begin();
-        p.indent(2);
         super.write(p);
         if (head != null) {
             p.print("<thead>");
@@ -46,10 +44,10 @@ public class Table extends Tag {
         p.print("<tbody>");
         p.breakLine();
         body.write(p);
-        p.indent(-2);
+        p.end();
         p.breakLine();
         p.print("</tbody>");
         p.print("</table>");
-        p.end();
+        p.breakLine();
     }
 }

@@ -60,26 +60,26 @@ public class ControlElection extends CIVSAction {
         }
         
         NodeList tableEntries =
-            new NodeList(
+            new NodeList(new Node[]{
                     new TRow(new NodeList(
                             new TCell("desc", new Text("Election title:"), 1, false),
                             new TCell(new Text(election.title)))),
-                            new TRow(new NodeList(
-                                    new TCell("desc", new Text("Status:"), 1, false),
-                                    new TCell(new Text(status)))),
-                                    new TRow(new NodeList(
-                                            new TCell("desc", new Text("Supervisor:"), 1, false),
-                                            new TCell(
-                                                    new NodeList(
-                                                            new Span("emailAddr", new Text(election.email)),
-                                                            new Text("(" + election.name + ")"))))),
-                                                            new TRow(new NodeList(
-                                                                    new TCell("desc", new Text("Description:"), 1, false),
-                                                                    new TCell(new Text(election.description)))),
-                                                                    new TRow(new NodeList(
-                                                                            new TCell("desc", new Text("Choices:"), 1, false),
-                                                                            new TCell(new Span("choicesList", choicesNode))))
-            );
+                    new TRow(new NodeList(
+                            new TCell("desc", new Text("Status:"), 1, false),
+                            new TCell(new Text(status)))),
+                    new TRow(new NodeList(
+                            new TCell("desc", new Text("Supervisor:"), 1, false),
+                            new TCell(
+                                    new NodeList(
+                                            new Span("emailAddr", new Text(election.email)),
+                                            new Text(" (" + election.name + ")"))))),
+                    new TRow(new NodeList(
+                            new TCell("desc", new Text("Description:"), 1, false),
+                            new TCell(new Text(election.description)))),
+                    new TRow(new NodeList(
+                            new TCell("desc", new Text("Choices:"), 1, false),
+                            new TCell(new Span("choicesList", choicesNode))))
+            });
         String options = "";
         
         if (election.allow_writeins) {

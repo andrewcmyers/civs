@@ -4,7 +4,7 @@ package servlet;
  * @author andru
  *
  * */
-public class TRow extends Container {
+public class TRow extends BlockContainer {
     
     /**
      * @param tagname
@@ -13,5 +13,4 @@ public class TRow extends Container {
     public TRow(Node cells) {
         super("tr", cells);
     }
-    
 }

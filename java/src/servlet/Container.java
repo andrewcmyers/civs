@@ -24,16 +24,14 @@ class Container extends Tag {
         // default: no options.
     }
     
+    /** Write everything between the open tag and the close tag. */
     protected void writeContents(HTMLWriter p) {
         contents.write(p);
     }
-    public void write(HTMLWriter p) {
-        super.write(p);
-        p.breakLine();
+    
+    public void writeRest(HTMLWriter p) {
         writeContents(p);
-        p.indent(-2);
-        p.breakLine();
-        p.print("</" + tag + ">");
         p.end();
+        p.print("</" + tag + ">");
     }
 }

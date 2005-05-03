@@ -16,10 +16,13 @@ public class SubmitButton extends InputNode {
      * @see servlet.Node#write(servlet.HTMLWriter)
      */
     public void write(HTMLWriter p) {
-        p.print("<input type=submit class=submit value=");
+        p.print("<input ");
+        p.begin();
+        p.print("type=submit class=submit value=");
         p.printq(name);
         p.print(" name=");
         p.printq(input.getName());
+        p.end();
         p.print(" />");
     }
     

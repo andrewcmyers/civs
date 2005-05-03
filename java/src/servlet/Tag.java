@@ -13,14 +13,17 @@ public class Tag extends Node {
         class_ = c;
     }
     
-    /* (non-Javadoc)
-     * @see servlet.Node#write(servlet.HTMLWriter)
+    /** Write out the tag, including an unmatched
+     * p.begin().
+     * @param p
      */
-    public void write(HTMLWriter p) {
+    public void writeTag(HTMLWriter p) {
         p.begin();
-        p.indent(2);
         p.print("<");
+        p.indent(2);
         p.print(tag);
+        p.begin();
+        p.indent(1);
         if (class_ != null || p.currentClass() != null) {
             p.print(" class=");
             if (class_ != null) {
@@ -31,9 +34,22 @@ public class Tag extends Node {
             p.setClass(null);
         }
         writeOptions(p);
+        p.end();
+        p.allowBreak();
         p.print(">");
     }
+    /** Write everything after the tag. Must include
+     * an extra p.end() to match writeTag(). */
+    public void writeRest(HTMLWriter p) {}
     
+    public void write(HTMLWriter p) {
+        p.begin();
+        writeTag(p);
+        writeRest(p);
+        p.end();
+    }
+    
+    /** Write everything inside the tag after the tag name itself. */
     protected void writeOptions(HTMLWriter p) {}
     
     public Tag setClass(String c) {
