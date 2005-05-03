@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 
 import servlet.*;
 
-public class CreateEditEvent extends Action {
+public class CreateEditEvent extends CalendarAction {
     private Event event;
     final private boolean readOnly;
     final private boolean isCreate;
@@ -19,22 +19,31 @@ public class CreateEditEvent extends Action {
     private InputNode inpEnd;
     private TextArea inpNote;
     
-    public CreateEditEvent(Servlet servlet, 
+    public CreateEditEvent(Main servlet, 
                            Action successAction, 
                            Action cancelAction, 
                            Event event, 
                            boolean readOnly,
                            boolean isCreate) {
         super(servlet);
-        this.successAction = successAction;
-        this.cancelAction = cancelAction;
+        this.successAction = successAction.intern();
+        this.cancelAction = cancelAction.intern();
         this.event = event;
         this.readOnly = readOnly;
         this.isCreate = isCreate;
         
         this.recreateInputs(null);
     }
-    
+
+    public boolean equivalentTo(Action a) {
+      // Could be more aggressive about this, but that'd be yucky.
+      return false;
+    }
+
+    public Action intern() {
+      // Could be more aggressive about this, but that'd be yucky.
+      return this;
+    }
 
     public Event getEvent() {
         return event;
@@ -45,10 +54,18 @@ public class CreateEditEvent extends Action {
         return producePage(req, null);
     }
         
-    private class FinishEditEvent extends Action {
-        public FinishEditEvent(Servlet s) {
+    private class FinishEditEvent extends CalendarAction {
+        public FinishEditEvent(Main s) {
             super(s);
         }
+
+	public boolean equivalentTo(Action a) {
+	  return false;
+	}
+
+	public Action intern() {
+	  return this;
+	}
         
         public Page invoke(Request req) throws ServletException {
             // user has finished editing.
@@ -113,10 +130,18 @@ public class CreateEditEvent extends Action {
         }        
     }
     
-    private class CancelEditEvent extends Action {
-        public CancelEditEvent(Servlet s) {
+    private class CancelEditEvent extends CalendarAction {
+        public CancelEditEvent(Main s) {
             super(s);
         }
+
+	public boolean equivalentTo(Action a) {
+	  return false;
+	}
+
+	public Action intern() {
+	  return this;
+	}
         
         public Page invoke(Request req) throws ServletException {
             // user has cancelled the event. Clear out the event information.
@@ -145,14 +170,14 @@ public class CreateEditEvent extends Action {
 			(isCreate?"Create":"Update")+" event"))));
         }
         entries = entries.append(new TRow(new TCell(new Hyperlink(req,
-		  new CancelEditEvent(getServlet()),
+		  new CancelEditEvent(main),
 		  new Text(readOnly?"Return":"Cancel")))));     
         Node content;
         if (readOnly) {
             content = new Table(null, entries);
         }
         else {
-            content = getServlet().createForm(new FinishEditEvent(getServlet()),
+            content = getServlet().createForm(new FinishEditEvent(main),
 		  req, new Table(null, entries)); 
         }
         

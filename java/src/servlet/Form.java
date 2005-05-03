@@ -6,7 +6,7 @@ public class Form extends BlockContainer {
     String servlet_url;
     Form(Action action_, Request req, Node n) {
         super("form", n);
-        action = action_;
+        action = action_.intern();
         servlet_url = req.servletURL();
         req.servlet.addAction(action, req);
     }

@@ -13,6 +13,7 @@ public class Hyperlink extends Container {
     }
     public Hyperlink(Request req, Action a, Node n) {
         super("a", n);
+	a = a.intern();
         url = req.servletURL() + "?action=" + a.getName();	
         req.servlet.addAction(a, req);
     }

@@ -12,7 +12,18 @@ public class ShowCalendar extends CalendarAction {
   static final int MONTH = java.util.Calendar.MONTH;
   static final int SUNDAY = java.util.Calendar.SUNDAY;
 
+  private static ShowCalendar memoized;
+
   public ShowCalendar(Main m) { super("show", m); }
+
+  public boolean equivalentTo(Action a) {
+    return a instanceof ShowCalendar;
+  }
+
+  public Action intern() {
+    if (memoized != null) return memoized;
+    return memoized = this;
+  }
 
   public Page invoke(Request req) throws ServletException {
     NodeList content = new NodeList(monthView(req, new java.util.Date()));
@@ -87,7 +98,7 @@ public class ShowCalendar extends CalendarAction {
 	    boolean canEdit = user.equals(e.creator);
 	    if (canEdit || canView) {
 	      cell = cell.append(new Hyperlink(req,
-		    new CreateEditEvent(servlet, this, this, e, !canEdit, false),
+		    new CreateEditEvent(main, this, this, e, !canEdit, false),
 		    new Text(eventText)));
 	    } else {
 	      cell = cell.append(new Text(eventText));
@@ -103,7 +114,7 @@ public class ShowCalendar extends CalendarAction {
 
     // Construct the table header, consisting of the month name and the names
     // of the days of the week.
-    sdf.applyPattern("MMMMM");
+    sdf.applyPattern("MMMMM yyyy");
     NodeList header =
       new NodeList(new TRow(new TCell(null, new Text(sdf.format(date)), 7,
 	      true)));

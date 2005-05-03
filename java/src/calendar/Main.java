@@ -27,10 +27,10 @@ public final class Main extends Servlet {
     addStartAction(new ShowCalendar(this));
   }
   
+  protected String defaultActionName(Request req) {
+      return "show";
+  }
 
-    protected String defaultActionName(Request req) {
-        return "show";
-    }
   public String getPrivateHostID() throws ServletException {
     return "";
   }
