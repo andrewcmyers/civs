@@ -12,25 +12,54 @@ public class ShowCalendar extends CalendarAction {
   static final int MONTH = java.util.Calendar.MONTH;
   static final int SUNDAY = java.util.Calendar.SUNDAY;
 
-  public ShowCalendar(Main m) { super("show", m); }
+  final DoCreateEvent doCreateEvent;
+  final Action nextMonth;
+  final Action prevMonth;
+
+  public ShowCalendar(Main m) {
+    super("show", m);
+    doCreateEvent = new DoCreateEvent(main, this);
+    nextMonth =
+      new CalendarAction(main) {
+	public Page invoke(Request req) throws ServletException {
+	  ((CalendarSessionState)req.getSessionState()).date.add(MONTH, 1);
+	  return ShowCalendar.this.invoke(req);
+	}
+      };
+    prevMonth =
+      new CalendarAction(main) {
+	public Page invoke(Request req) throws ServletException {
+	  ((CalendarSessionState)req.getSessionState()).date.add(MONTH, -1);
+	  return ShowCalendar.this.invoke(req);
+	}
+      };
+  }
 
   public Page invoke(Request req) throws ServletException {
-    NodeList content = new NodeList(monthView(req, new java.util.Date()));
+    NodeList content = new NodeList(monthView(req));
     content =
-      content.append(new Paragraph(new Hyperlink(req,
-	      new DoCreateEvent(main, this),
+      content.append(new Paragraph(new Hyperlink(req, prevMonth,
+	      new Text("Previous month"))));
+    content =
+      content.append(new Paragraph(new Hyperlink(req, nextMonth,
+	      new Text("Next month"))));
+    content =
+      content.append(new Paragraph(new Hyperlink(req, doCreateEvent,
 	      new Text("Create new event"))));
 
     return servlet.createPage("My Calendar", content);
   }
 
-  private Node monthView(Request req, Date date) {
+  private Node monthView(Request req) {
+    // Obtain the session store.
+    CalendarSessionState store = (CalendarSessionState)req.getSessionState();
+
     // XXX - where is this information stored?
     User reader = Main.USER;
     User user = Main.USER;
 
     // Normalize the date argument to fall on midnight.
-    date = DateUtil.toMidnight(date);
+    Date date = DateUtil.toMidnight(store.date.getTime());
 
     // Get start date -- the last Sunday on or before the beginning of the
     // month.
