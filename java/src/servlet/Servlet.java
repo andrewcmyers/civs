@@ -312,4 +312,6 @@ abstract public class Servlet extends HttpServlet {
             throw new IllegalArgumentException("Duplicate input name: " + n);
         inputNames.add(n);
     }
+
+    public abstract SessionState createSessionState();
 }

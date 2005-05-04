@@ -43,6 +43,10 @@ public final class Main extends Servlet {
         addStartAction(showResults);				// election_id
         // XXX Do we need the inputs?        
     }
+
+    public SessionState createSessionState() {
+	return null;
+    }
     
     // Should we create a new session for every request, or
     // reuse the old session? One big issue is how to deal with

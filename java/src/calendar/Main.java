@@ -26,6 +26,10 @@ public final class Main extends Servlet {
   public void initialize() {
     addStartAction(new ShowCalendar(this));
   }
+
+  public SessionState createSessionState() {
+    return new CalendarSessionState();
+  }
   
   protected String defaultActionName(Request req) {
       return "show";

@@ -37,4 +37,15 @@ public final class Request {
         // request.getRequestURL() is equivalent to the string below.
         //return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + request.getServletPath();
     }
+    public SessionState getSessionState() {
+	SessionState result =
+	  (SessionState)request.getSession(true).getAttribute("session_state");
+
+	if (result == null) {
+	    result = servlet.createSessionState();
+	    request.getSession(true).setAttribute("session_state", result);
+	}
+
+	return result;
+    }
 }
