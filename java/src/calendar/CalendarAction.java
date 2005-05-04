@@ -1,7 +1,6 @@
 package calendar;
 
 import servlet.Action;
-import javax.servlet.ServletException;
 
 /**
  * A Calendar-specific Action class.

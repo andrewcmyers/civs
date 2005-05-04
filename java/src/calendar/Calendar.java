@@ -1,7 +1,6 @@
 package calendar;
 
 import java.util.*;
-import servlet.*;
 
 /**
  * A Calendar holds the persistent state of the entire calendar system.

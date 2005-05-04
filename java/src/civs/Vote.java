@@ -44,6 +44,8 @@ public class Vote extends CIVSAction {
             options[i] = new Option("" + (i+1));
         }
         options[n] = new Option("No opinion");
+        
+        int[] permute = Utils.randomPermutation(n);
             
         for (int i = 0; i < n; i++) {
             rows_arr[i] = new TRow(new NodeList(
@@ -74,12 +76,13 @@ public class Vote extends CIVSAction {
                             "it genuinely expresses no opinion."))),
                     main.createForm(castVote, req,
                           new NodeList(
+                            new Div("ballot",
                             new Table("ballot",
                               new TRow(new NodeList(
                                  new TCell("choice", new Text("Choice"), 1, true),
                                  new TCell("rank", new Text("Rank"), 1, true)))
                                .setClass("ballot"),
-                              rows).setCellSpacing(0),
+                              rows).setCellSpacing(0)),
                             new SubmitButton(main, "Cast vote"))
                   )));
     }
