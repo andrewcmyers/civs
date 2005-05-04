@@ -26,23 +26,13 @@ public class CreateEditEvent extends CalendarAction {
                            boolean readOnly,
                            boolean isCreate) {
         super(servlet);
-        this.successAction = successAction.intern();
-        this.cancelAction = cancelAction.intern();
+        this.successAction = successAction;
+        this.cancelAction = cancelAction;
         this.event = event;
         this.readOnly = readOnly;
         this.isCreate = isCreate;
         
         this.recreateInputs(null);
-    }
-
-    public boolean equivalentTo(Action a) {
-      // Could be more aggressive about this, but that'd be yucky.
-      return false;
-    }
-
-    public Action intern() {
-      // Could be more aggressive about this, but that'd be yucky.
-      return this;
     }
 
     public Event getEvent() {
@@ -58,14 +48,6 @@ public class CreateEditEvent extends CalendarAction {
         public FinishEditEvent(Main s) {
             super(s);
         }
-
-	public boolean equivalentTo(Action a) {
-	  return false;
-	}
-
-	public Action intern() {
-	  return this;
-	}
         
         public Page invoke(Request req) throws ServletException {
             // user has finished editing.
@@ -134,14 +116,6 @@ public class CreateEditEvent extends CalendarAction {
         public CancelEditEvent(Main s) {
             super(s);
         }
-
-	public boolean equivalentTo(Action a) {
-	  return false;
-	}
-
-	public Action intern() {
-	  return this;
-	}
         
         public Page invoke(Request req) throws ServletException {
             // user has cancelled the event. Clear out the event information.

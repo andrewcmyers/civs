@@ -26,14 +26,4 @@ abstract public class CIVSAction extends Action {
     Main main() {
         return main;
     }
-
-    public boolean equivalentTo(Action a) {
-	// XXX check/fix/override me!
-	return this == a;
-    }
-
-    public Action intern() {
-	// XXX check/fix/override me!
-	return this;
-    }
 }

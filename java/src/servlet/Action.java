@@ -53,15 +53,4 @@ abstract public class Action {
     public Servlet getServlet() {
         return servlet;
     }
-
-    /**
-     * Determines whether two Actions are equivalent.
-     */
-    abstract public boolean equivalentTo(Action a);
-
-    /**
-     * Returns a canonical representation for the Action.  For any Action a,
-     * the invariant a.equivalentTo(a.intern()) should hold.
-     */
-    abstract public Action intern();
 }

@@ -12,18 +12,7 @@ public class ShowCalendar extends CalendarAction {
   static final int MONTH = java.util.Calendar.MONTH;
   static final int SUNDAY = java.util.Calendar.SUNDAY;
 
-  private static ShowCalendar memoized;
-
   public ShowCalendar(Main m) { super("show", m); }
-
-  public boolean equivalentTo(Action a) {
-    return a instanceof ShowCalendar;
-  }
-
-  public Action intern() {
-    if (memoized != null) return memoized;
-    return memoized = this;
-  }
 
   public Page invoke(Request req) throws ServletException {
     NodeList content = new NodeList(monthView(req, new java.util.Date()));
