@@ -26,7 +26,9 @@ public class TextArea extends InputNode {
         p.print(" cols=");
         p.printq(cols);
         p.print(">");
+        p.noindent(true);
         p.escape(initial_text);
+        p.noindent(false);
         // what goes here in a textarea?
         p.print("</textarea>");
     }
