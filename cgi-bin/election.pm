@@ -137,7 +137,7 @@ sub SaveHash {
 sub LockElection {
     if (!sysopen(ELOCK, $election_lock, &O_CREAT | &O_RDWR)) {
         print h1("Error");
-        print p("Did not have write access to acquire an election lock"), 
+        print p("Did not have write access to acquire an election lock."), 
           end_html();
         exit 0;
     }
@@ -172,7 +172,7 @@ sub UnlockElection {
 sub StartElection {
     if (sysopen(STARTED, $started_file, &O_RDONLY)) {
 	print h1("Error");
-	print p("This election ($title) has already been started"), end_html();
+	print p("This election ($title) has already been started."), end_html();
 	exit 0;
     }
     if (sysopen(STARTED, $started_file, &O_CREAT | &O_EXCL | &O_RDWR)) {
@@ -180,7 +180,7 @@ sub StartElection {
 	close(STARTED);
     } else {
 	print h1("Error");
-	print p("Did not have write access to start an election"), end_html();
+	print p("Did not have write access to start an election."), end_html();
 	exit 0;
     }
 }
@@ -196,7 +196,7 @@ sub IsStarted {
 sub CheckStarted {
     if (!IsStarted()) {
 	print h1("Error");
-	print p("This election does not exist or has not been started"), end_html();
+	print p("This election does not exist or has not been started."), end_html();
 	exit 0;
     }
 }

@@ -50,6 +50,12 @@ if ($nwin_param && $nwin_param > 0 &&
 my $algorithm = param('algorithm');
 if ($algorithm eq '') { $algorithm = 'beatpath_winner'; }
 
+my $real_prop = $proportional;
+my $show_prop = param('proportional');
+if ($show_prop ne '') {
+    $proportional = $show_prop;
+}
+
 print '<form method="GET"
 	action="'.$thisurl.'"
 	enctype="multipart/form-data"
@@ -309,13 +315,13 @@ sub PrintRanking {
     my @result = @{$_[0]};
     my @matrix = @{$_[1]};
     my $had_tie = 0;
-    print '<ol>';
+    print '<table>';
     my $j = 0;
     my $num_seen = 0;
     for (my $rank = 0; $rank <= $#result; $rank++) {
 	my @winner = @{$result[$rank]};
 	# find the explanatory defeat
-	print '<li value="'.($j+1).'">';
+	print '<tr><td>'.($j+1).'. ';
 	my $ranksize = $#winner + 1;
 	if ($ranksize > 1) {
 	    print '<i>Tied</i>:<br>';
@@ -337,11 +343,11 @@ sub PrintRanking {
 		    my @pwinners = @{$result[$brank]};
 		    for (my $bi = 0; $bi <= $#pwinners; $bi++) {
 			if ($matrix[$pwinners[$bi]][$winner[$i]] >
-			    $matrix[$winner[$i]][$pwinners[$bi]]) {
+			    $matrix[$winner[$i]][$pwinners[$bi]] &&
+			    $pwinners[$bi] != $condorcet_winner) {
 			    $explanation =
-			    escapeHTML($choices[$winner[$i]]).
-				' loses to '.
-				escapeHTML($choices[$pwinners[$bi]]).', '.
+				', loses to '.
+				escapeHTML($choices[$pwinners[$bi]]).' by '.
 				$matrix[$pwinners[$bi]][$winner[$i]].'&ndash;'.
 				$matrix[$winner[$i]][$pwinners[$bi]];
 			    $brank = -1; last;
@@ -349,9 +355,9 @@ sub PrintRanking {
 		    }
 		}
 	    } else {
-		$explanation = escapeHTML($choices[$winner[$i]]).' is top-ranked';
+		$explanation = '';
 	    }
-	    if ($explanation ne '') {
+	    if (0 && $explanation ne '') {
 		print '<span title="',$explanation,'">';
 	    }
 	    if ($num_seen < $num_winners) {
@@ -359,16 +365,27 @@ sub PrintRanking {
 	    } else {
 		print escapeHTML($choices[$winner[$i]]);
 	    }
-	    $choice_rank[$winner[$i]] = $j++;
+	    if ($condorcet_winner != -1 &&
+		$condorcet_winner != $winner[$i]) {
+		print '<span class=explain>&nbsp;&nbsp;loses ';
+		print ' to '.$choices[$condorcet_winner].' by ';
+		print $matrix[$condorcet_winner][$winner[$i]].'&ndash;'.
+			    $matrix[$winner[$i]][$condorcet_winner];
+		print '</span>';
+	    }
 	    if ($explanation ne '') {
+		print '<span class=explain>'.$explanation.'</span>';
+	    }
+	    $choice_rank[$winner[$i]] = $j++;
+	    if (0 && $explanation ne '') {
 		print '</span>';
 	    }
 	    if ($tie) { print '</font>'; }
 	}
 	$num_seen += $#winner + 1;
-	print '</li>';
+	print '</td></tr>';
     }
-    print "</ol>";
+    print '</table>';
     if ($had_tie) {
 	print p("Choices shown in red have tied for being selected.
 		You may wish to select among them randomly.");
@@ -480,6 +497,10 @@ sub PrintProportionalResults {
 		my @ratings = split /,/, $ratings;
 		my $wj = $ratings[$j];
 		my $wk = $ratings[$k];
+		if ($real_prop ne 'yes') {
+		    $wj = $num_choices - $wj;
+		    $wk = $num_choices - $wk;
+		}
 		if ($wj > $wk) { $sjk++; }
 		if ($wk > $wj) { $skj++; }
 	    }
@@ -572,8 +593,14 @@ sub PrintProportionalResults {
         $sum = 0;
 	my $k;
 	for (my $k = 0; $k < $num_winners; $k++) {
-	    @w1[$k] = $ratings[$c1[$k]];
-	    @w2[$k] = $ratings[$c2[$k]];
+	    if ($real_prop eq 'yes') {
+		@w1[$k] = $ratings[$c1[$k]];
+		@w2[$k] = $ratings[$c2[$k]];
+	    } else {
+		@w1[$k] = $num_choices - $ratings[$c1[$k]];
+		@w2[$k] = $num_choices - $ratings[$c2[$k]];
+	    }
+
 	}
 	@w1 = sort {$a <=> $b} @w1;
 	@w2 = sort {$a <=> $b} @w2;
@@ -921,7 +948,10 @@ sub PrintProportionalResults {
     my $combinations = 1;
     my $num_seen = 0;
     for (my $i = 0; $i < $num_winners; $i++) {
-	$combinations = $combinations * ($num_choices - $i);
+	$combinations *= ($num_choices - $i);
+    }
+    for (my $i = 0; $i < $num_winners; $i++) {
+	$combinations /= ($i + 1);
     }
     foreach my $k (keys %seen) {
 	$num_seen++;
