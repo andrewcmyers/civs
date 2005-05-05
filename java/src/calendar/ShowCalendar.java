@@ -13,14 +13,42 @@ public class ShowCalendar extends CalendarAction {
   static final int SUNDAY = java.util.Calendar.SUNDAY;
   static final int YEAR = java.util.Calendar.YEAR;
 
-  final DoCreateEvent doCreateEvent;
+  final Action doCreateEvent;
   final Action setMonth;
   final Input monthInput;
   final Input yearInput;
 
   public ShowCalendar(Main m) {
     super("show", m);
-    doCreateEvent = new DoCreateEvent(main, this);
+    doCreateEvent = new CalendarAction(main) {
+
+      /**
+       * Returns a new Event, filled out with default values.
+       */
+      private Event defaultEvent(Request req) {
+	SecurityPrincipal currentUser = req.getRemoteUserPrincipal();
+	java.util.Calendar c = GregorianCalendar.getInstance();
+	Date start = c.getTime();
+	c.add(Calendar.HOUR_OF_DAY, 1);
+	Date end = c.getTime();
+	Set attendees = new HashSet();
+	attendees.add(currentUser);
+	Set readers = attendees;
+	Set timeReaders = Collections.EMPTY_SET;
+	return new Event(start, end, "", "", attendees, currentUser,
+	    timeReaders, readers);
+      }
+
+      public Page invoke(Request req) throws ServletException {
+	  Event newEvent = defaultEvent(req); 
+	  CreateEditEvent createAction = new CreateEditEvent(main,
+	      new FinishEditingEvent(main, newEvent, true), ShowCalendar.this,
+	      newEvent, false, true);
+	  return createAction.invoke(req);
+      }
+
+      protected boolean clearSessionActionsOnInvoke() { return false; }
+    };
 
     try {
       monthInput = new Input("month", servlet);
@@ -144,9 +172,12 @@ public class ShowCalendar extends CalendarAction {
 
 	      boolean canEdit = canPrincipalEditEvent(curUser, e); 
 	      if (canEdit || canView) {
-	          cell = cell.append(new Hyperlink(req,
-	                                           new CreateEditEvent(main, this, this, e, !canEdit, false),
-	                                           new Text(eventText)));
+	          cell =
+		    cell.append(new Hyperlink(req,
+			  new CreateEditEvent(main,
+			    new FinishEditingEvent(main, e, false), this, e,
+			    !canEdit, false),
+			  new Text(eventText)));
 	      } else {
 	          cell = cell.append(new Text(eventText));
 	      }
@@ -195,6 +226,24 @@ public class ShowCalendar extends CalendarAction {
       return canPrincipalEditEvent(user, e) ||
              canPrincipalSeeEventDetail(user, e) ||
              e.timeReaders.contains(user);
+  }
+
+  class FinishEditingEvent extends CalendarAction {
+    private Event event;
+    private boolean created;
+    public FinishEditingEvent(Main s, Event event, boolean created) {
+      super(s);
+      this.event = event;
+      this.created = created;
+    }
+    
+    public Page invoke(Request req) throws ServletException {
+      if (created) main.cal.events.add(event);
+
+      CalendarSessionState store = (CalendarSessionState)req.getSessionState();
+      store.displayDate.setTime(event.startTime);
+      return ShowCalendar.this.invoke(req);
+    }      
   }
 }
 
