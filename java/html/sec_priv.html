@@ -16,11 +16,11 @@
 	    <h1>Condorcet Internet Voting Service</h1>
 	</td>
 	<td class="bannerright">
-	    <a href="@CIVSURL@">CIVS Home</a>
+	    <a href="@CIVS_URL@">CIVS Home</a>
 	    <br /> 
-	    <a href="@SERVLETURL@?request=create">Create new election</a> 
+	    <a href="@SERVLET_URL@?action=create">Create new election</a> 
 	    <br /> 
-	    <a href="@CIVSURL@/sec_priv.html">About security and privacy</a>
+	    <a href="@CIVS_URL@/sec_priv.html">About security and privacy</a>
 	</td>
 </tr>
 <tr>
@@ -197,9 +197,11 @@ of the voter.
 </ol>
 
 <a name="adding"><h3>Adding a voter</h3></a>
+<p>
 Given an e-mail address <i>e</i>, the server performs the
 following steps when a voter is added (either during
 election creation or later from the election control page):
+</p>
 
 <ol>
 <li>

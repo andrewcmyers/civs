@@ -40,18 +40,20 @@ public class Vote extends CIVSAction {
         int n = election.choices.length;
         Node[] rows_arr = new Node[n];        
         Option[] options = new Option[n+1];
+        Select[] selects = new Select[n];
         for (int i = 0; i < n; i++) {
             options[i] = new Option("" + (i+1));
+            selects[i] = new Select(main, n-1, options);
         }
         options[n] = new Option("No opinion");
         
         int[] permute = Utils.randomPermutation(n);
-            
-        for (int i = 0; i < n; i++) {
+                    
+        for (int i = 0; i < n; i++) {            
             rows_arr[i] = new TRow(new NodeList(
               new NodeList(
-                new TCell(new Text(election.choices[i])),
-                new TCell(new Select(main, i, options)))));
+                new TCell(new Text(election.choices[permute[i]])),
+                new TCell(selects[permute[i]]))));
         }
         NodeList rows = new NodeList(rows_arr);
   	
@@ -74,17 +76,17 @@ public class Vote extends CIVSAction {
                     new Span("emph", new Text("Note:")),
                     new Text("\"No opinion\" is not the same as the lowest possible rank; " +
                             "it genuinely expresses no opinion."))),
-                    main.createForm(castVote, req,
-                          new NodeList(
-                            new Div("ballot",
+                    new Div("ballot",
+                       main.createForm(castVote, req,
+                          new NodeList(                            
                             new Table("ballot",
                               new TRow(new NodeList(
                                  new TCell("choice", new Text("Choice"), 1, true),
                                  new TCell("rank", new Text("Rank"), 1, true)))
                                .setClass("ballot"),
-                              rows).setCellSpacing(0)),
+                              rows).setCellSpacing(0),
                             new SubmitButton(main, "Cast vote"))
-                  )));
+                  ))));
     }
     
     class CastVote extends CIVSAction {

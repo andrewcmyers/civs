@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head>
   <meta http-equiv="Content-Type" content="text/html">
   <title>Condorcet Internet Voting Service</title>
-  <link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+  <link rel="stylesheet" type="text/css" href="@CIVS_URL@/style.css" />
 </head>
 
 <body>
@@ -13,9 +13,9 @@
       Service</h1>
     </td>
     <td width=0% nowrap valign=top align=right>
-	<a href="@CIVSURL@">CIVS Home</a><br>
-	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
-	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a>
+	<a href="@CIVS_URL@">CIVS Home</a><br>
+	<a href="@CIVS_URL@/civs_create.html">Create new election</a><br>
+	<a href="@CIVS_URL@/sec_priv.html">About security and privacy</a>
     </td>
   </tr>
   <tr>
@@ -54,6 +54,7 @@ perfect proportional representation.
 
 <h2>Determining the winning committee</h2>
 
+<p>
 The rule used is a generalization of ordinary Condorcet
 voting. First, preferences expressed on
 individual candidates are lifted to obtain preferences on whole committees of
@@ -62,7 +63,9 @@ Condorcet methods are used to pick the &ldquo;best&rdquo;
 committee. The trick is to lift the preferences in a way
 that doesn't simply let a majority dictate the composition
 of the committee.
+</p>
 
+<p>
 We say that a given voter has an <i>f</i>-preference for
 possible committee <i>A</i> over another, <i>B</i>,
 if the voter prefers <i>A</i> to <i>B</i> when considering only

@@ -59,7 +59,7 @@ abstract public class Servlet extends HttpServlet {
      * @return null if load is acceptable, or else the page to be returned as an
      * error message.
      */
-    protected Node checkLoad() {
+    protected Node checkLoad(Request req) throws ServletException {
         return null;
     }
     
@@ -75,7 +75,7 @@ abstract public class Servlet extends HttpServlet {
             Request req = new Request(this, request);
             PrintWriter rw = response.getWriter();
             
-            Node loadMsg = checkLoad();
+            Node loadMsg = checkLoad(req);
             if (loadMsg != null) {
                 loadMsg.write(new HTMLWriter(rw));
                 rw.close();
@@ -165,6 +165,7 @@ abstract public class Servlet extends HttpServlet {
             return reportError("Access violation", "Improper request",
                                "The request includes no action identifier \"" + req.title() + "\"",
                                req);
+            // XXX why are we using an apparently nonexistent "title" parameter here? --AM
         }
         return reportError("Access violation", "Invalid Action",
                            "The action identifier in the request is invalid: <" + action_name + ">",
@@ -178,7 +179,7 @@ abstract public class Servlet extends HttpServlet {
      * @return the action for the given action name
      */
     private Action findAction(HttpServletRequest request, String action_name) {
-        // first look in the session specific actions, then the start actions
+        // first look in the session-specific actions, then the start actions
         Map sessionActions = getSessionActions(request);
         if (sessionActions.containsKey(action_name)) {
             return (Action)sessionActions.get(action_name);

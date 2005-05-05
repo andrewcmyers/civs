@@ -25,6 +25,8 @@ public final class Main extends Servlet {
     final Input election_id = new Input("id", this);
     final Input voter_key = new Input("key", this);
     
+    static final int MAX_LOAD = 50;
+    
     CIVSAction controlElection, vote, showResults, status, create;
     
     public Main() throws ServletException {}
@@ -46,6 +48,17 @@ public final class Main extends Servlet {
 
     public SessionState createSessionState() {
 	return null;
+    }
+    
+    public Node checkLoad(Request req) throws ServletException {
+        if (concurrentRequests() > MAX_LOAD) {
+            return reportError(req, "CIVS: Load too high", "Load too high",
+                    "Sorry, there are more than " + MAX_LOAD +
+                            "requests being handled now. Please try again later. " +
+                            "If you have already retried, please wait about twice as" +
+                            "long as the last time.");
+        }
+        return null;
     }
     
     // Should we create a new session for every request, or

@@ -107,7 +107,8 @@ public class ControlElection extends CIVSAction {
             tableEntries = tableEntries.append(new TRow(new NodeList(
                     new TCell("desc", new Text("Open poll:"), 1, false),
                     new TCell(new NodeList(new Text("Direct voters to "),
-                            main.createRequest(main.vote, args, req, new Text(voteURL))))
+                            new Span("URL",
+                            main.createRequest(main.vote, args, req, new Text(voteURL)))))
             )));
         }
         
