@@ -20,12 +20,21 @@ public abstract class SessionState {
      * XXX@@@ This should maybe be a ThreadLocal, to allow
      * correct functioning when there are multiple concurrent
      * requests in the same session.
+     * 
+     * XXX The whole idea of currRequest seems irredeemably
+     * broken to me. Making it thread-local seems like a dangerous
+     * hack. --AM
+     * 
+     * @deprecated
      */
     private Request currRequest;
     
+    /** @deprecated */
     Request getCurrentRequest() {
         return currRequest;
     }
+    
+    /** @deprecated */
     void setCurrentRequest(Request req) {
         this.currRequest = req;
     }
