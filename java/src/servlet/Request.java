@@ -26,9 +26,6 @@ public final class Request {
     public String action_name() {
         return request.getParameter("action");
     }
-    public String title() {
-        return request.getParameter("title");
-    }
     public String servletURL() {
         return request.getRequestURL().toString();
         // request.getRequestURL() is equivalent to the string below.

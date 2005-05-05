@@ -187,9 +187,8 @@ abstract public class Servlet extends HttpServlet {
     protected Node invalidActionRequested(Request req, String action_name) throws ServletException {
         if (action_name == null) {
             return reportError("Access violation", "Improper request",
-                               "The request includes no action identifier \"" + req.title() + "\"",
+                               "The request includes no action identifier.",
                                req);
-            // XXX why are we using an apparently nonexistent "title" parameter here? --AM
         }
         return reportError("Access violation", "Invalid Action",
                            "The action identifier in the request is invalid: <" + action_name + ">",
