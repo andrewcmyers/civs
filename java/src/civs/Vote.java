@@ -121,6 +121,11 @@ public class Vote extends CIVSAction {
                             "Invalid Voter Key",
                             "The voter key presented is not authorized to vote in this election.");
             }
+            Rank[] ranks = new Rank[ballot.length];
+            for (int i = 0; i < ballot.length; i++) {
+                String rank = req.getParam(ballot[i]);
+                ranks[i] = Rank.parseRank(rank);
+            }
             // TODO check whether voter key has been used before
             // TODO 1. record vote by appending to log file.
             // TODO 2. compute voter receipt
