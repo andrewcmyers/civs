@@ -11,46 +11,74 @@ public class ShowCalendar extends CalendarAction {
   static final int DAY_OF_WEEK = java.util.Calendar.DAY_OF_WEEK;
   static final int MONTH = java.util.Calendar.MONTH;
   static final int SUNDAY = java.util.Calendar.SUNDAY;
+  static final int YEAR = java.util.Calendar.YEAR;
 
   final DoCreateEvent doCreateEvent;
-  final Action nextMonth;
-  final Action prevMonth;
+  final Action setMonth;
+  final Input monthInput;
+  final Input yearInput;
 
   public ShowCalendar(Main m) {
     super("show", m);
     doCreateEvent = new DoCreateEvent(main, this);
-    nextMonth =
+
+    try {
+      monthInput = new Input("month", servlet);
+      yearInput = new Input("year", servlet);
+    } catch (ServletException e) {
+      throw new RuntimeException(e);
+    }
+
+    setMonth =
       new CalendarAction(main) {
 	public Page invoke(Request req) throws ServletException {
-	  ((CalendarSessionState)req.getSessionState()).displayDate.add(MONTH, 1);
-	  return ShowCalendar.this.invoke(req);
-	}
-      };
-    prevMonth =
-      new CalendarAction(main) {
-	public Page invoke(Request req) throws ServletException {
-	  ((CalendarSessionState)req.getSessionState()).displayDate.add(MONTH, -1);
+	  String month = req.getParam(monthInput);
+	  String year = req.getParam(yearInput);
+
+	  java.util.Calendar cal =
+	    ((CalendarSessionState)req.getSessionState()).displayDate;
+	  cal.set(MONTH, new Integer(month).intValue());
+	  cal.set(YEAR, new Integer(year).intValue());
+
 	  return ShowCalendar.this.invoke(req);
 	}
       };
   }
 
   public Page invoke(Request req) throws ServletException {
-      CalendarSessionState store = (CalendarSessionState)req.getSessionState();
-      if (store.displayDate == null) {
-          store.displayDate = java.util.Calendar.getInstance();
-      }
-      if (store.displayUser == null) {
-          store.displayUser = req.getRemoteUserPrincipal();
-      }
-      
-      NodeList content = new NodeList(monthView(req));
+    CalendarSessionState store = (CalendarSessionState)req.getSessionState();
+
+    if (store.displayDate == null) {
+	store.displayDate = java.util.GregorianCalendar.getInstance();
+    }
+
+    if (store.displayUser == null) {
+	store.displayUser = req.getRemoteUserPrincipal();
+    }
+
+    java.util.Calendar cal = (java.util.Calendar)store.displayDate.clone();
+    cal.add(MONTH, -1);
+    String prevMonth = new Integer(cal.get(MONTH)).toString();
+    String prevYear = new Integer(cal.get(YEAR)).toString();
+    cal.add(MONTH, 2);
+    String nextMonth = new Integer(cal.get(MONTH)).toString();
+    String nextYear = new Integer(cal.get(YEAR)).toString();
+
+    Map prevMonthInput = new HashMap();
+    prevMonthInput.put(monthInput, prevMonth);
+    prevMonthInput.put(yearInput, prevYear);
+
+    Map nextMonthInput = new HashMap();
+    nextMonthInput.put(monthInput, nextMonth);
+    nextMonthInput.put(yearInput, nextYear);
+
+    NodeList content = new NodeList(monthView(req));
     content =
-      content.append(new Paragraph(new Hyperlink(req, prevMonth,
-	      new Text("Previous month"))));
+      content.append(new Paragraph(servlet.createRequest(setMonth,
+	      prevMonthInput, req, new Text("Previous month"))));
     content =
-      content.append(new Paragraph(new Hyperlink(req, nextMonth,
-	      new Text("Next month"))));
+      content.append(new Paragraph(servlet.createRequest(setMonth,
+	      nextMonthInput, req, new Text("Next month"))));
     content =
       content.append(new Paragraph(new Hyperlink(req, doCreateEvent,
 	      new Text("Create new event"))));
@@ -90,7 +118,7 @@ public class ShowCalendar extends CalendarAction {
 
     // Loop week-by-week until we hit our begin date.
     SimpleDateFormat timeSDF = (SimpleDateFormat)sdf.clone();
-    timeSDF.applyPattern("KK:mm");
+    timeSDF.applyPattern("HH:mm");
     while (!endDate.equals(nextDate)) {
       NodeList row = NodeList.EMPTY;
       for (int count = 0; count < 7; count++) {

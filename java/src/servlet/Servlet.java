@@ -301,6 +301,7 @@ abstract public class Servlet extends HttpServlet {
         
         // XXX check inputs against the request?
         String url = createRequestURL(a, inputs, req);
+        addAction(a, req);
         return new Hyperlink(url, body);
     }
     

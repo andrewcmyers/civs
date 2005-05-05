@@ -38,6 +38,8 @@ public class DoCreateEvent extends CalendarAction {
       return createAction.invoke(req);
   }
 
+  protected boolean clearSessionActionsOnInvoke() { return false; }
+
   class ReceiveCreatedEvent extends CalendarAction {
       private Action returnAction;
       private Event event;
