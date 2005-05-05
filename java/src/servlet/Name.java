@@ -8,12 +8,12 @@ import java.io.Serializable;
  * they are made of chars.
  */
 public class Name implements Serializable {
-    byte[] chars;
+    byte[] bytes;
     int hash_code;
     /** Construct a Name from the raw byte data. */
     Name(byte[] c) {
-        chars = c;
-        hash_code = new String(chars).hashCode();
+        bytes = c;
+        hash_code = new String(bytes).hashCode();
     }
     /** Construct a Name from a hex-encoded string. */
     public static int dehex(char c) {
@@ -26,17 +26,17 @@ public class Name implements Serializable {
      * must have even length.
      * @param s
      */
-    Name(String s) {
-        if (s.length() % 2 != 0) {
+    public Name(String s) {
+        if (s == null || s.length() % 2 != 0) {
             throw new IllegalArgumentException("Invalid name encoding: " + s);
         }
-        chars = new byte[s.length() / 2];
+        bytes = new byte[s.length() / 2];
         for (int i = 0; i < s.length()-1; i = i + 2) {
             char hc = s.charAt(i);
             char lc = s.charAt(i+1);
-            chars[i/2] = (byte)(dehex(hc)*16 + dehex(lc));	
+            bytes[i/2] = (byte)(dehex(hc)*16 + dehex(lc));	
         }
-        hash_code = new String(chars).hashCode();
+        hash_code = new String(bytes).hashCode();
     }
     public int hashCode() {
         return hash_code;
@@ -44,9 +44,9 @@ public class Name implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof Name) {
             Name n = (Name)o;
-            if (chars.length != n.chars.length) return false;
-            for (int i = 0; i < chars.length; i++) {
-                if (chars[i] != n.chars[i]) return false;
+            if (bytes.length != n.bytes.length) return false;
+            for (int i = 0; i < bytes.length; i++) {
+                if (bytes[i] != n.bytes[i]) return false;
             }
             return true;				
         } else {
@@ -55,8 +55,8 @@ public class Name implements Serializable {
     }
     String toHex() {
         String r = "";
-        for (int i = 0; i < chars.length; i++) {
-            byte b = chars[i];
+        for (int i = 0; i < bytes.length; i++) {
+            byte b = bytes[i];
             int h = (b & 0xF0) >> 4;
             int l = (b & 0x0F);
             char hc, lc;

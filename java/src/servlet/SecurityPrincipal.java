@@ -1,8 +1,5 @@
 package servlet;
 
-import java.util.Iterator;
-import java.util.Set;
-
 /**
  * A security principal. This is a place holder, and when we integrate with
  * Jif should be replaced with jif.lang.Principal, that is, Jif's runtime 

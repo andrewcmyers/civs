@@ -1,7 +1,5 @@
 package servlet;
 
-import java.util.*;
-
 /**
  * A session principal. This principal represents an HTTP session.
  */

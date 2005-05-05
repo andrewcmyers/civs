@@ -25,7 +25,7 @@ public class CreateElection extends CIVSAction {
     final InputNode bpw = new RadioButton(completion_method, "beatpath_winner", true);
     final InputNode crp = new RadioButton(completion_method, "civs_rp", false);
     final InputNode mam = new RadioButton(completion_method, "MAM", false);
-    final InputNode names_chooser = new FileChooser(main);
+    final InputNode choices_chooser = new FileChooser(main);
     
     final FinishCreate finishCreate = new FinishCreate();
     
@@ -87,7 +87,7 @@ public class CreateElection extends CIVSAction {
 			              typein_explained(choices_inp, "Enter one choice per line."))),
 			            new TRow(new NodeList(
 			              desc("Or upload choice names:"),
-			              new TCell(names_chooser))))
+			              new TCell(choices_chooser))))
 			            .append(new TRow(new NodeList(
 			              desc("Description of election:"),
 			              new TCell(description_inp))))
@@ -147,9 +147,7 @@ public class CreateElection extends CIVSAction {
 			if (s.matches("[ \t\r\n]*")) throw new IllegalArgumentException(msg);
 			return s;
 		}
-		boolean isValidEmail(String email) {
-			return true;
-		}
+
 		boolean validChoice(String c, Vector current) {
 			if (c.equals("")) return false;
 			if (current.contains(c)) return false;
@@ -159,8 +157,7 @@ public class CreateElection extends CIVSAction {
 		public Page invoke(Request req) throws ServletException {
 			// parse the request.
 	      Election election = new Election();
-		  try {
-			
+		  try {			
 			election.id = "E_" + main.generateNonce();
 			election.allow_writeins = writein_checkbox.isChecked(req);
 			election.title = nonEmptyParam(title_inp, req, "election title");
@@ -170,7 +167,7 @@ public class CreateElection extends CIVSAction {
 				election.description = "(none)";
 			}
 			election.email = req.getParam(email_addr_inp);
-			if (election.email == null || !isValidEmail(election.email)) {
+			if (election.email == null || !Misc.isValidEmail(election.email)) {
 				throw new IllegalArgumentException("e-mail address");
 			}
 			election.ends = nonNullParam(election_end_inp, req, "election end time");
@@ -181,30 +178,38 @@ public class CreateElection extends CIVSAction {
 			String[] choices1 = req.getParam(choices_inp).split("[\r\n][\r\n]*");
 			Vector choices2 = new Vector();
 			for (int i = 0; i < choices1.length; i++) {
-				if (validChoice(choices1[i], choices2)) {
+				if (validChoice(choices1[i], choices2))
 					choices2.add(choices1[i]);
-				}
+			}
+			String uploaded = req.getParam(choices_chooser);
+			if (uploaded != null) {
+			    choices1 = uploaded.split("[\r\n][\r\n]*");
+			    for (int i = 0; i < choices1.length; i++) {
+			        if (validChoice(choices1[i], choices2)) {
+			            choices2.add(choices1[i]);
+			        }
+			    }			
 			}
 			
 			if (choices2.size() <= 1)
-				throw new IllegalArgumentException("list of choices");
+			    throw new IllegalArgumentException("list of choices");
 			election.choices = new String[choices2.size()];
 		    choices2.toArray(election.choices);
 			election.num_winners = Integer.parseInt(req.getParam(num_winners_inp));
 			if (election.num_winners < 1 ||
-					election.num_winners >= election.choices.length) {
-				throw new IllegalArgumentException("number of winners");
+			        election.num_winners >= election.choices.length) {
+			    throw new IllegalArgumentException("number of winners");
 			}
 		  }
 		  catch (NumberFormatException e) {
 		  	throw new IllegalArgumentException("number of winners");
 		  }
 		  catch (IllegalArgumentException e) {
-		  	return main.createPage("CIVS: Failed election creation",
-		  			new NodeList(main().banner("Failed election creation", req),
-		  					new Paragraph(new Text("The election was not created " +
-		  							"because of an invalid " + e.getMessage()))
-		  			));
+		      return main.createPage("CIVS: Failed election creation",
+		              new NodeList(main().banner("Failed election creation", req),
+		                      new Paragraph(new Text("The election was not created " +
+		                              "because of an invalid " + e.getMessage()))
+		              ));
 		  }
 		  String auth_key = main.generateNonce();
 		  String control_key = main.generateNonce();

@@ -1,7 +1,6 @@
 package servlet;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * A Request represents an HTTP request from
@@ -25,6 +24,9 @@ public final class Request {
     }
     public String action_name() {
         return request.getParameter("action");
+    }
+    public String remoteAddr() {
+        return request.getRemoteAddr();
     }
     public String servletURL() {
         return request.getRequestURL().toString();

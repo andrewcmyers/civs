@@ -11,8 +11,6 @@ import servlet.*;
  */
 public class Vote extends CIVSAction {
     
-    CIVSAction castVote = new CastVote(main);
-    
     Vote(Main main) {
         super("vote", main);
     }
@@ -47,7 +45,9 @@ public class Vote extends CIVSAction {
         }
         options[n] = new Option("No opinion");
         
-        int[] permute = Utils.randomPermutation(n);
+        int[] permute = Misc.randomPermutation(n);
+        // XXX Can we view permute as being computed by the Chaum tellers? How to 
+        // XXX pass through to the client?
                     
         for (int i = 0; i < n; i++) {            
             rows_arr[i] = new TRow(new NodeList(
@@ -77,34 +77,59 @@ public class Vote extends CIVSAction {
                     new Text("\"No opinion\" is not the same as the lowest possible rank; " +
                             "it genuinely expresses no opinion."))),
                     new Div("ballot",
-                       main.createForm(castVote, req,
+                       main.createForm(new CastVote(main, selects, election), req,
                           new NodeList(                            
                             new Table("ballot",
                               new TRow(new NodeList(
                                  new TCell("choice", new Text("Choice"), 1, true),
                                  new TCell("rank", new Text("Rank"), 1, true)))
                                .setClass("ballot"),
-                              rows).setCellSpacing(0),
+                              rows).setCellSpacing(0), 
                             new SubmitButton(main, "Cast vote"))
                   ))));
     }
     
     class CastVote extends CIVSAction {
+        Select[] ballot;
+        Election election;
 
         /**
          * @param main_
          */
-        CastVote(Main main_) {
+        CastVote(Main main_, Select[] ballot_, Election election_) {
             super(main_);
-            // TODO Auto-generated constructor stub
+            ballot = ballot_;
+            election = election_;
+            
         }
 
         /* (non-Javadoc)
          * @see servlet.Action#invoke(servlet.Request)
          */
         public Page invoke(Request req) throws ServletException {
-            // TODO Auto-generated method stub
-            return null;
+            // TODO 0. Determine/check voter key
+
+            String voter_key_s;
+            if (election.open_poll) {
+                voter_key_s = req.remoteAddr();
+            } else {
+                voter_key_s = req.getParam(main.voter_key);
+                Name voter_key = voter_key_s != null ? new Name(voter_key_s) : null;
+                if (!election.isAuthorized(voter_key))
+                    return main.reportError(req,
+                            "CIVS: Invalid voter key",
+                            "Invalid Voter Key",
+                            "The voter key presented is not authorized to vote in this election.");
+            }
+            // TODO check whether voter key has been used before
+            // TODO 1. record vote by appending to log file.
+            // TODO 2. compute voter receipt
+            Node[] results = new Node[ballot.length];
+            for (int i = 0; i < ballot.length; i++) {
+                results[i] = new Paragraph(new Text(election.choices[i] + ": " +
+                        req.getParam(ballot[i])));
+            }
+            return main.createPage("CIVS: Voting receipt", new NodeList(results));
         }
     }
     

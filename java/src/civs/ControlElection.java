@@ -2,6 +2,7 @@ package civs;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.ServletException;
 
@@ -48,7 +49,7 @@ public class ControlElection extends CIVSAction {
     Page electionReport(Election election, Request req) throws ServletException {
         String status;
         
-        if (election.stopped) {
+        if (election.isStopped()) {
             status = "Ended " + election.actual_end + " (was announced to end " +
             election.ends + ").";
         } else {
@@ -110,6 +111,10 @@ public class ControlElection extends CIVSAction {
                             new Span("URL",
                             main.createRequest(main.vote, args, req, new Text(voteURL)))))
             )));
+        } else {
+            tableEntries = tableEntries.append(new TRow(new NodeList(
+                    new TCell("desc", new Text("Authorized voters:"), 1, false),
+                    new TCell(new Text("" + election.numAuthVoters())))));
         }
         
         tableEntries = tableEntries.append(new TRow(new NodeList(
@@ -120,7 +125,7 @@ public class ControlElection extends CIVSAction {
           new NodeList(
             main.banner("Election Control: " + election.title, req),
             new Table("electionControl", null, tableEntries),
-            (!election.stopped) ?
+            (!election.isStopped()) ?
               new NodeList(
                       main.createForm(
                         new StopElection(main, election),
@@ -168,6 +173,29 @@ public class ControlElection extends CIVSAction {
          */
         public Page invoke(Request req) throws ServletException {
             // TODO Auto-generated method stub
+            String s1 = req.getParam(voters_inp);
+            String s2 = req.getParam(voters_upload);
+            String auth_key = req.getParam(main.auth_key);
+            String[] voters1 = s1.split("[\r\n][\r\n]*");
+
+            Vector voters2 = new Vector();
+            
+            for (int i = 0; i < voters1.length; i++) {
+                if (Misc.isValidEmail(voters1[i]))
+                    voters2.add(voters1[i]);
+            }
+            
+            String uploaded = req.getParam(voters_upload);
+            if (uploaded != null) {
+                voters1 = uploaded.split("[\r\n][\r\n]*");
+                for (int i = 0; i < voters1.length; i++) {
+                    if (Misc.isValidEmail(voters1[i]) &&
+                            !voters2.contains(voters1[i])) {
+                        voters2.add(voters1[i]);
+                    }
+                }			
+            }
+            Map m = election.addVoters(auth_key, voters2, main);
             return null;
         }
     }

@@ -51,10 +51,16 @@ public class Nonce {
         }
         return md;
     }
-    public static Name md5(String s) throws ServletException {
+    public static Name md5(byte[] bytes) throws ServletException {
         MessageDigest md = newMD5Digest();
-        md.update(s.getBytes());
-        return digestToName(md.digest());	
+        md.update(bytes);
+        return digestToName(md.digest());
+    }
+    public static Name md5(String s) throws ServletException {
+        return md5(s.getBytes());	
+    }
+    public static Name md5(Name n) throws ServletException {
+        return md5(n.bytes);
     }
     void addRandom() throws IOException {		
         char sep = File.separatorChar;
