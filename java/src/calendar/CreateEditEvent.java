@@ -134,8 +134,10 @@ public class CreateEditEvent extends CalendarAction {
 		inpNode(inpStart, DateUtil.dateToString(this.event.startTime),
 		  errors))));
 	entries = entries.append(new TRow(new NodeList(desc("End:"),
-		inpNode(inpEnd, DateUtil.dateToString(this.event.endTime),
-		  errors))));
+	                               		inpNode(inpEnd, DateUtil.dateToString(this.event.endTime),
+	                               		  errors))));
+	entries = entries.append(new TRow(new NodeList(desc("Creator:"),
+	                               		desc(this.event.creator.fullName()))));
 	entries = entries.append(new TRow(new NodeList(desc("Note:"),
 		inpNode(inpNote, this.event.note, errors))));
         if (!readOnly) {

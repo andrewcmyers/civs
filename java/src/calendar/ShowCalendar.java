@@ -22,21 +22,29 @@ public class ShowCalendar extends CalendarAction {
     nextMonth =
       new CalendarAction(main) {
 	public Page invoke(Request req) throws ServletException {
-	  ((CalendarSessionState)req.getSessionState()).date.add(MONTH, 1);
+	  ((CalendarSessionState)req.getSessionState()).displayDate.add(MONTH, 1);
 	  return ShowCalendar.this.invoke(req);
 	}
       };
     prevMonth =
       new CalendarAction(main) {
 	public Page invoke(Request req) throws ServletException {
-	  ((CalendarSessionState)req.getSessionState()).date.add(MONTH, -1);
+	  ((CalendarSessionState)req.getSessionState()).displayDate.add(MONTH, -1);
 	  return ShowCalendar.this.invoke(req);
 	}
       };
   }
 
   public Page invoke(Request req) throws ServletException {
-    NodeList content = new NodeList(monthView(req));
+      CalendarSessionState store = (CalendarSessionState)req.getSessionState();
+      if (store.displayDate == null) {
+          store.displayDate = java.util.Calendar.getInstance();
+      }
+      if (store.displayUser == null) {
+          store.displayUser = req.getRemoteUserPrincipal();
+      }
+      
+      NodeList content = new NodeList(monthView(req));
     content =
       content.append(new Paragraph(new Hyperlink(req, prevMonth,
 	      new Text("Previous month"))));
@@ -53,13 +61,10 @@ public class ShowCalendar extends CalendarAction {
   private Node monthView(Request req) {
     // Obtain the session store.
     CalendarSessionState store = (CalendarSessionState)req.getSessionState();
-
-    // XXX - where is this information stored?
-    User reader = Main.USER;
-    User user = Main.USER;
+    SecurityPrincipal curUser = req.getRemoteUserPrincipal();
 
     // Normalize the date argument to fall on midnight.
-    Date date = DateUtil.toMidnight(store.date.getTime());
+    Date date = DateUtil.toMidnight(store.displayDate.getTime());
 
     // Get start date -- the last Sunday on or before the beginning of the
     // month.
@@ -100,27 +105,23 @@ public class ShowCalendar extends CalendarAction {
 	  main.cal.events.subSet(new Event(curDate), new Event(nextDate));
 	List events = new LinkedList();
 	for (Iterator it = subSet.iterator(); it.hasNext(); ) {
-	  Event e = (Event)it.next();
-	  if (e.timeReaders.contains(reader) && e.attendees.contains(user)) {
-	    cell = cell.append(new Br());
+	  Event e = (Event)it.next();	  
+	  if (eventOnPrincipalsCal(store.displayUser, e) && 
+	          canPrincipalSeeEventTime(curUser, e)) {
+	      cell = cell.append(new Br());
+	      boolean canView = canPrincipalSeeEventDetail(curUser, e);
+	      String name = canView?e.name:"busy";
+	      	  
+	      String eventText = timeSDF.format(e.startTime) + " " + name;
 
-	    String name = "Busy";
-	    boolean canView = false;
-	    if (e.readers.contains(reader)) {
-	        name = e.name;
-	        canView = true;
-	    }
-		
-	    String eventText = timeSDF.format(e.startTime) + " " + name;
-
-	    boolean canEdit = user.equals(e.creator);
-	    if (canEdit || canView) {
-	      cell = cell.append(new Hyperlink(req,
-		    new CreateEditEvent(main, this, this, e, !canEdit, false),
-		    new Text(eventText)));
-	    } else {
-	      cell = cell.append(new Text(eventText));
-	    }
+	      boolean canEdit = canPrincipalEditEvent(curUser, e); 
+	      if (canEdit || canView) {
+	          cell = cell.append(new Hyperlink(req,
+	                                           new CreateEditEvent(main, this, this, e, !canEdit, false),
+	                                           new Text(eventText)));
+	      } else {
+	          cell = cell.append(new Text(eventText));
+	      }
 	  }
 	}
 
@@ -148,6 +149,24 @@ public class ShowCalendar extends CalendarAction {
 
     header = header.append(new TRow(dowRow));
     return new Table(header,body);
+  }
+  
+  private boolean eventOnPrincipalsCal(SecurityPrincipal user, Event e) {
+      return e.attendees.contains(user);
+  }
+  
+  private boolean canPrincipalEditEvent(SecurityPrincipal user, Event e) {
+      return user.equals(e.creator);	  
+  }
+  
+  private boolean canPrincipalSeeEventDetail(SecurityPrincipal user, Event e) {
+      return e.attendees.contains(user) || canPrincipalEditEvent(user, e);
+  }
+  
+  private boolean canPrincipalSeeEventTime(SecurityPrincipal user, Event e) {
+      return canPrincipalEditEvent(user, e) ||
+             canPrincipalSeeEventDetail(user, e) ||
+             e.timeReaders.contains(user);
   }
 }
 

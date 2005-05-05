@@ -2,6 +2,8 @@ package calendar;
 
 import java.util.*;
 
+import servlet.SecurityPrincipal;
+
 /**
  * An Event represents an entry in the calendar system.  A single Event object
  * is shared amongst all users involved in that event.
@@ -14,7 +16,7 @@ public class Event implements Comparable {
   String name;
   String note;
   Set attendees;
-  User creator;
+  SecurityPrincipal creator;
 
   // Access control
   Set timeReaders;  // Users who can read start/end time and attendees.
@@ -30,7 +32,7 @@ public class Event implements Comparable {
   }
 
   public Event(Date startTime, Date endTime, String name, String note,
-      Set attendees, User creator, Set timeReaders, Set readers) {
+      Set attendees, SecurityPrincipal creator, Set timeReaders, Set readers) {
     this.startTime = startTime;
     this.endTime = endTime;
     this.name = name;

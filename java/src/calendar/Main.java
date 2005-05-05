@@ -9,15 +9,6 @@ public final class Main extends Servlet {
   Calendar cal;
   Map servletParams;
 
-  // XXX - A dummy user until we figure out how we're representing users.
-  public static final User USER;
-  static {
-    USER = new User();
-    USER.id = "guest";
-    USER.name = "Guest";
-    USER.password = "";
-  }
-
   public Main() {
     cal = new Calendar();
     servletParams = new HashMap();

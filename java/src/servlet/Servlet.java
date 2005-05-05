@@ -136,11 +136,9 @@ abstract public class Servlet extends HttpServlet {
                 }
             }
 
-            // now action is not null
-            if (action.clearSessionActionsOnInvoke()) {
-                getSessionActions(request).clear();
-            }
+            preActionInvoke(action, req);
             Node n = action.invoke(req);				
+            postActionInvoke(n, action, req);
 
             if (n != null) {
                 n.write(new HTMLWriter(rw));
@@ -156,6 +154,32 @@ abstract public class Servlet extends HttpServlet {
         finally { decrement_req_cnt(); }
     }
     
+    /**
+     * Called just before servlet calls the method invoke on the action.
+     * @param action the Action to have invoke called on it
+     * @param req the request for this action
+     */
+    private void preActionInvoke(Action action, Request req) {
+        // now action is not null
+        if (action.clearSessionActionsOnInvoke()) {
+            getSessionActions(req.request).clear();
+        }
+        
+        // set the Request in the session state.
+        req.getSessionState().setCurrentRequest(req);
+    }
+
+    /**
+     * Called just before servlet calls the method invoke on the action.
+     * @param n the Node returned by invoke
+     * @param action the Action that just had invoke called on it
+     * @param req the request for this action
+     */
+    private void postActionInvoke(Node n, Action action, Request req) {
+        // clear the Request in the session state.
+        req.getSessionState().setCurrentRequest(null);
+    }
+
     /**
      * @return
      * @throws ServletException

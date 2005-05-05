@@ -8,10 +8,6 @@
     <servlet>
       <servlet-name>calendar</servlet-name>
       <servlet-class>calendar.Main</servlet-class>
-      <init-param>
-	<param-name>servlet_host</param-name>
-	<param-value>@SERVLET_HOST@</param-value>
-      </init-param>
     </servlet>
     <servlet-mapping>
       <servlet-name>calendar</servlet-name>
@@ -26,12 +22,29 @@
        A toy calendar servlet.
     </description>
 
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Protected Site </web-resource-name>
+      <!-- This protects the entire site -->
+      <url-pattern> /* </url-pattern>
+    </web-resource-collection>
+
+    <auth-constraint>
+      <!-- Any role has access -->
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+  <!-- require BASIC authentication -->
+  <login-config>
+    <auth-method> BASIC </auth-method>
+    <realm-name>Toy Calendar</realm-name>
+  </login-config>
 
     <!-- Define the default session timeout for your application,
          in minutes.  From a servlet or JSP page, you can modify
          the timeout for a particular session dynamically by using
          HttpSession.getMaxInactiveInterval(). -->
-
     <session-config>
       <session-timeout>30</session-timeout>    <!-- 30 minutes -->
     </session-config>

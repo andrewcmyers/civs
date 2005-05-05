@@ -1,12 +1,13 @@
 package calendar;
 
+import servlet.SecurityPrincipal;
 import servlet.SessionState;
 
 public class CalendarSessionState extends SessionState {
-  java.util.Calendar date;
+  java.util.Calendar displayDate = null;
+  SecurityPrincipal displayUser = null;
 
   public CalendarSessionState() {
-    date = java.util.GregorianCalendar.getInstance();
   }
 }
 
