@@ -15,6 +15,7 @@ body { background-color: #d0ffe8 }
 table { background-color: #e0fff0 }
 table.matrix {background-color: #e0f0ff}
 table.form {background-color: transparent}
+table.form p {width: 100%}
 table.createForm, table.electionControl {border-style: solid; border-color: #b0dfc8; border-width: 1}
 table.ballot { border-style: solid; padding: 1; border-color: #b0dfc8; border-width: 1; text-align: center}
 table.ballot thead tr th { background-color: #008000 }
@@ -83,8 +84,8 @@ td.lose { font-family: Courier New, courier, fixed; text-align:center;
 td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
 table.matrix th { background-color: transparent; color: black }
-table.links { border-color: black; border-style: solid;
-    border-width: 1; width: 40em }
+table.links { border-color: #b0dfc8; border-style: solid;
+    border-width: 2; width: 40em; }
 
 
 tr.selected { background-color: #ffffd0 }

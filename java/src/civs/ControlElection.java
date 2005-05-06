@@ -172,7 +172,6 @@ public class ControlElection extends CIVSAction {
          * @see servlet.Action#invoke(servlet.Request)
          */
         public Page invoke(Request req) throws ServletException {
-            // TODO Auto-generated method stub
             String s1 = req.getParam(voters_inp);
             String s2 = req.getParam(voters_upload);
             String auth_key = req.getParam(main.auth_key);

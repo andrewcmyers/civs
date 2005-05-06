@@ -3,7 +3,7 @@ package servlet;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * A Request represents an HTTP request from
+ * A Request represents an (HTTP) request from
  * the client. There are two kinds of requests:
  * initial requests that start a new session,
  * and requests that are part of an existing session.

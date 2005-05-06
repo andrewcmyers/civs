@@ -110,11 +110,13 @@ public class Vote extends CIVSAction {
             // TODO 0. Determine/check voter key
 
             String voter_key_s;
+            Name voter_key;
             if (election.open_poll) {
                 voter_key_s = req.remoteAddr();
+                voter_key = Nonce.md5(voter_key_s);
             } else {
                 voter_key_s = req.getParam(main.voter_key);
-                Name voter_key = voter_key_s != null ? new Name(voter_key_s) : null;
+                voter_key = voter_key_s != null ? new Name(voter_key_s) : null;
                 if (!election.isAuthorized(voter_key))
                     return main.reportError(req,
                             "CIVS: Invalid voter key",
@@ -126,6 +128,9 @@ public class Vote extends CIVSAction {
                 String rank = req.getParam(ballot[i]);
                 ranks[i] = Rank.parseRank(rank);
             }
+            Ballot b = new Ballot();
+            b.rankings = ranks;
+            b.voter_key_hash = Nonce.md5(voter_key);
             // TODO check whether voter key has been used before
             // TODO 1. record vote by appending to log file.
             // TODO 2. compute voter receipt

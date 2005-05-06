@@ -1,9 +1,11 @@
 package civs;
 
+import servlet.Name;
+
 /**
  * @author andru
  */
 public class Ballot {
-    String voter_key_hash;
+    Name voter_key_hash;
     Rank[] rankings;
 }
