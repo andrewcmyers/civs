@@ -2,9 +2,10 @@ package servlet;
 
 /**
  * Global state for a single session.
+ * XXX I made this non-abstract. Not sure why it can't be used as is... --AM
  */
 
-public abstract class SessionState {
+public class SessionState {
     /**
      * Principal representing this session.
      */

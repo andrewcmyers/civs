@@ -53,8 +53,9 @@ abstract public class Servlet extends HttpServlet {
         return new Form(action, req, body);
     }
     
-    /** checkLoad implements load checking for the servlet,
-     * probably by comparing concurrentRequests() against some
+    /** checkLoad implements load checking for the servlet. This
+     * behavior is supplied by the servlet implementation. A typical
+     * implementation would be to compare concurrentRequests() against some
      * specified maximum.
      * @return null if load is acceptable, or else the page to be returned as an
      * error message.
@@ -338,5 +339,7 @@ abstract public class Servlet extends HttpServlet {
         inputNames.add(n);
     }
 
-    public abstract SessionState createSessionState();
+    public SessionState createSessionState() {
+        return new SessionState();
+    }
 }

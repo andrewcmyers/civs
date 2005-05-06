@@ -164,7 +164,7 @@ public class CreateElection extends CIVSAction {
 			election.name = nonEmptyParam(name_inp, req, "name");
 			election.description = nonNullParam(description_inp, req, "election description");
 			if (election.description.matches("[ \t\r\n]*")) {
-				election.description = "(none)";
+				election.description = "(No election description)";
 			}
 			election.email = req.getParam(email_addr_inp);
 			if (election.email == null || !Misc.isValidEmail(election.email)) {

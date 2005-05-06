@@ -45,10 +45,6 @@ public final class Main extends Servlet {
         addStartAction(showResults);				// election_id
         // XXX Do we need the inputs?        
     }
-
-    public SessionState createSessionState() {
-	return null;
-    }
     
     public Node checkLoad(Request req) throws ServletException {
         if (concurrentRequests() > MAX_LOAD) {
