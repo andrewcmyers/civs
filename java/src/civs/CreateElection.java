@@ -222,7 +222,9 @@ public class CreateElection extends CIVSAction {
 		  args.put(main.auth_key, auth_key);
 		  args.put(main.ctrl_key, control_key);
 		  Node control_url = main.createRequest(main.controlElection, args,
-		  		req, new Text("Control election"));
+		  		req, new NodeList(new Text("Control"),
+		  		        new SpecialChar("nbsp"),
+		  		        new Text("election")));
 		  		
 		  String home_url = main.civs_host() + main.civs_url();
 		  Node email = new NodeList(		         
