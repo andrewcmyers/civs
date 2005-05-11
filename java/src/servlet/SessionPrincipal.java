@@ -17,7 +17,7 @@ public class SessionPrincipal extends SecurityPrincipal {
         if (this.equals(principal)) return true;
         SecurityPrincipal u = session.getSessionPrincipal();
         if (u != null) {
-            return u.actsFor(principal);
+            return SecurityPrincipalUtil.actsFor(u, principal);
         }
         return false;
     }    

@@ -26,7 +26,7 @@ public class ShowCalendar extends CalendarAction {
        * Returns a new Event, filled out with default values.
        */
       private Event defaultEvent(Request req) {
-	SecurityPrincipal currentUser = req.getRemoteUserPrincipal();
+	User currentUser = ((CalendarSessionState)req.getSessionState()).currentUser;
 	java.util.Calendar c = GregorianCalendar.getInstance();
 	Date start = c.getTime();
 	c.add(Calendar.HOUR_OF_DAY, 1);
@@ -76,12 +76,15 @@ public class ShowCalendar extends CalendarAction {
   public Page invoke(Request req) throws ServletException {
     CalendarSessionState store = (CalendarSessionState)req.getSessionState();
 
+    Page loginPage = ensureLoggedIn(req);
+    if (loginPage != null) return loginPage;
+    
     if (store.displayDate == null) {
 	store.displayDate = java.util.GregorianCalendar.getInstance();
     }
 
     if (store.displayUser == null) {
-	store.displayUser = req.getRemoteUserPrincipal();
+	store.displayUser = store.currentUser;
     }
 
     java.util.Calendar cal = (java.util.Calendar)store.displayDate.clone();
@@ -117,7 +120,6 @@ public class ShowCalendar extends CalendarAction {
   private Node monthView(Request req) {
     // Obtain the session store.
     CalendarSessionState store = (CalendarSessionState)req.getSessionState();
-    SecurityPrincipal curUser = req.getRemoteUserPrincipal();
 
     // Normalize the date argument to fall on midnight.
     Date date = DateUtil.toMidnight(store.displayDate.getTime());
@@ -157,20 +159,19 @@ public class ShowCalendar extends CalendarAction {
 	NodeList cell = new NodeList(new Text(sdf.format(curDate)));
 
 	// Output events on the current date that we care about.
-	Set subSet =
-	  main.cal.events.subSet(new Event(curDate), new Event(nextDate));
-	List events = new LinkedList();
+	Set subSet = main.cal.events.subSet(new Event(curDate), new Event(nextDate));
+
 	for (Iterator it = subSet.iterator(); it.hasNext(); ) {
 	  Event e = (Event)it.next();	  
-	  if (eventOnPrincipalsCal(store.displayUser, e) && 
-	          canPrincipalSeeEventTime(curUser, e)) {
+	  if (eventOnUsersCal(store.displayUser, e) && 
+	          canUserSeeEventTime(store.currentUser, e)) {
 	      cell = cell.append(new Br());
-	      boolean canView = canPrincipalSeeEventDetail(curUser, e);
+	      boolean canView = canUserSeeEventDetail(store.currentUser, e);
 	      String name = canView?e.name:"busy";
 	      	  
 	      String eventText = timeSDF.format(e.startTime) + " " + name;
 
-	      boolean canEdit = canPrincipalEditEvent(curUser, e); 
+	      boolean canEdit = canUserEditEvent(store.currentUser, e); 
 	      if (canEdit || canView) {
 	          cell =
 		    cell.append(new Hyperlink(req,
@@ -210,21 +211,21 @@ public class ShowCalendar extends CalendarAction {
     return new Table(header,body);
   }
   
-  private boolean eventOnPrincipalsCal(SecurityPrincipal user, Event e) {
+  private boolean eventOnUsersCal(User user, Event e) {
       return e.attendees.contains(user);
   }
   
-  private boolean canPrincipalEditEvent(SecurityPrincipal user, Event e) {
+  private boolean canUserEditEvent(User user, Event e) {
       return user.equals(e.creator);	  
   }
   
-  private boolean canPrincipalSeeEventDetail(SecurityPrincipal user, Event e) {
-      return e.attendees.contains(user) || canPrincipalEditEvent(user, e);
+  private boolean canUserSeeEventDetail(User user, Event e) {
+      return e.attendees.contains(user) || canUserEditEvent(user, e);
   }
   
-  private boolean canPrincipalSeeEventTime(SecurityPrincipal user, Event e) {
-      return canPrincipalEditEvent(user, e) ||
-             canPrincipalSeeEventDetail(user, e) ||
+  private boolean canUserSeeEventTime(User user, Event e) {
+      return canUserEditEvent(user, e) ||
+             canUserSeeEventDetail(user, e) ||
              e.timeReaders.contains(user);
   }
 

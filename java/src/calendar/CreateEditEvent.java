@@ -40,6 +40,9 @@ public class CreateEditEvent extends CalendarAction {
     }
     
     public Page invoke(Request req) throws ServletException {
+        Page loginPage = ensureLoggedIn(req);
+        if (loginPage != null) return loginPage;
+
         // when this action is invoked, produce the page.
         return producePage(req, null);
     }
@@ -137,7 +140,7 @@ public class CreateEditEvent extends CalendarAction {
 	                               		inpNode(inpEnd, DateUtil.dateToString(this.event.endTime),
 	                               		  errors))));
 	entries = entries.append(new TRow(new NodeList(desc("Creator:"),
-	                               		desc(this.event.creator.fullName()))));
+	                               		desc(this.event.creator.toString()))));
 	entries = entries.append(new TRow(new NodeList(desc("Note:"),
 		inpNode(inpNote, this.event.note, errors))));
         if (!readOnly) {
