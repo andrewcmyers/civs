@@ -11,7 +11,7 @@ public class LoginAction extends CalendarAction {
     final private Action successAction;
     
     private InputNode inpUserID;
-    private InputNode inpPassword = new TextInput(getServlet(), 40, "");
+    private InputNode inpPassword = new PasswordInput(getServlet(), 40, "");
     
     public LoginAction(Main servlet, Action successAction) {
         super(servlet);
