@@ -70,7 +70,8 @@ public class SelectUsersAction extends CalendarAction {
             HashMap errors = new HashMap();
             
             // get the list of user ids
-            InputNode inp = singleMode?(InputNode)inpSingleUser:(InputNode)inpUsers;
+            InputNode inp =
+	      singleMode ? (InputNode)inpSingleUser : (InputNode)inpUsers;
             String input = req.getParam(inp);
             String[] names = input.split("[\\r\\n]+");
             List validatedUsers = new ArrayList(names.length);
@@ -80,7 +81,7 @@ public class SelectUsersAction extends CalendarAction {
                         
             // validate the list of user ids
             if (singleMode && (names == null || names.length != 1)) {
-                errors.put(inp, "Please enter a single user id.");                
+                errors.put(inp, "Please enter a single user id.");
             }
             else {
                 String errMsg = "";
@@ -131,10 +132,14 @@ public class SelectUsersAction extends CalendarAction {
         String title = "Select User" + (singleMode?"":"s");
 	NodeList blurb = new NodeList(new Paragraph(new Text(message)));
 	if (!singleMode) {
-	    blurb = blurb.append(new Paragraph(new Text("Enter each user id on a separate line.")));	    
+	    blurb =
+	      blurb.append(new Paragraph(new Text("Enter each user id on a "
+		      + "separate line.")));	    
 	}
-	NodeList entries = new NodeList(new NodeList(desc(singleMode?"Select user":"Select users"),
-	      inpNode((singleMode?(InputNode)inpSingleUser:(InputNode)inpUsers), listToString(this.userList), errors)));
+	NodeList entries =
+	  new NodeList(desc(singleMode ? "Select user" : "Select users"),
+	      inpNode(singleMode ? (InputNode)inpSingleUser
+		: (InputNode)inpUsers, listToString(this.userList), errors);
 	entries =
 	      entries.append(new TRow(new TCell(new SubmitButton(getServlet(),
 			"OK"))));
@@ -145,7 +150,8 @@ public class SelectUsersAction extends CalendarAction {
         Node content = getServlet().createForm(new FinshSelectUsers(main),
 	  req, new Table(null, entries)); 
         
-	return getServlet().createPage(title, new NodeList(new Text(title), blurb, content));        
+	return getServlet().createPage(title, new NodeList(new Text(title),
+	    blurb, content));        
     }
     
     // helper methods for producing the output
