@@ -10,7 +10,7 @@ import servlet.*;
 public class LoginAction extends CalendarAction {
     final private Action successAction;
     
-    private InputNode inpEmailAddress;
+    private InputNode inpUserID;
     private InputNode inpPassword = new TextInput(getServlet(), 40, "");
     
     public LoginAction(Main servlet, Action successAction) {
@@ -34,7 +34,7 @@ public class LoginAction extends CalendarAction {
             // user has submitted username and password.
             
             // extract data from request
-            String emailAdd = req.getParam(inpEmailAddress);
+            String userID = req.getParam(inpUserID);
             String password = req.getParam(inpPassword);
 
             // now that we have retreived the data we need, recreate the inputs
@@ -47,26 +47,24 @@ public class LoginAction extends CalendarAction {
             HashMap errors = new HashMap();
 
             // @@@@ would check against a database here.
-            
-            if (emailAdd == null || emailAdd.length() == 0 || emailAdd.indexOf('@')<0) {
-                // invalid email address
-                errors.put(inpEmailAddress, "Invalid email address");                
+            User loginUser = (User)main.cal.users.get(userID);
+            if (userID == null || userID.length() == 0) {
+                // invalid user ID
+                errors.put(inpUserID, "Invalid user ID.");                
             }
-            else if (!"password".equals(password)) {
-                // incorrect password
-                errors.put(inpPassword, "Username and password unknown");                
+            else if (password == null || password.length() == 0) {
+                // invalid password
+                errors.put(inpPassword, "Please enter a password.");                
+            }
+            else if (loginUser == null || !password.equals(loginUser.getPassword())) {
+                // unknown user or incorrect password 
+                errors.put(inpPassword, "Unknown or incorrect username and password.");                
             }
             if (!errors.isEmpty()) {
                 return producePage(req, errors);
             }
 
-            // successful login! WOuld have retrieved user object from
-            // db. Just make one up for now.
-            User loginUser = new User(emailAdd);
-            loginUser.setFirstName("Homer");
-            loginUser.setLastName("Simpson");
-            loginUser.setPassword("password");
-            
+            // successful login!            
             
             // set the current user in the session state.
             ((CalendarSessionState)req.getSessionState()).currentUser = loginUser;
@@ -77,9 +75,9 @@ public class LoginAction extends CalendarAction {
     }
         
     private Page producePage(Request req, HashMap errors) {
-        String title = ("Login in to your favourite calendar webapp");
-	NodeList entries = new NodeList(new TRow(new NodeList(desc("Email address:"),
-	                                inpNode(inpEmailAddress, errors))));
+        String title = "Login to your favourite calendar webapp";
+	NodeList entries = new NodeList(new TRow(new NodeList(desc("User ID:"),
+	                                inpNode(inpUserID, errors))));
 	entries = entries.append(new TRow(new NodeList(desc("Password:"),
 		inpNode(inpPassword, errors))));
 	entries = entries.append(new TRow(new TCell(new SubmitButton(getServlet(),
@@ -93,14 +91,14 @@ public class LoginAction extends CalendarAction {
     
     // helper methods for producing the output
     private void recreateInputs(Request req) {
-        String defaultEmailAdd = "";
+        String defaultUserID = "";
         if (req != null) {
-            if (req.getParam(inpEmailAddress) != null) {
-                defaultEmailAdd = req.getParam(inpEmailAddress); 
+            if (req.getParam(inpUserID) != null) {
+                defaultUserID = req.getParam(inpUserID); 
             }
         }
         
-        this.inpEmailAddress = new TextInput(getServlet(), 40, defaultEmailAdd);
+        this.inpUserID = new TextInput(getServlet(), 40, defaultUserID);
     }
 
     private Node desc(String txt) {

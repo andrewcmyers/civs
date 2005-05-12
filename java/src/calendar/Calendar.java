@@ -6,15 +6,18 @@ import java.util.*;
  * A Calendar holds the persistent state of the entire calendar system.
  */
 public class Calendar {
-  Set users;
+  Map users; // map from userIDs to User objects.
   SortedSet events;
 
   static final int DATE = java.util.Calendar.DATE;
   static final int HOUR_OF_DAY = java.util.Calendar.HOUR_OF_DAY;
 
   public Calendar() {
-    users = new HashSet();
+    users = new HashMap();
     events = new TreeSet();
+    
+    // XXX test code. Should have persistent storage.
+    initializeUsers();
 
 //    // XXX Add some events to test -- some ugly fragile code
 //
@@ -79,4 +82,17 @@ public class Calendar {
 //      return (new Event(start, end, "work", "", attendees, null,
 //  	  timeReaders, readers));
 //  }
+  
+  private void initializeUsers() {
+      addUser("liujed", "password", "Jed", "Liu");
+      addUser("andru", "password", "Andrew", "Myers");
+      addUser("schong", "password", "Steve", "Chong");
+  }
+  private void addUser(String userID, String password, String firstName, String lastName) {
+      User u = new User(userID);
+      u.setFirstName(firstName);
+      u.setLastName(lastName);
+      u.setPassword(password);
+      users.put(userID, u);
+  }
 }

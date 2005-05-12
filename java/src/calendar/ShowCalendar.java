@@ -103,16 +103,30 @@ public class ShowCalendar extends CalendarAction {
     nextMonthInput.put(monthInput, nextMonth);
     nextMonthInput.put(yearInput, nextYear);
 
-    NodeList content = new NodeList(monthView(req));
+    List selectDispUser = new ArrayList(1);
+    Action changeUser = new SelectUsersAction(main,
+                                              new SelectDisplayUser(main, selectDispUser),
+                                              this,
+                                              selectDispUser,
+                                              true,
+                                              "Select user and we will magically display their calendar.");
+    NodeList content = new NodeList(new Paragraph(new Text("Hello " + store.currentUser)));
     content =
-      content.append(new Paragraph(servlet.createRequest(setMonth,
-	      prevMonthInput, req, new Text("Previous month"))));
+        content.append(new Paragraph(new NodeList(new Text("Showing "),
+                                                  new Hyperlink(req,  changeUser, new Text(store.displayUser.toString())),
+                                                  new Text("'s calendar"))));
+    content = content.append(monthView(req));
+    content = content.append(new Paragraph(servlet.createRequest(setMonth,
+                                         	      prevMonthInput, req, new Text("Previous month"))));
     content =
-      content.append(new Paragraph(servlet.createRequest(setMonth,
-	      nextMonthInput, req, new Text("Next month"))));
+        content.append(new Paragraph(servlet.createRequest(setMonth,
+  	      nextMonthInput, req, new Text("Next month"))));
     content =
-      content.append(new Paragraph(new Hyperlink(req, doCreateEvent,
-	      new Text("Create new event"))));
+        content.append(new Paragraph(new Hyperlink(req, doCreateEvent,
+  	      new Text("Create new event"))));
+    content =
+        content.append(new Paragraph(new Hyperlink(req, main.logoffAction,
+  	      new Text("Logoff"))));
 
     return servlet.createPage("My Calendar", content);
   }
@@ -230,21 +244,34 @@ public class ShowCalendar extends CalendarAction {
   }
 
   class FinishEditingEvent extends CalendarAction {
-    private Event event;
-    private boolean created;
-    public FinishEditingEvent(Main s, Event event, boolean created) {
-      super(s);
-      this.event = event;
-      this.created = created;
-    }
-    
-    public Page invoke(Request req) throws ServletException {
-      if (created) main.cal.events.add(event);
+      private Event event;
+      private boolean created;
+      public FinishEditingEvent(Main s, Event event, boolean created) {
+        super(s);
+        this.event = event;
+        this.created = created;
+      }
+      
+      public Page invoke(Request req) throws ServletException {
+        if (created) main.cal.events.add(event);
 
-      CalendarSessionState store = (CalendarSessionState)req.getSessionState();
-      store.displayDate.setTime(event.startTime);
-      return ShowCalendar.this.invoke(req);
-    }      
-  }
+        CalendarSessionState store = (CalendarSessionState)req.getSessionState();
+        store.displayDate.setTime(event.startTime);
+        return ShowCalendar.this.invoke(req);
+      }      
+    }
+  class SelectDisplayUser extends CalendarAction {
+      private List selectedUser;
+      public SelectDisplayUser(Main s, List l) {
+        super(s);
+        this.selectedUser = l;
+      }
+      
+      public Page invoke(Request req) throws ServletException {
+        CalendarSessionState store = (CalendarSessionState)req.getSessionState();
+        store.displayUser = (User)selectedUser.get(0);
+        return ShowCalendar.this.invoke(req);
+      }      
+    }
 }
 

@@ -46,4 +46,8 @@ public final class Request {
 
 	return result;
     }
+    
+    public void invalidateSession() {
+        request.getSession().invalidate();
+    }
 }

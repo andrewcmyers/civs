@@ -7,14 +7,14 @@ public class User {
     /**
      * email address is the primary key of the user
      */
-    private String emailAddress;
+    private String userID;
     
     private String firstName;
     private String lastName;
     private String password; // XXX should be a secure hash of it 
 
-    public User(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public User(String userID) {
+        this.userID = userID;
     }
 
     public void setFirstName(String firstName) {
@@ -41,12 +41,12 @@ public class User {
         return password;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-    
     public String toString() {
         return firstName + " " + lastName;
+    }
+
+    public String getUserID() {
+        return userID;
     }
 
 }

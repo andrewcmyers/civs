@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 public final class Main extends Servlet {
   Calendar cal;
   Map servletParams;
+  LogoffAction logoffAction;
+  ShowCalendar showCalAction;
 
   public Main() {
     cal = new Calendar();
@@ -15,7 +17,10 @@ public final class Main extends Servlet {
   }
 
   public void initialize() {
-    addStartAction(new ShowCalendar(this));
+      showCalAction = new ShowCalendar(this);
+      logoffAction = new LogoffAction(this);
+      addStartAction(showCalAction);
+      addStartAction(logoffAction);
   }
 
   public SessionState createSessionState() {
