@@ -131,6 +131,7 @@ public class CreateEditEvent extends CalendarAction {
     
     private Page producePage(Request req, HashMap errors) {
 	Action editAttendees = new SelectUsersAction(main, this, this, this.event.attendees, false, "Please enter the user ids of the event attendees.");
+	Action editTimeReaders = new SelectUsersAction(main, this, this, this.event.timeReaders, false, "Please enter the user ids of who may see the existence of this event.");
 	
         String title = (readOnly?"View":(isCreate?"Create":"Edit"))+" Event";
 	NodeList entries = new NodeList(new NodeList(desc("Name:"),
@@ -151,6 +152,12 @@ public class CreateEditEvent extends CalendarAction {
         }
 	entries = entries.append(new TRow(new NodeList(desc("Note:"),
 		inpNode(inpNote, this.event.note, errors))));
+	entries = entries.append(new TRow(new NodeList(desc("Event time visible to creator, attendees, and the following:"),
+	                                               desc(multiLineToNode(SelectUsersAction.usersToString(this.event.timeReaders, false))))));
+        if (!readOnly) {
+            entries = entries.append(new TRow(new NodeList(desc(""),
+                                                           desc(new Hyperlink(req, editTimeReaders, new Text("Edit time readers"))))));
+        }
         if (!readOnly) {
 	    entries =
 	      entries.append(new TRow(new TCell(new SubmitButton(getServlet(),
