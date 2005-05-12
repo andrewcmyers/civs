@@ -130,6 +130,8 @@ public class CreateEditEvent extends CalendarAction {
     }    
     
     private Page producePage(Request req, HashMap errors) {
+	Action editAttendees = new SelectUsersAction(main, this, this, this.event.attendees, false, "Please enter the user ids of the event attendees.");
+	
         String title = (readOnly?"View":(isCreate?"Create":"Edit"))+" Event";
 	NodeList entries = new NodeList(new NodeList(desc("Name:"),
 	      inpNode(inpName, this.event.name, errors)));
@@ -140,7 +142,13 @@ public class CreateEditEvent extends CalendarAction {
 	                               		inpNode(inpEnd, DateUtil.dateToString(this.event.endTime),
 	                               		  errors))));
 	entries = entries.append(new TRow(new NodeList(desc("Creator:"),
-	                               		desc(this.event.creator.toString()))));
+		                               		desc(this.event.creator.toString()))));
+	entries = entries.append(new TRow(new NodeList(desc("Attendees:"),
+	                                               desc(multiLineToNode(SelectUsersAction.usersToString(this.event.attendees, false))))));
+        if (!readOnly) {
+            entries = entries.append(new TRow(new NodeList(desc(""),
+                                                           desc(new Hyperlink(req, editAttendees, new Text("Edit attendees"))))));
+        }
 	entries = entries.append(new TRow(new NodeList(desc("Note:"),
 		inpNode(inpNote, this.event.note, errors))));
         if (!readOnly) {
@@ -164,6 +172,19 @@ public class CreateEditEvent extends CalendarAction {
 	      content));        
     }
     
+    /**
+     * Turn a multiline string into a list of texts and breaks
+     */
+    private Node multiLineToNode(String s) {
+        String[] lines = s.split("\\n");
+        Node[] nodes = new Node[2*lines.length];
+        for (int i = 0; i < lines.length; i++) {
+            nodes[2*i] = new Text(lines[i]);
+            nodes[1 + 2*i] = new Br();
+        }
+        return new NodeList(nodes);
+    }
+
     // helper methods for producing the output
     private void recreateInputs(Request req) {
         String defaultName = this.event.name;
@@ -191,7 +212,10 @@ public class CreateEditEvent extends CalendarAction {
         this.inpNote = new TextArea(getServlet(), 3, 40, defaultNote);        
     }
     private Node desc(String txt) {
-        Tag n = new TCell(new Text(txt));
+        return desc(new Text(txt));
+    }
+    private Node desc(Node nd) {
+        Tag n = new TCell(nd);
         n.setClass("desc");
         return n;
     }

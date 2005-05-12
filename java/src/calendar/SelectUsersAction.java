@@ -13,7 +13,7 @@ import servlet.*;
  * of Users, in which the selected user(s) will be returned.
  */
 public class SelectUsersAction extends CalendarAction {
-    private List userList;
+    private Collection userCollection;
     final private boolean singleMode;
     private String message;
     final private Action successAction;
@@ -25,13 +25,13 @@ public class SelectUsersAction extends CalendarAction {
     public SelectUsersAction(Main servlet, 
                            Action successAction, 
                            Action cancelAction, 
-                           List userList, 
+                           Collection userCollection, 
                            boolean singleMode,
                            String message) {
         super(servlet);
         this.successAction = successAction;
         this.cancelAction = cancelAction;
-        this.userList = userList;
+        this.userCollection = userCollection;
         this.singleMode = singleMode;
         this.message = message;
         if (this.message == null) {
@@ -47,8 +47,8 @@ public class SelectUsersAction extends CalendarAction {
         this.recreateInputs(null);
     }
 
-    public List getUserList() {
-        return userList;
+    public Collection getUserCollection() {
+        return userCollection;
     }
     
     public Page invoke(Request req) throws ServletException {
@@ -70,8 +70,7 @@ public class SelectUsersAction extends CalendarAction {
             HashMap errors = new HashMap();
             
             // get the list of user ids
-            InputNode inp =
-	      singleMode ? (InputNode)inpSingleUser : (InputNode)inpUsers;
+            InputNode inp = singleMode?(InputNode)inpSingleUser:(InputNode)inpUsers;
             String input = req.getParam(inp);
             String[] names = input.split("[\\r\\n]+");
             List validatedUsers = new ArrayList(names.length);
@@ -81,7 +80,7 @@ public class SelectUsersAction extends CalendarAction {
                         
             // validate the list of user ids
             if (singleMode && (names == null || names.length != 1)) {
-                errors.put(inp, "Please enter a single user id.");
+                errors.put(inp, "Please enter a single user id.");                
             }
             else {
                 String errMsg = "";
@@ -106,8 +105,8 @@ public class SelectUsersAction extends CalendarAction {
             }
 
             // list is valid, so store the users into the user list
-            SelectUsersAction.this.userList.clear();
-            SelectUsersAction.this.userList.addAll(validatedUsers);
+            SelectUsersAction.this.userCollection.clear();
+            SelectUsersAction.this.userCollection.addAll(validatedUsers);
 
             // send user back to return action.
             return SelectUsersAction.this.successAction.invoke(req);
@@ -121,7 +120,7 @@ public class SelectUsersAction extends CalendarAction {
         
         public Page invoke(Request req) throws ServletException {
             // user has cancelled the event. Clear out the event information.
-            SelectUsersAction.this.userList = null;
+            SelectUsersAction.this.userCollection = null;
             // send user back to return action.
             return SelectUsersAction.this.cancelAction.invoke(req);
         }
@@ -132,14 +131,12 @@ public class SelectUsersAction extends CalendarAction {
         String title = "Select User" + (singleMode?"":"s");
 	NodeList blurb = new NodeList(new Paragraph(new Text(message)));
 	if (!singleMode) {
-	    blurb =
-	      blurb.append(new Paragraph(new Text("Enter each user id on a "
-		      + "separate line.")));	    
+	    blurb = blurb.append(new Paragraph(new Text("Enter each user id on a separate line.")));	    
 	}
 	NodeList entries =
 	  new NodeList(desc(singleMode ? "Select user" : "Select users"),
 	      inpNode(singleMode ? (InputNode)inpSingleUser
-		: (InputNode)inpUsers, listToString(this.userList), errors));
+		: (InputNode)inpUsers, usersToString(this.userCollection, true), errors));
 	entries =
 	      entries.append(new TRow(new TCell(new SubmitButton(getServlet(),
 			"OK"))));
@@ -150,13 +147,12 @@ public class SelectUsersAction extends CalendarAction {
         Node content = getServlet().createForm(new FinshSelectUsers(main),
 	  req, new Table(null, entries)); 
         
-	return getServlet().createPage(title, new NodeList(new Text(title),
-	    blurb, content));        
+	return getServlet().createPage(title, new NodeList(new Text(title), blurb, content));        
     }
     
     // helper methods for producing the output
     private void recreateInputs(Request req) {
-        String defaultUsers = listToString(this.userList);
+        String defaultUsers = usersToString(this.userCollection, true);
         if (req != null) {
             if (req.getParam(inpSingleUser) != null) {
                 defaultUsers = req.getParam(inpSingleUser); 
@@ -170,15 +166,19 @@ public class SelectUsersAction extends CalendarAction {
         this.inpUsers = new TextArea(getServlet(), 3, 40, defaultUsers);        
     }
     /**
-     * Convert a list of Users to a string
-     * @param list
-     * @return
+     * Convert a collection of Users to a string
      */
-    private String listToString(List list) {
+    public static String usersToString(Collection users, boolean useUserIDs) {
+        if (users == null) return "";
         StringBuffer sb = new StringBuffer();
-        for (Iterator iter = list.iterator(); iter.hasNext(); ) {
+        for (Iterator iter = users.iterator(); iter.hasNext(); ) {
             User u = (User)iter.next();
-            sb.append(u.getUserID());
+            if (useUserIDs) {
+                sb.append(u.getUserID());
+            }
+            else {
+                sb.append(u.toString());                
+            }
             if (iter.hasNext()) {
                 sb.append("\n");                
             }
