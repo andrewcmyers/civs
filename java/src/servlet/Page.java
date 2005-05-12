@@ -14,14 +14,14 @@ public class Page extends Node {
     }
     
     public void write(HTMLWriter p) {
+        p.begin(2);
         p.print("<html>"); 
-        p.indent(2);
-        p.breakLine();
+        p.allowBreak(0, 1, "");
         head.write(p);
         body.write(p);
-        p.indent(-2);
-        p.breakLine();
+        p.end();
+        p.allowBreak(0, 1, "");
         p.print("</html>");		
-        p.breakLine();
+        p.allowBreak(0, 1, "");
     }
 }

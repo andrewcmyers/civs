@@ -19,7 +19,7 @@ public class Select extends InputNode {
      */
     public void write(HTMLWriter p) {
         // TODO Auto-generated method stub
-        p.indent(2);
+        p.begin(2);
         p.print("<select name=");
         p.printq(input.getName());
         p.print(">");
@@ -32,7 +32,7 @@ public class Select extends InputNode {
             p.escape(options[i].name);
             p.print("</option>");
         }
-        p.indent(-2);
+        p.end();
         p.breakLine();
         p.print("</select>");
     }

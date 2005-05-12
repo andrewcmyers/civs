@@ -68,24 +68,23 @@ abstract public class Servlet extends HttpServlet {
     throws IOException, ServletException {
         increment_req_cnt();
         
+        PrintWriter rw = response.getWriter();
+        HTMLWriter hw = new HTMLWriter(rw);
         try {
             response.setContentType("text/html");
             if (request.getCharacterEncoding() == null)
                 request.setCharacterEncoding("ISO-8859-1");						
             
             Request req = new Request(this, request);
-            PrintWriter rw = response.getWriter();
-            
+                        
             Node loadMsg = checkLoad(req);
             if (loadMsg != null) {
-                loadMsg.write(new HTMLWriter(rw));
-                rw.close();
+                loadMsg.write(hw);
                 return;
             }
             
             servlet.Action action = null;
             if (false) { // debugging: dump parameter names
-                HTMLWriter p = new HTMLWriter(rw);
                 String params = "";
                 for (Enumeration i = request.getParameterNames(); i.hasMoreElements();) {
                     String name = (String)i.nextElement();
@@ -95,10 +94,9 @@ abstract public class Servlet extends HttpServlet {
                     params += "\n";
                 }
                 
-                createPage("params", new Pre(new Text(params))).write(p);
+                createPage("params", new Pre(new Text(params))).write(hw);
             }
             if (false) { // debugging: dump form data
-                HTMLWriter p = new HTMLWriter(rw);
                 String s = "";
                 BufferedReader in = request.getReader();
                 while (true) {
@@ -107,7 +105,7 @@ abstract public class Servlet extends HttpServlet {
                     s += ln;
                     s += '\n';
                 }
-                createPage("request", new Pre(new Text(s))).write(p);
+                createPage("request", new Pre(new Text(s))).write(hw);
             }	
             
             String action_name = req.action_name();
@@ -121,8 +119,7 @@ abstract public class Servlet extends HttpServlet {
                 // either action_name specified, or no default action
                 if (action_name == null) {
                     Node n = invalidActionRequested(req, action_name);
-                    n.write(new HTMLWriter(rw));
-                    rw.close();
+                    n.write(hw);
                     return;
                 }
                 else {
@@ -131,8 +128,7 @@ abstract public class Servlet extends HttpServlet {
 
                 if (action == null) {
                     Node n = invalidActionRequested(req, action_name);
-                    n.write(new HTMLWriter(rw));
-                    rw.close();
+                    n.write(hw);
                     return;			
                 }
             }
@@ -144,17 +140,15 @@ abstract public class Servlet extends HttpServlet {
             Node n = action.invoke(req);				
 
             if (n != null) {
-                n.write(new HTMLWriter(rw));
+                n.write(hw);
             } else {
                 n = reportError("Error handling request", "Error Handling Request",
                         "The servlet did not generate any output for your request. " +
                         "This probably means that your request was ill-formed.", req);
-                n.write(new HTMLWriter(rw));
+                n.write(hw);
             }
-            
-            rw.close();
         }
-        finally { decrement_req_cnt(); }
+        finally { hw.close(); rw.close(); decrement_req_cnt(); }
     }
     
 

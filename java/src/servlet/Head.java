@@ -18,9 +18,8 @@ public class Head extends Node {
     }
     
     public void write(HTMLWriter w) {
-        w.begin();
+        w.begin(2);
         w.print("<head>");
-        w.indent(2);
         w.breakLine();
         w.print("<title>");
         w.escape(title);

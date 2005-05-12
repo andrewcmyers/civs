@@ -15,11 +15,8 @@ public class BlockContainer extends Container {
         super(tag, class_, body);
     }
     
-    public void writeTag(HTMLWriter p) {
-        p.allowBreak(); super.writeTag(p);
-    }
     public void write(HTMLWriter p) {
         super.write(p);
-        p.breakLine();
+        p.allowBreak(0, 1, "");
     }
 }

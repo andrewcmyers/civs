@@ -139,7 +139,7 @@ public class SelectUsersAction extends CalendarAction {
 	NodeList entries =
 	  new NodeList(desc(singleMode ? "Select user" : "Select users"),
 	      inpNode(singleMode ? (InputNode)inpSingleUser
-		: (InputNode)inpUsers, listToString(this.userList), errors);
+		: (InputNode)inpUsers, listToString(this.userList), errors));
 	entries =
 	      entries.append(new TRow(new TCell(new SubmitButton(getServlet(),
 			"OK"))));

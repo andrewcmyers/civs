@@ -19,6 +19,7 @@ public class Hidden extends InputNode {
         p.print("name=\"");
         p.print(input.getName());
         p.print("\"");
-        p.print(" />");
+        p.allowBreak(0,2," ");
+        p.print("/>");
     }
 }

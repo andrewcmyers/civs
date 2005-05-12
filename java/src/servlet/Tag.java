@@ -18,12 +18,10 @@ public class Tag extends Node {
      * @param p
      */
     public void writeTag(HTMLWriter p) {
-        p.begin();
+        p.begin(2);
         p.print("<");
-        p.indent(2);
         p.print(tag);
-        p.begin();
-        p.indent(1);
+        p.begin(1);
         if (class_ != null || p.currentClass() != null) {
             p.print(" class=");
             if (class_ != null) {
@@ -35,7 +33,7 @@ public class Tag extends Node {
         }
         writeOptions(p);
         p.end();
-        p.allowBreak();
+        p.allowBreak(0, 2, "");
         p.print(">");
     }
     /** Write everything after the tag. Must include
