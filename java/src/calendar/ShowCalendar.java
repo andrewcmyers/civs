@@ -26,7 +26,8 @@ public class ShowCalendar extends CalendarAction {
        * Returns a new Event, filled out with default values.
        */
       private Event defaultEvent(Request req) {
-	User currentUser = ((CalendarSessionState)req.getSessionState()).currentUser;
+	User currentUser =
+	  ((CalendarSessionState)req.getSessionState()).currentUser;
 	java.util.Calendar c = GregorianCalendar.getInstance();
 	Date start = c.getTime();
 	c.add(Calendar.HOUR_OF_DAY, 1);
@@ -104,20 +105,20 @@ public class ShowCalendar extends CalendarAction {
     nextMonthInput.put(yearInput, nextYear);
 
     List selectDispUser = new ArrayList(1);
-    Action changeUser = new SelectUsersAction(main,
-                                              new SelectDisplayUser(main, selectDispUser),
-                                              this,
-                                              selectDispUser,
-                                              true,
-                                              "Select user and we will magically display their calendar.");
-    NodeList content = new NodeList(new Paragraph(new Text("Hello " + store.currentUser)));
+    Action changeUser =
+      new SelectUsersAction(main, new SelectDisplayUser(main, selectDispUser),
+	  this, selectDispUser, true,
+	  "Select user and we will magically display their calendar.");
+    NodeList content =
+      new NodeList(new Paragraph(new Text("Hello " + store.currentUser)));
     content =
         content.append(new Paragraph(new NodeList(new Text("Showing "),
-                                                  new Hyperlink(req,  changeUser, new Text(store.displayUser.toString())),
-                                                  new Text("'s calendar"))));
+		new Hyperlink(req, changeUser,
+		  new Text(store.displayUser.toString())),
+		new Text("'s calendar"))));
     content = content.append(monthView(req));
     content = content.append(new Paragraph(servlet.createRequest(setMonth,
-                                         	      prevMonthInput, req, new Text("Previous month"))));
+	    prevMonthInput, req, new Text("Previous month"))));
     content =
         content.append(new Paragraph(servlet.createRequest(setMonth,
   	      nextMonthInput, req, new Text("Next month"))));
@@ -173,7 +174,8 @@ public class ShowCalendar extends CalendarAction {
 	NodeList cell = new NodeList(new Text(sdf.format(curDate)));
 
 	// Output events on the current date that we care about.
-	Set subSet = main.cal.events.subSet(new Event(curDate), new Event(nextDate));
+	Set subSet = main.cal.events.subSet(new Event(curDate),
+	    new Event(nextDate));
 
 	for (Iterator it = subSet.iterator(); it.hasNext(); ) {
 	  Event e = (Event)it.next();	  
@@ -255,7 +257,8 @@ public class ShowCalendar extends CalendarAction {
       public Page invoke(Request req) throws ServletException {
         if (created) main.cal.events.add(event);
 
-        CalendarSessionState store = (CalendarSessionState)req.getSessionState();
+	CalendarSessionState store =
+	  (CalendarSessionState)req.getSessionState();
         store.displayDate.setTime(event.startTime);
         return ShowCalendar.this.invoke(req);
       }      
