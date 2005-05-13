@@ -11,7 +11,6 @@ import java.io.StringWriter;
  * structure. Does not try to optimize line breaking or anything fancy.
  */
 public class HTMLWriter  {
-    int indent = 0;
     servlet.CodeWriter cw;
     boolean verbatim = false;
     String currentClass = null;
@@ -44,6 +43,9 @@ public class HTMLWriter  {
     }
     public void allowBreak(int n, int level, String alt) {
         cw.allowBreak(n, level, alt, alt.length());
+    }
+    public void unifiedBreak() {
+        cw.unifiedBreak(0, 1, " ", 1);
     }
     public void print(int i) {
         print(Integer.toString(i));
@@ -102,10 +104,10 @@ public class HTMLWriter  {
                 break;
             case ' ':
                 if (verbatim || pos <= MAX_WIDTH - 8) {
-                    cw.write("" + c);
+                    cw.write(" ");
                     pos++;
                 } else {
-                    breakLine();
+                    cw.allowBreak(2, 2, " ", 1);
                 }
                 break;
             default:

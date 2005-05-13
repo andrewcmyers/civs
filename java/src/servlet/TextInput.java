@@ -11,16 +11,23 @@ public class TextInput extends InputNode {
         initial_text = initial;
     }
     public void write(HTMLWriter p) {
+        p.begin(2);
         p.print("<input");
+        p.allowBreak(0, 2, " ");
         p.begin();
-        p.print(" type=text");
-        p.print(" name=");
+        p.print("type=text");
+        p.unifiedBreak();
+        p.print("name=");
         p.printq(input.getName());
-        p.print(" size=");
+        p.unifiedBreak();
+        p.print("size=");
         p.printq(size);
-        p.print(" value=");
+        p.unifiedBreak();
+        p.print("value=");
         p.printq(initial_text);
         p.end();
-        p.print(" />");
+        p.allowBreak(-2, 2, "");
+        p.end();
+        p.print("/>");
     }
 }

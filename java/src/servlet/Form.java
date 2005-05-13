@@ -11,28 +11,36 @@ public class Form extends BlockContainer {
         req.servlet.addAction(action, req);
     }
     public void writeOptions(HTMLWriter p) {
-        p.print(" ");
+        p.allowBreak(0, 2, " ");
         p.begin();
         p.print("method=POST");
-        p.breakLine();
+        p.unifiedBreak();
         //p.print("enctype=\"multipart/form-data\"");
         //p.breakLine();
         p.print("action=");
         p.print("\"");
         p.print(HTMLWriter.escape_URI(servlet_url));
         p.print("\"");
-        p.breakLine();
+        p.unifiedBreak();
         p.print("name=");
         p.printq(action.name.toHex());
         p.end();
     }
     
     void hidden(HTMLWriter p, String name, String value) {
-        p.print("<input type=\"hidden\" name=");
+        p.begin(2);
+        p.print("<input");
+        p.allowBreak(0, 2, " ");
+        p.print("type=\"hidden\"");
+        p.unifiedBreak();
+        p.print("name=");
         p.printq(name);
-        p.print(" value=");
+        p.unifiedBreak();
+        p.print("value=");
         p.printq(value);
-        p.print(" />");
+        p.end();
+        p.allowBreak(0, 2, " ");
+        p.print("/>");
     }
     
     public void writeContents(HTMLWriter p) {
