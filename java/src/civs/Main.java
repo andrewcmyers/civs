@@ -77,7 +77,7 @@ public final class Main extends Servlet {
     }
     
     public Node banner(String title, Request req) throws ServletException {
-        return new Table("banner", null, new NodeList(new TRow(new NodeList(
+        return new Div("banner", new Table("banner", null, new NodeList(new TRow(new NodeList(
                 new TCell("bannertop", new Header(1,
                 "Condorcet Internet Voting Service"), 1, false),
                 new TCell("bannerright", new NodeList(new Hyperlink(civs_url(),
@@ -86,7 +86,7 @@ public final class Main extends Servlet {
                         new Hyperlink(civs_url() + "/sec_priv.html", new Text(
                         "About security and privacy"))), 1, false))),
                         new TRow(new TCell("bannerbottom", new Header(2, title), 2,
-                                false))));
+                                false)))));
     }
     
     public Page reportError(Request req, String title, String header, String message) throws ServletException {

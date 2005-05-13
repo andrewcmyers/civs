@@ -56,10 +56,11 @@ public class CreateElection extends CIVSAction {
 	public Page invoke(Request req) throws ServletException {
 	    return main().createPage("CIVS Election Creation",
               new NodeList(main().banner("Create New Election", req),	
-	        new Paragraph(new Text("Use the following form to create an election for which you are the supervisor. " +
+              new Div("contents", new NodeList(
+              		new Paragraph(new Text("Use the following form to create an election for which you are the supervisor. " +
 	          " You will be able to authorize voters later.")),
 	          main().createForm(finishCreate,
-	                  req, new NodeList(new Table("createForm", null,
+	                  req,  new NodeList(new Table("createForm", null,
 	                          new NodeList(
 	                            new TRow(new NodeList(
 	                              desc("Title of the election:"),
@@ -130,7 +131,7 @@ public class CreateElection extends CIVSAction {
 			                                "because circularities are uncommon."))
 			                   ))))))
 	                  ),
-	                  new SubmitButton(main, "Create election")))));
+	                  new SubmitButton(main, "Create election")))))));
 	}
 	
 	class FinishCreate extends CIVSAction {
@@ -249,6 +250,7 @@ public class CreateElection extends CIVSAction {
 			
 		  return main.createPage("CIVS: Election created",
 	            new NodeList(main().banner("Election Created", req),
+	              new Div("contents",
 	               new Paragraph(new NodeList(
 	                 new Text("The election "),
 	                 new Span("electionTitle", new Text(election.title)),
@@ -262,7 +264,7 @@ public class CreateElection extends CIVSAction {
 	                 .append(main.local_debug()
 	                         ?  new NodeList(new HRule(), new Text("E-mail:"), new Br(), email)
 	                         : (Node)(new HRule()))
-	               )));
+	               ))));
 		}
 	}
 	

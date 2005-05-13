@@ -3,7 +3,8 @@ a:link       { color: #339966; background-color: transparent; font-weight:bold }
 a:visited    { color: #009999; background-color: transparent; font-weight:bold }
 a:hover      { color: #0000ff; background-color: transparent }
 body, table, p, ul, li, td  { font-family: Arial, helvetica, sans-serif;
-			      font-size: "100%";  color: "black" }
+			      font-size: "100%";  color: "black";
+			      margin: 0px }
 
 th              { font-family: helvetica, Arial, sans-serif;
                   color: white;
@@ -29,7 +30,8 @@ table.ballot select { text-align: center }
 
 div.ballot { text-align: center; width: 100% }
 
-p {width: 40em; text-align: left }
+p { text-align: left }
+
 
 div.emphasized { background-color: #ffffd0;
     padding: 3; border-style: solid; border-width: 1; border-color: black }
@@ -49,6 +51,9 @@ table.banner h2 { color: white }
 td.bannertop { width: 100%; vertical-align: top; text-align: left; padding: 7 }
 td.bannerbottom { width: 100%; text-align: center }
 td.bannerright { width: 0%; white-space: nowrap; text-align: right }
+
+div.contents { margin: 1em}
+div.text { width: 60ex }
 
 .submit { font-weight: bold; border-color: #ffffc0; background-color: #ffffc0 }
 table.createForm input { border-color: #c0ffc0; border-width: 1 }
@@ -84,8 +89,8 @@ td.lose { font-family: Courier New, courier, fixed; text-align:center;
 td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
 table.matrix th { background-color: transparent; color: black }
-table.links { border-color: #b0dfc8; border-style: solid;
-    border-width: 2; width: 40em; }
+table.links { margin: 1em; border-color: #b0dfc8; border-style: solid;
+    border-width: 2; width: 20em }
 
 
 tr.selected { background-color: #ffffd0 }
