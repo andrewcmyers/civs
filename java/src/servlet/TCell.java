@@ -18,7 +18,8 @@ public class TCell extends BlockContainer {
     
     protected void writeOptions(HTMLWriter p) {
         if (colspan != 1) {
-            p.print(" colspan=");
+            p.unifiedBreak();
+            p.print("colspan=");
             p.print(colspan);
         }
     }

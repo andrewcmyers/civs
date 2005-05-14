@@ -19,12 +19,18 @@ public class TextArea extends InputNode {
     }
     public void write(HTMLWriter p) {
         p.print("<textarea");
-        p.print(" name=");
+        p.allowBreak(1, 2, " ");
+        p.begin();
+        p.print("name=");
         p.printq(input.getName());
-        p.print(" rows=");
+        p.unifiedBreak();
+        p.print("rows=");
         p.printq(rows);
-        p.print(" cols=");
+        p.unifiedBreak();
+        p.print("cols=");
         p.printq(cols);
+        p.end();
+        p.allowBreak(0, 2, " ");
         p.print(">");
         p.noindent(true);
         p.escape(initial_text);

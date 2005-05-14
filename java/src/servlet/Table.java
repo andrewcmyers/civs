@@ -27,7 +27,8 @@ public class Table extends Tag {
     public void writeOptions(HTMLWriter p) {
         super.writeOptions(p);
         if (have_cell_spacing) {
-            p.print(" cellspacing=");
+            p.unifiedBreak();
+            p.print("cellspacing=");
             p.printq(cell_spacing);
         }
     }

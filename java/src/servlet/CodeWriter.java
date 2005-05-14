@@ -162,13 +162,25 @@ public class CodeWriter
      * margins were obeyed).
      */
     public boolean flush() throws IOException {
+        return flush(true);
+    }
+    /** Like <code>flush</code>, but passing <code>format=false</code>
+     * causes output to be generated in the fastest way possible, with
+     * all breaks broken.
+     * @param format whether to pretty-print the output
+     * @return whether formatting was completely successful.
+     * @throws IOException
+     */
+    public boolean flush(boolean format) throws IOException {
 	boolean success = true;
 	format_calls = 0;
-	try {
-	    top = input;
-	    Item.format(input, 0, 0, width, width,
-	            new MaxLevels(Integer.MAX_VALUE, Integer.MAX_VALUE), 0, 0);
-	} catch (Overrun o) { success = false; }
+	if (format) {
+	    try {
+	        top = input;
+	        Item.format(input, 0, 0, width, width,
+	                new MaxLevels(Integer.MAX_VALUE, Integer.MAX_VALUE), 0, 0);
+	    } catch (Overrun o) { success = false; }
+	} else success = false;
 	
         input.sendOutput(output, 0, 0, success, null);
         output.flush();

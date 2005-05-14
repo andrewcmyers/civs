@@ -23,7 +23,8 @@ public class Tag extends Node {
         p.print(tag);
         p.begin(1);
         if (class_ != null || p.currentClass() != null) {
-            p.print(" class=");
+            p.allowBreak(0, 2, " ");
+            p.print("class=");
             if (class_ != null) {
                 p.printq(class_);
             } else {

@@ -20,18 +20,25 @@ public class Head extends Node {
     public void write(HTMLWriter w) {
         w.begin(2);
         w.print("<head>");
-        w.breakLine();
+        w.unifiedBreak();
         w.print("<title>");
         w.escape(title);
         w.print("</title>");
         
         if (styleFile != null) {
-            w.breakLine();
+            w.unifiedBreak();
             w.print("<link ");
             w.begin();
-            w.print("rel=\"stylesheet\" type=\"text/css\" href=");
+            w.print("rel=\"stylesheet\"");
+            w.unifiedBreak();
+            w.print("type=\"text/css\"");
+            w.unifiedBreak();
+            w.print("href=");
             w.printq(styleFile);
-            w.print(" type=\"text/css\" />");
+            w.unifiedBreak();
+            w.print("type=\"text/css\"");
+            w.unifiedBreak();
+            w.print("/>");
             w.end();
         }
         w.end();

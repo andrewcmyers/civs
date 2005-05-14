@@ -20,7 +20,6 @@ public class Page extends Node {
         head.write(p);
         body.write(p);
         p.end();
-        p.allowBreak(0, 1, "");
         p.print("</html>");		
         p.allowBreak(0, 1, "");
     }

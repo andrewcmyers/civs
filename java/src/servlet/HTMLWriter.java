@@ -16,8 +16,10 @@ public class HTMLWriter  {
     String currentClass = null;
     int pos = 0;  // if pos == 0, the line is empty so far.
     public static final int MAX_WIDTH = 80;
+    PrintWriter printWriter;
     
     public HTMLWriter(PrintWriter p) {
+        printWriter = p;
         cw = new CodeWriter(p, MAX_WIDTH);
     }
     public void print(String s) {
@@ -82,7 +84,10 @@ public class HTMLWriter  {
     }
     
     public void close() throws IOException {
-        cw.flush();
+        boolean success = cw.flush();
+        if (!success) printWriter.println("<!-- pretty-printing failed -->");
+        else printWriter.println("<!-- pretty-printing succeeded -->");
+        printWriter.flush();
     }
     
     /** Escape HTML special characters in s and
@@ -107,8 +112,15 @@ public class HTMLWriter  {
                     cw.write(" ");
                     pos++;
                 } else {
-                    cw.allowBreak(2, 2, " ", 1);
+                    cw.allowBreak(2, 3, " ", 1);
                 }
+                break;
+            case '\r':
+            case '\n':
+                cw.allowBreak(0, 1, " ", 1);
+                while (i+1 < s.length() && (s.charAt(i+1) == '\r' ||
+                        s.charAt(i+1) == '\n'))
+                    i++;
                 break;
             default:
                 int code = (int)c;
