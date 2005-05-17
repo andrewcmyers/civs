@@ -53,7 +53,7 @@ public class Name implements Serializable {
             return false;
         }
     }
-    String toHex() {
+    public String toHex() {
         String r = "";
         for (int i = 0; i < bytes.length; i++) {
             byte b = bytes[i];

@@ -21,6 +21,8 @@ abstract public class Servlet extends HttpServlet {
     Map startActions;
     String style_sheet_url;
     boolean initialized = false;
+    static final int FORMAT_LOAD_LIMIT = 3;
+    
     
     synchronized void increment_req_cnt() {
         concurrent_requests++;
@@ -48,6 +50,12 @@ abstract public class Servlet extends HttpServlet {
         return new Page(new Head(title, style_sheet),
                 new Body(body));
     }
+    /** Create a page with that uses a JavaScript script. Dangerous. */
+    public final Page createPage(String title, Node body, String script) {
+        String style_sheet = getInitParameter("style_sheet_url");
+        return new Page(new Head(title, style_sheet, script),
+                new Body(body));
+    }
     
     public final Node createForm(Action action, Request req, Node body) {
         return new Form(action, req, body);
@@ -69,7 +77,7 @@ abstract public class Servlet extends HttpServlet {
         increment_req_cnt();
         
         PrintWriter rw = response.getWriter();
-        HTMLWriter hw = new HTMLWriter(rw);
+        HTMLWriter hw = new HTMLWriter(rw, concurrentRequests() <= FORMAT_LOAD_LIMIT);
         try {
             response.setContentType("text/html");
             if (request.getCharacterEncoding() == null)
@@ -137,7 +145,20 @@ abstract public class Servlet extends HttpServlet {
             if (action.clearSessionActionsOnInvoke()) {
                 getSessionActions(req.request).clear();
             }
-            Node n = action.invoke(req);				
+            
+            Node n;
+            try {
+                n = action.invoke(req);				
+            } catch (ServletException se) {
+                n = reportError("Servlet exception", "Failure: Servlet Exception",
+                        "An unexpected error occurred during servlet processing: " +
+                        se.getRootCause() == null ? "" : se.toString(),
+                        se.getRootCause() == null ? se : se.getRootCause(), req);
+            } catch (Throwable t) {
+                n = reportError("Servlet exception", "Failure: Servlet Exception",
+                       "An unexpected exception occurred during servlet processing: ",
+                       t, req);
+            }
 
             if (n != null) {
                 n.write(hw);
@@ -222,9 +243,25 @@ abstract public class Servlet extends HttpServlet {
     protected String defaultActionName(Request req) {
         return null;
     }
-    protected Page reportError(String title, String header, String explanation, Request request) 
+    public final Page reportError(String title, String header, String explanation,
+            Request req) throws ServletException {
+        
+        return reportError(title, header, explanation, null, req);
+        }
+    protected Page reportError(String title, String header, String explanation, Throwable t, Request request) 
     throws ServletException {
-        Node content = new Paragraph(new Text(explanation));
+        Node stackTrace;
+        if (t != null) {
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+            PrintWriter pw = new PrintWriter(bs);
+            t.printStackTrace(pw);
+            pw.flush();
+            stackTrace = new Pre(new Text(new String(bs.toByteArray())));
+        } else {
+            stackTrace = new Text("");
+        }
+        Node content = new NodeList(new Paragraph(new Text(explanation)),
+                			stackTrace);
         Action a = null;
         String defaultActionName = defaultActionName(request);
         if (defaultActionName != null) {            
@@ -236,8 +273,8 @@ abstract public class Servlet extends HttpServlet {
         if (a != null) {
             content = new NodeList(content, new Paragraph(new Hyperlink(request, a, new Text("Return"))));
         }
-        return createPage(title, new NodeList(new Header(1, header),
-                content));
+    
+        return createPage(title, new NodeList(new Header(1, header), content));
     }
     
     public final String initParameter(String p) {

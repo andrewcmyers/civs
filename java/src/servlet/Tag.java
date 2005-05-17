@@ -7,6 +7,7 @@ package servlet;
 public class Tag extends Node {	
     String tag;
     String class_;
+    String id;
     
     public Tag(String t, String c) {
         tag = t;
@@ -32,6 +33,11 @@ public class Tag extends Node {
             }
             p.setClass(null);
         }
+        if (id != null) {
+            p.allowBreak(0, 2, " ");
+            p.print("id=");
+            p.printq(id);
+        }
         writeOptions(p);
         p.end();
         p.allowBreak(0, 2, "");
@@ -54,5 +60,10 @@ public class Tag extends Node {
     public Tag setClass(String c) {
         class_ = c;
         return this;    	
+    }
+    
+    public Tag setId(String id_) {
+        id = id_;
+        return this;
     }
 }

@@ -13,13 +13,15 @@ import java.io.StringWriter;
 public class HTMLWriter  {
     servlet.CodeWriter cw;
     boolean verbatim = false;
+    boolean prettyprint;
     String currentClass = null;
     int pos = 0;  // if pos == 0, the line is empty so far.
     public static final int MAX_WIDTH = 80;
     PrintWriter printWriter;
     
-    public HTMLWriter(PrintWriter p) {
+    public HTMLWriter(PrintWriter p, boolean pp) {
         printWriter = p;
+        prettyprint = pp;
         cw = new CodeWriter(p, MAX_WIDTH);
     }
     public void print(String s) {
@@ -84,7 +86,7 @@ public class HTMLWriter  {
     }
     
     public void close() throws IOException {
-        boolean success = cw.flush();
+        boolean success = cw.flush(prettyprint);
         if (!success) printWriter.println("<!-- pretty-printing failed -->");
         else printWriter.println("<!-- pretty-printing succeeded -->");
         printWriter.flush();

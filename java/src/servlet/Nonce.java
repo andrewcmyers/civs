@@ -26,6 +26,12 @@ public class Nonce {
         initialize_seed();
     }
     
+    /** Create a nonce generator that is a straight MD5 digest. */
+    public Nonce() throws ServletException {
+        md = newMD5Digest();
+        md.reset();
+    }
+    
     /** Generate a pseudo-random sequence of bytes that
      * can be used as a nonce. */
     public Name generate() {
@@ -51,15 +57,14 @@ public class Nonce {
         }
         return md;
     }
-    public static Name md5(byte[] bytes) throws ServletException {
-        MessageDigest md = newMD5Digest();
+    public Name md5(byte[] bytes) throws ServletException {
         md.update(bytes);
         return digestToName(md.digest());
     }
-    public static Name md5(String s) throws ServletException {
+    public Name md5(String s) throws ServletException {
         return md5(s.getBytes());	
     }
-    public static Name md5(Name n) throws ServletException {
+    public Name md5(Name n) throws ServletException {
         return md5(n.bytes);
     }
     void addRandom() throws IOException {		
