@@ -1,10 +1,9 @@
 package civs;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Ballots records all the data sent by voters. This information is
@@ -13,13 +12,8 @@ import java.util.Map;
  * the need to lock the file down during the casting of each vote.
  */
 public class Ballots {
-    /** A map from used voter keys to corresponding ballots. */
+    /** A map from used ballot keys to corresponding ballots. */
     Map recorded_votes = new HashMap();
-    
-    Ballots(String datadir, Election e) throws IOException {
-        String dir = datadir + File.separatorChar +
-        		"elections" + File.separatorChar +
-        		e.id;
-        FileInputStream fs = new FileInputStream(new File(dir + File.separatorChar + "votes"));
-    }
+    /** A set of hashes (Names) of used voter keys */
+    Set recorded_voters = new HashSet();
 }

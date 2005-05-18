@@ -21,5 +21,6 @@ public class Hyperlink extends Container {
         p.print("\"");
         p.print(HTMLWriter.escape_URI(url));
         p.print("\"");
+        p.allowBreak(0, 2, " ");
     }
 }

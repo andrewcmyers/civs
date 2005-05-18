@@ -34,11 +34,11 @@ public class ControlElection extends CIVSAction {
             return main.reportError(req, "Illegal input", "Illegal Input", "Election not found, bad election id: " + election_id);
         }
         
-        if (!election.auth_key_hash.equals(Nonce.md5(auth_key))) {
+        if (!election.auth_key_hash.equals(new Nonce().md5(auth_key))) {
             return main.reportError(req, "Invalid authorization key", "Invalid Authorization Key",
                     "The authorization key " + auth_key + " is incorrect."); 
         }
-        if (!election.control_key_hash.equals(Nonce.md5(control_key))) {
+        if (!election.control_key_hash.equals(new Nonce().md5(control_key))) {
             return main.reportError(req, "Invalid control key", "Invalid Control Key",
                     "The control key " + control_key + " is incorrect.");
         }

@@ -22,9 +22,9 @@ public class Tag extends Node {
         p.begin(2);
         p.print("<");
         p.print(tag);
+        p.allowBreak(0, 2, " ");
         p.begin(1);
         if (class_ != null || p.currentClass() != null) {
-            p.allowBreak(0, 2, " ");
             p.print("class=");
             if (class_ != null) {
                 p.printq(class_);
@@ -34,13 +34,12 @@ public class Tag extends Node {
             p.setClass(null);
         }
         if (id != null) {
-            p.allowBreak(0, 2, " ");
+            p.allowBreak();
             p.print("id=");
             p.printq(id);
         }
         writeOptions(p);
         p.end();
-        p.allowBreak(0, 2, "");
         p.print(">");
     }
     /** Write everything after the tag. Must include

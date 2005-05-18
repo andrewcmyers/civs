@@ -68,11 +68,12 @@ public final class Main extends Servlet {
             int nr = concurrentRequests();
             return createPage("CIVS Status",
                     new NodeList(
-                            banner("CIVS Status", req),
+                        banner("CIVS Status", req),
+                        new Div("contents",
                             new Paragraph(new Text("The CIVS server is up and\n" +
                                     "is now handling " + nr +
                                     (nr > 1 ? " concurrent requests."
-                                            : " request (this one).")))));
+                                            : " request (this one)."))))));
         }
     }
     
@@ -80,11 +81,17 @@ public final class Main extends Servlet {
         return new Div("banner", new Table("banner", null, new NodeList(new TRow(new NodeList(
                 new TCell("bannertop", new Header(1,
                 "Condorcet Internet Voting Service"), 1, false),
-                new TCell("bannerright", new NodeList(new Hyperlink(civs_url(),
-                        new Text("CIVS Home")), new Br(),
-                        createRequest(create, null, req, new Text("Create new election")), new Br(),
-                        new Hyperlink(civs_url() + "/sec_priv.html", new Text(
-                        "About security and privacy"))), 1, false))),
+                new TCell("bannerright", new NodeList(new Node[] {
+                        new Hyperlink(civs_url(), new NodeList(
+                          new Text("CIVS"), new NBSP(), new Text("Home"))),
+                        new Br(),
+                        createRequest(create, null, req,
+                                new Text("Create new election")), new Br(),
+                        new Hyperlink(civs_url() + "/sec_priv.html", new NodeList(
+                                new Text("About"), new NBSP(),
+                                new Text("security"), new NBSP(),
+                                new Text("and"), new NBSP(),
+                                new Text("privacy")))}), 1, false))),
                         new TRow(new TCell("bannerbottom", new Header(2, title), 2,
                                 false)))));
     }
@@ -191,13 +198,23 @@ public final class Main extends Servlet {
             } 
             
             if (e != null) return e;
-            FileInputStream f = new FileInputStream(new File(filename));
-            ObjectInputStream of = new ObjectInputStream(f);	
-            e = (Election) of.readObject();
-            of.close();
-            f.close();
+            ObjectInputStream of;
+            FileInputStream f;
+            try {
+              of = new ObjectInputStream(f =new FileInputStream(
+                      new File(filename)));
+            } catch (IOException exc) {
+                throw new ServletException("Can't open election file " + filename, exc);
+            }
+            try {
+                e = (Election) of.readObject();
+            } catch (IOException exc) {
+                throw new ServletException("Bad election serialization. Version problems?", exc);
+            }
+            //of.close();
+            //f.close();
             
-            // read ballots here
+            e.readBallots(dataDir());
             
             synchronized (elections) {
                 Election e2 = (Election) elections.get(id);
@@ -209,7 +226,7 @@ public final class Main extends Servlet {
                 return e;
             }
         }
-        catch (ClassNotFoundException exc) { throw new ServletException("Class not found");} 
-        catch (IOException exc) { throw new ServletException("I/O exception reading election from " + filename); }
+        catch (ClassNotFoundException exc) { throw new ServletException("Class not found", exc);} 
+        //catch (IOException exc) { throw new ServletException("I/O exception reading election from " + filename, exc); }
     }
 }

@@ -3,9 +3,14 @@ package civs;
 import servlet.Name;
 
 /**
- * @author andru
+ * A single ballot cast by a voter.
  */
 public class Ballot {
-    Name voter_key_hash;
+    Name receipt_hash;
     Rank[] rankings;
+    
+    Ballot(Name v, Rank[] r) {
+        receipt_hash = v;
+        rankings = r;
+    }
 }

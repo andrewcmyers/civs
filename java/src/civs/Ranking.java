@@ -24,12 +24,18 @@ abstract public class Ranking {
                 return false;
             }
         }
+        public String toString() {
+            return Integer.toString(rank);
+        }
     }
     
     public class NoOpinion extends Ranking {
         public NoOpinion() {}
         public boolean leq(Ranking r) {
             return false;
+        }
+        public String toString() {
+            return "*";
         }
     }
 }

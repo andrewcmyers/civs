@@ -55,8 +55,9 @@ public class CreateElection extends CIVSAction {
 	
 	public Page invoke(Request req) throws ServletException {
 	    return main().createPage("CIVS Election Creation",
-              new NodeList(main().banner("Create New Election", req),	
-              new Div("contents", new NodeList(
+              new NodeList(
+               main().banner("Create New Election", req),	
+               new Div("contents", new NodeList(
               		new Paragraph(new Text("Use the following form to create an election for which you are the supervisor. " +
 	          " You will be able to authorize voters later.")),
 	          main().createForm(finishCreate,
@@ -195,7 +196,8 @@ public class CreateElection extends CIVSAction {
 			if (choices2.size() <= 1)
 			    throw new IllegalArgumentException("list of choices");
 			election.choices = new String[choices2.size()];
-		    choices2.toArray(election.choices);
+
+			choices2.toArray(election.choices);
 			election.num_winners = Integer.parseInt(req.getParam(num_winners_inp));
 			if (election.num_winners < 1 ||
 			        election.num_winners >= election.choices.length) {
@@ -214,8 +216,8 @@ public class CreateElection extends CIVSAction {
 		  }
 		  String auth_key = main.generateNonce();
 		  String control_key = main.generateNonce();
-		  election.auth_key_hash = Nonce.md5(auth_key);
-		  election.control_key_hash = Nonce.md5(control_key);
+		  election.auth_key_hash = new Nonce().md5(auth_key);
+		  election.control_key_hash = new Nonce().md5(control_key);
 		  // XXX the control_url needs to be constructed via the servlet framework so the
 		  // various data can be tied to inputs.
 		  Map args = new HashMap();
@@ -247,25 +249,27 @@ public class CreateElection extends CIVSAction {
 		    // send email
 			// install once we've successfully set everything up and sent mail.
 		  main.elections.put(election.id, election);
-			
+		  
+		  
 		  return main.createPage("CIVS: Election created",
-	            new NodeList(main().banner("Election Created", req),
-	              new Div("contents",
-	               new Paragraph(new NodeList(
-	                 new Text("The election "),
-	                 new Span("electionTitle", new Text(election.title)),
-	                 new Text(" has been created. E-mail containing election control information "),
-	                 (main.local_debug()
-	                    ? new Text("would be")
-	                    : new Text("has been")), 
-	                 new Text(" sent to "),
-	                 new Span("emailAddr", new Text(election.email)),
-	                 new Text("."))
-	                 .append(main.local_debug()
-	                         ?  new NodeList(new HRule(), new Text("E-mail:"), new Br(), email)
-	                         : (Node)(new HRule()))
-	               ))));
-		}
+	              new NodeList(main().banner("Election Created", req),
+	                 new Div("contents",
+	                    new Paragraph(new NodeList(new Node[] {
+	                       new Text("The election "),
+	                       new Span("electionTitle", new Text(election.title)),
+	                       new Text(" has been created.\n"),
+	                       new Text("E-mail containing election control information "),
+	                       (main.local_debug()
+	                               ? new Text("would be")
+	                                       : new Text("has been")), 
+	                                       new Text(" sent to "),
+	                                       new Span("emailAddr", new Text(election.email)),
+	                                       new Text("."),
+	                                       (main.local_debug()
+	                                               ?  new NodeList(new HRule(), new Text("E-mail:"), new Br(), email)
+	                                                       : (Node)(new HRule()))
+	                         })))));
+		  }
 	}
 	
 	void sendControlInfo(Election e) {

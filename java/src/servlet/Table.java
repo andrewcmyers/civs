@@ -31,6 +31,7 @@ public class Table extends Tag {
             p.print("cellspacing=");
             p.printq(cell_spacing);
         }
+        p.allowBreak(0, 2, " ");
     }
     
     public void write(HTMLWriter p) {

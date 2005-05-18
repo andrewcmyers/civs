@@ -2,9 +2,8 @@ a            { text-decoration: none }
 a:link       { color: #339966; background-color: transparent; font-weight:bold }
 a:visited    { color: #009999; background-color: transparent; font-weight:bold }
 a:hover      { color: #0000ff; background-color: transparent }
-body, table, p, ul, li, td  { font-family: Arial, helvetica, sans-serif;
-			      font-size: "100%";  color: "black";
-			      margin: 0px }
+table, p, ul, li, td  { font-family: Arial, helvetica, sans-serif;
+			      font-size: "100%";  color: "black"}
 
 th              { font-family: helvetica, Arial, sans-serif;
                   color: white;
@@ -12,7 +11,7 @@ th              { font-family: helvetica, Arial, sans-serif;
 		  border-color: #008000;
 		  font-weight: bold }
 
-body { background-color: #d0ffe8 }
+body { background-color: #d0ffe8; margin: 0px }
 table { background-color: #e0fff0 }
 table.matrix {background-color: #e0f0ff}
 table.form {background-color: transparent}
@@ -91,6 +90,5 @@ th.choice { text-align: left }
 table.matrix th { background-color: transparent; color: black }
 table.links { margin: 1em; border-color: #b0dfc8; border-style: solid;
     border-width: 2; width: 20em }
-
 
 tr.selected { background-color: #ffffd0 }

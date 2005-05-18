@@ -1,8 +1,8 @@
 var rows = new Array;
 var rank = new Array;
 var selected = new Array;
-var preftable;			// the ballot table
-var prefsection;		// the parent node of the rows (a section)
+var ballot;			// the ballot table
+var ballot_holder;		// the parent node of the rows (a section)
 var num_choices;
 
 var cur_top;
@@ -47,9 +47,9 @@ function resort_row(i) {
     //alert("moving " + i + " to " + j);
     // fix UI
     if (j == num_choices) {
-	prefsection.appendChild(rows[i]);
+	ballot_holder.appendChild(rows[i]);
     } else {
-	prefsection.insertBefore(rows[i], rows[j]);
+	ballot_holder.insertBefore(rows[i], rows[j]);
     }
 
     // now fix rows, rank, and selected
@@ -64,7 +64,7 @@ function resort_row(i) {
 // stably sort rows by their rank
 function sort_rows() {
     read_rows();
-    //alert("sorting the rows of " + preftable);
+    //alert("sorting the rows of " + ballot);
     var permut = new Array;
     for (var i = 0; i < num_choices; i++) {
 	permut[i] = i;
@@ -81,7 +81,7 @@ function sort_rows() {
     var newselected = new Array;
     for (var i = 0; i < permut.length; i++) {
 	var j = permut[i];
-	prefsection.appendChild(rows[j]);
+	ballot_holder.appendChild(rows[j]);
 	newselected[i] = selected[j];
 	diag = diag + j;
     }
@@ -108,9 +108,9 @@ function select_row(row, add) {
 }
 
 function read_rows() {
-    //alert("reading the rows, length = " + (preftable.rows.length - 1));
+    //alert("reading the rows, length = " + (ballot.rows.length - 1));
     for (var i = 0; i < num_choices; i++) {
-	var row = rows[i] = preftable.rows[i+1];
+	var row = rows[i] = ballot.rows[i+1];
 	var s = row.getElementsByTagName("select")[0];
 	rank[i] = s.selectedIndex + 1;
     }
@@ -333,12 +333,16 @@ function do_move_bottom() {
 }
 
 function setup() {
-    var button = document.getElementById("sort_button");
-    button.parentNode.removeChild(button);
+    ballot = document.getElementById("ballot");
+    ballot_holder = ballot.rows[0].parentNode; // tbody
+    num_choices = ballot.rows.length;
 
-    preftable = document.getElementById("preftable");
-    prefsection = preftable.rows[0].parentNode;
-    num_choices = preftable.rows.length - 1;
+    for (var i = 0; i < num_choices; i++) {
+	var r = ballot.rows[i];
+	// XXX set the onClick property of r to
+	// XXX select_row(this, event.shiftKey||event.ctrlKey)
+	// XXX -- but where to get "event"?
+    }
 
     document.CastVote.move_top.disabled = false;
     document.CastVote.move_up.disabled = false;

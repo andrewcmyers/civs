@@ -3,9 +3,7 @@ package civs;
 import servlet.Action;
 
 /**
- * @author andru
- *
- * CIVS actions all know their servlet.
+ * CIVS actions know their servlet.
  */
 abstract public class CIVSAction extends Action {
     Main main;

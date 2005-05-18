@@ -69,8 +69,10 @@ voted on the issue. Technical issues remain to be resolved about how
 to reconcile these integrity and repudiation properties. -->
 </ul>
 
-The remainder of this document describes why these goals are
-believed to be met.
+<p>
+The remainder of this document describes in more detailed
+how these goals are met.
+</p>
 
 <h2>Election types</h2>
 
@@ -161,8 +163,8 @@ e-mail in a URL.
 the server; the server stores the MD5 hash of the control
 and authorization keys and then forgets the keys.
 <li>The supervisor uses the URL in the email to start the
-election.  This proves that that the supervisor presented a
-real e-mail address.
+election.  This protects against spammers by proving
+that that the supervisor gave a real e-mail address.
 <li>The server hashes the provided authorization key and
 control key to make sure they match the stored hashes.
 <li>For each e-mail address, the server performs the steps described
@@ -295,14 +297,18 @@ the election), a dictionary attack becomes possible.
 
 <h2>Data Storage</h2>
 
-The following global information is stored on the server.
+<p>
+The following global information is stored on the server:
+</p>
 
 <ul>
 		<li>The server's private key (also called the private host id).
 		<li>A seed used as part of the nonce generation procedure.
 </ul>
 
+<p>
 The following per-election information is stored on the server.
+</p>
 
 <ul>
 		<li>Election identifier
@@ -322,14 +328,18 @@ The following per-election information is stored on the server.
 		<li>The map from ballot keys to ballots.
 </ul>
 
+<p>
 The election supervisor is sent the following information by email.
+</p>
 
 <ul>
 		<li>Election control key
 		<li>Election authorization key
 </ul>
 
+<p>
 Each voter possesses the following.
+</p>
 
 <ul>
 		<li>Voter key (in a private election)
