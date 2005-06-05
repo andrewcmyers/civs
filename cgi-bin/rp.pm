@@ -83,8 +83,6 @@ sub TransitiveClosure {
 	if ($mref->[$winner][$loser]) { next; }
 	$mref->[$winner][$loser] = 1;
 	if ($winner == $loser) { $cycle = 1; next; }
-	#print pre("Saw a new cycle: $choices[$loser] vs. $choices[$winner]\n");
-	#if ($mref->[$loser][$winner]) { $cycle = 1; next; }
 	for (my $j = 0; $j < $num_choices; $j++) {
 	    if ($mref->[$loser][$j]) {
 		push @worklist, [($winner, $j)];
@@ -94,9 +92,6 @@ sub TransitiveClosure {
 	    }
 	}
     }
-# 	    if (Floyd_Warshall($mref, $num_choices)) {
-#		print pre("oops - transitive closure failed");
-#	    }
     return $cycle;
 }
 # rank_candidates(mref, num_choices) uses a ranked-pairs
