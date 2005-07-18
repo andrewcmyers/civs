@@ -71,7 +71,7 @@ if (IsStopped) {
 if ($public ne 'yes') {
     print "Private election ($num_auth authorized voters)", br();
 } else {
-    print "This is an public election.", br();
+    print "This is a public poll.", br();
 }
 print "Actual votes cast: $num_votes", br();
 

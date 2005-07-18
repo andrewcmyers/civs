@@ -70,8 +70,8 @@ if (!IsStarted) {
 		my $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
 		$url .= "&akey=$authorization_key" 
 			if defined($authorization_key);
-		print p("This is an public election. You may share the following link
-                 with voters to allow them to vote in the election."),
+		print p("This is a public poll. You may share the following link
+                 with voters allow them to vote."),
               p("<tt><a href=\"$url\">$url</a></tt>").$cr;
     }
 } else {    
@@ -141,7 +141,7 @@ may be new voters or existing voters who have not voted yet.
 In a private election, giving the e-mail address of an already 
 existing voter " .b("will not") . " let that voter vote twice.
 It will only resend the voter an invitation to vote.
-In a public election, only a token attempt is made to prevent
+In a public poll, only a token attempt is made to prevent
 multiple voting.");
 print "<form method=POST
 	     action=$civs_bin_path/add_voters

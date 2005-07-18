@@ -108,8 +108,10 @@ and is also related to other completion rules such as
 <a href="http://en.wikipedia.org/wiki/Ranked_Pairs">
 Tideman Ranked Pairs</a>.
 In these algorithms, each of the pairwise preferences in the preference matrix
-is considered in in the order of the strength of the preference, and either
-<b>kept</b> (<b>affirmed</b>) if it does not create cycles, or else ignored.
+is considered in in the order of the strength of the preference, and
+<b>kept</b> (<b>affirmed</b>) if it does not create cycles with previously
+kept preferences. Otherwise, the preference is ignored because it is in
+conflict with stronger preferences.
 
 <h3>Affirming preferences</h3>
 

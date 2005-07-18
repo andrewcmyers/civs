@@ -16,6 +16,8 @@ table.matrix { background-color: #e0f0ff }
 table.form { background-color: transparent }
 div.emphasized { background-color: #ffffd0 }
 
+span.explain {font-size: 75%; color: #404040 }
+
 p, ul, li {background-color: transparent}
 
 h1, h2, h3   { font-family: Trebuchet MS, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }

@@ -138,7 +138,7 @@ Send "";
 Send "$url";
 Send "";
 if ($public eq 'yes') {
-    Send "Because this is a public election, voters may be directed to the following URL:";
+    Send "Because this is a public poll, voters may be directed to the following URL:";
     Send "";
     Send "http://$thishost$civs_bin_path/vote?id=$election_id&akey=$authorization_key";
     Send "";
