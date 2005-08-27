@@ -258,7 +258,8 @@ sub PrintNonproportionalDetails {
 			my @rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
 
 			my $i = 1;
-	
+
+			fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
 			foreach my $voter_key (@voters) {
 		    	# recorded_vote is a comma separated list of the ranks
 			    # that the voter assigned to candidates.  Element i of the list
