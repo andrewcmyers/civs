@@ -44,9 +44,9 @@ if ($js_ui) {
 
 my $winners_text;
 if ($num_winners == 1) {
-    $winners_text = "(1) favorite choice";
+    $winners_text = "single favorite choice";
 } else {
-    $winners_text = "($num_winners) favorite choices";
+    $winners_text = "$num_winners favorite choices";
 }
 
 CIVS_Header($title);
@@ -102,14 +102,16 @@ Contact the election supervisor if you need help.").$cr;
 if ($proportional ne 'yes' || !$use_combined_ratings) {
     print "<p>Please give each of the following choices
     a rank, where a smaller-numbered rank means that you
-    prefer that choice more. For example, it would make
+    prefer that choice more.
+    For example, it would make
     sense to give your top choice (or choices) the rank 1.
     You may give choices the same rank if you have no
     preference between them. You do not have to use all the
     possible ranks. All choices are initially given the
     lowest possible rank. <b>Note:</b> &ldquo;No opinion&rdquo;
-    is <i>not</i> the same as the lowest possible rank; it genuinely
-    expresses no opinion.</p>";
+    is <i>not</i> the same as the lowest possible rank; it says
+    that you choose not to rank this choice with respect to the
+    other choices.</p>";
 
     if ($proportional eq 'yes') {
 	print '<p>This election is decided using an experimental
@@ -147,6 +149,11 @@ if ($proportional ne 'yes' || !$use_combined_ratings) {
     <a href=\"$civs_url/proportional.html\">[See more information]</a>.
     </p>";
 }
+
+    print '<p id="jshelp">
+	The buttons on the right-hand side are deactivated because
+	your browser does not support Javascript.</p>';
+
 
 if ($ballot_reporting eq 'yes') {
 	print p(b("Ballot reporting is enabled for this election. ")

@@ -335,6 +335,13 @@ function do_move_bottom() {
 function setup() {
     var button = document.getElementById("sort_button");
     button.parentNode.removeChild(button);
+    var jshelp = document.getElementById("jshelp");
+    var curtext = jshelp.childNodes[0];
+    jshelp.removeChild(curtext);
+    var jshelp_text = document.createTextNode(
+    "As you assign ranks, the choices will remain sorted in rank order.  You may assign ranks using either the pulldowns in the Rank column or the buttons on the right-hand side.");
+    jshelp.appendChild(jshelp_text);
+
 
     preftable = document.getElementById("preftable");
     prefsection = preftable.rows[0].parentNode;

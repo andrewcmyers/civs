@@ -36,12 +36,18 @@ have a preference for choice A over choice B if A is ranked higher than B
 on more ballots than B is ranked higher than A on. If the voters prefer
 a choice A to every other choice, choice A is the <b>Condorcet winner</b>.
 Condorcet election methods are methods that are guaranteed to elect
-the Condorcet winner if one exists.
+the Condorcet winner if one exists. Condorcet methods have two important
+properties. First, they take into account the complete ranking of choices
+from every voter, which means they have more information to use in picking
+the winner. Second, when there is a Condorcet winner
+(the usual case), the voters have no incentive to rank the choices in
+any way other than their true preferences; so-called
+<b>strategic voting</b> usually does not help them.
 </p>
 
 <p>
-Although having a Condorcet winner is common, especially when there are
-many voters, there isn't always a Condorcet winner.
+Although there is usually a Condorcet winner, especially when there are
+many voters, it is possible that there isn't one.
 In ranked-preference voting systems, <b>preference
 cycles</b> may exist. For example, it is possible that on most ballots, choice
 A is preferred to choice B, on most ballots B is preferred to C, and
@@ -63,9 +69,9 @@ doesn't matter what completion rule is used.
 <h2>Supported completion rules</h3>
 
 <p>CIVS currently supports three rules for Condorcet completion:
-<b>Beatpath Winner</b>, also known
+<b>Beatpath Winner</b> (also known
 as <a href="http://electionmethods.org/CondorcetEx.htm"> Cloneproof Schwartz
-Sequential Dropping</a>, <a href="http://alumnus.caltech.edu/~seppley/">
+Sequential Dropping</a>), <a href="http://alumnus.caltech.edu/~seppley/">
 Maximize Affirmed Majorities</a> (MAM), and a deterministic variant of MAM
 called <b>CIVS Ranked Pairs</b>. The first two rules are described
 elsewhere (follow the links); CIVS Ranked Pairs is described below. 
