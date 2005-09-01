@@ -339,7 +339,7 @@ function setup() {
     var curtext = jshelp.childNodes[0];
     jshelp.removeChild(curtext);
     var jshelp_text = document.createTextNode(
-    "As you assign ranks, the choices will remain sorted in rank order.  You may assign ranks using either the pulldowns in the Rank column or the buttons on the right-hand side.");
+    "As you assign ranks, the choices will remain sorted in rank order.  You may assign ranks using either the pulldowns in the Rank column or the buttons above.");
     jshelp.appendChild(jshelp_text);
 
 

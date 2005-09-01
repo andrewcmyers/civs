@@ -94,13 +94,13 @@ if ($load) {
 print p("Please vote on the election ".b($title).'.').$cr;
 print p($description).$cr;
 
-print p("Only the $winners_text will win the election and be selected.<p>
+print p("Only the $winners_text will win the election.<p>
 The election ends <b>$election_end</b>.
 The election supervisor is $name (<tt>$email_addr</tt>).
 Contact the election supervisor if you need help.").$cr;
 
 if ($proportional ne 'yes' || !$use_combined_ratings) {
-    print "<p>Please give each of the following choices
+    print "<p>Give each of the following choices
     a rank, where a smaller-numbered rank means that you
     prefer that choice more.
     For example, it would make
@@ -150,9 +150,6 @@ if ($proportional ne 'yes' || !$use_combined_ratings) {
     </p>";
 }
 
-    print '<p id="jshelp">
-	The buttons on the right-hand side are deactivated because
-	your browser does not support Javascript.</p>';
 
 
 if ($ballot_reporting eq 'yes') {
@@ -229,17 +226,22 @@ for (my $i = 0; $i < $num_choices; $i++) {
 }
 print '</table></td>', $cr;
 if ($js_ui) {
-    print '<td valign="top" align="center">
-	<input type="button" id="move_top" disabled value="top"
+    print '<td width="0" valign="top" align="center">
+	<input type="button" id="move_top" disabled value="to top"
 	onClick="do_move_top()"><br>
-	<input type="button" id="move_up" disabled value="up"
+	<input type="button" id="move_up" disabled value="move up"
 	onClick="do_move_up()"><br>
-	<input type="button" id="make_tie" disabled value="tie"
+	<input type="button" id="make_tie" disabled value="make tie"
 	onClick="do_make_tie()"><br>
-	<input type="button" id="move_down" disabled value="down"
+	<input type="button" id="move_down" disabled value="move down"
 	onClick="do_move_down()"><br>
-	<input type="button" id="move_bottom" disabled value="bottom"
+	<input type="button" id="move_bottom" disabled value="to bottom"
 	onClick="do_move_bottom()">
+	<table class="form" width="110"><tr><td>
+        <p align="left" style="font-size: 80%" id="jshelp">
+	These buttons are deactivated because
+	your browser does not support Javascript.</p>
+	</td></tr></table>
 	</td>', $cr;
 }
 print '</tr></table>', $cr;
