@@ -214,6 +214,7 @@ sub rank_candidates {
 
     if ($denied_any) { $denied_report .= '</ul>'; }
 
+    # Now construct the ordering on candidates
     my $num_ranked = 0;
     my @ignore, my @ordering, my @rp_choice_index;
     while ($num_ranked < $num_choices) {

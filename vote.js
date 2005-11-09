@@ -36,7 +36,7 @@ function move_elem_to(a, i, j) {
 function resort_row(i) {
     // figure out where it goes (j)
     var j = 0;
-    while (j < num_choices && (j == i || rank[j] < rank[i])) {
+    while (j < num_choices && (j == i || rank[j] <= rank[i])) {
 	j++;
     }
     if (i == j || i == j - 1) { // XXX is i==j test needed?
@@ -116,6 +116,7 @@ function read_rows() {
     }
 }
 
+// Compute the num_at_rank array
 function scan_ranks() {
     var i;
     for (i = 1; i <= num_choices+1; i++) num_at_rank[i] = 0;
@@ -244,8 +245,15 @@ function do_move_down () {
 	      "Click (or shift-click) to select choices");
 	return;
     }
-    if (max_rank == num_choices + 1) return;
+    if (max_rank == num_choices + 1) {
+	alert("Use pulldown to change the rank from \"No opinion\"");
+	return;
+    }
     var new_rank = max_rank + 1;
+    if (new_rank == num_choices + 1) {
+	new_rank = max_rank;
+	//alert("moving bottom-ranked item down " + new_rank);
+    }
     scan_ranks();
     var nr = num_sel_by_rank(max_rank);
     var split = (num_at_rank[max_rank] > nr);
@@ -260,26 +268,29 @@ function do_move_down () {
 	//alert("trying to shift down");
 	while (j <= num_choices && num_at_rank[j]) j++;
 	if (j <= num_choices) { // nothing at j: can shift down
+	    // note: won't shift choices down to "no opinion"
 	    for (var i = num_choices-1; i >= 0; i--) {
 		if (rank[i] < j && rank[i] >= new_rank)
 		    set_rank(i, rank[i] + 1); // should not change position
 	    }
 	} else { // must shift up
-	    new_rank--;
+	    if (new_rank != max_rank) new_rank--;
 	    var j = new_rank;
-	    //alert("shifting up");
 	    while (j >= 1 && num_at_rank[j]) j--;
-		// note: don't shift choices down to "no opinion"
+	    //alert("shifting up to " + j);
 	    if (j >= 1) { // nothing at j: can shift up
 		for (var i = 0; i < num_choices; i++) {
-		    if (rank[i] <= new_rank && rank[i] > j)
+		    if (rank[i] <= new_rank && rank[i] > j) {
+	    //alert("moving " + i + " from " + rank[i] + " to " + (rank[i]-1));
 			set_rank(i, rank[i] - 1); // should not change posn
+		    }
 		}
 	    }
 	}
     }
     for (var i = 0; i < num_choices; i++) {
 	if (selected[i]) {
+	    //alert("now moving " + i + " from " + rank[i] + " to " + new_rank);
 	    if (set_rank(i, new_rank)) i--;
 	} else if (!split && rank[i] == new_rank && new_rank > 1) {
 	    if (set_rank(i, rank[i] - 1)) i--;

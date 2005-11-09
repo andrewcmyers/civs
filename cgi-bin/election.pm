@@ -416,6 +416,9 @@ sub SendKeys {
     my $num_added = 0;
     if (!($local_debug)) { ConnectMail; }
     foreach my $v (@addresses) {
+	$v =~ s/^(\s)+//;
+	$v =~ s/(\s)+$//;
+	$v =~ s/\s+/ /;
         my $url = "";
         if ($public eq 'yes') {
             $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
