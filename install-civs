@@ -38,17 +38,28 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
 	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
+	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
 	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
+	     -e 's|@PERLEXT@|'$PERLEXT'|' \
 	< $f > "${HTMLDIR}/$f"
     done
 
     for f in add_voters beatpath.pm civs_common.pm close control \
         create_election download_ballots election.pm mail.pm results \
+	status \
 		start_election vote rp.pm admctrl.pm
     do
+	target="${CGIBINDIR}/${f}"
+	if test -n "$PERLEXT"
+	then
+	    case $target in
+	      *.pm) ;;
+	      *) target="${target}${PERLEXT}";;
+	    esac
+	fi
 	#echo "copying cgi-bin/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
@@ -56,12 +67,14 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
 	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
+	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
 	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
-	 	 < "cgi-bin/$f" > "$CGIBINDIR/$f"
-	chmod a+x "${CGIBINDIR}/$f";
+	     -e 's|@PERLEXT@|'$PERLEXT'|' \
+	 	 < "cgi-bin/$f" > "$target"
+	chmod a+x "$target"
     done
 
     if [ ! -s $CIVSDATADIR/private_host_id ]; then

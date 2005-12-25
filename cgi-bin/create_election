@@ -1,8 +1,9 @@
-#!@PERL@ -I@CGIBINDIR@
+#!@PERL@
 
 use strict;
 use warnings;
 
+use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -11,7 +12,7 @@ use mail;
 use Socket;
 use IO::Handle;
 
-my $thisurl = $civs_bin_path."/create_election";
+my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 
 my $email_addr = param('email_addr');
 if (!($email_addr =~ m/.\@./)) {
@@ -118,7 +119,7 @@ my $authorization_key = SecureNonce();
 $edata{'hash_control_key'} = civs_hash($control_key);
 $edata{'hash_authorization_key'} = civs_hash($authorization_key);
 
-my $url = "http://$thishost$civs_bin_path/control?id=$election_id&key=$control_key&akey=$authorization_key";
+my $url = "http://$thishost$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key";
 
 if (!($local_debug)) {
 
@@ -140,11 +141,11 @@ Send "";
 if ($public eq 'yes') {
     Send "Because this is a public poll, voters may be directed to the following URL:";
     Send "";
-    Send "http://$thishost$civs_bin_path/vote?id=$election_id&akey=$authorization_key";
+    Send "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key";
     Send "";
 }
 Send "For more information about the Condorcet Internet Voting Service, see";
-Send "  http://$thishost$civs_url.\r\n";
+Send "  $civs_home.\r\n";
 Send "."; ConsumeSMTP;
 CloseMail;
 

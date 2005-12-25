@@ -1,6 +1,7 @@
 package admctrl;  # should be CIVS, or perhaps CIVS::Common
 use strict;
 use warnings;
+
 use Socket;
 
 our $home = "@CIVSDATADIR@";

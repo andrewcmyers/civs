@@ -1,10 +1,10 @@
-#!@PERL@ -I@CGIBINDIR@
+#!@PERL@
 
 use strict;
 use warnings;
 
-use admctrl;
-
+use lib '@CGIBINDIR@';
+# use admctrl;
 use civs_common;
 use CGI qw(:standard);
 use Socket;
@@ -17,7 +17,7 @@ use DB_File;
 use beatpath;
 use rp;
 
-my $thisurl = $civs_bin_path."/results";
+my $thisurl = $civs_bin_path."/results@PERLEXT@";
 my $detailed = param('detailed');
 
 # CheckLoad;
@@ -43,16 +43,17 @@ print h2($title);
 
 my $nwin_param = param('num_winners');
 my $real_nwin = $num_winners;
-if ($nwin_param && $nwin_param > 0 &&
+if (defined($nwin_param) && $nwin_param > 0 &&
     $nwin_param < $num_choices) {
 	$num_winners = 0+$nwin_param;
 }
 my $algorithm = param('algorithm');
-if ($algorithm eq '') { $algorithm = 'beatpath_winner'; }
+if (!defined($algorithm) || $algorithm eq '')
+{ $algorithm = 'beatpath_winner'; }
 
 my $real_prop = $proportional;
 my $show_prop = param('proportional');
-if ($show_prop ne '') {
+if (defined($show_prop) && $show_prop ne '') {
     $proportional = $show_prop;
 }
 
@@ -274,7 +275,7 @@ sub PrintNonproportionalDetails {
 			print table({-class=>'matrix'},
 				Tr(\@rows));
 			print p("Ballots are shown in a randomly generated order.");
-			print p(a({-href=>"http://$thishost$civs_bin_path/download_ballots?id=$election_id"},"Download ballots") . " as a CSV.");
+			print p(a({-href=>"http://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"},"Download ballots") . " as a CSV.");
         } else {
 			print p("No ballots were cast in this election.");
 		}
@@ -1007,8 +1008,11 @@ sub PrintProportionalResults {
 	    name="CompareSets">';
 
     print '<table>';
-    if (param('Compare') ne '') {
+    $comparison_request = param('Compare');
+    if (defined($comparison_request) && $comparison_request ne '') {
 	$comparison_request = 1;
+    } else {
+	$comparison_request = 0;
     }
     @curr_comm = split /,/, $committee[$cwinner[0]];
     print '<tr><th width=40px>Set 1</th><th width=40px>Set 2</th></tr>';

@@ -1,8 +1,10 @@
-#!/usr/bin/perl
+#!@PERL@
 
 use strict;
 use warnings;
-use admctrl;
+
+use lib '@CGIBINDIR@';
+# use admctrl;
 use civs_common;
 
 use CGI qw(:standard);
@@ -49,7 +51,7 @@ while (defined(my $file = readdir(DIR))) {
     $last_update = localtime($st->mtime) if defined($st);
     $title = "\"$title\"";
 
-    push @rows, Tr(td([a({-href=>'http://www5.cs.cornell.edu/cgi-bin/andru/civs/results?id='.$file}, small($title)),
+    push @rows, Tr(td([a({-href=>'@CIVSBINURL@/results@PERLEXT@?id='.$file}, small($title)),
     #push @rows, Tr(td([$file,
                        "$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
                        $public,

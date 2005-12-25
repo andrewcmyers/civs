@@ -11,7 +11,7 @@ BEGIN {
     use Exporter ();
     our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 
-    $VERSION     = 1.00;
+    $VERSION     = 1.02;
     @ISA         = qw(Exporter);
     @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys 
     &CheckAuthorizationKeyForAddingVoter &CheckAuthorizationKeyForVoting
@@ -58,7 +58,7 @@ my ($db_is_open, $election_is_locked);
 
 sub init {
     # Get election ID
-    $election_id = param('id') or die "No election ID found in input\n";
+    $election_id = param('id') or die "No election ID provided\n";
     &IsWellFormedElectionID or die "Ill-formed election ID: $election_id\n";
     
     # Set up filename paths
@@ -145,6 +145,14 @@ sub LockElection {
     $election_is_locked = 1;
 }
 
+sub UnlockElection {
+    if ($election_is_locked) {
+        flock ELOCK, &LOCK_UN;
+        close(ELOCK);
+        $election_is_locked = 0;
+    }
+}
+
 sub OpenDatabase {
     tie %edata, "DB_File", $election_data, &O_RDWR, 0666, $DB_HASH
         or die "Unable to tie election db=$election_data: $!\n";
@@ -158,14 +166,6 @@ sub CloseDatabase {
         untie %edata;
         untie %vdata;
         $db_is_open = 0;
-    }
-}
-
-sub UnlockElection {
-    if ($election_is_locked) {
-        flock ELOCK, &LOCK_UN;
-        close(ELOCK);
-        $election_is_locked = 0;
     }
 }
 
@@ -208,13 +208,13 @@ sub PointToResults {
 	} else {
 	print "<p>The following URL reports the current results of the election:<br>\n";
     }
-    print "<a href=\"http://$thishost$civs_bin_path/results?id=$election_id\">
-    <tt>http://$thishost$civs_bin_path/results?id=$election_id</tt></a></p>\n";
+    print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
+    <tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
 }
 sub PointToResultsComplete {
     print "<p>The following web page has the results of this completed election:<br>\n";
-    print "<a href=\"http://$thishost$civs_bin_path/results?id=$election_id\">
-       <tt>http://$thishost$civs_bin_path/results?id=$election_id</tt></a></p>\n";
+    print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
+       <tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
 }
 
 sub IsStopped {
@@ -296,8 +296,15 @@ sub ControlKeyError {
     p("Invalid key. You should have received a correct URL for
         controlling the election by email. This error has been logged.");
     print end_html();
-    ElectionLog("Election: $title ($election_id) : invalid attempt to close
-        election (wrong key)");
+    my $t = '<undefined title>';
+    if (defined($title)) {
+	$t = $title;
+    }
+    my $id = '<undefined election id>';
+    if (defined($election_id)) {
+	$id = $election_id;
+    }
+    ElectionLog("Election: $t ($id) : invalid attempt to close election (wrong key)");
     exit 0;
 }
 
@@ -369,7 +376,7 @@ sub IsWellFormedElectionID {
 
 sub CheckElectionID {
     if (!IsWellFormedElectionID) {
-    if ($election_id ne '') {
+    if (defined($election_id) && $election_id ne '') {
         print h1("Invalid election identifier");
         print p("The election identifier \"$election_id\" is not valid.\n");
         Log("Attempt to provide a bogus election identifier: \"$election_id\"");
@@ -385,6 +392,7 @@ sub ElectionLog {
     my $log_msg = shift;
     chomp($log_msg);
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
+    # print pre("trying to log to $election_log");
     if (!open ELECTION_LOG, ">>$election_log") {
         print h1("Error"),
           p("Unable to append to the election log."),
@@ -421,7 +429,7 @@ sub SendKeys {
 	$v =~ s/\s+/ /;
         my $url = "";
         if ($public eq 'yes') {
-            $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
+            $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
             $url .= "&akey=$authorization_key"
                 if (&ElectionUsesAuthorizationKey);
         } else {
@@ -435,7 +443,7 @@ sub SendKeys {
                 $voter_keys{$hash_voter_key} = 1;
                 $num_added++;
             }
-            $url = "http://$thishost$civs_bin_path/vote?id=$election_id"
+            $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
                         ."&key=$voter_key";
         }
 
@@ -467,10 +475,10 @@ sub SendKeys {
             Send "";
             Send "The election has been announced to end $election_end.";
             Send "To view the results of the election once it is closed, visit:";
-            Send "http://$thishost$civs_bin_path/results?id=$election_id";
+            Send "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id";
             Send "";
             Send "For more information about the Condorcet Internet Voting Service, see";
-            Send "http://$thishost$civs_url.";
+            Send "$civs_home";
             Send "."; ConsumeSMTP;
         }
     }

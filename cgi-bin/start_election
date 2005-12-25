@@ -1,21 +1,24 @@
-#!@PERL@ -I@CGIBINDIR@
+#!@PERL@
 
 use strict;
 use warnings;
+use CGI qw(:standard);
 
+use lib '@CGIBINDIR@';
 use civs_common;
 use IO::Handle;
-use CGI qw(:standard);
 use DB_File;
 use Digest::MD5 qw(md5_hex);
 
 HTML_Header("CIVS start election");
 CIVS_Header('Start election');
 
-use election;
+use election 1.02;
+
 my $max_voters = 1000;
 my $control_key = param('key');   
 my $authorization_key = param('akey');
+
 
 CheckElectionID;
 CheckControlKey($control_key);
@@ -41,7 +44,7 @@ my $num_added = SendKeys($authorization_key, \@addresses);
 
 print "Done.\n</pre>\n";
 
-print p("<a href=\"$civs_bin_path/control?id=$election_id&key=$control_key&akey=$authorization_key\">Go back to election control</a>");
+print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key\">Go back to election control</a>");
 
 # Destroy record of voter addresses so we can't
 # figure out who voted for what.

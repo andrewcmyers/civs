@@ -14,7 +14,7 @@ BEGIN {
     @ISA         = qw(Exporter);
     @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log
                       &SecureNonce &fisher_yates_shuffle $home $thishost
-                      $civs_bin_path $civs_log $civs_url $local_debug $cr
+                      $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error
                       &unique_elements &civs_hash &system_load &CheckLoad);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
@@ -44,7 +44,7 @@ BEGIN {
 	use IO::Handle;
 	use CGI::Carp qw(carpout set_message fatalsToBrowser);
 	open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or 
-		die "Unable to open @CIVSDATADIR@/cgi-log: $!\n";
+		#die "Unable to open @CIVSDATADIR@/cgi-log: $!\n";
 	autoflush CGILOG;
 	carpout(\*CGILOG);
 	set_message(\&Fatal_CIVS_Error);
@@ -68,6 +68,7 @@ our $thishost = "@THISHOST@";
 our $civs_bin_path = "@CIVSBINURL@";
 our $civs_log = $home.'/log';
 our $civs_url = "@CIVSURL@";
+our $civs_home = '@CIVSHOME@';
 our $lockfile = $home.'/global_lock';
 our $cr = "\r\n";
 our $private_host_id = '';
@@ -101,7 +102,7 @@ sub GetPrivateHostID {
 sub HTML_Header {
     (my $title, my $js) = @_;
     if (!$generated_header) {
-      if ($js eq '') {
+      if (!defined($js) || $js eq '') {
 	print header(), start_html(-title => $title,
 				   -style => {'src' => "@CIVSURL@/style.css"});
       } else {
@@ -126,7 +127,7 @@ print
     <td width=100% valign=top nowrap>
     <h1>&nbsp;Condorcet Internet Voting Service</h1>
     </td>
-    <td width=0% nowrap valign=top align=right><a href=\"$civs_url\">CIVS Home</a><br>
+    <td width=0% nowrap valign=top align=right><a href=\"$civs_home\">CIVS Home</a><br>
     <a href=\"$civs_url/civs_create.html\">Create new election</a><br>
     <a href=\"$civs_url/sec_priv.html\">About security and privacy</a>
     </td>
@@ -148,6 +149,7 @@ sub Fatal_CIVS_Error {
 	print h2("Error"),
 	      p("CIVS is unable to process your request
 	      because of an internal error.");
+	    print pre(@_);
 	print pre(@_) if $local_debug;
 	print end_html();
 	exit 0;

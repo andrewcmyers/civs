@@ -1,8 +1,9 @@
-#!@PERL@ -I@CGIBINDIR@
+#!@PERL@
 
 use strict;
 use warnings;
 
+use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -10,10 +11,10 @@ use DB_File;
 use Socket;
 use IO::Handle;
 
-my $thisurl = $civs_bin_path."/control";
+my $thisurl = $civs_bin_path."/control@PERLEXT@";
 
 HTML_Header("CIVS Election Control");
-use election;
+use election 1.02;
 
 my $control_key = param('key');    
 my $authorization_key = param('akey');
@@ -27,8 +28,8 @@ CheckAuthorizationKeyForAddingVoter($authorization_key);
 print h1("Election: $title");
 
 if (!IsStarted) {
-    print "<form method=POST
-		action=\"$civs_bin_path/start_election\"
+    print "<form method=\"POST\"
+		action=\"$civs_bin_path/start_election@PERLEXT@\"
 		enctype=\"multipart/form-data\"
 		name=\"Start\">\n";
     print '<p>The election has not yet started. Press this button to start it: ';
@@ -39,8 +40,8 @@ if (!IsStarted) {
     print '<input type="submit" value="Start election" name="start">';
     print '</p></form>';
 } elsif (!IsStopped) {
-    print "<form method=POST
-		action=$civs_bin_path/close
+    print "<form method=\"POST\"
+		action=\"$civs_bin_path/close@PERLEXT@\"
 		enctype=\"multipart/form-data\"
 		name=\"Close\">\n";
     print '<p>The election is in progress. Press this button to end it: ';
@@ -54,8 +55,8 @@ if (!IsStarted) {
 	    	$edata{'writeins'} = $writeins = 'no';
 		    print p('Write-in choices have been disabled');
 		} else {
-	    	print "<form method=POST
-				action=$civs_bin_path/control
+	    	print "<form method=\"POST\"
+				action=\"$civs_bin_path/control@PERLEXT@\"
 				enctype=\"multipart/form-data\"
 				name=\"Nowriteins\">\n";
 		    print p('Write-in choices are currently allowed. Press this
@@ -67,7 +68,7 @@ if (!IsStarted) {
 		}
     }
     if ($public eq 'yes') {
-		my $url = "http://$thishost$civs_bin_path/vote?id=$election_id";
+		my $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
 		$url .= "&akey=$authorization_key" 
 			if defined($authorization_key);
 		print p("This is a public poll. You may share the following link
@@ -76,7 +77,7 @@ if (!IsStarted) {
     }
 } else {    
 	&CloseDatabase;
-    print p("The election has ended. <a href=\"$civs_bin_path/results?id=$election_id\">Election results</a> are available.");
+    print p("The election has ended. <a href=\"$civs_bin_path/results@PERLEXT@?id=$election_id\">Election results</a> are available.");
 }
 
 print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
@@ -143,8 +144,8 @@ existing voter " .b("will not") . " let that voter vote twice.
 It will only resend the voter an invitation to vote.
 In a public poll, only a token attempt is made to prevent
 multiple voting.");
-print "<form method=POST
-	     action=$civs_bin_path/add_voters
+print "<form method=\"POST\"
+	     action=\"$civs_bin_path/add_voters@PERLEXT@\"
 	     enctype=\"multipart/form-data\"
 	     name=\"AddVoters\">\n";
 print hidden('id', $election_id);

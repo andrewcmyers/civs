@@ -1,9 +1,10 @@
-#!@PERL@ -I@CGIBINDIR@
+#!@PERL@
 
 use strict;
 use warnings;
 
-use admctrl;
+use lib '@CGIBINDIR@';
+# use admctrl;
 
 use civs_common;
 use CGI qw(:standard);
@@ -14,7 +15,7 @@ use DB_File;
 use Socket;
 use IO::Handle;
 
-my $thisurl = $civs_bin_path."/vote";
+my $thisurl = $civs_bin_path."/vote@PERLEXT@";
 
 use election;
 
@@ -34,7 +35,8 @@ my $voter_key = param('key');
 my $authorization_key = param('akey');
 
 my $js_ui = 1;
-if ($proportional eq 'yes' && $use_combined_ratings) { $js_ui = 0; }
+if (defined($proportional) && defined($use_combined_ratings) &&
+    $proportional eq 'yes' && $use_combined_ratings) { $js_ui = 0; }
 
 if ($js_ui) {
     HTML_Header('CIVS Voting', 'vote.js');
@@ -126,7 +128,7 @@ if ($proportional ne 'yes' || !$use_combined_ratings) {
 		choice, and so on. ';
 	print '</p>';
     }
-    print "<a href=\"$civs_url\">(More information on Condorcet election
+    print "<a href=\"$civs_home\">(More information on Condorcet election
     methods)</a></p>", $cr, $cr;
 } else {
     print '<p>This election is decided using an experimental
@@ -267,7 +269,7 @@ print "</form>\n";
 
 if ($public eq 'yes') {
     print p("If you have already voted, you may see
-	<a href=\"http://$thishost$civs_bin_path/results?id=$election_id\">
+	<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
 	the results of the election.</a>");
 }
 
@@ -286,8 +288,8 @@ sub ProcessVote {
 	if ($proportional eq 'yes' && !$use_combined_ratings) {
 	    $rank = $num_choices - $rank; # invert
 	}
-	if ($rank < 0) { $rank = 0; } # must be proportional
-	if ($rank > 999) { $rank = 999; } # must be proportional
+	if ($rank ne 'No opinion' && $rank < 0) { $rank = 0; } # must be proportional
+	if ($rank ne 'No opinion' && $rank > 999) { $rank = 999; } # must be proportional
 	if ($vote eq '') {
 	$vote = $rank;
 	} else {
@@ -381,7 +383,7 @@ sub OrderChoices {
 			    $rank[$i] = $num_choices;
 		    }
 	    }
-	    if ($shuffle ne 'no') {
+	    if (!defined($shuffle) || $shuffle ne 'no') {
 		fisher_yates_shuffle(\@choice_index);
 	    }
 	}

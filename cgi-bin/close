@@ -1,8 +1,9 @@
-#!@PERL@ -I@CGIBINDIR@
+#!@PERL@
 
 use strict;
 use warnings;
 
+use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -11,7 +12,7 @@ use DB_File;
 use Socket;
 use IO::Handle;
 
-my $thisurl = $civs_bin_path."/close";
+my $thisurl = $civs_bin_path."/close@PERLEXT@";
 
 HTML_Header("CIVS: Stopping Election");
 use election;
@@ -32,7 +33,7 @@ if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
     Log("Election $title ($election_id) stopped");
     print h1("Election stopped: $title");
     print p("The election has been stopped. It was announced to end $election_end");
-    print p("<a href=\"http://$thishost$civs_bin_path/results?id=$election_id\">
+    print p("<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
     View the results of the election");
 }
 print end_html();

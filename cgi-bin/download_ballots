@@ -1,8 +1,9 @@
-#!@PERL@ -I@CGIBINDIR@
+#!@PERL@
 
 use strict;
 use warnings;
 
+use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard);
 use Digest::MD5 qw(md5_hex);
@@ -12,7 +13,7 @@ use beatpath;
 use Socket;
 use IO::Handle;
 
-my $thisurl = $civs_bin_path."/download_ballots";
+my $thisurl = $civs_bin_path."/download_ballots@PERLEXT@";
 
 use election;
 
