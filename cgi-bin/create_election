@@ -74,10 +74,34 @@ if (!defined($proportional) or $proportional eq '') {
 $edata{'proportional'} = $proportional;
 
 my $choices = param('choices');
+my @c1 = split /(\r\n)+/, $choices;
+my @c2 = ();
 my $choices_file = upload('choices_file');
 if (defined($choices_file)) {
     while (<$choices_file>) {
-    	$choices .= $_;
+	chomp;
+	push @c2, $_;
+    }
+}
+$choices = "";
+sub trim {
+    (my $s) = @_;
+    $s =~ s/^\s+//;
+    $s =~ s/\s+$//;
+    return $s;
+}
+foreach my $ch (@c1) {
+    $ch = &trim($ch);
+    if ($ch =~ m/^\S+$/) {
+	$choices .= $ch;
+	$choices .= "\n";
+    }
+}
+foreach my $ch (@c2) {
+    $ch = &trim($ch);
+    if ($ch =~ m/^\S+$/) {
+	$choices .= $ch;
+	$choices .= "\n";
     }
 }
 $edata{'choices'} = $choices;
