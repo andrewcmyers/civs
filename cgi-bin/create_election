@@ -83,6 +83,7 @@ if (defined($choices_file)) {
 	push @c2, $_;
     }
 }
+my $num_choices = 0;
 $choices = "";
 sub trim {
     (my $s) = @_;
@@ -92,17 +93,28 @@ sub trim {
 }
 foreach my $ch (@c1) {
     $ch = &trim($ch);
-    if ($ch =~ m/^\S+$/) {
+    if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
 	$choices .= "\n";
+	$num_choices++;
     }
 }
 foreach my $ch (@c2) {
     $ch = &trim($ch);
-    if ($ch =~ m/^\S+$/) {
+    if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
 	$choices .= "\n";
+	$num_choices++;
     }
+}
+
+if ($num_choices < 2) {
+    HTML_Header("CIVS Election Creation");
+    CIVS_Header();
+    print h1("Error");
+    print p('An election must have at least two choices.');
+    print end_html();
+    exit 0;
 }
 $edata{'choices'} = $choices;
 

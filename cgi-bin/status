@@ -38,8 +38,11 @@ while (defined(my $file = readdir(DIR))) {
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
     my $name = $edata{'name'};
-	my $title = $edata{'title'};
+    my $title = $edata{'title'};
     my $email_addr = $edata{'email_addr'};
+    if (!defined($email_addr)) {
+	$email_addr = "(no addr)";
+    }
 	my $public = ($edata{'public'} eq 'yes') ? "Public" : "Private";
     my $num_auth = $edata{'num_auth'};
 	my $num_votes = $vdata{'num_votes'};
@@ -49,7 +52,11 @@ while (defined(my $file = readdir(DIR))) {
     my $st = stat($election_dir."/vote_log");
     my $last_update = 'N/A';
     $last_update = localtime($st->mtime) if defined($st);
-    $title = "\"$title\"";
+    if (defined($title)) {
+	$title = "\"$title\"";
+    } else {
+	$title = "(no title)";
+    }
 
     push @rows, Tr(td([a({-href=>'@CIVSBINURL@/results@PERLEXT@?id='.$file}, small($title)),
     #push @rows, Tr(td([$file,
