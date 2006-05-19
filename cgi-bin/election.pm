@@ -463,23 +463,29 @@ sub SendKeys {
             Send "";
             Send "A Condorcet Internet Voting Service election named $title has been created.";
             Send "You have been designated as a voter by the election supervisor,";
-            Send "$name ($email_addr). If you would like to vote, please visit the";
-            Send "following URL:";
-            Send "";
-            Send "$url";
-            Send "";
-            Send "This is your private URL. Do not give it to anyone else because";
-            Send "they could use it to vote for you. Your privacy will not be violated";
-            Send "by voting. The voting service does not keep track of your email address";
-            Send "or release any information about whether or how you have voted.";
-            Send "";
+            Send "$name ($email_addr).";
+	    if (!($description =~ m/^(\s)*$/)) {
+		Send '';
+		Send 'Description of election:';
+		Send $description;
+		Send '';
+	    }
+	    Send 'If you would like to vote, please visit the following URL:';
+            Send '';
+            Send "  $url";
+            Send '';
+            Send 'This is your private URL. Do not give it to anyone else because';
+            Send 'they could use it to vote for you. Your privacy will not be violated';
+            Send 'by voting. The voting service does not keep track of your email address';
+            Send 'or release any information about whether or how you have voted.';
+            Send '';
             Send "The election has been announced to end $election_end.";
-            Send "To view the results of the election once it is closed, visit:";
+            Send 'To view the results of the election once it is closed, visit:';
             Send "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id";
-            Send "";
+	    Send '';
             Send "For more information about the Condorcet Internet Voting Service, see";
             Send "$civs_home";
-            Send "."; ConsumeSMTP;
+            Send '.'; ConsumeSMTP;
         }
     }
     if (!($local_debug)) {

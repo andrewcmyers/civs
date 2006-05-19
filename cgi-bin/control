@@ -64,6 +64,8 @@ if (!IsStarted) {
 			    hidden('id', $election_id),
 		    	hidden('key', $control_key),
 			'<input type="submit" value="Disallow write-ins" name="nowriteins">');
+		    print hidden('akey', $authorization_key)
+			    if defined($authorization_key);
 		    print "</form>\n";
 		}
     }

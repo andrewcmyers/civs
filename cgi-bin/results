@@ -96,7 +96,7 @@ if ($proportional eq 'yes') {
     print "This election implements <a href=\"$url\">proportional representation</a>. ";
     if ($use_combined_ratings) {
 	print " The <a
-	href=\"$url#combinedratings\">combined-wieghts criterion</a>";
+	href=\"$url#combinedratings\">combined-weights criterion</a>";
     } else {
 	print " The <a href=\"$url#bestcandidate\">best-candidate criterion</a>";
     }
@@ -317,7 +317,7 @@ sub PrintRanking {
     my @result = @{$_[0]};
     my @matrix = @{$_[1]};
     my $had_tie = 0;
-    print '<table>';
+    print '<table class="rankings">';
     my $j = 0;
     my $num_seen = 0;
     for (my $rank = 0; $rank <= $#result; $rank++) {
@@ -336,6 +336,9 @@ sub PrintRanking {
 	} else {
 	    $tie = 0;
 	}
+# A bit torn on whether to escapeHTML() the names of the
+# candidates here. What about writeins, especially on a
+# public election?
 	for (my $i = 0; $i <= $#winner; $i++) {
 	    if ($i > 0) { print '<br>'; }
 	    if ($tie) { print '<font color=red>'; }
@@ -349,7 +352,7 @@ sub PrintRanking {
 			    $pwinners[$bi] != $condorcet_winner) {
 			    $explanation =
 				', loses to '.
-				escapeHTML($choices[$pwinners[$bi]]).' by '.
+				$choices[$pwinners[$bi]].' by '.
 				$matrix[$pwinners[$bi]][$winner[$i]].'&ndash;'.
 				$matrix[$winner[$i]][$pwinners[$bi]];
 			    $brank = -1; last;
@@ -365,7 +368,7 @@ sub PrintRanking {
 	    if ($num_seen < $num_winners) {
 		print b($choices[$winner[$i]]);
 	    } else {
-		print escapeHTML($choices[$winner[$i]]);
+		print $choices[$winner[$i]];
 	    }
 	    if ($condorcet_winner != -1 &&
 		$condorcet_winner != $winner[$i]) {
@@ -411,8 +414,10 @@ sub PrintBW {
 	PrintRanking [@result], [@matrix];
 
 	print h2("Preference matrix");
-	print p("The following matrix shows the number of ballots on
-	which choices beat other choices, considered pairwise.");
+	print p("The following table shows the results of all
+	pairwise contests between
+	two choices. Each entry shows the number of ballots on
+	which one choice was preferred to another choice.");
 	PrintMatrix $num_choices, [@matrix], [@choices], [@choice_index], 0;
 }
 
@@ -446,8 +451,10 @@ sub PrintRP {
 	PrintRanking $rref, [@matrix];
 
 	print h2("Preference matrix");
-	print p("The following matrix shows the number of ballots on
-	which choices beat other choices, considered pairwise.");
+	print p("The following table shows the results of all
+	pairwise contests between
+	two choices. Each entry shows the number of ballots on
+	which one choice was preferred to another choice.");
 	PrintMatrix $num_choices, [@matrix], [@choices], $ciref, 0;
 
 	if (!$allowed_cycle && !$denied_any) {
@@ -934,7 +941,7 @@ sub PrintProportionalResults {
 	print h2("Winning sets of choices$cr");
 	print p("There were $num_unbeaten unbeaten sets:$cr");
     }
-    print '<table><tr>';
+    print '<table class="rankings"><tr>';
     for (my $i = 0; $i < $num_unbeaten; $i++) {
 	print '<td><ol>';
 	@mapped_comm = renumber($committee[$cwinner[$i]]);
@@ -1007,7 +1014,7 @@ sub PrintProportionalResults {
 	    enctype="multipart/form-data"
 	    name="CompareSets">';
 
-    print '<table>';
+    print '<table class="comparison">';
     $comparison_request = param('Compare');
     if (defined($comparison_request) && $comparison_request ne '') {
 	$comparison_request = 1;

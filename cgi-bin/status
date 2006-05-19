@@ -23,6 +23,7 @@ push @rows, th(['Title', 'Supervisor', 'Public/Private', '# Authorized',
 my $elections_dir = $home."/elections/";
 opendir(DIR, $elections_dir) or die "Can't open directory $elections_dir: $!";
 while (defined(my $file = readdir(DIR))) {
+    next if !defined($file);
     next if $file =~/^\.\.?$/;    # skip . and ..
     next unless -d "$elections_dir/$file";   # skip non-directories
     next unless $file =~ m/^E_[0123456789abcdef]+/;   # skip non-elections
@@ -38,14 +39,17 @@ while (defined(my $file = readdir(DIR))) {
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
     my $name = $edata{'name'};
+    if (!defined($name)) { $name = '(undefined)'; }
     my $title = $edata{'title'};
     my $email_addr = $edata{'email_addr'};
     if (!defined($email_addr)) {
 	$email_addr = "(no addr)";
     }
-	my $public = ($edata{'public'} eq 'yes') ? "Public" : "Private";
+	my $public = (defined($edata{'public'}) && $edata{'public'} eq 'yes') ? "Public" : "Private";
     my $num_auth = $edata{'num_auth'};
-	my $num_votes = $vdata{'num_votes'};
+    if (!defined($num_auth)) { $num_auth = '&ndash;'; }
+    my $num_votes = $vdata{'num_votes'};
+    if (!defined($num_votes)) { $num_votes = '&ndash;'; }
     my $started = (-e $started_file) ? "Yes" : "No";
     my $stopped = (-e $stopped_file) ? "Yes" : "No";
     my $auth_key = (defined($edata{'hash_authorization_key'})) ? "Yes" : "No";
@@ -55,7 +59,7 @@ while (defined(my $file = readdir(DIR))) {
     if (defined($title)) {
 	$title = "\"$title\"";
     } else {
-	$title = "(no title)";
+	$title = '(no title)';
     }
 
     push @rows, Tr(td([a({-href=>'@CIVSBINURL@/results@PERLEXT@?id='.$file}, small($title)),

@@ -2,17 +2,19 @@ a            { text-decoration: none }
 a:link       { color: #339966; background-color: transparent; font-weight: bold }
 a:visited    { color: #009999; background-color: transparent; font-weight: bold }
 a:hover      { color: #0000FF; background-color: transparent }
-body, table, p, ul, li, td  { font-family: Arial, helvetica, sans-serif;
-			      font-size: "100%";  color: "black" }
-th              { font-family: Arial, helvetica, sans-serif;
+body, table, p, ul, li, td  { font-family: Verdana, Arial, helvetica, sans-serif;
+			      font-size: 100%;  color: black }
+body {margin: 0 }
+div.contents {padding-left: 1em; padding-right: 1em}
+th              { font-family: Verdana, Arial, helvetica, sans-serif;
                   color: white;
 		  background-color: #000080;
 		  border-color: #000080;
 		  font-weight: bold }
 
-body { background-color: #d0e8ff }
-table { background-color: #e0f0ff }
-table.matrix { background-color: #e0f0ff }
+body { background-color: #f0f0ff }
+table { background-color: #e0e0f0 }
+table.matrix { background-color: #e0e0f0 }
 table.form { background-color: transparent }
 div.emphasized { background-color: #ffffd0 }
 
@@ -20,7 +22,7 @@ span.explain {font-size: 75%; color: #404040 }
 
 p, ul, li {background-color: transparent}
 
-h1, h2, h3   { font-family: Trebuchet MS, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
+h1, h2, h3   { font-family: Trebuchet MS, Verdana, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
 
 table.banner a:link { color: white }
 table.banner a:visited { color: white }
@@ -39,10 +41,12 @@ h1  { font-size: 180%; }
 h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
+input, textarea { font-family: Verdana, helvetica, Arial, sans-serif;
+           background-color: #fff8e0 }
 pre, xmp { font-family: Courier New, Courier, monospace; margin-left: 1em;
 	   font-size: 90% }
 kbd, tt, code { font-family: Courier New, Courier, monospace; font-size: 90% }
-td { font-family: Arial, helvetica, sans-serif; font-size: 100%; }
+td { font-family: Verdana, Arial, helvetica, sans-serif; font-size: 100%; }
 
 td.recitation { background-color: #FFF0d0 }
 
@@ -55,6 +59,9 @@ td.lose { font-family: Courier New, courier, fixed; text-align:center;
 td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
 table.matrix th { background-color: transparent; color: black }
-table.links { border-color: black; border-style: solid; border-width: 1 }
+table.matrix, table.rankings { border-style: solid; border-width: 1px; border-color: #000040 }
+table.links { border-color: black; border-style: solid; border-width: 1px }
 
 tr.selected { background-color: #ffffd0 }
+
+table.banner h1 {text-shadow: white 2px 2px 2px }

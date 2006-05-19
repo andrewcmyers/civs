@@ -32,7 +32,7 @@ if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
     print STOPPED "stopped\n"; close(STOPPED);
     Log("Election $title ($election_id) stopped");
     print h1("Election stopped: $title");
-    print p("The election has been stopped. It was announced to end $election_end");
+    print p("The election has been stopped. It was announced to end $election_end.");
     print p("<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
     View the results of the election");
 }

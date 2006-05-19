@@ -138,6 +138,8 @@ print
     </td>
   </tr>
 </table>
+
+<div class=\"contents\">
 ";
 	$civs_header_printed = 1;
 }
