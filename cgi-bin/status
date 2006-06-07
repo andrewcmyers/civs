@@ -15,13 +15,11 @@ undef $/;
 &HTML_Header("CIVS Server Status");
 &CIVS_Header("Server Status");
 
-my @rows = ();
-push @rows, th(['Title', 'Supervisor', 'Public/Private', '# Authorized',
-                '# Votes', 'Started?', 'Stopped?', 'Uses auth. key?',
-                'Last updated']);
-
 my $elections_dir = $home."/elections/";
 opendir(DIR, $elections_dir) or die "Can't open directory $elections_dir: $!";
+
+my @entries;
+
 while (defined(my $file = readdir(DIR))) {
     next if !defined($file);
     next if $file =~/^\.\.?$/;    # skip . and ..
@@ -56,6 +54,10 @@ while (defined(my $file = readdir(DIR))) {
     my $st = stat($election_dir."/vote_log");
     my $last_update = 'N/A';
     $last_update = localtime($st->mtime) if defined($st);
+    my $mtime = 0;
+    if (defined($st)) {
+	$mtime = $st->mtime;
+    }
     if (defined($title)) {
 	$title = "\"$title\"";
     } else {
@@ -78,8 +80,34 @@ while (defined(my $file = readdir(DIR))) {
     untie %vdata;
 }
 
+our $compares = '';
+
+@entries = sort { $b->[0] <=> $a->[0] } @entries;
+
+my @rows = ();
+push @rows, th(['Title', 'Supervisor', 'Public/Private', '# Authorized',
+                '# Votes', 'Started?', 'Stopped?', 'Uses auth. key?',
+                'Last updated', 'Delete']);
+
+foreach my $entry (@entries) {
+    (my $mtime, my $file, my $title, my $name, my $email_addr, my $public,
+     my $num_auth, my $num_votes, my $started, my $stopped, my $auth_key,
+     my $last_update)
+	= @{$entry};
+    push @rows, Tr(td([a({-href=>'$civs_bin_path/results@PERLEXT@?id='.$file},
+	small($title)),
+	"$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
+	$public,
+	$num_auth,
+	$num_votes,
+	$started,
+	$stopped,
+	$auth_key,
+	small($last_update),
+	a({-href=>"delete_election.pl?id=$file&pwd=foo"},"Delete")
+	]));
+}
+
 print table({}, @rows);
             
 print end_html();
-
-

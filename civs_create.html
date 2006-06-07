@@ -61,7 +61,8 @@ the supervisor of the election you create.</p>
 	    errs += numerrs +
 		'. Proportional representation requires more than one winner\n';
 	}
-	if (document.forms.CreateElection.choices.value == '') {
+	if (document.forms.CreateElection.choices.value == '' &&
+	    document.forms.CreateElection.choices_file.value == '') {
 	    numerrs++;
 	    errs += numerrs + '. Must have at least two choices to vote on\n';
 	}

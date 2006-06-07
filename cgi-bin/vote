@@ -61,11 +61,11 @@ if ($public ne 'yes') {
 } else {
     if (!&ElectionUsesAuthorizationKey) {
 	# for backwards compatibility
-	$voter_key = remote_addr(); 
+	$voter_key = $remote_ip_address;
 	$voter = "voter";           
     } else {
 	CheckAuthorizationKeyForVoting($authorization_key);
-	$voter_key = civs_hash(remote_addr(),$authorization_key);
+	$voter_key = &civs_hash($remote_ip_address,$authorization_key);
     }
 }
 

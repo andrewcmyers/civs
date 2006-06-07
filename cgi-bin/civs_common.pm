@@ -16,7 +16,8 @@ BEGIN {
                       &SecureNonce &fisher_yates_shuffle $home $thishost
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error
-                      &unique_elements &civs_hash &system_load &CheckLoad);
+                      &unique_elements &civs_hash &system_load &CheckLoad
+		      $remote_ip_address);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -30,6 +31,21 @@ BEGIN {
 # The same holds for the other variables involved in printing fatal
 # errors to the browser.
 our $local_debug;
+our $using_ISA = '@USING_ISA@';
+our $remote_ip_address;
+
+if ($using_ISA) {
+    $remote_ip_address = http('HTTP_IPREMOTEADDR');
+    if ($remote_ip_address eq undef) {
+	$remote_ip_address = http('HTTP_REMOTE_ADDRESS');
+    }
+    if ($remote_ip_address eq undef) {
+	$remote_ip_address = remote_addr();
+    }
+} else {
+    $remote_ip_address = remote_addr();
+}
+
 
 
 # Package constructor
@@ -161,7 +177,7 @@ sub Fatal_CIVS_Error {
 sub Log {
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open(CIVS_LOG, ">>$civs_log");
-    print CIVS_LOG $now.' '.remote_addr().' '.$_[0].$cr;
+    print CIVS_LOG $now.' '.$remote_ip_address.' '.$_[0].$cr;
     close(CIVS_LOG);
 }
 

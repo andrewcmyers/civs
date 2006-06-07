@@ -14,6 +14,8 @@ use IO::Handle;
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 
+### Initial parameter checking
+
 my $email_addr = param('email_addr');
 if (!($email_addr =~ m/.\@./)) {
     print header(), start_html("Invalid email address");
@@ -24,54 +26,6 @@ if (!($email_addr =~ m/.\@./)) {
     print end_html();
     exit 0;
 }
-
-my $election_id = 'E_'.SecureNonce();
-my $election_dir = $home.'/elections/'.$election_id;
-my $election_data = $election_dir.'/election_data';
-
-if (!mkdir($election_dir)) {
-    HTML_Header("CIVS Election Creation");
-    CIVS_Header();
-    print h1("Error");
-    print p("The election directory is not writeable");
-    print end_html();
-    exit 0;
-}
-
-my %edata;
-tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
-
-##### read form data
-$edata{'title'} = my $title = param('title');
-$edata{'description'} = param('description');
-$edata{'name'} = my $name = param('name');
-$edata{'email_addr'} = param('email_addr');
-$edata{'num_winners'} = param('num_winners');
-$edata{'election_end'} = param('election_end');
-my $public = param('public');
-if (!defined($public) or $public eq '') {
-    $public = "no";
-}
-$edata{'public'} = $public;
-my $writeins = param('writeins');
-if (!defined($writeins) or $writeins eq '') {
-    $writeins = 'no';
-} else {
-    $writeins = 'yes';
-}
-my $shuffle = param('shuffle');
-if (!defined($shuffle) or $shuffle eq '') {
-    $shuffle = 'yes'; # shuffle by default
-}
-$edata{'writeins'} = $writeins;
-$edata{'shuffle'} = param('shuffle');
-my $proportional = param('proportional');
-if (!defined($proportional) or $proportional eq '') {
-    $proportional = 'no';
-} else {
-    $proportional = 'yes';
-}
-$edata{'proportional'} = $proportional;
 
 my $choices = param('choices');
 my @c1 = split /(\r\n)+/, $choices;
@@ -116,6 +70,57 @@ if ($num_choices < 2) {
     print end_html();
     exit 0;
 }
+
+### Election looks ok, create the election directory
+
+my $election_id = 'E_'.SecureNonce();
+my $election_dir = $home.'/elections/'.$election_id;
+my $election_data = $election_dir.'/election_data';
+
+if (!mkdir($election_dir)) {
+    HTML_Header("CIVS Election Creation");
+    CIVS_Header();
+    print h1("Error");
+    print p("The election directory is not writeable");
+    print end_html();
+    exit 0;
+}
+
+my %edata;
+tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
+
+##### read form data into DB
+$edata{'title'} = my $title = param('title');
+$edata{'description'} = param('description');
+$edata{'name'} = my $name = param('name');
+$edata{'email_addr'} = param('email_addr');
+$edata{'num_winners'} = param('num_winners');
+$edata{'election_end'} = param('election_end');
+my $public = param('public');
+if (!defined($public) or $public eq '') {
+    $public = "no";
+}
+$edata{'public'} = $public;
+my $writeins = param('writeins');
+if (!defined($writeins) or $writeins eq '') {
+    $writeins = 'no';
+} else {
+    $writeins = 'yes';
+}
+my $shuffle = param('shuffle');
+if (!defined($shuffle) or $shuffle eq '') {
+    $shuffle = 'yes'; # shuffle by default
+}
+$edata{'writeins'} = $writeins;
+$edata{'shuffle'} = param('shuffle');
+my $proportional = param('proportional');
+if (!defined($proportional) or $proportional eq '') {
+    $proportional = 'no';
+} else {
+    $proportional = 'yes';
+}
+$edata{'proportional'} = $proportional;
+
 $edata{'choices'} = $choices;
 
 my $addresses = param('addresses');

@@ -137,7 +137,7 @@ sub SaveHash {
 sub LockElection {
     if (!sysopen(ELOCK, $election_lock, &O_CREAT | &O_RDWR)) {
         print h1("Error");
-        print p("Did not have write access to acquire an election lock."), 
+        print p("Did not have the write access needed to acquire an election lock."), 
           end_html();
         exit 0;
     }
@@ -271,23 +271,21 @@ sub CheckVoterKey {
     }
 }
 
-
-
 sub CheckNotVoted {
     my ($voter_key, $old_voter_key, $voter) = @_;
-    if ($used_voter_keys{civs_hash($voter_key)}) {
-    print h1("Already voted");
-    print p("A vote has already been cast using your voter key.");
-    PointToResults;
-    print end_html();
-    if ($voter_key) {
-        ElectionLog("Election: $title ($election_id) : Saw second vote "
-                . "from voter key $voter_key");
-    } else {
-        ElectionLog("Election: $title ($election_id) : Saw second vote "
-                . "from (voter,key) = ($voter, $old_voter_key)");
-    }
-    exit 0;
+    if ($used_voter_keys{&civs_hash($voter_key)}) {
+	print h1("Already voted");
+	print p("A vote has already been cast using your voter key.");
+	PointToResults;
+	print end_html();
+	if ($voter_key) {
+	    ElectionLog("Election: $title ($election_id) : Saw second vote "
+		    . "from voter key $voter_key");
+	} else {
+	    ElectionLog("Election: $title ($election_id) : Saw second vote "
+		    . "from (voter,key) = ($voter, $old_voter_key)");
+	}
+	exit 0;
     }
 }
 
@@ -399,7 +397,7 @@ sub ElectionLog {
           end_html();
 	exit 0;
     }
-    print ELECTION_LOG $now." ".remote_addr()." ".$log_msg."\n";
+    print ELECTION_LOG $now." ".$remote_ip_address." ".$log_msg."\n";
     close ELECTION_LOG;
 }
 
