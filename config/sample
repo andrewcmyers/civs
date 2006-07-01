@@ -36,3 +36,19 @@ CIVSBINURL='/cgi-bin/test/civs'
 
 # The URL to the homepage of the CIVS server, relative to http://$THISHOST
 CIVSURL='/~username/civs'
+
+# The extension that should be added to Perl scripts so that the
+# web server will recognize them as such.
+PERLEXT='.pl'
+
+# Anything you need added to the environment variable PATH.
+ADDTOPATH=''
+
+# For debugging locally. Set to 1 to turn on debugging mode.
+LOCALDEBUG=''
+
+# If you are using ISA to do redirection, set this to 1 so the
+# scripts know to get the remote IP address out of the HTTP request
+# header. Otherwise all requests will appear to come from the web server
+# and public elections won't work.
+USING_ISA=''
