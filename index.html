@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html">
 <title>Condorcet Internet Voting Service</title>
-<link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+<base href="@CIVSURL@/">
+<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body>
 
-<div class=thebody>
 <table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
   <tbody><tr>
     <td width="100%" valign="top" nowrap>
@@ -19,16 +19,16 @@
 </tbody>
 </table>
 
-<div class="contents">
-
-<p>This free,    
-automated web service makes it easy to collect and anonymously     
-summarize the opinions of a number of people
-regarding some topic of interest.
-A voter is given a set of possible choices and is allowed to rank
-them. These rankings are combined and used to report a ranking
-generated from the opinions of all the voters.
-You might use this Internet voting service to:</p>
+<table class="form">
+<tr>
+<td>
+<div class="home">
+<p>CIVS is a free Internet voting service that makes it easy to conduct
+elections and polls on the Web.  A voter is given a set of possible choices and
+is allowed to rank them. Combined, these rankings are construct an overall
+ranking that anonymously summarizes the opinions of all the voters.  For
+example, it has been used to:
+</p>
 
 <p>
 <table align="center" class="form">
@@ -70,14 +70,16 @@ of strategic voting. Australia is an example of a country that uses
 a voting system with ranked preferences, Instant Runoff Voting. The     
 Condorcet voting system used by this service is better at identifying
 consensus candidates. Another name for Condorcet methods
-is Instant Round-Robin Voting, because every candidate is compared against
+is Instant Round-Robin, because every candidate is compared against
 every other candidate, unlike Instant Runoff Voting where a consensus
 candidate can be eliminated in early rounds. CIVS also supports
 proportional representation.
 </p>
-
-
-<table align="center" class="links"><tr><td width="50%">
+</div>
+</td>
+<td>
+<div>
+<table align="center" class="links"><tr><td>
 <ul>
 <li><a href="civs_create.html">Create a new election</a></li>
 <li><a href="public_elections.html">Vote in some public polls</a></li>
@@ -87,13 +89,16 @@ Join the CIVS mailing list</a></li>
 <li><a href="rp.html">Condorcet completion</a></li>
 <li><a href="proportional.html">Proportional representation</a></li>
 <li><a href="changelog.html">CIVS software</a></li>
-<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/results.pl?id=E_98d67c463bdd908f">Suggestion box</a></li>
+<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_98d67c463bdd908f&akey=48c2e13e0bb9104f">Suggestion box</a></li>
 <li><a href="acks.html">Acknowledgments</a></li>
 </ul>
-</td>
-<td width="50%">
+<hr>
+</div>
+</td></tr>
+<tr>
+<td>
 <ul><li>
-More information about Condorcet election methods:
+Information on Condorcet methods:
 <ul>
 <li><a href="http://www.electionmethods.org">electionmethods.org</a></li>
 <li><a href="http://seehuhn.de/comp/vote.html">The Debian voting system</a></li>
@@ -103,7 +108,7 @@ More information about Condorcet election methods:
 <li><a href="http://condorcet.org">condorcet.org</a></li>
 </ul>
 <li>
-Other online election and polling systems:
+Other online elections and polls:
 <ul>
 <li><a href="http://www.ericgorr.net/condorcet">Eric
 Gorr's Voting Calculator</li>
@@ -111,6 +116,7 @@ Gorr's Voting Calculator</li>
 <li><a href="http://bolson.org/voting">bolson.org</a></li>
 </ul>
 </td></tr></table>
+</table>
 <hr>
 <p>
 The Condorcet Internet Voting Service is run by <a
@@ -127,7 +133,5 @@ resulting from loss of use, data or profits, whether in an action of contract,
 negligence or other tortious action, arising out of or in connection with
 the use of this service.
 </small></p>
-</div>
-</div>
 </body>
 </html>

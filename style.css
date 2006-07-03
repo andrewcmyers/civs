@@ -4,19 +4,22 @@ a:visited    { color: #009999; background-color: transparent; font-weight: bold 
 a:hover      { color: #0000FF; background-color: transparent }
 body, table, p, ul, li, td  { font-family: Verdana, Arial, helvetica, sans-serif;
 			      font-size: 100%;  color: black }
-body {margin: 0 }
-div.contents {padding-left: 1em; padding-right: 1em}
+body {margin: 0; text-align: center }
+div.contents {padding-left: 1em; padding-right: 1em; text-align: left }
+
+div.home { text-align: justify; padding: 1em; margin: 0px auto; width: 700px}
+
 th              { font-family: Verdana, Arial, helvetica, sans-serif;
                   color: white;
 		  background-color: #000080;
 		  border-color: #000080;
 		  font-weight: bold }
 
-body { background-color: #f0f0ff }
+body { background-color: #f0f0ff; text-align: center }
 table { background-color: #e0e0f0 }
 table.matrix { background-color: #e0e0f0 }
 table.form { background-color: transparent }
-div.emphasized { background-color: #ffffd0 }
+div.emphasized { background-color: #ffffd0; margin: 0px auto }
 
 span.explain {font-size: 75%; color: #404040 }
 
@@ -37,7 +40,7 @@ table.banner h2 { color: white }
 	       background-color: transparent }
 .symbol      { font-family: Symbol, symbol }
 
-h1  { font-size: 180%; }
+h1  { font-size: 180%; text-align: center}
 h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
