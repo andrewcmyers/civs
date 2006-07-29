@@ -6,8 +6,14 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+#include <limits.h>
 
-#include <linux/un.h>
+#include <sys/un.h>
+
+#ifndef UNIX_PATH_MAX
+#define UNIX_PATH_MAX _POSIX_PATH_MAX
+#endif
 
 #define TRY(name,expr) if (0>(expr)) { perror(name); exit(EXIT_FAILURE); }
 
@@ -36,7 +42,7 @@ main(int argc, char **argv) {
     int sock;
     int input_closed = 0;
     struct sockaddr_in client;
-    int client_size;
+    socklen_t client_size;
     int fd;
     int maxfd;
     struct hostent *h;
