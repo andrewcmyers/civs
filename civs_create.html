@@ -55,8 +55,13 @@ the supervisor of the election you create.</p>
 	    numerrs++;
 	    errs += numerrs + '. Invalid email address \n';
 	}
+	if (!(document.forms.CreateElection.num_winners.value >= 1)) {
+	    numerrs++;
+	    errs += numerrs +
+		'. Must have at least one winner\n';
+	}
 	if (document.forms.CreateElection.proportional.checked &&
-	    document.forms.CreateElection.num_winners.value == '1') {
+	    !(document.forms.CreateElection.num_winners.value > 1)) {
 	    numerrs++;
 	    errs += numerrs +
 		'. Proportional representation requires more than one winner\n';

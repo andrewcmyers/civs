@@ -119,7 +119,7 @@ print STDOUT 'Condorcet completion rule:
 	onClick="newSettings()"
 	value="beatpath_winner" ',
 	$bw_checked,
-    '> Beatpath/Schulze/SSD &nbsp;&nbsp;
+    '> Beatpath/Schulze/CSSD &nbsp;&nbsp;
     <input type="radio"
 	name="algorithm",
 	onClick="newSettings()"

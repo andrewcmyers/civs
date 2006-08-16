@@ -52,12 +52,15 @@ while (defined(my $file = readdir(DIR))) {
     my $stopped = (-e $stopped_file) ? "Yes" : "No";
     my $auth_key = (defined($edata{'hash_authorization_key'})) ? "Yes" : "No";
     my $st = stat($election_dir."/vote_log");
+    my $mtime;
     my $last_update = 'N/A';
-    $last_update = localtime($st->mtime) if defined($st);
-    my $mtime = 0;
     if (defined($st)) {
 	$mtime = $st->mtime;
+    } else {
+	my $std = stat($election_dir);
+	$mtime = $std->mtime;
     }
+    $last_update = localtime($mtime);
     if (defined($title)) {
 	$title = "\"$title\"";
     } else {

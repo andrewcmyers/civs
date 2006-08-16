@@ -7,7 +7,11 @@ body, table, p, ul, li, td  { font-family: Verdana, Arial, helvetica, sans-serif
 body {margin: 0; text-align: center }
 div.contents {padding-left: 1em; padding-right: 1em; text-align: left }
 
-div.home { text-align: justify; padding: 1em; margin: 0px auto; width: 700px}
+div.home { text-align: justify; padding: 1em; margin: auto;
+           max-width: 700px; min-width: 40ex }
+
+div.rlinks { width: 100%;
+             margin-left: auto }
 
 th              { font-family: Verdana, Arial, helvetica, sans-serif;
                   color: white;
@@ -63,7 +67,9 @@ td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
 table.matrix th { background-color: transparent; color: black }
 table.matrix, table.rankings { border-style: solid; border-width: 1px; border-color: #000040 }
-table.links { border-color: black; border-style: solid; border-width: 1px }
+table.links { border-color: black; border-style: solid; border-width: 1px; margin: 5px}
+
+table.links tr td { padding: 5px; border-style: none solid; border-width: 1px; margin: 0px }
 
 tr.selected { background-color: #ffffd0 }
 
