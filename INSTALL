@@ -1,5 +1,4 @@
 Condorcet Internet Voting System
-Version 2.2
 Copyright 2006, Andrew C. Myers
 
 INSTALLATION INSTRUCTIONS
@@ -29,6 +28,17 @@ INSTALLATION INSTRUCTIONS
    adding yourself as a voter, opening the election, voting in the election,
    closing the election, and viewing the results.
 
-
 Good luck!
 
+ACKNOWLEDGEMENTS
+
+  Several people have worked on CIVS and its design. 
+
+    Andrew Myers built the initial version of the system and has maintained it.
+    Michael Clarkson designed and implemented the protocols that are used to
+    protect voter identity.  He also added the ballot reporting feature and
+    cleaned up the code quite a bit.
+    
+    Nate Nystrom gave good suggestions on the the user interface,  David Gamble
+    helpfully critiqued the proportional representation method, and Steve
+    Eppley gave useful pointers on MAM and related methods.
