@@ -155,11 +155,16 @@ if ($proportional ne 'yes' || !$use_combined_ratings) {
 
 
 if ($ballot_reporting eq 'yes') {
-	print p(b("Ballot reporting is enabled for this election. ")
-	    . "Your ballot (the rankings you assign to candidates) "
-		. "will be made public when the election is closed. "
-	    . "However, your ballot will be anonymous: "
-		. "no personally identifying information will appear.");
+    my $msg = b('Ballot reporting is enabled for this election. ')
+	    . 'Your ballot (the rankings you assign to candidates) '
+	    . 'will be made public when the election is closed.';
+    if ($reveal_voters eq 'yes') {
+	$msg .= 'Your email address will be visible along with your ballot.';
+    } else {
+	$msg .= 'However, your ballot will be anonymous: '
+	      . 'no personally identifying information will appear.';
+    }
+    print p($msg);
 }
 
 my $rating = 'Rank';
@@ -312,6 +317,9 @@ sub ProcessVote {
 	$vdata{'recorded_voters'} = $recorded_voters . "\n".  $ballot_key;
     } else {
 	$vdata{'recorded_voters'} = $ballot_key;
+    }
+    if ($reveal_voters eq 'yes') {
+	$vdata{"voter key of $ballot_key"} = $voter_key;
     }
 
 	# Now, update matrix.

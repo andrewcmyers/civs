@@ -49,7 +49,7 @@ print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_
 # Destroy record of voter addresses so we can't
 # figure out who voted for what.
 $edata{'num_auth'} = $num_added;
-$edata{'addresses'} = "";
+$edata{'addresses'} = '';
 
 print end_html();
 

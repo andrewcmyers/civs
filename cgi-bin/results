@@ -261,14 +261,22 @@ sub PrintNonproportionalDetails {
 			my $i = 1;
 
 			fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
-			foreach my $voter_key (@voters) {
-		    	# recorded_vote is a comma separated list of the ranks
-			    # that the voter assigned to candidates.  Element i of the list
-			    # corresponds to candidate i.
-			    my $recorded_vote = $vdata_copy{$voter_key}; 
-		    	my @row = split /,/, $recorded_vote;
-			    unshift @row, "$i. ";
-			    $i++;
+			foreach my $ballot_key (@voters) {
+			    # recorded_vote is a comma separated list of the
+			    # ranks that the voter assigned to candidates.
+			    # Element i of the list corresponds to candidate
+			    # i.
+			    my $recorded_vote = $vdata_copy{$ballot_key}; 
+			    my @row = split /,/, $recorded_vote;
+			    if ($reveal_voters eq 'yes') {
+			        my $voter_key =
+				  $vdata_copy{"voter key of $ballot_key"};
+				my $email = $edata{"email_addr $voter_key"};
+				unshift @row, ($email.': ');
+			    } else {
+				unshift @row, "$i. ";
+				$i++;
+			    }
 			    push @rows, td(\@row);
 			}
 

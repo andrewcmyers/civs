@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
 <title>Condorcet Internet Voting Service</title>
 <link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
 <meta http-equiv="Content-Script-Type" content="text/javascript">
@@ -45,6 +46,19 @@
 	if (numerrs == 0) return true;
 	alert('Errors:\n' + errs);
 	return false;
+    }
+
+    var prcontrol, prparent;
+    var rvcontrol, rvparent;
+
+    function setup() {
+	prcontrol = document.getElementById("prcontrol");
+	prparent = prcontrol.parentNode;
+	prparent.removeChild(prcontrol);
+
+	rvcontrol = document.getElementById("reveal_voters");
+	rvparent = rvcontrol.parentNode;
+	rvparent.removeChild(rvcontrol);
     }
 
     function render_text(ta_id, span_id) {
@@ -142,27 +156,39 @@ the supervisor of the election you create.</p>
   <p><input type=file name="addresses_file"></p>
   <p><input type="checkbox" name="public" value="yes">
   Make this a public election (voters can add themselves.
-  <strong>Warning:</strong> there is only a token attempt to prevent multiple voting).<br>
+  <strong>Warning:</strong> there is only a token attempt to prevent multiple voting, based on voters' IP addresses).<br>
   <input type="checkbox" name="writeins" value="yes">
   Allow voters to write in new choices.<br>
   <input type="checkbox" name="shuffle" value="no">
   Present choices on voting page in exactly the given order.<br>
-  <input type="checkbox" name="proportional" value="yes">
+  <input type="checkbox" name="proportional" value="yes"
+         onClick="prparent.appendChild(prcontrol)">
   Enforce proportional representation (useful only if there is
   more than one winner: <a href="proportional.html">more info</a>)</br>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If using proportional representation,
-  voters are assumed to be trying to maximize:
-  <input type="radio" name="rating_interpretation"
+  <span>
+   <p class="suboption" id="prcontrol">
+    For proportional representation, voters are assumed to be maximizing:<br>
+    <input type="radio" name="rating_interpretation"
        value="best_choice"
-       checked> rank of best choice
-  <input type="radio" name="rating_interpretation"
-  value="combined_ratings"> combined weights of selected choices<br>
-  <input type = "checkbox" name="ballot_reporting" value="yes">
-  Enable detailed anonymous ballot reporting.  Places a button on the results
-  page that allows anyone to view the rankings (but <em>not</em> any 
-  personally identifying information about voters) on each ballot cast.
+       checked> rank of their favorite choice<br>
+    <input type="radio" name="rating_interpretation"
+       value="combined_ratings"> combined weights of selected choices<br>
+   </p>
+  </span>
+  <input type="checkbox" name="ballot_reporting" value="yes"
+         onClick="rvparent.appendChild(rvcontrol);">
+  Enable detailed ballot reporting. 
+  Anyone to view the rankings on each ballot
+  (but <em>not</em> any identifying information about the voter) .
+  <span>
+  <p class="suboption" id="reveal_voters">
+  <input type="checkbox" name="reveal_voters" value="yes">
+  In detailed ballot report, also reveal the identity of the voter
+  with each ballot. Voters are <i class="warning">not</i> anonymous if this is checked,
+  nor does the server discard voter email addresses as it normally does.
   </p>
-       
+  </span>
+  </p>
 
 <div class="emphasized">
   <p>Make sure your e-mail address is correct because election information will
@@ -175,6 +201,10 @@ the supervisor of the election you create.</p>
   <input type="reset" value="Clear form" name="reset"></p>
 </form>
 </div>
+
+<script type="text/javascript">
+  setup();
+</script>
 </body>
 
 </html>

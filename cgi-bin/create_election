@@ -148,6 +148,13 @@ if (!defined($ballot_reporting) or $ballot_reporting eq '') {
     $ballot_reporting = 'yes';
 }
 $edata{'ballot_reporting'} = $ballot_reporting;
+my $reveal_voters = param('reveal_voters');
+if (!defined($reveal_voters) or $reveal_voters eq '') {
+    $reveal_voters = 'no';
+} else {
+    $reveal_voters = 'yes';
+}
+$edata{'reveal_voters'} = $reveal_voters;
 
 HTML_Header("CIVS Election Creation");
 CIVS_Header("Election created: $title");

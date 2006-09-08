@@ -74,3 +74,5 @@ table.links tr td { padding: 5px; border-style: none solid; border-width: 1px; m
 tr.selected { background-color: #ffffd0 }
 
 table.banner h1 {text-shadow: white 2px 2px 2px }
+p.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
+.warning {color: red}

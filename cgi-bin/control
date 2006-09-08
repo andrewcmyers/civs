@@ -117,9 +117,14 @@ if ($proportional eq 'yes') {
 }
 
 if ($ballot_reporting eq 'yes') {
-    print 'Detailed anonymized ballot reporting is enabled.', br();
+    print 'Detailed ballot reporting is enabled.', br();
+    if ($reveal_voters eq 'yes') {
+	print 'Voter identities (email) will be publicly associated with their ballots.';
+    } else {
+	print 'Voter identities (email) will be kept anonymous.';
+    }
 } else {
-    print 'Detailed anonymized ballot reporting is disabled.', br();
+    print 'Detailed ballot reporting is disabled.', br();
 }
  
 print h2('Description:'), p($description);

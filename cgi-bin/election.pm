@@ -25,7 +25,7 @@ BEGIN {
     $title $email_addr $description $num_winners $addresses @addresses
     $election_end $public $writeins $shuffle $proportional $use_combined_ratings
     $choices @choices $num_choices $num_auth $num_votes $recorded_voters
-    $ballot_reporting $authorization_key %used_voter_keys
+    $ballot_reporting $reveal_voters $authorization_key %used_voter_keys
     %voter_keys %edata %vdata);
 }
 
@@ -46,8 +46,8 @@ our (%edata, %vdata);
 our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      @addresses, $election_end, $public, $writeins, $proportional,
      $use_combined_ratings, $choices, @choices, $num_choices, $num_auth,
-     $num_votes, $recorded_voters, $ballot_reporting, $authorization_key,
-     $shuffle, %voter_keys, %used_voter_keys);
+     $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
+     $authorization_key, $shuffle, %voter_keys, %used_voter_keys);
 
 our $civs_supervisor = '@SUPERVISOR@';
 
@@ -93,7 +93,8 @@ sub init {
     $shuffle = $edata{'shuffle'};
     $num_votes = $vdata{'num_votes'} or $num_votes = 0;
     $recorded_voters = $vdata{'recorded_voters'};
-    $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = "";
+    $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';
+    $reveal_voters = $edata{'reveal_voters'} or $reveal_voters = '';
     %voter_keys = ();
     &LoadHash('voter_keys', \%voter_keys);
     &LoadHash('used_voter_keys', \%used_voter_keys);
@@ -409,6 +410,9 @@ sub GenerateVoterKey {
     my $authorization_key = shift;
     my $voter_key = civs_hash($voter_email, $authorization_key,
         $private_host_id);
+    if ($reveal_voters eq 'yes') {
+	$edata{"email_addr $voter_key"} = $voter_email;
+    }
     return $voter_key;
 }
 
@@ -472,10 +476,21 @@ sub SendKeys {
             Send '';
             Send "  $url";
             Send '';
-            Send 'This is your private URL. Do not give it to anyone else because';
-            Send 'they could use it to vote for you. Your privacy will not be violated';
-            Send 'by voting. The voting service does not keep track of your email address';
-            Send 'or release any information about whether or how you have voted.';
+            Send 'This is your private URL. Do not give it to anyone else,';
+	    Send 'because they could use it to vote for you.';
+	    Send '';
+	    
+	    if ($reveal_voters ne 'yes') {
+		Send 'Your privacy will not be violated by voting.';
+		Send 'The voting service has already destroyed the record of your email address';
+		Send 'and will not release any information about whether or how you have voted.';
+	    } else {
+		Send 'The election supervisor has decided to make this a';
+		Send 'non-anonymous election. If you vote, how you voted';
+		Send 'your vote will be publicly visible along with your';
+		Send 'email address. If you do not vote your privacy will';
+		Send 'be preserved.';
+	    }
             Send '';
             Send "The election has been announced to end $election_end.";
             Send 'To view the results of the election once it is closed, visit:';
