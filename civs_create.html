@@ -6,37 +6,8 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>Condorcet Internet Voting Service</title>
 <link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
-</head>
-
-<body>
-
-<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
-  <tbody><tr>
-    <td width="100%" valign="top" nowrap>
-      <h1>&nbsp;Condorcet Internet Voting
-      Service</h1>
-    </td>
-    <td width=0% nowrap valign=top align=right>
-	<a href="@CIVSHOME@">CIVS Home</a><br>
-	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
-	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a>
-    </td>
-  </tr>
-  <tr>
-    <td width="100%" valign="top" nowrap colspan=2>
-      <h2 align="center">Create a New Election</h2>
-    </td>
-  </tr>
-</tbody>
-</table>
-
-<div class="contents">
-
-<p>This web page allows you to create a new CIVS election. You will be   
-the supervisor of the election you create.</p>                          
-
-<hr>
-<script>
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<script type="text/javascript">
     function trim(str)
     {
         return str.replace(/^\s+|\s+$/g, '')
@@ -75,8 +46,45 @@ the supervisor of the election you create.</p>
 	alert('Errors:\n' + errs);
 	return false;
     }
+
+    function render_text(ta_id, span_id) {
+	var span = document.getElementById(span_id);
+	var ta = document.getElementById(ta_id);
+	span.innerHTML = ta.value;
+	return 1;
+    }
 </script>
 
+</head>
+
+<body>
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>&nbsp;Condorcet Internet Voting
+      Service</h1>
+    </td>
+    <td width=0% nowrap valign=top align=right>
+	<a href="@CIVSHOME@">CIVS Home</a><br>
+	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
+	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" valign="top" nowrap colspan=2>
+      <h2 align="center">Create a New Election</h2>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<div class="contents">
+
+<p>This web page allows you to create a new CIVS election. You will be   
+the supervisor of the election you create.</p>                          
+
+<hr>
 <form method="POST"
     action="@CIVSBINURL@/create_election@PERLEXT@"
     enctype="multipart/form-data"
@@ -112,7 +120,16 @@ the supervisor of the election you create.</p>
   </div>
 
   <p>Description of the election and available choices (optional):<br>
-  <textarea valign="top" rows="4" name="description" cols="60"></textarea></p>
+  <table>
+    <tr>
+      <td><textarea id="description" valign="top" rows="5" name="description" cols="60"></textarea>
+      </td>
+      <td><input type="button" value="Preview&gt;&gt;"
+	    onClick="render_text('description', 'rendered_description')"></td>
+      <td valign="top"><span id="rendered_description"></span></td>
+    </tr>
+  </table>
+  </p>
 
   <p>Enter the names of all the choices (candidates),
      one per line, or upload a file containing all the choices:</p>
