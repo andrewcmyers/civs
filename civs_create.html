@@ -67,6 +67,18 @@
 	span.innerHTML = ta.value;
 	return 1;
     }
+
+    function render_list(ta_id, span_id) {
+	var span = document.getElementById(span_id);
+	var ta = document.getElementById(ta_id);
+	var names = ta.value.split(/[\r\n]+/g);
+	var html = "";
+	for (i = 0; i < names.length; i++) {
+	    html = html + "<li>" + names[i] + "</li>";
+	}
+	span.innerHTML = "<ul>" + html + "</ul>";
+	return 1;
+    }
 </script>
 
 </head>
@@ -147,7 +159,17 @@ the supervisor of the election you create.</p>
 
   <p>Enter the names of all the choices (candidates),
      one per line, or upload a file containing all the choices:</p>
-  <p align="left"><textarea rows="5" name="choices" cols="60"></textarea>&nbsp;&nbsp;</p>
+  <p align="left">
+  <table class="form">
+  <tr><td>
+    <textarea rows="5" name="choices" cols="60" id="choices"></textarea></td>
+    <td>
+      <td><input type="button" value="Preview&gt;&gt;"
+	    onClick="render_list('choices', 'rendered_choices')"></td>
+      <td valign="top"><span id="rendered_choices"></span></td>
+    </tr>
+  </table>
+  </p>
   <p align="left"><input type=file name="choices_file"></p>
   <p>How many choices will win the election: <input type="text" name="num_winners" size="5" value="1"></p>
   <p>The e-mail addresses of voters, one per line
