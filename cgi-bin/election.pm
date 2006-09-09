@@ -452,6 +452,12 @@ sub SendKeys {
         if ($local_debug) {
             print "voter link: <a href=\"$url\">$url</a>\n";
         } else {
+	    sub SendURL {
+	      ($url) = @_;
+	      Send '<pre>';
+	      Send '    <a href=\"$url\">$url</a>';
+	      Send '</pre>';
+	    }
             print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
                 Send "mail from: $civs_supervisor"; ConsumeSMTP;
             Send "rcpt to: $v"; ConsumeSMTP;
@@ -462,24 +468,33 @@ sub SendKeys {
             Send "Reply-To: $email_addr";
             Send "To: $v";
             Send "Subject: CIVS Election now available for voting: $title";
-            Send "";
+	    Send 'Content-Type: text/html; charset=ISO-8859-1';
+	    Send 'Content-Transfer-Encoding: 8bit';
+            Send "Return-Path: $email_addr";
+            Send '';
+	    Send '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+	    Send '<html>';
+	    Send '<head>';
+	    Send '<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">';
+	    Send '</head>';
+	    Send '<body><p>';
             Send "A Condorcet Internet Voting Service election named $title has been created.";
             Send "You have been designated as a voter by the election supervisor,";
-            Send "$name ($email_addr).";
+            Send "$name (<a href=\"mailto:$email_addr ($name)\">$email_addr</a>).</p>";
 	    if (!($description =~ m/^(\s)*$/)) {
 		Send '';
-		Send 'Description of election:';
+		Send '<b>Description of election:</b>';
 		Send $description;
 		Send '';
 	    }
+	    Send '<p>';
 	    Send 'If you would like to vote, please visit the following URL:';
-            Send '';
-            Send "  $url";
-            Send '';
+	    SendURL($url);
             Send 'This is your private URL. Do not give it to anyone else,';
 	    Send 'because they could use it to vote for you.';
-	    Send '';
+	    Send '</p>';
 	    
+	      Send '<p>';
 	    if ($reveal_voters ne 'yes') {
 		Send 'Your privacy will not be violated by voting.';
 		Send 'The voting service has already destroyed the record of your email address';
@@ -491,13 +506,17 @@ sub SendKeys {
 		Send 'email address. If you do not vote your privacy will';
 		Send 'be preserved.';
 	    }
-            Send '';
+	    Send '</p><p>';
             Send "The election has been announced to end $election_end.";
             Send 'To view the results of the election once it is closed, visit:';
-            Send "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id";
-	    Send '';
+	    Send '</p>';
+	    SendURL("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id");
+            Send '<p>';
             Send "For more information about the Condorcet Internet Voting Service, see";
-            Send "$civs_home";
+            SendURL($civs_home);
+	    Send '</p>';
+	    Send '</body>';
+	    Send '</html>';
             Send '.'; ConsumeSMTP;
         }
     }
