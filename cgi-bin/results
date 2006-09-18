@@ -210,12 +210,14 @@ sub PrintMatrix {
 	    } else {
 		my $w = $m[$j][$k];
 		my $l = $m[$k][$j];
+		my $choicesj = $choices[$j]; $choicesj =~ s/<[^>]*>//gs;
+		my $choicesk = $choices[$k]; $choicesk =~ s/<[^>]*>//gs;
 		if ($w > $l) {
-		    print "<td class=\"win\" title=\"$choices[$j] beats $choices[$k] $w&ndash;$l\">";
+		    print "<td class=\"win\" title=\"$choicesj beats $choicesk $w&ndash;$l\">";
 		} elsif ($w == $l) {
-		    print "<td class=\"tie\" title=\"$choices[$j] ties $choices[$k] $w&ndash;$l\">";
+		    print "<td class=\"tie\" title=\"$choicesj ties $choicesk $w&ndash;$l\">";
 		} else {
-		    print "<td class=\"lose\" title=\"$choices[$j] loses to $choices[$k] $w&ndash;$l\">";
+		    print "<td class=\"lose\" title=\"$choicesj loses to $choicesk $w&ndash;$l\">";
 		}
 		if ($zerodot && $w == 0) {
 		    print '.';
