@@ -19,7 +19,7 @@ BEGIN {
     &CheckStarted &PointToResults &IsStopped &CheckNotStopped
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
-    &ElectionUsesAuthorizationKey &SyncVoterKeys
+    &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
