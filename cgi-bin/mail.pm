@@ -24,17 +24,19 @@ use Socket;
 our $sin;
 our $verbose;
 
-# Package initialization code
-
 &init;
 
+# Initialize package
 sub init {
 	if (!($local_debug)) {
 		my $proto = getprotobyname('tcp');
-		socket(SMTP, &PF_INET, &SOCK_STREAM, $proto) || print "can't open socket: $!\n";
-		my $port = getservbyname('smtp', 'tcp') || print "can't get port\n";
+		socket(SMTP, &PF_INET, &SOCK_STREAM, $proto) ||
+		    print "can't open socket: $!\n";
+		my $port = getservbyname('smtp', 'tcp') ||
+		    print "can't get port\n";
 		if ($port eq '') { exit 1; }
-		my $iaddr = gethostbyname('@SMTPHOST@') || print "no such host\n";
+		my $iaddr = gethostbyname('@SMTPHOST@') ||
+		    print "no such host\n";
 		if ($iaddr eq '') { exit 1; }
 		$sin = pack_sockaddr_in($port, $iaddr);
 	}
@@ -53,6 +55,8 @@ sub Send {
     print SMTP $_[0]."\r\n";
 }
 
+# Read a response from the SMTP server after making sure it has all
+# pending input. Exit if an error code is reported.
 sub ConsumeSMTP {
     SMTP->flush;
     while (<SMTP>) {
@@ -64,6 +68,7 @@ sub ConsumeSMTP {
     }
 }
 
+# Set up a connection to the SMTP server so email can be sent
 sub ConnectMail {
     if (connect(SMTP, $sin)) {
         #print STDERR "SMTP Connection established\n";
@@ -75,6 +80,7 @@ sub ConnectMail {
     }
 }
 
+# Close the connection to the SMTP server.
 sub CloseMail {
 	Send 'quit';
 	close SMTP;

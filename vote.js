@@ -1,3 +1,9 @@
+// vote.js
+//
+// This is the Javascript support for the animated ballot. Rows are
+// automatically resorted in ranking order, and buttons are provided
+// for convenient manipulation of the ballot.
+
 var rows = new Array;
 var rank = new Array;
 var selected = new Array;
@@ -171,6 +177,7 @@ function set_rank(i, r) {
     return resort_row(i);
 }
 
+// set multiple choices to have the same rank
 function do_make_tie() {
     var min_rank = min_selected_rank();
     if (num_selected < 2) {
@@ -184,6 +191,7 @@ function do_make_tie() {
     }
 }
 
+// move the selected choices up
 function do_move_up () {
     var min_rank = min_selected_rank();
     if (num_selected < 1) {
@@ -238,6 +246,7 @@ function do_move_up () {
     }
 }
 
+// move the selected choices down
 function do_move_down () {
     var max_rank = max_selected_rank();
     if (num_selected < 1) {
@@ -298,6 +307,7 @@ function do_move_down () {
     }
 }
 
+// move the suggested choices to the top ranking (1)
 function do_move_top() {
     var min_rank = min_selected_rank();
     if (num_selected < 1) {
@@ -320,6 +330,8 @@ function do_move_top() {
     }
     cur_top++;
 }
+
+// move the suggested choices to the bottom possible ranking
 function do_move_bottom() {
     var max_rank = max_selected_rank();
     if (num_selected < 1) {
@@ -343,6 +355,7 @@ function do_move_bottom() {
     cur_bot--;
 }
 
+// initialize the UI
 function setup() {
     var button = document.getElementById("sort_button");
     button.parentNode.removeChild(button);
