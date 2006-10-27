@@ -61,8 +61,8 @@ print '<form method="GET"
 	action="'.$thisurl.'"
 	enctype="multipart/form-data"
 	name="changeSettings">';
-print escapeHTML("Election supervisor: $name ("), tt($email_addr).')', br();
-print "Announced end of election: $election_end", br();
+print span("Election supervisor: $name (".tt($email_addr).')'), br();
+print span("Announced end of election: $election_end"), br();
 if (IsStopped) {
     my $close_time = $vdata_copy{'close_time'};
     print "Actual time election ended: $close_time", br();

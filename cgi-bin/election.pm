@@ -459,7 +459,7 @@ sub SendKeys {
 	      Send '</pre>';
 	    }
             print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
-                Send "mail from: $civs_supervisor"; ConsumeSMTP;
+                Send "mail from: $email_addr"; ConsumeSMTP;
             Send "rcpt to: $v"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
             Send "From: $email_addr ($name, CIVS election supervisor)";

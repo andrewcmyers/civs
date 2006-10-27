@@ -13,6 +13,7 @@ our @rvh; # Random voter hierarchy; used only for MAM tiebreaking.
 	  #   on the choices.
 our $tiebreak = 0;
           # whether the RVH was used to order majorities
+our $use_strongest_defeat = 0;
 
 # Note: MAM would pick a random ballot and use it to resolve ties in
 # order_pairs. Here we don't try to achieve a total
@@ -228,7 +229,8 @@ sub rank_candidates {
 			    $won = 0;
 			    last;
 			}
-			if ($affirmed[$j][$i] && $affirmed[$i][$j]) {
+			if ($use_strongest_defeat &&
+			    $affirmed[$j][$i] && $affirmed[$i][$j]) {
 			    $b = $strongest_defeat[$i];
 			    $a = $strongest_defeat[$j];
 			    if (&order_pairs > 0) {

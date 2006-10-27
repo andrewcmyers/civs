@@ -40,8 +40,17 @@ the CIVS software, click here:
 </p>
 
 <blockquote>
-<a href="http://www.cs.cornell.edu/andru/release/civs-2.4.tar.gz">
-[Download CIVS 2.4]</a>
+<form method="POST" 
+      action="http://www.cs.cornell.edu/w8/~andru/cgi-bin/download.pl"
+      enctype="multipart/form-data">
+  <input type="hidden" name="package" value="CIVS 2.5">
+  <input type="hidden" name="style" value="@CIVSURL@/style.css">
+  <input type="hidden" name="url"
+         value="http://www.cs.cornell.edu/andru/release/civs-2.5.tar.gz">
+  <input
+    style="background-color: blue; color: white; border-style: solid; border-color: black; font-weight: bold"
+  type="submit" value="Download CIVS 2.5" />
+</form>
 </blockquote>
 
 <p>

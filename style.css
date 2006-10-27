@@ -19,8 +19,8 @@ th              { font-family: Verdana, Arial, helvetica, sans-serif;
 		  border-color: #000080;
 		  font-weight: bold }
 
-body { background-color: #f0f0ff; text-align: center }
-table { background-color: #e0e0f0 }
+body { background-color: #f8f8ff; text-align: center }
+table { background-color: #e8e8f0 }
 table.matrix { background-color: #e0e0f0 }
 table.form { background-color: transparent }
 div.emphasized { background-color: #ffffd0; margin: 0px auto }
@@ -76,3 +76,8 @@ tr.selected { background-color: #ffffd0 }
 table.banner h1 {text-shadow: white 2px 2px 2px }
 p.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
 .warning {color: red}
+
+div.content {text-align: left; padding: 5ex}
+p.explanation {text-align: left; width: 60ex}
+td.answer {text-align: left}
+td.question {text-align: right}
