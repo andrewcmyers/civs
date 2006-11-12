@@ -18,7 +18,6 @@ use beatpath;
 use rp;
 
 my $thisurl = $civs_bin_path."/results@PERLEXT@";
-my $detailed = param('detailed');
 
 # CheckLoad;
 # timeout(30);
@@ -39,7 +38,7 @@ if ($public ne 'yes') {
     CheckStopped;
 }
 
-print h2($title);
+print br();
 
 my $nwin_param = param('num_winners');
 my $real_nwin = $num_winners;
@@ -105,10 +104,13 @@ if ($proportional eq 'yes') {
 my $bw_checked = '';
 my $rp_checked = '';
 my $mam_checked = '';
+my $runoff_checked = '';
 if ($algorithm eq 'civs_ranked_pairs') {
     $rp_checked = 'checked';
 } elsif ($algorithm eq 'mam') {
     $mam_checked = 'checked';
+} elsif ($algorithm eq 'runoff') {
+    $runoff_checked = 'checked';
 } else {
     $bw_checked = 'checked';
 }
@@ -131,45 +133,48 @@ print STDOUT 'Condorcet completion rule:
 	onClick="newSettings()"
 	value="mam"',
 	$mam_checked,
-    '> MAM';
+    '> MAM
+    <input type="radio"
+	name="algorithm",
+	onClick="newSettings()"
+	value="runoff"',
+	$runoff_checked,
+    '> Runoff';
     print '&nbsp;&nbsp;&nbsp; <a href="',$civs_url,'/rp.html">(What is this?)</a>';
     print '&nbsp;<input type="submit" id="recomplete" value="Update">';
 
   # print '&nbsp;<input type="submit" name="submit" value="Update display options">';
 print '</form>',$cr;
 
-print h2('Election description'), p($description);
+print h2('Election description'),
+      '<div class="description">',
+      p($description),
+      '</div>';
 
 # These variables are global to the results computations.
 my ($condorcet_winner);
 my (@result, @matrix, @closure_matrix, @choice_index, @choice_rank);
 my (%visited); 
 
+
 &ComputeNonproportionalResults;   # needed regardless of the election type
 
 if ($proportional eq 'yes') {
     &PrintProportionalResults;
 } else { 
-    &PrintCondorcetWinner;
+    # &PrintCondorcetWinner;
 
     print h2("Ranking of the choices");
 
     if ($algorithm eq 'civs_ranked_pairs' ||
 	$algorithm eq 'mam') {
 	&PrintRP;
+    } elsif ($algorithm eq 'runoff') {
+	&PrintRunoff;
     } else {
 	&PrintBW;
-    }
-    print hr();
-    
-    if ($detailed) {
-	    &PrintNonproportionalDetails;
-    } else {
-	    my $details_url = "$thisurl?id=$election_id&num_winners=$num_winners&algorithm=$algorithm" .
-		'&detailed=1#details';
-	    my $link = a({-href=>"$details_url"}, "Detailed results") 
-		    . " are also available.";
-	    print p($link);
+	print hr();
+	&PrintBWDetails;
     }
 }
 
@@ -232,29 +237,45 @@ sub PrintMatrix {
     print '</table>'.$cr;
 }
 
-sub PrintNonproportionalDetails {
+sub DetailsHeader {
+    print '<p id="show_details">For simplicity, some details of the election result
+    are not shown.
+    <button onclick=\'show_details();\'>
+	    Show details</button></p>';
+
+    print '<div id="details">';
+    print '<button id="hide_details" onclick="hide_details();">Hide details</button>
+	    <h2>Election result details</h2>';
+}
+
+sub PrintBWDetails {
 # Print the detailed results of the ordinary
 # (nonproportional) beatpath algorithm. 
 
-    print h2("Detailed results");
+    &DetailsHeader;
 
-    my $summary_url = "$thisurl?id=$election_id&num_winners=$num_winners";
-    print p(&details_bookmark . a({-href=>"$summary_url"}, "Hide details"));
-	
-    my ($j, $jj, $k, $kk);
-    print h2("Beatpath closure matrix");
-    print p("
-    The following matrix shows the strength of the strongest
-    beatpath connecting each pair of choices. Choice 1 is preferred
-    to choice 2 if there is a better beatpath leading from 1 to 2
-    than any leading from 2 to 1.
-    ");
+    print h3("Preference matrix");
 
-    PrintMatrix $num_choices, [@closure_matrix], [@choices], [@choice_index], 1;
+    print p("The following table shows the results of all pairwise contests between
+    two choices. Each entry shows the number of ballots on
+    which one choice was preferred to another choice.");
+    PrintMatrix $num_choices, [@matrix], [@choices], [@choice_index], 0;
+    if ($algorithm eq 'beatpath_winner') {
+	my ($j, $jj, $k, $kk);
+	print h3("Beatpath closure matrix");
+	print p("
+	The following matrix shows the strength of the strongest
+	beatpath connecting each pair of choices. Choice 1 is preferred
+	to choice 2 if there is a better beatpath leading from 1 to 2
+	than any leading from 2 to 1.
+	");
 
-    print h2('Ballot report');
+	PrintMatrix $num_choices, [@closure_matrix], [@choices], [@choice_index], 1;
+    }
 
     if ($ballot_reporting eq 'yes') {
+	print h3('Ballot report');
+
 		my @voters = split /\n/, $vdata_copy{'recorded_voters'};
 		if ($#voters >= 0) {
 			my @headings = @choices;
@@ -290,8 +311,9 @@ sub PrintNonproportionalDetails {
 			print p("No ballots were cast in this election.");
 		}
     } else {
-		print p("Detailed ballot reporting is not enabled for this election.");
+	print p("Ballot reporting was not enabled for this election.");
     }
+    print '</div>';
 }
 
 sub ComputeNonproportionalResults {
@@ -370,7 +392,11 @@ sub PrintRanking {
 		    }
 		}
 	    } else {
-		$explanation = '';
+		if ($winner[$i] == $condorcet_winner) {
+		    $explanation = '&nbsp;&nbsp;(Condorcet winner: wins contests with all other choices)';
+		} else {
+		    $explanation = '&nbsp;&nbsp;(Not defeated in any contest with another choice)';
+		}
 	    }
 	    if (0 && $explanation ne '') {
 		print '<span title="',$explanation,'">';
@@ -412,8 +438,9 @@ sub PrintCondorcetWinner {
     if ($proportional ne 'yes') {
 	print h2("Condorcet winner");
 	if ($condorcet_winner >= 0) {
-		    print p('The Condorcet winner of this election is '.
-			    strong($choices[$condorcet_winner]).'.');
+	    print p('Compared to each other choice, '.
+	    strong($choices[$condorcet_winner]).'
+	    has a higher ranking on a majority of ballots.');
 	} else {
 		    print p('This election had no Condorcet winner.').$cr;
 	}
@@ -423,12 +450,6 @@ sub PrintCondorcetWinner {
 sub PrintBW {
 	PrintRanking [@result], [@matrix];
 
-	print h2("Preference matrix");
-	print p("The following table shows the results of all
-	pairwise contests between
-	two choices. Each entry shows the number of ballots on
-	which one choice was preferred to another choice.");
-	PrintMatrix $num_choices, [@matrix], [@choices], [@choice_index], 0;
 }
 
 sub details_bookmark {
@@ -459,6 +480,10 @@ sub PrintRP {
 	#print pre("Done ranking");
 
 	PrintRanking $rref, [@matrix];
+
+	print hr();
+
+	&DetailsHeader;
 
 	print h2("Preference matrix");
 	print p("The following table shows the results of all
@@ -491,6 +516,11 @@ sub PrintRP {
 	    }
 	}
 
+	print '</div>';
+}
+
+sub PrintRunoff {
+    print p('Sorry, the runoff completion algorithm is not yet implemented');
 }
 
 ############################################################
@@ -995,22 +1025,6 @@ sub PrintProportionalResults {
     }
     PrintMatrix $#committee+1, [@cmatrix], [@comm_choices], [@comm_choice_index], 0;
 
-    if ($detailed) {
-	print h2('<a name="committee_beatpath">Beatpath closure matrix</a>');
-	print p('The following is the corresponding
-		beatpath matrix. Sets of choices 1 is preferred
-		to sets of choices 2 if there is a better beatpath leading from 1 to 2
-		than any leading from 2 to 1.');
-	STDOUT->flush();
-
-	PrintMatrix $#committee+1, [@committee_cmatrix], [@comm_choices], [@comm_choice_index], 1;
-
-    } else {
-	    $details_url = "$thisurl?id=$election_id&num_winners=$num_winners" . '&detailed=1#committee_beatpath';
-	    $link = a({-href=>"$details_url"},
-		'Detailed results are also available.');
-	    print p($bookmark.$link);
-    }
     print hr();
     print '<a name="comparison"></a>';
     print h2("Pairwise comparison");

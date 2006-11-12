@@ -77,6 +77,16 @@ table.banner h1 {text-shadow: white 2px 2px 2px }
 p.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
 .warning {color: red}
 
+div.description { border-style: solid; border-width: 1px;
+		  background-color: #f0f0f0; color: black; padding: 5px;
+		  font-family: serif }
+
+div#details { border-style: solid; border-width: 1px; background-color: #f8f8ff;
+              color: black; padding: 5px; margin: 5px;
+	      display: none }
+
+button#hide_details { display: inline }
+
 div.content {text-align: left; padding: 5ex}
 p.explanation {text-align: left; width: 60ex}
 td.answer {text-align: left}

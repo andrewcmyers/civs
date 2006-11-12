@@ -482,7 +482,7 @@ sub SendKeys {
             Send "You have been designated as a voter by the election supervisor,";
             Send "$name (<a href=\"mailto:$email_addr ($name)\">$email_addr</a>).</p>";
 	    if (!($description =~ m/^(\s)*$/)) {
-		Send '<p style="border-style: solid; border-width: 1; background-color: #f0f0f0; color: black">';
+		Send '<p style="border-style: solid; border-width: 1px; background-color: #f0f0f0; color: black">';
 		Send '<b>Description of election:</b>';
 		Send $description;
 	    }
