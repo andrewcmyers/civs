@@ -50,6 +50,7 @@
 
     var prcontrol, prparent;
     var rvcontrol, rvparent;
+    var rrcontrol, rrparent;
 
     function setup() {
 	prcontrol = document.getElementById("prcontrol");
@@ -59,6 +60,10 @@
 	rvcontrol = document.getElementById("reveal_voters");
 	rvparent = rvcontrol.parentNode;
 	rvparent.removeChild(rvcontrol);
+
+        rrcontrol = document.getElementById("rrcontrol");
+	rrparent = rrcontrol.parentNode;
+	rrparent.removeChild(rrcontrol);
     }
 
     function render_text(ta_id, span_id) {
@@ -183,6 +188,19 @@ the supervisor of the election you create.</p>
   Allow voters to write in new choices.<br>
   <input type="checkbox" name="shuffle" value="no">
   Present choices on voting page in exactly the given order.<br>
+  <input type="checkbox" name="restrict_results" value="yes"
+         onClick="rrparent.appendChild(rrcontrol);">
+    Make results available only to a limited set of users (by default,
+    all voters can see election results).
+    <br>
+    <span>
+    <p class="suboption" id="rrcontrol">
+    Enter email addresses of users permitted to view election results:
+    (All voters can see these email addresses)
+    </br>
+    <textarea rows="2" name="result_addrs" cols="50"></textarea>
+    </p>
+    </span>
   <input type="checkbox" name="proportional" value="yes"
          onClick="prparent.appendChild(prcontrol)">
   Enforce proportional representation (useful only if there is
@@ -200,13 +218,13 @@ the supervisor of the election you create.</p>
   <input type="checkbox" name="ballot_reporting" value="yes"
          onClick="rvparent.appendChild(rvcontrol);">
   Enable detailed ballot reporting. 
-  Anyone to view the rankings on each ballot
+  Any election participant can view the rankings on each ballot
   (but <em>not</em> any identifying information about the voter) .
   <span>
   <p class="suboption" id="reveal_voters">
   <input type="checkbox" name="reveal_voters" value="yes">
   In detailed ballot report, also reveal the identity of the voter
-  with each ballot. Voters are <i class="warning">not</i> anonymous if this is checked,
+  with each ballot.<br>Voters are <i class="warning">not</i> anonymous if this is checked,
   nor does the server discard voter email addresses as it normally does.
   </p>
   </span>

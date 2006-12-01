@@ -156,6 +156,16 @@ if (!defined($reveal_voters) or $reveal_voters eq '') {
 }
 $edata{'reveal_voters'} = $reveal_voters;
 
+my $restrict_results = param('restrict_results');
+my $result_addrs;
+if (!defined($restrict_results) or $restrict_results eq '') {
+    $restrict_results = 'no';
+} else {
+    $restrict_results = 'yes';
+    $edata{'result_addrs'} = $result_addrs = param('result_addrs');
+}
+$edata{'restrict_results'} = $restrict_results;
+
 HTML_Header("CIVS Election Creation");
 CIVS_Header("Election created: $title");
 
@@ -164,8 +174,10 @@ print "<pre>";
 
 my $control_key = SecureNonce();
 my $authorization_key = SecureNonce();
+my $result_key = SecureNonce();
 $edata{'hash_control_key'} = civs_hash($control_key);
 $edata{'hash_authorization_key'} = civs_hash($authorization_key);
+$edata{'hash_result_key'} = civs_hash($result_key);
 
 my $url = "http://$thishost$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key";
 
@@ -178,7 +190,7 @@ Send "rcpt to: $email_addr"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
 Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
 Send "To: $email_addr ($name)";
-Send "Subject: CIVS election created: $title ($election_id)";
+Send "Subject: CIVS election created: $title";
 Send "";
 Send "This email acknowledges the creation of a new election,";
 Send "$title. You have been designated as the supervisor of this";
@@ -203,14 +215,56 @@ print p("Mail has been sent to the address you provided (<tt>$email_addr</tt>)."
 print p("Click on the URL in that email to start the election: <strong>$title</strong>.");
 
 } else { # debugging mode
-print p("Here is the URL to control the new election:");
-print
-pre("<a href=\"$url\">$url</a>");
-
+    print p('Here is the URL to control the new election. In ordinary operation
+             this would be sent to the supervisor via email.');
+    print pre("<a href=\"$url\">$url</a>");
 }
+
 
 print end_html();
 Log("Election $title ($election_id) created by $email_addr");
 untie %edata;
+
+# Send authorized result viewers an email containing the URL that
+# allows viewing results.
+sub SendResultKey {
+    my $result_key = shift;
+
+    my @result_addrs = split /(\r\n)+/, $result_addrs;
+    foreach my $addr (@result_addrs) {
+	chomp $addr;
+	print pre(b("Sending result key to $addr"));
+
+	my $url = "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
+	ConnectMail;
+	my $civs_supervisor = '@SUPERVISOR@';
+	Send "mail from: $civs_supervisor"; ConsumeSMTP;
+	Send "rcpt to: $addr"; ConsumeSMTP;
+	Send "data"; ConsumeSMTP;
+	Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
+	Send "To: $addr";
+	Send "Subject: Results of CIVS election: $title";
+	Send "";
+	Send "A new CIVS election has been created named $title.";
+	Send "You have been designated as a user who is permitted to see the";
+	Send "result of this election. You will not be able to do this until";
+	Send "the election has been closed. To see the results, visit the";
+	Send "following URL:";
+	Send "";
+	Send "$url";
+	Send "";
+	Send "This URL is private. Allowing unauthorized users access to this";
+	Send "URL will permit them to see the election results.";
+	Send "For more information about the Condorcet Internet Voting Service, see";
+	Send "  $civs_home.\r\n";
+	Send "."; ConsumeSMTP;
+	CloseMail;
+    }
+}
+
+if ($restrict_results eq 'yes') {
+    SendResultKey($result_key);
+}
+
 
 exit 0;

@@ -17,7 +17,7 @@ BEGIN {
     &CheckAuthorizationKeyForAddingVoter &CheckAuthorizationKeyForVoting
     &LockElection &UnlockElection &StartElection &IsStarted
     &CheckStarted &PointToResults &IsStopped &CheckNotStopped
-    &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey
+    &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase
     $election_id $election_dir $started_file $stopped_file
@@ -26,6 +26,7 @@ BEGIN {
     $election_end $public $writeins $shuffle $proportional $use_combined_ratings
     $choices @choices $num_choices $num_auth $num_votes $recorded_voters
     $ballot_reporting $reveal_voters $authorization_key %used_voter_keys
+    $restrict_results $result_addrs $hash_result_key
     %voter_keys %edata %vdata);
 }
 
@@ -47,7 +48,8 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      @addresses, $election_end, $public, $writeins, $proportional,
      $use_combined_ratings, $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
-     $authorization_key, $shuffle, %voter_keys, %used_voter_keys);
+     $authorization_key, $shuffle, %voter_keys, %used_voter_keys,
+     $restrict_results, $result_addrs, $hash_result_key);
 
 our $civs_supervisor = '@SUPERVISOR@';
 
@@ -95,6 +97,12 @@ sub init {
     $recorded_voters = $vdata{'recorded_voters'};
     $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';
     $reveal_voters = $edata{'reveal_voters'} or $reveal_voters = '';
+    $restrict_results = $edata{'restrict_results'};
+    $result_addrs = $edata{'result_addrs'};
+    $hash_result_key = 0;
+    if ($restrict_results eq 'yes') {
+	$hash_result_key = $edata{'hash_result_key'};
+    }
     %voter_keys = ();
     &LoadHash('voter_keys', \%voter_keys);
     &LoadHash('used_voter_keys', \%used_voter_keys);
@@ -203,19 +211,39 @@ sub CheckStarted {
 }
 
 sub PointToResults {
-    if ($public eq 'no') {
-	print "<p>The following URL will report the results of the election once\n";
-	print "it is complete:<br>\n";
-	} else {
-	print "<p>The following URL reports the current results of the election:<br>\n";
+    if ($restrict_results ne 'yes') {
+	if ($public eq 'no') {
+	    print "<p>The following URL will report the results of the election once\n";
+	    print "it is complete:<br>\n";
+	    } else {
+	    print "<p>The following URL reports the current results of the election:<br>\n";
+	}
+	print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
+	<tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
+    } else {
+	print p('The results of this election will be released only to a limited set of users:');
+	print '<ul>';
+	my @result_addrs = split /(\r\n)+/, $result_addrs;
+	foreach my $addr (@result_addrs) {
+	    print li($addr), $cr;
+	}
+	print '</ul>', $cr;
     }
-    print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-    <tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
 }
 sub PointToResultsComplete {
-    print "<p>The following web page has the results of this completed election:<br>\n";
+  if ($restrict_results eq 'yes') {
+    print p('The results of this election have been released only to a limited set of users:');
+    print '<ul>';
+    my @result_addrs = split /(\r\n)+/, $result_addrs;
+    foreach my $addr (@result_addrs) {
+	print li($addr), $cr;
+    }
+    print '</ul>', $cr;
+  } else {
+    print "<p>The results of this completed election are here:<br>\n";
     print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
        <tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
+  }
 }
 
 sub IsStopped {
@@ -349,6 +377,20 @@ sub CheckAuthorizationKey {
     return $hash_authorization_key eq $hash_authorization_key_check;
 }
 
+sub CheckResultKey {
+    my $result_key = shift;
+    if (defined($result_key) &&
+	&civs_hash($result_key) eq $hash_result_key) {
+	return;
+    }
+    ElectionLog("Election: $title ($election_id) : invalid attempt to view election results (wrong key)");
+    print h1("Authorization failure"),
+    p("Invalid result key $result_key. You should have received a correct URL for
+        viewing election results by email. This error has been logged.");
+    print end_html();
+    exit 0;
+}
+
 sub CheckAuthorizationKeyForAddingVoter {
     my $authorization_key = shift;
     if (!CheckAuthorizationKey($authorization_key)) {   
@@ -406,8 +448,7 @@ sub ElectionLog {
 # the election's authorization key, and the server's private key.
 # Assumes that the authorization key has been validated.
 sub GenerateVoterKey {
-    my $voter_email = shift;
-    my $authorization_key = shift;
+    (my $voter_email, my $authorization_key) = @_;
     my $voter_key = civs_hash($voter_email, $authorization_key,
         $private_host_id);
     if ($reveal_voters eq 'yes') {
@@ -415,6 +456,7 @@ sub GenerateVoterKey {
     }
     return $voter_key;
 }
+
 
 # Construct new voter keys for all of the voters sent in @_.
 # Send all of the voters their keys, with logging to STDOUT.
@@ -490,7 +532,8 @@ sub SendKeys {
 	    Send 'If you would like to vote, please visit the following URL:';
 	    SendURL($url);
             Send 'This is your private URL. Do not give it to anyone else,';
-	    Send 'because they could use it to vote for you.';
+	    Send 'because they could use it to vote for you. Save it, because';
+	    Send 'it cannot be sent to you again.';
 	    Send '</p><p>';
 	    if ($reveal_voters ne 'yes') {
 		Send 'Your privacy will not be violated by voting.';

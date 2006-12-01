@@ -49,15 +49,18 @@ sub init {
 # Package functions
 
 sub Send {
-    if ($verbose) {
-		print $_[0]."\n"; STDOUT->flush();
+    if ($verbose || $local_debug) {
+	print $_[0]."\n"; STDOUT->flush();
     }
-    print SMTP $_[0]."\r\n";
+    if (!($local_debug)) {
+	print SMTP $_[0]."\r\n";
+    }
 }
 
 # Read a response from the SMTP server after making sure it has all
 # pending input. Exit if an error code is reported.
 sub ConsumeSMTP {
+    if ($local_debug) { return; }
     SMTP->flush;
     while (<SMTP>) {
 	if ($verbose) {
@@ -70,6 +73,10 @@ sub ConsumeSMTP {
 
 # Set up a connection to the SMTP server so email can be sent
 sub ConnectMail {
+    if ($local_debug) {
+	print "<pre>\r\n";
+	return;
+    }
     if (connect(SMTP, $sin)) {
         #print STDERR "SMTP Connection established\n";
 	ConsumeSMTP;
@@ -82,8 +89,12 @@ sub ConnectMail {
 
 # Close the connection to the SMTP server.
 sub CloseMail {
-	Send 'quit';
+    Send 'quit';
+    if ($local_debug) {
+	print '</pre>';
+    } else {
 	close SMTP;
+    }
 }
 
 1; #ok

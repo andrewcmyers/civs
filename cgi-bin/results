@@ -35,7 +35,11 @@ our %vdata_copy = %vdata;
 &UnlockElection;
 
 if ($public ne 'yes') {
-    CheckStopped;
+    &CheckStopped;
+}
+
+if ($restrict_results eq 'yes') {
+    &CheckResultKey(param('rkey'));
 }
 
 print br();

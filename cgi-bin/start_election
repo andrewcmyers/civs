@@ -13,12 +13,11 @@ use Digest::MD5 qw(md5_hex);
 HTML_Header("CIVS start election");
 CIVS_Header('Start election');
 
-use election 1.02;
+use election;
 
 my $max_voters = 1000;
 my $control_key = param('key');   
 my $authorization_key = param('akey');
-
 
 CheckElectionID;
 CheckControlKey($control_key);

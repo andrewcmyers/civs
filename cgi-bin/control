@@ -77,6 +77,7 @@ if (!IsStarted) {
                  with voters allow them to vote."),
               p("<tt><a href=\"$url\">$url</a></tt>").$cr;
     }
+
 } else {    
 	&CloseDatabase;
     print p("The election has ended. <a href=\"$civs_bin_path/results@PERLEXT@?id=$election_id\">Election results</a> are available.");
@@ -91,7 +92,25 @@ if (IsStarted or $num_auth) {
 	$num_auth_string = "0 ($waiting voters will be authorized when the election is started)";
 }
 print "Total authorized voters: $num_auth_string", br() unless $public eq 'yes';
+
 $num_votes += 0;
+if ($restrict_results eq 'yes') {
+    if (IsStopped) {
+	print 'Election results are now available to the following users:<br>',$cr;
+    } else {
+	print 'Election results will be available to the following users:', $cr;
+    }
+    my @result_addrs = split /(\r\n)+/, $result_addrs;
+    print '<ul>';
+    foreach my $addr (@result_addrs) {
+	print '<li>', $addr, $cr;
+    }
+    print '</ul>';
+} else {
+    if (!IsStopped) {
+	print p('Election results available to all voters when election completes.');
+    }
+}
 print "Actual votes cast so far: $num_votes", br();
 print "Election ends $election_end.", br();
 
