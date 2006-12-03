@@ -132,6 +132,7 @@ sub HTML_Header {
 }
 
 sub CIVS_Header {
+    my $suggestion_box = '@SUGGESTION_BOX@';
 print 
  "<table border=0 width=100% cellspacing=0 cellpadding=7 class=\"banner\">";
 if ($local_debug) {
@@ -145,7 +146,8 @@ print
     </td>
     <td width=0% nowrap valign=top align=right><a href=\"$civs_home\">CIVS Home</a><br>
     <a href=\"$civs_url/civs_create.html\">Create new election</a><br>
-    <a href=\"$civs_url/sec_priv.html\">About security and privacy</a>
+    <a href=\"$civs_url/sec_priv.html\">About security and privacy</a><br>
+    <a href=\"$suggestion_box\">CIVS suggestion box</a>
     </td>
   </tr>
   <tr>

@@ -26,7 +26,7 @@ CheckControlKey($control_key);
 CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 print h1("Election: $title");
-
+  
 if (!IsStarted) {
     print "<form method=\"POST\"
 		action=\"$civs_bin_path/start_election@PERLEXT@\"
@@ -47,8 +47,9 @@ if (!IsStarted) {
     print '<p>The election is in progress. Press this button to end it: ';
     print hidden('id', $election_id);
     print hidden('key', $control_key);
-    print '<input type="submit" value="End election" name="close">'."\n";
-    print '</p></form>'."\n";
+    print '<input type="submit" value="End election" name="close"
+            onclick="confirm(\'Ending the election is an operation that cannot be undone. Continue?\')">', $cr;
+    print '</p></form>', $cr;
 
     if ($writeins eq 'yes') {
 		if (param('nowriteins')) {
@@ -58,7 +59,7 @@ if (!IsStarted) {
 	    	print "<form method=\"POST\"
 				action=\"$civs_bin_path/control@PERLEXT@\"
 				enctype=\"multipart/form-data\"
-				name=\"Nowriteins\">\n";
+				name=\"Nowriteins\">", $cr;
 		    print p('Write-in choices are currently allowed. Press this
 			    button to stop allowing new write-ins.',
 			    hidden('id', $election_id),

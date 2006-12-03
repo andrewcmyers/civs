@@ -45,6 +45,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	     -e 's|@PERLEXT@|'$PERLEXT'|' \
 	     -e 's|@USING_ISA@|'$USING_ISA'|' \
+	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	< $f > "${HTMLDIR}/$f"
     done
 
@@ -74,6 +75,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	     -e 's|@PERLEXT@|'$PERLEXT'|' \
 	     -e 's|@USING_ISA@|'$USING_ISA'|' \
+	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	 	 < "cgi-bin/$f" > "$target"
 	chmod a+x "$target"
     done
