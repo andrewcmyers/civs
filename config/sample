@@ -52,3 +52,6 @@ LOCALDEBUG=''
 # header. Otherwise all requests will appear to come from the web server
 # and public elections won't work.
 USING_ISA=''
+
+# A URL for people to visit to give suggestions. May be left empty.
+SUGGESTION_BOX=''
