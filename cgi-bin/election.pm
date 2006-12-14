@@ -230,15 +230,21 @@ sub PointToResults {
 	print '</ul>', $cr;
     }
 }
-sub PointToResultsComplete {
-  if ($restrict_results eq 'yes') {
-    print p('The results of this election have been released only to a limited set of users:');
-    print '<ul>';
+
+# List the users who will be able to see the results
+sub ReportResultReaders {
+    print 'The results of this election have been released only to a limited set of users:';
+    print '<div class="list">';
     my @result_addrs = split /(\r\n)+/, $result_addrs;
     foreach my $addr (@result_addrs) {
-	print li($addr), $cr;
+	print tt($addr), br(), $cr;
     }
-    print '</ul>', $cr;
+    print '</div>'
+}
+
+sub PointToResultsComplete {
+  if ($restrict_results eq 'yes') {
+    &ReportResultReaders;
   } else {
     print "<p>The results of this completed election are here:<br>\n";
     print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
@@ -385,7 +391,7 @@ sub CheckResultKey {
     }
     ElectionLog("Election: $title ($election_id) : invalid attempt to view election results (wrong key)");
     print h1("Authorization failure"),
-    p("Invalid result key $result_key. You should have received a correct URL for
+    p("Invalid result key: \"$result_key\". You should have received a correct URL for
         viewing election results by email. This error has been logged.");
     print end_html();
     exit 0;

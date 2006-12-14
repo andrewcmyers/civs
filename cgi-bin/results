@@ -65,6 +65,9 @@ print '<form method="GET"
 	enctype="multipart/form-data"
 	name="changeSettings">';
 print span("Election supervisor: $name (".tt($email_addr).')'), br();
+if ($restrict_results eq 'yes') {
+    &election::ReportResultReaders;
+}
 print span("Announced end of election: $election_end"), br();
 if (IsStopped) {
     my $close_time = $vdata_copy{'close_time'};

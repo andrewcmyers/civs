@@ -230,13 +230,13 @@ untie %edata;
 sub SendResultKey {
     my $result_key = shift;
 
+    ConnectMail;
     my @result_addrs = split /(\r\n)+/, $result_addrs;
     foreach my $addr (@result_addrs) {
 	chomp $addr;
 	print pre(b("Sending result key to $addr"));
 
 	my $url = "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
-	ConnectMail;
 	my $civs_supervisor = '@SUPERVISOR@';
 	Send "mail from: $civs_supervisor"; ConsumeSMTP;
 	Send "rcpt to: $addr"; ConsumeSMTP;
@@ -258,8 +258,8 @@ sub SendResultKey {
 	Send "For more information about the Condorcet Internet Voting Service, see";
 	Send "  $civs_home.\r\n";
 	Send "."; ConsumeSMTP;
-	CloseMail;
     }
+    CloseMail;
 }
 
 if ($restrict_results eq 'yes') {

@@ -28,22 +28,22 @@ our $verbose;
 
 # Initialize package
 sub init {
-	if (!($local_debug)) {
-		my $proto = getprotobyname('tcp');
-		socket(SMTP, &PF_INET, &SOCK_STREAM, $proto) ||
-		    print "can't open socket: $!\n";
-		my $port = getservbyname('smtp', 'tcp') ||
-		    print "can't get port\n";
-		if ($port eq '') { exit 1; }
-		my $iaddr = gethostbyname('@SMTPHOST@') ||
-		    print "no such host\n";
-		if ($iaddr eq '') { exit 1; }
-		$sin = pack_sockaddr_in($port, $iaddr);
-	}
-
 	# connect(SMTP, $sin) || print "Can't connect\n";
 
 	$verbose = 0;
+}
+
+sub Init_mail_socket {
+    my $proto = getprotobyname('tcp');
+    socket(SMTP, &PF_INET, &SOCK_STREAM, $proto) ||
+	print "can't open socket: $!\n";
+    my $port = getservbyname('smtp', 'tcp') ||
+	print "can't get port\n";
+    if ($port eq '') { exit 1; }
+    my $iaddr = gethostbyname('@SMTPHOST@') ||
+	print "no such host\n";
+    if ($iaddr eq '') { exit 1; }
+    $sin = pack_sockaddr_in($port, $iaddr);
 }
 
 # Package functions
@@ -77,13 +77,14 @@ sub ConnectMail {
 	print "<pre>\r\n";
 	return;
     }
+    &Init_mail_socket;
     if (connect(SMTP, $sin)) {
         #print STDERR "SMTP Connection established\n";
 	ConsumeSMTP;
 	Send 'helo @THISHOST@';
 	ConsumeSMTP;
     } else {
-		die "Can't connect to SMTP server: $!\n";
+	die "Can't connect to SMTP server: $!\n";
     }
 }
 
