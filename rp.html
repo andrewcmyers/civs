@@ -36,7 +36,7 @@ because they use the voters' rankings to compare every choice against
 every other in head-to-head matchups. The voters are considered to collectively
 have a preference for choice A over choice B if A is ranked higher than B
 on more ballots than B is ranked higher than A on. If the voters prefer
-a choice A to every other choice, choice A is the <b>Condorcet winner</b>.
+a choice A to every other choice, choice A is the <b>Condorcet winner</b> (CW).
 Condorcet election methods are methods that are guaranteed to elect
 the Condorcet winner if one exists. Condorcet methods have two important
 properties. First, they take into account the complete ranking of choices
@@ -70,14 +70,17 @@ doesn't matter what completion rule is used.
 
 <h3>Supported completion rules</h3>
 
-<p>CIVS currently supports three rules for Condorcet completion:
+<p>CIVS currently supports four rules for Condorcet completion:
 <b>Beatpath Winner</b> (also known
 as Cloneproof Schwartz Sequential Dropping and the
 <a href="http://en.wikipedia.org/wiki/Schulze_method">Schulze Method</a>),
 <a href="http://alumnus.caltech.edu/~seppley/">
-Maximize Affirmed Majorities</a> (MAM), and a deterministic variant of MAM
-called <b>CIVS Ranked Pairs</b>. The first two rules are described
-elsewhere (follow the links); CIVS Ranked Pairs is described below. 
+Maximize Affirmed Majorities</a> (MAM), a deterministic variant of MAM
+called <a href="#rp">CIVS Ranked Pairs</a>, and a runoff-based Condorcet algorithm
+called <a href="#runoff">Condorcet Runoff</a>.
+The first two rules are described
+elsewhere (follow the links); CIVS Ranked Pairs and Runoff are
+described below. 
 </p>
 
 <p>
@@ -89,27 +92,45 @@ rules usually agree with each other, especially on the ranking of
 the first few choices.
 </p>
 
+<h2>Which completion rule should I use?</h2>
 <p>
-The different rules have advantages and disadvantages. Beatpath
-Winner can be computed very cheaply using the Floyd-Warshall
-all-pairs-shortest-paths algorithm. The two ranked pairs rules (CIVS
-Ranked Pairs and MAM) are more expensive to compute.
-If there are <i>n</i> choices,
-the ranked pairs algorithms are about <i>n</i> times slower than
-Beatpath Winner, but
-this slowdown is only noticeable if there are many choices (more than twenty).
-Based on experience with using these completion rules in CIVS, the
-ranked pairs methods seem to produce better results. They seem to be
-more stable in the sense that a given voter's ballot does not affect
-the ordering as much as it can in Beatpath Winner. The difference
-between CIVS Ranked Pairs and MAM is that MAM uses a sophisticated
-random tie-breaking method, whereas CIVS Ranked Pairs is completely
-deterministic. Thus, the result of running MAM is not determined
-by just the ballots cast. Comparison of the results of MAM and CIVS
-RP will show if randomization was needed and used by MAM.
+Usually it doesn't matter which completion rule is used, because there is a
+Condorcet winner. However, it's a good idea to pick the rule you're going to
+use ahead of time, to avoid arguments later on.  If all four rules agree, you
+can be confident that you're getting the right result. If they disagree, you
+should have a procedure, such as choosing one of them to be the deciding rule,
+or agreeing to rerun the election with the candidates in the top cycle.
 </p>
 
+<p>
+The cheapest and most widely used completion rule is Beatpath Winner.
+ This is because . CIVS RP and MAM seem to be better in this regard.
+</p>
+
+<p>
+The different rules have advantages and disadvantages. Beatpath Winner can be
+computed very cheaply using the Floyd-Warshall all-pairs-shortest-paths
+algorithm. The two ranked pairs rules (CIVS Ranked Pairs and MAM) are more
+expensive to compute.  If there are <i>n</i> choices, the ranked pairs
+algorithms are about <i>n</i> times slower than Beatpath Winner, but this
+slowdown is only noticeable if there are many choices (more than twenty).
+Anecdotally, Beatpath Winner seems to be less stable than the other three
+rules, in the sense that adding one ballot to the set of ballots can have a
+large effect on the rankings.  The methods based on ranked pairs seem to be
+more stable in the sense that a given voter's ballot does not affect the
+ordering as much as it can in Beatpath Winner, where one ballot can create a
+long new beatpath with global effects. The difference between CIVS Ranked Pairs
+and MAM is that MAM uses a sophisticated random tie-breaking method, whereas
+CIVS Ranked Pairs is completely deterministic. Thus, the result of running MAM
+is not determined by just the ballots cast. Comparison of the results of MAM
+and CIVS RP will show if randomization was needed and used by MAM.  If there is
+a lot of concern about strategic voting (particularly, burying), CIVS Runoff is
+a reasonable choice.
+</p>
+
+<a name="rp">
 <h2>CIVS Ranked Pairs</h2>
+</a>
 
 <p>The CIVS Ranked Pairs completion rule is a deterministic
 variant of Eppley's MAM procedure
@@ -160,6 +181,52 @@ are ranked based on the strength of the strongest preference against
 that choice.  There is no random
 tie-breaking mechanism, as in MAM; the algorithm is deterministic.
 </p>
+
+<a name="runoff">
+<h2>Condorcet Runoff</h2>
+</a>
+
+<p>
+The Condorcet Runoff rule is a Condorcet completion rule that uses an IRV-like
+process to perform Condorcet completion.  Given a set of choices, this
+algorithm finds the top-ranked choice (or choices) in the following way.  If
+there is a Condorcet winner, that is the top-ranked choice. Otherwise, for each
+choice, the ballots are examined to see on how many of the ballots that choice
+is the highest ranked among the choices being considered.  Call this number the
+top count for the choice. The choice or choices with the smallest count are
+removed from consideration and the process repeats, looking for a CW among the
+remaining choices. Eventually, there will either be a Condorcet winner, or the
+remaining choices will all have the same top count. This remaining choice or
+choices are then considered the top-ranked choices among the set.  CIVS repeats
+this algorithm to construct a ranking of all choices.
+</p>
+<p>
+Note that although this rule uses a runoff procedure to eliminate `weak'
+choices who create a cycle in the preference graph, it is still a Condorcet
+election method. If there is a CW, it will always be the top-ranked choice.
+</p>
+<p>
+The advantage of CIVS Runoff is that it is relatively resistant to certain
+kinds of strategic voting. In particular, it resists <i>burying</i>, an attack
+in which voters insincerely push strong competitors to their preferred choices
+lower in the rankings. A weaker form of <i>burying</i> is <i>truncation</i>, in
+which voters do not express their full preference by giving some set of
+candidates the lowest possible rank.  As long as burying does not create a
+preference cycle, it has no effect on any Condorcet method. However, it is
+possible for burying can create a preference cycle that many completion
+rules will then resolve in favor of the choice of the voters who have voted
+insincerely.
+</p>
+
+<p>
+Regardless of the completion rule, burying can easily backfire on the voters
+who employ, because it can result in weaker choices appearing to be consensus
+choices. A successful use of burying can be tricky to carry off; the best
+policy is to vote sincerely.
+</p>
+
+</i>
+
 </div>
 
 </body></html>

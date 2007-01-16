@@ -16,6 +16,7 @@ use Digest::MD5 qw(md5_hex);
 use DB_File;
 use beatpath;
 use rp;
+use runoff;
 
 my $thisurl = $civs_bin_path."/results@PERLEXT@";
 
@@ -88,6 +89,9 @@ print "Actual votes cast: $num_votes", br();
 	    onChange="newSettings()"
 	    value="'.$num_winners.'">';
     print hidden('id', $election_id);
+    if (defined(param('rkey'))) {
+	print hidden('rkey', param('rkey'));
+    }
     if ($real_nwin != $num_winners) {
 	my $winmsg = '1 winner';
 	if ($real_nwin != 1) {
@@ -280,6 +284,12 @@ sub PrintBWDetails {
 	PrintMatrix $num_choices, [@closure_matrix], [@choices], [@choice_index], 1;
     }
 
+    &BallotReport;
+    print '</div>';
+}
+
+# Generate a ballot report or say that it hasn't been enabled.
+sub BallotReport {
     if ($ballot_reporting eq 'yes') {
 	print h3('Ballot report');
 
@@ -320,7 +330,6 @@ sub PrintBWDetails {
     } else {
 	print p("Ballot reporting was not enabled for this election.");
     }
-    print '</div>';
 }
 
 sub ComputeNonproportionalResults {
@@ -490,7 +499,7 @@ sub PrintRP {
 
 	print hr();
 
-	&DetailsHeader;
+	DetailsHeader;
 
 	print h2("Preference matrix");
 	print p("The following table shows the results of all
@@ -523,11 +532,55 @@ sub PrintRP {
 	    }
 	}
 
+	BallotReport;
+
 	print '</div>';
 }
 
+sub MakeChoiceIndex {
+    my @rankings = @{$_[0]};
+    my $j = 0;
+    my @choice_index = ();
+    my @choice_rank = ();
+    for (my $rank = 0; $rank <= $#rankings; $rank++) {
+	my @winner = @{$rankings[$rank]};
+	for (my $i = 0; $i <= $#winner; $i++) {
+	    $choice_index[$j] = $winner[$i];
+	    $choice_rank[$winner[$i]] = $j + 1;
+	    $j++;
+	}
+    }
+    return ([@choice_index], [@choice_rank]);
+}
+
+sub ProcessBallots {
+    my @voters = @{@_[0]};
+    my @ballots = ();
+    foreach my $voter_key (@voters) {
+	my $ballot = $vdata_copy{$voter_key}; 
+	my @row = split /,/, $ballot;
+	push @ballots, \@row;
+    }
+    return \@ballots;
+}
+
 sub PrintRunoff {
-    print p('Sorry, the runoff completion algorithm is not yet implemented');
+    # print p('Warning: the runoff completion algorithm is still buggy');
+    # return;
+    my @voters = split /\n/, $vdata_copy{'recorded_voters'};
+    my $bref = ProcessBallots(\@voters);
+    (my $rref, my $runoff_log) = 
+	&runoff::rank_candidates($num_choices, \@matrix, $bref, \@choices);
+
+    (my $ciref, my $crref) = MakeChoiceIndex($rref);
+    
+    PrintRanking $rref, \@matrix;
+    DetailsHeader;
+    PrintMatrix $num_choices, \@matrix, \@choices, $ciref, 0;
+    BallotReport;
+    print $runoff_log;
+
+    print '</div>';
 }
 
 ############################################################
@@ -1070,7 +1123,10 @@ sub PrintProportionalResults {
     print '</table>';
     print hidden('id', $election_id);
     print hidden('num_winners', $num_winners);
-    print hidden('algorithm', $num_winners);
+    print hidden('algorithm', $algorithm);
+    if (defined(param('rkey'))) {
+	print hidden('rkey', param('rkey'));
+    }
     print '<input type="submit" value="Compare sets" name="Compare">';
     print '</form>';
     if ($comparison_request) {

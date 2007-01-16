@@ -51,7 +51,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
     for f in add_voters beatpath.pm civs_common.pm close control \
         create_election download_ballots election.pm mail.pm results \
-		start_election vote rp.pm admctrl.pm
+		start_election vote rp.pm runoff.pm admctrl.pm
     do
 	target="${CGIBINDIR}/${f}"
 	if test -n "$PERLEXT"

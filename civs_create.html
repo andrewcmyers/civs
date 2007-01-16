@@ -13,35 +13,54 @@
     {
         return str.replace(/^\s+|\s+$/g, '')
     };
-    function validateEmail  (vfld)   // element to be validated
+    function validateEmail(str)   // element to be validated
     {
-	var tfld = trim(vfld.value);  // value of field with whitespace trimmed off
+	var str = trim(str);  // value of field with whitespace trimmed off
 	var email = /^[^@]+@[^@.]+\.[^@]*\w\w$/
-	return email.test(tfld);
+	return email.test(str);
     };
 
     function validate() {
 	var numerrs = 0;
 	var errs = '';
-	if (!validateEmail(document.forms.CreateElection.email_addr)) {
+	if (!validateEmail(document.forms.CreateElection.email_addr.value)) {
 	    numerrs++;
-	    errs += numerrs + '. Invalid email address \n';
+	    errs += numerrs + '. Supervisor email address is invalid.\n';
 	}
 	if (!(document.forms.CreateElection.num_winners.value >= 1)) {
 	    numerrs++;
 	    errs += numerrs +
-		'. Must have at least one winner\n';
+		'. Must have at least one winner.\n';
 	}
 	if (document.forms.CreateElection.proportional.checked &&
 	    !(document.forms.CreateElection.num_winners.value > 1)) {
 	    numerrs++;
 	    errs += numerrs +
-		'. Proportional representation requires more than one winner\n';
+		'. Proportional representation requires more than one winner.\n';
 	}
 	if (document.forms.CreateElection.choices.value == '' &&
 	    document.forms.CreateElection.choices_file.value == '') {
 	    numerrs++;
-	    errs += numerrs + '. Must have at least two choices to vote on\n';
+	    errs += numerrs + '. Must have at least two choices to vote on.\n';
+	}
+	if (document.forms.CreateElection.restrict_results.checked == 'yes') {
+	    var rs = document.forms.CreateElection.result_addrs.value;
+	    var ra = rs.split(/[\r\n]+/g);
+	    var nr = 0;
+	    for (i = 0; i < ra.length; i++) {
+		if (ra[i] == '') continue;
+		if (!validateEmail(ra[i])) {
+		    numerrs++;
+		    errs += numerrs + '. Results recipient email address is invalid: ' + ra[i] + '.\n';
+		} else {
+		    nr++;
+		}
+	    }
+	    alert('Num valid recipients = ' + nr);
+	    if (nr == 0) {
+		numerrs++;
+		errs += numerrs + '. You have specified no users who can see the election results.\n';
+	    }
 	}
 	if (numerrs == 0) return true;
 	alert('Errors:\n' + errs);
@@ -66,10 +85,10 @@
 	rrparent.removeChild(rrcontrol);
     }
 
-    function render_text(ta_id, span_id) {
+    function render_text(prefix, ta_id, span_id) {
 	var span = document.getElementById(span_id);
 	var ta = document.getElementById(ta_id);
-	span.innerHTML = '<h2>Election description</h2>' + ta.value;
+	span.innerHTML =  prefix + ta.value;
 	return 1;
     }
 
@@ -132,12 +151,17 @@ the supervisor of the election you create.</p>
   <tr>
     <td align=right>Your e-mail address:</td>
     <td><input type="text" name="email_addr" size="20"
-      onchange="if (!validateEmail(this)) { alert('Invalid email address') }" >
+      onchange="if (!validateEmail(this.value)) { alert('Invalid email address') }" >
     </td>
   </tr>
   <tr>
-    <td align=right>The day and time when you plan to stop the election: </td>
-    <td> <input type="text" name="election_end" size="30"> </td>
+    <td align=right>The day and time when you plan to stop the election:
+	<small>(<b>Note:</b> election must be stopped manually)</small>
+    </td>
+    <td><input type="text" name="election_end" id="election_end" size="30"
+          onchange="render_text('<br><i>Preview</i>: Election ends ', 'election_end', 'rendered_end')">
+	 <span class="rendering" id="rendered_end"></span>
+</td>
   </tr>
   </table>
 
@@ -156,7 +180,9 @@ the supervisor of the election you create.</p>
       <td><textarea id="description" valign="top" rows="5" name="description" cols="60"></textarea>
       </td>
       <td><input type="button" value="Preview&gt;&gt;"
-	    onClick="render_text('description', 'rendered_description')"></td>
+	    onClick="render_text('<h2>Election description</h2>',
+				 'description',
+				 'rendered_description')"></td>
       <td valign="top"><span class="rendering" id="rendered_description"></span></td>
     </tr>
   </table>
@@ -192,7 +218,6 @@ the supervisor of the election you create.</p>
          onClick="rrparent.appendChild(rrcontrol);">
     Make results available only to a limited set of users (by default,
     all voters can see election results).
-    <strong>Warning: experimental feature.</strong>
     <br>
     <span>
     <p class="suboption" id="rrcontrol">

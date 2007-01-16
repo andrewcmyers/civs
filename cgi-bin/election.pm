@@ -19,7 +19,7 @@ BEGIN {
     &CheckStarted &PointToResults &IsStopped &CheckNotStopped
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
-    &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase
+    &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
@@ -463,6 +463,32 @@ sub GenerateVoterKey {
     return $voter_key;
 }
 
+sub SendBody {
+    my $html = shift;
+    my $boundary = 'CIVS-'.&SecureNonce;
+    my $plain = $html;
+    $plain =~ s/<[^>]+>//g;
+    $plain =~ s/\r\n\r\n/\r\n/g;
+    $plain =~ s/\n\n/\n/g;
+    $plain =~ s/^\r*//g;
+    $plain =~ s/^\n*//g;
+    
+    Send 'Mime-Version: 1.0';
+    Send "Content-Type: multipart/alternative; boundary=$boundary";
+    Send '';
+    Send "--$boundary";
+    Send 'Content-Encoding: 8bit';
+    Send 'Content-Type: text/plain; charset=ISO-8859-1; format=flowed';
+    Send '';
+    Send $plain;
+    Send "--$boundary";
+    Send 'Content-Encoding: 8bit';
+    Send 'Content-Type: text/html; charset=ISO-8859-1';
+    Send '';
+    Send $html;
+    Send "--$boundary--";
+}
+
 
 # Construct new voter keys for all of the voters sent in @_.
 # Send all of the voters their keys, with logging to STDOUT.
@@ -502,10 +528,13 @@ sub SendKeys {
         } else {
 	    sub SendURL {
 	      (my $url) = @_;
-	      Send '<pre>';
-	      Send "    <a href=\"$url\">$url</a>";
-	      Send '</pre>';
+	      Send MakeURL($url);
 	    }
+	    sub MakeURL {
+	      (my $url) = @_;
+	      return "<pre>\r\n    <a href=\"$url\">$url</a>\r\n</pre>";
+	    }
+
             print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
                 Send "mail from: $email_addr"; ConsumeSMTP;
             Send "rcpt to: $v"; ConsumeSMTP;
@@ -516,53 +545,54 @@ sub SendKeys {
             Send "Reply-To: $email_addr";
             Send "To: $v";
             Send "Subject: CIVS Election now available for voting: $title";
-	    Send 'Content-Type: text/html; charset=ISO-8859-1';
 	    Send 'Content-Transfer-Encoding: 8bit';
             Send "Return-Path: $email_addr";
-            Send '';
-	    Send '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
-	    Send '<html>';
-	    Send '<head>';
-	    Send '<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">';
-	    Send '</head>';
-	    Send '<body><p>';
-            Send "A Condorcet Internet Voting Service election named <b>$title</b> has been created.";
-            Send "You have been designated as a voter by the election supervisor,";
-            Send "$name (<a href=\"mailto:$email_addr ($name)\">$email_addr</a>).</p>";
+            Send 'X-Mailer: CIVS';
+	    my $html =
+"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
+<html>
+<head>
+<meta content=\"text/html;charset=ISO-8859-1\" http-equiv=\"Content-Type\"
+</head>
+<body><p>
+A Condorcet Internet Voting Service election named <b>$title</b> has been created.
+You have been designated as a voter by the election supervisor,
+$name (<a href=\"mailto:$email_addr ($name)\">$email_addr</a>).</p>";
+
 	    if (!($description =~ m/^(\s)*$/)) {
-		Send '<p style="border-style: solid; border-width: 1px; background-color: #f0f0f0; color: black">';
-		Send '<b>Description of election:</b>';
-		Send $description;
+		$html .= '<p style="border-style: solid; border-width: 1px; background-color: #f0f0f0; color: black">'.$cr.$cr;
+		$html .= '<b>Description of election:</b>'.$cr;
+		$html .= $description.$cr;
 	    }
-	    Send '</p><p>';
-	    Send 'If you would like to vote, please visit the following URL:';
-	    SendURL($url);
-            Send 'This is your private URL. Do not give it to anyone else,';
-	    Send 'because they could use it to vote for you. Save it, because';
-	    Send 'it cannot be sent to you again.';
-	    Send '</p><p>';
+	    $html .= $cr.$cr.'</p><p>If you would like to vote, please visit the following URL:';
+	    $html .= MakeURL($url);
+
+	    $html .= '
+This is your private URL. Do not give it to anyone else, because they could use
+it to vote for you.
+</p><p>';
 	    if ($reveal_voters ne 'yes') {
-		Send 'Your privacy will not be violated by voting.';
-		Send 'The voting service has already destroyed the record of your email address';
-		Send 'and will not release any information about whether or how you have voted.';
+		$html .= '
+Your privacy will not be violated by voting.  The voting service has already
+destroyed the record of your email address and will not release any information
+about whether or how you have voted.';
 	    } else {
-		Send 'The election supervisor has decided to make this a';
-		Send 'non-anonymous election. If you vote, how you voted';
-		Send 'your vote will be publicly visible along with your';
-		Send 'email address. If you do not vote your privacy will';
-		Send 'be preserved.';
+		$html .= '
+The election supervisor has decided to make this a non-anonymous election.  If
+you vote, how you voted your vote will be publicly visible along with your
+email address. If you do not vote, your privacy will be preserved.';
 	    }
-	    Send '</p><p>';
-            Send "The election has been announced to end $election_end.";
-            Send 'To view the results of the election once it is closed, visit:';
-	    Send '</p>';
-	    SendURL("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id");
-            Send '<p>';
-            Send "For more information about the Condorcet Internet Voting Service, see";
-            SendURL($civs_home);
-	    Send '</p>';
-	    Send '</body>';
-	    Send '</html>';
+	    $html .= $cr."</p><p>
+The election has been announced to end $election_end.  To view the results of
+the election once it is closed, visit:
+	    </p>".
+	    MakeURL("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id").
+            '<p>
+For more information about the Condorcet Internet Voting Service, see:'.$cr.
+            MakeURL($civs_home).'</p>
+</body>
+</html>';
+	    SendBody $html;
             Send '.'; ConsumeSMTP;
         }
     }
