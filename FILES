@@ -9,7 +9,6 @@ civs/results.js
 civs/sec_priv.html
 civs/timeout.c
 civs/vote.js
-civs/rp.pm
 civs/INSTALL
 civs/README
 civs/index.html
@@ -32,5 +31,6 @@ civs/cgi-bin/dump_election
 civs/cgi-bin/install-civs
 civs/cgi-bin/mail.pm
 civs/cgi-bin/rp.pm
+civs/cgi-bin/runoff.pm
 civs/cgi-bin/results
 civs/config/sample

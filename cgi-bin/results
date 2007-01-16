@@ -179,9 +179,9 @@ if ($proportional eq 'yes') {
 
     if ($algorithm eq 'civs_ranked_pairs' ||
 	$algorithm eq 'mam') {
-	&PrintRP;
+	&PrintReport('rp');
     } elsif ($algorithm eq 'runoff') {
-	&PrintRunoff;
+	&PrintReport('runoff');
     } else {
 	&PrintBW;
 	print hr();
@@ -249,6 +249,7 @@ sub PrintMatrix {
 }
 
 sub DetailsHeader {
+    print hr(),$cr;
     print '<p id="show_details">For simplicity, some details of the election result
     are not shown.
     <button onclick=\'show_details();\'>
@@ -464,77 +465,11 @@ sub PrintCondorcetWinner {
 }
 
 sub PrintBW {
-	PrintRanking [@result], [@matrix];
-
+    PrintRanking [@result], [@matrix];
 }
 
 sub details_bookmark {
-	return a({-name=>"details"}, "");
-}
-
-sub PrintRP {
-	STDOUT->flush();
-
-	if ($algorithm eq 'mam') {
-	    $rp::mam = 1;
-	    my @voters = split /\n/, $vdata_copy{'recorded_voters'};
-	    my @ballots = ();
-# generate a consistent random seed
-	    srand(hex(substr($election_id, length($election_id) - 8)));
-	    fisher_yates_shuffle(\@voters);
-	    foreach my $voter_key (@voters) {
-		my $ballot = $vdata_copy{$voter_key}; 
-		push @ballots, $ballot;
-	    }
-	    &rp::create_RVH(\@ballots, $num_choices);
-	} else {
-	    $rp::mam = 0;
-	}
-        (my $rref, my $ciref, my $denied_any,
-	 my $allowed_cycle, my $denied_report) = 
-	    &rp::rank_candidates([@matrix], $num_choices, [@choices]);
-	#print pre("Done ranking");
-
-	PrintRanking $rref, [@matrix];
-
-	print hr();
-
-	DetailsHeader;
-
-	print h2("Preference matrix");
-	print p("The following table shows the results of all
-	pairwise contests between
-	two choices. Each entry shows the number of ballots on
-	which one choice was preferred to another choice.");
-	PrintMatrix $num_choices, [@matrix], [@choices], $ciref, 0;
-
-	if (!$allowed_cycle && !$denied_any) {
-	    print p('All preferences were affirmed. All
-	    Condorcet election methods will
-	    agree with this ranking.');
-	}
-	if ($denied_any) {
-	    # print $denied_report;
-	    print p('The presence of a green entry below
-	    the diagonal (and a corresponding red one above)
-	    means that a preference was ignored because
-	    it conflicted with other, stronger preferences.');
-	}
-	if ($algorithm eq 'mam') {
-	    if ($rp::tiebreak) {
-		print p('Random tie breaking was used to
-		arrive at this ordering, as per the MAM
-		algorithm. This may have affected the ordering
-		of the choices.');
-	    } else {
-		print p('No random tie breaking was needed to
-		arrive at this ordering.');
-	    }
-	}
-
-	BallotReport;
-
-	print '</div>';
+    return a({-name=>"details"}, "");
 }
 
 sub MakeChoiceIndex {
@@ -564,13 +499,17 @@ sub ProcessBallots {
     return \@ballots;
 }
 
-sub PrintRunoff {
+sub PrintReport {
     # print p('Warning: the runoff completion algorithm is still buggy');
     # return;
+    no strict 'refs';
+    (my $module) = @_;
+    STDOUT->flush();
     my @voters = split /\n/, $vdata_copy{'recorded_voters'};
     my $bref = ProcessBallots(\@voters);
-    (my $rref, my $runoff_log) = 
-	&runoff::rank_candidates($num_choices, \@matrix, $bref, \@choices);
+    my $func = $module.'::rank_candidates';
+    (my $rref, my $log) = 
+	&$func($num_choices, \@matrix, $bref, \@choices);
 
     (my $ciref, my $crref) = MakeChoiceIndex($rref);
     
@@ -578,7 +517,7 @@ sub PrintRunoff {
     DetailsHeader;
     PrintMatrix $num_choices, \@matrix, \@choices, $ciref, 0;
     BallotReport;
-    print $runoff_log;
+    print $log;
 
     print '</div>';
 }
@@ -1188,7 +1127,9 @@ sub PrintProportionalResults {
 
     if ($algorithm eq 'beatpath_winner') {
 	&PrintBW;
-    } else {
-	&PrintRP;
+    } elsif ($algorithm eq 'rp' || $algorithm eq 'mam') {
+	&PrintReport($algorithm);
+    } elsif ($algorithm eq 'runoff') {
+	&PrintReport('runoff');
     }
 }

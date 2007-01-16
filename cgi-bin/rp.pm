@@ -95,6 +95,50 @@ sub TransitiveClosure {
     }
     return $cycle;
 }
+
+sub rank_candidates {
+    my ($num_choices, $mref, $bref, $choices) = @_;
+    my @ballots = @{$bref};
+    fisher_yates_shuffle [@ballots];
+
+    if ($main::algorithm eq 'mam') {
+	$mam = 1;
+	&create_RVH([@ballots], $num_choices);
+    } else {
+	    $mam = 0;
+	}
+
+    (my $rref, my $ciref, my $denied_any,
+	my $allowed_cycle, my $denied_report) = 
+	&rank_candidates_internal($mref, $num_choices, $choices);
+
+    my $log = '';
+    if (!$allowed_cycle && !$denied_any) {
+	$log .= p('All preferences were affirmed. All
+		  Condorcet election methods will
+		  agree with this ranking.');
+    }
+    if ($denied_any) {
+	$log .= p('The presence of a green entry below
+	    the diagonal (and a corresponding red one above)
+	    means that a preference was ignored because
+	    it conflicted with other, stronger preferences.');
+	$log .= $denied_report;
+    }
+    if ($main::algorithm eq 'mam') {
+	if ($tiebreak) {
+	    $log .= p('Random tie breaking was used to
+	    arrive at this ordering, as per the MAM
+	    algorithm. This may have affected the ordering
+	    of the choices.');
+	} else {
+	    $log .= p('No random tie breaking was needed to
+	    arrive at this ordering.');
+	}
+    }
+    return ($rref, $log);
+}
+
 # rank_candidates(mref, num_choices) uses a ranked-pairs
 # algorithm to ranks the "num_choices" choices
 # according to the preference matrix in "mref". It returns
@@ -106,7 +150,7 @@ sub TransitiveClosure {
 # preferences had to be denied to construct a ranking, and
 # denied_report is HTML text explaining which preferences
 # were denied and why.
-sub rank_candidates {
+sub rank_candidates_internal {
     (my $mref, my $num_choices, my $choices_ref) = @_;
     my @matrix = @{$mref};
     my @choices = @{$choices_ref};
@@ -259,10 +303,11 @@ sub rank_candidates {
 # candidates (or as much of an order as can be constructed,
 # anyway).
 sub create_RVH {
-    my $num_choices = $_[1];
-    foreach my $ballot (@{$_[0]}) {
+    (my $bref, my $num_choices) = @_;
+    my @ballots = @{$bref};
+    foreach my $rowref (@ballots) {
+	my @row = @{$rowref};
 	# print "$ballot\n";
-	my @row = split /,/, $ballot;
 	if ($#row != $num_choices-1) {
 	    # print "Bad ballot, skipping: ".$ballot."\n";
 	    next;

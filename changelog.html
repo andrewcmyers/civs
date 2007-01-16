@@ -35,27 +35,43 @@
 <p>
 Most users use the existing CIVS web server. However, the software is
 available for installation elsewhere, subject to certain restrictions
-described in the included README file. To download the latest version of
-the CIVS software, click here:
+described in the included README file. To download the latest released
+version of the CIVS software, click here:
 </p>
 
 <blockquote>
 <form method="POST" 
       action="http://www.cs.cornell.edu/w8/~andru/cgi-bin/download.pl"
       enctype="multipart/form-data">
-  <input type="hidden" name="package" value="CIVS 2.6">
+  <input type="hidden" name="package" value="CIVS 2.7">
   <input type="hidden" name="style" value="@CIVSURL@/style.css">
   <input type="hidden" name="url"
-         value="http://www.cs.cornell.edu/andru/release/civs-2.6.tar.gz">
+         value="http://www.cs.cornell.edu/andru/release/civs-2.7.tar.gz">
   <input
     style="background-color: blue; color: white; border-style: solid; border-color: black; font-weight: bold"
-  type="submit" value="Download CIVS 2.6" />
+  type="submit" value="Download CIVS 2.7" />
 </form>
 </blockquote>
 
 <p>
 See the file INSTALL for installation instructions.
 </p>
+
+<p>
+Recent updates:
+<ul>
+<li>2.7:
+<ul>
+<li>Added ability to release election results to a limited set of users.
+<li>Better client-side sanity checking for election creation.
+<li>Allow previewing of election description and choice list.
+<li>Added another completion algorithm (runoff) and factored out
+    completion algorithm code better to allow future completion algorithms
+    to be added more easily.
+<li>Allow voters' identity to be revealed (an election option).
+<li>Mail to voters is now HTML+ASCII (should be made optional).
+</ul>
+</ul>
 
 <p>
 The <a href="https://gforge.cis.cornell.edu/plugins/scmcvs/cvsweb.php/apl/civs/?cvsroot=cvsroot%2Fapl">
