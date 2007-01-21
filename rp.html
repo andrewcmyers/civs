@@ -193,12 +193,13 @@ algorithm finds the top-ranked choice (or choices) in the following way.  If
 there is a Condorcet winner, that is the top-ranked choice. Otherwise, for each
 choice, the ballots are examined to see on how many of the ballots that choice
 is the highest ranked among the choices being considered.  Call this number the
-top count for the choice. The choice or choices with the smallest count are
-removed from consideration and the process repeats, looking for a CW among the
-remaining choices. Eventually, there will either be a Condorcet winner, or the
-remaining choices will all have the same top count. This remaining choice or
-choices are then considered the top-ranked choices among the set.  CIVS repeats
-this algorithm to construct a ranking of all choices.
+top count for the choice. The choice with the smallest count are removed from
+consideration and the process repeats, looking for a CW among the remaining
+choices. (If multiple choices tie for having the smallest top count, one is
+randomly picked for removal.) Eventually, there will either be a Condorcet
+winner, or the remaining choices will all have the same top count. This
+remaining choice or choices are then considered the top-ranked choices among
+the set.  CIVS repeats this algorithm to construct a ranking of all choices.
 </p>
 <p>
 Note that although this rule uses a runoff procedure to eliminate `weak'

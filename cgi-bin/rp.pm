@@ -96,6 +96,7 @@ sub TransitiveClosure {
     return $cycle;
 }
 
+# See runoff.pm for a spec of this subroutine
 sub rank_candidates {
     my ($num_choices, $mref, $bref, $choices) = @_;
     my @ballots = @{$bref};

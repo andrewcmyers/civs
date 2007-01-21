@@ -47,6 +47,7 @@ sub trim {
 }
 foreach my $ch (@c1) {
     $ch = &trim($ch);
+    $ch =~ s/--/\&mdash;/g;
     if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
 	$choices .= "\n";
