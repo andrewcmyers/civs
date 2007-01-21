@@ -172,7 +172,7 @@ if ($proportional eq 'yes' && $use_combined_ratings) {
     $rating = 'Weight';
 }
 
-print '<form method="POST"
+print $cr, '<form method="POST"
         action="'.$thisurl.'"
         enctype="multipart/form-data"
         name="CastVote">';
