@@ -578,8 +578,9 @@ about whether or how you have voted.';
 	    } else {
 		$html .= '
 The election supervisor has decided to make this a non-anonymous election.  If
-you vote, how you voted your vote will be publicly visible along with your
-email address. If you do not vote, your privacy will be preserved.';
+you vote, how you voted will be publicly visible along with your
+email address. If you do not vote, the election supervisor will be able
+to determine this.';
 	    }
 	    $html .= $cr."</p><p>
 The election has been announced to end $election_end.  To view the results of
