@@ -225,7 +225,10 @@ sub PointToResults {
 	print '<ul>';
 	my @result_addrs = split /(\r\n)+/, $result_addrs;
 	foreach my $addr (@result_addrs) {
-	    print li($addr), $cr;
+	    $addr = TrimAddr($addr);
+	    if (CheckAddr($addr)) {
+		print li($addr), $cr;
+	    }
 	}
 	print '</ul>', $cr;
     }
@@ -237,7 +240,10 @@ sub ReportResultReaders {
     print '<div class="list">';
     my @result_addrs = split /(\r\n)+/, $result_addrs;
     foreach my $addr (@result_addrs) {
-	print tt($addr), br(), $cr;
+	$addr = TrimAddr($addr);
+	if (CheckAddr($addr)) {
+	    print tt($addr), br(), $cr;
+	}
     }
     print '</div>'
 }
@@ -500,9 +506,13 @@ sub SendKeys {
     my $num_added = 0;
     if (!($local_debug)) { ConnectMail; }
     foreach my $v (@addresses) {
-	$v =~ s/^(\s)+//;
-	$v =~ s/(\s)+$//;
-	$v =~ s/\s+/ /;
+	$v = TrimAddr($v);
+	if ($v eq '') { next; }
+	if (!CheckAddr($v)) {
+	    print 'Invalid email address: ', $v, $cr;
+	    next;
+	}
+
         my $url = "";
         if ($public eq 'yes') {
             $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";

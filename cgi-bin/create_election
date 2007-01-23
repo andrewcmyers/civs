@@ -17,7 +17,8 @@ my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 ### Initial parameter checking
 
 my $email_addr = param('email_addr');
-if (!($email_addr =~ m/.\@./)) {
+$email_addr = mail::TrimAddr($email_addr);
+if (!&CheckAddr($email_addr)) {
     print header(), start_html("Invalid email address");
     HTML_Header("CIVS Election Creation");
     CIVS_Header();
@@ -234,8 +235,12 @@ sub SendResultKey {
     ConnectMail;
     my @result_addrs = split /\s+/, $result_addrs;
     foreach my $addr (@result_addrs) {
-	chomp $addr;
+	$addr = TrimAddr($addr);
 	if ($addr eq '') { next; }
+	if (!(CheckAddr($addr))) {
+	    print pre("Invalid email address: $addr");
+	    next;
+	}
 	print pre(b("Sending result key to '$addr'"));
 
 	my $url = "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";

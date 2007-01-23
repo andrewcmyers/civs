@@ -13,7 +13,8 @@ BEGIN {
 
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
-    @EXPORT      = qw(&Send &ConsumeSMTP &ConnectMail &CloseMail);
+    @EXPORT      = qw(&Send &ConsumeSMTP &ConnectMail &CloseMail
+		      &CheckAddr &TrimAddr);
 }
 
 # Package imports
@@ -47,6 +48,20 @@ sub Init_mail_socket {
 }
 
 # Package functions
+
+sub CheckAddr {
+    (my $addr) = @_;
+
+    return ($addr =~ m/^[^@]+@[^@.]+\.[^@]*\w\w$/);
+}
+
+sub TrimAddr {
+    (my $addr) = @_;
+    $addr =~ s/^(\s)+//;
+    $addr =~ s/(\s)+$//;
+    $addr =~ s/\s+/ /;
+    return $addr;
+}
 
 sub Send {
     if ($verbose || $local_debug) {
