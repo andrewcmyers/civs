@@ -61,11 +61,15 @@ if (defined($show_prop) && $show_prop ne '') {
     $proportional = $show_prop;
 }
 
+sub Email {
+    return "<span class='email'>$_[0]</span>";
+}
+
 print '<form method="GET"
 	action="'.$thisurl.'"
 	enctype="multipart/form-data"
 	name="changeSettings">';
-print span("Election supervisor: $name (".tt($email_addr).')'), br();
+print span("Election supervisor: $name (".&Email($email_addr).")"), br();
 if ($restrict_results eq 'yes') {
     &election::ReportResultReaders;
 }
