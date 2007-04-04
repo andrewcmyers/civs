@@ -402,7 +402,7 @@ sub AddWritein {
 	# writeins is not clear.  Nor is the effect of a concurrent writein
 	# and vote, or even request for the candidate list.
     my $writein = param('writein');
-    $writein = CanonicalizeName($writein);
+    $writein = CanonicalizeName($writein) . " (write-in)";
     my $p = ProjectName($writein);
     my $ok = 1;
     for (my $i = 0; $i < $num_choices; $i++) {
