@@ -545,8 +545,10 @@ sub SendKeys {
 	      return "<pre>\r\n    <a href=\"$url\">$url</a>\r\n</pre>";
 	    }
 
+            ElectionLog("Sending mail to a voter for election $election_id\n");
             print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
-                Send "mail from: $civs_supervisor"; ConsumeSMTP;
+
+	    Send "mail from: $civs_supervisor"; ConsumeSMTP;
             Send "rcpt to: $v"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
             Send "From: $email_addr ($name, CIVS election supervisor)";
