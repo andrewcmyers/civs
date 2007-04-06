@@ -103,24 +103,22 @@ or agreeing to rerun the election with the candidates in the top cycle.
 </p>
 
 <p>
-The cheapest and most widely used completion rule is Beatpath Winner.
- This is because . CIVS RP and MAM seem to be better in this regard.
-</p>
-
-<p>
-The different rules have advantages and disadvantages. Beatpath Winner can be
-computed very cheaply using the Floyd-Warshall all-pairs-shortest-paths
-algorithm. The two ranked pairs rules (CIVS Ranked Pairs and MAM) are more
+The different rules have advantages and disadvantages. Beatpath Winner (Schulze)
+can be computed very cheaply using the Floyd-Warshall all-pairs-shortest-paths
+algorithm. Because of its simplicity and computational efficiency,
+it is probably the best known and most widely used method.
+The two ranked-pairs rules (CIVS Ranked Pairs and MAM) are more
 expensive to compute.  If there are <i>n</i> choices, the ranked pairs
-algorithms are about <i>n</i> times slower than Beatpath Winner, but this
+algorithms are about <i>n</i> times slower than Beatpath Winner. This
 slowdown is only noticeable if there are many choices (more than twenty).
 Anecdotally, Beatpath Winner seems to be less stable than the other three
 rules, in the sense that adding one ballot to the set of ballots can have a
-large effect on the rankings.  The methods based on ranked pairs seem to be
-more stable in the sense that a given voter's ballot does not affect the
-ordering as much as it can in Beatpath Winner, where one ballot can create a
-long new beatpath with global effects. The difference between CIVS Ranked Pairs
-and MAM is that MAM uses a sophisticated random tie-breaking method, whereas
+large effect on the rankings, because one ballot can create a
+long new beatpath with global effects.
+The methods based on ranked pairs seem to be
+more stable in the sense that a given voter's ballot tends not to affect the
+ordering as much. The difference between the two ranked pairs methods,
+CIVS Ranked Pairs and MAM, is that MAM uses a sophisticated random tie-breaking method, whereas
 CIVS Ranked Pairs is completely deterministic. Thus, the result of running MAM
 is not determined by just the ballots cast. Comparison of the results of MAM
 and CIVS RP will show if randomization was needed and used by MAM.  If there is
@@ -157,7 +155,7 @@ into account.
 
 <p>
 The major difference between CIVS Ranked Pairs and MAM is
-the rule on when to keep a preference. A preference is
+the rule on when to keep a preference. In CIVS RP, a preference is
 kept exactly when it does not create any <i>new</i> cycles when considered in
 conjunction with <i>strictly stronger</i>, kept preferences. Thus, preferences
 of equal strength may be kept even though in conjunction they produce a new
@@ -193,16 +191,16 @@ algorithm finds the top-ranked choice (or choices) in the following way.  If
 there is a Condorcet winner, that is the top-ranked choice. Otherwise, for each
 choice, the ballots are examined to see on how many of the ballots that choice
 is the highest ranked among the choices being considered.  Call this number the
-top count for the choice. The choice with the smallest count are removed from
+top count for the choice. The choice with the smallest count is removed from
 consideration and the process repeats, looking for a CW among the remaining
 choices. (If multiple choices tie for having the smallest top count, one is
 randomly picked for removal.) Eventually, there will either be a Condorcet
-winner, or the remaining choices will all have the same top count. This
+winner, or the remaining choices will all have the same top count. The
 remaining choice or choices are then considered the top-ranked choices among
 the set.  CIVS repeats this algorithm to construct a ranking of all choices.
 </p>
 <p>
-Note that although this rule uses a runoff procedure to eliminate `weak'
+Note that although this rule uses a runoff procedure to eliminate &ldquo;weak&rdquo;
 choices who create a cycle in the preference graph, it is still a Condorcet
 election method. If there is a CW, it will always be the top-ranked choice.
 </p>
