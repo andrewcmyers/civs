@@ -1,0 +1,146 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Condorcet Internet Voting Service</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>&nbsp;Condorcet Internet Voting
+      Service</h1>
+    </td>
+    <td width=0% nowrap valign=top align=right>
+	<a href="@CIVSHOME@">CIVS Home</a><br>
+	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
+	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" valign="top" nowrap colspan=2>
+      <h2 align="center">Frequently Asked Questions</h2>
+    </td>
+  </tr>
+</tbody>
+</table>
+<div class="contents">
+
+<h2>Setting up an election</h2>
+<ol>
+<li><b>What is the difference between Condorcet voting and voting methods
+that I am familiar with?</b><br>
+Condorcet voting methods let voters rank their preferences and do a good
+job of aggregating all the voter preferences into a single ranking.
+[&nbsp;<a href="rp.html">More&nbsp;information on Condorcet voting</a>&nbsp;]
+
+<li><b>For how long a period should I enable voting?</b><br>
+This is up to you. The best time period depends on your voters.
+For voters who are aware of the election or who check email frequently,
+a couple of days is usually enough time. Most people vote right away, or
+not at all. Election durations of more than a week are usually too
+long, unless your intention is to set up a long-running public survey.
+</li>
+
+<li><b>I would like to separate out the acceptable choices from the
+unacceptable choices. Can I do that?</b><br>
+Just create a choice named something like &ldquo;choices ranked below this
+are unacceptable&rdquo;. You can then use the election results in
+various ways. If you want reject choices that are considered unacceptable
+by a plurality of voters, reject those that are ranked below this pseudo-choice.
+If you want to find the choices that are acceptable to <i>every</i> voter,
+they are the ones that unananimously (n&ndash;0) beat this pseudo-choice.
+(This is handy for scheduling meetings where everyone needs to be present.)
+</li>
+
+<li><b>How big an election can I run?</b><br>
+CIVS is used regularly for elections with hundreds of voters.  You can set up a
+public election where any number of people can vote.  Elections have been
+successfully run with a couple of thousand voters, and this is a load it should
+stand up to even if voters all try to vote around the same time. CIVS hasn't
+been tested at 10,000 voters or higher, and since the server is implemented in
+Perl, it isn't as fast as it could be&mdash;there is reason to think it may
+fall over at that level of load. A Java version is in the works.  If you want
+to have a private election, the system will only allow you to add 1,000 voters
+at a time, but in principle you can have as many voters as you want. Note that
+making your election proportional dramatically increases the load on the CIVS
+server, so you may want to avoid that mode for large elections.
+<li>
+<b>How reliable is CIVS?</b><br>
+We haven't had any data losses due to hardware failure. A couple of years ago
+the CIVS server machine had a disk failure, but we were able to recover
+election data from backups and move the service to a new machine.  A bug (a
+subtle race condition) in CIVS code caused some corruption of voting data in
+one large election a couple of years ago, but it does not seem to have affected
+the election result. The race condition has long since been fixed. Since
+elections are stored in separate databases, it only affected the one election.
+
+<li>
+<b>A complete ranking of choices could embarrass some candidates. Can I avoid
+that?</b><br>
+Ordinarily, full election results are available to every voter. However,
+you can designate a smaller set of people who are allowed to see the election
+results. They can then report the winners to the voters.
+</ol>
+
+<h2>Running an election</h2>
+<ol>
+<li><b>Some voters never got their voter keys. What do I do?</b><br>
+It depends on whether you sent the voter key to the right address in the first
+place. If so, you can send it again by "adding" that voter with the
+election control page. The same voter key will be generated, so
+the voter won't be able to vote twice. If the email address was broken,
+then email should have bounced. In that case it should be safe to add
+the voter under their correct email address. You can check with the CIVS
+supervisor whether the email bounced, assuming you were not notified.
+</li>
+
+<li><b>Why doesn't the election end automatically at the specified time?</b><br>
+We wanted to give election supervisors the flexibility to write complex
+specifications of when the election should end, such as &ldquo;by March 3 or
+when we get at least 100 votes&rdquo;. It's too hard to handle all these cases.
+The supervisor can keep tabs on the election progress through the election
+control page.
+</li>
+
+<li><b>The voters haven't bothered to vote. Can I send them their voter
+keys again?</b><br> Yes, just "add" them again at the election control page.
+This will send them all email. Make sure you use exactly the same email address
+you did the first time; otherwise, a new voter key will be generated because
+it's a different voter as far as CIVS can tell.
+</li>
+<li>
+<b>How long will the election results remain available?</b><br>
+We are making a best effort to keep election results forever, for any election
+that receives more than one vote and doesn't look like a test of the system.
+However, you may want to make a copy of the election results page for
+posterity.
+</li>
+<li><b>Why doesn't the system notify the voters when the election has ended?</b><br>
+Because it doesn't know who the voters are any more. Once voter keys are
+sent out, all information about the voters is destroyed. It's the job of
+the election supervisor to close the election and notify voters or
+result recipients.
+</li>
+</ol>
+<h2>Voting</h2>
+<ol>
+<li><b>What does &ldquo;no opinion&rdquo; mean?</b><br>
+It means you are providing no information about how this choice ranks with
+respect to the other choices. Voters often pick &ldquo;no opinion&rdquo; when
+what they mean is that they don't like the choice or they don't have any
+information about it. These are probably reasons to rank the choice low.
+</ol>
+
+<h2>Security and Privacy</h2>
+
+<p>For a discussion of security and privacy in CIVS, see
+<a href="sec_priv.html">here</a>.
+</div>
+</body>
+</html>
