@@ -1,10 +1,12 @@
 civs/acks.html
 civs/changelog.html
 civs/civs_create.html
+civs/faq.html
 civs/gettimeofday.c
 civs/install-civs
 civs/pgrp.c
 civs/proportional.html
+civs/check123b.png
 civs/results.js
 civs/sec_priv.html
 civs/timeout.c
