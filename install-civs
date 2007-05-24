@@ -29,7 +29,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
     for f in civs_create.html index.html public_elections.html \
 	proportional.html sec_priv.html acks.html changelog.html \
-	rp.html faq.html style.css results.js vote.js
+	rp.html faq.html style.css results.js vote.js check123b.png
     do
 	#echo "copying $f to $HTMLDIR/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \
