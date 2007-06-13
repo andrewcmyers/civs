@@ -11,8 +11,11 @@ use DB_File;
 use mail;
 use Socket;
 use IO::Handle;
+use HTML::TagFilter;
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
+my $tf = new HTML::TagFilter;
+$tf->allow_tags({table => { all => [] }, td => {all => []}, tr => {all => []}});
 
 ### Initial parameter checking
 
@@ -49,6 +52,7 @@ sub trim {
 foreach my $ch (@c1) {
     $ch = &trim($ch);
     $ch =~ s/--/\&mdash;/g;
+    $ch = $tf->filter($ch);
     if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
 	$choices .= "\n";
@@ -57,6 +61,7 @@ foreach my $ch (@c1) {
 }
 foreach my $ch (@c2) {
     $ch = &trim($ch);
+    $ch = $tf->filter($ch);
     if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
 	$choices .= "\n";
@@ -92,12 +97,12 @@ my %edata;
 tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 
 ##### read form data into DB
-$edata{'title'} = my $title = param('title');
-$edata{'description'} = param('description');
-$edata{'name'} = my $name = param('name');
-$edata{'email_addr'} = param('email_addr');
-$edata{'num_winners'} = param('num_winners');
-$edata{'election_end'} = param('election_end');
+$edata{'title'} = my $title = $tf->filter(param('title'));
+$edata{'description'} = $tf->filter(param('description'));
+$edata{'name'} = my $name = $tf->filter(param('name'));
+$edata{'email_addr'} = $tf->filter(param('email_addr'));
+$edata{'num_winners'} = $tf->filter(param('num_winners'));
+$edata{'election_end'} = $tf->filter(param('election_end'));
 my $public = param('public');
 if (!defined($public) or $public eq '') {
     $public = "no";

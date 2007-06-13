@@ -26,7 +26,8 @@ INSTALLATION INSTRUCTIONS
 
 3. Test the server installation by browsing to $CIVSURL, creating an election,
    adding yourself as a voter, opening the election, voting in the election,
-   closing the election, and viewing the results.
+   closing the election, and viewing the results. You may need to obtain some
+   Perl packages, especially HTML::TagFilter.
 
 Good luck!
 
