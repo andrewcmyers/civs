@@ -43,28 +43,33 @@ version of the CIVS software, click here:
 <form method="POST" 
       action="http://www.cs.cornell.edu/w8/~andru/cgi-bin/download.pl"
       enctype="multipart/form-data">
-  <input type="hidden" name="package" value="CIVS 2.7">
+  <input type="hidden" name="package" value="CIVS 2.8">
+  <input type="hidden" name="logo" value='<img class="logo" src="http://www.cs.cornell.edu/w8/~andru/civs/check123b.png">'>
   <input type="hidden" name="style" value="@CIVSURL@/style.css">
   <input type="hidden" name="url"
-         value="http://www.cs.cornell.edu/andru/release/civs-2.7.tar.gz">
+         value="http://www.cs.cornell.edu/andru/release/civs-2.8.tar.gz">
   <input
     style="background-color: blue; color: white; border-style: solid; border-color: black; font-weight: bold"
-  type="submit" value="Download CIVS 2.7" />
+  type="submit" value="Download CIVS 2.8" />
 </form>
 </blockquote>
 
 <p>
-See the file INSTALL for installation instructions.
+See the file INSTALL for installation instructions. New releases of the
+software are announced here and sent in email to the
+<a href="https://lists.cs.cornell.edu/mailman/listinfo/civs-users-l">
+CIVS users mailing list</a>.
 </p>
 
 <p>
 Recent updates:
 <ul>
-<li>Current version on server (not released yet):
+<li>2.8:
 <ul>
-<li>Added better checking of email addresses to prevent sending bogus emails, and changed voter emails
-    to come from CIVS supervisor instead of election supervisor.
-<li>Cleaned up completion algorithm code so new completion algorithms can be added more easily.
+<li>Better checking of email addresses to prevent sending bogus emails.
+<li>Voter emails now come from CIVS supervisor instead of election supervisor.
+<li>Cleaned-up completion algorithm code allows adding new completion
+    algorithms more easily.
 <li>Corrected description of runoff.
 </ul>
 <li>2.7:
