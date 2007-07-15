@@ -76,10 +76,10 @@ as Cloneproof Schwartz Sequential Dropping and the
 <a href="http://en.wikipedia.org/wiki/Schulze_method">Schulze Method</a>),
 <a href="http://alumnus.caltech.edu/~seppley/">
 Maximize Affirmed Majorities</a> (MAM), a deterministic variant of MAM
-called <a href="#rp">CIVS Ranked Pairs</a>, and a runoff-based Condorcet algorithm
-called <a href="#runoff">Condorcet Runoff</a>.
+called <a href="#rp">CIVS Ranked Pairs</a>, and a runoff-based
+Condorcet algorithm called <a href="#runoff">Condorcet-IRV</a>.
 The first two rules are described
-elsewhere (follow the links); CIVS Ranked Pairs and Runoff are
+elsewhere (follow the links); CIVS Ranked Pairs and Condorcet-IRV are
 described below. 
 </p>
 
@@ -113,17 +113,17 @@ algorithms are about <i>n</i> times slower than Beatpath Winner. This
 slowdown is only noticeable if there are many choices (more than twenty).
 Anecdotally, Beatpath Winner seems to be less stable than the other three
 rules, in the sense that adding one ballot to the set of ballots can have a
-large effect on the rankings, because one ballot can create a
+large effect on the rankings, perhaps because one ballot can create a
 long new beatpath with global effects.
-The methods based on ranked pairs seem to be
+Methods based on ranked pairs seem to be
 more stable in the sense that a given voter's ballot tends not to affect the
 ordering as much. The difference between the two ranked pairs methods,
 CIVS Ranked Pairs and MAM, is that MAM uses a sophisticated random tie-breaking method, whereas
 CIVS Ranked Pairs is completely deterministic. Thus, the result of running MAM
 is not determined by just the ballots cast. Comparison of the results of MAM
 and CIVS RP will show if randomization was needed and used by MAM.  If there is
-a lot of concern about strategic voting (particularly, burying), CIVS Runoff is
-a reasonable choice.
+a lot of concern about strategic voting (particularly, burying attacks),
+Condorcet-IRV is a reasonable choice.
 </p>
 
 <a name="rp">
@@ -181,12 +181,14 @@ tie-breaking mechanism, as in MAM; the algorithm is deterministic.
 </p>
 
 <a name="runoff">
-<h2>Condorcet Runoff</h2>
+<h2>Condorcet-IRV</h2>
 </a>
 
 <p>
-The Condorcet Runoff rule is a Condorcet completion rule that uses an IRV-like
-process to perform Condorcet completion.  Given a set of choices, this
+The Condorcet-IRV rule is a Condorcet completion rule that uses an IRV-like
+process to perform Condorcet completion. It was originally proposed by
+Thomas Hill of England's Electoral Reform Society.
+Given a set of choices, this
 algorithm finds the top-ranked choice (or choices) in the following way.  If
 there is a Condorcet winner, that is the top-ranked choice. Otherwise, for each
 choice, the ballots are examined to see on how many of the ballots that choice
@@ -200,26 +202,26 @@ remaining choice or choices are then considered the top-ranked choices among
 the set.  CIVS repeats this algorithm to construct a ranking of all choices.
 </p>
 <p>
-Note that although this rule uses a runoff procedure to eliminate &ldquo;weak&rdquo;
-choices who create a cycle in the preference graph, it is still a Condorcet
-election method. If there is a CW, it will always be the top-ranked choice.
+Note that although this rule uses a runoff procedure to eliminate
+&ldquo;weak&rdquo; choices who create a cycle in the preference graph,
+it is still a Condorcet election method, unlike IRV/STV.  If there is a
+CW, it will always be the top-ranked choice.
 </p>
 <p>
-The advantage of CIVS Runoff is that it is relatively resistant to certain
+The advantage of Condorcet-IRV is that it is relatively resistant to certain
 kinds of strategic voting. In particular, it resists <i>burying</i>, an attack
 in which voters insincerely push strong competitors to their preferred choices
 lower in the rankings. A weaker form of <i>burying</i> is <i>truncation</i>, in
 which voters do not express their full preference by giving some set of
 candidates the lowest possible rank.  As long as burying does not create a
 preference cycle, it has no effect on any Condorcet method. However, it is
-possible for burying can create a preference cycle that many completion
+possible for burying to create a preference cycle that many completion
 rules will then resolve in favor of the choice of the voters who have voted
 insincerely.
 </p>
-
 <p>
-Regardless of the completion rule, burying can easily backfire on the voters
-who employ, because it can result in weaker choices appearing to be consensus
+Regardless of the completion rule, burying can easily backfire on voters
+who employ it, because it can result in weaker choices appearing to be consensus
 choices. A successful use of burying can be tricky to carry off; the best
 policy is to vote sincerely.
 </p>

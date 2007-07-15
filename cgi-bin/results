@@ -154,7 +154,7 @@ print STDOUT 'Condorcet completion rule:
 	onClick="newSettings()"
 	value="runoff"',
 	$runoff_checked,
-    '> Runoff';
+    '> Condorcet-IRV';
     print '&nbsp;&nbsp;&nbsp; <a href="',$civs_url,'/rp.html">(What is this?)</a>';
     print '&nbsp;<input type="submit" id="recomplete" value="Update">';
 
