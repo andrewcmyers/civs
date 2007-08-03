@@ -13,8 +13,7 @@
 <table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
   <tbody><tr>
     <td width="100%" valign="top" nowrap>
-      <h1>&nbsp;Condorcet Internet Voting
-      Service</h1>
+      <h1>&nbsp;Condorcet Internet Voting Service</h1>
     </td>
     <td width=0% nowrap valign=top align=right>
 	<a href="@CIVSHOME@">CIVS Home</a><br>
@@ -34,7 +33,7 @@
 
 	<p></p>
 	<div align="center" style="background-color: yellow; border-style: solid; border-color: black">
-	The Cornell Internet Voting System, also known as CIVS, is under development.
+	<b>Note:</b> The Cornell Internet Voting System, also known as CIVS, is under development.
 	This new system, described in a 
 	<a href="http://www.cs.cornell.edu/people/clarkson/papers/clarkson_civs_tr.pdf">technical report</a>,
 	uses much more complex cryptographic protocols to provide universal verifability 
@@ -46,8 +45,11 @@
 <p>
 Most users use the existing CIVS web server. However, the software is
 available for installation elsewhere, subject to certain restrictions
-described in the included README file. To download the latest released
-version of the CIVS software, click here:
+described in the included README file.
+</p>
+
+<p>
+To download the latest released version of the CIVS software, click here:
 </p>
 
 <blockquote>
@@ -90,14 +92,15 @@ useful HTML markup still permitted.
 </ul>
 <li>2.7:
 <ul>
-<li>Added ability to release election results to a limited set of users.
-<li>Better client-side sanity checking for election creation.
-<li>Allow previewing of election description and choice list.
-<li>Added another completion algorithm (runoff) and factored out
-    completion algorithm code better to allow future completion algorithms
-    to be added more easily.
-<li>Allow voters' identity to be revealed (an election option).
-<li>Mail to voters is now HTML+ASCII (should be made optional).
+<li>Ability to release election results only to a limited set of users.
+<li>Better client-side sanity checking at election creation.
+<li>Previewing of election description and choice list.
+<li>Another completion algorithm (runoff)
+<li>Better factoring out of completion algorithms to allow future
+    algorithms to be added more easily.
+<li>Allow voters' identity to be revealed as an election option
+<li>Mail to voters is now HTML+ASCII (should be made optional) to help
+    get through spam filters.
 </ul>
 </ul>
 

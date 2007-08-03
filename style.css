@@ -23,7 +23,11 @@ body { background-color: #f8f8ff; text-align: center }
 table { background-color: #e8e8f0 }
 table.matrix { background-color: #e0e0f0 }
 table.form { background-color: transparent }
-div.emphasized { background-color: #ffffd0; margin: 0px auto }
+div.emphasized {
+  background-color: #ffffd0; margin: 0px auto;
+  padding: 5px;
+  border-style: solid;
+  border-width: 1; border-color: #cca}
 
 span.explain {font-size: 75%; color: #404040 }
 

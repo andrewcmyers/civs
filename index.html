@@ -24,10 +24,10 @@
 <td align="center" rowspan="2">
 <div class="home">
 <p>CIVS is a free Internet voting service that makes it easy to conduct
-elections and polls on the Web.  A voter is given a set of possible choices and
-is allowed to rank them. Combined, these rankings are construct an overall
-ranking that anonymously summarizes the opinions of all the voters.  For
-example, it has been used to:
+elections and polls on the Web.  Each voter ranks a set of possible choices.
+Combined, these rankings are used to construct an overall
+ranking that anonymously summarizes the opinions of all voters.
+CIVS has been used for many elections, such as the following:
 </p>
 
 <p>
@@ -63,18 +63,20 @@ One vote is allowed per IP address.
 </p>
 
 <p>
-This voting system allows voters to rank their choices, rather  
-than just picking their most preferred choice. So it collects and uses
-more information from voters. Ranking avoids problems        
-like vote splitting and spoilers, and reduces the general problem       
-of strategic voting. Australia is an example of a country with a voting
-system based on ranking, Instant Runoff Voting. The     
-Condorcet voting system used by this service is better at identifying
-consensus candidates. Another name for Condorcet methods
-is Instant Round-Robin, because every candidate is compared against
-every other candidate, unlike Instant Runoff Voting where a consensus
-candidate can be eliminated in early rounds. CIVS also supports
-proportional representation.
+This voting system allows voters to rank their choices, rather  than just
+picking their most preferred choice. Compared to other polling methods, it
+collects and uses more information from voters. Ranking choices also avoids
+problems with vote splitting and spoilers. Australia is an example of a country
+with a voting system based on ranking, Instant Runoff Voting. However, the
+Condorcet method used by this service is better at identifying consensus
+candidates. Unlike most other Condorcet-based voting systems, CIVS also
+supports proportional representation.
+</p>
+<p>
+A new, highly secure version of CIVS is under development, and is described in <a
+href="http://www.cs.cornell.edu/people/clarkson/papers/clarkson_civs_tr.pdf">this
+technical report</a>. CIVS2 uses much more complex cryptographic
+protocols to provide universal verifiability and coercion resistance.
 </p>
 </div>
 </td>

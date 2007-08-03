@@ -61,27 +61,26 @@ they are the ones that unananimously (n&ndash;0) beat this pseudo-choice.
 
 <li><b>How big an election can I run?</b><br>
 CIVS is used regularly for elections with hundreds of voters.  You can set up a
-public election where any number of people can vote.  Elections have been
+public election where any number of people can vote. Elections have been
 successfully run with a couple of thousand voters, and this is a load it should
 stand up to even if voters all try to vote around the same time. CIVS hasn't
-been tested at 10,000 voters or higher. Since the server is implemented in
-Perl, it isn't as fast as it could be&mdash;it can handle about 4,000 voters
-per hour. A faster Java version is in the works.  If you want to have a private
-election, the system will only allow you to add 1,000 voters at a time, but in
-principle you can have as many voters as you want. Note that using the
+been tested at 10,000 voters or higher. The server is implemented in
+Perl, so it can handle about 4,000 voters per hour. If your voters don't show up
+faster than that, it should be fine no matter how many voters there are.  A
+faster Java version is in the works.  If you want to have a private election,
+the system will only allow you to add 1,000 voters at a time, but in principle
+you can have as many voters as you want. Note that using the experimental
 proportional method for your election dramatically increases the load on the
-CIVS server, so you should avoid that mode for large elections.
+CIVS server, so avoid that mode for large elections.
 <li>
 
 <b>How reliable is CIVS?</b><br>
 There have been no data losses due to hardware failure on the Cornell
-installation. A couple of years ago the CIVS server machine had a disk failure,
-but we were able to recover election data from backups and move the service to
-a new machine.  A bug (a subtle race condition) in CIVS code caused some
-corruption of voting data in one large election a couple of years ago, but it
-does not seem to have affected the election result. The race condition has long
-since been fixed. Since elections are stored in separate databases, it only
-affected one election.
+installation.  A race condition in CIVS code caused some corruption of voting
+data in one large election a couple of years ago, but did not seem to 
+affect the election result. This bug has long since been fixed in a way that
+should prevent all future race conditions. Each election is stored in
+a separate database, so data corruption can only affect only one election.
 
 <li>
 <b>A complete ranking of choices could embarrass some candidates.
@@ -95,7 +94,7 @@ results. They can then report the winners to the voters.
 <ol>
 <li><b>Some voters never got their voter keys. What do I do?</b><br>
 It depends on whether you sent the voter key to the right address in the first
-place. If so, you can send it again by "adding" that voter with the
+place. If so, you can send it again by &ldquo;adding&rdquo; that voter with the
 election control page. The same voter key will be generated, so
 the voter won't be able to vote twice. If the email address was broken,
 then email should have bounced. In that case it should be safe to add
@@ -107,15 +106,16 @@ supervisor whether the email bounced, assuming you were not notified.
 We wanted to give election supervisors the flexibility to write complex
 specifications of when the election should end, such as &ldquo;by March 3 or
 when we get at least 100 votes&rdquo;. It's too hard to handle all these cases.
-The supervisor can keep tabs on the progress of the election
-through the election control page.
+The supervisor can easily monitor election progress through the election control page.
 </li>
 
 <li><b>The voters haven't bothered to vote. Can I send them their voter
-keys again?</b><br> Yes, just "add" them again at the election control page.
+keys again?</b><br> Yes, just &ldquo;add&rdquo; them again at the election control page.
 This will send them all email. Make sure you use exactly the same email address
 you did the first time; otherwise, a new voter key will be generated because
-it's a different voter as far as CIVS can tell.
+it's a different voter as far as CIVS can tell. For security and privacy reasons,
+CIVS doesn't record voter email or voter keys, so it has no way to send an already
+generated voter key to a new email address.
 </li>
 <li>
 <b>How long will election results remain available?</b><br>

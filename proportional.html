@@ -191,12 +191,14 @@ a brute-force form by computing a preference
 matrix for all <i>f</i> in 1..<i>k</i>, where the matrix has size
 <b>C</b>(<i>c</i>,<i>k</i>)&times;<b>C</b>(<i>c</i>,<i>k</i>),
 where <i>c</i> is the number of candidates, and <b>C</b> is
-the choose function. The storage and computational overhead of
-a brute-force compuation is prohibitive for even moderately
-large <i>n</i> and <i>k</i>.
+the combinatoric choose function. The storage and computational overhead of
+this brute-force computation is prohibitive for even moderately
+large <i>n</i> and <i>k</i>. Therefore, this is not how the actual
+CIVS implementation works.
 </p>
 
-<p>The current technique for identifying the winning committee is less
+<p>
+The current technique for identifying the winning committee is less
 expensive but may be incomplete. The current implementation performs a local
 search through the space of committees to identify the Schwartz set of
 committees: all committees that are beaten only by other committees in
@@ -207,8 +209,9 @@ beatpath winner algorithm is run using all committees explored during
 the search for the Schwartz set. An interactive form also allows
 comparison of any two sets.  However, the output of the system in this
 mode must be currently be interpreted with some caution: while no
-counterexamples have been found, there is no proof that it always finds
-the winning committee according to the above criteria.
+counterexamples have been found, there is no proof that the current
+implementation always finds the winning committee according to the
+above criteria.
 </p>
 </div>
 
