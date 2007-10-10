@@ -571,11 +571,11 @@ You have been designated as a voter by the election supervisor,
 $name (<a href=\"mailto:$email_addr ($name)\">$email_addr</a>).</p>";
 
 	    if (!($description =~ m/^(\s)*$/)) {
-		$html .= '<p style="border-style: solid; border-width: 1px; background-color: #f0f0f0; color: black">'.$cr.$cr;
+		$html .= '<div style="border-style: solid; border-width: 1px; background-color: #f0f0f0; color: black">'.$cr.$cr;
 		$html .= '<b>Description of election:</b>'.$cr;
-		$html .= $description.$cr;
+		$html .= $description.'</div>'.$cr;
 	    }
-	    $html .= $cr.$cr.'</p><p>If you would like to vote, please visit the following URL:';
+	    $html .= $cr.$cr.'<p>If you would like to vote, please visit the following URL:';
 	    $html .= MakeURL($url);
 
 	    $html .= '
