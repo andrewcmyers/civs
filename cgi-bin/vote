@@ -111,7 +111,7 @@ if ($proportional ne 'yes' || !$use_combined_ratings) {
     preference between them. You do not have to use all the
     possible ranks. All choices are initially given the
     lowest possible rank. <b>Note:</b> &ldquo;No opinion&rdquo;
-    is <i>not</i> the same as the lowest possible rank; it says
+    is <i>not</i> the same as the lowest possible rank; it means
     that you choose not to rank this choice with respect to the
     other choices.</p>";
 
@@ -159,12 +159,16 @@ if ($ballot_reporting eq 'yes') {
 	    . 'Your ballot (the rankings you assign to candidates) '
 	    . 'will be made public when the election is closed.';
     if ($reveal_voters eq 'yes') {
-	$msg .= 'Your email address will be visible along with your ballot.';
+	$msg .= '<br><strong>Your email address will be visible</strong> along with your ballot.';
     } else {
-	$msg .= 'However, your ballot will be anonymous: '
+	$msg .= ' However, your ballot will still be anonymous: '
 	      . 'no personally identifying information will appear.';
     }
-    print p($msg);
+    if ($reveal_voters eq 'yes') {
+	print '<div class=emphasized>'.$msg.'</div>';
+    } else {
+	print p($msg);
+    }
 }
 
 my $rating = 'Rank';

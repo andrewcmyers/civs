@@ -589,7 +589,7 @@ destroyed the record of your email address and will not release any information
 about whether or how you have voted.';
 	    } else {
 		$html .= '
-The election supervisor has decided to make this a non-anonymous election.  If
+The election supervisor has decided to make this a <strong>non-anonymous election</strong>.  If
 you vote, how you voted will be publicly visible along with your
 email address. If you do not vote, the election supervisor will be able
 to determine this.';
