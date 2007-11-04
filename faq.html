@@ -87,7 +87,8 @@ a separate database, so data corruption can only affect only one election.
 Can I avoid that?</b><br>
 Ordinarily, full election results are available to every voter. However,
 you can designate a smaller set of people who are allowed to see the election
-results. They can then report the winners to the voters.
+results. They can then report the winners to the voters, using some mechanism
+outside of CIVS.
 </ol>
 
 <h2>Running an election</h2>
@@ -106,7 +107,8 @@ supervisor whether the email bounced, assuming you were not notified.
 We wanted to give election supervisors the flexibility to write complex
 specifications of when the election should end, such as &ldquo;by March 3 or
 when we get at least 100 votes&rdquo;. It's too hard to handle all these cases.
-The supervisor can easily monitor election progress through the election control page.
+The supervisor can easily monitor election progress through the election control
+page. The supervisor needs to...supervise.
 </li>
 
 <li><b>The voters haven't bothered to vote. Can I send them their voter
@@ -124,7 +126,7 @@ that receives more than one vote and doesn't look like a test of the system.
 However, you may want to make a copy of the election results page for
 posterity.
 </li>
-<li><b>Why doesn't the system notify the voters when the election has ended?</b><br>
+<li><b>Why doesn't the system notify voters when the election has ended?</b><br>
 Because it doesn't know who the voters are any more. Once voter keys are
 sent out, all information about the voters is destroyed. It's the job of
 the election supervisor to close the election and notify voters or
@@ -139,9 +141,13 @@ behavior for &ldquo;public&rdquo; elections (i.e., polls).
 <ol>
 <li><b>What does &ldquo;no opinion&rdquo; mean?</b><br>
 It means you are providing no information about how this choice ranks with
-respect to the other choices. Voters often pick &ldquo;no opinion&rdquo; when
-what they mean is that they don't like the choice or they don't have any
-information about it. These are probably reasons to rank the choice low.
+respect to the other choices. For example, if you give one choice the rank 1,
+and give all other choices the rank &ldquo;no opinion&rdquo;, your ballot
+becomes useless because it doesn't express any preferences.  Voters often pick
+&ldquo;no opinion&rdquo; when what they mean is that they don't like the choice
+or that they don't have any information about it. In these situations, it is often
+better to give the choice a low rank rather than to select &ldquo;no
+opinion&rdquo;.
 </ol>
 
 <h2>Security and Privacy</h2>

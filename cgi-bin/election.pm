@@ -26,7 +26,7 @@ BEGIN {
     $election_end $public $writeins $shuffle $proportional $use_combined_ratings
     $choices @choices $num_choices $num_auth $num_votes $recorded_voters
     $ballot_reporting $reveal_voters $authorization_key %used_voter_keys
-    $restrict_results $result_addrs $hash_result_key
+    $restrict_results $result_addrs $hash_result_key $no_opinion
     %voter_keys %edata %vdata);
 }
 
@@ -48,7 +48,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      @addresses, $election_end, $public, $writeins, $proportional,
      $use_combined_ratings, $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
-     $authorization_key, $shuffle, %voter_keys, %used_voter_keys,
+     $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
      $restrict_results, $result_addrs, $hash_result_key);
 
 our $civs_supervisor = '@SUPERVISOR@';
@@ -93,6 +93,7 @@ sub init {
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
     $shuffle = $edata{'shuffle'};
+    $no_opinion = $edata{'no_opinion'} or $no_opinion = 'no';
     $num_votes = $vdata{'num_votes'} or $num_votes = 0;
     $recorded_voters = $vdata{'recorded_voters'};
     $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';

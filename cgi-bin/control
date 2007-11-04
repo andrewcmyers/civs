@@ -120,9 +120,13 @@ print "Actual votes cast so far: $num_votes", br();
 print "Election ends $election_end.", br();
 
 if ($writeins eq 'yes') {
-    print 'Write-in choices are allowed.', br();
+    print 'Write-in choices are allowed.', br(), $cr;
 } else {
-    print 'Write-in choices are not allowed.', br();
+    print 'Write-in choices are not allowed.', br(), $cr;
+}
+
+if ($no_opinion eq 'yes') {
+    print 'Voters can choose "No opinion".', br(), $cr;
 }
 
 if ($proportional eq 'yes') {

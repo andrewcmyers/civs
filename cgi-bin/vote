@@ -221,7 +221,7 @@ for (my $i = 0; $i < $num_choices; $i++) {
 			print "  <option>$j</option>\n";
 	    }
 	}
-	if ($proportional ne 'yes') {
+	if ($proportional ne 'yes' && $no_opinion eq 'yes') {
 	    if ($selected eq "No opinion") {
 		print "  <option selected>No opinion</option>";
 	    } else {

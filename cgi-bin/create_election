@@ -105,30 +105,23 @@ $edata{'name'} = my $name = $tf->filter(param('name'));
 $edata{'email_addr'} = $tf->filter(param('email_addr'));
 $edata{'num_winners'} = $tf->filter(param('num_winners'));
 $edata{'election_end'} = $tf->filter(param('election_end'));
-my $public = param('public');
-if (!defined($public) or $public eq '') {
-    $public = "no";
+
+sub SetBinaryParameter {
+    my ($param_name, $default) = @_;
+
+    my $value = param($param_name);
+    if (!defined($value) or $value eq '') {
+	$value = $default;
+    }
+    $edata{$param_name} = $value;
+    return $value;
 }
-$edata{'public'} = $public;
-my $writeins = param('writeins');
-if (!defined($writeins) or $writeins eq '') {
-    $writeins = 'no';
-} else {
-    $writeins = 'yes';
-}
-my $shuffle = param('shuffle');
-if (!defined($shuffle) or $shuffle eq '') {
-    $shuffle = 'yes'; # shuffle by default
-}
-$edata{'writeins'} = $writeins;
-$edata{'shuffle'} = param('shuffle');
-my $proportional = param('proportional');
-if (!defined($proportional) or $proportional eq '') {
-    $proportional = 'no';
-} else {
-    $proportional = 'yes';
-}
-$edata{'proportional'} = $proportional;
+
+my $public = SetBinaryParameter('public', 'no');
+SetBinaryParameter('writeins', 'no');
+SetBinaryParameter('no_opinion', 'no');
+SetBinaryParameter('shuffle', 'yes');
+SetBinaryParameter('proportional', 'no');
 
 $edata{'choices'} = $choices;
 
@@ -150,30 +143,14 @@ if (defined($rating_interpretation) and $rating_interpretation eq 'combined_rati
 }
 $edata{'use_combined_ratings'} = $use_combined_ratings;
 
-my $ballot_reporting = param('ballot_reporting');
-if (!defined($ballot_reporting) or $ballot_reporting eq '') {
-    $ballot_reporting = 'no';
-} else {
-    $ballot_reporting = 'yes';
-}
-$edata{'ballot_reporting'} = $ballot_reporting;
-my $reveal_voters = param('reveal_voters');
-if (!defined($reveal_voters) or $reveal_voters eq '') {
-    $reveal_voters = 'no';
-} else {
-    $reveal_voters = 'yes';
-}
-$edata{'reveal_voters'} = $reveal_voters;
+SetBinaryParameter('ballot_reporting', 'no');
+SetBinaryParameter('reveal_voters', 'no');
 
-my $restrict_results = param('restrict_results');
+my $restrict_results = SetBinaryParameter('restrict_results', 'no');
 my $result_addrs;
-if (!defined($restrict_results) or $restrict_results eq '') {
-    $restrict_results = 'no';
-} else {
-    $restrict_results = 'yes';
+if ($result_addrs eq 'yes') {
     $edata{'result_addrs'} = $result_addrs = param('result_addrs');
 }
-$edata{'restrict_results'} = $restrict_results;
 
 HTML_Header("CIVS Election Creation");
 CIVS_Header("Election created: $title");
