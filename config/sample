@@ -32,7 +32,7 @@ CIVSDATADIR='/home/username/civs'
 
 # The URL path to the CIVS CGI scripts.  This is relative to $THISHOST.
 # I.e., the scripts will be found at http://$THISHOST$CIVSBINURL.
-CIVSBINURL='/cgi-bin/test/civs'
+CIVSBINURL='/cgi-bin/username/civs'
 
 # The URL to the homepage of the CIVS server, relative to http://$THISHOST
 CIVSURL='/~username/civs'
@@ -54,4 +54,4 @@ LOCALDEBUG=''
 USING_ISA=''
 
 # A URL for people to visit to give suggestions. May be left empty.
-SUGGESTION_BOX=''
+SUGGESTION_BOX='http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_5820adef7d6e8733&akey=51398305f80ae2cb'
