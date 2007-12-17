@@ -93,7 +93,7 @@ sub init {
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
     $shuffle = $edata{'shuffle'};
-    $no_opinion = $edata{'no_opinion'} or $no_opinion = 'no';
+    $no_opinion = $edata{'no_opinion'} or $no_opinion = 'yes';
     $num_votes = $vdata{'num_votes'} or $num_votes = 0;
     $recorded_voters = $vdata{'recorded_voters'};
     $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';

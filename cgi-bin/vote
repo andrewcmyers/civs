@@ -110,10 +110,13 @@ if ($proportional ne 'yes' || !$use_combined_ratings) {
     You may give choices the same rank if you have no
     preference between them. You do not have to use all the
     possible ranks. All choices are initially given the
-    lowest possible rank. <b>Note:</b> &ldquo;No opinion&rdquo;
-    is <i>not</i> the same as the lowest possible rank; it means
-    that you choose not to rank this choice with respect to the
-    other choices.</p>";
+    lowest possible rank.", $cr;
+    if ($no_opinion eq 'yes') {
+	print '<b>Note:</b> &ldquo;No opinion&rdquo;
+	    is <i>not</i> the same as the lowest possible rank; it means
+	    that you choose not to rank this choice with respect to the
+	    other choices.</p>', $cr;
+    }
 
     if ($proportional eq 'yes') {
 	print '<p>This election is decided using an experimental
