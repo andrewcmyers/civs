@@ -596,11 +596,14 @@ email address. If you do not vote, the election supervisor will be able
 to determine this.';
 	    }
 	    $html .= $cr."</p><p>
-The election has been announced to end $election_end.  To view the results of
-the election once it is closed, visit:
-	    </p>".
-	    MakeURL("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id").
-            '<p>
+The election has been announced to end $election_end.";
+            if ($restrict_results ne 'yes') {
+		$html .=
+' To view the results of the election once it is closed, visit:</p>'.
+	    MakeURL(
+"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id");
+	    }
+	    $html .= '<p>
 For more information about the Condorcet Internet Voting Service, see:'.$cr.
             MakeURL($civs_home).'</p>
 </body>

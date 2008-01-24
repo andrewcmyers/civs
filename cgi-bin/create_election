@@ -148,7 +148,7 @@ SetBinaryParameter('reveal_voters', 'no');
 
 my $restrict_results = SetBinaryParameter('restrict_results', 'no');
 my $result_addrs;
-if ($result_addrs eq 'yes') {
+if ($restrict_results eq 'yes') {
     $edata{'result_addrs'} = $result_addrs = param('result_addrs');
 }
 

@@ -221,6 +221,14 @@ the supervisor of the election you create.</p>
     Make results available only to a limited set of users (by default,
     all voters can see election results).
     <br>
+    <span>
+    <p class="suboption" id="rrcontrol">
+    Enter email addresses of users permitted to view election results:
+    (All voters can see these email addresses)
+    </br>
+    <textarea rows="2" name="result_addrs" cols="50"></textarea>
+    </p>
+    </span>
   <input type="checkbox" name="ballot_reporting" value="yes"
          onClick="rvparent.appendChild(rvcontrol);">
   Enable detailed ballot reporting. 
@@ -241,14 +249,6 @@ the supervisor of the election you create.</p>
   they are shuffled randomly on each ballot).<br>
   <input type="checkbox" name="no_opinion" value="yes">
   Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
-    <span>
-    <p class="suboption" id="rrcontrol">
-    Enter email addresses of users permitted to view election results:
-    (All voters can see these email addresses)
-    </br>
-    <textarea rows="2" name="result_addrs" cols="50"></textarea>
-    </p>
-    </span>
   <input type="checkbox" name="proportional" value="yes"
          onClick="prparent.appendChild(prcontrol)">
   Enforce proportional representation (useful only if there is
