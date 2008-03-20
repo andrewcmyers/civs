@@ -61,6 +61,12 @@ if (defined($show_prop) && $show_prop ne '') {
     $proportional = $show_prop;
 }
 
+my $real_combined = $use_combined_ratings;
+my $show_combined = param('use_combined_ratings');
+if (defined($show_combined) && $show_combined ne '') {
+    $use_combined_ratings = $show_combined;
+}
+
 sub Email {
     return "<span class='email'>$_[0]</span>";
 }

@@ -548,6 +548,8 @@ sub SendKeys {
 
             ElectionLog("Sending mail to a voter for election $election_id\n");
             print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
+	    my $uniqueid = &SecureNonce;
+	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
 	    Send "mail from: $civs_supervisor"; ConsumeSMTP;
             Send "rcpt to: $v"; ConsumeSMTP;
@@ -555,6 +557,7 @@ sub SendKeys {
             Send "From: $email_addr ($name, CIVS election supervisor)";
             Send "Sender: $email_addr";
             Send "Reply-To: $email_addr";
+	    Send "Message-ID: <$messageid>";
             Send "To: $v";
             Send "Subject: CIVS Election now available for voting: $title";
 	    Send 'Content-Transfer-Encoding: 8bit';
