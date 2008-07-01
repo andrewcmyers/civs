@@ -1,5 +1,9 @@
 package rp;
 
+# This package computes the CIVS Ranked Pairs and MAM rankings of
+# candidates, by providing an appropriate rank_candidates function.
+# See runoff.pm for a specification of this function.
+
 use CGI qw(:standard);
 use civs_common;
 use strict;
@@ -58,7 +62,7 @@ sub Floyd_Warshall {
 	if ($mref->[$i][$k] && $mref->[$k][$j] && !$mref->[$i][$j] &&
 	    $i != $j) {
 	    $mref->[$i][$j] = 1;
-	    print pre("Update $i, $j");
+	    # print pre("Update $i, $j");
 	    $update = 1;
 	}
       }
@@ -180,7 +184,10 @@ sub rank_candidates_internal {
 #
 # Note: Copying 2-D arrays with $a[$i] = [@{$b[$i]}] isn't any faster.
 #
+    my $count = 0;
     foreach my $pair_ref (@pairs) {
+	$count++;
+	main::ReportProgress(($count + 1) / ($#pairs + 1));
 	my @pair = @{$pair_ref};
 	(my $winner, my $loser, my $winvotes, my $losevotes) = @{$pair_ref};
 	my $wname = $choices[$winner];
@@ -302,7 +309,7 @@ sub rank_candidates_internal {
 # create_rvh(ballots, num_choices): using a list of ballots, randomly select
 # ballots until a total order is constructed on all
 # candidates (or as much of an order as can be constructed,
-# anyway).
+# anyway). (This is the "random voter hierarchy" in MAM parlance.)
 sub create_RVH {
     (my $bref, my $num_choices) = @_;
     my @ballots = @{$bref};
