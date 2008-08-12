@@ -324,6 +324,7 @@ sub ProjectName {
 # This is useful for detecting similar names.
     my $name = $_[0];
     $name =~ s/[^\w]//g; # remove all nonalphanumeric characters
+    $name =~ s/writein$//;
     $name = lc $name;
     return $name;
 }
