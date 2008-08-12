@@ -78,8 +78,9 @@ my $add_writein = param('AddWritein');
 my $vote = param('Vote');
 my $load = param('Load');
 
-if ($vote) {
+if ($vote && $voting_enabled) {
     &ProcessVote;     # prints out confirmation; call does not return
+    exit 0;           # should not happen.
 } 
 
 my (@rank, @choice_index, @iota);
@@ -93,69 +94,11 @@ if ($load) {
     &Load;
 }
 
-print p("Please vote on the election ".b($title).'.').$cr;
-print p($description).$cr;
-
-print p("Only the $winners_text will win the election.<p>
-The election ends <b>$election_end</b>.
-The election supervisor is $name (<tt>$email_addr</tt>).
-Contact the election supervisor if you need help.").$cr;
-
-if ($proportional ne 'yes' || !$use_combined_ratings) {
-    print "<p>Give each of the following choices
-    a rank, where a smaller-numbered rank means that you
-    prefer that choice more.
-    For example, it would make
-    sense to give your top choice (or choices) the rank 1.
-    You may give choices the same rank if you have no
-    preference between them. You do not have to use all the
-    possible ranks. All choices are initially given the
-    lowest possible rank.", $cr;
-    if ($no_opinion eq 'yes') {
-	print '<b>Note:</b> &ldquo;No opinion&rdquo;
-	    is <i>not</i> the same as the lowest possible rank; it means
-	    that you choose not to rank this choice with respect to the
-	    other choices.</p>', $cr;
-    }
-
-    if ($proportional eq 'yes') {
-	print '<p>This election is decided using an experimental
-	Condorcet-based algorithm designed to provide proportional
-	representation.';
-	print ' It is assumed by the voting algorithm that you want
-		the ranking of your most preferred
-		<i>winning</i> choice to be as
-		high as possible, and if two sets of winning choices
-		agree on the choice you prefer most, then you
-		would decide between them using the second most preferred
-		choice, and so on. ';
-	print '</p>';
-    }
-    print "<a href=\"$civs_home\">(More information on Condorcet election
-    methods)</a></p>", $cr, $cr;
+if ($voting_enabled) {
+    &IntroduceVoting;
 } else {
-    print '<p>This election is decided using an experimental
-    Condorcet-based algorithm designed to provide proportional
-    representation.';
-
-    print 'Please give each of the following choices a
-    <b>weight</b> that expresses how much you want that
-    choice to be part of the winning set of choices.';
-    print ' It is assumed by the voting algorithm that you want
-	    the sum of weights of winning choices to be as large
-	    as possible.';
-    print "All choices
-    are currently given a weight of zero, meaning that you
-    have no interest in seeing them win.
-    Weights cannot be negative or larger than 999.
-    It doesn't help you to make your weights larger
-    than other voters' weights, because your weights are only compared
-    against each other.
-    <a href=\"$civs_url/proportional.html\">[See more information]</a>.
-    </p>";
+    &IntroduceWriteins;
 }
-
-
 
 if ($ballot_reporting eq 'yes') {
     my $msg = b('Ballot reporting is enabled for this election. ')
@@ -187,9 +130,11 @@ print $cr, '<form method="POST"
 print '<table class="form" border="0" cellpadding="5" cellspacing="0"><tr><td>', $cr;
 
 print '<table border="1" cellpadding="5" cellspacing="0" id="preftable"><tr>
-	<th>&nbsp;Choice&nbsp;</th>
-	<th>'.$rating.'</th>
-       </tr>';
+	<th>&nbsp;Choice&nbsp;</th>';
+if ($voting_enabled) {
+    print '<th>'.$rating.'</th>';
+}
+print '</tr>',$cr;
 
 print hidden('voter', $voter); # nearly obsolete
 print hidden('voter_key', $old_voter_key); # nearly obsolete
@@ -215,31 +160,33 @@ for (my $i = 0; $i < $num_choices; $i++) {
     } else {
 	print "<tr><td><b>$choice</b></td>\n";
     }
-    if ($proportional ne 'yes' || !$use_combined_ratings) {
-	print "<td><select size=1 name=\"C$k\" onChange=\"sort_rows()\">\n";
-	for (my $j = 1; $j <= $num_choices; $j++) {
-	    if ($j == $selected) {
-			print "  <option selected>$j</option>\n";
-	    } else {
-			print "  <option>$j</option>\n";
+    if ($voting_enabled) {
+	if ($proportional ne 'yes' || !$use_combined_ratings) {
+	    print "<td><select size=1 name=\"C$k\" onChange=\"sort_rows()\">\n";
+	    for (my $j = 1; $j <= $num_choices; $j++) {
+		if ($j == $selected) {
+			    print "  <option selected>$j</option>\n";
+		} else {
+			    print "  <option>$j</option>\n";
+		}
 	    }
-	}
-	if ($proportional ne 'yes' && $no_opinion eq 'yes') {
-	    if ($selected eq "No opinion") {
-		print "  <option selected>No opinion</option>";
-	    } else {
-		print "  <option>No opinion</option>";
+	    if ($proportional ne 'yes' && $no_opinion eq 'yes') {
+		if ($selected eq "No opinion") {
+		    print "  <option selected>No opinion</option>";
+		} else {
+		    print "  <option>No opinion</option>";
+		}
 	    }
+	    print "</select></td>\n";
+	} else {
+	    print '<td><input type="text" name="C'.$k.'"
+	    size="3" value="'. $selected. '"></td>';
 	}
-	print "</select></td>\n";
-    } else {
-	print '<td><input type="text" name="C'.$k.'"
-	size="3" value="'. $selected. '"></td>';
     }
     print "</tr>\n";
 }
 print '</table></td>', $cr;
-if ($js_ui) {
+if ($js_ui && $voting_enabled) {
     print '<td width="0" valign="top" align="center">
 	<input type="button" id="move_top" disabled value="to top"
 	onClick="do_move_top()"><br>
@@ -261,7 +208,9 @@ if ($js_ui) {
 print '</tr></table>', $cr;
 
 
-print p('<input type="submit" value="Vote!" name="Vote">');
+if ($voting_enabled) {
+    print p('<input type="submit" value="Vote!" name="Vote">');
+}
 
 print '<p id="sort_button"> Sort the choices by their current rank:
        <input type="submit" value="Sort" name="SortChoices"></p>';
@@ -270,16 +219,18 @@ if ($writeins eq 'yes') {
     print '<p>Write in a new choice: <input type="text" size="60" name="writein">';
     print '<input type="submit" value="Add write-in" name="AddWritein"></p>';
 }
-print '<p>Read rankings from a saved voting page: ';
-print '<input type="file" id=rankings_file type=file name="rankings_file">';
-print '&nbsp; <input type="submit" id=load_rankings_file value="Load" name="Load">';
+if ($voting_enabled) {
+    print '<p>Read rankings from a saved voting page: ';
+    print '<input type="file" id=rankings_file type=file name="rankings_file">';
+    print '&nbsp; <input type="submit" id=load_rankings_file value="Load" name="Load">';
+}
 #print '<br>(To save a voting page, click "Sort" to collect
 #    your rankings and then just save this web page in your browser)</p>';
 # print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
 
 print "</form>\n";
 
-if ($public eq 'yes') {
+if ($voting_enabled && $public eq 'yes') {
     print p("If you have already voted, you may see
 	<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
 	the results of the election.</a>");
@@ -473,4 +424,75 @@ sub Load {
 		@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
     }
     my $loaded_choices = 'yes';
+}
+
+
+sub IntroduceWriteins {
+    print p("Voting is not yet permitted in this election. However,
+             you may view the available choices and write in new
+	     choices. Use the text field below to write in new choices.");
+}
+
+sub IntroduceVoting {
+    print p("Please vote on the election ".b($title).'.').$cr;
+    print p($description).$cr;
+
+    print p("Only the $winners_text will win the election.<p>
+    The election ends <b>$election_end</b>.
+    The election supervisor is $name (<tt>$email_addr</tt>).
+    Contact the election supervisor if you need help.").$cr;
+
+    if ($proportional ne 'yes' || !$use_combined_ratings) {
+	print "<p>Give each of the following choices
+	a rank, where a smaller-numbered rank means that you
+	prefer that choice more.
+	For example, it would make
+	sense to give your top choice (or choices) the rank 1.
+	You may give choices the same rank if you have no
+	preference between them. You do not have to use all the
+	possible ranks. All choices are initially given the
+	lowest possible rank.", $cr;
+	if ($no_opinion eq 'yes') {
+	    print '<b>Note:</b> &ldquo;No opinion&rdquo;
+		is <i>not</i> the same as the lowest possible rank; it means
+		that you choose not to rank this choice with respect to the
+		other choices.</p>', $cr;
+	}
+
+	if ($proportional eq 'yes') {
+	    print '<p>This election is decided using an experimental
+	    Condorcet-based algorithm designed to provide proportional
+	    representation.';
+	    print ' It is assumed by the voting algorithm that you want
+		    the ranking of your most preferred
+		    <i>winning</i> choice to be as
+		    high as possible, and if two sets of winning choices
+		    agree on the choice you prefer most, then you
+		    would decide between them using the second most preferred
+		    choice, and so on. ';
+	    print '</p>';
+	}
+	print "<a href=\"$civs_home\">(More information on Condorcet election
+	methods)</a></p>", $cr, $cr;
+    } else {
+	print '<p>This election is decided using an experimental
+	Condorcet-based algorithm designed to provide proportional
+	representation.';
+
+	print 'Please give each of the following choices a
+	<b>weight</b> that expresses how much you want that
+	choice to be part of the winning set of choices.';
+	print ' It is assumed by the voting algorithm that you want
+		the sum of weights of winning choices to be as large
+		as possible.';
+	print "All choices
+	are currently given a weight of zero, meaning that you
+	have no interest in seeing them win.
+	Weights cannot be negative or larger than 999.
+	It doesn't help you to make your weights larger
+	than other voters' weights, because your weights are only compared
+	against each other.
+	<a href=\"$civs_url/proportional.html\">[See more information]</a>.
+	</p>";
+    }
 }

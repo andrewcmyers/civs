@@ -23,10 +23,11 @@ BEGIN {
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
-    $election_end $public $writeins $shuffle $proportional $use_combined_ratings
-    $choices @choices $num_choices $num_auth $num_votes $recorded_voters
-    $ballot_reporting $reveal_voters $authorization_key %used_voter_keys
-    $restrict_results $result_addrs $hash_result_key $no_opinion
+    $election_end $public $writeins $allow_voting $voting_enabled
+    $shuffle $proportional
+    $use_combined_ratings $choices @choices $num_choices $num_auth $num_votes
+    $recorded_voters $ballot_reporting $reveal_voters $authorization_key
+    %used_voter_keys $restrict_results $result_addrs $hash_result_key $no_opinion
     %voter_keys %edata %vdata);
 }
 
@@ -45,8 +46,9 @@ our ($election_dir, $started_file, $stopped_file, $election_data, $election_log,
 
 our (%edata, %vdata);
 our ($name, $title, $email_addr, $description, $num_winners, $addresses,
-     @addresses, $election_end, $public, $writeins, $proportional,
-     $use_combined_ratings, $choices, @choices, $num_choices, $num_auth,
+     @addresses, $election_end, $public, $writeins, $allow_voting, $voting_enabled,
+     $proportional, $use_combined_ratings,
+     $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
      $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
      $restrict_results, $result_addrs, $hash_result_key);
@@ -86,6 +88,8 @@ sub init {
     $election_end = $edata{'election_end'};
     $public = $edata{'public'};
     $writeins = $edata{'writeins'};
+    $allow_voting = $edata{'allow_voting'};
+    $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
     $proportional = $edata{'proportional'} or $proportional = "";
     $use_combined_ratings = $edata{'use_combined_ratings'};
     $choices = $edata{'choices'} or $choices = "";

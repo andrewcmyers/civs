@@ -119,6 +119,7 @@ sub SetBinaryParameter {
 
 my $public = SetBinaryParameter('public', 'no');
 SetBinaryParameter('writeins', 'no');
+SetBinaryParameter('allow_voting', 'no');
 SetBinaryParameter('no_opinion', 'no');
 SetBinaryParameter('shuffle', 'yes');
 SetBinaryParameter('proportional', 'no');
