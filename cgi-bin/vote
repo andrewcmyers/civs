@@ -429,13 +429,13 @@ sub Load {
 
 
 sub IntroduceWriteins {
+    print p($description).$cr;
     print p("Voting is not yet permitted in this election. However,
              you may view the available choices and write in new
 	     choices. Use the text field below to write in new choices.");
 }
 
 sub IntroduceVoting {
-    print p("Please vote on the election ".b($title).'.').$cr;
     print p($description).$cr;
 
     print p("Only the $winners_text will win the election.<p>
