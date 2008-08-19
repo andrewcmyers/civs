@@ -32,19 +32,6 @@
 <div class="contents">
 
 	<p></p>
-	<div align="center" style="background-color: yellow; border-style: solid; border-color: black">
-	<b>Note:</b> Another voting system, known as
-	<a href="http://www.cs.cornell.edu/projects/civitas">
-	Civitas</a>,
-	is also under development at Cornell.
-	This new system, described in a 
-	<a href="http://www.cs.cornell.edu/people/clarkson/papers/clarkson_civs_tr.pdf">technical report</a>,
-	uses much more complex cryptographic protocols to provide universal verifability 
-	and coercion resistance. 
-	<b>The source code for the new system is not yet available.</b>
-	The link below provides the
-	source code for the Condorcet Internet Voting Service.
-	</div>
 
 <p>
 Most users use the existing CIVS web server. However, the software is
@@ -60,14 +47,14 @@ To download the latest released version of the CIVS software, click here:
 <form method="POST" 
       action="http://www.cs.cornell.edu/w8/~andru/cgi-bin/download.pl"
       enctype="multipart/form-data">
-  <input type="hidden" name="package" value="CIVS 2.9">
+  <input type="hidden" name="package" value="CIVS 2.10">
   <input type="hidden" name="logo" value='<img class="logo" src="http://www.cs.cornell.edu/w8/~andru/civs/check123b.png">'>
   <input type="hidden" name="style" value="@CIVSURL@/style.css">
   <input type="hidden" name="url"
-         value="http://www.cs.cornell.edu/andru/release/civs-2.9.tar.gz">
+         value="http://www.cs.cornell.edu/andru/release/civs-2.10.tar.gz">
   <input
     style="background-color: blue; color: white; border-style: solid; border-color: black; font-weight: bold"
-  type="submit" value="Download CIVS 2.9" />
+  type="submit" value="Download CIVS 2.10" />
 </form>
 </blockquote>
 
@@ -77,10 +64,32 @@ software are announced here and sent in email to the
 <a href="https://lists.cs.cornell.edu/mailman/listinfo/civs-users-l">
 CIVS users mailing list</a>.
 </p>
+	<div class="emphasized">
+	<b>Note:</b> Another voting system, known as
+	<a href="http://www.cs.cornell.edu/projects/civitas">
+	Civitas</a>,
+	is also under development at Cornell.
+	This new system, described in a 
+	<a href="http://www.cs.cornell.edu/people/clarkson/papers/clarkson_civs_tr.pdf">technical report</a>,
+	uses much more complex cryptographic protocols to provide universal verifability 
+	and coercion resistance.  The new system is available for download,
+	but it does not yet have a user interface.
+	The link below provides the
+	source code for the Condorcet Internet Voting Service.
+	</div>
 
 <p>
 Recent updates:
 <ul>
+<li>2.10:
+<ul>
+<li>Elections with write-ins now have voting initially disabled. It can
+be enabled explicitly from the control page. This allows write-ins to
+be on the same footing as other choices.
+<li>The election results page has a progress bar, which gives reassuring
+feedback for the more expensive tabulation computations.
+</ul>
+</li>
 <li>2.9:
 <ul>
 <li>Added filtering of HTML tags to remove possible XSS attacks, etc. Most

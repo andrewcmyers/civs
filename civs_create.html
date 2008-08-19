@@ -137,8 +137,6 @@
 
 <div class="contents">
 
-<p>Create a new CIVS election. You will be the supervisor.</p>                          
-<hr>
 <form method="POST"
     action="@CIVSBINURL@/create_election@PERLEXT@"
     enctype="multipart/form-data"
@@ -149,17 +147,17 @@
     <td align=right>Name of the election (e.g., <b>The Democratic Primary</b>):</td>
     <td><input type="text" name="title" size="50"></td>
   <tr>
-    <td align=right>Your name:</td>
+    <td align=right>Name of supervisor (you):</td>
     <td><input type="text" name="name" size="20">
   </td>
   <tr>
-    <td align=right>Your e-mail address:</td>
+    <td align=right>E-mail address of supervisor:</td>
     <td><input type="text" name="email_addr" size="20"
       onchange="if (!validateEmail(this.value)) { alert('Invalid email address') }" >
     </td>
   </tr>
   <tr>
-    <td align=right>The day and time when you plan to stop the election:
+    <td valign=top align=right>Day and time you plan to stop the election:<br>
 	<small>(<b>Note:</b> election must be stopped manually)</small>
     </td>
     <td><input type="text" name="election_end" id="election_end" size="30"
@@ -169,15 +167,14 @@
   </tr>
   </table>
 
-<div class="emphasized">
-  <strong>Note:</strong>
+<div class="emphasized"><small>
   Your name and e-mail address are used when sending e-mail to
   voters. Your name should be recognizable to voters, and the e-mail
   address must work because CIVS emails you the information needed to
   control the election. Make sure your spam filter does not
   block mail from <kbd>@SUPERVISOR@</kbd> (or check your spam folder if
   the mail does not arrive!).
-  </div>
+  </small></div>
 
   <p>Description of the election and available choices (may include HTML):<br>
   <table class="form">
@@ -208,8 +205,8 @@
   </p>
   <p align="left"><input type=file name="choices_file"></p>
   <p>How many choices will win the election: <input type="text" name="num_winners" size="5" value="1"></p>
-  <p>The e-mail addresses of up to 1000 voters, one per line
-  (more voters can be added later):</p>
+  <p>The e-mail addresses of up to 1000 voters, one per line.
+  Voters can also be added later.</p>
   <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
   <p><input type=file name="addresses_file"></p>
   <p><input type="checkbox" name="public" value="yes">
