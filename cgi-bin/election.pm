@@ -28,6 +28,7 @@ BEGIN {
     $use_combined_ratings $choices @choices $num_choices $num_auth $num_votes
     $recorded_voters $ballot_reporting $reveal_voters $authorization_key
     %used_voter_keys $restrict_results $result_addrs $hash_result_key $no_opinion
+    $last_vote_time
     %voter_keys %edata %vdata);
 }
 
@@ -51,7 +52,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
      $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
-     $restrict_results, $result_addrs, $hash_result_key);
+     $restrict_results, $result_addrs, $hash_result_key, $last_vote_time);
 
 our $civs_supervisor = '@SUPERVISOR@';
 
@@ -105,6 +106,7 @@ sub init {
     $restrict_results = $edata{'restrict_results'};
     $result_addrs = $edata{'result_addrs'};
     $hash_result_key = 0;
+    $last_vote_time = $vdata{'last_vote_time'};
     if ($restrict_results eq 'yes') {
 	$hash_result_key = $edata{'hash_result_key'};
     }

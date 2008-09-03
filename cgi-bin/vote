@@ -242,6 +242,7 @@ exit 0;
 
 sub ProcessVote {
     my $vote = '';
+    $vdata{'last_vote_time'} = $last_vote_time = time();
 
 	# Record the vote (note that vdata is
 	# indexed by voter key, preserving anonymity.)
