@@ -15,10 +15,23 @@ use POSIX qw(strftime);
 use Digest::MD5 qw(md5_hex);
 use DB_File;
 use beatpath;
+use beatpath2;
 use rp;
 use runoff;
 
 my $thisurl = $civs_bin_path."/results@PERLEXT@";
+
+# Map each algorithm name to the module that computes it.
+my %algorithms = ('beatpath_winner', 'beatpath', # obsolete
+                  'beatpath', 'beatpath2',
+                  'civs_ranked_pairs', 'rp',
+		  'mam', 'rp',
+		  'runoff', 'runoff');
+
+# maps legal algorithm modules to 1
+my %algorithm_modules = ('beatpath2', 1,
+                         'rp', 1,
+			 'runoff', 1);
 
 # CheckLoad;
 # timeout(30);
@@ -53,7 +66,7 @@ if (defined($nwin_param) && $nwin_param > 0 &&
 }
 my $algorithm = param('algorithm');
 if (!defined($algorithm) || $algorithm eq '')
-{ $algorithm = 'beatpath_winner'; }
+{ $algorithm = 'beatpath'; }
 
 my $real_prop = $proportional;
 my $show_prop = param('proportional');
@@ -67,6 +80,12 @@ if (defined($show_combined) && $show_combined ne '') {
     $use_combined_ratings = $show_combined;
 }
 
+if (!defined($algorithms{$algorithm})) {
+    print p('Error: undefined algorithm.');
+    print end_html();
+    exit 0;
+}
+
 my $cache_file = "$election_dir/results_win=$num_winners,alg=$algorithm";
 if ($proportional eq 'yes') { $cache_file .= ",prop,comb=$use_combined_ratings"; }
 
@@ -76,10 +95,10 @@ sub CacheTime {
 	my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
 	    = stat($cache_file);
     if ($mtime eq '') {
-	# print p("No cache file");
+	print '<!-- No cache file -->', $cr;
 	return 0; # no cache file
     } else {
-	# print p("Cache file timestamp:", $mtime);
+	print "<!-- Cache file timestamp: $mtime -->", $cr;
 	return $mtime;
     }
 }
@@ -87,17 +106,17 @@ sub CacheTime {
 my $cache_time = &CacheTime;
 my $progress_level = 0.0;
 
-if (param('fresh') ||                                 # Can force a refresh
+if (param('fresh') || param('Compare') ||             # Can force a refresh
      $last_vote_time > $cache_time ||                 # Recompute if out of date
      ($last_vote_time eq '' && $cache_time == 0)) {   # Recompute old if no cache
-    # print p("Computing fresh results in $cache_file..."), br();
+    print "<!-- Computing fresh results -->", $cr;
     &StartProgressMeter;
     open (RESULTS, ">$cache_file");
     &ComputeResults;
     close (RESULTS);
     &ReportCompletion;
 } else {
-    # print p("Reusing already computed results from $cache_file..."), br();
+    print "<!-- Reusing cached results -->", $cr;
 }
 
 open (RESULTS, "<$cache_file");
@@ -222,7 +241,7 @@ sub ComputeResults {
 	<input type="radio"
 	    name="algorithm"
 	    onClick="newSettings()"
-	    value="beatpath_winner" ',
+	    value="beatpath" ',
 	    $bw_checked,
 	'> Beatpath/Schulze/CSSD &nbsp;&nbsp;
 	<input type="radio"
@@ -264,16 +283,7 @@ sub ComputeResults {
 
 	print RESULTS h2("Ranking of the choices");
 
-	if ($algorithm eq 'civs_ranked_pairs' ||
-	    $algorithm eq 'mam') {
-	    &PrintReport('rp');
-	} elsif ($algorithm eq 'runoff') {
-	    &PrintReport('runoff');
-	} else {
-	    &PrintBW;
-	    &PrintBWDetails;
-	}
-
+	&PrintReport($algorithms{$algorithm});
     }
 }
 
@@ -334,45 +344,15 @@ sub PrintMatrix {
 
 sub DetailsHeader {
     print RESULTS hr(),$cr;
-    print RESULTS '<p id="show_details">For simplicity, some details of the election result
-    are not shown.
-    <button onclick=\'show_details();\'>
+    print RESULTS '<p id="show_details">',
+	'For simplicity, some details of the election result are not shown.
+	<button onclick=\'show_details();\'>
 	    Show details</button></p>', $cr;
 
     print RESULTS '<div id="details">';
-    print RESULTS '<button id="hide_details" onclick="hide_details();">Hide details</button>
-	    <h2>Election result details</h2>', $cr;
-}
-
-sub PrintBWDetails {
-# Print the detailed results of the ordinary
-# (nonproportional) beatpath algorithm. 
-
-    &DetailsHeader;
-
-    print RESULTS h3('Preference matrix'), $cr;
-
-    print RESULTS p('The following table shows the results of all pairwise
-      contests between two choices. Each entry shows the number of ballots on
-      which one choice was preferred to another choice.'), $cr;
-
-    PrintMatrix $num_choices, [@matrix], [@choices], [@choice_index], 0;
-
-    if ($algorithm eq 'beatpath_winner') {
-	my ($j, $jj, $k, $kk);
-	print RESULTS h3("Beatpath closure matrix"), $cr;
-	print RESULTS p("
-	The following matrix shows the strength of the strongest
-	beatpath connecting each pair of choices. Choice 1 is preferred
-	to choice 2 if there is a better beatpath leading from 1 to 2
-	than any leading from 2 to 1.
-	"), $cr;
-
-	PrintMatrix $num_choices, [@closure_matrix], [@choices], [@choice_index], 1;
-    }
-
-    &BallotReport;
-    print RESULTS '</div>', $cr;
+    print RESULTS '<button id="hide_details" onclick="hide_details();">',
+     'Hide details</button>
+      <h2>Election result details</h2>', $cr;
 }
 
 # Generate a ballot report or say that it hasn't been enabled.
@@ -589,19 +569,32 @@ sub PrintReport {
     no strict 'refs';
     (my $module) = @_;
     my @voters = split /\n/, $vdata_copy{'recorded_voters'};
-    my $bref = ProcessBallots(\@voters);
-    my $func = $module.'::rank_candidates';
+    my $bref = &ProcessBallots(\@voters);
+    my $rank_candidates = $module.'::rank_candidates';
+    my $print_details = $module.'::print_details';
+
+    if ($module eq 'beatpath') {
+	PrintRanking [@result], [@matrix];
+	print RESULTS '</div>';
+	return;
+    }
+
+    if (!$algorithm_modules{$module}) {
+	print RESULTS p("Algorithm module $module for algorithm $algorithm not valid");
+	print RESULTS '</div>';
+	return;
+    }
+
     (my $rref, my $log) = 
-	&$func($num_choices, \@matrix, $bref, \@choices);
+	&$rank_candidates($num_choices, \@matrix, $bref, \@choices);
 
-    (my $ciref, my $crref) = MakeChoiceIndex($rref);
+    (my $ciref, my $crref) = &MakeChoiceIndex($rref);
     
-    PrintRanking $rref, \@matrix;
-    DetailsHeader;
-    PrintMatrix $num_choices, \@matrix, \@choices, $ciref, 0;
-    BallotReport;
-    print RESULTS $log;
-
+    &PrintRanking($rref, \@matrix);
+    &DetailsHeader;
+    &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
+    &BallotReport;
+    &$print_details($log, $num_choices, \@choices, $ciref);
 
     print RESULTS '</div>';
 }
@@ -1209,11 +1202,5 @@ sub PrintProportionalResults {
     print RESULTS h2('Ranking of the choices').$cr;
     print RESULTS p('Winning choices are shown in bold.');
 
-    if ($algorithm eq 'beatpath_winner') {
-	&PrintBW;
-    } elsif ($algorithm eq 'rp' || $algorithm eq 'mam') {
-	&PrintReport($algorithm);
-    } elsif ($algorithm eq 'runoff') {
-	&PrintReport('runoff');
-    }
+    &PrintReport($algorithms{$algorithm});
 }

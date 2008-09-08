@@ -167,5 +167,13 @@ sub rank_candidates {
 
     return (\@result, $log);
 }
+
+# print_details($log, $n, $choices, $choice_index):
+# Print out to RESULTS the details of the election algorithm, using the
+# information in $log that was returned by rank_candidates.
+sub print_details {
+    (my $log) = @_;
+    print main::RESULTS $log;
+}
  
 1; # ok!
