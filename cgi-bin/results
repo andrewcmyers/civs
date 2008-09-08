@@ -153,6 +153,7 @@ sub StartProgressMeter {
 }
 
 # Report progress back to STDOUT. Called from within election computations.
+# Expects a number between 0 and 1.
 sub ReportProgress {
     (my $x) = @_;
     if ($x - $progress_level > 0.01) {
@@ -161,6 +162,7 @@ sub ReportProgress {
     }
 }
 
+# Call when results are finished, to remove progress meter.
 sub ReportCompletion {
     print '<script>
 	document.getElementById("compute_msg").style.display = "none";
@@ -169,7 +171,7 @@ sub ReportCompletion {
 }
 
 # Compute the results for the current election. Write the results to the
-# output file RESULTS.
+# output file RESULTS. Generate progress reports appropriately.
 sub ComputeResults {
 
     print RESULTS '<form method="GET"
@@ -315,7 +317,7 @@ sub PrintMatrix {
 	print RESULTS "<td width=40px>&nbsp;</td>\n";
 	for (my $kk = 0; $kk < $n; $kk++) {
 	    my $k = $choice_index[$kk];
-	if ($j == $k) {
+	    if ($j == $k) {
 		print RESULTS '<td class="count">-';
 	    } else {
 		my $w = $m[$j][$k];
@@ -360,72 +362,72 @@ sub BallotReport {
     if ($ballot_reporting eq 'yes') {
 	print RESULTS h3('Ballot report'), $cr;
 
-		my @voters = split /\n/, $vdata_copy{'recorded_voters'};
-		if ($#voters >= 0) {
-			my @headings = @choices;
-			my @rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
+	my @voters = split /\n/, $vdata_copy{'recorded_voters'};
+	if ($#voters >= 0) {
+	    my @headings = @choices;
+	    my @rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
 
-			my $i = 1;
+	    my $i = 1;
 
-			fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
-			foreach my $ballot_key (@voters) {
-			    # recorded_vote is a comma separated list of the
-			    # ranks that the voter assigned to candidates.
-			    # Element i of the list corresponds to candidate
-			    # i.
-			    my $recorded_vote = $vdata_copy{$ballot_key}; 
-			    my @row = split /,/, $recorded_vote;
-			    if ($reveal_voters eq 'yes') {
-			        my $voter_key =
-				  $vdata_copy{"voter key of $ballot_key"};
-				my $email = $edata{"email_addr $voter_key"};
-				unshift @row, ($email.': ');
-			    } else {
-				unshift @row, "$i. ";
-				$i++;
-			    }
-			    push @rows, td(\@row);
-			}
-
-			print RESULTS table({-class=>'matrix'},
-				Tr(\@rows));
-			print RESULTS p("Ballots are shown in a randomly generated order.");
-			print RESULTS p(a({-href=>"http://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"},"Download ballots") . " as a CSV.");
-        } else {
-			print RESULTS p("No ballots were cast in this election.");
+	    fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
+	    foreach my $ballot_key (@voters) {
+		# recorded_vote is a comma separated list of the
+		# ranks that the voter assigned to candidates.
+		# Element i of the list corresponds to candidate
+		# i.
+		my $recorded_vote = $vdata_copy{$ballot_key}; 
+		my @row = split /,/, $recorded_vote;
+		if ($reveal_voters eq 'yes') {
+		    my $voter_key =
+			$vdata_copy{"voter key of $ballot_key"};
+		    my $email = $edata{"email_addr $voter_key"};
+		    unshift @row, ($email.': ');
+		} else {
+		    unshift @row, "$i. ";
+		    $i++;
 		}
+		push @rows, td(\@row);
+	    }
+
+	    print RESULTS table({-class=>'matrix'},
+		    Tr(\@rows));
+	    print RESULTS p("Ballots are shown in a randomly generated order.");
+	    print RESULTS p(a({-href=>"http://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"},"Download ballots") . " as a CSV.");
+        } else {
+	    print RESULTS p("No ballots were cast in this election.");
+	}
     } else {
 	print RESULTS p("Ballot reporting was not enabled for this election.");
     }
 }
 
 sub ComputeNonproportionalResults {
-	# Compute condorcet winner and set up $matrix and $beatpath
-	$condorcet_winner = -1;
-	for (my $j = 0; $j < $num_choices; $j++) {
-	    if ($condorcet_winner < 0) { $condorcet_winner = $j; }
-	    for (my $k = 0; $k < $num_choices; $k++) {
-			my $n; $n = $vdata_copy{"$j.$k"} or $n = 0;
-			$matrix[$j][$k] = $n;
-			if ($j != $k) {
-			    my $m; $m = $vdata_copy{"$k.$j"} or $m = 0;
-			    if ($n <= $m && $condorcet_winner == $j) {
-					$condorcet_winner = -1; # can't be this one
-			    }
-			}
+    # Compute condorcet winner and set up $matrix and $beatpath
+    $condorcet_winner = -1;
+    for (my $j = 0; $j < $num_choices; $j++) {
+	if ($condorcet_winner < 0) { $condorcet_winner = $j; }
+	for (my $k = 0; $k < $num_choices; $k++) {
+	    my $n; $n = $vdata_copy{"$j.$k"} or $n = 0;
+	    $matrix[$j][$k] = $n;
+	    if ($j != $k) {
+		my $m; $m = $vdata_copy{"$k.$j"} or $m = 0;
+		if ($n <= $m && $condorcet_winner == $j) {
+			$condorcet_winner = -1; # can't be this one
+		}
 	    }
 	}
+    }
 
-	$beatpath::n = $num_choices;
-	for (my $j = 0; $j < $num_choices; $j++) {
-	    for (my $k = 0; $k < $num_choices; $k++) {
-			$beatpath::matrix[$j][$k] = $matrix[$j][$k];
-	    }
+    $beatpath::n = $num_choices;
+    for (my $j = 0; $j < $num_choices; $j++) {
+	for (my $k = 0; $k < $num_choices; $k++) {
+		    $beatpath::matrix[$j][$k] = $matrix[$j][$k];
 	}
-	&beatpath::rank_candidates();
-	@result = @beatpath::result;
-	@closure_matrix = @beatpath::closure_matrix;
-	@choice_index = @beatpath::choice_index;
+    }
+    &beatpath::rank_candidates();
+    @result = @beatpath::result;
+    @closure_matrix = @beatpath::closure_matrix;
+    @choice_index = @beatpath::choice_index;
 }
 
 sub PrintRanking {
@@ -528,10 +530,6 @@ sub PrintCondorcetWinner {
 		    print RESULTS p('This election had no Condorcet winner.').$cr;
 	}
     }
-}
-
-sub PrintBW {
-    PrintRanking [@result], [@matrix];
 }
 
 sub details_bookmark {
