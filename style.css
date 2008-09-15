@@ -30,6 +30,8 @@ div.emphasized {
   border-color: #cca
 }
 
+input#vote {font-size:200%; font-weight: bold; background-color: #ccf}
+
 span.explain {font-size: 75%; color: #404040 }
 
 p, ul, li {background-color: transparent}

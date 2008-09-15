@@ -81,13 +81,26 @@ CIVS users mailing list</a>.
 <p>
 Recent updates:
 <ul>
+<li>2.11:
+<ul>
+<li>Election results are now cached, which should improve server performance
+a great deal for large elections.
+<li>Schulze algorithm now uses "against" preferences in addition to "for"
+preferences. It now tends to agree with CIVS RP more often, perhaps because
+it no longer throws away information that CIVS RP uses.
+<li>All completion methods are now in a standardized form.
+A new completion method can be added very easily by writing a new package
+that implements <code>rank_candidates</code> and <code>print_details</code>,
+and modifying two tables at the top of the "results" script.
+<li>Some formatting cleanup of code.
+</ul>
 <li>2.10:
 <ul>
 <li>Elections with write-ins now have voting initially disabled. It can
 be enabled explicitly from the control page. This allows write-ins to
 be on the same footing as other choices.
 <li>The election results page has a progress bar, which gives reassuring
-feedback for the more expensive tabulation computations.
+feedback for the more expensive completion methods.
 </ul>
 </li>
 <li>2.9:

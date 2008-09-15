@@ -1,5 +1,7 @@
-Cache election result page in DB
+Don't cache the controls at the top.
 
 bigger vote button
 
 stress testing
+
+
