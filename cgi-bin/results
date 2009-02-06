@@ -107,7 +107,11 @@ my $cache_time = &CacheTime;
 my $progress_level = 0.0;
 
 if (param('fresh') || param('Compare') ||             # Can force a refresh
-     $last_vote_time > $cache_time ||                 # Recompute if out of date
+
+     ($last_vote_time > $cache_time &&                # Recompute if out of date
+      time() - $cache_time > 5) ||                    # and cache at least 5 sec
+                                                      # old.
+
      ($last_vote_time eq '' && $cache_time == 0)) {   # Recompute old if no cache
     print "<!-- Computing fresh results -->", $cr;
     &StartProgressMeter;
