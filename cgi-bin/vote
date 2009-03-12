@@ -101,9 +101,9 @@ if ($voting_enabled) {
 }
 
 if ($ballot_reporting eq 'yes') {
-    my $msg = b('Ballot reporting is enabled for this election. ')
+    my $msg = b('Ballot reporting is enabled for this poll. ')
 	    . 'Your ballot (the rankings you assign to candidates) '
-	    . 'will be made public when the election is closed.';
+	    . 'will be made public when the poll is closed.';
     if ($reveal_voters eq 'yes') {
 	$msg .= '<br><strong>Your email address will be visible</strong> along with your ballot.';
     } else {
@@ -142,32 +142,32 @@ print hidden('key', $voter_key);
 print hidden('id', $election_id);
 print hidden('akey', $authorization_key);
 
-print "\n<!-- Current rankings:\n";
+print $cr, '<!-- Current rankings:', $cr;
 for (my $i = 0; $i < $num_choices; $i++) {
     $name = $choices[$i];
     $name =~ s/"/ /;
     my $selected = $rank[$i];
-    print "$i \"$choices[$i]\" $selected\n";
+    print "$i \"$choices[$i]\" $selected", $cr;
 }
-print "-->\n";
+print "-->", $cr;
 
 for (my $i = 0; $i < $num_choices; $i++) {
     my $k = $choice_index[$i];
     my $selected = $rank[$k];
     my $choice = $choices[$k];
     if ($js_ui) {
-	print "<tr onClick=\"select_row(this, event.shiftKey||event.ctrlKey);\"><td><b>$choice</b></td>\n";
+	print "<tr onClick=\"select_row(this, event.shiftKey||event.ctrlKey);\"><td><b>$choice</b></td>", $cr;
     } else {
-	print "<tr><td><b>$choice</b></td>\n";
+	print "<tr><td><b>$choice</b></td>", $cr;
     }
     if ($voting_enabled) {
 	if ($proportional ne 'yes' || !$use_combined_ratings) {
-	    print "<td><select size=1 name=\"C$k\" onChange=\"sort_rows()\">\n";
+	    print "<td><select size=1 name=\"C$k\" onChange=\"sort_rows()\">", $cr;
 	    for (my $j = 1; $j <= $num_choices; $j++) {
 		if ($j == $selected) {
-			    print "  <option selected>$j</option>\n";
+			    print "  <option selected>$j</option>", $cr;
 		} else {
-			    print "  <option>$j</option>\n";
+			    print "  <option>$j</option>", $cr;
 		}
 	    }
 	    if ($proportional ne 'yes' && $no_opinion eq 'yes') {
@@ -177,13 +177,13 @@ for (my $i = 0; $i < $num_choices; $i++) {
 		    print "  <option>No opinion</option>";
 		}
 	    }
-	    print "</select></td>\n";
+	    print "</select></td>", $cr;
 	} else {
 	    print '<td><input type="text" name="C'.$k.'"
 	    size="3" value="'. $selected. '"></td>';
 	}
     }
-    print "</tr>\n";
+    print "</tr>", $cr;
 }
 print '</table></td>', $cr;
 if ($js_ui && $voting_enabled) {
@@ -228,12 +228,12 @@ if ($voting_enabled) {
 #    your rankings and then just save this web page in your browser)</p>';
 # print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
 
-print "</form>\n";
+print "</form>", $cr;
 
 if ($voting_enabled && $public eq 'yes') {
     print p("If you have already voted, you may see
 	<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-	the results of the election.</a>");
+	the results of the poll.</a>");
 }
 
 print end_html();
@@ -246,7 +246,7 @@ sub ProcessVote {
 
 	# Record the vote (note that vdata is
 	# indexed by voter key, preserving anonymity.)
-	# print "num_choices = $num_choices\n";
+	# print "num_choices = $num_choices", $cr;
     for (my $i = 0; $i < $num_choices; $i++) {
 	my $rank = param('C'.$i);
 	if ($proportional eq 'yes' && !$use_combined_ratings) {
@@ -361,14 +361,18 @@ sub AddWritein {
 	# This function has a race condition.  The effect of two concurrent 
 	# writeins is not clear.  Nor is the effect of a concurrent writein
 	# and vote, or even request for the candidate list.
-    my $writein = param('writein');
-    $writein = CanonicalizeName($writein) . " (write-in)";
-    my $p = ProjectName($writein);
+    my $writein = CanonicalizeName(param('writein'));
     my $ok = 1;
-    for (my $i = 0; $i < $num_choices; $i++) {
+    if ($writein eq '') {
+	print p(b("Name of write-in choice is empty")), $cr;
+	$ok = 0;
+    }
+    $writein .= " (write-in)";
+    my $p = ProjectName($writein);
+    for (my $i = 0; $ok && $i < $num_choices; $i++) {
 	if (ProjectName($choices[$i]) eq $p) {
 	    print p(b("Sorry, the name of the write-in is too similar ",
-				    "to an existing choice\n"));
+				    "to an existing choice")), $cr;
 	    $ok = 0;
 	    last;
 	}
@@ -412,7 +416,7 @@ sub Load {
 	    	my $cname = $choices[$i];
 		    $cname =~ s/"/ /;
 		    if ($cname eq $name) {
-				# print "Setting choice $i to rank $rank\n";
+				# print "Setting choice $i to rank $rank", $cr;
 				$rank[$i] = $rank;
 	    	}
 		}
@@ -431,7 +435,7 @@ sub Load {
 
 sub IntroduceWriteins {
     print p($description).$cr;
-    print p("Voting is not yet permitted in this election. However,
+    print p("Voting is not yet permitted in this poll. However,
              you may view the available choices and write in new
 	     choices. Use the text field below to write in new choices.");
 }
@@ -439,10 +443,10 @@ sub IntroduceWriteins {
 sub IntroduceVoting {
     print p($description).$cr;
 
-    print p("Only the $winners_text will win the election.<p>
-    The election ends <b>$election_end</b>.
-    The election supervisor is $name (<tt>$email_addr</tt>).
-    Contact the election supervisor if you need help.").$cr;
+    print p("Only the $winners_text will win the poll.<p>
+    The poll ends <b>$election_end</b>.
+    The poll supervisor is $name (<tt>$email_addr</tt>).
+    Contact the poll supervisor if you need help.").$cr;
 
     if ($proportional ne 'yes' || !$use_combined_ratings) {
 	print "<p>Give each of the following choices
@@ -462,8 +466,8 @@ sub IntroduceVoting {
 	}
 
 	if ($proportional eq 'yes') {
-	    print '<p>This election is decided using an experimental
-	    Condorcet-based algorithm designed to provide proportional
+	    print '<p>This poll is decided using an experimental
+	    Condorcet-based method designed to provide proportional
 	    representation.';
 	    print ' It is assumed by the voting algorithm that you want
 		    the ranking of your most preferred
@@ -474,10 +478,9 @@ sub IntroduceVoting {
 		    choice, and so on. ';
 	    print '</p>';
 	}
-	print "<a href=\"$civs_home\">(More information on Condorcet election
-	methods)</a></p>", $cr, $cr;
+	print "<a href=\"$civs_home\">(More information on Condorcet methods)</a></p>", $cr, $cr;
     } else {
-	print '<p>This election is decided using an experimental
+	print '<p>This poll is decided using an experimental
 	Condorcet-based algorithm designed to provide proportional
 	representation.';
 

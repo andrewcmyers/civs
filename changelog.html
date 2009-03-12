@@ -47,14 +47,14 @@ To download the latest released version of the CIVS software, click here:
 <form method="POST" 
       action="http://www.cs.cornell.edu/w8/~andru/cgi-bin/download.pl"
       enctype="multipart/form-data">
-  <input type="hidden" name="package" value="CIVS 2.10">
+  <input type="hidden" name="package" value="CIVS 2.11">
   <input type="hidden" name="logo" value='<img class="logo" src="http://www.cs.cornell.edu/w8/~andru/civs/check123b.png">'>
   <input type="hidden" name="style" value="@CIVSURL@/style.css">
   <input type="hidden" name="url"
-         value="http://www.cs.cornell.edu/andru/release/civs-2.10.tar.gz">
+         value="http://www.cs.cornell.edu/andru/release/civs-2.11.tar.gz">
   <input
     style="background-color: blue; color: white; border-style: solid; border-color: black; font-weight: bold"
-  type="submit" value="Download CIVS 2.10" />
+  type="submit" value="Download CIVS 2.11" />
 </form>
 </blockquote>
 
@@ -81,17 +81,22 @@ CIVS users mailing list</a>.
 <p>
 Recent updates:
 <ul>
+<li>2.12:
+<li>Better write-in filtering.
+
 <li>2.11:
 <ul>
-<li>Election results are now cached, which should improve server performance
-a great deal for large elections.
+<li>Elections are now called "polls" uniformly, per a user suggestion.
+<li>Results are now cached, which should improve server performance
+a great deal for large polls.
 <li>Schulze algorithm now uses "against" preferences in addition to "for"
 preferences. It now tends to agree with CIVS RP more often, perhaps because
 it no longer throws away information that CIVS RP uses.
-<li>All completion methods are now in a standardized form.
-A new completion method can be added very easily by writing a new package
+<li>All completion methods are now in a standardized form, which makes
+it easy to add new completion methods. It requires writing a Perl package
 that implements <code>rank_candidates</code> and <code>print_details</code>,
 and modifying two tables at the top of the "results" script.
+
 <li>Some formatting cleanup of code.
 </ul>
 <li>2.10:

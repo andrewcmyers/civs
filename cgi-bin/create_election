@@ -25,7 +25,7 @@ my $email_addr = param('email_addr');
 $email_addr = mail::TrimAddr($email_addr);
 if (!&CheckAddr($email_addr)) {
     print header(), start_html("Invalid email address");
-    HTML_Header("CIVS Election Creation");
+    HTML_Header("CIVS Poll Creation");
     CIVS_Header();
     print h1("Invalid email address");
     print p("The address \"$email_addr\" is not acceptable");
@@ -72,10 +72,10 @@ foreach my $ch (@c2) {
 }
 
 if ($num_choices < 2) {
-    HTML_Header("CIVS Election Creation");
+    HTML_Header("CIVS Poll Creation");
     CIVS_Header();
     print h1("Error");
-    print p('An election must have at least two choices.');
+    print p('A poll must have at least two choices.');
     print end_html();
     exit 0;
 }
@@ -87,10 +87,10 @@ my $election_dir = $home.'/elections/'.$election_id;
 my $election_data = $election_dir.'/election_data';
 
 if (!mkdir($election_dir)) {
-    HTML_Header("CIVS Election Creation");
+    HTML_Header("CIVS Poll Creation");
     CIVS_Header();
     print h1("Error");
-    print p("The election directory is not writeable");
+    print p("The poll directory is not writeable");
     print end_html();
     exit 0;
 }
@@ -153,8 +153,8 @@ if ($restrict_results eq 'yes') {
     $edata{'result_addrs'} = $result_addrs = param('result_addrs');
 }
 
-HTML_Header("CIVS Election Creation");
-CIVS_Header("Election created: $title");
+HTML_Header("CIVS Poll Creation");
+CIVS_Header("Poll created: $title");
 
 # print pre("public = $public");
 print "<pre>";
@@ -177,11 +177,11 @@ Send "rcpt to: $email_addr"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
 Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
 Send "To: $email_addr ($name)";
-Send "Subject: CIVS election created: $title";
+Send "Subject: CIVS poll created: $title";
 Send "";
-Send "This email acknowledges the creation of a new election,";
+Send "This email acknowledges the creation of a new poll,";
 Send "$title. You have been designated as the supervisor of this";
-Send "election. To start and stop the election, please use the following URL:";
+Send "poll. To start and stop the poll, please use the following URL:";
 Send "";
 Send "$url";
 Send "";
@@ -199,10 +199,10 @@ CloseMail;
 print "</pre>\n";
 
 print p("Mail has been sent to the address you provided (<tt>$email_addr</tt>).");
-print p("Click on the URL in that email to start the election: <strong>$title</strong>.");
+print p("Click on the URL in that email to start the poll: <strong>$title</strong>.");
 
 } else { # debugging mode
-    print p('Here is the URL to control the new election. In ordinary operation
+    print p('Here is the URL to control the new poll. In ordinary operation
              this would be sent to the supervisor via email.');
     print pre("<a href=\"$url\">$url</a>");
 }
@@ -235,18 +235,18 @@ sub SendResultKey {
 	Send "data"; ConsumeSMTP;
 	Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
 	Send "To: $addr";
-	Send "Subject: Results of CIVS election: $title";
+	Send "Subject: Results of CIVS poll: $title";
 	Send "";
-	Send "A new CIVS election has been created named $title.";
+	Send "A new CIVS poll has been created named $title.";
 	Send "You have been designated as a user who is permitted to see the";
-	Send "result of this election. You will not be able to do this until";
-	Send "the election has been closed. To see the results, visit the";
+	Send "result of this poll. You will not be able to do this until";
+	Send "the poll has been closed. To see the results, visit the";
 	Send "following URL:";
 	Send "";
 	Send "$url";
 	Send "";
 	Send "This URL is private. Allowing unauthorized users access to this";
-	Send "URL will permit them to see the election results.";
+	Send "URL will permit them to see the poll results.";
 	Send "For more information about the Condorcet Internet Voting Service, see";
 	Send "  $civs_home.\r\n";
 	Send "."; ConsumeSMTP;

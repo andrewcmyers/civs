@@ -120,8 +120,7 @@ sub rank_candidates {
     my $log = '';
     if (!$allowed_cycle && !$denied_any) {
 	$log .= p('All preferences were affirmed. All
-		  Condorcet election methods will
-		  agree with this ranking.');
+		  Condorcet methods will agree with this ranking.');
     }
     if ($denied_any) {
 	$log .= p('The presence of a green entry below

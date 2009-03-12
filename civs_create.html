@@ -53,7 +53,7 @@
 	    }
 	    if (nr == 0) {
 		errs[numerrs++] =
-		    'You have specified no users who can see the election results.';
+		    'You have specified no users who can see the poll results.';
 	    }
 	}
 	if (numerrs == 0) return true;
@@ -122,14 +122,14 @@
     </td>
     <td width=0% nowrap valign=top align=right>
 	<a href="@CIVSHOME@">CIVS Home</a><br>
-	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
+	<a href="@CIVSURL@/civs_create.html">Create new poll</a><br>
 	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a><br>
 	<a href="@CIVSURL@/faq.html">FAQ</a>
     </td>
   </tr>
   <tr>
     <td width="100%" valign="top" nowrap colspan=2>
-      <h2 align="center">Create a New Election</h2>
+      <h2 align="center">Create a New Poll</h2>
     </td>
   </tr>
 </tbody>
@@ -144,7 +144,7 @@
     onsubmit="return validate()">
   <table class="form">
   <tr>
-    <td align=right>Name of the election (e.g., <b>The Democratic Primary</b>):</td>
+    <td align=right>Name of the poll (e.g., <b>The Democratic Primary</b>):</td>
     <td><input type="text" name="title" size="50"></td>
   <tr>
     <td align=right>Name of supervisor (you):</td>
@@ -157,11 +157,11 @@
     </td>
   </tr>
   <tr>
-    <td valign=top align=right>Day and time you plan to stop the election:<br>
-	<small>(<b>Note:</b> election must be stopped manually)</small>
+    <td valign=top align=right>Day and time you plan to stop the poll:<br>
+	<small>(<b>Note:</b> polls must be stopped manually)</small>
     </td>
     <td><input type="text" name="election_end" id="election_end" size="30"
-          onchange="render_text('<br><i>Preview</i>: Election ends ', 'election_end', 'rendered_end')">
+          onchange="render_text('<br><i>Preview</i>: Poll ends ', 'election_end', 'rendered_end')">
 	 <span class="rendering" id="rendered_end"></span>
 </td>
   </tr>
@@ -171,18 +171,18 @@
   Your name and e-mail address are used when sending e-mail to
   voters. Your name should be recognizable to voters, and the e-mail
   address must work because CIVS emails you the information needed to
-  control the election. Make sure your spam filter does not
+  control the poll. Make sure your spam filter does not
   block mail from <kbd>@SUPERVISOR@</kbd> (or check your spam folder if
   the mail does not arrive!).
   </small></div>
 
-  <p>Description of the election and available choices (may include HTML):<br>
+  <p>Description of the poll and available choices (may include HTML):<br>
   <table class="form">
     <tr>
       <td><textarea id="description" valign="top" rows="5" name="description" cols="60"></textarea>
       </td>
       <td><input type="button" value="Preview&gt;&gt;"
-	    onClick="render_text('<h2>Election description</h2>',
+	    onClick="render_text('<h2>Poll description</h2>',
 				 'description',
 				 'rendered_description')"></td>
       <td valign="top"><span class="rendering" id="rendered_description"></span></td>
@@ -204,32 +204,42 @@
   </table>
   </p>
   <p align="left"><input type=file name="choices_file"></p>
-  <p>How many choices will win the election: <input type="text" name="num_winners" size="5" value="1"></p>
+  <p>How many choices will win: <input type="text" name="num_winners" size="5" value="1"></p>
   <p>The e-mail addresses of up to 1000 voters, one per line.
   Voters can also be added later.</p>
   <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
   <p><input type=file name="addresses_file"></p>
-  <p><input type="checkbox" name="public" value="yes">
-  Make this a public election (voters can add themselves.
-  <strong>Warning:</strong> there is only a token attempt to prevent multiple voting, based on voters' IP addresses).<br>
+
+  <h3>More options <small>(mouse over each check box for more information)</small></h3>
+  <p><input type="checkbox" name="public" value="yes"
+      title="In a public poll, you receive a single URL that any voter can
+	use to cast their vote. Thus, it can be posted on email distribution
+	lists. However, there is only a token attempt to prevent multiple voting, based on voters' IP addresses. If you want to make sure that voters only
+	vote once, use a private poll instead.">
+  Make this a public poll.
+<br>
   <input type="checkbox" name="restrict_results" value="yes"
-         onClick="rrparent.appendChild(rrcontrol);">
-    Make results available only to a limited set of users (by default,
-    all voters can see election results).
+         onClick="rrparent.appendChild(rrcontrol);"
+	 title="By default, poll results can be seen by anyone who votes in
+	 the poll. If you want to restrict the results to some other set
+	 of people, use this option.">
+    Make results available only to a limited set of users.
     <br>
     <span>
     <p class="suboption" id="rrcontrol">
-    Enter email addresses of users permitted to view election results:
+    Enter email addresses of users permitted to view poll results:
     (All voters can see these email addresses)
     </br>
     <textarea rows="2" name="result_addrs" cols="50"></textarea>
     </p>
     </span>
   <input type="checkbox" name="ballot_reporting" value="yes"
-         onClick="rvparent.appendChild(rvcontrol);">
+         onClick="rvparent.appendChild(rvcontrol);"
+	 title="This option allows any poll participant to
+	 view the rankings on each ballot. However, identifying
+	 information about the voters who cast these ballots is
+	 not revealed unless the next option is checked.">
   Enable detailed ballot reporting. 
-  Any election participant can view the rankings on each ballot
-  (but <em>not</em> any identifying information about the voter) .
   <span>
   <p class="suboption" id="reveal_voters">
   <input type="checkbox" name="reveal_voters" value="yes">
@@ -237,18 +247,34 @@
   with each ballot.<br>Voters are <i class="warning">not</i> anonymous if this is checked, nor does the server discard voter email addresses as it normally does.
   Voters are warned about this lack of anonymity.
   </p>
-  </span>
-  <input type="checkbox" name="writeins" value="yes">
-  Allow voters to write in new choices. Voting is initially disabled.<br>
-  <input type="checkbox" name="shuffle" value="no">
-  Present choices on voting page in exactly the given order (by default,
-  they are shuffled randomly on each ballot).<br>
-  <input type="checkbox" name="no_opinion" value="yes">
+  </span><br>
+  <input type="checkbox" name="writeins" value="yes"
+   title="You can allow write-ins with this option. However, write-ins are
+ at a big disadvantage if they occur after some votes have been cast. Therefore,
+ when this option is selected, there is a write-in phase in which ballots cannot
+ be cast. The supervisor must explicitly enable voting.">
+  Allow voters to write in new choices.<br>
+  <input type="checkbox" name="shuffle" value="no"
+  title="By default, poll choices are presented in a randomly shuffled
+  order on each ballot. For some polls, such as choosing a meeting time,
+  it will be more convenient for voters to see the choices in exactly
+  the order given above.">
+  Present choices on voting page in exactly the given order.<br>
+  <input type="checkbox" name="no_opinion" value="yes"
+    title="The &#x22;no opinion&#x22; option can have unexpected effects. Be sure to read about how to use it.">
   Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
   <input type="checkbox" name="proportional" value="yes"
-         onClick="prparent.appendChild(prcontrol)">
-  Enforce proportional representation (useful only if there is
-  more than one winner [<a href="proportional.html">more information</a>])</br>
+         onClick="prparent.appendChild(prcontrol)"
+	 title="The proportional mode is useful only for multiwinner
+	 elections, where you want to make sure that the voters' desires
+	 are expressed proportionally. Otherwise a majority of voters can
+	 decide all of the winners. Proportional mode is much slower than
+	 the regular nonproportional mode, and should not be used in cases where there
+	 are a lot of choices and a lot of winners. In most cases, but not
+	 all, the results from the proportional and nonproportional mode
+	 agree.  Click the 'more information' link to
+	 find out more about how this mode works.">
+  Enforce proportional representation [<a href="proportional.html">more information</a>]</br>
   <span>
    <p class="suboption" id="prcontrol">
     For proportional representation, voters are assumed to be maximizing:<br>
@@ -261,12 +287,12 @@
   </span>
 
 <div class="emphasized">
-  Make sure your e-mail address is correct because election information will
-  be emailed to you. Voters will not be informed of the election's
+  Make sure your e-mail address is correct because poll information will
+  be emailed to you. Voters will not be informed of the poll's
   existence until you respond to this e-mail message.
   </div>
   <p style="margin-left: 5ex">
-    <input type="submit" value="Create election" name="submit">
+    <input type="submit" value="Create poll" name="submit">
   </p>
 </form>
 </div>

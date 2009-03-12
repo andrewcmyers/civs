@@ -145,7 +145,7 @@ print
     <h1>&nbsp;Condorcet Internet Voting Service</h1>
     </td>
     <td width=0% nowrap valign=top align=right><a href=\"$civs_home\">CIVS Home</a><br>
-    <a href=\"$civs_url/civs_create.html\">Create new election</a><br>
+    <a href=\"$civs_url/civs_create.html\">Create new poll</a><br>
     <a href=\"$civs_url/sec_priv.html\">About security and privacy</a><br>
     <a href=\"$civs_url/faq.html\">FAQ</a><br>
     <a href=\"$suggestion_box\">CIVS suggestion box</a>

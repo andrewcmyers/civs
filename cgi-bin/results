@@ -36,10 +36,10 @@ my %algorithm_modules = ('beatpath2', 1,
 # CheckLoad;
 # timeout(30);
 
-HTML_Header('CIVS Election Results', 'results.js');
+HTML_Header('CIVS Poll Results', 'results.js');
 use election;
 
-CIVS_Header("Election Results: $title");
+CIVS_Header("Poll Results: $title");
 
 CheckElectionID;
 CheckStarted;
@@ -144,7 +144,7 @@ my (%visited);
 
 # Start the progress meter (sends to STDOUT)
 sub StartProgressMeter {
-    print '<p id=compute_msg><i>Computing election results...</i></p>', $cr;
+    print '<p id=compute_msg><i>Computing results...</i></p>', $cr;
     print '<table id="completion_meter" cellpadding=0><tr><td id="completed_meter" width=0px height=2ex></td><td id="incomplete_meter" width=100%</td></tr></table>',$cr;
     print '<script>
        var complete = document.getElementById("completed_meter");
@@ -184,19 +184,19 @@ sub ComputeResults {
 	    action="'.$thisurl.'"
 	    enctype="multipart/form-data"
 	    name="changeSettings">';
-    print RESULTS span("Election supervisor: $name (".&Email($email_addr).")"), br();
+    print RESULTS span("Supervisor: $name (".&Email($email_addr).")"), br();
     if ($restrict_results eq 'yes') {
 	&election::ReportResultReaders;
     }
-    print RESULTS span("Announced end of election: $election_end"), br();
+    print RESULTS span("Announced end of poll: $election_end"), br();
     if (IsStopped) {
 	my $close_time = $vdata_copy{'close_time'};
-	print RESULTS "Actual time election ended: $close_time", br();
+	print RESULTS "Actual time poll closed: $close_time", br();
     } else {
-	print RESULTS 'Election has not yet ended.', br();
+	print RESULTS 'Poll has not yet ended.', br();
     }
     if ($public ne 'yes') {
-	print RESULTS "Private election ($num_auth authorized voters)", br();
+	print RESULTS "Private poll ($num_auth authorized voters)", br();
     } else {
 	print RESULTS "This is a public poll.", br();
     }
@@ -216,13 +216,13 @@ sub ComputeResults {
 	if ($real_nwin != 1) {
 	    $winmsg = $real_nwin.' winners';
 	}
-	print RESULTS "&nbsp;(Election actually has $winmsg)";
+	print RESULTS "&nbsp;(Poll actually has $winmsg)";
     }
 
     print RESULTS br();
     if ($proportional eq 'yes') {
 	my $url = $civs_url.'/proportional.html';
-	print RESULTS "This election implements <a href=\"$url\">proportional representation</a>. ";
+	print RESULTS "This poll implements <a href=\"$url\">proportional representation</a>. ";
 	if ($use_combined_ratings) {
 	    print RESULTS " The <a
 	    href=\"$url#combinedratings\">combined-weights criterion</a>";
@@ -276,10 +276,10 @@ sub ComputeResults {
     # print RESULTS '&nbsp;<input type="submit" name="submit" value="Update display options">';
     print RESULTS '</form>',$cr;
 
-    print RESULTS h2('Election description'),
+    print RESULTS h2('Poll description'), $cr,
 	'<div class="description">',
 	p($description),
-	'</div>';
+	'</div>', $cr;
 
 
     &ComputeNonproportionalResults;   # needed regardless of the election type
@@ -289,7 +289,7 @@ sub ComputeResults {
     } else { 
 	# &PrintCondorcetWinner;
 
-	print RESULTS h2("Ranking of the choices");
+	print RESULTS h2('Ranking of the choices'), $cr;
 
 	&PrintReport($algorithms{$algorithm});
     }
@@ -314,7 +314,7 @@ sub PrintMatrix {
 		my $j1 = $jj + 1;
 		print RESULTS '<th width=20px>'.$j1.'.</th>';
     }
-    print RESULTS '</tr>'.$cr;
+    print RESULTS '</tr>', $cr;
     for (my $jj = 0; $jj < $n; $jj++) {
 	my $j = $choice_index[$jj];
 	my $j1 = $jj + 1;
@@ -353,14 +353,14 @@ sub PrintMatrix {
 sub DetailsHeader {
     print RESULTS hr(),$cr;
     print RESULTS '<p id="show_details">',
-	'For simplicity, some details of the election result are not shown.
+	'For simplicity, some details of the poll result are not shown.
 	<button onclick=\'show_details();\'>
 	    Show details</button></p>', $cr;
 
     print RESULTS '<div id="details">';
     print RESULTS '<button id="hide_details" onclick="hide_details();">',
      'Hide details</button>
-      <h2>Election result details</h2>', $cr;
+      <h2>Result details</h2>', $cr;
 }
 
 # Generate a ballot report or say that it hasn't been enabled.
@@ -400,10 +400,10 @@ sub BallotReport {
 	    print RESULTS p("Ballots are shown in a randomly generated order.");
 	    print RESULTS p(a({-href=>"http://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"},"Download ballots") . " as a CSV.");
         } else {
-	    print RESULTS p("No ballots were cast in this election.");
+	    print RESULTS p("No ballots were cast in this poll.");
 	}
     } else {
-	print RESULTS p("Ballot reporting was not enabled for this election.");
+	print RESULTS p("Ballot reporting was not enabled for this poll.");
     }
 }
 
@@ -440,7 +440,7 @@ sub PrintRanking {
     my @result = @{$_[0]};
     my @matrix = @{$_[1]};
     my $had_tie = 0;
-    print RESULTS '<table class="rankings">';
+    print RESULTS '<table class="rankings">', $cr;
     my $j = 0;
     my $num_seen = 0;
     for (my $rank = 0; $rank <= $#result; $rank++) {
@@ -449,7 +449,7 @@ sub PrintRanking {
 	print RESULTS '<tr><td>'.($j+1).'. ';
 	my $ranksize = $#winner + 1;
 	if ($ranksize > 1) {
-	    print RESULTS '<i>Tied</i>:<br>';
+	    print RESULTS '<i>Tied</i>:<br>', $cr;
 	}
 	    my $tie;
 	if ($num_seen < $num_winners &&
@@ -463,7 +463,7 @@ sub PrintRanking {
 # candidates here. What about writeins, especially on a
 # public election?
 	for (my $i = 0; $i <= $#winner; $i++) {
-	    if ($i > 0) { print RESULTS '<br>'; }
+	    if ($i > 0) { print RESULTS '<br>', $cr; }
 	    if ($tie) { print RESULTS '<font color=red>'; }
 	    my $explanation = '';
 	    if ($rank > 0) {
@@ -515,9 +515,9 @@ sub PrintRanking {
 	    if ($tie) { print RESULTS '</font>'; }
 	}
 	$num_seen += $#winner + 1;
-	print RESULTS '</td></tr>';
+	print RESULTS '</td>', $cr, '</tr>', $cr;
     }
-    print RESULTS '</table>';
+    print RESULTS '</table>', $cr;
     if ($had_tie) {
 	print RESULTS p("Choices shown in red have tied for being selected.
 		You may wish to select among them randomly.");
@@ -527,13 +527,13 @@ sub PrintRanking {
 sub PrintCondorcetWinner {
 # this is common to all Condorcet methods
     if ($proportional ne 'yes') {
-	print RESULTS h2("Condorcet winner");
+	print RESULTS h2("Condorcet winner"), $cr;
 	if ($condorcet_winner >= 0) {
 	    print RESULTS p('Compared to each other choice, '.
 	    strong($choices[$condorcet_winner]).'
 	    has a higher ranking on a majority of ballots.');
 	} else {
-		    print RESULTS p('This election had no Condorcet winner.').$cr;
+		    print RESULTS p('This poll had no Condorcet winner.').$cr;
 	}
     }
 }
@@ -677,12 +677,12 @@ sub PrintProportionalResults {
 	return @mapped;
     }
 
-    print RESULTS "<h2>Choices (in individual preference order)</h2>";
+    print RESULTS '<h2>Choices (in individual preference order)</h2>', $cr;
     print RESULTS "<ol>";
     for (my $j = 0; $j < $num_choices; $j++) {
-	print RESULTS "<li> ".$choices[$choice_index[$j]]."</li>\n";
+	print RESULTS '<li> ', $choices[$choice_index[$j]], '</li>', $cr;
     }
-    print RESULTS "</ol>";
+    print RESULTS '</ol>';
 
     $prop_details = 0;
 
@@ -1056,12 +1056,12 @@ sub PrintProportionalResults {
     $num_unbeaten = $#cwinner + 1;
     if ($num_unbeaten == 1) {
 	print RESULTS h2("Winning set of choices".$cr);
-	print RESULTS p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> winner of this election was the following set of choices:");
+	print RESULTS p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> winner of this poll was the following set of choices:");
     } else {
 	print RESULTS h2("Winning sets of choices$cr");
 	print RESULTS p("There were $num_unbeaten unbeaten sets:$cr");
     }
-    print RESULTS '<table class="rankings"><tr>';
+    print RESULTS '<table class="rankings">', $cr, '<tr>';
     for (my $i = 0; $i < $num_unbeaten; $i++) {
 	print RESULTS '<td><ol>';
 	@mapped_comm = renumber($committee[$cwinner[$i]]);
@@ -1196,11 +1196,11 @@ sub PrintProportionalResults {
     }
     print RESULTS "<hr>\n";
     STDOUT->flush();
-    print RESULTS h2('Nonproportional election');
-    print RESULTS p('The following gives the details of how the election
+    print RESULTS h2('Nonproportional poll');
+    print RESULTS p('The following gives the details of how the poll
              would have resulted if run on single choices, without
 	     proportional representation. This hypothetical
-	     election defines the &ldquo;individual preference
+	     poll defines the &ldquo;individual preference
 	     order&rdquo; used above.');
 
     print RESULTS h2('Ranking of the choices').$cr;

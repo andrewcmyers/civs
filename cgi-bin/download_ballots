@@ -18,21 +18,21 @@ my $thisurl = $civs_bin_path."/download_ballots@PERLEXT@";
 use election;
 
 if (!IsWellFormedElectionID) {
-    error("The election identifier \"$election_id\" is not valid.");
+    error("The poll identifier \"$election_id\" is not valid.");
 }
 
 if (!IsStarted) {
-    error("This election does not exist or has not been started");
+    error("This poll does not exist or has not been started");
 }
 
 if ($public ne 'yes') {
     if (!IsStopped) {
-	error("This election has not yet been closed");
+	error("This poll has not yet been closed");
     }
 }
 
 if ($ballot_reporting ne 'yes') {
-    error("Ballot reporting is not enabled for this election");
+    error("Ballot reporting is not enabled for this poll");
 }
 
 print header(-type=>'application/text', -attachment=>'civs_ballots.csv');

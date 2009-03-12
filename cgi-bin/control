@@ -14,42 +14,42 @@ use mail;
 
 my $thisurl = $civs_bin_path."/control@PERLEXT@";
 
-HTML_Header("CIVS Election Control");
+HTML_Header("CIVS Poll Control");
 use election 1.02;
 
 my $control_key = param('key');    
 my $authorization_key = param('akey');
 
-CIVS_Header("Election control");
+CIVS_Header("Poll control");
 
 CheckElectionID;
 CheckControlKey($control_key);
 CheckAuthorizationKeyForAddingVoter($authorization_key);
 
-print h1("Election: $title");
+print h1("Title: $title");
   
 if (!IsStarted) {
     print "<form method=\"POST\"
 		action=\"$civs_bin_path/start_election@PERLEXT@\"
 		enctype=\"multipart/form-data\"
 		name=\"Start\">\n";
-    print '<p>The election has not yet started. Press this button to start it: ';
+    print '<p>The poll has not yet started. Press this button to start it: ';
     print hidden('id', $election_id);
     print hidden('key', $control_key);
     print hidden('akey', $authorization_key)
 		if defined($authorization_key);
-    print '<input type="submit" value="Start election" name="start">';
+    print '<input type="submit" value="Start poll" name="start">';
     print '</p></form>';
 } elsif (!IsStopped) {
     print "<form method=\"POST\"
 		action=\"$civs_bin_path/close@PERLEXT@\"
 		enctype=\"multipart/form-data\"
 		name=\"Close\">\n";
-    print '<p>The election is in progress. Press this button to end it: ';
+    print '<p>The poll is in progress. Press this button to end it: ';
     print hidden('id', $election_id);
     print hidden('key', $control_key);
-    print '<input type="submit" value="End election" name="close"
-            onclick="confirm(\'Ending the election is an operation that cannot be undone. Continue?\')">', $cr;
+    print '<input type="submit" value="End poll" name="close"
+            onclick="confirm(\'Ending a poll is an operation that cannot be undone. Continue?\')">', $cr;
     print '</p></form>', $cr;
 
     if ($writeins eq 'yes') {
@@ -91,25 +91,25 @@ if (!IsStarted) {
 
 } else {    
 	&CloseDatabase;
-    print p("The election has ended. <a href=\"$civs_bin_path/results@PERLEXT@?id=$election_id\">Election results</a> are available.");
+    print p("The poll has ended. <a href=\"$civs_bin_path/results@PERLEXT@?id=$election_id\">Poll results</a> are available.");
 }
 
-print "Election supervisor: $name (<tt>$email_addr</tt>)", br();
+print "Poll supervisor: $name (<tt>$email_addr</tt>)", br();
 my $num_auth_string;
 if (IsStarted or $num_auth) {
 	$num_auth_string = "$num_auth"
 } else {
 	my $waiting = $#addresses + 1;
-	$num_auth_string = "0 ($waiting voters will be authorized when the election is started)";
+	$num_auth_string = "0 ($waiting voters will be authorized when the poll is started)";
 }
 print "Total authorized voters: $num_auth_string", br() unless $public eq 'yes';
 
 $num_votes += 0;
 if ($restrict_results eq 'yes') {
     if (IsStopped) {
-	print 'Election results are now available to the following users:<br>',$cr;
+	print 'Poll results are now available to the following users:<br>',$cr;
     } else {
-	print 'Election results will be available to the following users:', $cr;
+	print 'Poll results will be available to the following users:', $cr;
     }
     my @result_addrs = split /(\r\n)+/, $result_addrs;
     print '<ul>';
@@ -122,11 +122,11 @@ if ($restrict_results eq 'yes') {
     print '</ul>';
 } else {
     if (!IsStopped) {
-	print p('Election results available to all voters when election completes.');
+	print p('Poll results available to all voters when poll completes.');
     }
 }
 print "Actual votes cast so far: $num_votes", br();
-print "Election ends $election_end.", br();
+print "Poll ends $election_end.", br();
 
 if ($writeins eq 'yes') {
     print 'Write-in choices are allowed.', br(), $cr;
@@ -143,10 +143,10 @@ if ($no_opinion eq 'yes') {
 
 if ($proportional eq 'yes') {
     if ($use_combined_ratings) {
-	print 'This election uses the proportional representation
+	print 'This poll uses the proportional representation
 	    algorithm with the combined-ratings voter criterion.',br();
     } else {
-	print 'This election uses the proportional representation
+	print 'This poll uses the proportional representation
 	    algorithm with the best-candidate voter criterion.',br();
     }
     if ($num_choices == 1) {
@@ -175,7 +175,7 @@ if ($num_winners == 1) {
 } else {
     $wintxt = "$num_winners candidates";
 }
-print p("The top $wintxt will win the election.");
+print p("The top $wintxt will win.");
 print "<ul>";
 for (my $j = 0; $j < $num_choices; $j++) {
     print li($choices[$j]);
@@ -186,7 +186,7 @@ print h2("Add voters");
 
 print p("Enter e-mail addresses of voters, one per line. These
 may be new voters or existing voters who have not voted yet.
-In a private election, giving the e-mail address of an already 
+In a private poll, giving the e-mail address of an already 
 existing voter " .b("will not") . " let that voter vote twice.
 It will only resend the voter an invitation to vote.
 In a public poll, only a token attempt is made to prevent

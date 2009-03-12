@@ -10,8 +10,8 @@ use IO::Handle;
 use DB_File;
 use Digest::MD5 qw(md5_hex);
 
-HTML_Header("CIVS start election");
-CIVS_Header('Start election');
+HTML_Header("CIVS start poll");
+CIVS_Header('Start poll');
 
 use election;
 
@@ -25,13 +25,13 @@ CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 if (IsStarted) {
     print h1("Error");
-    print p("This election has already been started"), end_html();
+    print p("This poll has already been started"), end_html();
     exit 0;
 }
 
 StartElection;
 
-print p('The election '.strong($title).' has been started.'.$cr);
+print p('The poll '.strong($title).' has been started.'.$cr);
 
 print '<pre>'.$cr;
 if ($#addresses > $max_voters) {
@@ -43,7 +43,7 @@ my $num_added = SendKeys($authorization_key, \@addresses);
 
 print "Done.\n</pre>\n";
 
-print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key\">Go back to election control</a>");
+print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key\">Go back to poll control</a>");
 
 # Destroy record of voter addresses so we can't
 # figure out who voted for what.
@@ -52,6 +52,6 @@ $edata{'addresses'} = '';
 
 print end_html();
 
-Log("Election $title ($election_id) started");
+Log("Poll $title ($election_id) started");
 
 exit 0;

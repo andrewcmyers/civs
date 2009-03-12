@@ -30,7 +30,7 @@ div.emphasized {
   border-color: #cca
 }
 
-input#vote {font-size:200%; font-weight: bold; background-color: #ccf}
+input#vote {font-size:160%; font-weight: bold; background-color: #ccf}
 
 span.explain {font-size: 75%; color: #404040 }
 
@@ -74,6 +74,8 @@ td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
 table.matrix th { background-color: transparent; color: black }
 table.matrix, table.rankings { border-style: solid; border-width: 1px; border-color: #000040 }
+table.rankings tr td { text-indent: -3ex; padding-left: 3ex }
+
 table.links {
     border-color: black;
     border-style: solid;

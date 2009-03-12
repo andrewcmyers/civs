@@ -19,7 +19,7 @@ use election;
 
 my $control_key = param('key');    
 
-CIVS_Header("Stopping election");
+CIVS_Header("Stopping poll");
 
 CheckElectionID;
 CheckStarted;
@@ -27,21 +27,22 @@ CheckControlKey($control_key);
 CheckNotStopped;
 
 if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
-    print h1("Error"), p("Was not able to stop the election");
+    print h1("Error"), p("Was not able to stop the poll");
 } else {
     print STOPPED "stopped\n"; close(STOPPED);
-    Log("Election $title ($election_id) stopped");
+    Log("Poll $title ($election_id) stopped");
     print h1("Election stopped: $title");
-    print p("The election has been stopped. It was announced to end $election_end.");
+    print p("The poll has been stopped. It was announced to end $election_end.");
     if ($restrict_results ne 'yes') {
 	print p("<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-	View the results of the election</a>");
+	View poll results</a>");
     } else {
-	print p('The election results are now available to be viewed by authorized users.');
+	print p('The poll results are now available to be viewed by authorized users.');
     }
 }
 print end_html();
 
+$vdata{'last_vote_time'} = time();
 $vdata{'close_time'} = localtime();
 
 exit 0;
