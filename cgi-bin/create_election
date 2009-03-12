@@ -16,8 +16,15 @@ use HTML::TagFilter;
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 my $tf = new HTML::TagFilter;
 my $ok = {all => []};
-$tf->allow_tags({table => $ok, td => $ok, tr => $ok,
-	        dl => $ok, dt => $ok, dd => $ok, small => $ok});
+$tf->allow_tags({
+    table => $ok,
+    td => {colspan => [], rowspan => []},
+    tr => $ok,
+    dl => $ok, dt => $ok, dd => $ok,
+    small => $ok,
+    p => {align => ['left' | 'right' | 'center']},
+    ol => {type => ['a', '1', 'A']},
+    ul => $ok});
 
 ### Initial parameter checking
 
