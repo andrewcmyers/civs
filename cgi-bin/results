@@ -46,7 +46,8 @@ CheckStarted;
 
 our %vdata_copy = %vdata;
 
-&UnlockElection;
+&CloseDatabase;
+&UnlockElection; # try to avoid blocking out other people
 
 if ($public ne 'yes') {
     &CheckStopped;
