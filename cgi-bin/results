@@ -560,7 +560,7 @@ sub MakeChoiceIndex {
 }
 
 sub ProcessBallots {
-    my @voters = @{@_[0]};
+    my @voters = @{$_[0]};
     my @ballots = ();
     foreach my $voter_key (@voters) {
 	my $ballot = $vdata_copy{$voter_key}; 

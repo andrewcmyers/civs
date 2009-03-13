@@ -36,10 +36,10 @@ our $remote_ip_address;
 
 if ($using_ISA) {
     $remote_ip_address = http('HTTP_IPREMOTEADDR');
-    if ($remote_ip_address eq undef) {
+    if (!defined($remote_ip_address)) {
 	$remote_ip_address = http('HTTP_REMOTE_ADDRESS');
     }
-    if ($remote_ip_address eq undef) {
+    if (!defined($remote_ip_address)) {
 	$remote_ip_address = remote_addr();
     }
 } else {
