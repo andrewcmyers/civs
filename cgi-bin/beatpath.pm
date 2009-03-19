@@ -1,5 +1,8 @@
 package beatpath;
 
+# Note: this is the original "beatpath" method offered by CIVS.
+# It is now obsolete and replaced by "beatpath2.pm".
+
 # Definitions:
 # The strength of a direct beat is the maximum
 # of the number of votes that rank one candidate

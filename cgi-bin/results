@@ -45,6 +45,7 @@ CheckElectionID;
 CheckStarted;
 
 our %vdata_copy = %vdata;
+our %edata_copy = %edata;
 
 &CloseDatabase;
 &UnlockElection; # try to avoid blocking out other people
@@ -167,6 +168,7 @@ sub ReportProgress {
 	print '<script>report_progress(', $x, ');</script>', $cr;
 	$progress_level = $x;
     }
+    STDOUT->flush();
 }
 
 # Call when results are finished, to remove progress meter.
@@ -383,11 +385,15 @@ sub BallotReport {
 		# Element i of the list corresponds to candidate
 		# i.
 		my $recorded_vote = $vdata_copy{$ballot_key}; 
+		if (!defined($recorded_vote)) {
+		    Log "Election $election_id ($title): Lost ballot for voter key $ballot_key?";
+		    next;
+		}
 		my @row = split /,/, $recorded_vote;
 		if ($reveal_voters eq 'yes') {
 		    my $voter_key =
 			$vdata_copy{"voter key of $ballot_key"};
-		    my $email = $edata{"email_addr $voter_key"};
+		    my $email = $edata_copy{"email_addr $voter_key"};
 		    unshift @row, ($email.': ');
 		} else {
 		    unshift @row, "$i. ";
@@ -564,8 +570,12 @@ sub ProcessBallots {
     my @ballots = ();
     foreach my $voter_key (@voters) {
 	my $ballot = $vdata_copy{$voter_key}; 
-	my @row = split /,/, $ballot;
-	push @ballots, \@row;
+	if (!defined($ballot)) {
+	    Log "Election $election_id ($title): Lost ballot for voter key $voter_key?";
+	} else {
+	    my @row = split /,/, $ballot;
+	    push @ballots, \@row;
+	}
     }
     return \@ballots;
 }
