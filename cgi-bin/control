@@ -26,7 +26,7 @@ CheckElectionID;
 CheckControlKey($control_key);
 CheckAuthorizationKeyForAddingVoter($authorization_key);
 
-print h1("Title: $title");
+print h1("$title");
   
 if (!IsStarted) {
     print "<form method=\"POST\"
@@ -85,7 +85,7 @@ if (!IsStarted) {
 		$url .= "&akey=$authorization_key" 
 			if defined($authorization_key);
 		print p("This is a public poll. You may share the following link
-                 with voters allow them to vote."),
+                 with voters to allow them to vote."),
               p("<tt><a href=\"$url\">$url</a></tt>").$cr;
     }
 
