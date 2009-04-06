@@ -91,7 +91,13 @@ if (!IsStarted) {
 
 } else {    
 	&CloseDatabase;
-    print p("The poll has ended. <a href=\"$civs_bin_path/results@PERLEXT@?id=$election_id\">Poll results</a> are available.");
+    my $results_link;
+    if ($restrict_results eq 'yes') {
+	$results_link = "";
+    } else {
+	$results_link = "<a href=\"$civs_bin_path/results@PERLEXT@?id=$election_id\">Poll results</a> are available.";
+    }
+    print p("The poll has ended.", $results_link);
 }
 
 print "Poll supervisor: $name (<tt>$email_addr</tt>)", br();
@@ -107,7 +113,9 @@ print "Total authorized voters: $num_auth_string", br() unless $public eq 'yes';
 $num_votes += 0;
 if ($restrict_results eq 'yes') {
     if (IsStopped) {
-	print 'Poll results are now available to the following users:<br>',$cr;
+	print 'Poll results are now available to the following users,',
+	      ' who were earlier sent an email containing a URL for',
+	      ' viewing results:<br>',$cr;
     } else {
 	print 'Poll results will be available to the following users:', $cr;
     }

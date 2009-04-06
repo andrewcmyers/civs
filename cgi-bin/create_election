@@ -246,11 +246,13 @@ sub SendResultKey {
 	Send "";
 	Send "A new CIVS poll has been created named $title.";
 	Send "You have been designated as a user who is permitted to see the";
-	Send "result of this poll. You will not be able to do this until";
-	Send "the poll has been closed. To see the results, visit the";
-	Send "following URL:";
+	Send "result of this poll.";
 	Send "";
-	Send "$url";
+	Send "Save this email. If you lose it you will not have access to";
+	Send "the results. Once the poll has been closed, results will be";
+	Send "available at the following URL:";
+	Send "";
+	Send "  $url";
 	Send "";
 	Send "This URL is private. Allowing unauthorized users access to this";
 	Send "URL will permit them to see the poll results.";
