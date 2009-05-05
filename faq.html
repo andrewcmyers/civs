@@ -18,7 +18,7 @@
     </td>
     <td width=0% nowrap valign=top align=right>
 	<a href="@CIVSHOME@">CIVS Home</a><br>
-	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
+	<a href="@CIVSURL@/civs_create.html">Create new poll</a><br>
 	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a><br>
 	<a href="@CIVSURL@/faq.html">FAQ</a>
     </td>
@@ -32,7 +32,7 @@
 </table>
 <div class="contents">
 
-<h2>Setting up an election</h2>
+<h2>Setting up a poll</h2>
 <ol>
 <li><b>What is the difference between Condorcet voting and voting methods
 that I am familiar with?</b><br>
@@ -42,7 +42,7 @@ job of aggregating all the voter preferences into a single ranking.
 
 <li><b>For how long a period should I enable voting?</b><br>
 This is up to you. The best time period depends on your voters.
-For voters who are aware of the election or who check email frequently,
+For voters who are aware of the poll or who check email frequently,
 a couple of days is usually enough time. Most people vote right away, or
 not at all. Election durations of more than a week are usually too
 long, unless your intention is to set up a long-running public survey.
@@ -51,7 +51,7 @@ long, unless your intention is to set up a long-running public survey.
 <li><b>I would like to separate out the acceptable choices from the
 unacceptable choices. Can I do that?</b><br>
 Just create a choice named something like &ldquo;choices ranked below this
-are unacceptable&rdquo;. You can then use the election results in
+are unacceptable&rdquo;. You can then use the poll results in
 various ways. If you want reject choices that are considered unacceptable
 by a plurality of voters, reject those that are ranked below this pseudo-choice.
 If you want to find the choices that are acceptable to <i>every</i> voter,
@@ -59,60 +59,67 @@ they are the ones that unananimously (n&ndash;0) beat this pseudo-choice.
 (This is handy for scheduling meetings where everyone needs to be present.)
 </li>
 
-<li><b>How big an election can I run?</b><br>
-CIVS is used regularly for elections with hundreds of voters.  You can set up a
-public election where any number of people can vote. Elections have been
+<li><b>How big a poll can I run?</b><br>
+CIVS is used regularly for polls with hundreds of voters.  You can set up a
+public poll where any number of people can vote. Elections have been
 successfully run with a couple of thousand voters, and this is a load it should
 stand up to even if voters all try to vote around the same time. CIVS hasn't
 been tested at 10,000 voters or higher. The server is implemented in
 Perl, so it can handle about 4,000 voters per hour. If your voters don't show up
 faster than that, it should be fine no matter how many voters there are.  A
-faster Java version is in the works.  If you want to have a private election,
+faster Java version is in the works.  If you want to have a private poll,
 the system will only allow you to add 1,000 voters at a time, but in principle
 you can have as many voters as you want. Note that using the experimental
-proportional method for your election dramatically increases the load on the
-CIVS server, so avoid that mode for large elections.
+proportional method for your poll dramatically increases the load on the
+CIVS server, so avoid that mode for large polls.
 <li>
 
 <b>How reliable is CIVS?</b><br>
 There have been no data losses due to hardware failure on the Cornell
 installation.  A race condition in CIVS code caused some corruption of voting
-data in one large election a couple of years ago, but did not seem to 
-affect the election result. This bug has long since been fixed in a way that
-should prevent all future race conditions. Each election is stored in
-a separate database, so data corruption can only affect only one election.
+data in one large poll a couple of years ago, but did not seem to 
+affect the poll result. This bug has long since been fixed in a way that
+should prevent all future race conditions. Each poll is stored in
+a separate database, so data corruption can only affect only one poll.
 
 <li>
 <b>A complete ranking of choices could embarrass some candidates.
 Can I avoid that?</b><br>
-Ordinarily, full election results are available to every voter. However,
-you can designate a smaller set of people who are allowed to see the election
+Ordinarily, full poll results are available to every voter. However,
+you can designate a smaller set of people who are allowed to see the poll
 results. They can then report the winners to the voters, using some mechanism
 outside of CIVS.
+
+<li>
+<b>I'm paranoid. Can I make sure the person or people running the CIVS web site
+can't learn what my voters are voting on?</b> Yes, just
+give your choices nondescriptive names like A, B, C, .... Then, send
+all voters an explanation of what those names stand for. Less convenient
+for voters, but completely private.
 </ol>
 
-<h2>Running an election</h2>
+<h2>Running a poll</h2>
 <ol>
 <li><b>Some voters never got their voter keys. What do I do?</b><br>
 It depends on whether you sent the voter key to the right address in the first
 place. If so, you can send it again by &ldquo;adding&rdquo; that voter with the
-election control page. The same voter key will be generated, so
+pol control page. The same voter key will be generated, so
 the voter won't be able to vote twice. If the email address was broken,
 then email should have bounced. In that case it should be safe to add
 the voter under their correct email address. You can check with the CIVS
 supervisor whether the email bounced, assuming you were not notified.
 </li>
 
-<li><b>Why doesn't the election end automatically at the specified time?</b><br>
-We wanted to give election supervisors the flexibility to write complex
-specifications of when the election should end, such as &ldquo;by March 3 or
+<li><b>Why doesn't the poll end automatically at the specified time?</b><br>
+We wanted to give poll supervisors the flexibility to write complex
+specifications of when the poll should end, such as &ldquo;by March 3 or
 when we get at least 100 votes&rdquo;. It's too hard to handle all these cases.
-The supervisor can easily monitor election progress through the election control
+The supervisor can easily monitor progress through the poll control
 page. The supervisor needs to...supervise.
 </li>
 
 <li><b>The voters haven't bothered to vote. Can I send them their voter
-keys again?</b><br> Yes, just &ldquo;add&rdquo; them again at the election control page.
+keys again?</b><br> Yes, just &ldquo;add&rdquo; them again at the poll control page.
 This will send them all email. Make sure you use exactly the same email address
 you did the first time; otherwise, a new voter key will be generated because
 it's a different voter as far as CIVS can tell. For security and privacy reasons,
@@ -120,22 +127,22 @@ CIVS doesn't record voter email or voter keys, so it has no way to send an alrea
 generated voter key to a new email address.
 </li>
 <li>
-<b>How long will election results remain available?</b><br>
-We are making a best effort to keep election results forever, for any election
+<b>How long will poll results remain available?</b><br>
+We are making a best effort to keep poll results forever, for any poll
 that receives more than one vote and doesn't look like a test of the system.
-However, you may want to make a copy of the election results page for
+However, you may want to make a copy of the poll results page for
 posterity.
 </li>
-<li><b>Why doesn't the system notify voters when the election has ended?</b><br>
+<li><b>Why doesn't the system notify voters when the poll has ended?</b><br>
 Because it doesn't know who the voters are any more. Once voter keys are
 sent out, all information about the voters is destroyed. It's the job of
-the election supervisor to close the election and notify voters or
+the poll supervisor to close the poll and notify voters or
 result recipients.
 </li>
-<li><b>Can I make current election results visible before the election closes?</b>
+<li><b>Can I make current poll results visible before the poll closes?</b>
 <br>
 This increases the danger of strategic voting. However, it is the 
-behavior for &ldquo;public&rdquo; elections (i.e., polls).
+behavior for &ldquo;public&rdquo; polls.
 </ol>
 <h2>Voting</h2>
 <ol>
