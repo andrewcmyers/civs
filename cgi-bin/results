@@ -1072,7 +1072,7 @@ sub PrintProportionalResults {
 	print RESULTS h2("Winning sets of choices$cr");
 	print RESULTS p("There were $num_unbeaten unbeaten sets:$cr");
     }
-    print RESULTS '<table class="rankings">', $cr, '<tr>';
+    print RESULTS '<table class=rankings>', $cr, '<tr>';
     for (my $i = 0; $i < $num_unbeaten; $i++) {
 	print RESULTS '<td><ol>';
 	@mapped_comm = renumber($committee[$cwinner[$i]]);

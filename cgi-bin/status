@@ -10,6 +10,7 @@ use civs_common;
 use CGI qw(:standard);
 use File::stat;
 use DB_File;
+use POSIX qw(strftime);
 undef $/;
 
 &HTML_Header("CIVS Server Status");
@@ -48,7 +49,16 @@ while (defined(my $file = readdir(DIR))) {
     if (!defined($num_auth)) { $num_auth = '&ndash;'; }
     my $num_votes = $vdata{'num_votes'};
     if (!defined($num_votes)) { $num_votes = '&ndash;'; }
-    my $started = (-e $started_file) ? "Yes" : "No";
+    my $started;
+    if (-e $started_file) {
+	if (defined($edata{'election_begin'}) {
+	    $started = localtime($edata{'election_begin'});
+	} else {
+	    $started = "Yes";
+	}
+    } else {
+	$started = "No";
+    }
     my $stopped = (-e $stopped_file) ? "Yes" : "No";
     my $auth_key = (defined($edata{'hash_authorization_key'})) ? "Yes" : "No";
     my $st = stat($election_dir."/vote_log");

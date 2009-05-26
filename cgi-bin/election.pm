@@ -28,7 +28,7 @@ BEGIN {
     $use_combined_ratings $choices @choices $num_choices $num_auth $num_votes
     $recorded_voters $ballot_reporting $reveal_voters $authorization_key
     %used_voter_keys $restrict_results $result_addrs $hash_result_key $no_opinion
-    $last_vote_time
+    $last_vote_time $election_begin
     %voter_keys %edata %vdata);
 }
 
@@ -47,7 +47,7 @@ our ($election_dir, $started_file, $stopped_file, $election_data, $election_log,
 
 our (%edata, %vdata);
 our ($name, $title, $email_addr, $description, $num_winners, $addresses,
-     @addresses, $election_end, $public, $writeins, $allow_voting, $voting_enabled,
+     @addresses, $election_begin, $election_end, $public, $writeins, $allow_voting, $voting_enabled,
      $proportional, $use_combined_ratings,
      $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
@@ -86,6 +86,7 @@ sub init {
     $num_winners = $edata{'num_winners'};
     $addresses = $edata{'addresses'} or $addresses = "";
     @addresses = split /[\r\n]+/, $addresses;
+    $election_begin = $edata{'election_begin'};
     $election_end = $edata{'election_end'};
     $public = $edata{'public'};
     $writeins = $edata{'writeins'};

@@ -75,6 +75,7 @@ th.choice { text-align: left }
 table.matrix th { background-color: transparent; color: black }
 table.matrix, table.rankings { border-style: solid; border-width: 1px; border-color: #000040 }
 table.rankings tr td { text-indent: -3ex; padding-left: 3ex }
+table.rankings tr td ol { text-indent: 0ex }
 
 table.links {
     border-color: black;

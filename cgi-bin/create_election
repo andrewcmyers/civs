@@ -112,6 +112,7 @@ $edata{'name'} = my $name = $tf->filter(param('name'));
 $edata{'email_addr'} = $tf->filter(param('email_addr'));
 $edata{'num_winners'} = $tf->filter(param('num_winners'));
 $edata{'election_end'} = $tf->filter(param('election_end'));
+$edata{'election_begin'} = time();
 
 sub SetBinaryParameter {
     my ($param_name, $default) = @_;
