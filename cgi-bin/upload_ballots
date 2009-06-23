@@ -1,0 +1,141 @@
+#!@PERL@
+
+use strict;
+use warnings;
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use CGI qw(:standard);
+# use Digest::MD5 qw(md5_hex);
+use DB_File;
+use mail;
+use Socket;
+use IO::Handle;
+use HTML::TagFilter;
+
+my $thisurl = $civs_bin_path."/load_ballots@PERLEXT@";
+
+HTML_Header('Load Ballots');
+use election 1.02;
+
+my $control_key = param('key');    
+my $authorization_key = param('akey');
+
+CIVS_Header("Load ballots");
+
+CheckElectionID;
+CheckControlKey($control_key);
+CheckAuthorizationKeyForAddingVoter($authorization_key);
+
+if ($external_ballots ne 'yes') {
+    print p("Error: this election does not allow loading of external ballots");
+    exit 0;
+}
+
+my $ballot_file = upload('ballot_data');
+my $lineno = 0;
+my @errors = ();
+my $num_ballots = 0;
+my @ballots;
+while (<$ballot_file>) {
+    chomp;
+    $lineno++;
+    s/^(\s)*//g;
+    s/(\s)*$//g;
+    if (m/^#/) { next; }
+    my @indices = split /,/;
+    if ($#indices != $num_choices - 1) {
+	push @errors, "Line $lineno: expected $num_choices ranks, got " . ($#indices+1);
+	next;
+    }
+    for (my $i = 0; $i < $num_choices; $i++) {
+	my $rank = $indices[$i];
+	if ($rank eq '-') { $rank = 'No opinion'; }
+	if ($rank =~ m/^[0-9]*$/ &&
+	    $rank >= 1 &&
+	    $rank <= $num_choices ||
+	    $rank eq 'No opinion') {
+	    $ballots[$num_ballots][$i] = $rank;
+	    next;
+	}
+	push @errors, "Line $lineno: badly formed rank &ldquo;$rank&rdquo;";
+    }
+    $num_ballots++;
+}
+if ($#errors >= 0) {
+    print h2("Errors found in ballot file"), $cr;
+    print '<ul>';
+    for my $error (@errors) {
+	print li(), $error, '.', $cr;
+    }
+    print '</ul>';
+    print p("Ballots not uploaded"), $cr;
+    exit 0;
+}
+print p("Ballot file is well formed and contains $num_ballots ballots.");
+
+my $num_votes = 0 + $vdata{'num_votes'};
+
+#
+# Insert the ballots into the DB
+#
+for (my $i = 0; $i < $num_ballots; $i++) {
+    my $vote = '';
+    my @rank;
+#
+# Record the vote
+#
+    my $ballot_key = 'ext' . ($i + $num_votes);
+    for (my $j=0; $j < $num_choices; $j++) {
+	my $rank = $ballots[$i][$j];
+	if ($vote eq '') {
+	    $vote = $rank;
+	} else {
+	    $vote .= "," . $rank;
+	}
+	$rank[$j] = $rank;
+    }
+    $vdata{$ballot_key} = $vote;
+#
+# Record the "voter"
+#
+    if ($recorded_voters) {
+	$recorded_voters = $vdata{'recorded_voters'} =
+	    $recorded_voters . "\n".  $ballot_key;
+    } else {
+	$recorded_voters = $vdata{'recorded_voters'} = $ballot_key;
+    }
+    if ($reveal_voters eq 'yes') {
+	$vdata{"voter key of $ballot_key"} = $ballot_key;
+    }
+#
+# Update the matrix
+#
+    for (my $j = 0; $j < $num_choices; $j++) {
+	for (my $k = 0; $k < $num_choices; $k++) {
+	    my $jk = $vdata{"$j.$k"};
+	       $jk = 0 if (!defined($jk));
+	if ($rank[$j] ne 'No opinion' &&
+			$rank[$k] ne 'No opinion' &&
+			$rank[$j] < $rank[$k]) 
+		{
+			$vdata{"$j.$k"} = $jk + 1;
+	    }	
+	}
+    }
+}
+
+
+$vdata{'last_vote_time'} = $last_vote_time = time();
+$vdata{'num_votes'} += $num_ballots;
+
+print p('Ballots uploaded successfully');
+
+if (!IsStarted) {
+    StartElection;
+}
+
+&PointToResults;
+print end_html();
+
+exit 0;
