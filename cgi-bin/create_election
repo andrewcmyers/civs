@@ -36,7 +36,7 @@ if ($filter_tags ne 'no') {
 # Filter tags from a string, if $filter_tags is not 'no'
 sub Filter {
     if ($filter_tags ne 'no') {
-	return &Filter($_[0]);
+	return $tf->filter($_[0]);
     } else {
 	return $_[0];
     }
