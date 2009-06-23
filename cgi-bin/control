@@ -32,7 +32,7 @@ if (!IsStarted) {
     print "<form method=\"POST\"
 		action=\"$civs_bin_path/start_election@PERLEXT@\"
 		enctype=\"multipart/form-data\"
-		name=\"Start\">\n";
+		name=\"Start\">", $cr;
     print '<p>The poll has not yet started. Press this button to start it: ';
     print hidden('id', $election_id);
     print hidden('key', $control_key);
@@ -44,7 +44,7 @@ if (!IsStarted) {
     print "<form method=\"POST\"
 		action=\"$civs_bin_path/close@PERLEXT@\"
 		enctype=\"multipart/form-data\"
-		name=\"Close\">\n";
+		name=\"Close\">", $cr;
     print '<p>The poll is in progress. Press this button to end it: ';
     print hidden('id', $election_id);
     print hidden('key', $control_key);
@@ -77,7 +77,7 @@ if (!IsStarted) {
 		    }
 		    print hidden('akey', $authorization_key)
 			    if defined($authorization_key);
-		    print "</form>\n";
+		    print "</form>", $cr;
 		}
     }
     if ($public eq 'yes') {
@@ -100,7 +100,7 @@ if (!IsStarted) {
     print p("The poll has ended.", $results_link);
 }
 
-print "Poll supervisor: $name (<tt>$email_addr</tt>)", br();
+print "Poll supervisor: $name (<tt>$email_addr</tt>)", br(), $cr;
 my $num_auth_string;
 if (IsStarted or $num_auth) {
 	$num_auth_string = "$num_auth"
@@ -108,7 +108,7 @@ if (IsStarted or $num_auth) {
 	my $waiting = $#addresses + 1;
 	$num_auth_string = "0 ($waiting voters will be authorized when the poll is started)";
 }
-print "Total authorized voters: $num_auth_string", br() unless $public eq 'yes';
+print "Total authorized voters: $num_auth_string", br(), $cr unless $public eq 'yes';
 
 $num_votes += 0;
 if ($restrict_results eq 'yes') {
@@ -133,8 +133,8 @@ if ($restrict_results eq 'yes') {
 	print p('Poll results available to all voters when poll completes.');
     }
 }
-print "Actual votes cast so far: $num_votes", br();
-print "Poll ends $election_end.", br();
+print "Actual votes cast so far: $num_votes", br(), $cr;
+print "Poll ends $election_end.", br(), $cr;
 
 if ($writeins eq 'yes') {
     print 'Write-in choices are allowed.', br(), $cr;
@@ -152,10 +152,10 @@ if ($no_opinion eq 'yes') {
 if ($proportional eq 'yes') {
     if ($use_combined_ratings) {
 	print 'This poll uses the proportional representation
-	    algorithm with the combined-ratings voter criterion.',br();
+	    algorithm with the combined-ratings voter criterion.',br(), $cr;
     } else {
 	print 'This poll uses the proportional representation
-	    algorithm with the best-candidate voter criterion.',br();
+	    algorithm with the best-candidate voter criterion.',br(), $cr;
     }
     if ($num_choices == 1) {
 	print p('Proportional representation is enabled
@@ -165,18 +165,18 @@ if ($proportional eq 'yes') {
 }
 
 if ($ballot_reporting eq 'yes') {
-    print 'Detailed ballot reporting is enabled.', br();
+    print 'Detailed ballot reporting is enabled.', br(), $cr;
     if ($reveal_voters eq 'yes') {
 	print 'Voter identities (email) will be publicly associated with their ballots.';
     } else {
 	print 'Voter identities (email) will be kept anonymous.';
     }
 } else {
-    print 'Detailed ballot reporting is disabled.', br();
+    print 'Detailed ballot reporting is disabled.', br(), $cr;
 }
  
-print h2('Description:'), p($description);
-print h2("Candidates");
+print $cr, h2('Description:'), p($description);
+print $cr, h2("Candidates");
 my $wintxt;
 if ($num_winners == 1) {
     $wintxt = "candidate";
@@ -190,27 +190,50 @@ for (my $j = 0; $j < $num_choices; $j++) {
 }
 print "</ul>";
 
-print h2("Add voters");
+if ($external_ballots ne 'yes') {
+    print $cr, h2("Add voters");
 
-print p("Enter e-mail addresses of voters, one per line. These
-may be new voters or existing voters who have not voted yet.
-In a private poll, giving the e-mail address of an already 
-existing voter " .b("will not") . " let that voter vote twice.
-It will only resend the voter an invitation to vote.
-In a public poll, only a token attempt is made to prevent
-multiple voting.");
-print "<form method=\"POST\"
-	     action=\"$civs_bin_path/add_voters@PERLEXT@\"
-	     enctype=\"multipart/form-data\"
-	     name=\"AddVoters\">\n";
-print hidden('id', $election_id);
-print hidden('key', $control_key);
-print hidden('akey', $authorization_key)
-	if defined($authorization_key);
-print p('<textarea rows="2" name="new_addresses" cols="50"></textarea>');
-print p('Upload file: <input id=new_addresses_file type=file name="new_addresses_file">');
-print '<input type="submit" value="Add voters" name="add">';
-print '</form>';
+    print p("Enter e-mail addresses of voters, one per line. These
+    may be new voters or existing voters who have not voted yet.
+    In a private poll, giving the e-mail address of an already 
+    existing voter " .b("will not") . " let that voter vote twice.
+    It will only resend the voter an invitation to vote.
+    In a public poll, only a token attempt is made to prevent
+    multiple voting.");
+    print "<form method=\"POST\"
+		action=\"$civs_bin_path/add_voters@PERLEXT@\"
+		enctype=\"multipart/form-data\"
+		name=\"AddVoters\">", $cr;
+    print hidden('id', $election_id);
+    print hidden('key', $control_key);
+    print hidden('akey', $authorization_key)
+	    if defined($authorization_key);
+    print p('<textarea rows="2" name="new_addresses" cols="50"></textarea>');
+    print p('Upload file: <input id=new_addresses_file type=file name="new_addresses_file">');
+    print '<input type="submit" value="Add voters" name="add">';
+    print '</form>';
+} else {
+    print $cr, h2("Load ballot data");
+
+    print "<form method=\"POST\"
+               action=\"$civs_bin_path/upload_ballots@PERLEXT@\"
+	       enctype=\"multipart/form-data\"
+	       name=\"LoadBallots\">$cr";
+    print hidden('id', $election_id);
+    print hidden('key', $control_key);
+    print hidden('akey', $authorization_key)
+	    if defined($authorization_key);
+
+    print 'File to upload ballots from:',
+	input({type=>'file', name=>'ballot_data'}), $cr;
+    print input({type=>'submit', value=>'Load ballots', name=>'load_ballots'});
+
+    print p({class=>'explanation'}, small('The file should be formatted with one ballot per line. Each
+      line contains the ranks of the N choices, which are numbers from 1
+      to N, or a dash (-) to represent no opinion. Lines may be terminated
+      with LF or CR/LF. Whitespace is ignored; lines whose first
+      non-whitespace character is # are also ignored.'));
+}
 
 print end_html();
 

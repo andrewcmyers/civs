@@ -47,6 +47,10 @@ ADDTOPATH=''
 # For debugging locally. Set to 1 to turn on debugging mode.
 LOCALDEBUG=''
 
+# Filter tags! Unless you like being vulnerable to XSS attacks.
+# Your funeral if you set this to 'no'.
+FILTER_TAGS='yes'
+
 # If you are using ISA to do redirection, set this to 1 so the
 # scripts know to get the remote IP address out of the HTTP request
 # header. Otherwise all requests will appear to come from the web server

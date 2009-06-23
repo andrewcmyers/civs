@@ -14,17 +14,33 @@ use IO::Handle;
 use HTML::TagFilter;
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
-my $tf = new HTML::TagFilter;
-my $ok = {all => []};
-$tf->allow_tags({
-    table => $ok,
-    td => {colspan => [], rowspan => []},
-    tr => $ok,
-    dl => $ok, dt => $ok, dd => $ok,
-    small => $ok,
-    p => {align => ['left' | 'right' | 'center']},
-    ol => {type => ['a', '1', 'A']},
-    ul => $ok});
+
+my $filter_tags = '@FILTER_TAGS@';
+
+my $tf;
+if ($filter_tags ne 'no') {
+
+    $tf = new HTML::TagFilter;
+    my $ok = {all => []};
+    $tf->allow_tags({
+	table => $ok,
+	td => {colspan => [], rowspan => []},
+	tr => $ok,
+	dl => $ok, dt => $ok, dd => $ok,
+	small => $ok,
+	p => {align => ['left' | 'right' | 'center']},
+	ol => {type => ['a', '1', 'A']},
+	ul => $ok});
+}
+
+# Filter tags from a string, if $filter_tags is not 'no'
+sub Filter {
+    if ($filter_tags ne 'no') {
+	return &Filter($_[0]);
+    } else {
+	return $_[0];
+    }
+}
 
 ### Initial parameter checking
 
@@ -61,7 +77,7 @@ sub trim {
 foreach my $ch (@c1) {
     $ch = &trim($ch);
     $ch =~ s/--/\&mdash;/g;
-    $ch = $tf->filter($ch);
+    $ch = &Filter($ch);
     if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
 	$choices .= "\n";
@@ -70,7 +86,7 @@ foreach my $ch (@c1) {
 }
 foreach my $ch (@c2) {
     $ch = &trim($ch);
-    $ch = $tf->filter($ch);
+    $ch = &Filter($ch);
     if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
 	$choices .= "\n";
@@ -106,12 +122,12 @@ my %edata;
 tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 
 ##### read form data into DB
-$edata{'title'} = my $title = $tf->filter(param('title'));
-$edata{'description'} = $tf->filter(param('description'));
-$edata{'name'} = my $name = $tf->filter(param('name'));
-$edata{'email_addr'} = $tf->filter(param('email_addr'));
-$edata{'num_winners'} = $tf->filter(param('num_winners'));
-$edata{'election_end'} = $tf->filter(param('election_end'));
+$edata{'title'} = my $title = &Filter(param('title'));
+$edata{'description'} = &Filter(param('description'));
+$edata{'name'} = my $name = &Filter(param('name'));
+$edata{'email_addr'} = &Filter(param('email_addr'));
+$edata{'num_winners'} = &Filter(param('num_winners'));
+$edata{'election_end'} = &Filter(param('election_end'));
 $edata{'election_begin'} = time();
 
 sub SetBinaryParameter {
@@ -131,6 +147,7 @@ SetBinaryParameter('allow_voting', 'no');
 SetBinaryParameter('no_opinion', 'no');
 SetBinaryParameter('shuffle', 'yes');
 SetBinaryParameter('proportional', 'no');
+SetBinaryParameter('external_ballots', 'no');
 
 $edata{'choices'} = $choices;
 

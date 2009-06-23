@@ -218,13 +218,17 @@
 	vote once, use a private poll instead.">
   Make this a public poll.
 <br>
+  <input type="checkbox" name="external_ballots" value="yes"
+      title="If you want to upload all the voting ballots yourself, check this box. Voters cannot vote in such a poll. This is useful if you are trying to understand how the various voting methods work, or if you have obtained ballots from some source outside CIVS.">
+  Make this a test poll: read all votes from a file.
+<br>
   <input type="checkbox" name="restrict_results" value="yes"
          onClick="rrparent.appendChild(rrcontrol);"
 	 title="By default, poll results can be seen by anyone who votes in
 	 the poll. If you want to restrict the results to some other set
 	 of people, use this option.">
     Make results available only to a limited set of users.
-    <br>
+<br>
     <span>
     <p class="suboption" id="rrcontrol">
     Enter email addresses of users permitted to view poll results:
@@ -261,7 +265,7 @@
   the order given above.">
   Present choices on voting page in exactly the given order.<br>
   <input type="checkbox" name="no_opinion" value="yes"
-    title="The &#x22;no opinion&#x22; option can have unexpected effects. Be sure to read about how to use it.">
+    title="The &#x22;no opinion&#x22; option can have unexpected effects. Be sure to read about how to use it, and inform voters accordingly.">
   Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
   <input type="checkbox" name="proportional" value="yes"
          onClick="prparent.appendChild(prcontrol)"

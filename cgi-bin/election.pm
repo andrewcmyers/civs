@@ -24,7 +24,7 @@ BEGIN {
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
     $election_end $public $writeins $allow_voting $voting_enabled
-    $shuffle $proportional
+    $shuffle $proportional $external_ballots
     $use_combined_ratings $choices @choices $num_choices $num_auth $num_votes
     $recorded_voters $ballot_reporting $reveal_voters $authorization_key
     %used_voter_keys $restrict_results $result_addrs $hash_result_key $no_opinion
@@ -48,7 +48,7 @@ our ($election_dir, $started_file, $stopped_file, $election_data, $election_log,
 our (%edata, %vdata);
 our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      @addresses, $election_begin, $election_end, $public, $writeins, $allow_voting, $voting_enabled,
-     $proportional, $use_combined_ratings,
+     $proportional, $use_combined_ratings, $external_ballots,
      $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
      $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
@@ -103,6 +103,7 @@ sub init {
     $num_votes = $vdata{'num_votes'} or $num_votes = 0;
     $recorded_voters = $vdata{'recorded_voters'};
     $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';
+    $external_ballots = $edata{'external_ballots'} or $external_ballots = 'no';
     $reveal_voters = $edata{'reveal_voters'} or $reveal_voters = '';
     $restrict_results = $edata{'restrict_results'};
     $result_addrs = $edata{'result_addrs'};

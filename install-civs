@@ -45,13 +45,14 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	     -e 's|@PERLEXT@|'$PERLEXT'|' \
 	     -e 's|@USING_ISA@|'$USING_ISA'|' \
+	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	< $f > "${HTMLDIR}/$f"
     done
 
     for f in add_voters beatpath.pm beatpath2.pm civs_common.pm close control \
-        create_election download_ballots election.pm mail.pm results \
-		start_election vote rp.pm runoff.pm admctrl.pm
+        create_election download_ballots upload_ballots results \
+	election.pm mail.pm start_election vote rp.pm runoff.pm admctrl.pm
     do
 	target="${CGIBINDIR}/${f}"
 	if test -n "$PERLEXT"
@@ -75,6 +76,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	     -e 's|@PERLEXT@|'$PERLEXT'|' \
 	     -e 's|@USING_ISA@|'$USING_ISA'|' \
+	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	 	 < "cgi-bin/$f" > "$target"
 	chmod a+x "$target"
