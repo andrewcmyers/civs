@@ -96,6 +96,10 @@ can't learn what my voters are voting on?</b> Yes, just
 give your choices nondescriptive names like A, B, C, .... Then, send
 all voters an explanation of what those names stand for. Less convenient
 for voters, but completely private.
+
+<li><b>Can poll choices include images?</b> Sure. Just use an
+HTML &lt;img&gt; tag. Several standard HTML tags are supported,
+though there is filtering to prevent XSS attacks.
 </ol>
 
 <h2>Running a poll</h2>
@@ -154,7 +158,7 @@ becomes useless because it doesn't express any preferences.  Voters often pick
 &ldquo;no opinion&rdquo; when what they mean is that they don't like the choice
 or that they don't have any information about it. In these situations, it is often better to give the choice a low rank rather than to select &ldquo;no
 opinion&rdquo;. A good reason for a voter to give a choice the rank
-``no opinion'' is because the voter isn't <strong>supposed</strong> to
+&ldquo;no opinion&rdquo; is because the voter isn't <strong>supposed</strong> to
 express an opinion about that choice.
 </ol>
 
