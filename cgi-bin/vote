@@ -478,7 +478,7 @@ sub IntroduceVoting {
 		    choice, and so on. ';
 	    print '</p>';
 	}
-	print "<a href=\"$civs_home\">(More information on Condorcet methods)</a></p>", $cr, $cr;
+	print "<a href=\"$civs_home\">[More information on Condorcet methods]</a></p>", $cr, $cr;
     } else {
 	print '<p>This poll is decided using an experimental
 	Condorcet-based algorithm designed to provide proportional

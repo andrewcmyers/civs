@@ -198,7 +198,9 @@ sub ComputeResults {
     } else {
 	print RESULTS 'Poll has not yet ended.', br();
     }
-    if ($public ne 'yes') {
+    if ($external_ballots eq 'yes') {
+	print RESULTS "This is a test poll.", br();
+    } elsif ($public ne 'yes') {
 	print RESULTS "Private poll ($num_auth authorized voters)", br();
     } else {
 	print RESULTS "This is a public poll.", br();
