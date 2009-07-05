@@ -124,7 +124,9 @@ sub HTML_Header {
       } else {
 	print header(), start_html(-title => $title,
 				   -style => {'src' => "@CIVSURL@/style.css"},
-				   -script => {'src' => "@CIVSURL@/$js"},
+				   -script => [{'src' => "@CIVSURL@/$js"},
+				               {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"},
+				               {'src' => "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}], 
 				   -onLoad => "setup()");
       }
     }
