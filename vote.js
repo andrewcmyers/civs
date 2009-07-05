@@ -381,4 +381,35 @@ function setup() {
     cur_bot = num_choices;
 
     sort_rows();
+
+	//DRAGGABLE CODE
+	$('#preftable tbody').sortable({'items':'tr', 'axis':'y', 
+		'update':function(e,u){
+
+			var this_select = u.item.find('select')[0];
+			scan_ranks();
+			var this_rank = this_select.selectedIndex + 1;	
+			num_at_rank[this_rank]--;
+
+			var max_prev_rank = 0;
+			var prev_left = 0;
+			$('#preftable').find('select').each(function() {
+				var i = $(this)[0].selectedIndex + 1;
+				if($(this)[0] == this_select) {
+					if (prev_left > 0)
+						$(this)[0].selectedIndex = max_prev_rank;
+					else
+						$(this)[0].selectedIndex = max_prev_rank++;
+				} else {
+					prev_left = --num_at_rank[i];
+					if(num_at_rank[i] > 0)
+						$(this)[0].selectedIndex = max_prev_rank;
+					else
+						$(this)[0].selectedIndex = max_prev_rank++;
+				}
+
+			});
+			read_rows();
+		}});
+	//END DRAGGABLE
 }
