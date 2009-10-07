@@ -121,3 +121,4 @@ dd { font-size: 90%; margin-left: 3em }
 table#completion_meter { border-style: solid; border-width: 1px; border-color: black; width: 250px; padding: 0; margin: 0}
 td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
 td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
+table#civs_uses {font-size: 90%}
