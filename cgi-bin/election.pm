@@ -559,8 +559,8 @@ sub SendKeys {
 	    my $uniqueid = &SecureNonce;
 	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
-	    Send "mail from: $civs_supervisor"; ConsumeSMTP;
-            Send "rcpt to: $v"; ConsumeSMTP;
+	    Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
+            Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
             Send "From: $email_addr ($name, CIVS poll supervisor)";
             Send "Sender: $email_addr";

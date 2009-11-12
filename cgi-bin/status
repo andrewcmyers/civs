@@ -1,4 +1,7 @@
 #!@PERL@
+#
+# Monitor the status of a CIVS election server. The URL of this script
+# should be kept private.
 
 use strict;
 use warnings;
@@ -44,15 +47,18 @@ while (defined(my $file = readdir(DIR))) {
     if (!defined($email_addr)) {
 	$email_addr = "(no addr)";
     }
-	my $public = (defined($edata{'public'}) && $edata{'public'} eq 'yes') ? "Public" : "Private";
+    my $public = (defined($edata{'public'}) && $edata{'public'} eq 'yes') ? "Public" : "Private";
+    if (defined($edata{'external_ballots'}) &&
+	  $edata{'external_ballots'} eq 'yes')
+	{ $public = 'Test'; }
     my $num_auth = $edata{'num_auth'};
     if (!defined($num_auth)) { $num_auth = '&ndash;'; }
     my $num_votes = $vdata{'num_votes'};
     if (!defined($num_votes)) { $num_votes = '&ndash;'; }
     my $started;
     if (-e $started_file) {
-	if (defined($edata{'election_begin'}) {
-	    $started = localtime($edata{'election_begin'});
+	if (defined($edata{'election_begin'})) {
+	    $started = '<small>'.localtime($edata{'election_begin'}).'</small>';
 	} else {
 	    $started = "Yes";
 	}
@@ -77,17 +83,9 @@ while (defined(my $file = readdir(DIR))) {
 	$title = '(no title)';
     }
 
-    push @rows, Tr(td([a({-href=>'@CIVSBINURL@/results@PERLEXT@?id='.$file}, small($title)),
-    #push @rows, Tr(td([$file,
-                       "$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
-                       $public,
-                       $num_auth,
-                       $num_votes,
-                       $started,
-                       $stopped,
-                       $auth_key,
-                       small($last_update)
-                       ]));
+    push @entries,
+     [($mtime, $file, $title, $name, $email_addr, $public,
+       $num_auth, $num_votes, $started, $stopped, $auth_key, $last_update)];
 
     untie %edata;
     untie %vdata;
@@ -98,9 +96,9 @@ our $compares = '';
 @entries = sort { $b->[0] <=> $a->[0] } @entries;
 
 my @rows = ();
-push @rows, th(['Title', 'Supervisor', 'Public/Private', '# Authorized',
-                '# Votes', 'Started?', 'Stopped?', 'Uses auth. key?',
-                'Last updated', 'Delete']);
+push @rows, th(['Title', 'Supervisor', 'Type', '# Auth',
+                'Votes', 'Start', 'Stopped',
+                'Last update', 'Delete']);
 
 foreach my $entry (@entries) {
     (my $mtime, my $file, my $title, my $name, my $email_addr, my $public,
@@ -115,12 +113,11 @@ foreach my $entry (@entries) {
 	$num_votes,
 	$started,
 	$stopped,
-	$auth_key,
 	small($last_update),
 	a({-href=>"delete_election.pl?id=$file&pwd=foo"},"Delete")
 	]));
 }
 
-print table({}, @rows);
+print table({-class => 'status'}, @rows);
             
 print end_html();

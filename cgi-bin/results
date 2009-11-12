@@ -475,7 +475,7 @@ sub PrintRanking {
 # public election?
 	for (my $i = 0; $i <= $#winner; $i++) {
 	    if ($i > 0) { print RESULTS '<br>', $cr; }
-	    if ($tie) { print RESULTS '<font color=red>'; }
+	    if ($tie) { print RESULTS '<span class=warning>'; }
 	    my $explanation = '';
 	    if ($rank > 0) {
 		for (my $brank = $rank-1; $brank >= 0; $brank--) {
@@ -497,7 +497,7 @@ sub PrintRanking {
 		if ($winner[$i] == $condorcet_winner) {
 		    $explanation = '&nbsp;&nbsp;(Condorcet winner: wins contests with all other choices)';
 		} else {
-		    $explanation = '&nbsp;&nbsp;(Not defeated in any contest with another choice)';
+		    $explanation = '&nbsp;&nbsp;(Not defeated in any contest vs. another choice)';
 		}
 	    }
 	    if (0 && $explanation ne '') {
@@ -523,7 +523,7 @@ sub PrintRanking {
 	    if (0 && $explanation ne '') {
 		print RESULTS '</span>';
 	    }
-	    if ($tie) { print RESULTS '</font>'; }
+	    if ($tie) { print RESULTS '</span>'; }
 	}
 	$num_seen += $#winner + 1;
 	print RESULTS '</td>', $cr, '</tr>', $cr;

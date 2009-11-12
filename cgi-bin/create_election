@@ -197,8 +197,8 @@ if (!($local_debug)) {
 
 ConnectMail;
 my $civs_supervisor = '@SUPERVISOR@';
-Send "mail from: $civs_supervisor"; ConsumeSMTP;
-Send "rcpt to: $email_addr"; ConsumeSMTP;
+Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
+Send "rcpt to:<$email_addr>"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
 Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
 Send "To: $email_addr ($name)";
@@ -255,8 +255,8 @@ sub SendResultKey {
 
 	my $url = "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
 	my $civs_supervisor = '@SUPERVISOR@';
-	Send "mail from: $civs_supervisor"; ConsumeSMTP;
-	Send "rcpt to: $addr"; ConsumeSMTP;
+	Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
+	Send "rcpt to:<$addr>"; ConsumeSMTP;
 	Send "data"; ConsumeSMTP;
 	Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
 	Send "To: $addr";

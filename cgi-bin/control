@@ -80,13 +80,15 @@ if (!IsStarted) {
 		    print "</form>", $cr;
 		}
     }
-    if ($public eq 'yes') {
+    if ($external_ballots eq 'yes') {
+	print p('This is a test poll.'), $cr;
+    } elsif ($public eq 'yes') {
 		my $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
 		$url .= "&akey=$authorization_key" 
 			if defined($authorization_key);
 		print p("This is a public poll. You may share the following link
                  with voters to allow them to vote."),
-              p("<tt><a href=\"$url\">$url</a></tt>").$cr;
+              p("<tt><a href=\"$url\">$url</a></tt>"), $cr;
     }
 
 } else {    
