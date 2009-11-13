@@ -16,7 +16,7 @@
       <h1>&nbsp;Condorcet Internet Voting Service</h1>
     </td>
     <td width=0% nowrap valign=top align=right>
-	<a href="@CIVSHOME@">CIVS Home</a><br>
+	<a href="@CIVSHOME@">CIVS</a><br>
 	<a href="@CIVSURL@/civs_create.html">Create new election</a><br>
 	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a>
     </td>
@@ -87,6 +87,7 @@ Recent updates:
 <li>Support for test polls in which ballots are uploaded.
 <li>Record start time of polls.
 <li>Better write-in filtering.
+<li>Fixed interaction with rigorous SMTP servers.
 </ul>
 
 <li>2.11:
@@ -94,9 +95,9 @@ Recent updates:
 <li>Elections are now called "polls" uniformly, per a user suggestion.
 <li>Results are now cached, which should improve server performance
 a great deal for large polls.
-<li>Schulze algorithm now uses "against" preferences in addition to "for"
-preferences. It now tends to agree with CIVS RP more often, perhaps because
-it no longer throws away information that CIVS RP uses.
+<li>Schulze/beatpath algorithm now uses "against" preferences in addition to
+"for" preferences. It now tends to agree with CIVS RP more often, perhaps
+because it no longer throws away information that CIVS RP uses.
 <li>All completion methods are now in a standardized form, which makes
 it easy to add new completion methods. It requires writing a Perl package
 that implements <code>rank_candidates</code> and <code>print_details</code>,
