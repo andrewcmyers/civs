@@ -30,57 +30,80 @@
 <h2>Overview</h2>
 
 <p>
-CIVS supports an experimental mode in which it can be
-used to select multiple candidates while enforcing
-proportional representation. Roughly speaking, a set of voters can
-only influence the selection of a fraction of the selected
-candidates that is proportional to the number of voters.
+CIVS supports an experimental mode in which it can be used to select multiple
+candidates while enforcing proportional representation. We refer to the
+possible sets of selected candidates as <i>committees</i>. The goal is to pick
+the best committee in a proportional way.  Roughly speaking, this means that a
+set of voters can only influence a fraction of the selected committee that is
+proportional to the number of voters in that set.
 </p>
 
 <p>
-For example, suppose that 60% of the voters want candidates
-<i>A</i>, <i>B</i>, <i>C</i>, <i>D</i>, and <i>E</i>, in that order, and 40% want <i>X</i>, <i>Y</i>, <i>Z</i>, <i>U</i>, and <i>V</i>.
-Ordinary Condorcet voting will rank
-<i>A</i>, <i>B</i>, <i>C</i>, <i>D</i>, and <i>E</i> higher
-than the other five candidates, because a majority likes
-them better. For some tasks, this is the right way to run
-the election. However, if the election is selecting a
-five-person committee to
-represent the whole population, 40% would have no representation
-at all. The proportional representation algorithm used by
-CIVS would elect the candidates <i>A</i>, <i>B</i>, <i>C</i>, <i>X</i>, and
-<i>Y</i> (we will write this result as <i>ABCXY</i>), achieving
-perfect proportional representation.
+For example, suppose that 60% of the voters want candidates <i>A</i>, <i>B</i>,
+<i>C</i>, <i>D</i>, and <i>E</i>, in that order, and 40% want <i>X</i>,
+<i>Y</i>, <i>Z</i>, <i>U</i>, and <i>V</i>.  Ordinary Condorcet voting will
+rank <i>A</i>, <i>B</i>, <i>C</i>, <i>D</i>, and <i>E</i> higher than the other
+five candidates, because a majority likes them better. For some tasks, this is
+the right way to run the election. However, if the election is selecting a
+five-person committee to represent the whole population, choosing the committee
+ABCDE would mean 40% have no representation at all. The proportional
+representation algorithm used by CIVS would elect the committee ABCXY,
+achieving perfect proportional representation.
+
+<p>In general, if there are n blocs of voters who always choose candidates from
+their disjoint factions, the number of candidates from a given faction in the
+selected committee is proportional to the number of voters, except that the
+number of candidates may be rounded up or down.
 </p>
 
 <h2>Determining the winning committee</h2>
 
 The rule used is a generalization of ordinary Condorcet
-voting. First, preferences expressed on
-individual candidates are lifted to obtain preferences on whole committees of
-<i>k</i> members. Then
-Condorcet methods are used to pick the &ldquo;best&rdquo;
-committee. The trick is to lift the preferences in a way
-that doesn't simply let a majority dictate the composition
-of the committee.
+voting. First, the voters' preferences, expressed on
+individual candidates, are lifted to obtain their preferences on whole <i>committees</i> of
+<i>k</i> members. Then using the preferences on whole committees, a
+standard Condorcet method is used to pick the &ldquo;best&rdquo;
+committee in the Condorcet sense.
+The key to making this method proportional
+is to lift the preferences in a way that doesn't simply let a
+majority dictate the composition of the entire committee.
 
-We say that a given voter has an <i>f</i>-preference for
-possible committee <i>A</i> over another, <i>B</i>,
-if the voter prefers <i>A</i> to <i>B</i> when considering only
-the <i>f</i> most preferred candidates on each committee.
-We can compare any two possible committees for all values of
-<i>f</i> from 1 to <i>k</i> by determining for each voter
-and each value of <i>f</i> whether they have an <i>f</i>-preference for one of the two
-committees over the other, and summing up the number of
-voters with a preference for one and the number with a
-preference for the other. Suppose that the number of voters
-with a preference for committee 1 is <i>v</i> and there are
+<h3>f-Preferences</h3>
+<p>
+Lifting is achieved through what we call <i>f</i>-preferences.  A given voter
+has an <i>f</i>-preference for possible committee <i>A</i> over another,
+<i>B</i>, if the voter prefers <i>A</i> to <i>B</i> when considering
+in each committee <b>only</b> the <i>f</i> candidates most preferred
+by that voter.  For example, a voter has 1-preference for committee 1 over
+committee 2 if the voter' favorite candidate in committee 1 is preferred by
+that voter over the voter's favorite candidate in committee 2.  The voter has a
+2-preference for committee 1 over committee 2 if the two favorite candidates on
+committee 1 are preferred over the two favorite candidates on committee 2.
+Determining whether a given voter prefers one pair (or generally, set) of
+candidates over another set is a separate issue that is discussed below.
+</p>
+
+
+<h3>Comparing committees</h3>
+<p>
+A Condorcet method requires that we be able to be able to compare two choices
+pairwise, and derive the strength of the voters' preference between
+each pair. In this case the choices are committees. To compare two committees,
+we compute the aggregate f-preference of the voters for all values of f between
+1 and k. The aggregate f-preference for committee 1 over committee 2 is the
+number of voters with an f-preference for 1 over 2. 
+</p>
+
+<h3>Proportional preferences</h3>
+<p>
+Suppose that the number of voters
+with a preference for committee 1 over committee 2 is <i>v</i> and there are
 <i>n</i> voters overall. Then an <i>f</i>-preference for
-committee 1 is <b>valid</b> if
+committee 1 is <b>proportionally valid</b> if
 <i>v</i>(<i>k</i>+1)/<i>n</i> &#8805; <i>f</i>.
 Invalid preferences are usually ignored in deciding the winner; to decide whether
 committee 1 is preferred over committee 2, we find the
-largest <i>f</i> such that <i>v</i> voters have a valid
+largest <i>f</i> such that <i>v</i> voters have a proportionally valid
 <i>f</i>-preference for one of the two committees. This <i>v</i>
 becomes the strength of the preference in the ordinary
 Condorcet sense; this is called the <i>proportional preference</i> here.
@@ -91,14 +114,17 @@ in cases where the minority is indifferent.</p>
 <p>For <i>k</i>=1, this voting
 scheme is simply the ordinary Condorcet scheme. For
 larger <i>k</i>, it yields proportional results. In the
-above example, the 60% have no valid preference for
+above example, the 60% have no proportionally valid preference for
 <i>ABCDE</i> over <i>ABCXY</i> because their maximum
-valid preference is a 3-preference (because 3/6 &le; 60% &lt; 4/6).
+proportionally valid preference is a 3-preference (because 3/6 &le; 60% &lt; 4/6).
 The 40%, on the other hand, have a valid 2-preference for the second result
 (because 2/6 &le; 40% &lt; 3/6), so <i>ABCXY</i> is the winning committee,
 as desired.</p>
 
-<p>The factor (<i>k</i>+1) may be surprising in the validity condition,
+<h3>Fairness</h3>
+
+<p>The factor (<i>k</i>+1) may be surprising in the condition for
+proportional validity,
 but it actually agrees with proportional representation voting schemes
 developed elsewhere; it is analogous to the
 <a href="http://www.encyclopedia4u.com/d/droop-quota.html">
@@ -134,19 +160,20 @@ would result in a higher level of overrepresentation in some cases.
 
 <h2>Determining a voter's preference</h2>
 
-<p>There is also the question of how to decide whether a voter prefers
-one committee over another. In proportional representation mode, there
-is only one difference from the voter's perspective: instead of ranking
-the candidates, the voter gives
-a nonnegative <b>weight</b> to each candidate. The voting algorithm
-decides which of two committees would be preferred by a candidate using
-one of two criteria, <i>combined weights</i> or <i>best candidate</i>:
+<p>We deferred the question of how to decide whether a voter prefers one set of
+<i>f</i> candidates over another, where a set of candidates is a subset of a
+committee. In proportional representation mode, there is only one difference
+from the voter's perspective.  The voting algorithm decides which of two
+committees would be preferred by a candidate using one of two criteria,
+<i>combined weights</i> or <i>best candidate</i>.
 
 <p>
 <a name="combinedrating">
 <strong>Combined weights.</strong>
 </a>
-The voter's goal is to maximize the sum of weights
+In combined weights mode, the voter gives a nonnegative <b>weight</b> to
+each candidate instead of ranking the candidates. The voter's goal is to
+maximize the sum of weights
 of selected candidates. This is an appropriate criterion for elections where
 the quality of all the candidates is important to the voters, such as
 the election of an actual committee that will be voting on some issues.
@@ -165,30 +192,33 @@ can be determined: if <i>A</i> is given a weight of
 10 and <i>B</i> and <i>C</i> have weights 8 and 6 respectively, then the voting
 algorithm will (on the voter's behalf) work towards electing
 <i>BC</i> in preference to <i>A</i>, because 14 &gt; 10.
-However, if <i>B</i> and <i>C</i> were instead given weights 4 and 2, the voter would have expressed that <i>A</i> is preferred to <i>BC</i> because 6 &lt; 10.<br>
+However, if <i>B</i> and <i>C</i> were instead given weights 4 and 2, the voter would have expressed that <i>A</i> is preferred to <i>BC</i>
+because 6 &lt; 10.
 </p>
 
 <p>
 <a name="bestcandidate">
 <strong>Best candidate.</strong>
 </a>
-With this criterion, the voter's goal is to get a single very good candidate
-elected possible, and the quality of other elected candidates is a strictly
-secondary consideration.  This is appropriate for an election where the voter
-really only cares about the best candidate: for example, the selection of a
-set of entree dishes for a menu, where the voter will only eat one of
-the entrees.  Here, two committees are compared using their best candidates
-(according to the voter); other candidates are considered only if the voter has
-no preference between the best candidates. In the examples above, <i>A</i>
-would be preferred to <i>BC</i> in either case, because <i>A</i> is preferred
-to <i>B</i>.</p>
+In best candidate mode, the voter's goal is to get a single very good candidate
+elected, and the quality of other elected candidates is a strictly secondary
+consideration.  This is appropriate for an election where the voter really only
+cares about the best candidate: for example, the selection of a set of entree
+dishes for a menu, where the voter will only eat one of the entrees.  Here, two
+committees are compared using their best candidates (according to the voter);
+other candidates are considered only if the voter has no preference between the
+best candidates. In the examples above, <i>A</i> would be preferred to
+<i>BC</i> in either case, because <i>A</i> is preferred to <i>B</i>. If the
+most-preferred candidate in each committee is equally preferred, then the
+second-most preferred candidate is used, and so on up to candidate <i>f</i>.
+</p>
 
 <h2>Algorithm</h2>
 
 <p>
 The voting scheme described above can be evaluated in
 a brute-force form by computing a preference
-matrix for all <i>f</i> in 1..<i>k</i>, where the matrix has size
+matrix for all <i>f</i> in 1..<i>k</i>. This matrix has size
 <b>C</b>(<i>c</i>,<i>k</i>)&times;<b>C</b>(<i>c</i>,<i>k</i>),
 where <i>c</i> is the number of candidates, and <b>C</b> is
 the combinatoric choose function. The storage and computational overhead of
