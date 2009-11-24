@@ -114,7 +114,8 @@ foreach my $entry (@entries) {
 	$started,
 	$stopped,
 	small($last_update),
-	a({-href=>"delete_election.pl?id=$file&pwd=foo"},"Delete")
+	a({-href=>"delete_election.pl?id=$file&pwd=foo"},"Delete"),
+	$cr,
 	]));
 }
 

@@ -489,7 +489,7 @@ sub IntroduceVoting {
 	choice to be part of the winning set of choices.';
 	print ' It is assumed by the voting algorithm that you want
 		the sum of weights of winning choices to be as large
-		as possible.';
+		as possible. ';
 	print "All choices
 	are currently given a weight of zero, meaning that you
 	have no interest in seeing them win.

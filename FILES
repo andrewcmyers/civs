@@ -31,7 +31,6 @@ civs/cgi-bin/vote
 civs/cgi-bin/beatpath.pm
 civs/cgi-bin/beatpath2.pm
 civs/cgi-bin/dump_election
-civs/cgi-bin/install-civs
 civs/cgi-bin/mail.pm
 civs/cgi-bin/rp.pm
 civs/cgi-bin/runoff.pm

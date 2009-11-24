@@ -93,7 +93,7 @@ table.links tr td {
 
 tr.selected { background-color: #ffffd0 }
 
-table.banner h1 {text-shadow: white 2px 2px 2px }
+table.banner h1 {text-shadow: white 2px 2px 4px }
 p.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
 div.list {padding: 1px 0px 1px 2ex}
 span.email {font-family: Courier New, courier, fixed; font-weight: 600}
