@@ -378,12 +378,14 @@ function drag_update(e, u) {
     var last_src = -1;
 
     while (i >= 0) {
-        // two cases: rank[i] is the same as the rank of the
+        // three cases: 1. rank[i] is the same as the rank of the
         // previous one. In this case map it to last_dest.
-        // Otherwise map it to last_used - 1;
+        // 2. Or it is less than last_dest, in which keep it the same.
+        // 3. Otherwise map it to last_used - 1;
         if (rank[i] != last_src) {
             last_src = rank[i];
-            last_dest--;
+            if (rank[i]-1 < last_dest) last_dest = rank[i]-1;
+            else last_dest--;
         }
         selector(rows[i]).selectedIndex = last_dest;
         i--;
@@ -394,7 +396,8 @@ function drag_update(e, u) {
     while (i < num_choices) {
         if (rank[i] != last_src) {
             last_src = rank[i];
-            last_dest++;
+            if (rank[i]-1 > last_dest) last_dest = rank[i]-1;
+            else last_dest++;
         }
         selector(rows[i]).selectedIndex = last_dest;
         i++;
