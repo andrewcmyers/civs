@@ -27,7 +27,7 @@ if ($filter_tags ne 'no') {
 	td => {colspan => [], rowspan => []},
 	tr => $ok,
 	dl => $ok, dt => $ok, dd => $ok,
-	span => $ok, div = $ok,
+	span => $ok, div => $ok,
 	small => $ok,
 	p => {align => ['left' | 'right' | 'center']},
 	ol => {type => ['a', '1', 'A']},
