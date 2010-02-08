@@ -360,7 +360,7 @@ function do_move_bottom() {
     cur_bot--;
 }
 
-// Update the ranks of the rows after a row is dragged
+// Correct the ranks of the rows after a row is dragged.
 function drag_update(e, u) {
     var this_select = u.item.find('select')[0];
     var rownum = 0;
@@ -384,7 +384,7 @@ function drag_update(e, u) {
         // 3. Otherwise map it to last_used - 1;
         if (rank[i] != last_src) {
             last_src = rank[i];
-            if (rank[i]-1 < last_dest) last_dest = rank[i]-1;
+            if (rank[i]-1 < last_dest) break;
             else last_dest--;
         }
         selector(rows[i]).selectedIndex = last_dest;
@@ -396,7 +396,7 @@ function drag_update(e, u) {
     while (i < num_choices) {
         if (rank[i] != last_src) {
             last_src = rank[i];
-            if (rank[i]-1 > last_dest) last_dest = rank[i]-1;
+            if (rank[i]-1 > last_dest) break;
             else last_dest++;
         }
         selector(rows[i]).selectedIndex = last_dest;
@@ -430,7 +430,7 @@ function setup() {
 
     sort_rows();
 
-    $('#preftable tbody').sortable({'items':'tr',
+    $('#preftable tbody').sortable({'items':'tr:not(.heading)',
 		    'axis':'y', 
 		    'update':drag_update});
 }

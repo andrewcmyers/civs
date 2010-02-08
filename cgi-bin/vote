@@ -129,7 +129,8 @@ print $cr, '<form method="POST"
 
 print '<table class="form" border="0" cellpadding="5" cellspacing="0"><tr><td>', $cr;
 
-print '<table border="1" cellpadding="5" cellspacing="0" id="preftable"><tr>
+print '<table border="1" cellpadding="5" cellspacing="0" id="preftable">
+   <tr class="heading">
 	<th>&nbsp;Choice&nbsp;</th>';
 if ($voting_enabled) {
     print '<th>'.$rating.'</th>';
