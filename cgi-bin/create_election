@@ -19,7 +19,6 @@ my $filter_tags = '@FILTER_TAGS@';
 
 my $tf;
 if ($filter_tags ne 'no') {
-
     $tf = new HTML::TagFilter;
     my $ok = {all => []};
     $tf->allow_tags({

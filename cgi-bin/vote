@@ -209,8 +209,10 @@ print '</tr></table>', $cr;
 
 
 if ($voting_enabled) {
-    print p('<input id=vote type="submit" value="Vote!" name="Vote">');
+    print p('<input id=vote type="submit" value="Submit this vote" name="Vote">');
 }
+
+print hr();
 
 print '<p id="sort_button"> Sort the choices by their current rank:
        <input type="submit" value="Sort" name="SortChoices"></p>';

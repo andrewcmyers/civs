@@ -409,10 +409,8 @@ function setup() {
     var jshelp = document.getElementById("jshelp");
     var curtext = jshelp.childNodes[0];
     jshelp.removeChild(curtext);
-    var jshelp_text = document.createTextNode(
-    "As you assign ranks, the choices will remain sorted in rank order.  You may assign ranks using either the pulldowns in the Rank column, the buttons above, or by dragging choices into position.");
+    var jshelp_text = document.createTextNode("You can rank choices in three ways: (1) drag into desired order (2) use pulldowns in Rank column (3) use buttons above");
     jshelp.appendChild(jshelp_text);
-
 
     preftable = document.getElementById("preftable");
     prefsection = preftable.rows[0].parentNode;
