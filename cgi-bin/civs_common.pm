@@ -125,7 +125,7 @@ sub HTML_Header {
 	print header(), start_html(-title => $title,
 				   -style => {'src' => "@CIVSURL@/style.css"},
 				   -script => [{'src' => "@CIVSURL@/$js"},
-				               {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"},
+				               {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
 				               {'src' => "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}], 
 				   -onLoad => "setup()");
       }
@@ -146,7 +146,7 @@ print
     <td width=100% valign=top nowrap>
     <h1>&nbsp;Condorcet Internet Voting Service</h1>
     </td>
-    <td width=0% nowrap valign=top align=right><a href=\"$civs_home\">CIVS</a><br>
+    <td width=0% nowrap valign=top align=right><a href=\"$civs_home\">About CIVS</a><br>
     <a href=\"$civs_url/civs_create.html\">Create new poll</a><br>
     <a href=\"$civs_url/sec_priv.html\">About security and privacy</a><br>
     <a href=\"$civs_url/faq.html\">FAQ</a><br>

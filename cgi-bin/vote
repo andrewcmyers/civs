@@ -485,7 +485,7 @@ sub IntroduceVoting {
     } else {
 	print '<p>This poll is decided using an experimental
 	Condorcet-based algorithm designed to provide proportional
-	representation.';
+	representation. ';
 
 	print 'Please give each of the following choices a
 	<b>weight</b> that expresses how much you want that

@@ -1,5 +1,10 @@
 # This is a sample CIVS config file, for use with the install-civs script.
 
+# Where the "About CIVS" links point.
+# Currently a pointer to the Cornell CIVS installation, can be
+# changed to point to another installation.
+CIVSHOME='http://www.cs.cornell.edu/andru/civs.html'
+
 # The address of the web server that is hosting CIVS (may include port number)
 THISHOST='MyServer.MyUniversity.edu'
 
