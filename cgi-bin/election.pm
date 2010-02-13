@@ -567,7 +567,7 @@ sub SendKeys {
             Send "Reply-To: $email_addr";
 	    Send "Message-ID: <$messageid>";
             Send "To: $v";
-            Send "Subject: CIVS Poll now available for voting: $title";
+            Send "Subject: Poll: $title";
 	    Send 'Content-Transfer-Encoding: 8bit';
             Send "Return-Path: $email_addr";
             Send 'X-Mailer: CIVS';
