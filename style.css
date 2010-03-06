@@ -22,6 +22,7 @@ body { background-color: #f8f8ff}
 table { background-color: #e8e8f0 }
 table.matrix { background-color: #e0e0f0 }
 table.form { background-color: transparent }
+table#ballot { margin: 0 auto }
 div.emphasized {
   background-color: #ffffd0; margin: 0px auto;
   padding: 5px;
@@ -30,7 +31,8 @@ div.emphasized {
   border-color: #cca
 }
 
-input#vote {font-size:140%; font-weight: bold; background-color: #ccf}
+input#vote {font-size:140%; font-weight: bold; background-color: #dd8}
+input#vote:hover {background-color: #8d8}
 
 span.explain {font-size: 75%; color: #404040 }
 
@@ -58,8 +60,24 @@ h1  { font-size: 180%; text-align: center}
 h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
-input, textarea { font-family: Verdana, helvetica, Arial, sans-serif;
+input[type=file] { background-color: #f8f0d0 }
+input, textarea, button { font-family: Verdana, helvetica, Arial, sans-serif;
            background-color: #fff8e0 }
+input:hover, button:hover, textarea:hover {background-color: #eeb}
+/* input[type=text]:active, textarea:active, input[type=file]:active
+    {background-color: #ffa}  -- a little too 'active' */
+
+input#download {
+    background-color: blue;
+    color: white;
+    border-style: solid;
+    border-color: black;
+    font-weight: bold
+}
+input#download:hover {
+    background-color: #88f
+}
+
 pre, xmp { font-family: Courier New, Courier, monospace; margin-left: 1em;
 	   font-size: 90% }
 kbd, tt, code { font-family: Courier New, Courier, monospace; font-size: 90% }

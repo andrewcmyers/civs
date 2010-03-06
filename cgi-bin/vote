@@ -127,7 +127,7 @@ print $cr, '<form method="POST"
         enctype="multipart/form-data"
         name="CastVote">';
 
-print '<table class="form" border="0" cellpadding="5" cellspacing="0"><tr><td>', $cr;
+print '<table class="form" id="ballot" border="0" cellpadding="5" cellspacing="0"><tr><td>', $cr;
 
 print '<table border="1" cellpadding="5" cellspacing="0" id="preftable">
    <tr class="heading">
@@ -206,12 +206,15 @@ if ($js_ui && $voting_enabled) {
 	</td></tr></table>
 	</td>', $cr;
 }
-print '</tr></table>', $cr;
+
+print '</tr>', $cr;
 
 
 if ($voting_enabled) {
-    print p('<input id=vote type="submit" value="Submit this vote" name="Vote">');
+    print '<tr><td><input id=vote type="submit" value="Submit this vote" name="Vote"><td>&nbsp;</td></tr>', $cr;
 }
+
+print '</table>', $cr;
 
 print hr();
 

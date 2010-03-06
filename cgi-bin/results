@@ -294,7 +294,7 @@ sub ComputeResults {
     } else { 
 	# &PrintCondorcetWinner;
 
-	print RESULTS h2('Ranking of the choices'), $cr;
+	print RESULTS h2('Ranking result'), $cr;
 
 	&PrintReport($algorithms{$algorithm});
     }
