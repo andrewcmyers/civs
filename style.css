@@ -5,7 +5,7 @@ a:hover      { color: #0000FF; background-color: transparent }
 body, table, p, ul, li, td  { font-family: Verdana, Arial, helvetica, sans-serif;
 			      font-size: 100%;  color: black }
 body {margin: 0 }
-div.contents {padding-left: 1em; padding-right: 1em; text-align: left }
+div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 
 div.home { text-align: justify; padding: 1em;
            width: 700px}
@@ -42,7 +42,10 @@ table.banner a:link { color: white }
 table.banner a:visited { color: white }
 table.banner a:hover { color: yellow }
 
-table.banner { background-color: #000080 }
+table.banner { background-image: url('sample-ballot.png');
+               background-color: #008;
+	       background-position: center left;
+	       background-repeat: repeat-x}
 table.banner h1 { color: white }
 table.banner h2 { color: white }
 
