@@ -129,7 +129,7 @@ print $cr, '<form method="POST"
 
 print '<table class="form" id="ballot" border="0" cellpadding="5" cellspacing="0"><tr><td>', $cr;
 
-print '<table border="1" cellpadding="5" cellspacing="0" id="preftable">
+print '<table cellpadding="5px" cellspacing="0" border="1" id="preftable">
    <tr class="heading">
 	<th>&nbsp;Choice&nbsp;</th>';
 if ($voting_enabled) {
@@ -157,9 +157,9 @@ for (my $i = 0; $i < $num_choices; $i++) {
     my $selected = $rank[$k];
     my $choice = $choices[$k];
     if ($js_ui) {
-	print "<tr onClick=\"select_row(this, event.shiftKey||event.ctrlKey);\"><td><b>$choice</b></td>", $cr;
+	print "<tr onClick=\"select_row(this, event.shiftKey||event.ctrlKey);\"><td class=choice>$choice</td>", $cr;
     } else {
-	print "<tr><td><b>$choice</b></td>", $cr;
+	print "<tr><td class=choice>$choice</td>", $cr;
     }
     if ($voting_enabled) {
 	if ($proportional ne 'yes' || !$use_combined_ratings) {
@@ -188,7 +188,7 @@ for (my $i = 0; $i < $num_choices; $i++) {
 }
 print '</table></td>', $cr;
 if ($js_ui && $voting_enabled) {
-    print '<td width="0" valign="top" align="center">
+    print '<td rowspan=2 width="0" valign="top" align="center">
 	<input type="button" id="move_top" disabled value="to top"
 	onClick="do_move_top()"><br>
 	<input type="button" id="move_up" disabled value="move up"
@@ -199,7 +199,7 @@ if ($js_ui && $voting_enabled) {
 	onClick="do_move_down()"><br>
 	<input type="button" id="move_bottom" disabled value="to bottom"
 	onClick="do_move_bottom()">
-	<table class="form" width="110"><tr><td>
+	<table class="form"><tr><td>
         <p align="left" style="font-size: 80%" id="jshelp">
 	These buttons are deactivated because
 	your browser does not support Javascript.</p>
@@ -211,7 +211,7 @@ print '</tr>', $cr;
 
 
 if ($voting_enabled) {
-    print '<tr><td><input id=vote type="submit" value="Submit this vote" name="Vote"><td>&nbsp;</td></tr>', $cr;
+    print '<tr><td><input id=vote type="submit" value="Submit ranking" name="Vote"></tr>', $cr;
 }
 
 print '</table>', $cr;
@@ -225,11 +225,11 @@ if ($writeins eq 'yes') {
     print '<p>Write in a new choice: <input type="text" size="60" name="writein">';
     print '<input type="submit" value="Add write-in" name="AddWritein"></p>';
 }
-if ($voting_enabled) {
-    print '<p>Read rankings from a saved voting page: ';
-    print '<input type="file" id=rankings_file type=file name="rankings_file">';
-    print '&nbsp; <input type="submit" id=load_rankings_file value="Load" name="Load">';
-}
+# if ($voting_enabled) {
+#   print '<p>Read rankings from a saved voting page: ';
+#   print '<input type="file" id=rankings_file type=file name="rankings_file">';
+#   print '&nbsp; <input type="submit" id=load_rankings_file value="Load" name="Load">';
+# }
 #print '<br>(To save a voting page, click "Sort" to collect
 #    your rankings and then just save this web page in your browser)</p>';
 # print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
@@ -239,7 +239,7 @@ print "</form>", $cr;
 if ($voting_enabled && $public eq 'yes') {
     print p("If you have already voted, you may see
 	<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-	the results of the poll.</a>");
+	the current poll results</a>.");
 }
 
 print end_html();
@@ -458,11 +458,10 @@ sub IntroduceVoting {
 	print "<p>Give each of the following choices
 	a rank, where a smaller-numbered rank means that you
 	prefer that choice more.
-	For example, it would make
-	sense to give your top choice (or choices) the rank 1.
-	You may give choices the same rank if you have no
+	For example, give your top choice the rank 1.
+	Give choices the same rank if you have no
 	preference between them. You do not have to use all the
-	possible ranks. All choices are initially given the
+	possible ranks. All choices initially have the
 	lowest possible rank.", $cr;
 	if ($no_opinion eq 'yes') {
 	    print '<b>Note:</b> &ldquo;No opinion&rdquo;
@@ -484,7 +483,7 @@ sub IntroduceVoting {
 		    choice, and so on. ';
 	    print '</p>';
 	}
-	print "<a href=\"$civs_home\">[More information on Condorcet methods]</a></p>", $cr, $cr;
+	print $cr, $cr;
     } else {
 	print '<p>This poll is decided using an experimental
 	Condorcet-based algorithm designed to provide proportional

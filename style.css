@@ -2,9 +2,12 @@ a            { text-decoration: none }
 a:link       { color: #339966; background-color: transparent; font-weight: bold }
 a:visited    { color: #009999; background-color: transparent; font-weight: bold }
 a:hover      { color: #0000FF; background-color: transparent }
-body, table, p, ul, li, td  { font-family: Verdana, Arial, helvetica, sans-serif;
-			      font-size: 100%;  color: black }
-body {margin: 0 }
+body, table, p, ul, li, td  {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 100%;
+    color: black
+}
+body {margin: 0}
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 
 div.home { text-align: justify; padding: 1em;
@@ -23,6 +26,7 @@ table { background-color: #e8e8f0 }
 table.matrix { background-color: #e0e0f0 }
 table.form { background-color: transparent }
 table#ballot { margin: 0 auto }
+table#ballot td { vertical-align: top; }
 div.emphasized {
   background-color: #ffffd0; margin: 0px auto;
   padding: 5px;
@@ -31,8 +35,8 @@ div.emphasized {
   border-color: #cca
 }
 
-input#vote {font-size:140%; font-weight: bold; background-color: #dd8}
-input#vote:hover {background-color: #8d8}
+input#vote {font-size:130%; font-weight: medium; background-color: #dd8}
+input#vote:hover {background-color: #ff6}
 
 span.explain {font-size: 75%; color: #404040 }
 
@@ -93,8 +97,18 @@ td.lose { font-family: Courier New, courier, fixed; text-align:center;
 	  background-color: #ffd0d0; font-weight: bold }
 td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
+table#preftable tr:hover td { background-color: #f0f0ff }
+table#preftable tr.selected:hover td { background-color: #ffffe0 }
+table#preftable { border-style: outset;
+		  margin: 0 auto;
+                  border-width: 1px;
+		  border-collapse: collapse;
+		  border-color: #abc }
+td.choice { font-weight: bold }
 table.matrix th { background-color: transparent; color: black }
-table.matrix, table.rankings { border-style: solid; border-width: 1px; border-color: #000040 }
+table.matrix, table.rankings { border-style: solid;
+      			       border-width: 1px;
+			       border-color: #000040 }
 table.rankings tr td { text-indent: -3ex; padding-left: 3ex }
 table.rankings tr td ol { text-indent: 0ex }
 
@@ -122,8 +136,8 @@ span.email {font-family: Courier New, courier, fixed; font-weight: 600}
 
 div.description { border-style: solid; border-width: 1px;
 		  background-color: #f0f0f0; color: black; padding: 5px;
-		  font-family: Verdana, Arial, helvetica, sans-serif;
-		}
+		  font-family: Verdana, Arial, helvetica, sans-serif; }
+p#jshelp {width: 36ex}
 
 div#details { border-style: solid; border-width: 1px; background-color: #f8f8ff;
               color: black; padding: 5px; margin: 5px;
@@ -143,3 +157,5 @@ table#completion_meter { border-style: solid; border-width: 1px; border-color: b
 td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
 td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
 table#civs_uses {font-size: 90%}
+
+#move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }

@@ -406,14 +406,31 @@ function drag_update(e, u) {
 }
 
 // initialize the UI
+
+Node.prototype.app = function(c) {
+    this.appendChild(c);
+    return this;
+}
+
+function el(t) {
+    return document.createElement(t);
+}
+function tx(t) {
+    return document.createTextNode(t);
+}
+
 function setup() {
     var button = document.getElementById("sort_button");
     button.parentNode.removeChild(button);
     var jshelp = document.getElementById("jshelp");
     var curtext = jshelp.childNodes[0];
     jshelp.removeChild(curtext);
-    var jshelp_text = document.createTextNode("You can rank choices in three ways: (1) drag into desired order (2) use pulldowns in Rank column (3) use buttons above");
-    jshelp.appendChild(jshelp_text);
+    jshelp
+       .app(tx("Rank the choices in one of three ways: "))
+       .app(el("ol")
+          .app(el("li").app(tx("drag the rows")))
+	  .app(el("li").app(tx("use pulldowns in Rank column")))
+	  .app(el("li").app(tx("select rows and use buttons above"))));
 
     preftable = document.getElementById("preftable");
     prefsection = preftable.rows[0].parentNode;
