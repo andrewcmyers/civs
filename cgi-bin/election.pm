@@ -175,7 +175,9 @@ sub OpenDatabase {
     tie %edata, "DB_File", $election_data, &O_RDWR, 0666, $DB_HASH
         or die "Unable to tie poll db=$election_data: $!\n";
     tie %vdata, "DB_File", $vote_data, &O_CREAT|&O_RDWR, 0666, $DB_HASH
-        or die "Unable to tie voter db=$vote_data: $!\n";
+	or die "Unable to tie voter db=$vote_data: $!\n";
+    
+
     $db_is_open = 1;
 }
 
@@ -507,12 +509,12 @@ sub SendBody {
 
 # Construct new voter keys for all of the voters sent in @_.
 # Send all of the voters their keys, with logging to STDOUT.
-# And record the keys in the database.
+# Record the keys in the database, and update the number of
+# authorized voters accordingly.
 sub SendKeys {
     my $authorization_key = shift;
     my $addresses_ref = shift;
     my @addresses =  &unique_elements( @{$addresses_ref} );
-    my $num_added = 0;
     if (!($local_debug)) { ConnectMail; }
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
@@ -536,7 +538,7 @@ sub SendKeys {
                       "The voter's key will be resent to the voter.\n";
             } else {
                 $voter_keys{$hash_voter_key} = 1;
-                $num_added++;
+                $num_auth++; $edata{'num_auth'} = $num_auth;
             }
             $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
                         ."&key=$voter_key";
@@ -627,8 +629,6 @@ For more information about the Condorcet Internet Voting Service, see:'.$cr.
         CloseMail;
     }
     STDOUT->flush();
-
-    return $num_added;
 }
 
 1; # ok!

@@ -51,8 +51,9 @@ sub Init_mail_socket {
 
 sub CheckAddr {
     (my $addr) = @_;
+    chomp $addr;
 
-    return ($addr =~ m/^[^@]+@[^@.]+\.[^@]*\w\w$/);
+    return ($addr =~ m/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|edu|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)$/i);
 }
 
 sub TrimAddr {
@@ -73,16 +74,24 @@ sub Send {
 }
 
 # Read a response from the SMTP server after making sure it has all
-# pending input. Exit if an error code is reported.
-sub ConsumeSMTP {
-    if ($local_debug) { return; }
+# pending input. Return zero iff an error code is reported.
+sub SendSMTP {
+    if ($local_debug) { return 1; }
     SMTP->flush;
     while (<SMTP>) {
 	if ($verbose) {
 	    print $_; STDOUT->flush();
 	}
 	if ($_ =~ m/^[123][0-9][0-9] /) { last; }
-	if ($_ =~ m/^[45][0-9][0-9] /) { print "SMTP server rejects request: $_"; exit 1; }
+	if ($_ =~ m/^[45][0-9][0-9] /) { print "SMTP server rejects request: $_"; return 0; }
+    }
+    return 1;
+}
+
+# Like SendSMTP, but terminates if there is an error.
+sub ConsumeSMTP {
+    if (!SendSMTP) {
+	exit 1;
     }
 }
 
