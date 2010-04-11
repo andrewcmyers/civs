@@ -20,7 +20,7 @@
 	<a href="@CIVSHOME@">About CIVS</a><br>
 	<a href="@CIVSURL@/civs_create.html">Create new poll</a><br>
 	<a href="@CIVSURL@/sec_priv.html">About security and privacy</a><br>
-	<a href="@CIVSURL@/faq.html">FAQ</a>
+	<a class=here href="@CIVSURL@/faq.html">FAQ</a>
     </td>
   </tr>
   <tr>
@@ -60,27 +60,29 @@ they are the ones that unananimously (n&ndash;0) beat this pseudo-choice.
 </li>
 
 <li><b>How big a poll can I run?</b><br>
+
 CIVS is used regularly for polls with hundreds of voters.  You can set up a
 public poll where any number of people can vote. Elections have been
 successfully run with a couple of thousand voters, and this is a load it should
-stand up to even if voters all try to vote around the same time. CIVS hasn't
-been tested at 10,000 voters or higher. The server is implemented in
-Perl, so it can handle about 4,000 voters per hour. If your voters don't show up
-faster than that, it should be fine no matter how many voters there are.  A
-faster Java version is in the works.  If you want to have a private poll,
-the system will only allow you to add 1,000 voters at a time, but in principle
-you can have as many voters as you want. Note that using the experimental
-proportional method for your poll dramatically increases the load on the
-CIVS server, so avoid that mode for large polls.
+stand up to even if voters all try to vote around the same time. Election
+results are now cached, so the system has become much more scalable.
+<p>
+However, CIVS hasn't been stress-tested at 10,000 voters or higher. The server
+is implemented in Perl, so it can easily handle 4,000 voters per hour. If your
+voters don't show up faster than that, it should be fine no matter how many
+voters there are.  If you want to have a private poll, the system will only
+allow you to add 1,000 voters at a time, but in principle you can have as many
+voters as you want. Note that using the experimental proportional method for
+your poll can dramatically increase the load on the CIVS server, so avoid that
+mode for large polls.
 <li>
 
 <b>How reliable is CIVS?</b><br>
+
 There have been no data losses due to hardware failure on the Cornell
-installation.  A race condition in CIVS code caused some corruption of voting
-data in one large poll a couple of years ago, but did not seem to 
-affect the poll result. This bug has long since been fixed in a way that
-should prevent all future race conditions. Each poll is stored in
-a separate database, so data corruption can only affect only one poll.
+installation, and no problems with poll results being corrupted due to bugs,
+since 2006. Each poll is stored in a separate database, so if there were
+data corruption, it could can affect only one poll.
 
 <li>
 <b>A complete ranking of choices could embarrass some candidates.
@@ -100,6 +102,12 @@ for voters, but completely private.
 <li><b>Can poll choices include images?</b> Sure. Just use an
 HTML &lt;img&gt; tag. Many standard HTML tags are supported,
 though there is filtering to prevent XSS attacks.
+
+<li><b>Why doesn't CIVS support my favorite election method (STV, ...)?</b>
+The focus has been on supporting Condorcet methods, which guarantee (when they can)
+that no one is preferred over the winner. However, the interface for adding new
+election methods is relatively clean, so you can add your own election methods if
+you like. We may even add them to CIVS if you provide them.
 </ol>
 
 <h2>Running a poll</h2>

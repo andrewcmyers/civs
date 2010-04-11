@@ -77,7 +77,7 @@ Lifting is achieved through what we call <i>f</i>-preferences.  A given voter
 has an <i>f</i>-preference for possible committee <i>A</i> over another,
 <i>B</i>, if the voter prefers <i>A</i> to <i>B</i> when considering
 in each committee <b>only</b> the <i>f</i> candidates most preferred
-by that voter.  For example, a voter has A-preference for committee A over
+by that voter.  For example, a voter has a 1-preference for committee A over
 committee B if the voter' favorite candidate in committee A is preferred by
 that voter over the voter's favorite candidate in committee B.  The voter has a
 2-preference for committee A over committee B if the two favorite candidates on
@@ -100,9 +100,10 @@ number of voters with an f-preference for A over B.
 <h3>Proportional preferences</h3>
 <p>
 Suppose that the number of voters
-with a preference for committee A over committee B is <i>v</i> and there are
-<i>n</i> voters overall. Then an <i>f</i>-preference for
-committee 1 is <b>proportionally valid</b> if
+with an <i>f</i>-preference for committee A
+over committee B is <i>v</i> and that there are
+<i>n</i> voters overall. Then the <i>f</i>-preference for
+committee A over committee B is <b>proportionally valid</b> if
 <i>v</i>(<i>k</i>+1)/<i>n</i> &#8805; <i>f</i>.
 Invalid preferences are usually ignored in deciding the winner; to decide whether
 committee A is preferred over committee B, we find the
@@ -115,20 +116,20 @@ for one committee over the other, then the full <i>k</i>-preference
 (the <b>nonproportional preference</b>) is used to break the tie. This rule allows majorities to break ties
 in cases where the minority is indifferent.</p>
 <p>For <i>k</i>=1, this voting
-scheme is simply the ordinary Condorcet scheme. For
+method is simply an ordinary Condorcet method. For
 larger <i>k</i>, it yields proportional results. In the
-above example, the 60% have no proportionally valid preference for
+initial example, the 60% have no proportionally valid preference for
 <i>abcde</i> over <i>abcxy</i> because their maximum
 proportionally valid preference is a 3-preference (because 3/6 &le; 60% &lt; 4/6).
-The 40%, on the other hand, have a valid 2-preference for the second result
-(because 2/6 &le; 40% &lt; 3/6), so <i>abcxy</i> is the winning committee,
-as desired.</p>
+The 40%, on the other hand, have a valid 2-preference for <i>abcxy</i>
+(because 2/6 &le; 40% &lt; 3/6). Therefore, <i>abcxy</i>
+is the winning committee, achieving proportionality.</p>
 
 <h3>Fairness</h3>
 
 <p>The factor (<i>k</i>+1) may be surprising in the condition for
 proportional validity,
-but it actually agrees with proportional representation voting schemes
+but it actually agrees with proportional representation election methods
 developed elsewhere; it is analogous to the
 <a href="http://www.encyclopedia4u.com/d/droop-quota.html">
 Droop quota</a> used by many STV election methods.
@@ -219,7 +220,7 @@ second-most preferred candidate is used, and so on up to candidate <i>f</i>.
 <h2>Algorithm</h2>
 
 <p>
-The voting scheme described above can be evaluated in
+The election method described above can be evaluated in
 a brute-force form by computing a preference
 matrix for all <i>f</i> in 1..<i>k</i>. This matrix has size
 <b>C</b>(<i>c</i>,<i>k</i>)&times;<b>C</b>(<i>c</i>,<i>k</i>),

@@ -407,9 +407,11 @@ function drag_update(e, u) {
 
 // initialize the UI
 
-Node.prototype.app = function(c) {
-    this.appendChild(c);
-    return this;
+if (window.navigator.appName != "Microsoft Internet Explorer") {
+    Element.prototype.app = function(c) {
+	this.appendChild(c);
+	return this;
+    }
 }
 
 function el(t) {
@@ -422,15 +424,11 @@ function tx(t) {
 function setup() {
     var button = document.getElementById("sort_button");
     button.parentNode.removeChild(button);
+    var jsnohelp = document.getElementById("jsnohelp");
     var jshelp = document.getElementById("jshelp");
     var curtext = jshelp.childNodes[0];
-    jshelp.removeChild(curtext);
-    jshelp
-       .app(tx("Rank the choices in one of three ways: "))
-       .app(el("ol")
-          .app(el("li").app(tx("drag the rows")))
-	  .app(el("li").app(tx("use pulldowns in Rank column")))
-	  .app(el("li").app(tx("select rows and use buttons above"))));
+    jsnohelp.style.display = 'none';
+    jshelp.style.display = 'block';
 
     preftable = document.getElementById("preftable");
     prefsection = preftable.rows[0].parentNode;
@@ -448,6 +446,6 @@ function setup() {
     sort_rows();
 
     $('#preftable tbody').sortable({'items':'tr:not(.heading)',
-		    'axis':'y', 
-		    'update':drag_update});
+			'axis':'y', 
+			'update':drag_update});
 }

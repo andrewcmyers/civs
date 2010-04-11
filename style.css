@@ -1,13 +1,11 @@
-a            { text-decoration: none }
-a:link       { color: #339966; background-color: transparent; font-weight: bold }
-a:visited    { color: #009999; background-color: transparent; font-weight: bold }
-a:hover      { color: #0000FF; background-color: transparent }
 body, table, p, ul, li, td  {
     font-family: Verdana, Arial, helvetica, sans-serif;
     font-size: 100%;
     color: black
 }
-body {margin: 0}
+body { margin: 0;
+       background-color: #f8f8ff }
+
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 
 div.home { text-align: justify; padding: 1em;
@@ -15,13 +13,18 @@ div.home { text-align: justify; padding: 1em;
 
 div.rlinks { width: 100%; }
 
+a.here, a.here:link, a.here:visited { color: #ffd }
+a            { text-decoration: none }
+a:link       { color: #339966; background-color: transparent; font-weight: bold }
+a:visited    { color: #009999; background-color: transparent; font-weight: bold }
+a:hover      { color: #0000FF; background-color: transparent }
+
 th              { font-family: Verdana, Arial, helvetica, sans-serif;
                   color: white;
 		  background-color: #000080;
 		  border-color: #000080;
 		  font-weight: bold }
 
-body { background-color: #f8f8ff}
 table { background-color: #e8e8f0 }
 table.matrix { background-color: #e0e0f0 }
 table.form { background-color: transparent }
@@ -35,7 +38,8 @@ div.emphasized {
   border-color: #cca
 }
 
-input#vote {font-size:130%; font-weight: medium; background-color: #dd8}
+input#vote {font-size:130%; font-weight: medium; background-color: #dd8;
+            margin: 0 auto}
 input#vote:hover {background-color: #ff6}
 
 span.explain {font-size: 75%; color: #404040 }
@@ -47,6 +51,7 @@ h1, h2, h3   { font-family: Trebuchet MS, Verdana, Arial, helvetica, sans-serif;
 table.banner a:link { color: white }
 table.banner a:visited { color: white }
 table.banner a:hover { color: yellow }
+table.banner a.here:visited { color: #ffe }
 
 table.banner { background-image: url('sample-ballot.png');
                background-color: #008;
@@ -98,6 +103,7 @@ td.lose { font-family: Courier New, courier, fixed; text-align:center;
 td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
 table#preftable tr:hover td { background-color: #f0f0ff }
+table#preftable td { cursor: move }
 table#preftable tr.selected:hover td { background-color: #ffffe0 }
 table#preftable { border-style: outset;
 		  margin: 0 auto;
@@ -115,14 +121,14 @@ table.rankings tr td ol { text-indent: 0ex }
 table.links {
     background-image: url('vertstrip.png');
     border-color: black;
-    border-style: solid;
-    border-width: 1px;
+    border-style: outset;
+    border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
+    border-width: 3px;
     margin: 5px
 }
 
 table.links tr td {
     padding: 5px;
-    border-style: none solid;
     border-width: 1px;
     margin: 0px
 }
@@ -138,7 +144,9 @@ span.email {font-family: Courier New, courier, fixed; font-weight: 600}
 div.description { border-style: solid; border-width: 1px;
 		  background-color: #f0f0f0; color: black; padding: 5px;
 		  font-family: Verdana, Arial, helvetica, sans-serif; }
-p#jshelp {width: 36ex}
+#jshelp p {text-align: left; width: 36ex}
+#jshelp ol {text-align: left; width: 36ex}
+p#jsnohelp {text-align: left; width: 36ex}
 
 div#details { border-style: solid; border-width: 1px; background-color: #f8f8ff;
               color: black; padding: 5px; margin: 5px;

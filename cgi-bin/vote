@@ -39,9 +39,9 @@ if (defined($proportional) && defined($use_combined_ratings) &&
     $proportional eq 'yes' && $use_combined_ratings) { $js_ui = 0; }
 
 if ($js_ui) {
-    HTML_Header('CIVS Voting', 'vote.js');
+    HTML_Header('CIVS Vote: '.$title, 'vote.js');
 } else {
-    HTML_Header('CIVS Voting');
+    HTML_Header('CIVS Vote: '.$title);
 }
 
 my $winners_text;
@@ -200,9 +200,18 @@ if ($js_ui && $voting_enabled) {
 	<input type="button" id="move_bottom" disabled value="to bottom"
 	onClick="do_move_bottom()">
 	<table class="form"><tr><td>
-        <p align="left" style="font-size: 80%" id="jshelp">
+        <p id="jsnohelp">
 	These buttons are deactivated because
 	your browser does not support Javascript.</p>
+        <div style="display: none" id="jshelp">
+	<p>
+	Rank the choices in one of three ways:
+	<ol>
+	<li>drag the rows
+	<li>use pulldowns in Rank column
+	<li>select rows and use buttons above
+	</ol>
+	</div>
 	</td></tr></table>
 	</td>', $cr;
 }

@@ -36,7 +36,8 @@ my %algorithm_modules = ('beatpath2', 1,
 # CheckLoad;
 # timeout(30);
 
-HTML_Header('CIVS Poll Results', 'results.js');
+HTML_Header("CIVS poll result", 'results.js');
+
 use election;
 
 CIVS_Header("Poll Results: $title");

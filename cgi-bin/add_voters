@@ -43,7 +43,7 @@ GetPrivateHostID;
 # Send all of the voters their keys
 SendKeys($authorization_key, \@new_addresses);
 
-print "$num_added voter(s) added\n";
+print "Total of $num_auth voter(s) authorized to vote.\n";
 print "Done.\n</pre>\n";
 
 my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
