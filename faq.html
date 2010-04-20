@@ -6,6 +6,10 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>Condorcet Internet Voting Service</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
+<style>
+  li b { color: #470; display: block }
+  ol li { margin-top: 0.5ex }
+</style>
 </head>
 
 <body>
@@ -35,12 +39,12 @@
 <h2>Setting up a poll</h2>
 <ol>
 <li><b>What is the difference between Condorcet voting and voting methods
-that I am familiar with?</b><br>
+that I am familiar with?</b>
 Condorcet voting methods let voters rank their preferences and do a good
 job of aggregating all the voter preferences into a single ranking.
 [&nbsp;<a href="rp.html">More&nbsp;information on Condorcet voting</a>&nbsp;]
 
-<li><b>For how long a period should I enable voting?</b><br>
+<li><b>For how long a period should I enable voting?</b>
 This is up to you. The best time period depends on your voters.
 For voters who are aware of the poll or who check email frequently,
 a couple of days is usually enough time. Most people vote right away, or
@@ -49,7 +53,7 @@ long, unless your intention is to set up a long-running public survey.
 </li>
 
 <li><b>I would like to separate out the acceptable choices from the
-unacceptable choices. Can I do that?</b><br>
+unacceptable choices. Can I do that?</b>
 Just create a choice named something like &ldquo;choices ranked below this
 are unacceptable&rdquo;. You can then use the poll results in
 various ways. If you want reject choices that are considered unacceptable
@@ -59,7 +63,7 @@ they are the ones that unananimously (n&ndash;0) beat this pseudo-choice.
 (This is handy for scheduling meetings where everyone needs to be present.)
 </li>
 
-<li><b>How big a poll can I run?</b><br>
+<li><b>How big a poll can I run?</b>
 
 CIVS is used regularly for polls with hundreds of voters.  You can set up a
 public poll where any number of people can vote. Elections have been
@@ -77,16 +81,16 @@ your poll can dramatically increase the load on the CIVS server, so avoid that
 mode for large polls.
 <li>
 
-<b>How reliable is CIVS?</b><br>
+<b>How reliable is CIVS?</b>
 
 There have been no data losses due to hardware failure on the Cornell
 installation, and no problems with poll results being corrupted due to bugs,
-since 2006. Each poll is stored in a separate database, so if there were
-data corruption, it could can affect only one poll.
+since 2006. Each poll is stored in a separate database, so if there
+<strong>were</strong> data corruption, it could can affect only one poll.
 
 <li>
 <b>A complete ranking of choices could embarrass some candidates.
-Can I avoid that?</b><br>
+Can I avoid that?</b>
 Ordinarily, full poll results are available to every voter. However,
 you can designate a smaller set of people who are allowed to see the poll
 results. They can then report the winners to the voters, using some mechanism
@@ -100,8 +104,8 @@ all voters an explanation of what those names stand for. Less convenient
 for voters, but completely private.
 
 <li><b>Can poll choices include images?</b> Sure. Just use an
-HTML &lt;img&gt; tag. Many standard HTML tags are supported,
-though there is filtering to prevent XSS attacks.
+HTML <tt>&lt;img&gt;</tt> tag. Many standard HTML tags are supported,
+though there is filtering to block XSS attacks.
 
 <li><b>Why doesn't CIVS support my favorite election method (STV, ...)?</b>
 The focus has been on supporting Condorcet methods, which guarantee (when they can)
@@ -112,7 +116,7 @@ you like. We may even add them to CIVS if you provide them.
 
 <h2>Running a poll</h2>
 <ol>
-<li><b>Some voters never got their voter keys. What do I do?</b><br>
+<li><b>Some voters never got their voter keys. What do I do?</b>
 It depends on whether you sent the voter key to the right address in the first
 place. If so, you can send it again by &ldquo;adding&rdquo; that voter with the
 poll control page. The same voter key will be generated, so
@@ -122,7 +126,7 @@ the voter under their correct email address. You can check with the CIVS
 supervisor whether the email bounced, assuming you were not notified.
 </li>
 
-<li><b>Why doesn't the poll end automatically at the specified time?</b><br>
+<li><b>Why doesn't the poll end automatically at the specified time?</b>
 We wanted to give poll supervisors the flexibility to write complex
 specifications of when the poll should end, such as &ldquo;by March 3 or
 when we get at least 100 votes&rdquo;. It's too hard to handle all these cases.
@@ -131,7 +135,7 @@ page. The supervisor needs to...supervise.
 </li>
 
 <li><b>The voters haven't bothered to vote. Can I send them their voter
-keys again?</b><br> Yes, just &ldquo;add&rdquo; them again at the poll control page.
+keys again?</b> Yes, just &ldquo;add&rdquo; them again at the poll control page.
 This will send them all email. Make sure you use exactly the same email address
 you did the first time; otherwise, a new voter key will be generated because
 it's a different voter as far as CIVS can tell. For security and privacy reasons,
@@ -139,26 +143,26 @@ CIVS doesn't record voter email or voter keys, so it has no way to send an alrea
 generated voter key to a new email address.
 </li>
 <li>
-<b>How long will poll results remain available?</b><br>
+<b>How long will poll results remain available?</b>
 We are making a best effort to keep poll results forever, for any poll
 that receives more than one vote and doesn't look like a test of the system.
 However, you may want to make a copy of the poll results page for
 posterity.
 </li>
-<li><b>Why doesn't the system notify voters when the poll has ended?</b><br>
+<li><b>Why doesn't the system notify voters when the poll has ended?</b>
 Because it doesn't know who the voters are any more. Once voter keys are
 sent out, all information about the voters is destroyed. It's the job of
 the poll supervisor to close the poll and notify voters or
 result recipients.
 </li>
 <li><b>Can I make current poll results visible before the poll closes?</b>
-<br>
+
 This increases the danger of strategic voting. However, it is the 
 behavior for &ldquo;public&rdquo; polls.
 </ol>
 <h2>Voting</h2>
 <ol>
-<li><b>What does &ldquo;no opinion&rdquo; mean?</b><br>
+<li><b>What does &ldquo;no opinion&rdquo; mean?</b>
 It means you are providing no information about how this choice ranks with
 respect to the other choices. For example, if you give one choice the rank 1,
 and give all other choices the rank &ldquo;no opinion&rdquo;, your ballot

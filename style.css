@@ -13,7 +13,6 @@ div.home { text-align: justify; padding: 1em;
 
 div.rlinks { width: 100%; }
 
-a.here, a.here:link, a.here:visited { color: #ffd }
 a            { text-decoration: none }
 a:link       { color: #339966; background-color: transparent; font-weight: bold }
 a:visited    { color: #009999; background-color: transparent; font-weight: bold }
@@ -51,7 +50,9 @@ h1, h2, h3   { font-family: Trebuchet MS, Verdana, Arial, helvetica, sans-serif;
 table.banner a:link { color: white }
 table.banner a:visited { color: white }
 table.banner a:hover { color: yellow }
-table.banner a.here:visited { color: #ffe }
+table.banner a.here, table.banner a.here:link, table.banner a.here:visited {
+    color: #bdf
+}
 
 table.banner { background-image: url('sample-ballot.png');
                background-color: #008;
@@ -120,11 +121,18 @@ table.rankings tr td ol { text-indent: 0ex }
 
 table.links {
     background-image: url('vertstrip.png');
-    border-color: black;
+    border-color: #bbc;
     border-style: outset;
     border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
     border-width: 3px;
     margin: 5px
+}
+
+.foo {
+    border-top-color: #cdd;
+    border-left-color: #cdd;
+    border-right-color: #ace;
+    border-bottom-color: #ace;
 }
 
 table.links tr td {
@@ -136,6 +144,7 @@ table.links tr td {
 tr.selected { background-color: #ffffd0 }
 
 table.banner h1 {text-shadow: white 2px 2px 4px }
+table.banner td {white-space: nowrap}
 p.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
 div.list {padding: 1px 0px 1px 2ex}
 span.email {font-family: Courier New, courier, fixed; font-weight: 600}

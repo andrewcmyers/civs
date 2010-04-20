@@ -216,15 +216,19 @@ sub print_details {
 	    } else {
 		my $w = $m->[$j][$k];
 		my $wlabel = "$w->[0]<small>&ndash;$w->[1]</small>";
+		my $wlabelt = "$w->[0]-$w->[1]";
+		if ($w->[0] == 0 && $w->[1] == 0) { $wlabelt = "none"; }
 		my $l = $m->[$k][$j];
 		my $llabel = "$l->[0]<small>&ndash;$l->[1]</small>";
+		my $llabelt = "$l->[0]-$l->[1]";
+		if ($l->[0] == 0 && $l->[1] == 0) { $llabelt = "none"; }
 		my $comparison = &compare_beats($w, $l);
 		if ($comparison > 0) {
-		    Print "<td class=\"win\" title=\"$wlabel vs. $llabel\">";
+		    Print "<td class=\"win\" title=\"$wlabelt vs. $llabelt\">";
 		} elsif ($comparison == 0) {
-		    Print "<td class=\"tie\" title=\"$wlabel vs. $llabel\">";
+		    Print "<td class=\"tie\" title=\"$wlabelt vs. $llabelt\">";
 		} else {
-		    Print "<td class=\"lose\" title=\"$wlabel vs. $llabel\">";
+		    Print "<td class=\"lose\" title=\"$wlabelt vs. $llabelt\">";
 		}
 		if ($w->[0] == 0) {
 		    Print '.';
