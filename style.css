@@ -176,4 +176,6 @@ td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 
 td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
 table#civs_uses {font-size: 90%}
 
+li b, strong { color: #842 }
+
 #move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }
