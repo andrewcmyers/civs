@@ -1,6 +1,7 @@
 package civs_common;  # should be CIVS, or perhaps CIVS::Common
 
 use strict;
+no strict 'refs';
 use warnings;
 use POSIX ":sys_wait_h";
 use Socket;
@@ -17,7 +18,7 @@ BEGIN {
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error
                       &unique_elements &civs_hash &system_load &CheckLoad
-		      $remote_ip_address);
+		      $remote_ip_address $languages $tx);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -33,18 +34,7 @@ BEGIN {
 our $local_debug;
 our $using_ISA = '@USING_ISA@';
 our $remote_ip_address;
-
-if ($using_ISA) {
-    $remote_ip_address = http('HTTP_IPREMOTEADDR');
-    if (!defined($remote_ip_address)) {
-	$remote_ip_address = http('HTTP_REMOTE_ADDRESS');
-    }
-    if (!defined($remote_ip_address)) {
-	$remote_ip_address = remote_addr();
-    }
-} else {
-    $remote_ip_address = remote_addr();
-}
+our $languages;
 
 
 
@@ -76,6 +66,8 @@ use CGI qw(:standard);
 use POSIX qw(strftime);
 use Digest::MD5 qw(md5_hex);
 use Fcntl qw(:flock);
+use languages;
+
 # use Time::HiRes qw(gettimeofday);
 
 # Exported package globals
@@ -100,7 +92,33 @@ our $html_header_printed = 0;
 
 sub init {
  &GetPrivateHostID;
+ &SetIPAddress;
+ &SetLanguage;
 }
+
+
+sub SetIPAddress {
+    if ($using_ISA) {
+	$remote_ip_address = http('HTTP_IPREMOTEADDR');
+	if (!defined($remote_ip_address)) {
+	    $remote_ip_address = http('HTTP_REMOTE_ADDRESS');
+	}
+	if (!defined($remote_ip_address)) {
+	    $remote_ip_address = remote_addr();
+	}
+    } else {
+	$remote_ip_address = remote_addr();
+    }
+}
+
+sub SetLanguage {
+    $languages = http('Accept-Language');
+    if (!defined($languages)) {
+	$languages = 'en-us';
+    }
+    &languages::init($languages);
+}
+
 
 sub GetPrivateHostID {
     if (!open(HOSTID, $private_host_id_file)) {
@@ -144,13 +162,13 @@ if ($local_debug) {
 print 
  "<tr>
     <td width=100% valign=top nowrap>
-    <h1>&nbsp;Condorcet Internet Voting Service</h1>
+    <h1>&nbsp;".$tx->Condorcet_Internet_Voting_Service."</h1>
     </td>
     <td width=0% nowrap valign=top align=right><a href=\"$civs_home\">About CIVS</a><br>
-    <a href=\"$civs_url/civs_create.html\">Create new poll</a><br>
-    <a href=\"$civs_url/sec_priv.html\">About security and privacy</a><br>
-    <a href=\"$civs_url/faq.html\">FAQ</a><br>
-    <a href=\"$suggestion_box\">CIVS suggestion box</a>
+    <a href=\"$civs_url/civs_create.html\">".$tx->create_new_poll."</a><br>
+    <a href=\"$civs_url/sec_priv.html\">".$tx->about_security_and_privacy."</a><br>
+    <a href=\"$civs_url/faq.html\">".$tx->FAQ."</a><br>
+    <a href=\"$suggestion_box\">".$tx->CIVS_suggestion_box."</a>
     </td>
   </tr>
   <tr>
@@ -170,8 +188,7 @@ sub Fatal_CIVS_Error {
 	&CIVS_Header("Error") unless $civs_header_printed;
 	
 	print h2("Error"),
-	      p("CIVS is unable to process your request
-	      because of an internal error.");
+	      p($tx->unable_to_process);
 	    print pre(@_);
 	print pre(@_) if $local_debug;
 	print end_html();

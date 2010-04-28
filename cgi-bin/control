@@ -14,13 +14,13 @@ use mail;
 
 my $thisurl = $civs_bin_path."/control@PERLEXT@";
 
-HTML_Header("CIVS Poll Control");
+HTML_Header($tx->CIVS_Poll_Control);
 use election 1.02;
 
 my $control_key = param('key');    
 my $authorization_key = param('akey');
 
-CIVS_Header("Poll control");
+CIVS_Header($tx->Poll_control);
 
 CheckElectionID;
 CheckControlKey($control_key);
@@ -33,23 +33,23 @@ if (!IsStarted) {
 		action=\"$civs_bin_path/start_election@PERLEXT@\"
 		enctype=\"multipart/form-data\"
 		name=\"Start\">", $cr;
-    print '<p>The poll has not yet started. Press this button to start it: ';
+    print '<p>'. $tx->poll_has_not_yet_started;
     print hidden('id', $election_id);
     print hidden('key', $control_key);
     print hidden('akey', $authorization_key)
 		if defined($authorization_key);
-    print '<input type="submit" value="Start poll" name="start">';
+    print '<input type="submit" value="'.$tx->start_poll.'" name="start">';
     print '</p></form>';
 } elsif (!IsStopped) {
     print "<form method=\"POST\"
 		action=\"$civs_bin_path/close@PERLEXT@\"
 		enctype=\"multipart/form-data\"
 		name=\"Close\">", $cr;
-    print '<p>The poll is in progress. Press this button to end it: ';
+    print '<p>'.$tx->the_poll_is_in_progress;
     print hidden('id', $election_id);
     print hidden('key', $control_key);
     print '<input type="submit" value="End poll" name="close"
-            onclick="confirm(\'Ending a poll is an operation that cannot be undone. Continue?\')">', $cr;
+            onclick="confirm(\'', $tx->ending_poll_cannot_be_undone, '\')">', $cr;
     print '</p></form>', $cr;
 
     if ($writeins eq 'yes') {
@@ -59,7 +59,7 @@ if (!IsStarted) {
 		}
 		if (param('nowriteins')) {
 		    $edata{'writeins'} = $writeins = 'no';
-		    print p('Write-in choices have been disabled');
+		    print p($tx->writeins_have_been_disabled);
 		} else {
 		    print "<form method=\"POST\"
 				action=\"$civs_bin_path/control@PERLEXT@\"
@@ -68,12 +68,16 @@ if (!IsStarted) {
 		    print p('Write-in choices are currently allowed.',
 			    hidden('id', $election_id),
 			    hidden('key', $control_key),
-			'<input type="submit" value="Disallow further write-ins" name="nowriteins">');
+			    '<input type="submit" value="',
+			        $tx->disallow_further_writeins,
+				'" name="nowriteins">');
 		    if ($allow_voting ne 'yes') {
-			print p('Voting is currently disabled during the write-in phase.',
+			print p($tx->voting_disabled_during_writeins,
 			    hidden('id', $election_id),
 			    hidden('key', $control_key),
-			'<input type="submit" value="Allow voting during write-in phase" name="allow_voting">');
+			'<input type="submit" value="',
+			  $tx->allow_voting_during_writeins,
+			  '" name="allow_voting">');
 		    }
 		    print hidden('akey', $authorization_key)
 			    if defined($authorization_key);
@@ -81,7 +85,7 @@ if (!IsStarted) {
 		}
     }
     if ($external_ballots eq 'yes') {
-	print p('This is a test poll.'), $cr;
+	print p($tx->this_is_a_test_poll), $cr;
     } elsif ($public eq 'yes') {
 		my $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
 		$url .= "&akey=$authorization_key" 
@@ -102,7 +106,7 @@ if (!IsStarted) {
     print p("The poll has ended.", $results_link);
 }
 
-print "Poll supervisor: $name (<tt>$email_addr</tt>)", br(), $cr;
+print $tx->poll_supervisor($name,$email_addr), br(), $cr;
 my $num_auth_string;
 if (IsStarted or $num_auth) {
 	$num_auth_string = "$num_auth"
@@ -110,7 +114,8 @@ if (IsStarted or $num_auth) {
 	my $waiting = $#addresses + 1;
 	$num_auth_string = "0 ($waiting voters will be authorized when the poll is started)";
 }
-print "Total authorized voters: $num_auth_string", br(), $cr unless $public eq 'yes';
+print $tx->total_authorized_voters($num_auth_string), br(), $cr
+    unless $public eq 'yes';
 
 $num_votes += 0;
 if ($restrict_results eq 'yes') {

@@ -65,11 +65,13 @@ sub TrimAddr {
 }
 
 sub Send {
-    if ($verbose || $local_debug) {
-	print $_[0]."\n"; STDOUT->flush();
-    }
-    if (!($local_debug)) {
-	print SMTP $_[0]."\r\n";
+    foreach my $s (@_) {
+	if ($verbose || $local_debug) {
+	    print $s."\n"; STDOUT->flush();
+	}
+	if (!($local_debug)) {
+	    print SMTP $s."\r\n";
+	}
     }
 }
 

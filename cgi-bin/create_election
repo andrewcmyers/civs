@@ -223,12 +223,11 @@ CloseMail;
 
 print "</pre>\n";
 
-print p("Mail has been sent to the address you provided (<tt>$email_addr</tt>).");
-print p("Click on the URL in that email to start the poll: <strong>$title</strong>.");
+print p($tx->mail_has_been_sent($email_addr));
+print p($tx->click_on_the_URL_to_start($title));
 
 } else { # debugging mode
-    print p('Here is the URL to control the new poll. In ordinary operation
-             this would be sent to the supervisor via email.');
+    print p($tx->here_is_the_control_URL);
     print pre("<a href=\"$url\">$url</a>");
 }
 
