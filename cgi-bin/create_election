@@ -48,7 +48,7 @@ my $email_addr = param('email_addr');
 $email_addr = mail::TrimAddr($email_addr);
 if (!&CheckAddr($email_addr)) {
     print header(), start_html("Invalid email address");
-    HTML_Header("CIVS Poll Creation");
+    HTML_Header($tx->CIVS_Poll_Creation);
     CIVS_Header();
     print h1("Invalid email address");
     print p("The address \"$email_addr\" is not acceptable");
@@ -95,7 +95,7 @@ foreach my $ch (@c2) {
 }
 
 if ($num_choices < 2) {
-    HTML_Header("CIVS Poll Creation");
+    HTML_Header($tx->CIVS_Poll_Creation);
     CIVS_Header();
     print h1("Error");
     print p('A poll must have at least two choices.');
@@ -110,7 +110,7 @@ my $election_dir = $home.'/elections/'.$election_id;
 my $election_data = $election_dir.'/election_data';
 
 if (!mkdir($election_dir)) {
-    HTML_Header("CIVS Poll Creation");
+    HTML_Header($tx->CIVS_Poll_Creation);
     CIVS_Header();
     print h1("Error");
     print p("The poll directory is not writeable");
@@ -178,8 +178,8 @@ if ($restrict_results eq 'yes') {
     $edata{'result_addrs'} = $result_addrs = param('result_addrs');
 }
 
-HTML_Header("CIVS Poll Creation");
-CIVS_Header("Poll created: $title");
+HTML_Header($tx->CIVS_Poll_Creation);
+CIVS_Header($tx->Poll_created($title));
 
 # print pre("public = $public");
 print "<pre>";

@@ -39,17 +39,12 @@ if (defined($proportional) && defined($use_combined_ratings) &&
     $proportional eq 'yes' && $use_combined_ratings) { $js_ui = 0; }
 
 if ($js_ui) {
-    HTML_Header('CIVS Vote: '.$title, 'vote.js');
+    HTML_Header($tx->page_header_CIVS_Vote($title), 'vote.js');
 } else {
-    HTML_Header('CIVS Vote: '.$title);
+    HTML_Header($tx->page_header_CIVS_Vote($title));
 }
 
-my $winners_text;
-if ($num_winners == 1) {
-    $winners_text = "single favorite choice";
-} else {
-    $winners_text = "$num_winners favorite choices";
-}
+my $winners_text = $tx->winners_text($num_winners);
 
 CIVS_Header($title);
 
@@ -101,14 +96,11 @@ if ($voting_enabled) {
 }
 
 if ($ballot_reporting eq 'yes') {
-    my $msg = b('Ballot reporting is enabled for this poll. ')
-	    . 'Your ballot (the rankings you assign to candidates) '
-	    . 'will be made public when the poll is closed.';
+    my $msg = strong($tx->ballot_reporting_is_enabled);
     if ($reveal_voters eq 'yes') {
-	$msg .= '<br><strong>Your email address will be visible</strong> along with your ballot.';
+	$msg .= '<br>'.$tx->address_will_be_visible();
     } else {
-	$msg .= ' However, your ballot will still be anonymous: '
-	      . 'no personally identifying information will appear.';
+	$msg .= $tx->ballot_will_be_anonymous();
     }
     if ($reveal_voters eq 'yes') {
 	print '<div class=emphasized>'.$msg.'</div>';
@@ -117,9 +109,9 @@ if ($ballot_reporting eq 'yes') {
     }
 }
 
-my $rating = 'Rank';
+my $rating = $tx->Rank;
 if ($proportional eq 'yes' && $use_combined_ratings) {
-    $rating = 'Weight';
+    $rating = $tx->Weight;
 }
 
 print $cr, '<form method="POST"
@@ -131,7 +123,7 @@ print '<table class="form" id="ballot" border="0" cellpadding="5" cellspacing="0
 
 print '<table cellpadding="5px" cellspacing="0" border="1" id="preftable">
    <tr class="heading">
-	<th>&nbsp;Choice&nbsp;</th>';
+	<th>&nbsp;'.$tx->Choice.'&nbsp;</th>';
 if ($voting_enabled) {
     print '<th>'.$rating.'</th>';
 }
@@ -189,28 +181,23 @@ for (my $i = 0; $i < $num_choices; $i++) {
 print '</table></td>', $cr;
 if ($js_ui && $voting_enabled) {
     print '<td rowspan=2 width="0" valign="top" align="center">
-	<input type="button" id="move_top" disabled value="to top"
+	<input type="button" id="move_top" disabled value="'.$tx->to_top.'"
 	onClick="do_move_top()"><br>
-	<input type="button" id="move_up" disabled value="move up"
+	<input type="button" id="move_up" disabled value="'.$tx->move_up.'"
 	onClick="do_move_up()"><br>
-	<input type="button" id="make_tie" disabled value="make tie"
+	<input type="button" id="make_tie" disabled value="'.$tx->make_tie.'"
 	onClick="do_make_tie()"><br>
-	<input type="button" id="move_down" disabled value="move down"
+	<input type="button" id="move_down" disabled value="'.$tx->move_down.'"
 	onClick="do_move_down()"><br>
-	<input type="button" id="move_bottom" disabled value="to bottom"
+	<input type="button" id="move_bottom" disabled value="'.$tx->to_bottom.'"
 	onClick="do_move_bottom()">
 	<table class="form"><tr><td>
-        <p id="jsnohelp">
-	These buttons are deactivated because
-	your browser does not support Javascript.</p>
+        <p id="jsnohelp">'.
+	$tx->buttons_are_deactivated.
+	'</p>
         <div style="display: none" id="jshelp">
-	<p>
-	Rank the choices in one of three ways:
-	<ol>
-	<li>drag the rows
-	<li>use pulldowns in Rank column
-	<li>select rows and use buttons above
-	</ol>
+	<p>'.
+	$tx->ranking_instructions.'
 	</div>
 	</td></tr></table>
 	</td>', $cr;
@@ -220,7 +207,7 @@ print '</tr>', $cr;
 
 
 if ($voting_enabled) {
-    print '<tr><td><input id=vote type="submit" value="Submit ranking" name="Vote"></tr>', $cr;
+    print '<tr><td><input id=vote type="submit" value="'.$tx->submit_ranking.'" name="Vote"></tr>', $cr;
 }
 
 print '</table>', $cr;
@@ -231,7 +218,7 @@ print '<p id="sort_button"> Sort the choices by their current rank:
        <input type="submit" value="Sort" name="SortChoices"></p>';
 
 if ($writeins eq 'yes') {
-    print '<p>Write in a new choice: <input type="text" size="60" name="writein">';
+    print '<p>'.$tx->write_in_a_choice.' <input type="text" size="60" name="writein">';
     print '<input type="submit" value="Add write-in" name="AddWritein"></p>';
 }
 # if ($voting_enabled) {
@@ -246,9 +233,7 @@ if ($writeins eq 'yes') {
 print "</form>", $cr;
 
 if ($voting_enabled && $public eq 'yes') {
-    print p("If you have already voted, you may see
-	<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-	the current poll results</a>.");
+    print p($tx->if_you_have_already_voted("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id"));
 }
 
 print end_html();
@@ -313,8 +298,8 @@ sub ProcessVote {
 	}
     }
 
-    print p("Thank you. Your vote for <strong>$title</strong> has been
-	successfully cast. Your voter receipt is ". code($election_id."/".$voter_ballot_release_key).".");
+    print p($tx->thank_you_for_voting($title,
+				$election_id."/".$voter_ballot_release_key));
     
     # This is code to be enabled later, when we implement ballot checking.
     #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
@@ -379,15 +364,14 @@ sub AddWritein {
     my $writein = CanonicalizeName(param('writein'));
     my $ok = 1;
     if ($writein eq '') {
-	print p(b("Name of write-in choice is empty")), $cr;
+	print p(b($tx->name_of_writein_is_empty)), $cr;
 	$ok = 0;
     }
     $writein .= " (write-in)";
     my $p = ProjectName($writein);
     for (my $i = 0; $ok && $i < $num_choices; $i++) {
 	if (ProjectName($choices[$i]) eq $p) {
-	    print p(b("Sorry, the name of the write-in is too similar ",
-				    "to an existing choice")), $cr;
+	    print p(b($tx->writein_too_similar)), $cr;
 	    $ok = 0;
 	    last;
 	}
@@ -449,69 +433,17 @@ sub Load {
 
 
 sub IntroduceWriteins {
-    print p($description).$cr;
-    print p("Voting is not yet permitted in this poll. However,
-             you may view the available choices and write in new
-	     choices. Use the text field below to write in new choices.");
+    print p($description), $cr;
+    print p($tx->only_writeins_are_permitted), $cr;
 }
 
 sub IntroduceVoting {
-    print p($description).$cr;
+    print p($description), $cr;
 
-    print p("Only the $winners_text will win the poll.<p>
-    The poll ends <b>$election_end</b>.
-    The poll supervisor is $name (<tt>$email_addr</tt>).
-    Contact the poll supervisor if you need help.").$cr;
-
-    if ($proportional ne 'yes' || !$use_combined_ratings) {
-	print "<p>Give each of the following choices
-	a rank, where a smaller-numbered rank means that you
-	prefer that choice more.
-	For example, give your top choice the rank 1.
-	Give choices the same rank if you have no
-	preference between them. You do not have to use all the
-	possible ranks. All choices initially have the
-	lowest possible rank.", $cr;
-	if ($no_opinion eq 'yes') {
-	    print '<b>Note:</b> &ldquo;No opinion&rdquo;
-		is <i>not</i> the same as the lowest possible rank; it means
-		that you choose not to rank this choice with respect to the
-		other choices.</p>', $cr;
-	}
-
-	if ($proportional eq 'yes') {
-	    print '<p>This poll is decided using an experimental
-	    Condorcet-based method designed to provide proportional
-	    representation.';
-	    print ' It is assumed by the voting algorithm that you want
-		    the ranking of your most preferred
-		    <i>winning</i> choice to be as
-		    high as possible, and if two sets of winning choices
-		    agree on the choice you prefer most, then you
-		    would decide between them using the second most preferred
-		    choice, and so on. ';
-	    print '</p>';
-	}
-	print $cr, $cr;
-    } else {
-	print '<p>This poll is decided using an experimental
-	Condorcet-based algorithm designed to provide proportional
-	representation. ';
-
-	print 'Please give each of the following choices a
-	<b>weight</b> that expresses how much you want that
-	choice to be part of the winning set of choices.';
-	print ' It is assumed by the voting algorithm that you want
-		the sum of weights of winning choices to be as large
-		as possible. ';
-	print "All choices
-	are currently given a weight of zero, meaning that you
-	have no interest in seeing them win.
-	Weights cannot be negative or larger than 999.
-	It doesn't help you to make your weights larger
-	than other voters' weights, because your weights are only compared
-	against each other.
-	<a href=\"$civs_url/proportional.html\">[See more information]</a>.
-	</p>";
-    }
+    print p($tx->instructions1($winners_text, $election_end, $name, $email_addr)),
+	  $cr;
+    print p($tx->instructions2(($no_opinion eq 'yes'),
+                               ($proportional eq 'yes'),
+			       $use_combined_ratings,
+			       $civs_url)), $cr;
 }

@@ -137,18 +137,23 @@ sub HTML_Header {
     (my $title, my $js) = @_;
     if (!$generated_header) {
       if (!defined($js) || $js eq '') {
-	print header(), start_html(-title => $title,
-				   -style => {'src' => "@CIVSURL@/style.css"});
+	print header(-charset => 'utf-8'),
+	      start_html(-title => $title,
+	                 -lang => $tx->lang,
+			 -style => {'src' => "@CIVSURL@/style.css"});
       } else {
-	print header(), start_html(-title => $title,
-				   -style => {'src' => "@CIVSURL@/style.css"},
-				   -script => [{'src' => "@CIVSURL@/$js"},
-				               {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
+	print header(-charset => 'utf-8'),
+	      start_html(-title => $title,
+	                 -lang => $tx->lang,
+			 -style => {'src' => "@CIVSURL@/style.css"},
+			 -script => [{'src' => "@CIVSURL@/$js"},
+				    {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
 				               {'src' => "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}], 
 				   -onLoad => "setup()");
       }
     }
     $html_header_printed = 1;
+    # print pre($languages::log);
 }
 
 sub CIVS_Header {
@@ -164,7 +169,7 @@ print
     <td width=100% valign=top nowrap>
     <h1>&nbsp;".$tx->Condorcet_Internet_Voting_Service."</h1>
     </td>
-    <td width=0% nowrap valign=top align=right><a href=\"$civs_home\">About CIVS</a><br>
+    <td width=0% nowrap valign=top align=right><a href=\"$civs_home\">".$tx->about_civs."</a><br>
     <a href=\"$civs_url/civs_create.html\">".$tx->create_new_poll."</a><br>
     <a href=\"$civs_url/sec_priv.html\">".$tx->about_security_and_privacy."</a><br>
     <a href=\"$civs_url/faq.html\">".$tx->FAQ."</a><br>

@@ -109,10 +109,10 @@ if (!IsStarted) {
 print $tx->poll_supervisor($name,$email_addr), br(), $cr;
 my $num_auth_string;
 if (IsStarted or $num_auth) {
-	$num_auth_string = "$num_auth"
+    $num_auth_string = "$num_auth"
 } else {
-	my $waiting = $#addresses + 1;
-	$num_auth_string = "0 ($waiting voters will be authorized when the poll is started)";
+    my $waiting = $#addresses + 1;
+    $num_auth_string = $tx->no_authorized_yet($waiting);
 }
 print $tx->total_authorized_voters($num_auth_string), br(), $cr
     unless $public eq 'yes';
@@ -140,8 +140,8 @@ if ($restrict_results eq 'yes') {
 	print p('Poll results available to all voters when poll completes.');
     }
 }
-print "Actual votes cast so far: $num_votes", br(), $cr;
-print "Poll ends $election_end.", br(), $cr;
+print $tx->actual_votes_so_far($num_votes), br(), $cr;
+print $tx->poll_ends($election_end), br(), $cr;
 
 if ($writeins eq 'yes') {
     print 'Write-in choices are allowed.', br(), $cr;
@@ -255,3 +255,4 @@ if ($external_ballots ne 'yes') {
 print end_html();
 
 exit 0;
+# vim: set sw=4 ts=8

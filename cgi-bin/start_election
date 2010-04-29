@@ -31,7 +31,7 @@ if (IsStarted) {
 
 StartElection;
 
-print p('The poll '.strong($title).' has been started.'.$cr);
+print p($tx->poll_started($title)), $cr;
 
 print '<pre>'.$cr;
 if ($#addresses > $max_voters) {
