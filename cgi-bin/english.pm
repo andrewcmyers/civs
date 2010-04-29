@@ -59,7 +59,7 @@ sub Poll_created {
 # start
 
 sub poll_started {
-    return 'The poll '.strong($_[1]).' has been started.';
+    return 'The poll <strong>'.$_[1].'</strong> has been started.';
 }
 
 # control

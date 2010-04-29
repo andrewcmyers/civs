@@ -60,7 +60,7 @@ sub Poll_created {
 # start
 
 sub poll_started {
-    return 'A '.strong($_[1]).' szavazás elindult.';
+    return 'A <strong>'.$_[1].'</strong> szavazás elindult.';
 }
 
 # control
