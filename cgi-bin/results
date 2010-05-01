@@ -84,12 +84,12 @@ if (defined($show_combined) && $show_combined ne '') {
 }
 
 if (!defined($algorithms{$algorithm})) {
-    print p('Error: undefined algorithm.');
+    print p($tx->undefined_algorithm);
     print end_html();
     exit 0;
 }
 
-my $cache_file = "$election_dir/results_win=$num_winners,alg=$algorithm";
+my $cache_file = "$election_dir/results_win=$num_winners,alg=$algorithm,lang=".$tx->lang;
 if ($proportional eq 'yes') { $cache_file .= ",prop,comb=$use_combined_ratings"; }
 
 # Return the timestamp on the cache file, or 0 if no cache file
@@ -147,7 +147,7 @@ my (%visited);
 
 # Start the progress meter (sends to STDOUT)
 sub StartProgressMeter {
-    print '<p id=compute_msg><i>Computing results...</i></p>', $cr;
+    print '<p id=compute_msg><i>'. $tx->computing_results. '</i></p>', $cr;
     print '<table id="completion_meter" cellpadding=0><tr><td id="completed_meter" width=0px height=2ex></td><td id="incomplete_meter" width=100%</td></tr></table>',$cr;
     print '<script>
        var complete = document.getElementById("completed_meter");
@@ -188,27 +188,27 @@ sub ComputeResults {
 	    action="'.$thisurl.'"
 	    enctype="multipart/form-data"
 	    name="changeSettings">';
-    print RESULTS span("Supervisor: $name (".&Email($email_addr).")"), br();
+    print RESULTS span($tx->Supervisor($name, &Email($email_addr))), br;
     if ($restrict_results eq 'yes') {
 	&election::ReportResultReaders;
     }
-    print RESULTS span("Announced end of poll: $election_end"), br();
+    print RESULTS span($tx->Announced_end_of_poll($election_end)), br();
     if (IsStopped) {
 	my $close_time = $vdata_copy{'close_time'};
-	print RESULTS "Actual time poll closed: $close_time", br();
+	print RESULTS $tx->Actual_time_poll_closed($close_time);
     } else {
-	print RESULTS 'Poll has not yet ended.', br();
+	print RESULTS $tx->Poll_not_ended, br();
     }
     if ($external_ballots eq 'yes') {
-	print RESULTS "This is a test poll.", br();
+	print RESULTS $tx->This_is_a_test_poll, br, $cr;
     } elsif ($public ne 'yes') {
-	print RESULTS "Private poll ($num_auth authorized voters)", br();
+	print RESULTS $tx->This_is_a_private_poll($num_auth), br, $cr;
     } else {
-	print RESULTS "This is a public poll.", br();
+	print RESULTS $tx->This_is_a_public_poll, br, $cr;
     }
-    print RESULTS "Actual votes cast: $num_votes", br();
+    print RESULTS $tx->Actual_votes_cast($num_votes);
 
-    print RESULTS 'Number of winning choices: ';
+    print RESULTS $tx->Number_of_winning_candidates;
     print RESULTS '<input type="text" size=2
 	    name="num_winners"
 	    onChange="newSettings()"
@@ -218,11 +218,7 @@ sub ComputeResults {
 	print RESULTS hidden('rkey', param('rkey'));
     }
     if ($real_nwin != $num_winners) {
-	my $winmsg = '1 winner';
-	if ($real_nwin != 1) {
-	    $winmsg = $real_nwin.' winners';
-	}
-	print RESULTS "&nbsp;(Poll actually has $winmsg)";
+	print RESULTS $tx->Poll_actually_has($num_winners);
     }
 
     print RESULTS br();
@@ -282,7 +278,7 @@ sub ComputeResults {
     # print RESULTS '&nbsp;<input type="submit" name="submit" value="Update display options">';
     print RESULTS '</form>',$cr;
 
-    print RESULTS h2('Poll description'), $cr,
+    print RESULTS h2($tx->poll_description_hdr), $cr,
 	'<div class="description">',
 	p($description),
 	'</div>', $cr;
@@ -293,9 +289,8 @@ sub ComputeResults {
     if ($proportional eq 'yes') {
 	&PrintProportionalResults;
     } else { 
-	# &PrintCondorcetWinner;
 
-	print RESULTS h2('Ranking result'), $cr;
+	print RESULTS h2($tx->Ranking_result), $cr;
 
 	&PrintReport($algorithms{$algorithm});
     }
@@ -337,11 +332,14 @@ sub PrintMatrix {
 		my $choicesj = $choices[$j]; $choicesj =~ s/<[^>]*>//gs;
 		my $choicesk = $choices[$k]; $choicesk =~ s/<[^>]*>//gs;
 		if ($w > $l) {
-		    print RESULTS "<td class=\"win\" title=\"$choicesj beats $choicesk $w&ndash;$l\">";
+		    print RESULTS '<td class="win" title="'.
+			$tx->x_beats_y($choicesj,$choicesk,$w,$l) . '">';
 		} elsif ($w == $l) {
-		    print RESULTS "<td class=\"tie\" title=\"$choicesj ties $choicesk $w&ndash;$l\">";
+		    print RESULTS '<td class="tie" title="'.
+			$tx->x_ties_y($choicesj,$choicesk,$w,$l).'">';
 		} else {
-		    print RESULTS "<td class=\"lose\" title=\"$choicesj loses to $choicesk $w&ndash;$l\">";
+		    print RESULTS '<td class="lose" title="'.
+			$tx->x_loses_to_y($choicesj,$choicesk,$w,$l).'">';
 		}
 		if ($zerodot && $w == 0) {
 		    print RESULTS '.';
@@ -359,20 +357,21 @@ sub PrintMatrix {
 sub DetailsHeader {
     print RESULTS hr(),$cr;
     print RESULTS '<p id="show_details">',
-	'For simplicity, some details of the poll result are not shown.
-	<button onclick=\'show_details();\'>
-	    Show details</button></p>', $cr;
+	$tx->some_result_details_not_shown, 
+	'<button onclick=\'show_details();\'>',
+	    $tx->Show_details, 
+	'</button></p>', $cr;
 
     print RESULTS '<div id="details">';
     print RESULTS '<button id="hide_details" onclick="hide_details();">',
-     'Hide details</button>
-      <h2>Result details</h2>', $cr;
+     $tx->Hide_details, '</button><h2>',
+     $tx->Result_details, '</h2>', $cr;
 }
 
 # Generate a ballot report or say that it hasn't been enabled.
 sub BallotReport {
     if ($ballot_reporting eq 'yes') {
-	print RESULTS h3('Ballot report'), $cr;
+	print RESULTS h3($tx->Ballot_report), $cr;
 
 	my @voters = split /\n/, $vdata_copy{'recorded_voters'};
 	if ($#voters >= 0) {
@@ -409,13 +408,13 @@ sub BallotReport {
 
 	    print RESULTS table({-class=>'matrix'},
 		    Tr(\@rows));
-	    print RESULTS p("Ballots are shown in a randomly generated order.");
-	    print RESULTS p(a({-href=>"http://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"},"Download ballots") . " as a CSV.");
+	    print RESULTS p($tx->Ballots_are_shown_in_random_order);
+	    print RESULTS p($tx->Download_ballots_as_a_CSV("http://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"));
         } else {
-	    print RESULTS p("No ballots were cast in this poll.");
+	    print RESULTS p($tx->No_ballots_were_cast);
 	}
     } else {
-	print RESULTS p("Ballot reporting was not enabled for this poll.");
+	print RESULTS p($tx->Ballot_reporting_was_not_enabled);
     }
 }
 
@@ -461,7 +460,7 @@ sub PrintRanking {
 	print RESULTS '<tr><td>'.($j+1).'. ';
 	my $ranksize = $#winner + 1;
 	if ($ranksize > 1) {
-	    print RESULTS '<i>Tied</i>:<br>', $cr;
+	    print RESULTS $tx->Tied, br, $cr;
 	}
 	    my $tie;
 	if ($num_seen < $num_winners &&
@@ -485,24 +484,20 @@ sub PrintRanking {
 			if ($matrix[$pwinners[$bi]][$winner[$i]] >
 			    $matrix[$winner[$i]][$pwinners[$bi]] &&
 			    $pwinners[$bi] != $condorcet_winner) {
-			    $explanation =
-				', loses to '.
-				$choices[$pwinners[$bi]].' by '.
-				$matrix[$pwinners[$bi]][$winner[$i]].'&ndash;'.
-				$matrix[$winner[$i]][$pwinners[$bi]];
+			    $explanation = $tx->loss_explanation(
+				$choices[$pwinners[$bi]],
+				$matrix[$pwinners[$bi]][$winner[$i]],
+				$matrix[$winner[$i]][$pwinners[$bi]]);
 			    $brank = -1; last;
 			}
 		    }
 		}
 	    } else {
 		if ($winner[$i] == $condorcet_winner) {
-		    $explanation = '&nbsp;&nbsp;(Condorcet winner: wins contests with all other choices)';
+		    $explanation = $tx->Condorcet_winner_explanation;
 		} else {
-		    $explanation = '&nbsp;&nbsp;(Not defeated in any contest vs. another choice)';
+		    $explanation = $tx->undefeated_explanation;
 		}
-	    }
-	    if (0 && $explanation ne '') {
-		print RESULTS '<span title="',$explanation,'">';
 	    }
 	    if ($num_seen < $num_winners) {
 		print RESULTS b($choices[$winner[$i]]);
@@ -511,11 +506,11 @@ sub PrintRanking {
 	    }
 	    if ($condorcet_winner != -1 &&
 		$condorcet_winner != $winner[$i]) {
-		print RESULTS '<span class=explain>&nbsp;&nbsp;loses ';
-		print RESULTS ' to '.$choices[$condorcet_winner].' by ';
-		print RESULTS $matrix[$condorcet_winner][$winner[$i]].'&ndash;'.
-			    $matrix[$winner[$i]][$condorcet_winner];
-		print RESULTS '</span>';
+		print RESULTS '<span class=explain>',
+				$tx->loss_explanation2($choices[$condorcet_winner],
+				    $matrix[$condorcet_winner][$winner[$i]],
+				    $matrix[$winner[$i]][$condorcet_winner]),
+			      '</span>';
 	    }
 	    if ($explanation ne '') {
 		print RESULTS '<span class=explain>'.$explanation.'</span>';
@@ -531,22 +526,7 @@ sub PrintRanking {
     }
     print RESULTS '</table>', $cr;
     if ($had_tie) {
-	print RESULTS p("Choices shown in red have tied for being selected.
-		You may wish to select among them randomly.");
-    }
-}
-
-sub PrintCondorcetWinner {
-# this is common to all Condorcet methods
-    if ($proportional ne 'yes') {
-	print RESULTS h2("Condorcet winner"), $cr;
-	if ($condorcet_winner >= 0) {
-	    print RESULTS p('Compared to each other choice, '.
-	    strong($choices[$condorcet_winner]).'
-	    has a higher ranking on a majority of ballots.');
-	} else {
-		    print RESULTS p('This poll had no Condorcet winner.').$cr;
-	}
+	print RESULTS p($tx->Choices_shown_in_red_have_tied);
     }
 }
 
@@ -693,7 +673,7 @@ sub PrintProportionalResults {
 	return @mapped;
     }
 
-    print RESULTS '<h2>Choices (in individual preference order)</h2>', $cr;
+    print RESULTS '<h2>', $tx->Choices_in_individual_pref_order, '</h2>', $cr;
     print RESULTS "<ol>";
     for (my $j = 0; $j < $num_choices; $j++) {
 	print RESULTS '<li> ', $choices[$choice_index[$j]], '</li>', $cr;

@@ -14,12 +14,12 @@ use IO::Handle;
 
 my $thisurl = $civs_bin_path."/close@PERLEXT@";
 
-HTML_Header("CIVS: Stopping Election");
+HTML_Header($tx->CIVS_Ending_Poll);
 use election;
 
 my $control_key = param('key');    
 
-CIVS_Header("Stopping poll");
+CIVS_Header($tx->Ending_poll);
 
 CheckElectionID;
 CheckStarted;
@@ -30,14 +30,14 @@ if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
     print h1("Error"), p("Was not able to stop the poll");
 } else {
     print STOPPED "stopped\n"; close(STOPPED);
-    Log("Poll $title ($election_id) stopped");
-    print h1("Election stopped: $title");
-    print p("The poll has been stopped. It was announced to end $election_end.");
+    Log("Poll $title ($election_id) ended");
+    print h1($tx->Poll_ended($title));
+    print p($tx->The_poll_has_been_ended($election_end));
     if ($restrict_results ne 'yes') {
 	print p("<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-	View poll results</a>");
+	".$tx->View_poll_results.'</a>');
     } else {
-	print p('The poll results are now available to be viewed by authorized users.');
+	print p($tx->poll_results_available_to_authorized_users);
     }
 }
 print end_html();

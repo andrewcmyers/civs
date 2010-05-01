@@ -38,7 +38,7 @@ if (!IsStarted) {
     print hidden('key', $control_key);
     print hidden('akey', $authorization_key)
 		if defined($authorization_key);
-    print '<input type="submit" value="'.$tx->start_poll.'" name="start">';
+    print '<input type="submit" value="'.$tx->Start_poll.'" name="start">';
     print '</p></form>';
 } elsif (!IsStopped) {
     print "<form method=\"POST\"
@@ -48,7 +48,7 @@ if (!IsStarted) {
     print '<p>'.$tx->the_poll_is_in_progress;
     print hidden('id', $election_id);
     print hidden('key', $control_key);
-    print '<input type="submit" value="End poll" name="close"
+    print '<input type="submit" value="'.$tx->End_poll.'" name="close"
             onclick="confirm(\'', $tx->ending_poll_cannot_be_undone, '\')">', $cr;
     print '</p></form>', $cr;
 
@@ -65,7 +65,7 @@ if (!IsStarted) {
 				action=\"$civs_bin_path/control@PERLEXT@\"
 				enctype=\"multipart/form-data\"
 				name=\"Nowriteins\">", $cr;
-		    print p('Write-in choices are currently allowed.',
+		    print p($tx->Writeins_currently_allowed,
 			    hidden('id', $election_id),
 			    hidden('key', $control_key),
 			    '<input type="submit" value="',
@@ -90,9 +90,7 @@ if (!IsStarted) {
 		my $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
 		$url .= "&akey=$authorization_key" 
 			if defined($authorization_key);
-		print p("This is a public poll. You may share the following link
-                 with voters to allow them to vote."),
-              p("<tt><a href=\"$url\">$url</a></tt>"), $cr;
+		print p($tx->This_is_a_public_poll_plus_link($url)), $cr;
     }
 
 } else {    
@@ -101,9 +99,10 @@ if (!IsStarted) {
     if ($restrict_results eq 'yes') {
 	$results_link = "";
     } else {
-	$results_link = "<a href=\"$civs_bin_path/results@PERLEXT@?id=$election_id\">Poll results</a> are available.";
+	$results_link =
+	    $tx->Poll_results_are_available("$civs_bin_path/results@PERLEXT@?id=$election_id");
     }
-    print p("The poll has ended.", $results_link);
+    print p($tx->The_poll_has_ended, $results_link);
 }
 
 print $tx->poll_supervisor($name,$email_addr), br(), $cr;
@@ -120,11 +119,9 @@ print $tx->total_authorized_voters($num_auth_string), br(), $cr
 $num_votes += 0;
 if ($restrict_results eq 'yes') {
     if (IsStopped) {
-	print 'Poll results are now available to the following users,',
-	      ' who were earlier sent an email containing a URL for',
-	      ' viewing results:<br>',$cr;
+	print $tx->Poll_results_are_now_available_to_the_following_users, br, $cr;
     } else {
-	print 'Poll results will be available to the following users:', $cr;
+	print $tx->Poll_results_will_be_available_to_the_following_users, br, $cr;
     }
     my @result_addrs = split /(\r\n)+/, $result_addrs;
     print '<ul>';
@@ -137,23 +134,23 @@ if ($restrict_results eq 'yes') {
     print '</ul>';
 } else {
     if (!IsStopped) {
-	print p('Poll results available to all voters when poll completes.');
+	print p($tx->Poll_results_available_to_all_voters_when_poll_completes);
     }
 }
 print $tx->actual_votes_so_far($num_votes), br(), $cr;
 print $tx->poll_ends($election_end), br(), $cr;
 
 if ($writeins eq 'yes') {
-    print 'Write-in choices are allowed.', br(), $cr;
+    print $tx->Writeins_allowed, br(), $cr;
     if (!$voting_enabled) {
-	print 'Voting is disabled during write-ins.', br(), $cr;
+	print $tx->Voting_is_disabled_during_writeins, br(), $cr;
     }
 } else {
-    print 'Write-in choices are not allowed.', br(), $cr;
+    print $tx->Writeins_not_allowed, br(), $cr;
 }
 
 if ($no_opinion eq 'yes') {
-    print 'Voters can choose "No opinion".', br(), $cr;
+    print $tx->Voters_can_choose_No_opinion, br(), $cr;
 }
 
 if ($proportional eq 'yes') {
@@ -172,25 +169,19 @@ if ($proportional eq 'yes') {
 }
 
 if ($ballot_reporting eq 'yes') {
-    print 'Detailed ballot reporting is enabled.', br(), $cr;
+    print $tx->Detailed_ballot_reporting_enabled, br(), $cr;
     if ($reveal_voters eq 'yes') {
-	print 'Voter identities (email) will be publicly associated with their ballots.';
+	print $tx->Voter_identities_will_be_public;
     } else {
-	print 'Voter identities (email) will be kept anonymous.';
+	print $tx->Voter_identities_will_be_kept_anonymous;
     }
 } else {
-    print 'Detailed ballot reporting is disabled.', br(), $cr;
+    print $tx->Detailed_ballot_reporting_disabled;
 }
  
-print $cr, h2('Description:'), p($description);
-print $cr, h2("Candidates");
-my $wintxt;
-if ($num_winners == 1) {
-    $wintxt = "candidate";
-} else {
-    $wintxt = "$num_winners candidates";
-}
-print p("The top $wintxt will win.");
+print $cr, h2($tx->Description), p($description);
+print $cr, h2($tx->Candidates);
+print p($tx->the_top_n_will_win($num_winners));
 print "<ul>";
 for (my $j = 0; $j < $num_choices; $j++) {
     print li($choices[$j]);
@@ -198,15 +189,10 @@ for (my $j = 0; $j < $num_choices; $j++) {
 print "</ul>";
 
 if ($external_ballots ne 'yes') {
-    print $cr, h2("Add voters");
+    print $cr, h2($tx->Add_voters);
 
-    print p("Enter e-mail addresses of voters, one per line. These
-    may be new voters or existing voters who have not voted yet.
-    In a private poll, giving the e-mail address of an already 
-    existing voter " .b("will not") . " let that voter vote twice.
-    It will only resend the voter an invitation to vote.
-    In a public poll, only a token attempt is made to prevent
-    multiple voting.");
+    print p($tx->add_voter_instructions);
+
     print "<form method=\"POST\"
 		action=\"$civs_bin_path/add_voters@PERLEXT@\"
 		enctype=\"multipart/form-data\"
@@ -216,11 +202,11 @@ if ($external_ballots ne 'yes') {
     print hidden('akey', $authorization_key)
 	    if defined($authorization_key);
     print p('<textarea rows="2" name="new_addresses" cols="50"></textarea>');
-    print p('Upload file: <input id=new_addresses_file type=file name="new_addresses_file">');
-    print '<input type="submit" value="Add voters" name="add">';
+    print p($tx->Upload_file, '<input id=new_addresses_file type=file name="new_addresses_file">');
+    print '<input type="submit" value="'.$tx->Add_voters.'" name="add">';
     print '</form>';
 } else {
-    print $cr, h2("Load ballot data");
+    print $cr, h2($tx->Load_ballot_data);
 
     print "<form method=\"POST\"
                action=\"$civs_bin_path/upload_ballots@PERLEXT@\"

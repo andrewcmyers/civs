@@ -154,8 +154,8 @@ sub SaveHash {
 
 sub LockElection {
     if (!sysopen(ELOCK, $election_lock, &O_CREAT | &O_RDWR)) {
-        print h1("Error");
-        print p("Did not have the write access needed to lock the poll."), 
+        print h1($tx->Error);
+        print p($tx->No_write_access_to_lock_poll);
           end_html();
         exit 0;
     }
@@ -191,16 +191,16 @@ sub CloseDatabase {
 
 sub StartElection {
     if (sysopen(STARTED, $started_file, &O_RDONLY)) {
-	print h1("Error");
-	print p("This poll ($title) has already been started."), end_html();
+	print h1($tx->Error);
+	print p($tx->This_poll_has_already_been_started), end_html();
 	exit 0;
     }
     if (sysopen(STARTED, $started_file, &O_CREAT | &O_EXCL | &O_RDWR)) {
 	print STARTED "started\n";
 	close(STARTED);
     } else {
-	print h1("Error");
-	print p("Did not have write access to start a poll."), end_html();
+	print h1($tx->Error);
+	print p($tx->No_write_access_to_start_poll), end_html();
 	exit 0;
     }
 }
@@ -215,8 +215,8 @@ sub IsStarted {
 
 sub CheckStarted {
     if (!IsStarted()) {
-	print h1("Error");
-	print p("This poll does not exist or has not been started."), end_html();
+	print h1($tx->Error);
+	print p($tx->Poll_does_not_exist_or_not_started), end_html();
 	exit 0;
     }
 }
@@ -224,15 +224,15 @@ sub CheckStarted {
 sub PointToResults {
     if ($restrict_results ne 'yes') {
 	if ($public eq 'no') {
-	    print "<p>The following URL will report poll results once\n";
-	    print "it is complete:<br>\n";
+		print '<p>', $tx->following_URL_will_report_results, br, $cr;
 	    } else {
-	    print "<p>The following URL reports the current poll results:<br>\n";
+		print '<p>', $tx->following_URL_reports_results, br, $cr;
+
 	}
 	print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
 	<tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
     } else {
-	print p('The results of this poll will be released only to a limited set of users:');
+	print p($tx->Poll_results_will_be_available_to_the_following_users);
 	print '<ul>';
 	my @result_addrs = split /(\r\n)+/, $result_addrs;
 	foreach my $addr (@result_addrs) {
@@ -247,7 +247,7 @@ sub PointToResults {
 
 # List the users who will be able to see the results
 sub ReportResultReaders {
-    print 'The results of this poll have been released only to a limited set of users:';
+    print $tx->results_available_to_the_following_users;
     print '<div class="list">';
     my @result_addrs = split /(\r\n)+/, $result_addrs;
     foreach my $addr (@result_addrs) {
@@ -263,7 +263,7 @@ sub PointToResultsComplete {
   if ($restrict_results eq 'yes') {
     &ReportResultReaders;
   } else {
-    print "<p>The results of this completed poll are here:<br>\n";
+    print "<p>", $tx->The_results_of_this_completed_poll_are_here, br, $cr;
     print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
        <tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
   }
@@ -279,8 +279,8 @@ sub IsStopped {
 }
 sub CheckNotStopped {
     if (IsStopped()) {
-	print h1("Poll already closed");
-	print p("This poll (<strong>$title</strong>) has already been closed.");
+	print h1("Poll already ended");
+	print p($tx->already_ended($title));
 	PointToResultsComplete;
 	print end_html();
 	exit 0;
@@ -308,15 +308,14 @@ sub CheckVoterKey {
         if ($voter_key_check ne $old_voter_key) {
             Log("Invalid voter key $old_voter_key presented by $voter " .
                 "for election $election_id, expected $voter_key_check");
-            print h1("Error"), p("Your voter key is invalid, $voter. ",
-                "You should have received a correct URL by email."), 
-                end_html();
+            print h1($tx->Error),
+		  p($tx->Your_voter_key_is_invalid__check_mail($voter));
+	    end_html();
             exit 0;
         }
     } else {
         if (!$voter_keys{civs_hash($voter_key)}) {
-            print h1("Error"), p("Your voter key is invalid. ", 
-                "You should have received a correct URL by email."),
+            print h1($tx->Error), p($tx->Your_voter_key_is_invalid__check_mail('')),
                 end_html(); 
             exit 0;
         }
@@ -326,8 +325,8 @@ sub CheckVoterKey {
 sub CheckNotVoted {
     my ($voter_key, $old_voter_key, $voter) = @_;
     if ($used_voter_keys{&civs_hash($voter_key)}) {
-	print h1("Already voted");
-	print p("A vote has already been cast using your voter key.");
+	print h1($tx->Already_voted);
+	print p($tx->vote_has_already_been_cast);
 	PointToResults;
 	print end_html();
 	if ($voter_key) {
@@ -342,9 +341,8 @@ sub CheckNotVoted {
 }
 
 sub ControlKeyError {
-    print h1("Error"),
-    p("Invalid key. You should have received a correct URL for
-        controlling the poll by email. This error has been logged.");
+    print h1($tx->Error),
+    p($tx->Invalid_key);
     print end_html();
     my $t = '<undefined title>';
     if (defined($title)) {
@@ -407,9 +405,8 @@ sub CheckResultKey {
 	return;
     }
     ElectionLog("Election: $title ($election_id) : invalid attempt to view election results (wrong key)");
-    print h1("Authorization failure"),
-    p("Invalid result key: \"$result_key\". You should have received a correct URL for
-        viewing poll results by email. This error has been logged.");
+    print h1($tx->Authorization_failure);
+    p($tx->Invalid_result_key($result_key));
     print end_html();
     exit 0;
 }
@@ -417,7 +414,8 @@ sub CheckResultKey {
 sub CheckAuthorizationKeyForAddingVoter {
     my $authorization_key = shift;
     if (!CheckAuthorizationKey($authorization_key)) {   
-        print h1("Error"), p("Invalid key. You should have received a correct URL for controlling the poll by email. This error has been logged.");
+        print h1($tx->Error),
+	p($tx->Invalid_control_key($authorization_key)); 
         print end_html();
         ElectionLog("Election: $title ($election_id) : invalid attempt to add voter (wrong key)");
         exit 0;
@@ -427,7 +425,7 @@ sub CheckAuthorizationKeyForAddingVoter {
 sub CheckAuthorizationKeyForVoting {
     my $authorization_key = shift;
     if (!CheckAuthorizationKey($authorization_key)) {   
-        print h1("Error"), p("Invalid key. You should have received a correct URL for voting in the poll. This error has been logged.");
+        print h1($tx->Error), p($tx->Invalid_key);
         print end_html();
         ElectionLog("Election: $title ($election_id) : invalid attempt to add voter (wrong key)");
         exit 0;
@@ -441,8 +439,8 @@ sub IsWellFormedElectionID {
 sub CheckElectionID {
     if (!IsWellFormedElectionID) {
     if (defined($election_id) && $election_id ne '') {
-        print h1("Invalid poll identifier");
-        print p("The poll identifier \"$election_id\" is not valid.\n");
+        print h1($tx->Invalid_poll_id);
+        print p($tx->Poll_id_not_valid($election_id));
         Log("Attempt to provide a bogus poll identifier: \"$election_id\"");
         $election_id = '';
     }
@@ -458,8 +456,8 @@ sub ElectionLog {
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     # print pre("trying to log to $election_log");
     if (!open ELECTION_LOG, ">>$election_log") {
-        print h1("Error"),
-          p("Unable to append to the poll log."),
+        print h1($tx->Error),
+          p($tx->Unable_to_append_to_poll_log);
           end_html();
 	exit 0;
     }
@@ -520,7 +518,7 @@ sub SendKeys {
 	$v = TrimAddr($v);
 	if ($v eq '') { next; }
 	if (!CheckAddr($v)) {
-	    print 'Invalid email address: ', $v, $cr;
+	    print $tx->Invalid_email_address($v), $cr;
 	    next;
 	}
 
@@ -534,8 +532,7 @@ sub SendKeys {
             my $hash_voter_key = civs_hash($voter_key);
             if ($voter_keys{$hash_voter_key}) {
                 # This email address has already been added to the poll
-                print "Voter \"$v\" is already an authorized voter. ",
-                      "The voter's key will be resent to the voter.\n";
+                print $tx->Voter_v_already_authorized($v);
             } else {
                 $voter_keys{$hash_voter_key} = 1;
                 $num_auth++; $edata{'num_auth'} = $num_auth;
@@ -557,7 +554,7 @@ sub SendKeys {
 	    }
 
             ElectionLog("Sending mail to a voter for poll $election_id\n");
-            print "Sending mail to voter \"$v\"...\n"; STDOUT->flush();
+            print $tx->Sending_mail_to_voter_v($v), $cr; STDOUT->flush();
 	    my $uniqueid = &SecureNonce;
 	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
@@ -579,45 +576,31 @@ sub SendKeys {
 <head>
 <meta content=\"text/html;charset=ISO-8859-1\" http-equiv=\"Content-Type\"
 </head>
-<body><p>
-A Condorcet Internet Voting Service election named <b>$title</b> has been created.
-You have been designated as a voter by the election supervisor,
-$name (<a href=\"mailto:$email_addr ($name)\">$email_addr</a>).</p>";
+<body><p>";
+	    $html .= $tx->voter_mail_intro($title, $name, $email_addr);
+	    $html .= '</p>';
 
 	    if (!($description =~ m/^(\s)*$/)) {
 		$html .= '<div style="border-style: solid; border-width: 1px; background-color: #f0f0f0; color: black">'.$cr.$cr;
-		$html .= '<b>Description of poll:</b>'.$cr;
+		$html .= '<b>' . $tx->Description_of_poll . '</b>' . $cr;
 		$html .= $description.'</div>'.$cr;
 	    }
-	    $html .= $cr.$cr.'<p>If you would like to vote, please visit the following URL:';
+	    $html .= $cr.$cr.'<p>'. $tx->if_you_would_like_to_vote_please_visit;
 	    $html .= MakeURL($url);
 
-	    $html .= '
-This is your private URL. Do not give it to anyone else, because they could use
-it to vote for you.
-</p><p>';
+	    $html .= $tx->This_is_your_private_URL . '</p><p>';
 	    if ($reveal_voters ne 'yes') {
-		$html .= '
-Your privacy will not be violated by voting.  The voting service has already
-destroyed the record of your email address and will not release any information
-about whether or how you have voted.';
+		$html .= $tx->Your_privacy_will_not_be_violated;
 	    } else {
-		$html .= '
-The poll supervisor has decided to make this a <strong>non-anonymous poll</strong>.  If
-you vote, how you voted will be publicly visible along with your
-email address. If you do not vote, the poll supervisor will be able
-to determine this.';
+		$html .= $tx->This_is_a_nonanonymous_poll;
 	    }
-	    $html .= $cr."</p><p>
-The poll has been announced to end $election_end.";
+	    $html .= $cr."</p><p>".$tx->poll_has_been_announced_to_end($election_end);
             if ($restrict_results ne 'yes') {
-		$html .=
-' To view the results of the poll once it is closed, visit:</p>'.
+		$html .= ' ' . $tx->To_view_the_results_at_the_end . '</p>';
 	    MakeURL(
 "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id");
 	    }
-	    $html .= '<p>
-For more information about the Condorcet Internet Voting Service, see:'.$cr.
+	    $html .= '<p>' . $tx->For_more_information . $cr;
             MakeURL($civs_home).'</p>
 </body>
 </html>';

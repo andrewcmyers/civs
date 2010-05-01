@@ -60,7 +60,7 @@ sub Poll_created {
 # start
 
 sub poll_started {
-    return 'A <strong>'.$_[1].'</strong> szavazás elindult.';
+    "Elindult a szavazás <strong>$_[1]</strong> néven.";
 }
 
 # control
@@ -74,7 +74,7 @@ sub Poll_control {
 sub poll_has_not_yet_started {
     return 'A szavazás még nem kezdődött el. Nyomd meg ezt a gombot az elindításához: ';
 }
-sub start_poll {
+sub Start_poll {
     return 'Szavazás elindítása';
 }
 
@@ -121,11 +121,7 @@ sub page_header_CIVS_Vote { # election_title
 }
 
 sub winners_text {
-    if ($_[1] == 1) {
-	return "Egy győztes van";
-    } else {
-	return "$num_winners győztes van";
-    }
+	return "$num_winners";
 }
 sub ballot_reporting_is_enabled {
     return 'A szavazatok kimutatása engedélyezve van ehhez a szavazáshoz.
@@ -133,7 +129,7 @@ sub ballot_reporting_is_enabled {
 	    nyilvános lesz amikor a szavazás lezárul.';
 }
 sub instructions1 { # winners_text, end, name, email
-    return "Csak a $_[1] fogja megnyerni a szavazást.<p>
+    return "A szavazásnak $_[1] győztese lesz.<p>
 	    A szavazás vége: <b>$_[2]</b>.
 	    A szavazás gazdája $_[3] (<tt>$_[4]</tt>).
 	    Ha segítségre van szükséged, keresd a szavazás gazdáját.";
@@ -249,5 +245,47 @@ sub writein_too_similar {
 }
 
 # results
+
+sub vote_has_already_been_cast {
+    return 'A szavazási kulcsoddal már van szavazat leadva';
+}
+
+sub following_URL_reports_results {
+    return 'A szavazás eredményét a következő helyen nézheted meg:';
+}
+
+sub Already_voted {
+    return 'Már szavaztál';
+}
+
+sub Go_back_to_poll_control {
+    return 'Vissza a szavazás vezérléséhez';
+}
+
+sub Writeins_currently_allowed {
+    return 'Választási lehetőségek beírás most engedélyezett.';
+}
+
+sub Poll_results_available_to_all_voters_when_poll_completes {
+    return 'A szavazás eredménye mindenki számára elérhető ha a szavazás lezárult.';
+}
+sub Writeins_allowed {
+    return 'Választási lehetőségek beírása engedélyezett.';
+}
+sub Detailed_ballot_reporting_enabled {
+    return 'A részletes eredmény kimutatása engedélyezett';
+}
+sub Voter_identities_will_be_kept_anonymous {
+    return 'A szavazók személye (email) névtelen marad.';
+}
+sub Description {
+    return 'Leírás:'
+}
+sub Candidates {
+    return 'Választási lehetőségek:';
+}
+sub Add_voters {
+    return 'Szavazók hozzáadása';
+}
 
 1; # package succeeded!
