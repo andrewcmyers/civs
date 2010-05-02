@@ -45,7 +45,7 @@ span.explain {font-size: 75%; color: #404040 }
 
 p, ul, li {background-color: transparent}
 
-h1, h2, h3   { font-family: Trebuchet MS, Verdana, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
+h1, h2, h3   { font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
 
 table.banner a:link { color: white }
 table.banner a:visited { color: white }
@@ -66,7 +66,7 @@ table.banner h2 { color: white }
 	       background-color: transparent }
 .symbol      { font-family: Symbol, symbol }
 
-h1  { font-size: 180%; text-align: center}
+h1  { font-size: 200%; text-align: center}
 h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }

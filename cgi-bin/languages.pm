@@ -22,7 +22,8 @@ our $log;
 my @variants =
   (['english', 'en-us', 1.0],
    ['english', 'en', 1.0],
-   ['hungarian', 'hu', 1.0]
+   ['hungarian', 'hu-hu', 0.95]
+   ['hungarian', 'hu', 0.95]
   );
 
 # Result: &init() determines the current language preference using the
@@ -30,6 +31,7 @@ my @variants =
 sub init {
     ($accept_language) = @_;
     chomp $accept_language;
+    $accept_language = lc $accept_language;
     my @reqs = split /\s*,\s*/, $accept_language;
     my @choices, my @qualities;
     for (my $i = 0; $i <= $#reqs; $i++) {
