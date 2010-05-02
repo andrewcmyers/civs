@@ -36,11 +36,11 @@ my %algorithm_modules = ('beatpath2', 1,
 # CheckLoad;
 # timeout(30);
 
-HTML_Header("CIVS poll result", 'results.js');
+HTML_Header($tx->CIVS_poll_result, 'results.js');
 
 use election;
 
-CIVS_Header("Poll Results: $title");
+CIVS_Header($tx->Poll_results($title));
 
 CheckElectionID;
 CheckStarted;

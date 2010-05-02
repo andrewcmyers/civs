@@ -41,9 +41,9 @@ if ($#addresses > $max_voters) {
 
 SendKeys($authorization_key, \@addresses);
 
-print "Done.\n</pre>\n";
+print $tx->Done . "</pre>", $cr;
 
-print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key\">Go back to poll control</a>");
+print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key\">".$tx->Go_back_to_poll_control.'</a>');
 
 # Destroy record of voter addresses so we can't
 # figure out who voted for what.

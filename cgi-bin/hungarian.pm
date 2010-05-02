@@ -58,13 +58,11 @@ sub Poll_created {
 }
 
 # start
-
 sub poll_started {
     "Elindult a szavazás <strong>$_[1]</strong> néven.";
 }
 
 # control
-
 sub CIVS_Poll_Control {
     return "CIVS Szavazás Vezérlése";
 }
@@ -78,6 +76,9 @@ sub Start_poll {
     return 'Szavazás elindítása';
 }
 
+sub End_poll {
+    return 'Szavazás leállítása';
+}
 sub ending_poll_cannot_be_undone {
     return 'A szavazás leállítását nem lehet visszacsinálni. Folytassuk?';
 }
@@ -114,6 +115,80 @@ sub poll_ends { # end
     return "A szavazás vége: $_[1].";
 }
 
+sub Poll_results_available_to_all_voters_when_poll_completes {
+    return 'A szavazás eredménye elérhető minden szavazónak ha a szavazás lezárult.';
+}
+sub Voters_can_choose_No_opinion {
+    return 'A szavazók választhatják a &ldquo;Nincs vélemény&rdquo; lehetőséget';
+}
+sub Voting_is_disabled_during_writeins {
+    return 'A szavazás az új lehetőségek felvitele közben letiltva.';
+}
+sub Poll_results_will_be_available_to_the_following_users {
+    return 'A szavazás eredménye a következő felhasználóknak lesz elérhető:';
+}
+sub Poll_results_are_now_available_to_the_following_users {
+    return 'A szavazás eredménye most csak a következő felhasználóknak érhető el,
+	    akiknek régebben ki lett küldve egy email a szavazás eredményéhez szóló URL-el:';
+}
+sub results_available_to_the_following_users {
+    'A szavazás eredménye csak a következő felhasználóknak elérhető:';
+}
+
+sub Poll_results_are_available { #url
+    return "<a href=\"$_[1]\">A szavazás eredménye</a>";
+}
+sub Poll_results_will_be_available { #url
+    return "<a href=\"$_[1]\">A szvavazás eredménye</a>";
+}
+sub Description {
+    return 'Leírás:';
+}
+sub Candidates {
+    return 'Lehetőségek:';
+}
+sub Add_voters {
+    return 'Szavazó hozzáadása';
+}
+
+sub the_top_n_will_win { # num_winners
+    my $wintxt;
+    if ($_[1] == 1) {
+	$wintxt = "lehetőség";
+    } else {
+	$wintxt = "$_[1] lehetőség";
+    }
+    return "A legjobb $wintxt fog nyerni.";
+}
+
+sub add_voter_instructions {
+    "Add meg a szavazók email címeit, minden sorban egyet.
+    ezek lehetnek új szavazók, vagy létező szavazók akik még nem szavaztak.
+    Egy zártkörű szavazásnál egy már létező szavazó e-mail címének megadása
+    <strong>nem fogja</strong> azt okozni, hogy az a szavazó kétszer szavazhasson,
+    csupán újraküldi a meghívót a szavazáshoz.
+    Egy nyílt szavazásnál csak jelképes próbálkozás történik a többszörös szavazás
+    kivédésére.";
+}
+sub Upload_file {
+    'Fájl feltöltése: ';
+}
+sub Load_ballot_data {
+    'Szavazat adat betöltése';
+}
+sub File_to_upload_ballots_from {
+    'Fájl a szavazat adatok betöltésére:';
+}
+sub This_is_a_public_poll_plus_link {
+    my $url = $_[1];
+    "Ez egy nyílt szavazás. Oszd meg a következő hivatkozást
+    a szavazókkal, hogy szavazhassanak:</p><p>
+	&nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
+}
+sub The_poll_has_ended {
+    'A szavazás lezárult.';
+}
+
 # vote
 
 sub page_header_CIVS_Vote { # election_title
@@ -121,50 +196,50 @@ sub page_header_CIVS_Vote { # election_title
 }
 
 sub winners_text {
-	return "$num_winners";
+    return "$num_winners";
 }
 sub ballot_reporting_is_enabled {
     return 'A szavazatok kimutatása engedélyezve van ehhez a szavazáshoz.
-	    A szavazatod (a választási lehetségekhez rendelt rangsorod)
-	    nyilvános lesz amikor a szavazás lezárul.';
+        A szavazatod (a választási lehetségekhez rendelt rangsorod)
+        nyilvános lesz amikor a szavazás lezárul.';
 }
 sub instructions1 { # winners_text, end, name, email
     return "A szavazásnak $_[1] győztese lesz.<p>
-	    A szavazás vége: <b>$_[2]</b>.
-	    A szavazás gazdája $_[3] (<tt>$_[4]</tt>).
-	    Ha segítségre van szükséged, keresd a szavazás gazdáját.";
+        A szavazás vége: <b>$_[2]</b>.
+        A szavazás gazdája $_[3] (<tt>$_[4]</tt>).
+        Ha segítségre van szükséged, keresd a szavazás gazdáját.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($no_opinion, my $prop, my $combined, my $civs_url) = @_;
     my $ret;
     if (!$prop || !$combined) {
-	$ret = "Rendelj a következő lehetőségek mindegyikéhez egy rangot,
-	    ahol <b>a kisebb szám jelöli a szerinted jobb megoldást</b>.
-	    Például a szerinted legjobb legyen az 1-es.
-	    Azoknak a lehetőségeknek, amelyeket ugyanolyannak tartasz,
+    $ret = "Rendelj a következő lehetőségek mindegyikéhez egy rangot,
+        ahol <b>a kisebb szám jelöli a szerinted jobb megoldást</b>.
+        Például a szerinted legjobb legyen az 1-es.
+        Azoknak a lehetőségeknek, amelyeket ugyanolyannak tartasz,
         add ugyanazt a számot.
         Nem kell minden lehetséges számot felhasználnod.
         Minden lehetőség alapértelmezetten a legalacsonyabb lehetséges
         rangot kapja. ". $cr;
-	if ($no_opinion) {
-	    $ret .= '<b>Figyelem:</b> A &ldquo;Nincs vélemény&rdquo;
-		    <i>nem</i> ugyanaz, mint a lehetséges legalacsonyabb rang;
+    if ($no_opinion) {
+        $ret .= '<b>Figyelem:</b> A &ldquo;Nincs vélemény&rdquo;
+            <i>nem</i> ugyanaz, mint a lehetséges legalacsonyabb rang;
             azt jelenti, hogy nem akarod a lehetőséget rangsorolni a többi
             lehetőséghez képest.</p>';
-	}
-	if ($proportional) {
-	    $ret .= '<p>Ezt a szavazást egy kísérleti Condorcet alapú módszerrel
+    }
+    if ($proportional) {
+        $ret .= '<p>Ezt a szavazást egy kísérleti Condorcet alapú módszerrel
         számoljuk ki, amelyet arra terveztek, hogy arányos képviseletet biztosítson.
         A szavazás algoritmusa azt feltételezi, hogy a szerinted legjobb <i>nyerő</i>
         lehetőséget olyan magasra rangsorolod, amennyire csak lehet, és ha
         a nyerő lehetőségek két halmaza egyezik az általad legjobban preferált
         lehetőségben, akkor te a második helyen rangsorolt alapján döntenél,
         és így tovább. ';
-	}
+    }
     } else {
-	$ret = '<p>Ezt a szavazást egy kísérleti Condorcet alapú módszerrel
+    $ret = '<p>Ezt a szavazást egy kísérleti Condorcet alapú módszerrel
     számoljuk ki.
-	Adj a következő lehetőségeknek egy <b>súlyozást<b> amely
+    Adj a következő lehetőségeknek egy <b>súlyozást<b> amely
     kifejezi azt, hogy mennyire szeretnéd az adott lehetőséget
     a nyerő lehetőségek halmazában látni.
     Az algoritmus feltételezi, hogy a súlyozások összegét
@@ -174,18 +249,27 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     A súlyok nem lehetnek negatívak vagy nagyobbak mint 999.
     Nem segít ha a súlyozást nagyobbra veszed mint más szavazók
     súlyozása, mert a te súlyaidat csak egymással hasonlítjuk össze.'.
-	"<a href=\"$civs_url/proportional.html\">[További információk]</a>.</p>";
+    "<a href=\"$civs_url/proportional.html\">[További információk]</a>.</p>";
     }
     return $ret;
 }
 
+sub Rank {
+    return 'Rang';
+}
+sub Choice {
+    return 'Választás';
+}
+sub Weight {
+    return 'Súly';
+}
 sub address_will_be_visible {
     return '<strong>Az email címed látható lesz</strong> a szavazatodon.';
 }
 
 sub ballot_will_be_anonymous {
     return ' Mindazonáltal a szavazatod titkos les: '
-	 . 'nem jelenik meg személyes adat rajta.';
+     . 'nem jelenik meg személyes adat rajta.';
 }
 
 sub submit_ranking {
@@ -219,11 +303,11 @@ sub buttons_are_deactivated {
 sub ranking_instructions {
     return
        'Rangsorold a lehetőségeket az alábbi módok valamelyikével:
-	<ol>
-	    <li>húzd a sort a helyére
-	    <li>Használd a rangsor oszlopban a legördülő menüt
-	    <li>válassz ki sorokat és használd a fenti gombokat
-	</ol>';
+    <ol>
+        <li>húzd a sort a helyére
+        <li>Használd a rangsor oszlopban a legördülő menüt
+        <li>válassz ki sorokat és használd a fenti gombokat
+    </ol>';
 }
 
 sub write_in_a_choice {
@@ -231,11 +315,11 @@ sub write_in_a_choice {
 }
 sub if_you_have_already_voted { #url
     return "Ha már szavaztál, megnézheted
-	<a href=\"$_[1]\">az aktuális eredményeket</a>.";
+    <a href=\"$_[1]\">az aktuális eredményeket</a>.";
 }
 sub thank_you_for_voting { #title, receipt
     return "Köszönjük. A szavazatod <strong>$_[1]</strong> témában
-	sieresen leadva. A szavazói nyugtád kódja: ". code($_[2]).".";
+    sieresen leadva. A szavazói nyugtád kódja: <code>$_[2]</code>.";
 }
 sub name_of_writein_is_empty {
     return "A választási lehetőség neve üres";
@@ -244,7 +328,7 @@ sub writein_too_similar {
     return "Sajnáljuk, a választási lehetőség neve túlságosan hasonló egy már létezőhöz";
 }
 
-# results
+# election
 
 sub vote_has_already_been_cast {
     return 'A szavazási kulcsoddal már van szavazat leadva';
@@ -258,34 +342,272 @@ sub Already_voted {
     return 'Már szavaztál';
 }
 
+sub Error {
+    'Hiba';
+}
+sub Invalid_key {
+    'Hibás kulcs. Egy megfelelő URL-t kellett kapjál emailben a szavazás
+    irányításához. Ez a hiba naplózva lett.';
+}
+sub Authorization_failure {
+    'Jogosultsági hiba';
+}
+
+sub already_ended { # title 
+    "Ez a szvazás (<strong>$_[1]</strong>) már lezárult.";
+}
+sub The_results_of_this_completed_poll_are_here {
+    'Ennek a lezárult szvazásnak az eredménye itt van:';
+}
+
+sub No_write_access_to_lock_poll {
+    "Nincs írásjogunk a szavazás zárolásához.";
+}
+sub This_poll_has_already_been_started { # title
+    "Ez a szavazás ($_[1]) már elindult.";
+}
+sub No_write_access_to_start_poll {
+    'nincs írásjogunk a szavazás indításához.';
+}
+sub Poll_does_not_exist_or_not_started {
+    'Ez a szavazás nem létezik vagy még nem indult el.';
+}
+sub Your_voter_key_is_invalid__check_mail { # voter
+   my $voter = $_[1];
+   if ($voter ne '') {
+    "A szavazási kulcsod hibás, $voter.
+     A megfelelú URL-t emailben meg kellett volna kapnod.";
+   } else {
+    "A szavazási kulcsod hibás.
+     A megfelelú URL-t emailben meg kellett volna kapnod.";
+   }
+}
+sub Invalid_result_key { # key
+    "Hibás kulcs az eredményhez: \"$_[1]\". A szavazás eredményének megtekintéséhez
+    e-mailben kellett volna megkapd a megfelelő URL-t. Ez a hiba naplózva lett."
+}
+sub Invalid_control_key { # key
+    "Hibás vezérlő kulcs. E-mailben kellett volna megkapd a megfelelő URL-t. Ez a hiba naplózva lett.";
+}
+sub Invalid_voting_key {
+    "Hibás szavazó kulcs. E-mailben kellett volna megkapd a megfelelő URL-t. Ez a hiba naplózva lett.";
+}
+sub Invalid_poll_id {
+    "Hibás szavazás azonosító";
+}
+sub Poll_id_not_valid { #id
+    "A szavazás azonosítója (\"$_[1]\") hibás.";
+}
+sub Unable_to_append_to_poll_log {
+    "Nem bírok a szavazás naplójához hozzáadni.";
+}
+sub Voter_v_already_authorized {
+    "A szavazó (\"$_[1]\") már a névjegyzékben van.
+     A szavazó kulcsát újraküldöm.";
+}
+sub Invalid_email_address { # addr
+    "Hibás email cím: $v";
+}
+sub Sending_mail_to_voter_v {
+    "Levél küldése a szavazónak: \"$_[1]\"...";
+}
+sub voter_mail_intro { #title, name, email_addr
+"Egy szavazás indult a Condorcet Internetes Szavazási Szolgáltatásban <b>$_[1]</b> néven.
+A szavazás gazdája felvett téged a szavazók jegyzékébe,
+$_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
+}
+sub description_of_poll {
+    "A szavazás leírása:";
+}
+sub if_you_would_like_to_vote_please_visit {
+    'A szavazáshoz kérlek látogasd meg a következő webhelyet:';
+}
+sub This_is_your_private_URL {
+'Ez a te személyes címed. Ne add oda senki másnek, mert akkor helyetted tudnának szavazni.';
+}
+sub Your_privacy_will_not_be_violated {
+'A magánéletedet a szavazás nem sérti. A szavazási szolgáltatás már letörölte az e-mail címedet tartalmazó bejegyzést, és nem szolgáltat semmilyen információt arról, hogy szavaztál-e, és hogyan.';
+}
+sub This_is_a_nonanonymous_poll {
+'A szavazás gazdája úgy döntött, hogy ez egy <strong>név szerinti szavazás</strong>. 
+Ha szavazol, a szavazatod nyilvánosan látható lesz az e-mail címeddel együtt. Ha nem szavazol,
+a szavazás gazdája azt is ki tudja deríteni.';
+}
+
+sub poll_has_been_announced_to_end { #election_end
+    "A szavazás végének időpontja: $_[1].";
+}
+
+sub To_view_the_results_at_the_end {
+    'A szavazás eredményének megtekintéséhez annak lezárása után a következő címet tekintsd meg:</p>';
+}
+
+sub For_more_information {
+'A Condorcet Internetes Szavazási Szolgáltatásról további információkat a következő címen tuhatsz meg:';
+}
+
+
+# close
+
+sub CIVS_Ending_Poll {
+    'CIVS: Szavazás befejezése';
+}
+
+sub Ending_poll {
+    'Egy szavazás befejezése';
+}
+sub View_poll_results {
+    'A szavazás eredményének megtekintése';
+}
+sub Poll_ended { #title
+    return "Szavazás lezárult: $_[1]";
+}
+
+sub The_poll_has_been_ended { #election_end
+    "A szavazás már lezárult. A szavazás vége a következő időpontra lett meghirdetve: $_[1].";
+}
+
+sub poll_results_available_to_authorized_users {
+    'A szavazás eredménye a jogosult felhasználók számára már látható.';
+}
+
+
+# results
+
 sub Go_back_to_poll_control {
-    return 'Vissza a szavazás vezérléséhez';
+    return 'Vissza a szavazás irányításához';
 }
 
 sub Writeins_currently_allowed {
-    return 'Választási lehetőségek beírás most engedélyezett.';
+    'Új lehetőségek hozzáadása most engedélyezett.';
 }
 
-sub Poll_results_available_to_all_voters_when_poll_completes {
-    return 'A szavazás eredménye mindenki számára elérhető ha a szavazás lezárult.';
-}
 sub Writeins_allowed {
-    return 'Választási lehetőségek beírása engedélyezett.';
+    'Új lehetőségek hozzáadása engedélyezett.';
+}
+sub Writeins_not_allowed {
+    'Write-in candidates are not allowed.';
 }
 sub Detailed_ballot_reporting_enabled {
-    return 'A részletes eredmény kimutatása engedélyezett';
+    'Új lehetőségek hozzáadása nem engedélyezett.';
+}
+sub Detailed_ballot_reporting_disabled {
+    'Részletes szavazatkimutatás letiltva.';
 }
 sub Voter_identities_will_be_kept_anonymous {
-    return 'A szavazók személye (email) névtelen marad.';
+    'A szavazás titkos.';
 }
-sub Description {
-    return 'Leírás:'
+sub Voter_identities_will_be_public {
+    'A szavazás név szerinti. A szavazók e-mail címe publikálva lesz a szavazatukkal együtt.';
 }
-sub Candidates {
-    return 'Választási lehetőségek:';
+sub undefined_algorithm {
+    'Error: undefined algorithm.';
 }
-sub Add_voters {
-    return 'Szavazók hozzáadása';
+sub computing_results {
+    'Eredmények kiszámítása...';
+}
+sub Supervisor { #name, email
+    "A szavazás gazdája: $_[1] ($_[2])";
+}
+sub Announced_end_of_poll {
+    "A szavazás lezárásának meghírdetett ideje: $_[1]";
+}
+sub Actual_time_poll_closed { # close time
+    "A szavazás lezárásának valós ideje: $_[1]";
+}
+sub Poll_not_ended {
+    'A szavazás még nem zárult le.';
+}
+sub This_is_a_test_poll {
+    'Ez egy teszt szavazás.';
+}
+sub This_is_a_private_poll { #num_auth
+    "Privát szavazás ($_[1] szavazásra jogosult)";
+}
+sub This_is_a_public_poll {
+    'Ez egy nyilvános szavazás.';
 }
 
+sub Actual_votes_cast { #num_votes
+    "Leadott szavazatok száma: $num_votes";
+}
+sub Number_of_winning_candidates {
+    'A győztes lehetőségek száma: ';
+}
+sub Poll_actually_has { #winmsg
+    my $winmsg = '1';
+    if ($_[1] != 1) {
+	$winmsg = $real_nwin.'';
+    }
+    "&nbsp;(A szavazásnak valójában $winmsg győztese van.)";
+}
+sub poll_description_hdr {
+    'Szavazás leírása';
+}
+sub Ranking_result {
+    'Rangsorolás eredménye';
+}
+sub x_beats_y { # x y w l 
+    "$_[1] jobb mint $_[2] ($_[3]&ndash;$_[4])";
+}
+sub x_ties_y { # x y w l 
+    "$_[1] és $_[2] holtversenyben van ($_[3]&ndash;$_[4])";
+}
+sub x_loses_to_y { # x y w l 
+    "$_[1] rosszabb mint $_[2] ($_[3]&ndash;$_[4])";
+}
+sub some_result_details_not_shown {
+    'Az egyszerűség kedvéért a szavazás eredményének néhány részletét nem mutatjuk.';
+}
+sub Show_details {
+    'Részletek mutatása';
+}
+sub Hide_details {
+    'Részletek elrejtése';
+}
+sub Result_details {
+    'Az eredmény részletei';
+}
+sub Ballot_report {
+    'Szavazat részletek';
+}
+sub Ballots_are_shown_in_random_order {
+    "A szavazatokat véletlenszerű sorrendben mutatjuk.";
+}
+sub Download_ballots_as_a_CSV { # url
+    "<a href=\"$url\">Szavazatok letöltése</a> CSV-ként.";
+}
+sub No_ballots_were_cast {
+    "Ebben a szavazásban nem szavazott senki.";
+}
+sub Ballot_reporting_was_not_enabled {
+    "A szavazatok kimutatása ebben a szavazásban nem engedélyezett.";
+}
+sub Tied {
+    "<i>Holtverseny</i>:";
+}
+sub loss_explanation { # loss_to, for, against
+    ', gyengébb mint '. $_[1].' ennyivel: '. $_[2] .'&ndash;'. $_[3];
+}
+sub loss_explanation2 {
+    '&nbsp;&nbsp;gyengébb mint '.$choices[$condorcet_winner].' ennyivel '.
+	$matrix[$condorcet_winner][$winner[$i]].'&ndash;'.
+	$matrix[$winner[$i]][$condorcet_winner];
+}
+sub Condorcet_winner_explanation {
+    '&nbsp;&nbsp;(Condorcet nyertes: minden más lehetőséggel szemben nyert)';
+}
+sub undefeated_explanation {
+    '&nbsp;&nbsp;(Nem verte meg másik lehetőség.)';
+}
+sub Choices_shown_in_red_have_tied {
+    "A pirossal jelölt lehetőségek holtversenyben vannak.
+	Lehet hogy véletlenszerűen akarsz választani közülük.";
+}
+sub Condorcet_winner {
+    "Condorcet nyertes";
+}
+sub Choices_in_individual_pref_order {
+    'Lehetőségek (az egyéni preferencia sorrendjében)';
+}
 1; # package succeeded!

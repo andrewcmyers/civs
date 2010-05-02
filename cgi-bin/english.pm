@@ -144,7 +144,7 @@ sub Poll_control {
 sub poll_has_not_yet_started {
     'The poll has not yet started. Press this button to start it: ';
 }
-sub start_poll {
+sub Start_poll {
     'Start poll';
 }
 sub End_poll {
@@ -284,6 +284,9 @@ sub Total_of_x_voters_authorized { # x
 
 sub Go_back_to_poll_control {
     'Go back to poll control';
+}
+sub Done {
+    'Done.';
 }
 
 # vote
@@ -590,6 +593,13 @@ sub was_not_able_stop_the_poll {
 
 
 # results
+
+sub CIVS_poll_result {
+    "CIVS poll result";
+}
+sub Poll_results { # title
+    "Poll Results: $_[1]";
+}
 
 sub Writeins_currently_allowed {
     'Write-in choices are currently allowed.';
