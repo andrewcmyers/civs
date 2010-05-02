@@ -3,8 +3,7 @@ package languages;
 use strict;
 no strict 'refs';
 use warnings;
-use english;
-use hungarian;
+use lib '@CGIBINDIR@';
 
 BEGIN {
     use Exporter ();
@@ -59,6 +58,7 @@ sub init {
 	    }
 	}
     }
+    require "$language.pm";
     my $init = $language . "::init";
     $tx = &$init();
     return;

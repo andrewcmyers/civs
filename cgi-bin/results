@@ -192,12 +192,12 @@ sub ComputeResults {
     if ($restrict_results eq 'yes') {
 	&election::ReportResultReaders;
     }
-    print RESULTS span($tx->Announced_end_of_poll($election_end)), br();
+    print RESULTS span($tx->Announced_end_of_poll($election_end)), br, $cr;
     if (IsStopped) {
 	my $close_time = $vdata_copy{'close_time'};
-	print RESULTS $tx->Actual_time_poll_closed($close_time);
+	print RESULTS $tx->Actual_time_poll_closed($close_time), br, $cr;
     } else {
-	print RESULTS $tx->Poll_not_ended, br();
+	print RESULTS $tx->Poll_not_ended, br, $cr;
     }
     if ($external_ballots eq 'yes') {
 	print RESULTS $tx->This_is_a_test_poll, br, $cr;
@@ -247,13 +247,13 @@ sub ComputeResults {
 	$bw_checked = 'checked';
     }
 
-    print RESULTS 'Condorcet completion rule:
+    print RESULTS $tx->Condorcet_completion_rule.'
 	<input type="radio"
 	    name="algorithm"
 	    onClick="newSettings()"
 	    value="beatpath" ',
 	    $bw_checked,
-	'> Beatpath/Schulze/CSSD &nbsp;&nbsp;
+	'> Schulze/Beatpath/CSSD &nbsp;&nbsp;
 	<input type="radio"
 	    name="algorithm",
 	    onClick="newSettings()"

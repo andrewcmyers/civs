@@ -623,6 +623,9 @@ sub Voter_identities_will_be_kept_anonymous {
 sub Voter_identities_will_be_public {
     'Voter identities (email) will be publicly associated with their ballots.';
 }
+sub Condorcet_completion_rule {
+    'Condorcet completion rule:';
+}
 sub undefined_algorithm {
     'Error: undefined algorithm.';
 }
