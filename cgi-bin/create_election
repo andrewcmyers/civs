@@ -47,8 +47,7 @@ sub Filter {
 my $email_addr = param('email_addr');
 $email_addr = mail::TrimAddr($email_addr);
 if (!&CheckAddr($email_addr)) {
-    print header(), start_html($tx->Invalid_email_address_hdr);
-    HTML_Header($tx->CIVS_Poll_Creation);
+    HTML_Header($tx->Invalid_email_address_hdr);
     CIVS_Header();
     print h1($tx->Invalid_email_address_hdr);
     print p($tx->Address_unacceptable($email_addr));
