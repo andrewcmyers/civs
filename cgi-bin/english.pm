@@ -517,6 +517,9 @@ sub Invalid_email_address { # addr
 sub Sending_mail_to_voter_v {
     "Sending mail to voter \"$_[1]\"...";
 }
+sub CIVS_poll_supervisor {
+    'CIVS poll supervisor';
+}
 sub voter_mail_intro { #title, name, email_addr
 "A Condorcet Internet Voting Service election named <b>$_[1]</b> has been created.
 You have been designated as a voter by the election supervisor,

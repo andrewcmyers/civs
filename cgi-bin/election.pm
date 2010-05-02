@@ -493,12 +493,12 @@ sub SendBody {
     Send '';
     Send "--$boundary";
     Send 'Content-Encoding: 8bit';
-    Send 'Content-Type: text/plain; charset=ISO-8859-1; format=flowed';
+    Send 'Content-Type: text/plain; charset=UTF-8; format=flowed';
     Send '';
     Send $plain;
     Send "--$boundary";
     Send 'Content-Encoding: 8bit';
-    Send 'Content-Type: text/html; charset=ISO-8859-1';
+    Send 'Content-Type: text/html; charset=UTF-8';
     Send '';
     Send $html;
     Send "--$boundary--";
@@ -561,7 +561,7 @@ sub SendKeys {
 	    Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
             Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
-            Send "From: $email_addr ($name, CIVS poll supervisor)";
+            Send "From: $email_addr ($name, ".$tx->CIVS_poll_supervisor.')';
             Send "Sender: $email_addr";
             Send "Reply-To: $email_addr";
 	    Send "Message-ID: <$messageid>";
@@ -574,7 +574,7 @@ sub SendKeys {
 "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
 <html>
 <head>
-<meta content=\"text/html;charset=ISO-8859-1\" http-equiv=\"Content-Type\"
+<meta content=\"text/html;charset=UTF-8\" http-equiv=\"Content-Type\"
 </head>
 <body><p>";
 	    $html .= $tx->voter_mail_intro($title, $name, $email_addr);
