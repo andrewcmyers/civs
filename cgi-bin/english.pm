@@ -86,7 +86,7 @@ sub creation_email_info1 { # title, url
 $_[1]. You have been designated as the supervisor of this
 poll. To start and stop the poll, please use the following URL:
 
-  $url
+  $_[2]
 
 ";
 }
@@ -109,7 +109,7 @@ sub Results_of_CIVS_poll { # title
     "Results of CIVS poll: $title";
 }
 sub Results_key_email_body { # title, url, civs_home
-"A new CIVS poll has been created named $_[1].
+"A new CIVS poll has been created named \"$_[1]\".
 You have been designated as a user who is permitted to see the
 result of this poll.
 
