@@ -1,6 +1,6 @@
 package english;
 
-sub lang { return 'en-US'; }
+sub lang { 'en-US'; }
 
 sub init {
     my $self = {};
@@ -10,123 +10,194 @@ sub init {
 
 # civs_common
 sub Condorcet_Internet_Voting_Service {
-    return 'Condorcet Internet Voting Service';
+    'Condorcet Internet Voting Service';
+}
+sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
+    'Condorcet Internet Voting Service';
 }
 sub about_civs {
-    return 'About CIVS';
+    'About CIVS';
 }
 sub create_new_poll {
-    return 'Create new poll';
+    'Create new poll';
 }
 sub about_security_and_privacy {
-    return 'About security and privacy';
+    'About security and privacy';
 }
 sub FAQ {
-    return 'FAQ';
+    'FAQ';
 }
 sub CIVS_suggestion_box {
-    return 'CIVS suggestion box';
+    'CIVS suggestion box';
 }
 sub unable_to_process {
-    return 'CIVS is unable to process your request because of an internal error.';
+    'CIVS is unable to process your request because of an internal error.';
+}
+sub CIVS_Error {
+    'CIVS Error';
+}
+sub CIVS_server_busy {
+    'CIVS server busy';
+}
+sub Sorry_the_server_is_busy {
+    'Sorry, the CIVS web server is very busy right now and
+     cannot handle more requests. Please try again a little later.';
 }
 
 # civs_create
 
 sub mail_has_been_sent {
-    return "Mail has been sent to the address you provided (<tt>$_[1]</tt>).";
+    "Mail has been sent to the address you provided (<tt>$_[1]</tt>).";
 }
 
 sub click_on_the_URL_to_start {
-    return "Click on the URL in that email to start the poll: <strong>$_[1]</strong>.";
+    "Click on the URL in that email to start the poll: <strong>$_[1]</strong>.";
 }
 
 sub here_is_the_control_URL {
-    return 'Here is the URL to control the new poll. In ordinary operation
+    'Here is the URL to control the new poll. In ordinary operation
              this would be sent to the supervisor via e-mail.';
 }
 sub the_poll_is_in_progress {
-    return 'The poll is in progress. Press this button to end it: ';
+    'The poll is in progress. Press this button to end it: ';
 }
 
 sub CIVS_Poll_Creation {
-    return "CIVS Poll Creation";
+    "CIVS Poll Creation";
 }
 sub Poll_created {
-    return "Poll created: $_[1]"
+    "Poll created: $_[1]"
 }
 
+sub Address_unacceptable { #addr
+    "The address \"$_[1]\" is not acceptable";
+}
+sub Poll_must_have_two_choices {
+    'A poll must have at least two choices.';
+}
+sub Poll_directory_not_writeable {
+    "The poll directory is not writeable";
+}
+sub CIVS_poll_created {
+ "CIVS poll created: $title";
+}
+sub creation_email_info1 { # title, url
+"This email acknowledges the creation of a new poll,
+$_[1]. You have been designated as the supervisor of this
+poll. To start and stop the poll, please use the following URL:
+
+  $url
+
+";
+}
+sub creation_email_public_link { # url
+"Because this is a public poll, voters may be directed to the following URL:
+
+  $_[1]
+
+";
+}
+sub for_more_information_about_CIVS { # url
+"For more information about the Condorcet Internet Voting Service, see
+  $_[1]";
+}
+
+sub Sending_result_key { # addr
+    "Sending result key to '$_[1]'";
+}
+sub Results_of_CIVS_poll { # title
+    "Results of CIVS poll: $title";
+}
+sub Results_key_email_body { # title, url, civs_home
+"A new CIVS poll has been created named $_[1].
+You have been designated as a user who is permitted to see the
+result of this poll.
+
+Save this email. If you lose it you will not have access to
+the results. Once the poll has been closed, results will be
+available at the following URL:
+
+  $_[2]
+
+This URL is private. Allowing unauthorized users access to this
+URL will permit them to see the poll results.
+For more information about the Condorcet Internet Voting Service, see
+  $_[3]
+
+";
+}
+  
 # start
 
 sub poll_started {
-    return 'The poll <strong>'.$_[1].'</strong> has been started.';
+    'The poll <strong>'.$_[1].'</strong> has been started.';
 }
 
 # control
 
 sub CIVS_Poll_Control {
-    return "CIVS Poll Control";
+    "CIVS Poll Control";
 }
 sub Poll_control {
-    return "Poll Control";
+    "Poll Control";
 }
 sub poll_has_not_yet_started {
-    return 'The poll has not yet started. Press this button to start it: ';
+    'The poll has not yet started. Press this button to start it: ';
 }
 sub start_poll {
-    return 'Start poll';
+    'Start poll';
 }
 sub End_poll {
-    return 'End poll';
+    'End poll';
 }
 sub ending_poll_cannot_be_undone {
-    return 'Ending a poll is an operation that cannot be undone. Continue?';
+    'Ending a poll is an operation that cannot be undone. Continue?';
 }
 sub writeins_have_been_disabled {
-    return 'Write-in candidates have been disabled';
+    'Write-in candidates have been disabled';
 }
 sub disallow_further_writeins {
-    return 'Write-in candidates have been disabled';
+    'Write-in candidates have been disabled';
 }
 sub voting_disabled_during_writeins {
-    return 'Voting is currently disabled during the write-in phase.';
+    'Voting is currently disabled during the write-in phase.';
 }
 sub allow_voting_during_writeins {
-    return "Allow voting during write-in phase";
+    "Allow voting during write-in phase";
 }
 sub this_is_a_test_poll {
-    return 'This is a test poll.';
+    'This is a test poll.';
 }
 
 sub poll_supervisor { # name, email
-    return "Poll supervisor: $_[1] (<tt>$_[2]</tt>)";
+    "Poll supervisor: $_[1] (<tt>$_[2]</tt>)";
 }
 sub no_authorized_yet { #waiting
-    return "0 ($_[1] voters will be authorized when the poll is started)";
+    "0 ($_[1] voters will be authorized when the poll is started)";
 }
 sub total_authorized_voters { # num_auth_string
-    return "Total authorized voters: $_[1]";
+    "Total authorized voters: $_[1]";
 }
 sub actual_votes_so_far { # num
- return "Actual votes cast thus far: $_[1]";
+    "Actual votes cast thus far: $_[1]";
 }
 sub poll_ends { # end
-    return "Poll ends $_[1].";
+    "Poll ends $_[1].";
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
-    return 'Poll results available to all voters when poll completes.';
+    'Poll results available to all voters when poll completes.';
 }
 sub Voters_can_choose_No_opinion {
-    return 'Voters can choose &ldquo;No opinion&rdquo;';
+    'Voters can choose &ldquo;No opinion&rdquo;';
 }
 sub Voting_is_disabled_during_writeins {
-    return 'Voting is disabled during the write-in period.';
+    'Voting is disabled during the write-in period.';
 }
 sub Poll_results_will_be_available_to_the_following_users {
-    return 'Poll results will be available only to the following users:';
+    'Poll results will be available only to the following users:';
 }
 sub Poll_results_are_now_available_to_the_following_users {
-    return 'Poll results are now available only to the following users,
+    'Poll results are now available only to the following users,
 	    who were earlier sent an email containing a URL for
 	     viewing results:';
 }
@@ -135,19 +206,19 @@ sub results_available_to_the_following_users {
 }
 
 sub Poll_results_are_available { #url
-    return "<a href=\"$_[1]\">See poll results</a>";
+    "<a href=\"$_[1]\">See poll results</a>";
 }
 sub Poll_results_will_be_available { #url
-    return "<a href=\"$_[1]\">See poll results</a>";
+    "<a href=\"$_[1]\">See poll results</a>";
 }
 sub Description {
-    return 'Description:';
+    'Description:';
 }
 sub Candidates {
-    return 'Candidates:';
+    'Candidates:';
 }
 sub Add_voters {
-    return 'Add voters';
+    'Add voters';
 }
 
 sub the_top_n_will_win { # num_winners
@@ -188,10 +259,37 @@ sub The_poll_has_ended {
     'The poll has ended.';
 }
 
+# add voters
+
+sub CIVS_Adding_Voters {
+    'CIVS: Adding Voters';
+}
+sub Adding_voters {
+    'Adding voters';
+}
+
+sub Sorry_voters_can_only_be_added_to_poll_in_progress {
+    'Sorry, voters can only be added to an poll in progress.';
+}
+
+sub Total_of_x_voters_authorized { # x
+    if ($_[1] == 0) {
+	print "No voters authorized to vote yet.", $cr, '</pre>';
+    } elsif ($_[1] == 1) {
+	print "Only 1 voter authorized to vote so far.", $cr, '</pre>';
+    } else {
+	print "Total of $_[1] voters authorized to vote.", $cr, '</pre>';
+    }
+}
+
+sub Go_back_to_poll_control {
+    'Go back to poll control';
+}
+
 # vote
 
 sub page_header_CIVS_Vote { # election_title
-    return 'CIVS Vote: '.$_[1];
+    'CIVS Vote: '.$_[1];
 }
 
 sub winners_text {
@@ -202,12 +300,12 @@ sub winners_text {
     }
 }
 sub ballot_reporting_is_enabled {
-    return 'Ballot reporting is enabled for this poll.
-	    Your ballot (the rankings you assign to candidates)
-	    will be made public when the poll ends.';
+    'Ballot reporting is enabled for this poll.
+     Your ballot (the rankings you assign to candidates)
+     will be made public when the poll ends.';
 }
 sub instructions1 { # winners_text, end, name, email
-    return "Only the $_[1] will win the poll.<p>
+    "Only the $_[1] will win the poll.<p>
 	    The poll ends <b>$_[2]</b>.
 	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
 	    Contact the poll supervisor if you need help.";
@@ -260,55 +358,54 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     return $ret;
 }
 sub Rank {
-    return 'Rank';
+    'Rank';
 }
 sub Choice {
-    return 'Choice';
+    'Choice';
 }
 sub Weight {
-    return 'Weight';
+    'Weight';
 }
 
 sub address_will_be_visible {
-    return '<strong>Your email address will be visible</strong> along with your ballot.';
+    '<strong>Your email address will be visible</strong> along with your ballot.';
 }
 
 sub ballot_will_be_anonymous {
-    return ' However, your ballot will still be anonymous: '
-	 . 'no personally identifying information will appear.';
+    ' However, your ballot will still be anonymous:
+      no personally identifying information will appear.';
 }
 
 sub submit_ranking {
-    return 'Submit ranking';
+    'Submit ranking';
 }
 
 sub only_writeins_are_permitted {
-    return 'Voting is not yet permitted in this poll. However,
+    'Voting is not yet permitted in this poll. However,
              you may view the available choices and write in new
 	     choices. Use the text field below to write in new choices.';
 }
 
 sub to_top {
-    return 'to top';
+    'to top';
 }
 sub to_bottom {
-    return 'to bottom';
+    'to bottom';
 }
 sub move_up {
-    return 'move up';
+    'move up';
 }
 sub move_down {
-    return 'move down';
+    'move down';
 }
 sub make_tie {
-    return 'make tie';
+    'make tie';
 }
 sub buttons_are_deactivated {
-    return 'These buttons are deactivated because
+    'These buttons are deactivated because
 	your browser does not support Javascript.';
 }
 sub ranking_instructions {
-    return
        'Rank the choices in one of three ways:
 	<ol>
 	    <li>drag the rows
@@ -318,21 +415,21 @@ sub ranking_instructions {
 }
 
 sub write_in_a_choice {
-    return 'Write in a new choice: ';
+    'Write in a new choice: ';
 }
 sub if_you_have_already_voted { #url
-    return "If you have already voted, you may see
+    "If you have already voted, you may see
 	<a href=\"$_[1]\">the current poll results</a>.";
 }
 sub thank_you_for_voting { #title, receipt
-    return "Thank you. Your vote for <strong>$_[1]</strong> has been
+    "Thank you. Your vote for <strong>$_[1]</strong> has been
 	successfully cast. Your voter receipt is <code>$_[2]</code>.";
 }
 sub name_of_writein_is_empty {
-    return "Name of write-in choice is empty";
+    "Name of write-in choice is empty";
 }
 sub writein_too_similar {
-    return "Sorry, the name of the write-in is too similar to an existing choice";
+    "Sorry, the name of the write-in is too similar to an existing choice";
 }
 
 # election
@@ -347,7 +444,7 @@ sub following_URL_reports_results {
     'The following URL reports the current poll results:';
 }
 sub Already_voted {
-    return 'Already voted';
+    'Already voted';
 }
 sub Error {
     'Error';
@@ -411,6 +508,9 @@ sub Voter_v_already_authorized {
     "Voter \"$_[1]\" is already authorized.
      The voter's key will be resent to the voter.";
 }
+sub Invalid_email_address_hdr { # addr
+    "Invalid email address";
+}
 sub Invalid_email_address { # addr
     "Invalid email address: $v";
 }
@@ -470,7 +570,7 @@ sub View_poll_results {
     'View_poll_results';
 }
 sub Poll_ended { #title
-    return "Poll ended: $_[1]";
+    "Poll ended: $_[1]";
 }
 
 sub The_poll_has_been_ended { #election_end
@@ -481,12 +581,12 @@ sub poll_results_available_to_authorized_users {
     'The poll results are now available to authorized users.';
 }
 
+sub was_not_able_stop_the_poll {
+    'Was not able to stop the poll';
+}
+
 
 # results
-
-sub Go_back_to_poll_control {
-    return 'Go back to poll control';
-}
 
 sub Writeins_currently_allowed {
     'Write-in choices are currently allowed.';

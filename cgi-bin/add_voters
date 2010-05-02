@@ -24,8 +24,8 @@ if (defined($new_addresses_file)) {
 }
 my @new_addresses = split /[\r\n]+/, $new_addresses;
 
-HTML_Header("CIVS: Adding Voters");
-CIVS_Header("Adding voters");
+HTML_Header($tx->CIVS_Adding_Voters);
+CIVS_Header($tx->Adding_voters);
 
 my $control_key = param('key');    
 CheckControlKey($control_key);
@@ -33,7 +33,8 @@ my $authorization_key = param('akey');
 CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 if (!IsStarted || IsStopped) {
-    print h1("Error"), p("Sorry, voters can only be added to an poll in progress.");
+    print h1($tx->Error),
+	p($tx->Sorry_voters_can_only_be_added_to_poll_in_progress);
     exit 0;
 }
 
@@ -43,12 +44,11 @@ GetPrivateHostID;
 # Send all of the voters their keys
 SendKeys($authorization_key, \@new_addresses);
 
-print "Total of $num_auth voter(s) authorized to vote.\n";
-print "Done.\n</pre>\n";
+print $tx->Total_of_x_voters_authorized($num_auth), $cr, '</pre>;
 
 my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
 $url .= "&akey=$authorization_key" if defined($authorization_key);
-print p("<a href=\"$url\">Go back to poll control</a>");
+print p("<a href=\"$url\">" . $tx->Go_back_to_poll_control. '</a>');
 
 print end_html();
 Log("$num_auth new voters added to $title ($election_id)");

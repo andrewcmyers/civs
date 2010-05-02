@@ -47,11 +47,11 @@ sub Filter {
 my $email_addr = param('email_addr');
 $email_addr = mail::TrimAddr($email_addr);
 if (!&CheckAddr($email_addr)) {
-    print header(), start_html("Invalid email address");
+    print header(), start_html($tx->Invalid_email_address_hdr);
     HTML_Header($tx->CIVS_Poll_Creation);
     CIVS_Header();
-    print h1("Invalid email address");
-    print p("The address \"$email_addr\" is not acceptable");
+    print h1($tx->Invalid_email_address_hdr);
+    print p($tx->Address_unacceptable($email_addr));
     print end_html();
     exit 0;
 }
@@ -97,8 +97,8 @@ foreach my $ch (@c2) {
 if ($num_choices < 2) {
     HTML_Header($tx->CIVS_Poll_Creation);
     CIVS_Header();
-    print h1("Error");
-    print p('A poll must have at least two choices.');
+    print h1($tx->Error);
+    print p($tx->Poll_must_have_two_choices);
     print end_html();
     exit 0;
 }
@@ -112,8 +112,8 @@ my $election_data = $election_dir.'/election_data';
 if (!mkdir($election_dir)) {
     HTML_Header($tx->CIVS_Poll_Creation);
     CIVS_Header();
-    print h1("Error");
-    print p("The poll directory is not writeable");
+    print h1($tx->Error);
+    print p($tx->Poll_directory_not_writeable);
     print end_html();
     exit 0;
 }
@@ -202,22 +202,13 @@ Send "rcpt to:<$email_addr>"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
 Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
 Send "To: $email_addr ($name)";
-Send "Subject: CIVS poll created: $title";
+Send "Subject: ". $tx->CIVS_poll_created($title);
 Send "";
-Send "This email acknowledges the creation of a new poll,";
-Send "$title. You have been designated as the supervisor of this";
-Send "poll. To start and stop the poll, please use the following URL:";
-Send "";
-Send "$url";
-Send "";
+Send $tx->creation_email_info1($title,$url);
 if ($public eq 'yes') {
-    Send "Because this is a public poll, voters may be directed to the following URL:";
-    Send "";
-    Send "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key";
-    Send "";
+    Send $tx->creation_email_public_link("http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
 }
-Send "For more information about the Condorcet Internet Voting Service, see";
-Send "  $civs_home.\r\n";
+Send $tx->for_more_information_about_CIVS($civs_home);
 Send "."; ConsumeSMTP;
 CloseMail;
 
@@ -247,34 +238,22 @@ sub SendResultKey {
 	$addr = TrimAddr($addr);
 	if ($addr eq '') { next; }
 	if (!(CheckAddr($addr))) {
-	    print pre("Invalid email address: $addr");
+	    print pre($tx->Invalid_email_address($addr));
 	    next;
 	}
-	print pre(b("Sending result key to '$addr'"));
+	print pre(b($tx->Sending_result_key($addr)));
 
 	my $url = "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
 	my $civs_supervisor = '@SUPERVISOR@';
 	Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
 	Send "rcpt to:<$addr>"; ConsumeSMTP;
 	Send "data"; ConsumeSMTP;
-	Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
+	Send "From: $civs_supervisor ('.
+	    $tx->Condorcet_Internet_Voting_Service_email_hdr.')';
 	Send "To: $addr";
-	Send "Subject: Results of CIVS poll: $title";
+	Send "Subject: " . $tx->Results_of_CIVS_poll($title);
 	Send "";
-	Send "A new CIVS poll has been created named $title.";
-	Send "You have been designated as a user who is permitted to see the";
-	Send "result of this poll.";
-	Send "";
-	Send "Save this email. If you lose it you will not have access to";
-	Send "the results. Once the poll has been closed, results will be";
-	Send "available at the following URL:";
-	Send "";
-	Send "  $url";
-	Send "";
-	Send "This URL is private. Allowing unauthorized users access to this";
-	Send "URL will permit them to see the poll results.";
-	Send "For more information about the Condorcet Internet Voting Service, see";
-	Send "  $civs_home.\r\n";
+	Send $tx->Results_key_email_body($title,$url,$civs_home);
 	Send "."; ConsumeSMTP;
     }
     CloseMail;

@@ -123,7 +123,7 @@ sub SetLanguage {
 sub GetPrivateHostID {
     if (!open(HOSTID, $private_host_id_file)) {
 	&HTML_Header("Configuration error");
-        print h1("Error"),
+        print h1($tx->Error),
 	      p("Unable to access the server's private key"),
 	      end_html();
 	exit 0;
@@ -189,10 +189,10 @@ print
 }
 
 sub Fatal_CIVS_Error {
-	&HTML_Header("CIVS Error") unless $html_header_printed;
-	&CIVS_Header("Error") unless $civs_header_printed;
+	&HTML_Header($tx->CIVS_Error) unless $html_header_printed;
+	&CIVS_Header($tx->Error) unless $civs_header_printed;
 	
-	print h2("Error"),
+	print h2($tx->Error),
 	      p($tx->unable_to_process);
 	    print pre(@_);
 	print pre(@_) if $local_debug;
@@ -274,10 +274,9 @@ sub system_load {
 sub CheckLoad {
     my $load = system_load + 0;
     if ($load >= 10.0) {
-	HTML_Header('CIVS server busy');
-	CIVS_Header('CIVS server busy');
-	print p("Sorry, the CIVS web server is very busy right now and
-	    cannot handle more requests. Please try again a little later.");
+	HTML_Header($tx->CIVS_server_busy);
+	CIVS_Header($tx->CIVS_server_busy);
+	print p($tx->Sorry_the_server_is_busy);
 	exit 0;
     }
 }

@@ -27,7 +27,7 @@ CheckControlKey($control_key);
 CheckNotStopped;
 
 if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
-    print h1("Error"), p("Was not able to stop the poll");
+    print h1($tx->Error), p($tx->was_not_able_stop_the_poll);
 } else {
     print STOPPED "stopped\n"; close(STOPPED);
     Log("Poll $title ($election_id) ended");
