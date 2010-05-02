@@ -119,25 +119,17 @@ sub rank_candidates {
 
     my $log = '';
     if (!$allowed_cycle && !$denied_any) {
-	$log .= p('All preferences were affirmed. All
-		  Condorcet methods will agree with this ranking.');
+	$log .= $tx->All_prefs_were_affirmed;
     }
     if ($denied_any) {
-	$log .= p('The presence of a green entry below
-	    the diagonal (and a corresponding red one above)
-	    means that a preference was ignored because
-	    it conflicted with other, stronger preferences.');
+	$log .= p($tx->Presence_of_a_green_entry_etc);
 	$log .= $denied_report;
     }
     if ($main::algorithm eq 'mam') {
 	if ($tiebreak) {
-	    $log .= p('Random tie breaking was used to
-	    arrive at this ordering, as per the MAM
-	    algorithm. This may have affected the ordering
-	    of the choices.');
+	    $log .= p($tx->Random_tie_breaking_used);
 	} else {
-	    $log .= p('No random tie breaking was needed to
-	    arrive at this ordering.');
+	    $log .= p($tx->No_random_tie_breaking_used);
 	}
     }
     return ($rref, $log);

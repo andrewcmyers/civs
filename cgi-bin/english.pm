@@ -744,4 +744,27 @@ sub Condorcet_winner {
 sub Choices_in_individual_pref_order {
     'Choices (in individual preference order)';
 }
+
+# rp
+
+sub All_prefs_were_affirmed {
+    'All preferences were affirmed. All
+		  Condorcet methods will agree with this ranking.';
+}
+
+sub Presence_of_a_green_entry_etc {
+    'The presence of a green entry below
+	the diagonal (and a corresponding red one above)
+	means that a preference was ignored because
+	it conflicted with other, stronger preferences.';
+}
+sub Random_tie_breaking_used {
+'Random tie breaking was used to
+arrive at this ordering, as per the MAM
+algorithm. This may have affected the ordering
+of the choices.';
+}
+sub No_random_tie_breaking_used {
+    'No random tie breaking was needed to arrive at this ordering.';
+}
 1; # package succeeded!
