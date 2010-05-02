@@ -79,7 +79,7 @@ sub Poll_directory_not_writeable {
     "The poll directory is not writeable";
 }
 sub CIVS_poll_created {
- "CIVS poll created: $title";
+ "CIVS poll created: $_[1]";
 }
 sub creation_email_info1 { # title, url
 "This email acknowledges the creation of a new poll,
@@ -106,7 +106,7 @@ sub Sending_result_key { # addr
     "Sending result key to '$_[1]'";
 }
 sub Results_of_CIVS_poll { # title
-    "Results of CIVS poll: $title";
+    "Results of CIVS poll: $_[1]";
 }
 sub Results_key_email_body { # title, url, civs_home
 "A new CIVS poll has been created named \"$_[1]\".
@@ -522,7 +522,7 @@ sub Invalid_email_address_hdr { # addr
     "Invalid email address";
 }
 sub Invalid_email_address { # addr
-    "Invalid email address: $v";
+    "Invalid email address: $_[1]";
 }
 sub Sending_mail_to_voter_v {
     "Sending mail to voter \"$_[1]\"...";
@@ -662,7 +662,7 @@ sub This_is_a_public_poll {
 }
 
 sub Actual_votes_cast { #num_votes
-    "Actual votes cast: $num_votes";
+    "Actual votes cast: $_[1]";
 }
 sub Number_of_winning_candidates {
     'Number of winning candidates: ';
@@ -711,7 +711,7 @@ sub Ballots_are_shown_in_random_order {
     "Ballots are shown in a randomly generated order.";
 }
 sub Download_ballots_as_a_CSV { # url
-    "<a href=\"$url\">Download ballots</a> as a CSV";
+    "<a href=\"$_[1]\">Download ballots</a> as a CSV";
 }
 sub No_ballots_were_cast {
     "No ballots were cast in this poll.";
@@ -726,9 +726,7 @@ sub loss_explanation { # loss_to, for, against
     ', loses to '. $_[1].' by '. $_[2] .'&ndash;'. $_[3];
 }
 sub loss_explanation2 {
-    '&nbsp;&nbsp;loses to '.$choices[$condorcet_winner].' by '.
-	$matrix[$condorcet_winner][$winner[$i]].'&ndash;'.
-	$matrix[$winner[$i]][$condorcet_winner];
+    '&nbsp;&nbsp;loses to '.$_[1].' by '.$_[2].'&ndash;'.$_[3];
 }
 sub Condorcet_winner_explanation {
     '&nbsp;&nbsp;(Condorcet winner: wins contests with all other choices)';

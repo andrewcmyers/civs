@@ -199,7 +199,7 @@ sub page_header_CIVS_Vote { # election_title
 }
 
 sub winners_text {
-    return "$num_winners";
+    return "$_[1]";
 }
 sub ballot_reporting_is_enabled {
     return 'A szavazatok kimutatása engedélyezve van ehhez a szavazáshoz.
@@ -409,7 +409,7 @@ sub Voter_v_already_authorized {
      A szavazó kulcsát újraküldöm.";
 }
 sub Invalid_email_address { # addr
-    "Hibás email cím: $v";
+    "Hibás email cím: $_[1]";
 }
 sub Sending_mail_to_voter_v {
     "Levél küldése a szavazónak: \"$_[1]\"...";
@@ -532,7 +532,7 @@ sub This_is_a_public_poll {
 }
 
 sub Actual_votes_cast { #num_votes
-    "Leadott szavazatok száma: $num_votes";
+    "Leadott szavazatok száma: $_[1]";
 }
 sub Number_of_winning_candidates {
     'A győztes lehetőségek száma: ';
@@ -578,7 +578,7 @@ sub Ballots_are_shown_in_random_order {
     "A szavazatokat véletlenszerű sorrendben mutatjuk.";
 }
 sub Download_ballots_as_a_CSV { # url
-    "<a href=\"$url\">Szavazatok letöltése</a> CSV-ként.";
+    "<a href=\"$_[1]\">Szavazatok letöltése</a> CSV-ként.";
 }
 sub No_ballots_were_cast {
     "Ebben a szavazásban nem szavazott senki.";
@@ -593,9 +593,7 @@ sub loss_explanation { # loss_to, for, against
     ', gyengébb mint '. $_[1].' ennyivel: '. $_[2] .'&ndash;'. $_[3];
 }
 sub loss_explanation2 {
-    '&nbsp;&nbsp;gyengébb mint '.$choices[$condorcet_winner].' ennyivel '.
-	$matrix[$condorcet_winner][$winner[$i]].'&ndash;'.
-	$matrix[$winner[$i]][$condorcet_winner];
+    '&nbsp;&nbsp;gyengébb mint '.$_[1].' ennyivel '. $_[2] .'&ndash;'. $_[3];
 }
 sub Condorcet_winner_explanation {
     '&nbsp;&nbsp;(Condorcet nyertes: minden más lehetőséggel szemben nyert)';
