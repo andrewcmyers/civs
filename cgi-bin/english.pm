@@ -528,7 +528,7 @@ sub voter_mail_intro { #title, name, email_addr
 You have been designated as a voter by the election supervisor,
 $_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
 }
-sub description_of_poll {
+sub Description_of_poll {
     "Description of poll:";
 }
 sub if_you_would_like_to_vote_please_visit {
@@ -669,6 +669,9 @@ sub Poll_actually_has { #winmsg
 }
 sub poll_description_hdr {
     'Poll description';
+}
+sub Description_of_poll {
+    'Description of poll:';
 }
 sub Ranking_result {
     'Ranking result';
