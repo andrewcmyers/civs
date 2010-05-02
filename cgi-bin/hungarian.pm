@@ -15,7 +15,7 @@ sub init {
 
 # civs_common
 sub Condorcet_Internet_Voting_Service {
-    return 'Condorcet Internet Szavazási Szolgáltatás';
+    return 'Condorcet Internet Szavazási Szolgáltatás<br>(CIVS)';
 }
 sub about_civs {
     return 'A CIVS-ről';

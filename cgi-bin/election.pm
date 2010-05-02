@@ -289,11 +289,10 @@ sub CheckNotStopped {
 
 sub CheckStopped {
     if (!IsStopped() && (!$local_debug)) {
-	print h1("Poll not yet closed");
+	print h1($tx->Poll_not_yet_ended);
 	print p(
-    "This poll (<strong>$title</strong>) has not yet been closed
-    by its supervisor, $name (<tt>$email_addr</tt>).
-    The poll has been announced to end $election_end.");
+	    $tx->The_poll_has_been_ended($title,$name,$email_addr),
+	    $tx->poll_has_been_announced_to_end($election_end));
 	PointToResults;
 	print end_html();
 	exit 0;
