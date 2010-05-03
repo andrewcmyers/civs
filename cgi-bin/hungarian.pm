@@ -467,6 +467,13 @@ sub Authorization_failure {
 sub already_ended { # title 
     "Ez a szvazás (<strong>$_[1]</strong>) már lezárult.";
 }
+sub Poll_not_yet_ended {
+    "A szavazás még nem ért véget";
+}
+sub The_poll_has_not_yet_been_ended { #title, name, email
+    "A $_[1] című szavazásnak még nem vetett véget a gazdája,
+    $_[2] ($_[3]),";
+}
 sub The_results_of_this_completed_poll_are_here {
     'Ennek a lezárult szvazásnak az eredménye itt van:';
 }
@@ -536,7 +543,7 @@ sub voter_mail_intro { #title, name, email_addr
 A szavazás gazdája felvett téged a szavazók jegyzékébe,
 $_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
 }
-sub description_of_poll {
+sub Description_of_poll {
     "A szavazás leírása:";
 }
 sub if_you_would_like_to_vote_please_visit {
@@ -626,6 +633,9 @@ sub Voter_identities_will_be_kept_anonymous {
 }
 sub Voter_identities_will_be_public {
     'A szavazás név szerinti. A szavazók e-mail címe publikálva lesz a szavazatukkal együtt.';
+}
+sub Condorcet_completion_rule {
+    'Condorcet kifejtési szabály:';
 }
 sub undefined_algorithm {
     'Error: undefined algorithm.';
@@ -735,4 +745,27 @@ sub Condorcet_winner {
 sub Choices_in_individual_pref_order {
     'Lehetőségek (az egyéni preferencia sorrendjében)';
 }
+
+# rp
+
+sub All_prefs_were_affirmed {
+    'Minden preferencia megerősített. Minden
+        Condorcet módszernél egyezni fog ez a sorrend.';
+}
+
+sub Presence_of_a_green_entry_etc {
+    'A zöld bejegyzés léte az átló alatt
+        (és a megfelelő vörös az átló felett)
+        azt jelenti, hogy egy preferencia figyelmen kívül
+        lett hagyva mert más, erősebb preferenciákkal ütközik.';
+}
+sub Random_tie_breaking_used {
+'Ez a sorrend úgy alakult ki, hogy egy vagy több
+holtversenyben véletlenszerű döntés született, a MAM algoritmus szerint.
+Ez befolyásolhatta a lehetőségek sorrendjét.';
+}
+sub No_random_tie_breaking_used {
+    'Nem volt szükség véletlenszerű döntésre ennek a sorrendnek az eléréséhez.';
+}
+
 1; # package succeeded!
