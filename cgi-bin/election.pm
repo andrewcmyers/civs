@@ -561,7 +561,7 @@ sub SendKeys {
             Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
             Send "From: $email_addr ($name, ".$tx->CIVS_poll_supervisor.')';
-            Send "Sender: $email_addr";
+            Send "Sender: $civs_supervisor";
             Send "Reply-To: $email_addr";
 	    Send "Message-ID: <$messageid>";
             Send "To: $v";

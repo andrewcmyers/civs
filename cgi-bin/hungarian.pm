@@ -84,14 +84,14 @@ sub Poll_directory_not_writeable {
     "A szavazás könyvtára nem írható";
 }
 sub CIVS_poll_created {
- "CIVS szavazás létrehozva: $title";
+ "CIVS szavazás létrehozva: $_[1]";
 }
 sub creation_email_info1 { # title, url
 "Ez az email visszaigazolja egy új szavazás létrehozását,
 $_[1] néven. Te vagy a szavazás gazdája.
 A szavazás elindításához és leállításához kérlek használd a következő URL-t:
 
-  $url
+  $_[2]
 
 ";
 }
@@ -111,7 +111,7 @@ sub Sending_result_key { # addr
     "Az eredmény kulcsának küldése '$_[1]' részére";
 }
 sub Results_of_CIVS_poll { # title
-    "A $title CIVS szavazás eredményei";
+    "A $_[1] CIVS szavazás eredményei";
 }
 
 sub Results_key_email_body { # title, url, civs_home
@@ -260,7 +260,7 @@ sub This_is_a_public_poll_plus_link {
     my $url = $_[1];
     "Ez egy nyílt szavazás. Oszd meg a következő hivatkozást
     a szavazókkal, hogy szavazhassanak:</p><p>
-	&nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
+	&nbsp;&nbsp;<tt><a href=\"$url\">$_[2]</a></tt>";
 }
 sub The_poll_has_ended {
     'A szavazás lezárult.';
@@ -356,7 +356,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     A súlyok nem lehetnek negatívak vagy nagyobbak mint 999.
     Nem segít ha a súlyozást nagyobbra veszed mint más szavazók
     súlyozása, mert a te súlyaidat csak egymással hasonlítjuk össze.'.
-    "<a href=\"$civs_url/proportional.html\">[További információk]</a>.</p>";
+    "<a href=\"$_[4]/proportional.html\">[További információk]</a>.</p>";
     }
     return $ret;
 }
@@ -661,10 +661,10 @@ sub Actual_votes_cast { #num_votes
 sub Number_of_winning_candidates {
     'A győztes lehetőségek száma: ';
 }
-sub Poll_actually_has { #winmsg
+sub Poll_actually_has { #real_nwin
     my $winmsg = '1';
     if ($_[1] != 1) {
-	$winmsg = $real_nwin.'';
+	$winmsg = $_[1];
     }
     "&nbsp;(A szavazásnak valójában $winmsg győztese van.)";
 }
