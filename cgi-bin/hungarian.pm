@@ -17,6 +17,10 @@ sub init {
 sub Condorcet_Internet_Voting_Service {
     return 'Condorcet Internet Szavazási Szolgáltatás<br>(CIVS)';
 }
+
+sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
+    'Condorcet Internet Szavazási Szolgáltatás';
+}
 sub about_civs {
     return 'A CIVS-ről';
 }
@@ -34,6 +38,16 @@ sub CIVS_suggestion_box {
 }
 sub unable_to_process {
     return 'A CIVS belső hiba miatt nem tudja végrehajtani a kérést.';
+}
+
+sub CIVS_Error {
+    'CIVS Error';
+}
+sub CIVS_server_busy {
+    'A CIVS kiszolgáló le van terhelve';
+}
+sub Sorry_the_server_is_busy {
+    'Sajnáljuk, a CIVS kiszolgáló nagyon le van most terhelve, és nem tud több kérést feldolgozni. Légy szíves térj vissza később.';
 }
 
 # civs_create
@@ -59,6 +73,66 @@ sub CIVS_Poll_Creation {
 sub Poll_created {
     return "Szavazás létrehozva: $_[1]"
 }
+
+sub Address_unacceptable { #addr
+    "Ez a cím (\"$_[1]\") nem elfogadható";
+}
+sub Poll_must_have_two_choices {
+    'Egy szavazásnak legalább két választása kell legyen.';
+}
+sub Poll_directory_not_writeable {
+    "A szavazás könyvtára nem írható";
+}
+sub CIVS_poll_created {
+ "CIVS szavazás létrehozva: $title";
+}
+sub creation_email_info1 { # title, url
+"Ez az email visszaigazolja egy új szavazás létrehozását,
+$_[1] néven. Te vagy a szavazás gazdája.
+A szavazás elindításához és leállításához kérlek használd a következő URL-t:
+
+  $url
+
+";
+}
+sub creation_email_public_link { # url
+"Mivel ez egy nyílt szavazás, a szavazókat a következő URL-re lehet irányítani:
+
+  $_[1]
+
+";
+}
+sub for_more_information_about_CIVS { # url
+"A Condorcet Szavazási Szolgáltatásról bővebb információkárt lásd:
+  $_[1]";
+}
+
+sub Sending_result_key { # addr
+    "Az eredmény kulcsának küldése '$_[1]' részére";
+}
+sub Results_of_CIVS_poll { # title
+    "A $title CIVS szavazás eredményei";
+}
+
+sub Results_key_email_body { # title, url, civs_home
+"Egy új CIVS szavazás indult $_[1] néven.
+A szavazás eredményének megtekintése a te számodra engedélyezett.
+
+Mentsd el ezt a levelet, mert ha elveszted, nem lesz hozzáférésed az eredményekhez.
+Ha a szavazás lezárult, az eredmények a következő címen lesznek elérhetőek:
+
+  $_[2]
+
+Ez a cím bizalmas. Ha jogosulatlan személyek számára ismertté válik ez a cím,
+akkor megnézhetik a szavazás eredményét.
+A Condorcet Internet Szavazási szolgáltatásról további információkat
+az alábbi címen találsz:
+
+  $_[3]
+
+";
+}
+
 
 # start
 sub poll_started {
@@ -191,6 +265,36 @@ sub This_is_a_public_poll_plus_link {
 sub The_poll_has_ended {
     'A szavazás lezárult.';
 }
+
+# add voters
+
+sub CIVS_Adding_Voters {
+    'CIVS: Szavazók hozzáadása';
+}
+sub Adding_voters {
+    'Szavazók hozzáadása';
+}
+
+sub Sorry_voters_can_only_be_added_to_poll_in_progress {
+    'Sajnáljuk, szavazókat csak folyamatban lévő szavazáshoz lehet hozzáadni.';
+}
+
+sub Total_of_x_voters_authorized { # x
+    if ($_[1] == 0) {
+        print "Üres a szavazói névjegyzék.", $cr, '</pre>';
+    } else {
+        print "Összesen $_[1] szavazó van a névjegyzékben.", $cr, '</pre>';
+    }
+}
+
+sub Go_back_to_poll_control {
+    'Vissza a szavazás irányítására';
+}
+sub Done {
+    'Kész.';
+}
+
+
 
 # vote
 
@@ -337,6 +441,10 @@ sub vote_has_already_been_cast {
     return 'A szavazási kulcsoddal már van szavazat leadva';
 }
 
+sub following_URL_will_report_results {
+    return 'A szavazás eredményét a következő helyen nézheted meg ha vége a szavazásnak:';
+}
+
 sub following_URL_reports_results {
     return 'A szavazás eredményét a következő helyen nézheted meg:';
 }
@@ -408,12 +516,21 @@ sub Voter_v_already_authorized {
     "A szavazó (\"$_[1]\") már a névjegyzékben van.
      A szavazó kulcsát újraküldöm.";
 }
+sub Invalid_email_address_hdr { # addr
+    "Hibás email cím";
+}
+
 sub Invalid_email_address { # addr
     "Hibás email cím: $_[1]";
 }
 sub Sending_mail_to_voter_v {
     "Levél küldése a szavazónak: \"$_[1]\"...";
 }
+
+sub CIVS_poll_supervisor {
+    'CIVS szavazásgazda';
+}
+
 sub voter_mail_intro { #title, name, email_addr
 "Egy szavazás indult a Condorcet Internetes Szavazási Szolgáltatásban <b>$_[1]</b> néven.
 A szavazás gazdája felvett téged a szavazók jegyzékébe,
@@ -474,11 +591,18 @@ sub poll_results_available_to_authorized_users {
     'A szavazás eredménye a jogosult felhasználók számára már látható.';
 }
 
+sub was_not_able_stop_the_poll {
+    'Nem bírom leállítani a szavazást.';
+}
+
 
 # results
 
-sub Go_back_to_poll_control {
-    return 'Vissza a szavazás irányításához';
+sub CIVS_poll_result {
+    "CIVS szavazás eredménye";
+}
+sub Poll_results { # title
+    "A szavazás eredményei: $_[1]";
 }
 
 sub Writeins_currently_allowed {
