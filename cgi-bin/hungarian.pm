@@ -256,11 +256,11 @@ sub Load_ballot_data {
 sub File_to_upload_ballots_from {
     'Fájl a szavazat adatok betöltésére:';
 }
-sub This_is_a_public_poll_plus_link {
+sub This_is_a_public_poll_plus_link { #url
     my $url = $_[1];
     "Ez egy nyílt szavazás. Oszd meg a következő hivatkozást
     a szavazókkal, hogy szavazhassanak:</p><p>
-	&nbsp;&nbsp;<tt><a href=\"$url\">$_[2]</a></tt>";
+	&nbsp;&nbsp;<tt><a href=\"$_[1]\">$_[1]</a></tt>";
 }
 sub The_poll_has_ended {
     'A szavazás lezárult.';

@@ -75,9 +75,9 @@ doesn't matter what completion rule is used.
 <h3>Supported completion rules</h3>
 
 <p>CIVS currently supports four rules for Condorcet completion:
-<b>Beatpath Winner</b> (also known
-as Cloneproof Schwartz Sequential Dropping and the
-<a href="http://en.wikipedia.org/wiki/Schulze_method">Schulze Method</a>),
+The <a href="http://en.wikipedia.org/wiki/Schulze_method">Schulze method</a>
+(also known as Beatpath Winner and
+Cloneproof Schwartz Sequential Dropping),
 <a href="http://alumnus.caltech.edu/~seppley/">
 Maximize Affirmed Majorities</a> (MAM), a deterministic variant of MAM
 called <a href="#rp">CIVS Ranked Pairs</a>, and a runoff-based
@@ -134,8 +134,8 @@ Condorcet-IRV is a reasonable choice.
 </a>
 
 <p>The CIVS Ranked Pairs completion rule is a deterministic
-variant of Eppley's MAM procedure
-and is also related to other completion rules such as
+variant of Eppley's MAM method;
+it is also related to other completion methods such as
 <a href="http://en.wikipedia.org/wiki/Ranked_Pairs">
 Tideman Ranked Pairs</a>.
 In these algorithms, each of the pairwise preferences in the preference matrix
@@ -164,6 +164,14 @@ conjunction with <i>strictly stronger</i>, kept preferences. Thus, preferences
 of equal strength may be kept even though in conjunction they produce a new
 cycle, as long as <i>individually</i> they do not.
 </p>
+<p>
+CIVS RP is a deterministic method that does not use randomness, unlike MAM (and
+some other voting methods).  Voting methods that rely on randomness need to
+have a mechanism for generating randomness in a trustworthy way, because
+otherwise the voting system itself might cheat by generating randomness until
+the best possible outcome is achieved from the viewpoint of whoever controls
+the randomness.
+</p>
 
 <h3>Ranking the choices</h3>
 
@@ -179,8 +187,7 @@ occur if there are preferences of equal strength.  When a Schwartz set
 contains multiple choices, there must be a cycle of kept preferences. In
 this case, the choices within that Schwartz set
 are ranked based on the strength of the strongest preference against
-that choice.  There is no random
-tie-breaking mechanism, as in MAM; the algorithm is deterministic.
+that choice.
 </p>
 
 <a name="runoff">

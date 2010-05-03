@@ -206,7 +206,7 @@ sub ComputeResults {
     } else {
 	print RESULTS $tx->This_is_a_public_poll, br, $cr;
     }
-    print RESULTS $tx->Actual_votes_cast($num_votes);
+    print RESULTS $tx->Actual_votes_cast($num_votes), br, $cr;
 
     print RESULTS $tx->Number_of_winning_candidates;
     print RESULTS '<input type="text" size=2
