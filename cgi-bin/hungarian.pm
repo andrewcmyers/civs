@@ -331,7 +331,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
             azt jelenti, hogy nem akarod a lehetőséget rangsorolni a többi
             lehetőséghez képest.</p>';
     }
-    if ($proportional) {
+    if ($prop) {
         $ret .= '<p>Ezt a szavazást egy kísérleti Condorcet alapú módszerrel
         számoljuk ki, amelyet arra terveztek, hogy arányos képviseletet biztosítson.
         A szavazás algoritmusa azt feltételezi, hogy a szerinted legjobb <i>nyerő</i>
