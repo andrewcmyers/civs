@@ -44,8 +44,6 @@ if ($js_ui) {
     HTML_Header($tx->page_header_CIVS_Vote($title));
 }
 
-my $winners_text = $tx->winners_text($num_winners);
-
 CIVS_Header($title);
 
 CheckElectionID;
@@ -440,8 +438,8 @@ sub IntroduceWriteins {
 sub IntroduceVoting {
     print p($description), $cr;
 
-    print p($tx->instructions1($winners_text, $election_end, $name, $email_addr)),
-	  $cr;
+    print p($tx->instructions1($num_winners, $election_end,
+			       $name, $email_addr)), $cr;
     print p($tx->instructions2(($no_opinion eq 'yes'),
                                ($proportional eq 'yes'),
 			       $use_combined_ratings,

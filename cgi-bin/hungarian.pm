@@ -302,15 +302,12 @@ sub page_header_CIVS_Vote { # election_title
     return 'CIVS Szavazás: '.$_[1];
 }
 
-sub winners_text {
-    return "$_[1]";
-}
 sub ballot_reporting_is_enabled {
     return 'A szavazatok kimutatása engedélyezve van ehhez a szavazáshoz.
         A szavazatod (a választási lehetségekhez rendelt rangsorod)
         nyilvános lesz amikor a szavazás lezárul.';
 }
-sub instructions1 { # winners_text, end, name, email
+sub instructions1 { # num_winners, end, name, email
     return "A szavazásnak $_[1] győztese lesz.<p>
         A szavazás vége: <b>$_[2]</b>.
         A szavazás gazdája $_[3] (<tt>$_[4]</tt>).

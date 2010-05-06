@@ -295,19 +295,18 @@ sub page_header_CIVS_Vote { # election_title
     'CIVS Vote: '.$_[1];
 }
 
-sub winners_text {
-    if ($_[1] == 1) {
-	return "single favorite choice";
-    } else {
-	return "$num_winners favorite choices";
-    }
-}
 sub ballot_reporting_is_enabled {
     'Ballot reporting is enabled for this poll.
      Your ballot (the rankings you assign to candidates)
      will be made public when the poll ends.';
 }
-sub instructions1 { # winners_text, end, name, email
+sub instructions1 { # num_winners, end, name, email
+    my $wintxt;
+    if ($_[1] == 1) {
+	$wintxt="single favorite choice";
+    } else {
+	$wintxt="$_[1] favorite choices";
+    }
     "Only the $_[1] will win the poll.<p>
 	    The poll ends <b>$_[2]</b>.
 	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
@@ -331,7 +330,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
 		    that you choose not to rank this choice with respect to the
 		    other choices.</p>';
 	}
-	if ($proportional) {
+	if ($prop) {
 	    $ret .= '<p>This poll is decided using an experimental Condorcet-based
 	    method designed to provide proportional representation. It is assumed
 	    by the voting algorithm that you want the ranking of your most
