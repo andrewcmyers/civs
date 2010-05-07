@@ -1,6 +1,7 @@
 civs/acks.html
 civs/changelog.html
 civs/civs_create.html
+civs/civs_create.html.hu
 civs/faq.html
 civs/gettimeofday.c
 civs/install-civs
@@ -14,6 +15,7 @@ civs/vote.js
 civs/INSTALL
 civs/README
 civs/index.html
+civs/index.html.hu
 civs/public_elections.html
 civs/style.css
 civs/lockserv.c
@@ -26,6 +28,10 @@ civs/cgi-bin/control
 civs/cgi-bin/create_election
 civs/cgi-bin/download_ballots
 civs/cgi-bin/election.pm
+civs/cgi-bin/english.pm
+civs/cgi-bin/hungarian.pm
+civs/cgi-bin/languages.pm
+civs/cgi-bin/language-skel.pm
 civs/cgi-bin/start_election
 civs/cgi-bin/vote
 civs/cgi-bin/beatpath.pm

@@ -184,7 +184,7 @@ sub ReportCompletion {
 # output file RESULTS. Generate progress reports appropriately.
 sub ComputeResults {
 
-    print RESULTS '<form method="GET"
+    print RESULTS '<div id="settings"><form method="GET"
 	    action="'.$thisurl.'"
 	    enctype="multipart/form-data"
 	    name="changeSettings">';
@@ -276,7 +276,7 @@ sub ComputeResults {
 	print RESULTS '&nbsp;<input type="submit" id="recomplete" value="Update">';
 
     # print RESULTS '&nbsp;<input type="submit" name="submit" value="Update display options">';
-    print RESULTS '</form>',$cr;
+    print RESULTS '</form></div>',$cr;
 
     print RESULTS h2($tx->poll_description_hdr), $cr,
 	'<div class="description">',

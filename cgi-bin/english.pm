@@ -91,7 +91,7 @@ poll. To start and stop the poll, please use the following URL:
 ";
 }
 sub creation_email_public_link { # url
-"Because this is a public poll, voters may be directed to the following URL:
+"Because this is a public poll, you may direct voters to the following URL:
 
   $_[1]
 
