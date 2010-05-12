@@ -25,6 +25,8 @@ my @variants =
    ['hungarian', 'hu', 0.95],
    ['italian', 'it', 0.95],
    ['italian', 'it-it', 0.95],
+   ['french', 'fr', 0.95],
+   ['french', 'fr-fr', 0.95],
   );
 
 # Result: &init() determines the current language preference using the
