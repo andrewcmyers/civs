@@ -34,10 +34,10 @@ sub unable_to_process {
     'CIVS ne peut traiter votre requette en raison d\'une erreur interne.';
 }
 sub CIVS_Error {
-    'Error CIVS';
+    'Erreur CIVS';
 }
 sub CIVS_server_busy {
-    'Serveur CIVS server occupé';
+    'Serveur CIVS occupé';
 }
 sub Sorry_the_server_is_busy {
     'Désolé, mais le serveur web CIVS est actuellement surchargé et il ne peut plus
@@ -47,58 +47,58 @@ sub Sorry_the_server_is_busy {
 # civs_create
 
 sub mail_has_been_sent {
-    "Un courrier a été envoyé à l'adresse que vous nous avez communiqué (<tt>$_[1]</tt>).";
+    "Un courrier électronique a été envoyé à l'adresse que vous nous avez communiqué (<tt>$_[1]</tt>).";
 }
 
 sub click_on_the_URL_to_start {
-    "Cliquer sur le lien internet contenu dans ce courrier électronique pour démarrer la consultation : <strong>$_[1]</strong>.";
+    "Cliquer sur le lien internet contenu dans ce courrier électronique pour commencer la consultation : <strong>$_[1]</strong>.";
 }
 
 sub here_is_the_control_URL {
-    "Voici le lien internet permettant de gérer la nouvelle consultation. Dans le cas d\'une gestion ordinaire ce lien aurait été envoyé
-    au responsable de la consultation par courrier électronique.";
+    "Voici le lien internet permettant de gérer la nouvelle consultation. Dans le cas d\'une gestion ordinaire ce lien aurait été
+     envoyé au responsable de la consultation par courrier électronique.";
 }
 sub the_poll_is_in_progress {
-    'The poll is in progress. Press this button to end it: ';
+    'La consultation est en cours. Cliquer sur ce bouton pour la terminer : ';
 }
 
 sub CIVS_Poll_Creation {
-    "CIVS Poll Creation";
+    "CIVS Création de la consultation";
 }
 sub Poll_created {
-    "Poll created: $_[1]"
+    "Consultation créée: $_[1]"
 }
 
 sub Address_unacceptable { #addr
     "The address \"$_[1]\" is not acceptable";
 }
 sub Poll_must_have_two_choices {
-    'A poll must have at least two choices.';
+    'Une consultation doit proposer un minimum de deux choix.';
 }
 sub Poll_directory_not_writeable {
     "The poll directory is not writeable";
 }
 sub CIVS_poll_created {
- "CIVS poll created: $_[1]";
+ "CIVS consultation créée : $_[1]";
 }
 sub creation_email_info1 { # title, url
-"This email acknowledges the creation of a new poll,
-$_[1]. You have been designated as the supervisor of this
-poll. To start and stop the poll, please use the following URL:
+"Ce courrier électronique confirme la création d'une nouvelle consultation,
+$_[1]. Vous avez été désigné comme le responsable de cette consultation. Le lien Internet
+ suivant vous permet de démarrer ou d'arrêter le déroulement de la consultation :
 
   $_[2]
 
 ";
 }
 sub creation_email_public_link { # url
-"Because this is a public poll, you may direct voters to the following URL:
+"Cette consultation étant publique, vous pouvez communiquer aux votants le lien Internet suivant :
 
   $_[1]
 
 ";
 }
 sub for_more_information_about_CIVS { # url
-"For more information about the Condorcet Internet Voting Service, see
+"Le lien Internet suivant vous permet d'accéder à plus d\'informations concernant le Service de Vote Internet Condorcet (CIVS) :
   $_[1]";
 }
 
@@ -106,22 +106,20 @@ sub Sending_result_key { # addr
     "Sending result key to '$_[1]'";
 }
 sub Results_of_CIVS_poll { # title
-    "Results of CIVS poll: $_[1]";
+    "Résultats de la consultation CIVS: $_[1]";
 }
 sub Results_key_email_body { # title, url, civs_home
-"A new CIVS poll has been created named \"$_[1]\".
-You have been designated as a user who is permitted to see the
-result of this poll.
+"Une nouvelle consultation CIVS a été créée, son nom est \"$_[1]\".
+Le responsable de la consultation vous a autorisé en connaître le résultat.
 
-Save this email. If you lose it you will not have access to
-the results. Once the poll has been closed, results will be
-available at the following URL:
+Concervez ce courrier électronique. Si vous ne le conservez pas, il ne vous sera pas possible d'accéder aux résultats.
+ Après la clôture de la consultation, les résultats seront accessible avec le lien Internet suivant:
 
   $_[2]
 
-This URL is private. Allowing unauthorized users access to this
-URL will permit them to see the poll results.
-For more information about the Condorcet Internet Voting Service, see
+Ce lien est destiné à votre seul usage. Permettre à un tiers d'utiliser ce lien lui donnera accès
+aux résultat de la consultation.
+Le lien Internet suivant vous permet d'accéder à plus d'informations concernant le Service de Vote Internet Condorcet (CIVS) :
   $_[3]
 
 ";
@@ -130,7 +128,7 @@ For more information about the Condorcet Internet Voting Service, see
 # start
 
 sub poll_started {
-    'The poll <strong>'.$_[1].'</strong> has been started.';
+    'La consultation <strong>'.$_[1].'</strong> est commencée.';
 }
 
 # control
@@ -142,7 +140,7 @@ sub Poll_control {
     "Poll Control";
 }
 sub poll_has_not_yet_started {
-    'The poll has not yet started. Press this button to start it: ';
+    'La consultation n\'est pas encore commencée. Cliquer sur le bouton pour la commencer ';
 }
 sub Start_poll {
     'Start poll';
@@ -151,58 +149,58 @@ sub End_poll {
     'End poll';
 }
 sub ending_poll_cannot_be_undone {
-    'Ending a poll is an operation that cannot be undone. Continue?';
+    'La cloture d\'une consultation est une action définitive. Voulez-vous quand même continuer ? ';
 }
 sub writeins_have_been_disabled {
-    'Write-in candidates have been disabled';
+    'Le panachage à été dévalidé';
 }
 sub disallow_further_writeins {
-    'Write-in candidates have been disabled';
+    'Le panachage à été dévalidé';
 }
 sub voting_disabled_during_writeins {
-    'Voting is currently disabled during the write-in phase.';
+    'Le vote est actuellement suspendu pendant la phase de panachage.';
 }
 sub allow_voting_during_writeins {
-    "Allow voting during write-in phase";
+    "Permetre le vote durant la phase de panachage";
 }
 sub this_is_a_test_poll {
-    'This is a test poll.';
+    'Ceci est une consultation de test.';
 }
 
 sub poll_supervisor { # name, email
-    "Poll supervisor: $_[1] (<tt>$_[2]</tt>)";
+    "Responsable de la consultation : $_[1] (<tt>$_[2]</tt>)";
 }
 sub no_authorized_yet { #waiting
-    "0 ($_[1] voters will be authorized when the poll is started)";
+    "0 ($_[1] votants seront autorisés en début de consultation)";
 }
 sub total_authorized_voters { # num_auth_string
-    "Total authorized voters: $_[1]";
+    "Nombre total de votants autorisés: $_[1]";
 }
 sub actual_votes_so_far { # num
-    "Actual votes cast thus far: $_[1]";
+    "Nombre de votes actuellement exprimés: $_[1]";
 }
 sub poll_ends { # end
     "Poll ends $_[1].";
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
-    'Poll results available to all voters when poll completes.';
+    'Le résultat de cette consultation sera à la disposition de tous les votants après la cloture de la consultation.';
 }
 sub Voters_can_choose_No_opinion {
-    'Voters can choose &ldquo;No opinion&rdquo;';
+    'Les votants peuvent choisir l\' &ldquo;abstention&rdquo;';
 }
 sub Voting_is_disabled_during_writeins {
-    'Voting is disabled during the write-in period.';
+    'Le vote est actuellement suspendu pendant la phase de panachage.';
 }
 sub Poll_results_will_be_available_to_the_following_users {
-    'Poll results will be available only to the following users:';
+    'Les résultats de la consultation ne seront disponibles que pour les utilisateurs suivants :';
 }
 sub Poll_results_are_now_available_to_the_following_users {
-    'Poll results are now available only to the following users,
-	    who were earlier sent an email containing a URL for
-	     viewing results:';
+    'Les résultats de la consultation sont maintenant disponibles pour les utilisateurs figurants dans la liste suivante.
+	    Ces utilisateurs ont reçu un courrier électronique qui contenait un lient Internet leur permettant
+	     de consulter ces résultats :';
 }
 sub results_available_to_the_following_users {
-    'The results of this poll have been released only to a limited set of users:';
+    'Les résultats de cette consultation n\'ont été communiqué qu\'a un nombre restreint d\'utilisateurs :';
 }
 
 sub Poll_results_are_available { #url
@@ -212,32 +210,33 @@ sub Poll_results_will_be_available { #url
     "<a href=\"$_[1]\">See poll results</a>";
 }
 sub Description {
-    'Description:';
+    'Description :';
 }
 sub Candidates {
-    'Candidates:';
+    'Candidats :';
 }
 sub Add_voters {
-    'Add voters';
+    'Ajouter des votants';
 }
 
 sub the_top_n_will_win { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
-	$wintxt = "candidate";
+	$wintxt = "candidat";
     } else {
-	$wintxt = "$_[1] candidates";
+	$wintxt = "$_[1] candidats";
     }
     return "The top $wintxt will win.";
 }
 
 sub add_voter_instructions {
-    "Enter e-mail addresses of voters, one per line. These
-    may be new voters or existing voters who have not voted yet.
-    In a private poll, giving the e-mail address of an already 
-    existing voter <strong>will not</strong> let that voter vote twice.
-    It will only resend the voter an invitation to vote.
-    In a public poll, only a token attempt is made to prevent
+    "Saisir l'adresse du courrier électronique des votants, une adresse par ligne.
+    Ces votants peuvent être de nouveaux votants ou des votants déjà enregistrés
+    qui n'ont pas encore voté. Dans le cas d'une élection à bulletin secret, la 
+    saisie d'un votant déjà enregistré <strong>ne permettra pas</strong> à ce votant
+    de pouvoir voter une deuxième fois. Cette saisie ne provoquera que l'envoi d'un
+    courrier électronique d'invitation au vote.
+    Dans le cas d'une élection à main levée, In a public poll, only a token attempt is made to prevent
     multiple voting.";
 }
 sub Upload_file {
@@ -251,12 +250,12 @@ sub File_to_upload_ballots_from {
 }
 sub This_is_a_public_poll_plus_link {
     my $url = $_[1];
-    "This is a public poll. Share the following link
-	with voters to allow them to vote:</p><p>
+    "Ceci est une élection à main levée. Partagez le lien Internet ci-dessous avec les votants
+        pour leur permettre d'exprimer leur suffrage :</p><p>
 	&nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
 }
 sub The_poll_has_ended {
-    'The poll has ended.';
+    'La consultation est terminée.';
 }
 
 # add voters
@@ -269,7 +268,7 @@ sub Adding_voters {
 }
 
 sub Sorry_voters_can_only_be_added_to_poll_in_progress {
-    'Sorry, voters can only be added to an poll in progress.';
+    'Désolé, des votants ne peuvent être ajoutés que si la consultation est en cours.';
 }
 
 sub Total_of_x_voters_authorized { # x
@@ -370,12 +369,12 @@ sub Weight {
 }
 
 sub address_will_be_visible {
-    '<strong>Your email address will be visible</strong> along with your ballot.';
+    '<strong>L\'adresse de votre courrier électronique sera inscrit sur votre bulletin de vote</strong>.';
 }
 
 sub ballot_will_be_anonymous {
-    ' However, your ballot will still be anonymous:
-      no personally identifying information will appear.';
+    ' Néanmoins, votre vote reste anonyme, il ne contiendra aucune information
+      permettant de vous identifier.';
 }
 
 sub submit_ranking {
@@ -383,9 +382,10 @@ sub submit_ranking {
 }
 
 sub only_writeins_are_permitted {
-    'Voting is not yet permitted in this poll. However,
-             you may view the available choices and write in new
-	     choices. Use the text field below to write in new choices.';
+    'Le vote n\'est pas encore possible pour cette consultation. Néanmoins
+             il vous est possible de consulter la liste des propositions offertes et
+             de rajouter de nouvelles propositions. Utlisez le champs ci-dessous pour
+             écrire vos nouvelles propositions.';
 }
 
 sub to_top {
@@ -404,8 +404,8 @@ sub make_tie {
     'make tie';
 }
 sub buttons_are_deactivated {
-    'These buttons are deactivated because
-	your browser does not support Javascript.';
+    'Ces boutons ont été désactivés car
+	votre navigateur ne supporte pas Javascript.';
 }
 sub ranking_instructions {
        'Rank the choices in one of three ways:
@@ -420,53 +420,53 @@ sub write_in_a_choice {
     'Write in a new choice: ';
 }
 sub if_you_have_already_voted { #url
-    "If you have already voted, you may see
-	<a href=\"$_[1]\">the current poll results</a>.";
+    "Si vous avez déjà voté, vous pouvez consulter 
+	<a href=\"$_[1]\">les résultats de la consultation en cours</a>.";
 }
 sub thank_you_for_voting { #title, receipt
-    "Thank you. Your vote for <strong>$_[1]</strong> has been
-	successfully cast. Your voter receipt is <code>$_[2]</code>.";
+    "Merci. Votre vote pour la consultation <strong>$_[1]</strong> a été
+	enregistré. Votre certificat de vote est <code>$_[2]</code>.";
 }
 sub name_of_writein_is_empty {
     "Name of write-in choice is empty";
 }
 sub writein_too_similar {
-    "Sorry, the name of the write-in is too similar to an existing choice";
+    "Désolé, votre proposition est trop proche d\'une proposition déjà existante";
 }
 
 # election
 
 sub vote_has_already_been_cast {
-    "A vote has already been cast using your voter key.";
+    "Un vote a déjà été enregistré avec votre identifiant de votant.";
 }
 sub following_URL_will_report_results {
-    'The following URL will report poll results once the poll ends:';
+    'Les résultats de cette consultation seront disponibles après la fin de la consultation en utilisant le lien Internet suivant : ';
 }
 sub following_URL_reports_results {
-    'The following URL reports the current poll results:';
+    'Les résultats de cette consultation sont disponibles en utilisant le lien Internet suivant : ';
 }
 sub Already_voted {
-    'Already voted';
+    'A déjà voté';
 }
 sub Error {
-    'Error';
+    'Erreur';
 }
 sub Invalid_key {
-    'Invalid key. You should have received a correct URL for
-        controlling the poll by email. This error has been logged.';
+    'Identifiant invalide. Vous devriez avoir reçu un courrier électronique avec un lien Internet 
+        vous permettant de participer à la consultation. Cette incident a été enregistrée.';
 }
 sub Authorization_failure {
     'Authorization failure';
 }
 
 sub already_ended { # title 
-    "This poll (<strong>$_[1]</strong>) has already been ended.";
+    "Cette consulation (<strong>$_[1]</strong>) est déjà terminée.";
 }
 sub Poll_not_yet_ended {
-    "Poll not yet ended";
+    "Consultation non encore terminée";
 }
 sub The_poll_has_not_yet_been_ended { #title, name, email
-    "This poll ($_[1]) has not yet been ended by its supervisor,
+    "Cette consultation ($_[1]) n'a pas encore été cloturée par son responsable,
     $_[2] ($_[3]),";
 }
 sub The_results_of_this_completed_poll_are_here {
@@ -477,21 +477,21 @@ sub No_write_access_to_lock_poll {
     "Did not have the write access needed to lock the poll.";
 }
 sub This_poll_has_already_been_started { # title
-    "This poll ($_[1]) has already been started.";
+    "Cette consultation ($_[1]) a déjà été commencée.";
 }
 sub No_write_access_to_start_poll {
     'Did not have write access to start a poll.';
 }
 sub Poll_does_not_exist_or_not_started {
-    'This poll does not exist or has not been started.';
+    'Cette consultation n\'existe pas ou n\'a pas encore été commencée.';
 }
 sub Your_voter_key_is_invalid__check_mail { # voter
    my $voter = $_[1];
    if ($voter ne '') {
-    "Your voter key is invalid, $voter.
-     You should have received a correct URL by email.";
+    "Votre identifiant de votant est invalide, $voter.
+     Vous devriez avoir reçu un courrier électronique avec un lien Internet correcte.";
    } else {
-    "Your voter key is invalid. You should have received a correct URL by email.";
+    "Votre identifiant de votant est invalide. Vous devriez avoir reçu un courrier électronique avec un lien Internet correcte.";
    }
 }
 sub Invalid_result_key { # key
@@ -518,42 +518,42 @@ sub Voter_v_already_authorized {
      The voter's key will be resent to the voter.";
 }
 sub Invalid_email_address_hdr { # addr
-    "Invalid email address";
+    "Adresse de courrier électronique non valide";
 }
 sub Invalid_email_address { # addr
-    "Invalid email address: $_[1]";
+    "Adresse de courrier électronique non valide : $_[1]";
 }
 sub Sending_mail_to_voter_v {
-    "Sending mail to voter \"$_[1]\"...";
+    "Courrier électronique envoyé au votant \"$_[1]\"...";
 }
 sub CIVS_poll_supervisor {
-    'CIVS poll supervisor';
+    'Responsable de consultation CIVS';
 }
 sub voter_mail_intro { #title, name, email_addr
-"A Condorcet Internet Voting Service election named <b>$_[1]</b> has been created.
-You have been designated as a voter by the election supervisor,
+"La consultation <b>$_[1]</b> a été mise en place à l'aide du Service de Vote Internet Condorcet (CIVS).
+Le responsable de cette consultation vous a désigné comme participant à cette consultation,
 $_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
 }
 sub Description_of_poll {
-    'Description of poll:';
+    'Description de la consultation : ';
 }
 sub if_you_would_like_to_vote_please_visit {
-    'If you would like to vote, please visit the following URL:';
+    'Si vous désirer voter, merci de cliquer sur l\'adresse Internet suivante : ';
 }
 sub This_is_your_private_URL {
-'This is your private URL. Do not give it to anyone else, because they could use
-it to vote for you.';
+'Cette adresse Internet n\'est destinée qu\'a vous. Ne la communiquez à personne, car elle pourrait être utilisée
+pour voter à votre place.';
 }
 sub Your_privacy_will_not_be_violated {
-'Your privacy will not be violated by voting.  The voting service has already
-destroyed the record of your email address and will not release any information
-about whether or how you have voted.';
+'La confidentialité de votre vie privé ne sera pas menacée par votre vote. Ce service de consultation a déja
+ supprimé l\'enregistrement qui contenait votre adresse electronique et ne communiquera aucune
+information relative à votre choix de vote ou aux consultations auquelles vous avez participé.';
 }
 sub This_is_a_nonanonymous_poll {
-'The poll supervisor has decided to make this a <strong>non-anonymous poll</strong>.  If
-you vote, how you voted will be publicly visible along with your
-email address. If you do not vote, the poll supervisor will also be able
-to determine this.';
+'Le responsable de cette consultation a décidé que le vote se ferait <strong>à main levée</strong>.
+ Si vous particpez à cette consultation, votre choix de vote sera rendu publique et votre adresse de
+ courrier internet seront communiqués aux autres participants de cette consultation. Si vous ne participez
+ pas à la consultation le responsable de la consultation en sera informé.';
 }
 
 sub poll_has_been_announced_to_end { #election_end
@@ -561,11 +561,11 @@ sub poll_has_been_announced_to_end { #election_end
 }
 
 sub To_view_the_results_at_the_end {
-    'To view the results of the poll once it has ended, visit:</p>';
+    'Pour consulter les résultats de la consultations après sa clotûre, consultez : </p>';
 }
 
 sub For_more_information {
-'For more information about the Condorcet Internet Voting Service, see:';
+'Pour plus d\'informations concernant le Service de Vote Internet Condorcet (CIVS), consultez : ';
 }
 
 
@@ -590,21 +590,21 @@ sub The_poll_has_been_ended { #election_end
 }
 
 sub poll_results_available_to_authorized_users {
-    'The poll results are now available to authorized users.';
+    'Les résultats de la consultation sont disponibles pour les utilisateurs autorisés.';
 }
 
 sub was_not_able_stop_the_poll {
-    'Was not able to stop the poll';
+    'N\'a pas pu clore la consultation';
 }
 
 
 # results
 
 sub CIVS_poll_result {
-    "CIVS poll result";
+    "Resultats de consultation CIVS";
 }
 sub Poll_results { # title
-    "Poll Results: $_[1]";
+    "Resultats de la consultation : $_[1]";
 }
 
 sub Writeins_currently_allowed {
@@ -612,10 +612,10 @@ sub Writeins_currently_allowed {
 }
 
 sub Writeins_allowed {
-    'Write-in candidates are allowed.';
+    'Les candidats panachés sont permis.';
 }
 sub Writeins_not_allowed {
-    'Write-in candidates are not allowed.';
+    'Les candidats panachés ne sont pas permis.';
 }
 sub Detailed_ballot_reporting_enabled {
     'Detailed ballot reporting is enabled.';
@@ -627,19 +627,19 @@ sub Voter_identities_will_be_kept_anonymous {
     'Voter identities will be kept anonymous';
 }
 sub Voter_identities_will_be_public {
-    'Voter identities (email) will be publicly associated with their ballots.';
+    'L\'identité des votants (courrier électronique) sera publiquement associés à leur vote.';
 }
 sub Condorcet_completion_rule {
     'Condorcet completion rule:';
 }
 sub undefined_algorithm {
-    'Error: undefined algorithm.';
+    'Erreur : Algorithm non défini.';
 }
 sub computing_results {
-    'Computing results...';
+    'Dépouillement des résult...';
 }
 sub Supervisor { #name, email
-    "Supervisor: $_[1] ($_[2])";
+    "Responsable : $_[1] ($_[2])";
 }
 sub Announced_end_of_poll {
     "Announced end of poll: $_[1]";
@@ -648,33 +648,33 @@ sub Actual_time_poll_closed { # close time
     "Actual time poll closed: $_[1]";
 }
 sub Poll_not_ended {
-    'Poll has not yet ended.';
+    'La consultation n\'est pas encore terminée.';
 }
 sub This_is_a_test_poll {
-    'This is a test poll.';
+    'Ceci est une consultation de test.';
 }
 sub This_is_a_private_poll { #num_auth
-    "Private poll ($_[1] authorized voters)";
+    "Vote à bulletin secret ($_[1] participants autorisés)";
 }
 sub This_is_a_public_poll {
-    'This is a public poll.';
+    'Ceci est une consultation à main levée.';
 }
 
 sub Actual_votes_cast { #num_votes
     "Actual votes cast: $_[1]";
 }
 sub Number_of_winning_candidates {
-    'Number of winning candidates: ';
+    'Nombre de candidast élus : ';
 }
 sub Poll_actually_has { #winmsg
-    my $winmsg = '1 winner';
+    my $winmsg = '1 élu';
     if ($_[1] != 1) {
-	$winmsg = $real_nwin.' winners';
+	$winmsg = $real_nwin.' élus';
     }
     "&nbsp;(Poll actually has $winmsg)";
 }
 sub poll_description_hdr {
-    'Poll description';
+    'Description de la consultation';
 }
 sub Ranking_result {
     'Ranking result';
@@ -692,10 +692,10 @@ sub some_result_details_not_shown {
     'For simplicity, some details of the poll result are not shown.';
 }
 sub Show_details {
-    'Show details';
+    'Montrer les détails';
 }
 sub Hide_details {
-    'Hide details';
+    'Cacher les détails';
 }
 sub Result_details {
     'Result details';
@@ -704,13 +704,13 @@ sub Ballot_report {
     'Ballot report'
 }
 sub Ballots_are_shown_in_random_order {
-    "Ballots are shown in a randomly generated order.";
+    "Les bulletin de vote sont affichés dans un ordre aléatoire.";
 }
 sub Download_ballots_as_a_CSV { # url
     "<a href=\"$_[1]\">Download ballots</a> as a CSV";
 }
 sub No_ballots_were_cast {
-    "No ballots were cast in this poll.";
+    "Aucun vote n'\a été exprimé lors de cette consultation.";
 }
 sub Ballot_reporting_was_not_enabled {
     "Ballot reporting was not enabled for this poll.";
