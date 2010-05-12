@@ -58,7 +58,7 @@ sub init {
 		$row[2] * $qualities[$j] > $best) {
 		$best = $row[2] * $qualities[$j];
 		$language = $row[0];
-		# $log .= "Choosing $language (score $best)\n";
+		$log .= "Choosing $language (score $best)\n";
 	    }
 	}
     }

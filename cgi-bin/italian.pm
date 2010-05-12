@@ -1,10 +1,10 @@
 package italian;
 
+my $debug = 0;
 use lib '@CGIBINDIR@';
 
 use english;
 our @ISA = ('english'); # go to AmE module for missing methods
-
 
 sub lang { return 'it-IT'; }
 
@@ -15,6 +15,7 @@ sub init {
 }
 
 # civs_common
+if ($debug) { print "common\n" }
 sub Condorcet_Internet_Voting_Service {
     'Servizio di voto Condorcet on-line (CIVS)';
 }
@@ -51,6 +52,7 @@ sub Sorry_the_server_is_busy {
 }
 
 # civs_create
+if ($debug) { print "create\n" }
 
 sub mail_has_been_sent {
     "L'e-mail è stata inviata all'indirizzo fornito (<tt>$_[1]</tt>).";
@@ -72,7 +74,7 @@ sub CIVS_Poll_Creation {
     "Creazione votazione CIVS";
 }
 sub Poll_created {
-    "Votazione creata: $_[1]"
+    "Votazione creata: $_[1]";
 }
 
 sub Address_unacceptable { #addr
@@ -134,12 +136,14 @@ Per maggiori informazioni sul servizio di voto Condorcet on-line:
 }
   
 # start
+if ($debug) { print "start\n" }
 
 sub poll_started {
     'La votazione <strong>'.$_[1].'</strong> è stata aperta.';
 }
 
 # control
+if ($debug) { print "control\n" }
 
 sub CIVS_Poll_Control {
     "Gestione votazione CIVS";
@@ -265,6 +269,7 @@ sub The_poll_has_ended {
 }
 
 # add voters
+if ($debug) { print "add\n" }
 
 sub CIVS_Adding_Voters {
     'CIVS: Aggiunta elettori';
@@ -295,6 +300,7 @@ sub Done {
 }
 
 # vote
+if ($debug) { print "vote\n" }
 
 sub page_header_CIVS_Vote { # election_title
     'Votazione CIVS: '.$_[1];
@@ -439,6 +445,7 @@ sub writein_too_similar {
 }
 
 # election
+if ($debug) { print "election\n" }
 
 sub vote_has_already_been_cast {
     "È già stato espresso un voto con le credenziali fornite.";
@@ -606,6 +613,7 @@ sub was_not_able_stop_the_poll {
 
 
 # results
+if ($debug) { print "results\n" }
 
 sub CIVS_poll_result {
     "Risultati votazione CIVS";
@@ -708,7 +716,7 @@ sub Result_details {
     'Dettagli risultato';
 }
 sub Ballot_report {
-    'Dettagli schede'
+    'Dettagli schede';
 }
 sub Ballots_are_shown_in_random_order {
     "Le schede sono visualizzate in ordine casuale.";
@@ -749,6 +757,7 @@ sub Choices_in_individual_pref_order {
 }
 
 # rp
+if ($debug) { print "rp\n" }
 
 sub All_prefs_were_affirmed {
     'Tutte le preferenze calcolate sono acicliche.
@@ -762,10 +771,13 @@ sub Presence_of_a_green_entry_etc {
 	era in conflitto con altre preferenze più forti.';
 }
 sub Random_tie_breaking_used {
-'Per ottenere questa classifica sono stati utilizzati degli spareggi
-casuali (algoritmo MAM). La particolare scelta degli spareggi può
-avere effetto sulla classifica.';
+    'Per ottenere questa classifica sono stati utilizzati degli spareggi
+    casuali (algoritmo MAM). La particolare scelta degli spareggi può
+    avere effetto sulla classifica.';
 }
 sub No_random_tie_breaking_used {
     'Non è stato necessario ricorrere a spareggi casuali.';
 }
+if ($debug) {print "done\n"}
+
+1;
