@@ -31,6 +31,7 @@ civs/cgi-bin/election.pm
 civs/cgi-bin/english.pm
 civs/cgi-bin/french.pm
 civs/cgi-bin/hungarian.pm
+civs/cgi-bin/italian.pm
 civs/cgi-bin/languages.pm
 civs/cgi-bin/language-skel.pm
 civs/cgi-bin/start_election
