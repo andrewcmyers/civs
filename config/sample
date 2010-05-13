@@ -64,3 +64,8 @@ USING_ISA=''
 
 # A URL for people to visit to give suggestions. May be left empty.
 SUGGESTION_BOX='http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_5820adef7d6e8733&akey=51398305f80ae2cb'
+
+# For multi-language support. The web server may need to have some
+# options turned on to support other languages.
+EN_SUFFIX='.en'
+UTF8_SUFFIX='.utf8'

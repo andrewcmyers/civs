@@ -32,7 +32,12 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	rp.html faq.html style.css results.js vote.js check123b.png \
 	sample-ballot.png vertstrip.png
     do
-	#echo "copying $f to $HTMLDIR/$f"
+	case "$f" in
+	  *.html.*) dest="${HTMLDIR}/${f}${UTF8_SUFFIX}";;
+	  *.html)   dest="${HTMLDIR}/${f}${EN_SUFFIX}";;
+	  *)        dest="${HTMLDIR}/${f}";;
+	esac
+	echo "copying $f to $dest"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
 	     -e 's|@THISHOST@|'$THISHOST'|' \
@@ -48,7 +53,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@USING_ISA@|'$USING_ISA'|' \
 	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
-	< $f > "${HTMLDIR}/$f"
+	< "$f" > "$dest"
     done
 
     for f in add_voters beatpath.pm beatpath2.pm civs_common.pm close control \
