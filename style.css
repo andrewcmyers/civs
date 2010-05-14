@@ -122,9 +122,9 @@ table.rankings tr td ol { text-indent: 0ex }
 table.links {
     background-image: url('vertstrip.png');
     border-color: #bbc;
-    border-style: outset;
+    border-style: solid;
     border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
-    border-width: 3px;
+    border-width: 1px;
     margin: 5px
 }
 
