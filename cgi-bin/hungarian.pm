@@ -563,7 +563,7 @@ sub poll_has_been_announced_to_end { #election_end
 }
 
 sub To_view_the_results_at_the_end {
-    'A szavazás eredményének megtekintéséhez annak lezárása után a következő címet tekintsd meg:</p>';
+    "A szavazás eredményének megtekintéséhez annak lezárása után a következő címet tekintsd meg:</p> $_[1]";
 }
 
 sub For_more_information {
