@@ -184,7 +184,7 @@ sub ReportCompletion {
 # output file RESULTS. Generate progress reports appropriately.
 sub ComputeResults {
 
-    print RESULTS '<div id="settings"><form method="GET"
+    print RESULTS '<span id="settings"><form method="GET"
 	    action="'.$thisurl.'"
 	    enctype="multipart/form-data"
 	    name="changeSettings">';
@@ -247,36 +247,37 @@ sub ComputeResults {
 	$bw_checked = 'checked';
     }
 
-    print RESULTS $tx->Condorcet_completion_rule.'
+    print RESULTS $tx->Condorcet_completion_rule,
+	          $tx->What_is_this($civs_url.'/rp.html'),'
+        <br><blockquote>
 	<input type="radio"
 	    name="algorithm"
 	    onClick="newSettings()"
 	    value="beatpath" ',
 	    $bw_checked,
-	'> Schulze/Beatpath/CSSD &nbsp;&nbsp;
+	'> Schulze/Beatpath/CSSD<br>
 	<input type="radio"
 	    name="algorithm",
 	    onClick="newSettings()"
 	    value="civs_ranked_pairs"',
 	    $rp_checked,
-	'> CIVS Ranked Pairs &nbsp;&nbsp;
+	'> CIVS Ranked Pairs<br>
 	<input type="radio"
 	    name="algorithm",
 	    onClick="newSettings()"
 	    value="mam"',
 	    $mam_checked,
-	'> MAM
+	'> MAM<br>
 	<input type="radio"
 	    name="algorithm",
 	    onClick="newSettings()"
 	    value="runoff"',
 	    $runoff_checked,
 	'> Condorcet-IRV';
-	print RESULTS '&nbsp;&nbsp;&nbsp; <a href="',$civs_url,'/rp.html">(What is this?)</a>';
-	print RESULTS '&nbsp;<input type="submit" id="recomplete" value="Update">';
+	print RESULTS '<br><input type="submit" id="recomplete" value="Update">';
 
     # print RESULTS '&nbsp;<input type="submit" name="submit" value="Update display options">';
-    print RESULTS '</form></div>',$cr;
+    print RESULTS '</blockquote></form></span>',$cr;
 
     print RESULTS h2($tx->poll_description_hdr), $cr,
 	'<div class="description">',
@@ -355,7 +356,7 @@ sub PrintMatrix {
 }
 
 sub DetailsHeader {
-    print RESULTS hr(),$cr;
+    # print RESULTS hr(),$cr;
     print RESULTS '<p id="show_details">',
 	$tx->some_result_details_not_shown, 
 	'<button onclick=\'show_details();\'>',
@@ -406,7 +407,7 @@ sub BallotReport {
 		push @rows, td(\@row);
 	    }
 
-	    print RESULTS table({-class=>'matrix'},
+	    print RESULTS table({-class=>'ballots'},
 		    Tr(\@rows));
 	    print RESULTS p($tx->Ballots_are_shown_in_random_order);
 	    print RESULTS p($tx->Download_ballots_as_a_CSV("http://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"));

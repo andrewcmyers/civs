@@ -689,7 +689,7 @@ sub x_loses_to_y { # x y w l
     "$_[1] loses to $_[2] $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {
-    'For simplicity, some details of the poll result are not shown.';
+    'For simplicity, some details of the poll result are not shown. &nbsp;';
 }
 sub Show_details {
     'Show details';
@@ -707,7 +707,7 @@ sub Ballots_are_shown_in_random_order {
     "Ballots are shown in a randomly generated order.";
 }
 sub Download_ballots_as_a_CSV { # url
-    "<a href=\"$_[1]\">Download ballots</a> as a CSV";
+    "[<a href=\"$_[1]\">Download ballots in CSV format</a>]";
 }
 sub No_ballots_were_cast {
     "No ballots were cast in this poll.";
@@ -739,6 +739,10 @@ sub Condorcet_winner {
 }
 sub Choices_in_individual_pref_order {
     'Choices (in individual preference order)';
+}
+
+sub What_is_this { # url
+    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>';
 }
 
 # rp
