@@ -1,5 +1,9 @@
 package french;
 
+use lib '@CGIBINDIR@';
+use english;
+our @ISA = ('english'); # go to AmE module for missing methods
+
 sub lang { 'fr-FR'; }
 
 sub init {
@@ -41,7 +45,7 @@ sub CIVS_server_busy {
 }
 sub Sorry_the_server_is_busy {
     'Désolé, mais le serveur CIVS est actuellement surchargé et
-     il ne peut plus accepter de requettes. Merci de bien vouloir
+     il ne peut plus accepter de requêtes. Merci de bien vouloir
      essayer de nouveau ultérieurement.';
 }
 
@@ -150,10 +154,10 @@ sub Start_poll {
     'Commencer la consultation';
 }
 sub End_poll {
-    'Cloturer la consultation';
+    'Clôturer la consultation';
 }
 sub ending_poll_cannot_be_undone {
-    'La cloture d\'une consultation est une action définitive. Voulez-vous quand même continuer ? ';
+    'La clôture d\'une consultation est une action définitive. Voulez-vous quand même continuer ? ';
 }
 sub writeins_have_been_disabled {
     'Le panachage à été dévalidé';
@@ -178,17 +182,17 @@ sub no_authorized_yet { #waiting
     "0 ($_[1] participants seront autorisés en début de consultation)";
 }
 sub total_authorized_voters { # num_auth_string
-    "Nombre total de particpants autorisés: $_[1]";
+    "Nombre total de participants autorisés: $_[1]";
 }
 sub actual_votes_so_far { # num
     "Nombre de votes actuellement exprimés: $_[1]";
 }
 sub poll_ends { # end
-    "Cloture de la consultation $_[1].";
+    "Clôture de la consultation $_[1].";
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
     'Le résultat de cette consultation sera à la disposition de tous
-     les participants après la cloture de la consultation.';
+     les participants après la clôture de la consultation.';
 }
 sub Voters_can_choose_No_opinion {
     'Les participants peuvent choisir l\' &ldquo;abstention&rdquo;';
@@ -222,7 +226,7 @@ sub Candidates {
     'Candidats : ';
 }
 sub Add_voters {
-    'Ajouter des particpants';
+    'Ajouter des participants';
 }
 
 sub the_top_n_will_win { # num_winners
@@ -237,7 +241,7 @@ sub the_top_n_will_win { # num_winners
 
 sub add_voter_instructions {
     "Saisir l'adresse du courrier électronique des participants, une adresse par
-     ligne. Ces participants peuvent être de nouveaux particpants ou des participants déjà
+     ligne. Ces participants peuvent être de nouveaux participants ou des participants déjà
      enregistrés qui n'ont pas encore voté. Dans le cas d'une élection à
      bulletin secret, la saisie d'un participant déjà enregistré <strong>ne 
      permettra pas</strong> à ce participant de pouvoir voter une deuxième fois.
@@ -314,7 +318,7 @@ sub instructions1 { # num_winners, end, name, email
 	$wintxt="$_[1] favorite choices";
     }
     "Seulement les $_[1] remporteront la consultation.<p>
-	    La consultation sera cloturée le <b>$_[2]</b>.
+	    La consultation sera clôturée le <b>$_[2]</b>.
 	    Le responsable de la consultation est $_[3] (<tt>$_[4]</tt>).
 	    N'hésitez pas à le contacter si vous avez besoin d'aide.";
 }
@@ -342,7 +346,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
 	if ($prop) {
 	    $ret .= '<p>Cette consultation utilise une méthode expérimentale
             basée sur le vote Condorcet pour fournir une représentation
-            proportionelle. L\'algorithm utilisé suppose que vous désirez  It is assumed
+            proportionnelle. L\'algorithme utilisé suppose que vous désirez  It is assumed
 	    by the voting algorithm that you want the ranking of your most
 	    preferred <i>winning</i> choice to be as high as possible, and if two
 	    sets of winning choices agree on the choice you prefer most, then you
@@ -352,12 +356,12 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     } else {
 	$ret = '<p>Cette consultation utilise une méthode expérimentale
         basée sur le vote Condorcet pour fournir une représentation
-        proportionelle. Merci de donner aux propositions ou candidats
+        proportionnelle. Merci de donner aux propositions ou candidats
         suivants une b>pondération</b> qui exprime votre intérêt pour
         que ces propositions ou ces candidats soient inclus dans le groupe
         des propositions ou des candidats retenus pour la suite de la
         consultation.
-        L\'algorithm utilisé suppose que désirez que la	somme des 
+        L\'algorithme utilisé suppose que désirez que la	somme des 
         pondérations des propositions ou des candidats retenus doit être
         la plus élevée possible. Toutes les propositions ou candidats
         possèdent une pondération initiale de 0, ce qui signifie que vous
@@ -470,17 +474,17 @@ sub Invalid_key {
      Cette incident a été enregistrée.';
 }
 sub Authorization_failure {
-    'Echec lors de l\'autorisation';
+    'Échec lors de l\'autorisation';
 }
 
 sub already_ended { # title 
-    "Cette consulation (<strong>$_[1]</strong>) est déjà terminée.";
+    "Cette consultation (<strong>$_[1]</strong>) est déjà terminée.";
 }
 sub Poll_not_yet_ended {
     "Consultation non encore terminée";
 }
 sub The_poll_has_not_yet_been_ended { #title, name, email
-    "Cette consultation ($_[1]) n'a pas encore été cloturée par son responsable,
+    "Cette consultation ($_[1]) n'a pas encore été clôturée par son responsable,
     $_[2] ($_[3]),";
 }
 sub The_results_of_this_completed_poll_are_here {
@@ -488,7 +492,7 @@ sub The_results_of_this_completed_poll_are_here {
 }
 
 sub No_write_access_to_lock_poll {
-    "Ne possède pas les droits d\'écriture nécessaires pour vérouiller la consultation.";
+    "Ne possède pas les droits d\'écriture nécessaires pour verrouiller la consultation.";
 }
 sub This_poll_has_already_been_started { # title
     "Cette consultation ($_[1]) a déjà été commencée.";
@@ -564,7 +568,7 @@ sub Your_privacy_will_not_be_violated {
 'La confidentialité de votre vie privé ne sera pas menacée par votre vote.
  Ce service de consultation a déjà  supprimé l\'enregistrement qui contenait
  votre adresse électronique et ne communiquera aucune information relative
- à votre choix de vote ou aux consultations auquelles vous avez participé.';
+ à votre choix de vote ou aux consultations auxquelles vous avez participé.';
 }
 sub This_is_a_nonanonymous_poll {
 'Le responsable de cette consultation à décidé que cette consultation serait
@@ -580,7 +584,7 @@ sub poll_has_been_announced_to_end { #election_end
 }
 
 sub To_view_the_results_at_the_end {
-    'Pour consulter les résultats de la consultations après sa clotûre
+    'Pour consulter les résultats de la consultations après sa clôture
     , consultez : </p>$_[1]';
 }
 
@@ -593,11 +597,11 @@ sub For_more_information {
 # close
 
 sub CIVS_Ending_Poll {
-    'CIVS: Cloture de Consultation';
+    'CIVS: Clôture de Consultation';
 }
 
 sub Ending_poll {
-    'Cloturer une consultation';
+    'Clôturer une consultation';
 }
 sub View_poll_results {
     'View_poll_results';
@@ -607,7 +611,7 @@ sub Poll_ended { #title
 }
 
 sub The_poll_has_been_ended { #election_end
-    "Cette consultation est close. Sa date de cloture était initialement prévue le $_[1].";
+    "Cette consultation est close. Sa date de clôture était initialement prévue le $_[1].";
 }
 
 sub poll_results_available_to_authorized_users {
@@ -654,7 +658,7 @@ sub Condorcet_completion_rule {
     'Règle de vote Condorcet :';
 }
 sub undefined_algorithm {
-    'Erreur : Algorithm non défini.';
+    'Erreur : Algorithme non défini.';
 }
 sub computing_results {
     'Dépouillement des résultats...';
@@ -663,10 +667,10 @@ sub Supervisor { #name, email
     "Responsable : $_[1] ($_[2])";
 }
 sub Announced_end_of_poll {
-    "Date prévue de cloture de consultation : $_[1]";
+    "Date prévue de clôture de consultation : $_[1]";
 }
 sub Actual_time_poll_closed { # close time
-    "Date de cloture de consultation : $_[1]";
+    "Date de clôture de consultation : $_[1]";
 }
 sub Poll_not_ended {
     'La consultation n\'est pas encore terminée.';
@@ -685,7 +689,7 @@ sub Actual_votes_cast { #num_votes
     "Nombre de votes actuellement exprimés : $_[1]";
 }
 sub Number_of_winning_candidates {
-    'Nombre de candidast élus : ';
+    'Nombre de candidats élus : ';
 }
 sub Poll_actually_has { #winmsg
     my $winmsg = '1 élu';
@@ -753,7 +757,7 @@ sub undefeated_explanation {
 }
 sub Choices_shown_in_red_have_tied {
     "Les propositions affichées en rouge sont à égalité pour être choisies.
-	Vous pouver les départager aléatoirement.";
+	Vous pouvez les départager aléatoirement.";
 }
 sub Condorcet_winner {
     "Gagnant à la méthode Condorcet";
@@ -776,7 +780,7 @@ sub Presence_of_a_green_entry_etc {
 	it conflicted with other, stronger preferences.';
 }
 sub Random_tie_breaking_used {
-'Une méthode aléatoire a été utilisée pour éliminer les ex-æquo et obtenir ce classement selon les règles de l\'algorithm MAM. L\'ordre des propositions a pu en être altéré.';
+'Une méthode aléatoire a été utilisée pour éliminer les ex-æquo et obtenir ce classement selon les règles de l\'algorithme MAM. L\'ordre des propositions a pu en être altéré.';
 }
 sub No_random_tie_breaking_used {
     'Il n\'a pas été nécessaire d\'utiliser une méthode aléatoire pour départager les ex-æquo et obtenir ce classement.';
