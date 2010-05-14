@@ -595,9 +595,9 @@ sub SendKeys {
 	    }
 	    $html .= $cr."</p><p>".$tx->poll_has_been_announced_to_end($election_end);
             if ($restrict_results ne 'yes') {
-		$html .= ' ' . $tx->To_view_the_results_at_the_end . '</p>';
-	    MakeURL(
-"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id");
+		$html .= ' ' .
+		  $tx->To_view_the_results_at_the_end(MakeURL("http://$thishost$civs_bin_path/".
+				"results@PERLEXT@?id=$election_id"));
 	    }
 	    $html .= '<p>' . $tx->For_more_information . $cr;
             MakeURL($civs_home).'</p>

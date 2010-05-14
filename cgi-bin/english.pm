@@ -561,7 +561,7 @@ sub poll_has_been_announced_to_end { #election_end
 }
 
 sub To_view_the_results_at_the_end {
-    'To view the results of the poll once it has ended, visit:</p>';
+    'To view the results of the poll once it has ended, visit:</p> $_[1]';
 }
 
 sub For_more_information {
