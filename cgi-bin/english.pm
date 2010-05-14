@@ -274,11 +274,11 @@ sub Sorry_voters_can_only_be_added_to_poll_in_progress {
 
 sub Total_of_x_voters_authorized { # x
     if ($_[1] == 0) {
-	print "No voters authorized to vote yet.", $cr, '</pre>';
+	'No voters authorized to vote yet.';
     } elsif ($_[1] == 1) {
-	print "Only 1 voter authorized to vote so far.", $cr, '</pre>';
+	'Only 1 voter authorized to vote so far.';
     } else {
-	print "Total of $_[1] voters authorized to vote.", $cr, '</pre>';
+	"Total of $_[1] voters authorized to vote.";
     }
 }
 

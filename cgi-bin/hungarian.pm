@@ -281,9 +281,9 @@ sub Sorry_voters_can_only_be_added_to_poll_in_progress {
 
 sub Total_of_x_voters_authorized { # x
     if ($_[1] == 0) {
-        print "Üres a szavazói névjegyzék.", $cr, '</pre>';
+        "Üres a szavazói névjegyzék.";
     } else {
-        print "Összesen $_[1] szavazó van a névjegyzékben.", $cr, '</pre>';
+        "Összesen $_[1] szavazó van a névjegyzékben.";
     }
 }
 

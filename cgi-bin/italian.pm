@@ -284,11 +284,11 @@ sub Sorry_voters_can_only_be_added_to_poll_in_progress {
 
 sub Total_of_x_voters_authorized { # x
     if ($_[1] == 0) {
-	print "Nessun elettore registrato.", $cr, '</pre>';
+	"Nessun elettore registrato.";
     } elsif ($_[1] == 1) {
-	print "C'è un solo elettore registrato.", $cr, '</pre>';
+	"C'è un solo elettore registrato.";
     } else {
-	print "$_[1] elettori registrati.", $cr, '</pre>';
+	"$_[1] elettori registrati.";
     }
 }
 

@@ -280,11 +280,11 @@ sub Sorry_voters_can_only_be_added_to_poll_in_progress {
 
 sub Total_of_x_voters_authorized { # x
     if ($_[1] == 0) {
-	print "Aucun participant n\'est actuellement autorisé à s\'exprimer.", $cr, '</pre>';
+	"Aucun participant n\'est actuellement autorisé à s\'exprimer.";
     } elsif ($_[1] == 1) {
-	print "Seul un participant est actuellement autorisé à s\'exprimer.", $cr, '</pre>';
+	"Seul un participant est actuellement autorisé à s\'exprimer.";
     } else {
-	print "$_[1] participants autorisés à s'exprimer.", $cr, '</pre>';
+	"$_[1] participants autorisés à s'exprimer.", $cr, '</pre>';
     }
 }
 
