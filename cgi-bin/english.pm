@@ -157,7 +157,7 @@ sub writeins_have_been_disabled {
     'Write-in candidates have been disabled';
 }
 sub disallow_further_writeins {
-    'Write-in candidates have been disabled';
+    'Disallow further write-ins';
 }
 sub voting_disabled_during_writeins {
     'Voting is currently disabled during the write-in phase.';
@@ -206,9 +206,6 @@ sub results_available_to_the_following_users {
 }
 
 sub Poll_results_are_available { #url
-    "<a href=\"$_[1]\">See poll results</a>";
-}
-sub Poll_results_will_be_available { #url
     "<a href=\"$_[1]\">See poll results</a>";
 }
 sub Description {
@@ -313,7 +310,7 @@ sub instructions1 { # num_winners, end, name, email
 	    Contact the poll supervisor if you need help.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($no_opinion, my $prop, my $combined, my $civs_url) = @_;
+    my ($no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;
     if (!$prop || !$combined) {
 	$ret = "Give each of the following choices
@@ -579,7 +576,7 @@ sub Ending_poll {
     'Ending a poll';
 }
 sub View_poll_results {
-    'View_poll_results';
+    'View poll results';
 }
 sub Poll_ended { #title
     "Poll ended: $_[1]";
