@@ -217,7 +217,7 @@ print '<p id="sort_button"> Sort the choices by their current rank:
 
 if ($writeins eq 'yes') {
     print '<p>'.$tx->write_in_a_choice.' <input type="text" size="60" name="writein">';
-    print '<input type="submit" value="Add write-in" name="AddWritein"></p>';
+    print '<input type="submit" value="', $tx->Add_writein, '" name="AddWritein"></p>';
 }
 # if ($voting_enabled) {
 #   print '<p>Read rankings from a saved voting page: ';

@@ -65,7 +65,7 @@ sub here_is_the_control_URL {
      envoyé au responsable de la consultation par courrier électronique.";
 }
 sub the_poll_is_in_progress {
-    'La consultation est en cours. Cliquer sur ce bouton pour la terminer : ';
+    'La consultation est en cours. Cliquer sur le bouton " Clôturer la consultation" pour la clôturer : ';
 }
 
 sub CIVS_Poll_Creation {
@@ -90,7 +90,8 @@ sub CIVS_poll_created {
 sub creation_email_info1 { # title, url
 "Ce courrier électronique confirme la création d'une nouvelle consultation,
 $_[1]. Vous avez été désigné comme le responsable de cette consultation.
- Le lien Internet suivant vous permet de démarrer ou d'arrêter le déroulement de la consultation :
+
+Le lien Internet suivant vous permet de démarrer ou d'arrêter le déroulement de la consultation :
 
   $_[2]
 
@@ -105,29 +106,35 @@ sub creation_email_public_link { # url
 }
 sub for_more_information_about_CIVS { # url
 "Le lien Internet suivant vous permet d'accéder à plus d\'informations concernant le Service de Vote Internet Condorcet (CIVS) :
-  $_[1]";
+
+  $_[1]
+
+";
 }
 
 sub Sending_result_key { # addr
-    "Sending result key to '$_[1]'";
+    "Envoi de la clef de consultation des résultats à '$_[1]'";
 }
 sub Results_of_CIVS_poll { # title
     "Résultats de la consultation CIVS: $_[1]";
 }
 sub Results_key_email_body { # title, url, civs_home
 "Une nouvelle consultation CIVS a été créée, son nom est \"$_[1]\".
-Le responsable de la consultation vous a autorisé en connaître le résultat.
+Le responsable de la consultation vous a autorisé à en connaître le résultat.
 
 Conservez ce courrier électronique. Si vous ne le conservez pas, il ne vous
- sera pas possible d'accéder aux résultats. Après la clôture de la
- consultation, les résultats seront accessible avec le lien Internet suivant :
+sera pas possible d'accéder aux résultats. Après la clôture de la
+consultation, les résultats seront accessible en utilisant le lien Internet
+suivant :
 
   $_[2]
 
 Ce lien est destiné à votre seul usage. Permettre à un tiers d'utiliser
- ce lien lui donnera accès aux résultat de la consultation.
+ce lien lui donnera accès aux résultats de la consultation.
+
 Le lien Internet suivant vous permet d'accéder à plus d'informations
- concernant le Service de Vote Internet Condorcet (CIVS) :
+concernant le Service de Vote Internet Condorcet (CIVS) :
+
   $_[3]
 
 ";
@@ -148,7 +155,7 @@ sub Poll_control {
     "Gestion de la consultation";
 }
 sub poll_has_not_yet_started {
-    'La consultation n\'est pas encore commencée. Cliquer sur le bouton pour la commencer : ';
+    'La consultation n\'est pas encore commencée. Cliquer sur le bouton "Commencer la consultation" pour la commencer : ';
 }
 sub Start_poll {
     'Commencer la consultation';
@@ -182,10 +189,10 @@ sub no_authorized_yet { #waiting
     "0 ($_[1] participants seront autorisés en début de consultation)";
 }
 sub total_authorized_voters { # num_auth_string
-    "Nombre total de participants autorisés: $_[1]";
+    "Nombre total de participants autorisés : $_[1]";
 }
 sub actual_votes_so_far { # num
-    "Nombre de votes actuellement exprimés: $_[1]";
+    "Nombre de votes actuellement exprimés : $_[1]";
 }
 sub poll_ends { # end
     "Clôture de la consultation $_[1].";
@@ -223,7 +230,7 @@ sub Description {
     'Description : ';
 }
 sub Candidates {
-    'Candidats : ';
+    'Candidats ou Propositions : ';
 }
 sub Add_voters {
     'Ajouter des participants';
@@ -232,11 +239,11 @@ sub Add_voters {
 sub the_top_n_will_win { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
-	$wintxt = "candidat";
+	$wintxt = "Un seul candidat ou une seule proposition sera gagnant";
     } else {
-	$wintxt = "$_[1] candidats";
+	$wintxt = "Les $_[1] premiers candidats ou premières propositions seront gagnantes";
     }
-    return "Les $wintxt premiers gagneront.";
+    return $wintxt ;
 }
 
 sub add_voter_instructions {
@@ -296,7 +303,7 @@ sub Go_back_to_poll_control {
     'Retour à la gestion de la consultation';
 }
 sub Done {
-    'Fait.';
+    'Terminé.';
 }
 
 # vote
@@ -356,20 +363,23 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     } else {
 	$ret = '<p>Cette consultation utilise une méthode expérimentale
         basée sur le vote Condorcet pour fournir une représentation
-        proportionnelle. Merci de donner aux propositions ou candidats
-        suivants une b>pondération</b> qui exprime votre intérêt pour
-        que ces propositions ou ces candidats soient inclus dans le groupe
-        des propositions ou des candidats retenus pour la suite de la
+        proportionnelle.
+        Merci de donner aux candidats ou aux propositions suivants une
+        <b>pondération</b> qui exprime votre intérêt pour
+        que ces candidats ou ces propositions soient inclus dans le groupe
+        des candidats ou des propositions retenus pour la suite de la
         consultation.
-        L\'algorithme utilisé suppose que désirez que la	somme des 
+        L\'algorithme utilisé suppose que désirez que la somme des 
         pondérations des propositions ou des candidats retenus doit être
-        la plus élevée possible. Toutes les propositions ou candidats
-        possèdent une pondération initiale de 0, ce qui signifie que vous
-        n\'avez aucun intérêt pour ces propositions. Une pondération ne
-        peut être ni négative ni avoir une valeur supérieure à 999.
+        la plus élevée possible.
+        Touts les candidats ou les propositions possèdent une pondération
+        initiale de 0, ce qui signifie que vous n\'avez aucun intérêt pour
+        ces propositions.
+        Une pondération ne peut être ni négative ni avoir une valeur
+        supérieure à 999.
         Le fait d\'utiliser des valeurs de pondération plus importantes
         que celles des autres participants ne change en rien le résultat de
-        la consultation.'.
+        la consultation. '.
 	"<a href=\"$civs_url/proportional.html\">[Pour en savoir plus]</a>.</p>";
     }
     return $ret;
@@ -378,14 +388,14 @@ sub Rank {
     'Rang';
 }
 sub Choice {
-    'Proposition';
+    'Candidats ou Propositions';
 }
 sub Weight {
     'Pondération';
 }
 
 sub address_will_be_visible {
-    '<strong>L\'adresse de votre courrier électronique sera inscrit sur votre bulletin de vote</strong>.';
+    '<strong>L\'adresse de votre courrier électronique sera inscrite sur votre bulletin de vote</strong>.';
 }
 
 sub ballot_will_be_anonymous {
@@ -394,15 +404,15 @@ sub ballot_will_be_anonymous {
 }
 
 sub submit_ranking {
-    'Soumettre le rang';
+    'Voter';
 }
 
 sub only_writeins_are_permitted {
     'Le vote n\'est pas encore possible pour cette consultation. Néanmoins
              il vous est possible de consulter la liste des propositions
-             ou des candidats offerts et de rajouter de nouvelles propositions
-             ou de nouveaux candidats. Utilisez le champs ci-dessous pour
-             saisir vos propositions ou vos candidats.';
+             ou des candidats proposés et de rajouter de nouvelles
+             propositions ou de nouveaux candidats. Utilisez le champs
+             ci-dessous pour saisir vos propositions ou vos candidats.';
 }
 
 sub to_top {
@@ -442,13 +452,13 @@ sub if_you_have_already_voted { #url
 }
 sub thank_you_for_voting { #title, receipt
     "Merci. Votre vote pour la consultation <strong>$_[1]</strong> a été
-	enregistré. Votre certificat de vote est <code>$_[2]</code>.";
+	enregistré. Votre certificat de vote est   <code>$_[2]</code>.";
 }
 sub name_of_writein_is_empty {
-    "Name of write-in choice is empty";
+    "Vous n\'avez pas saisi de nouveau candidat ou de nouvelle proposition";
 }
 sub writein_too_similar {
-    "Désolé, votre proposition ou votre candidat est trop proche d\'une proposition ou d'un candidat déjà existant";
+    "Désolé, votre proposition ou votre candidat est trop proche d\'une proposition ou d\'un candidat déjà existant";
 }
 
 # election
@@ -470,8 +480,8 @@ sub Error {
 }
 sub Invalid_key {
     'Identifiant invalide. Vous devriez avoir reçu un courrier électronique
-     avec un lien Internet vous permettant de participer à la consultation.
-     Cette incident a été enregistrée.';
+     contenant un lien Internet vous permettant de participer à la consultation.
+     Cet incident a été enregistré.';
 }
 sub Authorization_failure {
     'Échec lors de l\'autorisation';
@@ -506,23 +516,26 @@ sub Poll_does_not_exist_or_not_started {
 sub Your_voter_key_is_invalid__check_mail { # voter
    my $voter = $_[1];
    if ($voter ne '') {
-    "Votre identifiant de participant est invalide, $voter.
-     Vous devriez avoir reçu un courrier électronique avec un lien
-     Internet correct.";
+    "Identifiant de participation invalide, $voter.
+     Vous devriez avoir reçu un courrier électronique contenant un lien
+     Internet vous permettant de particper à la consultation.";
    } else {
-    "Votre identifiant de participant est invalide. Vous devriez avoir reçu un
-     courrier électronique avec un lien Internet correct.";
+    "Identifiant de participation invalide. Vous devriez avoir reçu un
+     courrier électronique conyenant un lien Internet vous permettant
+     de participer à la consultation.";
    }
 }
 sub Invalid_result_key { # key
-    "Invalid result key: \"$_[1]\". You should have received a correct URL for
-        viewing poll results by email. This error has been logged.";
+    "Identifiant de consultation des résultats invalide : \"$_[1]\".
+     Vous devriez avoir reçu un courrier électronique contenant un lien
+     Internet vous permettant la consultation des résultats de la
+     consultation. Cet incident a été enregistré.";
 }
 sub Invalid_control_key { # key
-    "Invalid control key. You should have received a correct URL for controlling the poll by email. This error has been logged.";
+    "Invalid control key. You should have received a correct URL for controlling the poll by email. Cet incident a été enregistré.";
 }
 sub Invalid_voting_key {
-    "Invalid voting key. You should have received a correct URL for voting by email. This error has been logged.";
+    "Invalid voting key. You should have received a correct URL for voting by email. Cet incident a été enregistré.";
 }
 sub Invalid_poll_id {
     "Invalid poll identifier";
@@ -615,7 +628,7 @@ sub The_poll_has_been_ended { #election_end
 }
 
 sub poll_results_available_to_authorized_users {
-    'Les résultats de la consultation sont disponibles pour les utilisateurs autorisés.';
+    'Les résultats de la consultation sont disponibles aux les utilisateurs autorisés.';
 }
 
 sub was_not_able_stop_the_poll {

@@ -385,6 +385,10 @@ sub only_writeins_are_permitted {
 	     choices. Use the text field below to write in new choices.';
 }
 
+sub Add_writein {
+    'Add write-in';
+}
+
 sub to_top {
     'to top';
 }
