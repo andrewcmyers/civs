@@ -283,9 +283,9 @@ sub Sorry_voters_can_only_be_added_to_poll_in_progress {
 
 sub Total_of_x_voters_authorized { # x
     if ($_[1] == 0) {
-	print "Noch keine Wähler zur Abstimmung zugelassen.", $cr, '</pre>';
+	"Noch keine Wähler zur Abstimmung zugelassen.";
     } else {
-	print "Bislang $_[1] Wähler zur Abstimmung zugelassen.", $cr, '</pre>';
+	"Bislang $_[1] Wähler zur Abstimmung zugelassen.";
     }
 }
 
