@@ -27,9 +27,9 @@ TestAndCreateDir $CIVSDATADIR/elections;
 
 rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
-    for f in civs_create.html.* index.html.* public_elections.html \
-	proportional.html sec_priv.html acks.html changelog.html \
-	rp.html faq.html style.css results.js vote.js check123b.png \
+    for f in civs_create.html* index.html* public_elections.html* \
+	proportional.html* sec_priv.html* acks.html* changelog.html* \
+	rp.html* faq.html* style.css results.js vote.js check123b.png \
 	sample-ballot.png vertstrip.png
     do
 	case "$f" in
@@ -59,7 +59,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
     for f in add_voters beatpath.pm beatpath2.pm civs_common.pm close control \
         create_election download_ballots upload_ballots results languages.pm \
 	election.pm mail.pm start_election vote rp.pm runoff.pm admctrl.pm \
-	english.pm hungarian.pm italian.pm french.pm
+	english.pm hungarian.pm italian.pm french.pm german.pm
     do
 	target="${CGIBINDIR}/${f}"
 	if test -n "$PERLEXT"
