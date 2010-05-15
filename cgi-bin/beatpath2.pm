@@ -3,6 +3,7 @@ package beatpath2;
 use strict;
 use warnings;
 use CGI qw(:standard);
+use languages;
 
 # A package for computing the Schulze method using both winning and losing
 # votes (losing votes are purely secondary in the ordering).
@@ -189,12 +190,7 @@ sub print_details {
     my @choices = @{$choices};
     my @choice_index = @{$choice_index};
 
-    Print p("
-	The following matrix shows the strength of the strongest
-	beatpath connecting each pair of choices. Choice 1 is ranked above
-	choice 2 if there is a stronger beatpath leading from 1 to 2
-	than any leading from 2 to 1.
-	"), $cr;
+    Print p($tx->beatpath_matrix_explanation), $cr;
 
     Print '<table class="matrix">'.$cr;
     Print '<tr><td>&nbsp;</td><td>&nbsp;</td>';

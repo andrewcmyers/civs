@@ -768,4 +768,14 @@ of the choices.';
 sub No_random_tie_breaking_used {
     'No random tie breaking was needed to arrive at this ordering.';
 }
+
+# beatpath
+
+sub beatpath_matrix_explanation {
+    'The following matrix shows the strength of the strongest
+    beatpath connecting each pair of choices. Choice 1 is ranked above
+    choice 2 if there is a stronger beatpath leading from 1 to 2
+    than any leading from 2 to 1.';
+}
+
 1; # package succeeded!
