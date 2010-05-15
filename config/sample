@@ -53,7 +53,8 @@ ADDTOPATH=''
 LOCALDEBUG=''
 
 # Filter tags! Unless you like being vulnerable to XSS attacks.
-# Your funeral if you set this to 'no'.
+# Your funeral if you set this to 'no'. The HTML::TagFilter module must
+# be in the Perl library path.
 FILTER_TAGS='yes'
 
 # If you are using ISA to do redirection, set this to 1 so the
