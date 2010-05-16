@@ -43,6 +43,6 @@ if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
 print end_html();
 
 $vdata{'last_vote_time'} = time();
-$vdata{'close_time'} = localtime();
+$vdata{'close_time'} = time();
 
 exit 0;

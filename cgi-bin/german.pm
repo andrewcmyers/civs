@@ -648,7 +648,13 @@ sub Announced_end_of_poll {
     "Angekündigter Abstimmungsschluss: $_[1]";
 }
 sub Actual_time_poll_closed { # close time
-    "Tatsächlicher Abstimmungsschluss: $_[1]";
+    if ($_[1] == 0) {
+	"Tatsächlicher Abstimmungsschluss: $_[1]"
+    } else {
+	'Tatsächlicher Abstimmungsschluss: <script>document.write(new Date(' .
+	    $_[1] * 1000 . 
+	    ').toLocaleString())</script>';
+    }
 }
 sub Poll_not_ended {
     'Abstimmung ist noch nicht geschlossen.';

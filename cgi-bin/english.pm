@@ -646,7 +646,13 @@ sub Announced_end_of_poll {
     "Announced end of poll: $_[1]";
 }
 sub Actual_time_poll_closed { # close time
-    "Actual time poll closed: $_[1]";
+    if ($_[1] == 0) {
+	"Actual time poll closed: $_[1]"
+    } else {
+	'Actual time poll closed: <script>document.write(new Date(' .
+	    $_[1] * 1000 . 
+	    ').toLocaleString())</script>';
+    }
 }
 sub Poll_not_ended {
     'Poll has not yet ended.';

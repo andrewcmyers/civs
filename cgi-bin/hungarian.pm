@@ -647,7 +647,13 @@ sub Announced_end_of_poll {
     "A szavazás lezárásának meghírdetett ideje: $_[1]";
 }
 sub Actual_time_poll_closed { # close time
-    "A szavazás lezárásának valós ideje: $_[1]";
+    if ($_[1] == 0) {
+	"A szavazás lezárásának valós ideje: $_[1]"
+    } else {
+	'A szavazás lezárásának valós ideje: <script>document.write(new Date(' .
+	    $_[1] * 1000 . 
+	    ').toLocaleString())</script>';
+    }
 }
 sub Poll_not_ended {
     'A szavazás még nem zárult le.';

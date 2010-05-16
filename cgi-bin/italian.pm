@@ -661,7 +661,13 @@ sub Announced_end_of_poll {
     "Termine annunciato della votazione: $_[1]";
 }
 sub Actual_time_poll_closed { # close time
-    "Effettiva chiusura della votazione: $_[1]";
+    if ($_[1] == 0) {
+	"Effettiva chiusura della votazione: $_[1]"
+    } else {
+	'Effettiva chiusura della votazione: <script>document.write(new Date(' .
+	    $_[1] * 1000 . 
+	    ').toLocaleString())</script>';
+    }
 }
 sub Poll_not_ended {
     'La votazione non è ancora terminata.';

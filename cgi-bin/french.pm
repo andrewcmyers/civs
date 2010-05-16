@@ -683,7 +683,13 @@ sub Announced_end_of_poll {
     "Date prévue de clôture de consultation : $_[1]";
 }
 sub Actual_time_poll_closed { # close time
-    "Date de clôture de consultation : $_[1]";
+    if ($_[1] == 0) {
+	"Date de clôture de consultation : $_[1]"
+    } else {
+	'Date de clôture de consultation : <script>document.write(new Date(' .
+	    $_[1] * 1000 . 
+	    ').toLocaleString())</script>';
+    }
 }
 sub Poll_not_ended {
     'La consultation n\'est pas encore terminée.';
