@@ -244,13 +244,13 @@ sub rank_candidates_internal {
 	} else {
 	    if (!$denied_any) {
 		$denied_report .=
-		    (p('Some voter preferences were ignored because they 
-		      conflict with other, stronger preferences:').'<ul>');
+		    p($tx->Some_voter_preferences_were_ignored).'<ul>';
 		$denied_any = 1;
 	    }
 	    $denied_report .=
-		(li("The $pair[2]&ndash;$pair[3] preference for $wname"
-				." over $lname."));
+		li(p($tx->preference_description($pair[2], $pair[3],
+		    				  $wname, $lname)));
+
 	    # print pre("  denied.");
 	}
 	STDOUT->flush();

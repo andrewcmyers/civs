@@ -784,4 +784,19 @@ sub beatpath_matrix_explanation {
     than any leading from 2 to 1.';
 }
 
+sub no_pref {
+    'none'
+}
+
+#rp
+
+sub Some_voter_preferences_were_ignored {
+    'Some voter preferences were ignored because they
+     conflict with other, stronger preferences:'
+}
+
+sub preference_description {
+    "The $_[1]&ndash;$_[2] preference for $_[3] over $_[4]."
+}
+
 1; # package succeeded!
