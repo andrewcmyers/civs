@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Condorcet Internet Voting Service</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <style>
+  ol li { margin-top: 0.5ex }
+  </style>
+</head>
+<body>
+<table class="banner" border="0" cellpadding="7" cellspacing="0"
+ width="100%">
+  <tbody>
+    <tr>
+      <td nowrap="nowrap" valign="top" width="100%">
+      <h1>Service de Vote Internet Condorcet (CIVS)</h1>
+      </td>
+      <td align="right" nowrap="nowrap" valign="top" width="0%"> <a
+ href="@CIVSHOME@">About CIVS</a><br>
+      <a href="@CIVSURL@/civs_create.html">Créer une consultation</a><br>
+      <a href="@CIVSURL@/sec_priv.html">Sécurité et Confidentialité</a><br>
+      <a class="here" href="@CIVSURL@/faq.html">FAQ</a> </td>
+    </tr>
+    <tr>
+      <td colspan="2" nowrap="nowrap" valign="top" width="100%">
+      <h2 align="center">Foire Aux Questions</h2>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="contents">
+<h2>Créer une consultation</h2>
+<ol>
+  <li><b>Quelle sont les différences entre la méthode de Condorcet et
+les autres méthodes de votes auquelles je suis habitué ? </b>La
+méthode de Condorcet est
+une méthode de vote qui permet aux personnes participant à une
+consultation de classer les candidats ou les propositions et qui agrège
+de façon efficace les préférences des participants.
+[ <a href="rp.html">Plus d'informations concernant la méthode de
+Condorcet</a> ] </li>
+  <li><b>La consultation doit être ouverte pendant combien de temps ?</b>
+C'est à vous de le déterminer. Cela dépend de la disponibilités des
+personnes consultées. Pour des participants qui ont été informés de la
+consultation ou qui vérifient leur courrier électronique
+fréquemment la durée de la consultation peut être de 2 à 3 jours.
+Il a été observé que la plus part des gens soit votent immédiatement,
+soit ne votent pas. Une durée de consultation de plus d'une
+semaine est généralement trop longue, sauf si vous voulez mettre en
+place une consultation publique sur un long terme. </li>
+  <li><b>Comment permettre la classification des choix entre
+acceptables et non acceptables ?</b> Il vous suffit de créer une
+pseudo-proposition dont le texte soit "Tous les candidats ou toutes les
+propositions classés au dessous de cette proposition sont
+inacceptables". Vous pourrez utiliser les résultats de la consultation
+de plusieurs façon différentes. Si vous voulez rejeter les candidats ou
+les propositions qui sont considérés comme inacceptables par une
+pluralité de participants, il vous suffit de rejeter ceux qui sont
+classés au dessous de la pseudo-proposition. Si vous voulez trouver
+quels sont les candidats ou les propositions qui sont acceptables par <span
+ style="font-style: italic;">tous</span> les participants, il vous
+suffit de choisir celles qui ont unanimement .(n-0) battu cette
+pseudo-proposition. C'est extrêmement pratique pour fixer la date d'une
+réunion où tous les participants doivent être présents. </li>
+  <li><b>Quelle est la taille maximum d'une consultation gérable avec
+CIVS ?</b>
+CIVS a été utilisé très régulièrement pour des consultations concernant
+des centaines de participants. Vous pouvez mettre en place une
+consultation publique pour une quantité illimité de participants.&nbsp;
+CIVS a été utilisé pour des consultation concernant plusieurs milliers
+de participants et CIVS est parfaitement capable de supporter la charge
+qu'implique ce type de consultation même si les participants expriment
+leur vote tous en même temps.
+Election
+results are now cached, so the system has become much more scalable.
+    <p>Néanmoins CIVS n'a pas été testé pour des consultations de
+10.000 participants ou plus. Le logiciel est écrit en langage Perl et
+est parfaitement capable de prendre en compte 4,000 participants par
+heure. Tant que les participants à la consultation ne dépassent par ce
+quota, CIVS est capable de gérer des consultations de taille très
+importante. En ce qui concerne les consultations à bulletin secret,
+CIVS ne vous autorise à ajouter des participants que par groupe de
+1000,
+mais en principe vous pouvez organiser des consultations de taille très
+importante. Merci de prendre note que l'usage du vote Note that using
+the experimental proportional
+method for
+your poll augmente de façon très importante la charge du serveur. Nous
+vous conseillons de ne pas utiliser ce mode pour de grandes
+consultations. </p>
+  </li>
+  <li><b>CIVS est il fiable ?</b> L'infrastructure informatique de
+Cornell n'a jamais provoquée de perte de données depuis 2006 et aucune
+consultation n'a été affectée par des bug logiciels depuis cette même
+date. Chaque consultation étant stockée dans une base de données
+séparée, une <span style="font-weight: bold;">éventuelle</span>
+corruption des données serait limitée à une seule consultation<strong></strong>.
+  </li>
+  <li><b>La publication intégrale des résultats peut gêner certains
+candidats ou les supporter de certaines propositions. Comment gérer
+cette difficulté&nbsp; ?</b> Généralement les résultats&nbsp; d'une
+consultation sont disponible à tous les participants. Néanmoins vous
+pouvez restreindre la communication des résultats à un groupe de
+personnes. Elles pourront par la suite communiquer la liste des
+candidats élus ou des propositions retenues par un moyen extérieur à
+CIVS. </li>
+  <li><b>Je suis paranoïaque. Comment être sur que les personnes qui
+administrent le service CIVS n'auront jamais accès aux données de la
+consultation </b>Il existe une solution simple pour satisfaire votre
+paranoïa : Donner des noms non descriptifs aux candidats ou aux
+propositions, par exemple : A, B, C, .... Il vous suffit ensuite de
+faire
+parvenir à tous les votants la correspondance entre ces noms
+et les noms des candidats ou les propositions. C'est une solution
+moins pratique pour les participants, mais qui respecte votre besoin de
+confidentialité. </li>
+  <li><b>Puis-je inclure des images dans les propositions ? </b>Bien
+sur. Vous pouvez inclure une balise HTML de type <tt>&lt;img&gt; </tt>.
+En fait vous pouvez inclure la plus part des balise HTML, bien que
+celles ci soient filtrées pour éviter les attaques XSS. </li>
+  <li><b>Pourquoi CIVS ne propose-t-il pas encore mon mode de
+consultation préféré (STV,
+...)?</b>
+Nous avons concentré nos efforts sur la méthode Condorcet, qui garantit
+(quand c'est possible) que le candidat élu ou la proposition retenue
+est bien à
+chaque fois le candidat ou la proposition préféré. Toutefois
+l'interface
+permettant l'adjonction d'un nouveau mode d'élection est relativement
+aisée, il vous sera donc possible d'ajouter vos propres modes de
+consultation si vous le désirez. Nous pourrions même les intégrer dans
+CIVS si vous nous les communiquez. </li>
+</ol>
+<h2>Running a poll</h2>
+<ol>
+  <li><b>Some voters never got their voter keys. What do I do?</b>
+It depends on whether you sent the voter key to the right address in
+the first
+place. If so, you can send it again by “adding” that voter with the
+poll control page. The same voter key will be generated, so
+the voter won't be able to vote twice. If the email address was broken,
+then email should have bounced. In that case it should be safe to add
+the voter under their correct email address. You can check with the
+CIVS
+supervisor whether the email bounced, assuming you were not notified. </li>
+  <li><b>Why doesn't the poll end automatically at the specified time?</b>
+We wanted to give poll supervisors the flexibility to write complex
+specifications of when the poll should end, such as “by March 3 or
+when we get at least 100 votes”. It's too hard to handle all these
+cases.
+The supervisor can easily monitor progress through the poll control
+page. The supervisor needs to...supervise. </li>
+  <li><b>The voters haven't bothered to vote. Can I send them their
+voter
+keys again?</b> Yes, just “add” them again at the poll control page.
+This will send them all email. Make sure you use exactly the same email
+address
+you did the first time; otherwise, a new voter key will be generated
+because
+it's a different voter as far as CIVS can tell. For security and
+privacy reasons,
+CIVS doesn't record voter email or voter keys, so it has no way to send
+an already
+generated voter key to a new email address. </li>
+  <li> <b>How long will poll results remain available?</b>
+We are making a best effort to keep poll results forever, for any poll
+that receives more than one vote and doesn't look like a test of the
+system.
+However, you may want to make a copy of the poll results page for
+posterity. </li>
+  <li><b>Why doesn't the system notify voters when the poll has ended?</b>
+Because it doesn't know who the voters are any more. Once voter keys
+are
+sent out, all information about the voters is destroyed. It's the job
+of
+the poll supervisor to close the poll and notify voters or
+result recipients. </li>
+  <li><b>Can I make current poll results visible before the poll closes?</b>
+This increases the danger of strategic voting. However, it is the
+behavior for “public” polls. </li>
+</ol>
+<h2>Voting</h2>
+<ol>
+  <li><b>What does “no opinion” mean?</b>
+It means you are providing no information about how this choice ranks
+with
+respect to the other choices. For example, if you give one choice the
+rank 1,
+and give all other choices the rank “no opinion”, your ballot
+becomes useless because it doesn't express any preferences. Voters
+often pick
+“no opinion” when what they mean is that they don't like the choice
+or that they don't have any information about it. In these situations,
+it is often better to give the choice a low rank rather than to select
+“no
+opinion”. A good reason for a voter to give a choice the rank
+“no opinion” is because the voter isn't <em>supposed</em> to
+express an opinion about that choice. </li>
+</ol>
+<h2>Sécurité et Confidentialité</h2>
+<p>Pour plus d'informations concernant la sécurité et la
+confidencialité, cliquez&nbsp; <a href="sec_priv.html">ici</a>.
+</p>
+</div>
+</body>
+</html>

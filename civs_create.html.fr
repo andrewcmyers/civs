@@ -22,19 +22,19 @@
 	var numerrs = 0;
 	var errs = new Array;
 	if (!validateEmail(document.forms.CreateElection.email_addr.value)) {
-	    errs[numerrs++] = 'Supervisor email address is invalid.';
+	    errs[numerrs++] = 'L\'adresse de courrier électronique du responsable de la consultation est invalide.';
 	}
 	if (!(document.forms.CreateElection.num_winners.value >= 1)) {
-	    errs[numerrs++] = 'Must have at least one winner.';
+	    errs[numerrs++] = 'Il doit y avoir au moins un élu ou une proposition retenue.';
 	}
 	if (document.forms.CreateElection.proportional.checked &&
 	    !(document.forms.CreateElection.num_winners.value > 1)) {
 	    errs[numerrs++] =
-		'Proportional representation requires more than one winner.';
+		'La représentation proportionelle implique qu\'il y ait plus d\'un élu ou plus d\'une proposition retenue.';
 	}
 	if (document.forms.CreateElection.choices.value == '' &&
 	    document.forms.CreateElection.choices_file.value == '') {
-	    errs[numerrs++] = 'Must have at least two choices to vote on.';
+	    errs[numerrs++] = 'Il doit y avoir au minimum deux candidats ou deux propositions pour pouvoir organiser une consultation.';
 	}
 	if (document.forms.CreateElection.restrict_results.checked) {
 	    var rs = document.forms.CreateElection.result_addrs.value;
@@ -44,14 +44,14 @@
 		if (ra[i] == '') continue;
 		if (!validateEmail(ra[i])) {
 		    errs[numerrs++] =
-			'Results recipient email address is invalid: ' + ra[i];
+			'L\'adresse de courrier électronique de ce destinataire des résultats est invalide : ' + ra[i];
 		} else {
 		    nr++;
 		}
 	    }
 	    if (nr == 0) {
 		errs[numerrs++] =
-		    'You have specified no users who can see the poll results.';
+		    'Vous n\'avez pas précisé qui pourra consulter les résultats de la consultation.';
 	    }
 	}
 	if (numerrs == 0) return true;
@@ -136,13 +136,13 @@
   <table class="form">
     <tbody>
       <tr>
-        <td align="right">Nom de le consultation (par exemple, <b>Palme
+        <td align="right">Nom de la consultation (par exemple, <b>Palme
 d'or du Festival de Cannes</b>) : <br>
         </td>
         <td><input name="title" size="50" type="text"></td>
       </tr>
       <tr>
-        <td align="right">Non du responsable (vous) : <br>
+        <td align="right">Nom du responsable (vous) : <br>
         </td>
         <td><input name="name" size="20" type="text"> </td>
       </tr>
@@ -151,17 +151,17 @@ d'or du Festival de Cannes</b>) : <br>
 responsable : <br>
         </td>
         <td><input name="email_addr" size="20"
- onchange="if (!validateEmail(this.value)) { alert('Invalid email address') }"
+ onchange="if (!validateEmail(this.value)) { alert('Adresse de courrier Internet invalide') }"
  type="text"> </td>
       </tr>
       <tr>
         <td align="right" valign="top">Date et heure de fin de la
 consultation : <br>
         <small>(<b>Note:</b> La consultation ne se clôturera pas
-automatiquement. C'est au responsable de clôture manuellement la
+automatiquement. C'est au responsable de clôturer manuellement la
 consultation)</small> </td>
         <td><input name="election_end" id="election_end" size="30"
- onchange="render_text('<br><i>Prévisualiser </i>: Poll ends ', 'election_end', 'rendered_end')"
+ onchange="render_text('<br><i>Prévisualiser </i>: La consultation sera clôse le ', 'election_end', 'rendered_end')"
  type="text"> <span class="rendering" id="rendered_end"></span></td>
       </tr>
     </tbody>
@@ -176,17 +176,17 @@ les information nécessaires à la gestion de la consultation. Merci de
 vérifier que le filtre anti-spam attaché à cette adresse de courrier
 électronique ne bloquera pas les courriers provenant de l'expéditeur <kbd>@SUPERVISOR@</kbd>
 (il ne sera peut être pas inutile de contrôler le dossier où sont
-dirigés les spam si vous ne recevez pas de courrier électronique
+dirigés les spams si vous ne recevez pas de courrier électronique
 provenant de CIVS). </small></div>
-  <p>Description de la consultation, des candidats ou des propositions.
-Le format est libre et vous pouvez inclure des balises HTML) : <br>
+  <p>Description de la consultation, des candidats ou des propositions
+(Le format est libre et vous pouvez inclure des balises HTML) : <br>
   <table class="form">
     <tbody>
       <tr>
         <td><textarea id="description" valign="top" rows="5"
  name="description" cols="60"></textarea> </td>
         <td><input value="Prévisualiser &gt;&gt;"
- onclick="render_text('<h2>Poll description</h2>',
+ onclick="render_text('<h2>Description de la consultation</h2>',
 				 'description',
 				 'rendered_description')"
  type="button"></td>
@@ -198,8 +198,8 @@ Le format est libre et vous pouvez inclure des balises HTML) : <br>
   </table>
   </p>
   <p>Saisir le nom des candidats ou le texte des propositions, Un
-candidat ou une proposition par ligne. Vous pouvez aussi récupérer un
-fichier contenant ces information : <br>
+candidat ou une proposition par ligne. Vous pouvez aussi charger un
+fichier contenant ces informations : <br>
   </p>
   <p align="left">
   <table class="form">

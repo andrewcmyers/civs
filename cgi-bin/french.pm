@@ -32,7 +32,7 @@ sub FAQ {
     'FAQ';
 }
 sub CIVS_suggestion_box {
-    'CIVS suggestion box';
+    'Comment améliorer CIVS';
 }
 sub unable_to_process {
     'CIVS ne peut traiter votre requête en raison d\'une erreur interne.';
@@ -56,7 +56,7 @@ sub mail_has_been_sent {
 }
 
 sub click_on_the_URL_to_start {
-    "Cliquer sur le lien internet contenu dans ce courrier électronique pour commencer la consultation : <strong>$_[1]</strong>.";
+    "Cliquer sur le lien internet contenu dans ce courrier électronique pour commencer la consultation :<strong> $_[1]</strong>.";
 }
 
 sub here_is_the_control_URL {
@@ -479,7 +479,7 @@ sub Error {
     'Erreur';
 }
 sub Invalid_key {
-    'Identifiant invalide. Vous devriez avoir reçu un courrier électronique
+    'Identifiant de participation invalide. Vous devriez avoir reçu un courrier électronique
      contenant un lien Internet vous permettant de participer à la consultation.
      Cet incident a été enregistré.';
 }
@@ -498,7 +498,7 @@ sub The_poll_has_not_yet_been_ended { #title, name, email
     $_[2] ($_[3]),";
 }
 sub The_results_of_this_completed_poll_are_here {
-    'Les résultats de cette consultation terminée sont disponibles içi : ';
+    'Les résultats de cette consultation sont disponibles en cliquant sur le lien Internet suivant : ';
 }
 
 sub No_write_access_to_lock_poll {
@@ -521,7 +521,7 @@ sub Your_voter_key_is_invalid__check_mail { # voter
      Internet vous permettant de particper à la consultation.";
    } else {
     "Identifiant de participation invalide. Vous devriez avoir reçu un
-     courrier électronique conyenant un lien Internet vous permettant
+     courrier électronique contenant un lien Internet vous permettant
      de participer à la consultation.";
    }
 }
@@ -532,10 +532,14 @@ sub Invalid_result_key { # key
      consultation. Cet incident a été enregistré.";
 }
 sub Invalid_control_key { # key
-    "Invalid control key. You should have received a correct URL for controlling the poll by email. Cet incident a été enregistré.";
+    "Identifiant de gestion de la consultation invalide. Vous devriez avoir reçu un
+     courrier électronique contenant un lien Internet vous permettant
+     de gérer la consultation. Cet incident a été enregistré.";
 }
 sub Invalid_voting_key {
-    "Invalid voting key. You should have received a correct URL for voting by email. Cet incident a été enregistré.";
+    "Identifiant de participation invalide. Vous devriez avoir reçu un
+     courrier électronique conyenant un lien Internet vous permettant
+     de participer à la consultation. Cet incident a été enregistré.";
 }
 sub Invalid_poll_id {
     "Invalid poll identifier";
@@ -564,18 +568,19 @@ sub CIVS_poll_supervisor {
 }
 sub voter_mail_intro { #title, name, email_addr
 "La consultation <b>$_[1]</b> a été mise en place à l'aide du Service de Vote Internet Condorcet (CIVS).
-Le responsable de cette consultation vous a désigné comme participant à cette consultation,
-$_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
+Le responsable de cette consultation, $_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>), vous a désigné comme participant à cette consultation
+ .</p>";
 }
 sub Description_of_poll {
     'Description de la consultation : ';
 }
 sub if_you_would_like_to_vote_please_visit {
-    'Si vous désirer voter, merci de cliquer sur l\'adresse Internet suivante : ';
+    '
+     Si vous désirez voter, merci de cliquer sur le lien Internet suivante : ';
 }
 sub This_is_your_private_URL {
-'Cette adresse Internet n\'est destinée qu\'à vous. Ne la communiquez à
- personne, car elle pourrait être utilisée pour voter à votre place.';
+'Ce lien Internet n\'est destiné qu\'à vous. Ne le communiquez à
+ personne, car il pourrait être utilisé pour voter à votre place.';
 }
 sub Your_privacy_will_not_be_violated {
 'La confidentialité de votre vie privé ne sera pas menacée par votre vote.
@@ -598,7 +603,7 @@ sub poll_has_been_announced_to_end { #election_end
 
 sub To_view_the_results_at_the_end {
     'Pour consulter les résultats de la consultations après sa clôture
-    , consultez : </p>$_[1]';
+    , cliquez sur le lien Internet suivant : </p> $_[1]';
 }
 
 sub For_more_information {
@@ -617,7 +622,7 @@ sub Ending_poll {
     'Clôturer une consultation';
 }
 sub View_poll_results {
-    'View_poll_results';
+    'Accéder aux résultats de la consultation';
 }
 sub Poll_ended { #title
     "Consultation close le : $_[1]";

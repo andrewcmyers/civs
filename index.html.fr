@@ -6,6 +6,13 @@
   <base href="@CIVSURL@/">
   <link rel="stylesheet" type="text/css" href="style.css">
   <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+  <meta name="GENERATOR" content="OpenOffice.org 3.1  (Linux)">
+  <style type="text/css">
+	<!--
+		@page { margin: 2cm }
+		P { margin-bottom: 0.21cm }
+	--></style>
 </head>
 <body>
 <table class="banner" border="0" cellpadding="7" cellspacing="0"
@@ -37,22 +44,22 @@ choisir : </p>
           <tr>
             <td>
             <ul>
-              <li>Les responsables d'organisation</li>
-              <li>Les horaires de réunion<br>
+              <li>Des responsables d'organisation</li>
+              <li>Des horaires de réunion<br>
               </li>
-              <li>Les membres de comités<br>
+              <li>Des membres de comités<br>
               </li>
-              <li>Les nom de projets, logos, nom de domaines</li>
-              <li>Les lauréats de diplômes</li>
+              <li>Des nom de projets, logos, nom de domaines</li>
+              <li>Des lauréats de diplômes</li>
             </ul>
             </td>
             <td>
             <ul>
-              <li>Les restaurants</li>
-              <li>Les films</li>
+              <li>Des restaurants</li>
+              <li>Des films</li>
               <li>Le menu des fêtes</li>
-              <li>Les sélections du club littéraire</li>
-              <li>Les musiques favorites</li>
+              <li>Des sélections de club littéraire</li>
+              <li>Des musiques favorites</li>
             </ul>
             </td>
           </tr>
@@ -60,9 +67,9 @@ choisir : </p>
       </table>
       <p><strong>Comment cela fonctionne :</strong> N'importe qui peut
 créer une consultation, mais seulement les participants autorisés en
-seront informés de cette consultation. Les participants et le
+seront informés. Les participants et le
 responsable de la consultation doivent posséder une adresse
-électronique , un accès internet et un navigateur Web. Lors de la
+électronique, un accès internet et un navigateur Web. Lors de la
 création de la consultation, les participants reçoivent un courrier
 électronique contenant un lien Internet qui leur permet d'exprimer leur
 vote.
@@ -71,32 +78,28 @@ possession d'une adresse email, dans ce cas un seul vote est accepté
 par adresse Internet (IP) </p>
       <p> <strong>Vote par préférence : </strong>Les participants à
 la consultation classent par ordre de préférence les propositions ou
-les candidats qui leur sont soumis. Les participants ne sont pas limité
-à un seul choix. Comparé à d'autre méthode de consultation électorale,
+les candidats qui leur sont soumis. Les participants ne sont pas
+limités
+à un seul choix. Comparée à d'autres méthode de consultation
+électorale,
 cette méthode permet de prendre en compte plus d'informations provenant
-des participants. Cette méthode de vote aide à éviter les
-      <meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
-      <title></title>
-      <meta name="GENERATOR" content="OpenOffice.org 3.1  (Linux)">
-      <style type="text/css">
-	<!--
-		@page { margin: 2cm }
-		P { margin-bottom: 0.21cm }
-	--></style>ex-æquo
+des participants. Cette méthode de vote aide à éviter les ex-æquo
 et la dispersion des votes.
-CIVS supports proportional representation,
-unlike other Condorcet systems. </p>
-      <p>Preferential voting systems are used now in real elections.
-For example,
-Australia uses Single Transferable Vote (STV).
-However, Condorcet voting methods are better at identifying consensus
-candidates. STV (and IRV) can elect a candidate even when a majority of
-voters would prefer someone else, and <a
- href="http://bolson.org/%7Ebolson/2009/20090303_burlington_vt_mayor.html">has
-in real elections</a>. </p>
-      <p><a href="http://www.cs.cornell.edu/projects/civitas">Civitas</a>
-,une version extrêmement sécurisée de CIVS, est en cours de
-développement, described in a peer-reviewed paper.
+A la différence d'autres votes Condorcet, CIVS gère la représentation
+proportionnelle. </p>
+      <p>Aujourd'hui des élections importantes utilisent le vote par
+préférence. Par exemple l'Australie utilise le scrutin à vote unique
+transférable (STV).
+Néanmoins, la méthode de Condorcet identifie mieux les candidats ou les
+propositions de consensus. Les modes de scrutin STV (et IRV) peuvent
+provoquer l'élection d'un certain candidat alors que la majorité des
+participants à la consultation auraient préféré en désigner un autre,
+comme cela c'est produit <a
+ href="http://bolson.org/%7Ebolson/2009/20090303_burlington_vt_mayor.html">lors
+de certaines élections</a>. </p>
+      <p><a href="http://www.cs.cornell.edu/projects/civitas">Civitas</a>,
+version extrêmement sécurisée de CIVS, est en cours de
+développement et a été déjà décrit dans une publication.
 Civitas utilise des protocoles cryptographiques beaucoup plus
 sophistiqués que ceux de CIVS. Ces protocoles permettent de garantir un
 anonymat fort, une vérification universelle et une résistance à la
@@ -118,9 +121,10 @@ contrainte. </p>
 à la liste de distribution de CIVS</a></li>
               <li><a href="sec_priv.html">Sécurité et Confidentialité<br>
                 </a></li>
-              <li><a href="rp.html">Condorcet completion</a></li>
-              <li><a href="proportional.html">Proportional
-representation</a></li>
+              <li><a href="rp.html">Paradoxe de Condorcet<br>
+                </a></li>
+              <li><a href="proportional.html">Représentation
+proportionnelle</a></li>
               <li><a href="changelog.html">Logiciel CIVS<br>
                 </a></li>
               <li><span style="text-decoration: underline;">Remerciements</span><br>
@@ -149,10 +153,12 @@ de programmation préféré</a> </li>
               <li><a
  href="http://www.cs.cornell.edu/w8/%7Eandru/cgi-perl/civs/vote.pl?id=E_4e62bfdb14d5f61e&amp;akey=3f460c25aaa1f858">Films
 préférés</a></li>
-              <li><a href="@SUGGESTION_BOX@">CIVS suggestion box</a></li>
+              <li><a href="@SUGGESTION_BOX@">Suggérer de nouvelles
+fonctionnalités pour CIVS<br>
+                </a></li>
               <li><a
- href="http://www.cs.cornell.edu/w8/%7Eandru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&amp;akey=55426123feb7e40b">European
-Vacation</a></li>
+ href="http://www.cs.cornell.edu/w8/%7Eandru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&amp;akey=55426123feb7e40b">Vacances
+en Europe</a></li>
               <li><a href="public_elections.html">(autres)</a> </li>
             </ul>
             </td>
