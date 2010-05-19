@@ -200,8 +200,8 @@ Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
 Send "rcpt to:<$email_addr>"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
 Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
-Send "To: $email_addr ($name)";
-Send "Subject: ". $tx->CIVS_poll_created($title);
+SendHeader 'To',  $email_addr ($name);
+SendHeader 'Subject', $tx->CIVS_poll_created($title);
 Send "";
 Send $tx->creation_email_info1($title,$url);
 if ($public eq 'yes') {
