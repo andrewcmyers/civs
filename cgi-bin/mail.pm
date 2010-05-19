@@ -14,7 +14,7 @@ BEGIN {
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
     @EXPORT      = qw(&Send &ConsumeSMTP &ConnectMail &CloseMail
-		      &CheckAddr &TrimAddr);
+		      &CheckAddr &TrimAddr &SendHeader);
 }
 
 # Package imports

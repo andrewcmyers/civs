@@ -12,6 +12,7 @@ use mail;
 use Socket;
 use IO::Handle;
 use HTML::TagFilter;
+use MIME::Base64;
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 
@@ -200,7 +201,7 @@ Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
 Send "rcpt to:<$email_addr>"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
 Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
-SendHeader 'To',  $email_addr ($name);
+SendHeader 'To',  "$email_addr ($name)";
 SendHeader 'Subject', $tx->CIVS_poll_created($title);
 Send "";
 Send $tx->creation_email_info1($title,$url);
