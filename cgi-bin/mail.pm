@@ -5,6 +5,7 @@ package mail;   # should be CIVS::Mail
 
 use strict;
 use warnings;
+use MIME::Base64;
 
 # Export the package interface
 BEGIN {

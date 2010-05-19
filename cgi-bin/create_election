@@ -200,9 +200,10 @@ my $civs_supervisor = '@SUPERVISOR@';
 Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
 Send "rcpt to:<$email_addr>"; ConsumeSMTP;
 Send "data"; ConsumeSMTP;
-Send "From: $civs_supervisor (Condorcet Internet Voting Service)";
+SendHeader 'From', "$civs_supervisor (Condorcet Internet Voting Service)";
 SendHeader 'To',  "$email_addr ($name)";
 SendHeader 'Subject', $tx->CIVS_poll_created($title);
+Send 'Content-Type: text/plain; charset="utf-8"';
 Send "";
 Send $tx->creation_email_info1($title,$url);
 if ($public eq 'yes') {
@@ -248,10 +249,11 @@ sub SendResultKey {
 	Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
 	Send "rcpt to:<$addr>"; ConsumeSMTP;
 	Send "data"; ConsumeSMTP;
-	Send "From: $civs_supervisor (".
+	SendHeader 'From', "$civs_supervisor (".
 	    $tx->Condorcet_Internet_Voting_Service_email_hdr.')';
-	Send "To: $addr";
-	Send "Subject: " . $tx->Results_of_CIVS_poll($title);
+	SendHeader 'To', $addr;
+	SendHeader 'Subject', $tx->Results_of_CIVS_poll($title);
+	Send 'Content-Type: text/plain; charset="utf-8"';
 	Send "";
 	Send $tx->Results_key_email_body($title,$url,$civs_home);
 	Send "."; ConsumeSMTP;
