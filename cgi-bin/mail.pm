@@ -128,9 +128,14 @@ sub CloseMail {
 sub SendHeader {
     my ($header, $text) = @_;
     if ($text =~ m/[\200-\377]/) {
-	$text =	'=?utf-8?b?' .
-		    MIME::Base64::encode_base64($text, '') .
-		    '?=';
+	my $enc = MIME::Base64::encode_base64($text,'');
+	$text = '';
+	for ($i = 0; $i < length($enc); $i += 60) {
+	    if ($i != 0) {
+		    $text .= "\r\n ";
+	    }
+	    $text .= '=?utf-8?b?' . substr($enc, $i, 60) . '?=';
+	}
     }
     Send $header . ': ' . $text;
 }
