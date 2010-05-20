@@ -210,15 +210,8 @@ l'abstention lorsqu'ils n'apprécient pas un candidat ou une
 proposition, ou bien lorsqu'ils estiment ne pas avoir assez
 d'informations pour former leur opinion. Dans cette situation, il est
 préférable de positionner le candidat ou la proposition dans les
-profondeurs du classement plutôt que choisir de choisir l'abstention.
-Une bonne occasion d'utiliser l'abstention est quand le participant
-n'est pas supposé exprimer une opinion au sujet d'un candidat ou d'une
-proposition. <span style="font-weight: bold;">A good reason for a
-voter to give a choice the rank
-“no opinion” is because the voter isn't </span><em
- style="font-weight: bold;">supposed</em><span
- style="font-weight: bold;"> to
-express an opinion about that choice.</span> </li>
+profondeurs du classement plutôt que choisir de choisir l'abstention.<span
+ style="font-weight: bold;"></span> </li>
 </ol>
 <h2>Sécurité et Confidentialité</h2>
 <p>Pour plus d'informations concernant la sécurité et la

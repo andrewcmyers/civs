@@ -324,7 +324,7 @@ sub instructions1 { # num_winners, end, name, email
     } else {
 	$wintxt="$_[1] favorite choices";
     }
-    "Seulement les $_[1] remporteront la consultation.<p>
+    "Seulement les $_[1] premiers remporteront la consultation.<p>
 	    La consultation sera clôturée le <b>$_[2]</b>.
 	    Le responsable de la consultation est $_[3] (<tt>$_[4]</tt>).
 	    N'hésitez pas à le contacter si vous avez besoin d'aide.";
@@ -333,14 +333,14 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($no_opinion, my $prop, my $combined, my $civs_url) = @_;
     my $ret;   
     if (!$prop || !$combined) {
-	$ret = "Merci de bien vouloir classer les propositions ou les
-        candidats suivants. Plus une proposition ou un candidat vous
-        convient plus vous lui donnerez un rang élevé.
-        Par conséquent votre proposition ou candidat préféré aura donc le rang 1.
-        Si vous n'avez pas de préférence entre plusieurs propositions ou
-        candidats, vous pouvez leur donner le même rang. Il vous est
+	$ret = "Merci de bien vouloir classer les candidats ou les propositions
+        suivants. Plus un candidat ou une proposition vous convient plus vous
+        lui donnerez un rang élevé. Par conséquent votre candidat ou votre
+        proposition préféré aura donc le rang 1.
+        Si vous n'avez pas de préférence entre plusieurs candidats ou propositions,
+        vous pouvez leur donner le même rang. Il vous est
         possible de ne pas utiliser toutes les rangs disponibles.
-        Initialement toutes les propositions ou les candidats 
+        Initialement toutes les candidats ou les propositions 
         possèdent le rang les plus faible. ". $cr;
 	if ($no_opinion) {
 	    $ret .= '<b>Note : </b> &ldquo;S\'abstenir&rdquo;
@@ -416,16 +416,16 @@ sub only_writeins_are_permitted {
 }
 
 sub to_top {
-    'Début';
+    'Mettre en tête de liste';
 }
 sub to_bottom {
-    'Fin';
+    'Mettre en queue de liste';
 }
 sub move_up {
-    'Augmenter le rang';
+    'Avancer vers la tête de liste d'\un rang';
 }
 sub move_down {
-    'Diminuer le rang';
+    'Reculer vers la queue de liste d'\un rang';
 }
 sub make_tie {
     'Rendre ex-æquo';
@@ -437,9 +437,9 @@ sub buttons_are_deactivated {
 sub ranking_instructions {
        'Classer les propositions selon trois méthodes possibles :
 	<ol>
-	    <li>Déplacer les lignes,
-	    <li>use pulldowns in Rank column;
-	    <li>Sélectionne les colonnes et utiliser les boutons ci-dessus.
+	    <li>Déplacer les lignes en cliquant dessus,
+	    <li>Cliquer dans les listes déroulantes de la colonne "Rang";
+	    <li>Sélectionner une ou plusieurs lignes et utiliser les boutons ci-dessus.
 	</ol>';
 }
 
@@ -602,8 +602,8 @@ sub poll_has_been_announced_to_end { #election_end
 }
 
 sub To_view_the_results_at_the_end {
-    'Pour consulter les résultats de la consultations après sa clôture
-    , cliquez sur le lien Internet suivant : </p> $_[1]';
+    "Pour consulter les résultats de la consultations après sa clôture
+    , cliquez sur le lien Internet suivant : </p> $_[1]";
 }
 
 sub For_more_information {
@@ -670,7 +670,7 @@ sub Voter_identities_will_be_kept_anonymous {
     'La consultation aura lieu à bulletin secret';
 }
 sub Voter_identities_will_be_public {
-    'L\'identité des participants (courrier électronique) sera publiquement associés à leur vote.';
+    'L\'identité des participants (adresse du courrier électronique) sera publiquement associée à leur vote.';
 }
 sub Condorcet_completion_rule {
     'Règle de vote Condorcet :';
@@ -750,7 +750,7 @@ sub Result_details {
     'Résultats détaillés';
 }
 sub Ballot_report {
-    'Compte rendu des bulletin de vote'
+    'Compte rendu des bulletins de vote'
 }
 sub Ballots_are_shown_in_random_order {
     "Les bulletin de vote sont affichés dans un ordre aléatoire.";
