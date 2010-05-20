@@ -169,11 +169,11 @@ consultation)</small> </td>
   <div class="emphasized"><small> Votre nom et votre adresse de
 courrier électronique seront insérés dans les courriers électroniques
 envoyés aux participants de la consultation. Votre nom doit donc être
-connu des participants et cette même adresse de courrier électronique
+connu des participants et votre adresse de courrier électronique
 doit permettre la réception de courriers électroniques. CIVS va
-utiliser cette adresse de courrier électronique pour vous communiquer
+utiliser votre adresse de courrier électronique pour vous communiquer
 les information nécessaires à la gestion de la consultation. Merci de
-vérifier que le filtre anti-spam attaché à cette adresse de courrier
+vérifier que le filtre anti-spam attaché votre de courrier
 électronique ne bloquera pas les courriers provenant de l'expéditeur <kbd>@SUPERVISOR@</kbd>
 (il ne sera peut être pas inutile de contrôler le dossier où sont
 dirigés les spams si vous ne recevez pas de courrier électronique
@@ -217,8 +217,8 @@ fichier contenant ces informations : <br>
   </table>
   </p>
   <p align="left"><input name="choices_file" type="file"></p>
-  <p>Combien y aura-t-il d'élus ou de propositions retenues : <input
- name="num_winners" size="5" value="1" type="text"></p>
+  <p>Combien y aura-t-il de candidats élus ou de propositions retenus
+: <input name="num_winners" size="5" value="1" type="text"></p>
   <p>Saisir les adresses de courrier électronique des participants à la
 consultation, une adresse par ligne. Il vous est possible de saisir un
 maximum de 1000 adresses de courrier électronique. Il vous sera
@@ -238,7 +238,7 @@ sur la case à cocher pour avoir des informations complémentaires)</small></h3>
  ne s'expriment qu'une seule fois nous vous conseillons d'organiser une élection à bulletin secret."
  type="checkbox"> Cette consultation est publique. <br>
   <input name="external_ballots" value="yes"
- title="Cochez cette option si vous voulez télécharger les bulletins de vote de la consultation.
+ title="Cochez cette option si vous voulez charger les bulletins de vote de la consultation.
  Les participants à cette consultation ne pourront pas exprimer leur suffrage. Cette option vous permet d'explorer
  toutes les options et méthodes de vote de CIVS. Vous pouvez aussi utiliser cette option si vous devez dépouiller
  des bulletins de vote qui n'ont pas été enregistrés par CIVS."
@@ -269,21 +269,21 @@ consultation contiendront
 aussi l'identité des participants et leur vote. <span
  style="font-weight: bold;">ATTENTION</span> : Si vous cochez cette
 case les participants ne seront donc plus anonymes, le serveur CIVS ne
-détruira pas les adresses de courrier électronique. Les participants
+détruira pas les adresses de courrier électronique des participants.
+Les participants
 seront avertis de l'absence d'anonymat de cette consultation. </p>
   </span><br>
   <input name="writeins" value="yes"
  title="Cochez cette option si vous désirez autoriser le panachage. La consultation sera alors
  divisée en deux sessions. Lors de la première session les participants pourront proposer de nouveaux
  candidats ou de nouvelles propositions. Lors de la deuxième session les participants pourront s'exprimer
- sur la totalité des candidats ou des propositions. Le responsable de la consultation gère 
- les deux sessions"
+ sur la totalité des candidats ou des propositions. Le responsable de la consultation gère le déroulement des deux sessions"
  type="checkbox"> Permettre aux participants d'ajouter des candidats ou
 des propositions. Le vote est alors dit "panaché".<br>
   <input name="shuffle" value="no"
  title="Par défaut les candidats ou les propositions sont affichées aléatoirement. Dans certains cas il
  peut être plus efficace pour les participants de préserver l'ordre dans lequel les candidats ou les propositions
- ont été saisies. Un bon exemple est le cas d'un consultation concernant les horaires possible pour une réunion."
+ ont été saisis. Un bon exemple est le cas d'un consultation concernant les horaires possibles pour une réunion."
  type="checkbox"> Présenter les candidats ou les propositions sur le
 bulletin de vote dans l'ordre exact où ils ont été saisis.<br>
   <input name="no_opinion" value="yes"
@@ -310,10 +310,10 @@ représentation proportionnelle, les participants sont supposés vouloir
 maximiser :<br>
   <input name="rating_interpretation" value="best_choice"
  checked="checked" type="radio"> Soit le classement de leur candidat ou
-proposition favori;<br>
+de leur proposition favori;<br>
   <input name="rating_interpretation" value="combined_ratings"
  type="radio"> Soit le poids combiné des différents candidats ou
-propositions qu'ils ont choisis.<br>
+des différentes propositions qu'ils ont choisis.<br>
   </p>
   </span></p>
   <div class="emphasized">Vérifier que l'adresse de votre courrier

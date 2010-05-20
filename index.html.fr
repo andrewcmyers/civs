@@ -77,8 +77,8 @@ Pour les consultations publiques il est possible de ne pas imposer la
 possession d'une adresse email, dans ce cas un seul vote est accepté
 par adresse Internet (IP) </p>
       <p> <strong>Vote par préférence : </strong>Les participants à
-la consultation classent par ordre de préférence les propositions ou
-les candidats qui leur sont soumis. Les participants ne sont pas
+la consultation classent par ordre de préférence les candidats ou les
+propositions qui leur sont soumis. Les participants ne sont pas
 limités
 à un seul choix. Comparée à d'autres méthode de consultation
 électorale,

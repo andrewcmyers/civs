@@ -560,13 +560,13 @@ sub SendKeys {
 	    Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
             Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
-	    SendHeader 'From',
-		"$email_addr ($name, ".$tx->CIVS_poll_supervisor.')';
+	    SendHeader ('From',
+		"$email_addr ($name, ".$tx->CIVS_poll_supervisor.')');
             Send "Sender: $civs_supervisor";
             Send "Reply-To: $email_addr";
 	    Send "Message-ID: <$messageid>";
             Send "To: $v";
-	    SendHeader 'Subject', $tx->poll_email_subject($title);
+	    SendHeader('Subject', $tx->poll_email_subject($title));
 	    Send 'Content-Transfer-Encoding: 8bit';
             Send "Return-Path: $email_addr";
             Send 'X-Mailer: CIVS';

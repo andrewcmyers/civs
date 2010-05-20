@@ -17,7 +17,7 @@
       <h1>Service de Vote Internet Condorcet (CIVS)</h1>
       </td>
       <td align="right" nowrap="nowrap" valign="top" width="0%"> <a
- href="@CIVSHOME@">About CIVS</a><br>
+ href="@CIVSHOME@">Au sujet de CIVS</a><br>
       <a href="@CIVSURL@/civs_create.html">Créer une consultation</a><br>
       <a href="@CIVSURL@/sec_priv.html">Sécurité et Confidentialité</a><br>
       <a class="here" href="@CIVSURL@/faq.html">FAQ</a> </td>
@@ -33,19 +33,21 @@
 <h2>Créer une consultation</h2>
 <ol>
   <li><b>Quelle sont les différences entre la méthode de Condorcet et
-les autres méthodes de votes auquelles je suis habitué ? </b>La
+les autres méthodes de votes auxquelles je suis habitué ? </b>La
 méthode de Condorcet est
 une méthode de vote qui permet aux personnes participant à une
 consultation de classer les candidats ou les propositions et qui agrège
 de façon efficace les préférences des participants.
 [ <a href="rp.html">Plus d'informations concernant la méthode de
 Condorcet</a> ] </li>
-  <li><b>La consultation doit être ouverte pendant combien de temps ?</b>
+  <li><b>Une consultation doit être ouverte pendant combien de temps ?</b>
 C'est à vous de le déterminer. Cela dépend de la disponibilités des
-personnes consultées. Pour des participants qui ont été informés de la
-consultation ou qui vérifient leur courrier électronique
-fréquemment la durée de la consultation peut être de 2 à 3 jours.
-Il a été observé que la plus part des gens soit votent immédiatement,
+personnes consultées. Si les personnes consultées ont été informées de
+la
+consultation ou bien si elles vérifient leur courrier électronique
+fréquemment, la durée de la consultation peut être de 2 à 3 jours.
+Il a été observé que la plus part des personnes consultées soit votent
+immédiatement,
 soit ne votent pas. Une durée de consultation de plus d'une
 semaine est généralement trop longue, sauf si vous voulez mettre en
 place une consultation publique sur un long terme. </li>
@@ -63,7 +65,7 @@ quels sont les candidats ou les propositions qui sont acceptables par <span
 suffit de choisir celles qui ont unanimement .(n-0) battu cette
 pseudo-proposition. C'est extrêmement pratique pour fixer la date d'une
 réunion où tous les participants doivent être présents. </li>
-  <li><b>Quelle est la taille maximum d'une consultation gérable avec
+  <li><b>Quelle est la taille maximum d'une consultation organisable
 CIVS ?</b>
 CIVS a été utilisé très régulièrement pour des consultations concernant
 des centaines de participants. Vous pouvez mettre en place une
@@ -72,8 +74,9 @@ CIVS a été utilisé pour des consultation concernant plusieurs milliers
 de participants et CIVS est parfaitement capable de supporter la charge
 qu'implique ce type de consultation même si les participants expriment
 leur vote tous en même temps.
-Election
-results are now cached, so the system has become much more scalable.
+Les résultats des consultations sont maintenant stockés dans un cache,
+ce qui a rendu CIVS beaucoup plus résistant à la charge.<span
+ style="font-weight: bold;"></span>
     <p>Néanmoins CIVS n'a pas été testé pour des consultations de
 10.000 participants ou plus. Le logiciel est écrit en langage Perl et
 est parfaitement capable de prendre en compte 4,000 participants par
@@ -83,10 +86,9 @@ importante. En ce qui concerne les consultations à bulletin secret,
 CIVS ne vous autorise à ajouter des participants que par groupe de
 1000,
 mais en principe vous pouvez organiser des consultations de taille très
-importante. Merci de prendre note que l'usage du vote Note that using
-the experimental proportional
-method for
-your poll augmente de façon très importante la charge du serveur. Nous
+importante. Merci de prendre note que l'usage de la représentation
+proportionnelle augmente de façon très importante la charge du serveur.
+Nous
 vous conseillons de ne pas utiliser ce mode pour de grandes
 consultations. </p>
   </li>
@@ -98,9 +100,9 @@ séparée, une <span style="font-weight: bold;">éventuelle</span>
 corruption des données serait limitée à une seule consultation<strong></strong>.
   </li>
   <li><b>La publication intégrale des résultats peut gêner certains
-candidats ou les supporter de certaines propositions. Comment gérer
+candidats ou les partisans de certaines propositions. Comment gérer
 cette difficulté&nbsp; ?</b> Généralement les résultats&nbsp; d'une
-consultation sont disponible à tous les participants. Néanmoins vous
+consultation sont disponibles à tous les participants. Néanmoins vous
 pouvez restreindre la communication des résultats à un groupe de
 personnes. Elles pourront par la suite communiquer la liste des
 candidats élus ou des propositions retenues par un moyen extérieur à
@@ -132,75 +134,95 @@ aisée, il vous sera donc possible d'ajouter vos propres modes de
 consultation si vous le désirez. Nous pourrions même les intégrer dans
 CIVS si vous nous les communiquez. </li>
 </ol>
-<h2>Running a poll</h2>
+<h2>Gérer une consultation</h2>
 <ol>
-  <li><b>Some voters never got their voter keys. What do I do?</b>
-It depends on whether you sent the voter key to the right address in
-the first
-place. If so, you can send it again by “adding” that voter with the
-poll control page. The same voter key will be generated, so
-the voter won't be able to vote twice. If the email address was broken,
-then email should have bounced. In that case it should be safe to add
-the voter under their correct email address. You can check with the
-CIVS
-supervisor whether the email bounced, assuming you were not notified. </li>
-  <li><b>Why doesn't the poll end automatically at the specified time?</b>
-We wanted to give poll supervisors the flexibility to write complex
-specifications of when the poll should end, such as “by March 3 or
-when we get at least 100 votes”. It's too hard to handle all these
-cases.
-The supervisor can easily monitor progress through the poll control
-page. The supervisor needs to...supervise. </li>
-  <li><b>The voters haven't bothered to vote. Can I send them their
-voter
-keys again?</b> Yes, just “add” them again at the poll control page.
-This will send them all email. Make sure you use exactly the same email
-address
-you did the first time; otherwise, a new voter key will be generated
-because
-it's a different voter as far as CIVS can tell. For security and
-privacy reasons,
-CIVS doesn't record voter email or voter keys, so it has no way to send
-an already
-generated voter key to a new email address. </li>
-  <li> <b>How long will poll results remain available?</b>
-We are making a best effort to keep poll results forever, for any poll
-that receives more than one vote and doesn't look like a test of the
-system.
-However, you may want to make a copy of the poll results page for
-posterity. </li>
-  <li><b>Why doesn't the system notify voters when the poll has ended?</b>
-Because it doesn't know who the voters are any more. Once voter keys
-are
-sent out, all information about the voters is destroyed. It's the job
-of
-the poll supervisor to close the poll and notify voters or
-result recipients. </li>
-  <li><b>Can I make current poll results visible before the poll closes?</b>
-This increases the danger of strategic voting. However, it is the
-behavior for “public” polls. </li>
+  <li><b>Certains participants n'ont jamais reçu leur bulletin
+électronique. Que dois-je faire ?</b>
+Si vous avez envoyé le bulletin de vote électronique à la bonne adresse
+de courrier électronique du participant, il vous suffit de d'ajouter de
+nouveau ce participant à la liste des participants. CIVS fera parvenir
+de nouveau au participant le même bulletin de vote, il n'y aura donc
+pas de risque de vote multiple car un bulletin de vote ne peut être
+utilisé qu'une seule fois. Si l'adresse utilisée pour envoyer le
+bulletin de vote était incorrecte, le courrier électronique qui
+contenait le bulletin de vote à du vous être renvoyé. Dans ce cas il
+est possible d'ajouter de nouveau ce participant à la liste des
+participant, cette fois ci avec sa bonne adresse de courrier
+électronique. Si vous n'avez pas été notifié du retour du courrier
+électronique, vous pouvez contacter le gestionnaire de CIVS pour
+vérifier l'état de ce courrier. </li>
+  <li><b>Pourquoi n'est-il pas possible d'automatiser la date de
+clôture de la consultation ?</b>&nbsp;
+Nous voulions permettre au responsable de la consultation de préciser
+des règles assez complexes de clôture de consultation. Comme par
+exemple " Fin de la consultation le 3 Mars ou lorsque 100 votes auront
+été exprimés." Mais c'est vraiment très difficile à programmer. Donc le
+plus simple est de laisser le responsable suivre le déroulement de la
+consultation et décider lui-même de la clôture de la consultation.</li>
+  <li><b>Les participants n'ont pas pris la peine de s'exprimer.
+Puis-je leur envoyer de nouveau leurs bulletins de vote électronique
+?&nbsp;</b> Oui, il vous suffit de d'ajouter de nouveau ces
+non-participants à la liste des
+participants. CIVS fera parvenir de nouveau à ces non- participants le
+même
+bulletin de vote, il n'y aura donc pas de risque de vote multiple car
+un bulletin de vote ne peut être utilisé qu'une seule fois. Vérifiez
+simplement que vous utilisez bien la même adresse de courrier
+électronique que lors du premier envoi, car sinon CIVS va créer un
+nouveau bulletin de vote électronique. Pour des raisons de sécurité et
+de confidentialité CIVS n'enregistre pas les adresses de courrier
+électronique des participants ni les bulletins de vote électronique.
+CIVS ne peut donc pas re-créer un bulletin de vote électronique à
+l'identique pour une nouvelle adresse de courrier électronique.. </li>
+  <li> <b>Pendant combien de temps les résultats d'une consultations
+restent-ils disponibles ?</b>
+Nous essayons de maintenir disponible le plus longtemps possible le
+résultat des consultations si ces consultations ont reçues plus d'un
+vote et si elles ne ressemblent pas à des consultations de test.
+Néanmoins il vous est toujours possible de faire une copie de la page
+des résultats d'une consultation si vous en désirez une copie pour la
+postérité.<br>
+  </li>
+  <li><b>Pourquoi CIVS ne notifie pas les participants de la clôture de
+la consultation ?</b>
+Tout simplement car CIVS n'enregistre
+pas les adresses de courrier électronique des participants. Une fois
+les courriers électroniques contenant les bulletins de vote
+électroniques envoyés, toutes les informations concernant les
+participants sont détruites. C'est au responsable de la consultation de
+clore la consultation et d'avertir les participants de cette clôture.</li>
+  <li><b>Puis-je rendre accessible le résultat de la consultation avant
+sa clôture ?</b> Cette pratique augment le risque de vote stratégique.
+Le résultat d'une consultation publique est accessible pendant toute la
+durée de la consultation.. </li>
 </ol>
-<h2>Voting</h2>
+<h2>Vote<br>
+</h2>
 <ol>
-  <li><b>What does “no opinion” mean?</b>
-It means you are providing no information about how this choice ranks
-with
-respect to the other choices. For example, if you give one choice the
-rank 1,
-and give all other choices the rank “no opinion”, your ballot
-becomes useless because it doesn't express any preferences. Voters
-often pick
-“no opinion” when what they mean is that they don't like the choice
-or that they don't have any information about it. In these situations,
-it is often better to give the choice a low rank rather than to select
-“no
-opinion”. A good reason for a voter to give a choice the rank
-“no opinion” is because the voter isn't <em>supposed</em> to
-express an opinion about that choice. </li>
+  <li><b>Quel sens donner à l'abstention ?</b> Choisir l'abstention
+signifie que vous ne voulez fournir aucune informations concernant le
+classement d'un candidat ou d'une proposition. Par exemple si vous
+classez en premier un seul candidat ou une seule proposition et que
+vous vous abstenez concernant tous les autres candidats ou toutes les
+autres propositions votre vote est inutile car il n'exprime alors
+aucune préférence. Les participants à une consultation choisissent
+l'abstention lorsqu'ils n'apprécient pas un candidat ou une
+proposition, ou bien lorsqu'ils estiment ne pas avoir assez
+d'informations pour former leur opinion. Dans cette situation, il est
+préférable de positionner le candidat ou la proposition dans les
+profondeurs du classement plutôt que choisir de choisir l'abstention.
+Une bonne occasion d'utiliser l'abstention est quand le participant
+n'est pas supposé exprimer une opinion au sujet d'un candidat ou d'une
+proposition. <span style="font-weight: bold;">A good reason for a
+voter to give a choice the rank
+“no opinion” is because the voter isn't </span><em
+ style="font-weight: bold;">supposed</em><span
+ style="font-weight: bold;"> to
+express an opinion about that choice.</span> </li>
 </ol>
 <h2>Sécurité et Confidentialité</h2>
 <p>Pour plus d'informations concernant la sécurité et la
-confidencialité, cliquez&nbsp; <a href="sec_priv.html">ici</a>.
+confidentialité, cliquez&nbsp; <a href="sec_priv.html">ici</a>.
 </p>
 </div>
 </body>
