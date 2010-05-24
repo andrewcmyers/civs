@@ -422,10 +422,10 @@ sub to_bottom {
     'Mettre en queue de liste';
 }
 sub move_up {
-    'Avancer vers la tête de liste d'\un rang';
+    'Avancer vers la tête de liste d\'un rang';
 }
 sub move_down {
-    'Reculer vers la queue de liste d'\un rang';
+    'Reculer vers la queue de liste d\'un rang';
 }
 sub make_tie {
     'Rendre ex-æquo';
