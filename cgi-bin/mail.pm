@@ -126,18 +126,28 @@ sub CloseMail {
 }
 
 sub SendHeader {
-    my ($header, $text) = @_;
-    my $budget = 75 - 12 - length($header) - 2;
-    $budget -= $budget % 4;
-    if ($text =~ m/[\200-\377]/) {
-	my $enc = MIME::Base64::encode_base64($text,'');
-	$text = '';
-	for (my $i = 0; $i < length($enc); $i += $budget) {
-	    if ($i != 0) {
-		$text .= "\r\n ";
+    my $header = shift @_;
+    my $first = 1;
+    my $text = '';
+    foreach my $section (@_) {
+	# print CGI::pre('Section: ', $section);
+	if (!$first) { $text .= "\r\n " }
+	$first = 0;
+	if ($section =~ m/[\200-\377]/) {
+	    my $budget = 75 - 12 - length($header) - 2;
+	    $budget -= $budget % 4;
+	    my $enc = MIME::Base64::encode_base64($section,'');
+	    my $i = 0;
+	    while ($i < length($enc)) {
+		if ($i != 0) {
+		    $text .= "\r\n ";
+		}
+		$text .= '=?utf-8?B?' . substr($enc, $i, $budget) . '?=';
+		$i += $budget;
 		$budget = 60;
 	    }
-	    $text .= '=?utf-8?B?' . substr($enc, $i, $budget) . '?=';
+	} else {
+	    $text .= $section;
 	}
     }
     Send $header . ': ' . $text;

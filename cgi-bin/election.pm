@@ -561,14 +561,15 @@ sub SendKeys {
             Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
 	    SendHeader ('From',
-		"$email_addr ($name, ".$tx->CIVS_poll_supervisor.')');
-            Send "Sender: $civs_supervisor";
-            Send "Reply-To: $email_addr";
-	    Send "Message-ID: <$messageid>";
-            Send "To: $v";
+		"\"$name, ".$tx->CIVS_poll_supervisor."\"",
+		"<$email_addr>");
+            SendHeader('Sender', $civs_supervisor);
+            SendHeader('Reply-To', $email_addr);
+	    SendHeader('Message-ID', "<$messageid>");
+            SendHeader('To', "<$v>");
 	    SendHeader('Subject', $tx->poll_email_subject($title));
 	    Send 'Content-Transfer-Encoding: 8bit';
-            Send "Return-Path: $email_addr";
+            SendHeader('Return-Path', $email_addr);
             Send 'X-Mailer: CIVS';
 	    my $html =
 "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
