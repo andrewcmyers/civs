@@ -140,11 +140,13 @@ sub HTML_Header {
 	print header(-charset => 'utf-8'),
 	      start_html(-title => $title,
 	                 -lang => $tx->lang,
+			 -charset => 'utf-8',
 			 -style => {'src' => "@CIVSURL@/style.css"});
       } else {
 	print header(-charset => 'utf-8'),
 	      start_html(-title => $title,
 	                 -lang => $tx->lang,
+			 -charset => 'utf-8',
 			 -style => {'src' => "@CIVSURL@/style.css"},
 			 -script => [{'src' => "@CIVSURL@/$js"},
 				    {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
@@ -153,7 +155,6 @@ sub HTML_Header {
       }
     }
     $html_header_printed = 1;
-    # print pre($languages::log);
 }
 
 sub CIVS_Header {
