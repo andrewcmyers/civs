@@ -529,7 +529,7 @@ sub Sending_mail_to_voter_v {
     "Sende E-Mail an Wähler \"$_[1]\"...";
 }
 sub CIVS_poll_supervisor {
-    'CIVS-Abstimmungsleiter';
+    "\"$_[1], CIVS-Abstimmungsleiter\""
 }
 sub voter_mail_intro { #title, name, email_addr
 "Es wurde eine Abstimmung beim Condorcet Internet Voting Service namens <b>$_[1]</b>

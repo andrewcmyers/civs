@@ -30,6 +30,7 @@ th              { font-family: Verdana, Arial, helvetica, sans-serif;
     margin-left: 15px;
     padding: 5px;
     border: solid 1px #bbc;
+    max-width: 60ex;
 }
 
 table { background-color: #e8e8f0 }

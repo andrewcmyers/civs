@@ -213,9 +213,6 @@ sub results_available_to_the_following_users {
 sub Poll_results_are_available { #url
     "<a href=\"$_[1]\">Mostra risultati</a>";
 }
-sub Poll_results_will_be_available { #url
-    "<a href=\"$_[1]\">Mostra risultati</a>";
-}
 sub Description {
     'Descrizione:';
 }
@@ -532,7 +529,7 @@ sub Sending_mail_to_voter_v {
     "Invio e-mail a \"$_[1]\"...";
 }
 sub CIVS_poll_supervisor {
-    'Supervisiore della votazione CIVS';
+    "\"$_[1], Supervisiore della votazione CIVS\""
 }
 sub voter_mail_intro { #title, name, email_addr
 "Una votazione di nome <b>$_[1]</b> è stata creata nel sistema di voto Condorcet on-line (CIVS).

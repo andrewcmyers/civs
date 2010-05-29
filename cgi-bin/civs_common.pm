@@ -137,16 +137,16 @@ sub HTML_Header {
     (my $title, my $js) = @_;
     if (!$generated_header) {
       if (!defined($js) || $js eq '') {
-	print header(-charset => 'utf-8'),
+	print header(-charset => 'utf-8', -content_language => $tx->lang),
 	      start_html(-title => $title,
 	                 -lang => $tx->lang,
-			 -charset => 'utf-8',
+			 -encoding => 'utf-8',
 			 -style => {'src' => "@CIVSURL@/style.css"});
       } else {
-	print header(-charset => 'utf-8'),
+	print header(-charset => 'utf-8', -content_language => $tx->lang),
 	      start_html(-title => $title,
 	                 -lang => $tx->lang,
-			 -charset => 'utf-8',
+			 -encoding => 'utf-8',
 			 -style => {'src' => "@CIVSURL@/style.css"},
 			 -script => [{'src' => "@CIVSURL@/$js"},
 				    {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},

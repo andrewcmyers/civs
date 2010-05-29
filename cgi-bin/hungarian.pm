@@ -215,9 +215,6 @@ sub results_available_to_the_following_users {
 sub Poll_results_are_available { #url
     return "<a href=\"$_[1]\">A szavazás eredménye</a>";
 }
-sub Poll_results_will_be_available { #url
-    return "<a href=\"$_[1]\">A szvavazás eredménye</a>";
-}
 sub Description {
     return 'Leírás:';
 }
@@ -532,7 +529,7 @@ sub Sending_mail_to_voter_v {
 }
 
 sub CIVS_poll_supervisor {
-    'CIVS szavazásgazda';
+    "\"$_[1], CIVS szavazásgazda\""
 }
 
 sub voter_mail_intro { #title, name, email_addr

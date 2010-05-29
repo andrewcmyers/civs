@@ -223,9 +223,6 @@ sub results_available_to_the_following_users {
 sub Poll_results_are_available { #url
     "<a href=\"$_[1]\">Accéder aux résultats de la consultation</a>";
 }
-sub Poll_results_will_be_available { #url
-    "<a href=\"$_[1]\">Accéder aux résultats de la consultation</a>";
-}
 sub Description {
     'Description : ';
 }
@@ -563,8 +560,8 @@ sub Invalid_email_address { # addr
 sub Sending_mail_to_voter_v {
     "Courrier électronique envoyé au participant \"$_[1]\"...";
 }
-sub CIVS_poll_supervisor {
-    'Responsable de la consultation CIVS';
+sub CIVS_poll_supervisor { # name
+    "\"$_[1], Responsable de la consultation CIVS\""
 }
 sub voter_mail_intro { #title, name, email_addr
 "La consultation <b>$_[1]</b> a été mise en place à l'aide du Service de Vote Internet Condorcet (CIVS).
