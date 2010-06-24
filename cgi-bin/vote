@@ -432,6 +432,8 @@ sub Load {
 
 sub IntroduceWriteins {
     print p($description), $cr;
+    print p($tx->instructions1($num_winners, $election_end,
+			       $name, $email_addr)), $cr;
     print p($tx->only_writeins_are_permitted), $cr;
 }
 

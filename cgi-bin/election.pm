@@ -561,7 +561,7 @@ sub SendKeys {
             Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
 	    SendHeader ('From',
-		$tx->CIVS_poll_supervisor_name($name),
+		$tx->CIVS_poll_supervisor($name),
 		"<$email_addr>");
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $email_addr);
@@ -601,8 +601,8 @@ sub SendKeys {
 		  $tx->To_view_the_results_at_the_end(MakeURL("http://$thishost$civs_bin_path/".
 				"results@PERLEXT@?id=$election_id"));
 	    }
-	    $html .= '<p>' . $tx->For_more_information . $cr;
-            MakeURL($civs_home).'</p>
+	    $html .= '<p>' . $tx->For_more_information . $cr .
+		MakeURL($civs_home).'</p>
 </body>
 </html>';
 	    SendBody $html;

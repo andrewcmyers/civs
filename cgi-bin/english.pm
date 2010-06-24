@@ -304,13 +304,13 @@ sub instructions1 { # num_winners, end, name, email
     } else {
 	$wintxt="$_[1] favorite choices";
     }
-    "Only the $_[1] will win the poll.<p>
+    "Only the $wintxt will win the poll.<p>
 	    The poll ends <b>$_[2]</b>.
 	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
 	    Contact the poll supervisor if you need help.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($no_opinion, $prop, $combined, $civs_url) = @_;
+    my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;
     if (!$prop || !$combined) {
 	$ret = "Give each of the following choices
@@ -687,7 +687,7 @@ sub poll_description_hdr {
     'Poll description';
 }
 sub Ranking_result {
-    'Ranking result';
+    'Result';
 }
 sub x_beats_y { # x y w l 
     "$_[1] beats $_[2] $_[3]&ndash;$_[4]";

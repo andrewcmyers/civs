@@ -315,7 +315,7 @@ sub instructions1 { # num_winners, end, name, email
 	    Nehmen Sie mit dem Abstimmungsleiter Kontakt auf, falls Sie Hilfe benötigen.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($no_opinion, $proportional, $combined, $civs_url) = @_;
+    my ($self, $no_opinion, $proportional, $combined, $civs_url) = @_;
     my $ret;
     if (!$proportional || !$combined) {
 	$ret = "Teilen Sie jedem der folgenden Kandidaten
