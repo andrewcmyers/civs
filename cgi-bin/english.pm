@@ -468,7 +468,7 @@ sub Poll_not_yet_ended {
 }
 sub The_poll_has_not_yet_been_ended { #title, name, email
     "This poll ($_[1]) has not yet been ended by its supervisor,
-    $_[2] ($_[3]),";
+    $_[2] ($_[3]).";
 }
 sub The_results_of_this_completed_poll_are_here {
     'The results of this completed poll are here:';

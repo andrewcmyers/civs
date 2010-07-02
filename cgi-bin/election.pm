@@ -291,7 +291,7 @@ sub CheckStopped {
     if (!IsStopped() && (!$local_debug)) {
 	print h1($tx->Poll_not_yet_ended);
 	print p(
-	    $tx->The_poll_has_been_ended($title,$name,$email_addr),
+	    $tx->The_poll_has_not_yet_been_ended($title,$name,$email_addr),
 	    $tx->poll_has_been_announced_to_end($election_end));
 	PointToResults;
 	print end_html();
