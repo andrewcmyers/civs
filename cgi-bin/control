@@ -49,7 +49,7 @@ if (!IsStarted) {
     print hidden('id', $election_id);
     print hidden('key', $control_key);
     print '<input type="submit" value="'.$tx->End_poll.'" name="close"
-            onclick="confirm(\'', $tx->ending_poll_cannot_be_undone, '\')">', $cr;
+            onclick="return confirm(\'', $tx->ending_poll_cannot_be_undone, '\')">', $cr;
     print '</p></form>', $cr;
 
     if ($writeins eq 'yes') {
