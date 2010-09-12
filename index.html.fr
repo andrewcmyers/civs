@@ -121,14 +121,10 @@ contrainte. </p>
 à la liste de distribution de CIVS</a></li>
               <li><a href="sec_priv.html">Sécurité et Confidentialité<br>
                 </a></li>
-              <li><a href="rp.html">Paradoxe de Condorcet<br>
-                </a></li>
-              <li><a href="proportional.html">Représentation
-proportionnelle</a></li>
-              <li><a href="changelog.html">Logiciel CIVS<br>
-                </a></li>
-              <li><span style="text-decoration: underline;">Remerciements</span><br>
-              </li>
+              <li><a href="rp.html">Paradoxe de Condorcet</a></li>
+              <li><a href="proportional.html">Représentation proportionnelle</a></li>
+              <li><a href="changelog.html">Logiciel CIVS</a></li>
+              <li><a href="acks.html">Remerciements</a></li>
             </ul>
             </td>
           </tr>
