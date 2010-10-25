@@ -140,6 +140,8 @@ sub HTML_Header {
 	print header(-charset => 'utf-8', -content_language => $tx->lang),
 	      start_html(-title => $title,
 	                 -lang => $tx->lang,
+			 -head => Link({ -rel => "shortcut icon",
+			                 -href => "http://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
 			 -encoding => 'utf-8',
 			 -style => {'src' => "@CIVSURL@/style.css"});
       } else {
@@ -148,6 +150,8 @@ sub HTML_Header {
 	                 -lang => $tx->lang,
 			 -encoding => 'utf-8',
 			 -style => {'src' => "@CIVSURL@/style.css"},
+			 -head => Link({ -rel => "shortcut icon",
+			                 -href => "http://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
 			 -script => [{'src' => "@CIVSURL@/$js"},
 				    {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
 				               {'src' => "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}], 
