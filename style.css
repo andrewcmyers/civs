@@ -7,6 +7,7 @@ body { margin: 0;
        background-color: #fffff8 }
 
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
+div.normal_text { max-width: 80ex; margin: 0 auto }
 
 div.home { text-align: justify; padding: 1em;
            width: 700px}
