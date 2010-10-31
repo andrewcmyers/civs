@@ -34,7 +34,32 @@
 </table>
 <div class="contents">
 
-<h2>Setting up a poll</h2>
+<div class="links">
+<ul>
+<li><a href="#running">Questions about voting</a>
+<li><a href="#setting_up">Questions about setting up a poll</a>
+<li><a href="#running">Questions about running a poll</a>
+<li><a href="sec_priv.html">Questions about security and privacy</a>
+</ul>
+</div>
+
+<a name="#voting">
+<h2>Voting</h2></a>
+<ol>
+<li><b>What does &ldquo;no opinion&rdquo; mean?</b>
+It means you are providing no information about how this choice ranks with
+respect to the other choices. For example, if you give one choice the rank 1,
+and give all other choices the rank &ldquo;no opinion&rdquo;, your ballot
+becomes useless because it doesn't express any preferences.  Voters often pick
+&ldquo;no opinion&rdquo; when what they mean is that they don't like the choice
+or that they don't have any information about it. In these situations, it is often better to give the choice a low rank rather than to select &ldquo;no
+opinion&rdquo;. A good reason for a voter to give a choice the rank
+&ldquo;no opinion&rdquo; is because the voter isn't <em>supposed</em> to
+express an opinion about that choice.
+</ol>
+
+<a name="setting_up">
+<h2>Setting up a poll</h2></a>
 <ol>
 <li><b>What is the difference between Condorcet voting and voting methods
 that I am familiar with?</b>
@@ -110,9 +135,21 @@ The focus has been on supporting Condorcet methods, which guarantee (when they c
 that no one is preferred over the winner. However, the interface for adding new
 election methods is relatively clean, so you can add your own election methods if
 you like. We may even add them to CIVS if you provide them.
+
+<li><b>Can I answer multiple questions within one poll?</b> Yes. While CIVS only
+allows one ranking to be defined per poll, it is possible to create polls in which
+incomparable things are ranked separatel. For example, if you wanted to pick a 
+place to hold a meeting and a time to hold it, you could have several choices that
+are meetings and several that are times, and instruct the voters to rank all places
+above all times.  Assuming your voters followed instructions,
+the poll result will have all places ranked above all times, and their
+relative rankings will match what you would have gotten if you had run two separate polls.
+
 </ol>
 
+<a name="running">
 <h2>Running a poll</h2>
+</a>
 <ol>
 <li><b>Some voters never got their voter keys. What do I do?</b>
 It depends on whether you sent the voter key to the right address in the first
@@ -158,20 +195,6 @@ result recipients.
 This increases the danger of strategic voting. However, it is the 
 behavior for &ldquo;public&rdquo; polls.
 </ol>
-<h2>Voting</h2>
-<ol>
-<li><b>What does &ldquo;no opinion&rdquo; mean?</b>
-It means you are providing no information about how this choice ranks with
-respect to the other choices. For example, if you give one choice the rank 1,
-and give all other choices the rank &ldquo;no opinion&rdquo;, your ballot
-becomes useless because it doesn't express any preferences.  Voters often pick
-&ldquo;no opinion&rdquo; when what they mean is that they don't like the choice
-or that they don't have any information about it. In these situations, it is often better to give the choice a low rank rather than to select &ldquo;no
-opinion&rdquo;. A good reason for a voter to give a choice the rank
-&ldquo;no opinion&rdquo; is because the voter isn't <em>supposed</em> to
-express an opinion about that choice.
-</ol>
-
 <h2>Security and Privacy</h2>
 
 <p>For a discussion of security and privacy in CIVS, see

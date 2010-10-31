@@ -126,7 +126,7 @@ table.matrix, table.rankings { border: solid 1px #aac }
 table.rankings tr td { text-indent: -3ex; padding-left: 3ex }
 table.rankings tr td ol { text-indent: 0ex }
 
-table.links {
+.links {
     background-image: url('vertstrip.png');
     border-color: #bbc;
     border-style: solid;
