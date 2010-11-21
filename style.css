@@ -153,7 +153,7 @@ span.email {font-family: Courier New, courier, fixed; font-weight: 600}
 
 div.description { border: solid 1px #bbb;
 		  border-radius: 8px;
-		  max-width: 80ex;
+		  max-width: 70ex;
 		  margin-right: 20px;
 		    -moz-border-radius: 8px;
 		    -webkit-border-radius: 8px;

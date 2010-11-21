@@ -9,6 +9,10 @@ sub init {
 }
 
 # civs_common
+sub style_file {
+    'hebrew.css';
+}
+
 sub Condorcet_Internet_Voting_Service {
     'שירות הצבעה אינטרנטי קונדורסט';
 }

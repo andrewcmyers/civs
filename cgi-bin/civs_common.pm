@@ -136,6 +136,7 @@ sub GetPrivateHostID {
 sub HTML_Header {
     (my $title, my $js) = @_;
     if (!$generated_header) {
+      my $style = $tx->style_file;
       if (!defined($js) || $js eq '') {
 	print header(-charset => 'utf-8', -content_language => $tx->lang),
 	      start_html(-title => $title,
@@ -143,13 +144,13 @@ sub HTML_Header {
 			 -head => Link({ -rel => "shortcut icon",
 			                 -href => "http://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
 			 -encoding => 'utf-8',
-			 -style => {'src' => "@CIVSURL@/style.css"});
+			 -style => {'src' => "@CIVSURL@/$style"});
       } else {
 	print header(-charset => 'utf-8', -content_language => $tx->lang),
 	      start_html(-title => $title,
 	                 -lang => $tx->lang,
 			 -encoding => 'utf-8',
-			 -style => {'src' => "@CIVSURL@/style.css"},
+			 -style => {'src' => "@CIVSURL@/$style"},
 			 -head => Link({ -rel => "shortcut icon",
 			                 -href => "http://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
 			 -script => [{'src' => "@CIVSURL@/$js"},
