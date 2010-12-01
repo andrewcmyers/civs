@@ -1,5 +1,12 @@
 package portuguese;
 
+use lib '@CGIBINDIR@';
+
+use english;
+our @ISA = ('english'); # go to AmE module for missing methods
+
+our $VERSION = 1.000;
+
 sub lang { 'pt-BR'; }
 
 sub init {
