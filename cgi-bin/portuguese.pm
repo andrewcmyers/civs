@@ -44,7 +44,7 @@ sub CIVS_Error {
     'Erro no CIVS';
 }
 sub CIVS_server_busy {
-    'Servidor CIVS ocupado';
+    'Servidor CIVS sobrecarregado';
 }
 sub Sorry_the_server_is_busy {
     'O servidor CIVS está sobrecarregado no momento.
@@ -70,7 +70,7 @@ sub the_poll_is_in_progress {
 }
 
 sub CIVS_Poll_Creation {
-    "Criação de Votação CIVS";
+    "CIVS: Criação de Votação";
 }
 sub Poll_created {
     "Votação criada: $_[1]"
@@ -86,7 +86,7 @@ sub Poll_directory_not_writeable {
     "Não foi possível escrever no diretório da votação";
 }
 sub CIVS_poll_created {
- "Votação CIVS criada: $_[1]";
+ "CIVS: Votação criada: $_[1]";
 }
 sub creation_email_info1 { # title, url
 "Esta mensagem sinaliza a criação de uma nova votação no CIVS,
@@ -143,7 +143,7 @@ sub poll_started {
 # control
 
 sub CIVS_Poll_Control {
-    "Controle de Votação CIVS";
+    "CIVS: Controle de Votação";
 }
 sub Poll_control {
     "Controle de Votação";
@@ -187,13 +187,13 @@ sub total_authorized_voters { # num_auth_string
     "Total de votantes autorizados: $_[1]";
 }
 sub actual_votes_so_far { # num
-    "Número de votos já registrados: $_[1]";
+    "Número de votos registrados: $_[1]";
 }
 sub poll_ends { # end
     "Término da votação: $_[1].";
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
-    'Resultados disponibilizados a todos os votantes quando votação encerrar.';
+    'Os resultados serão disponibilizados a todos os votantes quando votação encerrar.';
 }
 sub Voters_can_choose_No_opinion {
     'Votantes podem escolher &ldquo;Sem opinião&rdquo;';
@@ -228,27 +228,27 @@ sub Add_voters {
 sub the_top_n_will_win { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
-	$wintxt = "O primeiro candidato será escolhido.";
+	$wintxt = "Será escolhido um candidato entre os candidatos abaixo.";
     } else {
-	$wintxt = "Os primeiros $_[1] candidatos serão escolhidos.";
+	$wintxt = "Serão escolhidos $_[1] candidatos entre os candidatos abaixo.";
     }
     return $wintxt;
 }
 
 sub add_voter_instructions {
-    "Entre os endereços de correio eletrônico dos votantes,
+    "Adicione os endereços de correio eletrônico dos votantes,
     um por linha. Podem ser novos votantes ou votantes existentes
     que ainda não votaram. Em uma votação privada, colocar
     o endereço de um votante já existente <strong>não</strong> permitirá
     que ele vote duas vezes, somente lhe será enviado um novo convite.
-    Em uma votação pública, é realizada somente uma tentativa com \"tokens\"
-    para evitar votos múltiplos."
+    Em uma votação pública, uma tentativa de evitar votos múltiplos é
+    realizada, com o uso de \"tokens\"."
 }
 sub Upload_file {
     'Carregar arquivo: ';
 }
 sub Load_ballot_data {
-    'Carregar dados de votos';
+    'Carregar votos a partir de um arquivo';
 }
 sub File_to_upload_ballots_from {
     'Arquivo com os votos:';
@@ -310,9 +310,9 @@ sub instructions1 { # num_winners, end, name, email
 	$wintxt="$_[1] vencedores";
     }
     "A votação terá $wintxt.<p>
-	    Término da votação: <b>$_[2]</b>.
+	    Término da votação: <b>$_[2]</b>.<p>
 	    Supervisor da votação: $_[3] (<tt>$_[4]</tt>).
-            Contacte o supervisor se precisar de ajuda.";
+            Não hesite em contactá-lo se precisar de ajuda.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($no_opinion, $prop, $combined, $civs_url) = @_;
@@ -320,6 +320,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     if (!$prop || !$combined) {
 	$ret = "Atribua um valor a cada uma das opções abaixo.
             Quanto menor o valor, maior a preferência pela opção.
+            Por exemplo, a sua opção preferida terá o valor 1.
             Dê o mesmo valor a opções quando a escolha de uma ou
             outra for indiferente para você. Você não precisa usar
             todos os valores possíveis. Inicialmente todas as 
@@ -408,9 +409,9 @@ sub buttons_are_deactivated {
 sub ranking_instructions {
        'Ordene as opções. Você pode fazê-lo de três formas:
 	<ol>
-	    <li>arrastando as opções
+	    <li>arrastando as opções;
 	    <li>usando os botões da coluna &ldquo;Posição&rdquo;
-	    <li>selecionando opções e usando os botões acima
+	    <li>selecionando opções e usando os botões acima.
 	</ol>';
 }
 
@@ -429,7 +430,7 @@ sub name_of_writein_is_empty {
     "Nome da opção a adicionar está vazio";
 }
 sub writein_too_similar {
-    "O nome da nova opção é muito similar a uma já existente";
+    "O nome da nova opção é muito similar ao de uma já existente";
 }
 
 # election
@@ -442,7 +443,6 @@ sub following_URL_will_report_results {
 }
 sub following_URL_reports_results {
     'O seguinte endereço contém os resultados da votação:';
-    'The following URL reports the current poll results:';
 }
 sub Already_voted {
     'Já votou';
@@ -467,10 +467,10 @@ sub Poll_not_yet_ended {
 }
 sub The_poll_has_not_yet_been_ended { #title, name, email
     "Esta votação ($_[1]) ainda não foi encerrada pelo supervisor,
-    $_[2] ($_[3]),";
+    $_[2] ($_[3]).";
 }
 sub The_results_of_this_completed_poll_are_here {
-    'Os resultados finais desta votação estão aqui:';
+    'Os resultados desta votação já encerrada estão aqui:';
 }
 
 sub No_write_access_to_lock_poll {
@@ -520,7 +520,7 @@ sub Unable_to_append_to_poll_log {
     "Impossível acrescentar ao arquivo de registros da votação.";
 }
 sub Voter_v_already_authorized {
-    "Votante \"$_[1]\" já está autorizado.
+    "O votante \"$_[1]\" já está autorizado.
      A chave de votação será reenviada.";
 }
 sub Invalid_email_address_hdr { # addr
@@ -533,18 +533,18 @@ sub Sending_mail_to_voter_v {
     "Enviando mensagem ao votante \"$_[1]\"...";
 }
 sub CIVS_poll_supervisor {
-    'Supervisor de votação CIVS';
+    'CIVS: Supervisor de votação';
 }
 sub voter_mail_intro { #title, name, email_addr
-"A eleição chamada <b>$_[1]</b> foi criada no sistema CIVS.
-Você foi designado como um votante pelo supervisor da eleição,
+"Foi criada no sistema CIVS uma votação chamada <b>$_[1]</b>.
+Você foi designado como um votante pelo supervisor da votação,
 $_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
 }
 sub Description_of_poll {
     'Descrição da votação:';
 }
 sub if_you_would_like_to_vote_please_visit {
-    'Se quiser votar, por favor use o seguinte endereço:';
+    'Para votar, use o seguinte endereço:';
 }
 sub This_is_your_private_URL {
 'Este é seu endereço privado. Não permita que outra pessoa o acesse, porque poderá votar em seu nome.';
@@ -584,7 +584,7 @@ sub CIVS_Ending_Poll {
 }
 
 sub Ending_poll {
-    'Encerrando uma votação';
+    'Encerrando a votação';
 }
 sub View_poll_results {
     'Veja os resultados da votação';
@@ -609,7 +609,7 @@ sub was_not_able_stop_the_poll {
 # results
 
 sub CIVS_poll_result {
-    "Resultado da votação CIVS";
+    "CIVS: Resultados da votação";
 }
 sub Poll_results { # title
     "Resultados da votação: $_[1]";
@@ -632,7 +632,7 @@ sub Detailed_ballot_reporting_disabled {
     'Relatório detalhado dos votos está desabilitado.';
 }
 sub Voter_identities_will_be_kept_anonymous {
-    'A identidade dos votantes não será revelada';
+    'A identidade dos votantes não será revelada.';
 }
 sub Voter_identities_will_be_public {
     'A identidade dos votantes (email) será publicamente associada a seus votos.';
@@ -654,9 +654,9 @@ sub Announced_end_of_poll {
 }
 sub Actual_time_poll_closed { # close time
     if ($_[1] == 0) {
-	"Hora de encerramento da eleição: $_[1]"
+	"Hora de encerramento da votação: $_[1]"
     } else {
-	'Hora de encerramento da eleição: <script>document.write(new Date(' .
+	'Hora de encerramento da votação: <script>document.write(new Date(' .
 	    $_[1] * 1000 . 
 	    ').toLocaleString())</script>';
     }
@@ -787,7 +787,8 @@ sub No_random_tie_breaking_used {
 sub beatpath_matrix_explanation {
     'A matriz abaixo mostra a força do caminho mais forte conectando
     cada par de opções. A opção 1 é escolhida sobre a opção 2 se houver
-    um caminho mais forte de 1 para 2 do qualquer caminho de 2 para 1.';
+    pelo menos um caminho de 1 para 2 que é mais forte do que todos 
+    os caminhos de 2 para 1.';
 }
 
 sub no_pref {
