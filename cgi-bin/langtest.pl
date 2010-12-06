@@ -1,9 +1,10 @@
+use lib '.';
 use lib 'cgi-bin';
 use languages;
 
-my $cr = "\n";
+my $cr = "\r\n";
 
-languages::init($ARGV[0]);
+&languages::init($ARGV[0]);
 
 print $languages::log;
 

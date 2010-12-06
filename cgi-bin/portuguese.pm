@@ -410,7 +410,7 @@ sub ranking_instructions {
        'Ordene as opções. Você pode fazê-lo de três formas:
 	<ol>
 	    <li>arrastando as opções;
-	    <li>usando os botões da coluna &ldquo;Posição&rdquo;
+	    <li>usando os botões da coluna &ldquo;Posição&rdquo;;
 	    <li>selecionando opções e usando os botões acima.
 	</ol>';
 }

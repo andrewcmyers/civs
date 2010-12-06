@@ -1,5 +1,7 @@
 package english;
 
+our $VERSION = 1.10;
+
 sub lang { 'en-US'; }
 
 sub init {
