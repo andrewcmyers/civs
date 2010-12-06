@@ -315,7 +315,7 @@ sub instructions1 { # num_winners, end, name, email
             Não hesite em contactá-lo se precisar de ajuda.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($no_opinion, $prop, $combined, $civs_url) = @_;
+    my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;
     if (!$prop || !$combined) {
 	$ret = "Atribua um valor a cada uma das opções abaixo.
