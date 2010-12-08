@@ -32,6 +32,9 @@ th              { font-family: Verdana, Arial, helvetica, sans-serif;
     padding: 5px;
     border: solid 1px #bbc;
     max-width: 60ex;
+    -moz-box-shadow: 3px 3px 5px #aaa;
+    -webkit-box-shadow: 3px 3px 5px #aaa;
+    box-shadow: 3px 3px 5px #aaa;
 }
 
 table { background-color: #e8e8f0 }
