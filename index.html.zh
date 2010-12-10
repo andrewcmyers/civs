@@ -1,0 +1,143 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>CIVS在线投票服务（Condorcet Internet Voting Service）</title>
+<base href="@CIVSURL@/">
+<link rel="stylesheet" type="text/css" href="style.css" />
+<link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+</head>
+
+<body>
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>CIVS在线投票系统（Condorcet Internet Voting Service）</h1>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<table class="form">
+<tr>
+<td rowspan="2">
+<div class="home">
+<p>CIVS是一个免费的在线投票服务。该服务使在线投票更为简单。每个投票者
+对投票选项进行排序。投票结果将匿名的基于所有投票者的偏好生成投票结果
+的排序结果。CIVS现在有超过50000个用户参与者不同形式的投票、选举和决策:
+</p>
+
+<table id="civs_uses" class="form">
+<tr><td>
+<ul>
+<li>组织官员</li>
+<li>开会时间</li>
+<li>委员会成员</li>
+<li>项目名称，标志，域名</li>
+<li>获奖者</li>
+</ul>
+</td>
+<td>
+<ul>
+<li>聚餐地点</li>
+<li>观看的电影</li>
+<li>派对菜单</li>
+<li>读书俱乐部的选择</li>
+<li>最爱的音乐</li>
+</ul>
+</td></tr>
+</table>
+
+<p><strong>原理:</strong>
+每个人都可以创建一个新的CIVS投票，但是只有授权的用户可以参与。投票者和
+投票创建者都必须有电子邮箱和网络访问。在投票创建的时候，受邀的参与者都
+将收到一个参与投票的电子邮件邀请。创建者也可以创建实名投票，实名投票无
+需提供参与者的电子邮件信息。在这个情况下，一个IP地址只能投一票。
+</p>
+
+<p>
+<strong>投票结果计算: </strong>
+投票参与者可以对所有选项进行排序，还不是只选择一个选项。与其他选票系统
+相比，这种方法可以获取更多的用户偏好信息来取得更好的投票结果。排序选项
+（又称偏好）投票可以避免投票分散（vote split）和投票破坏者（spoilers）
+现象的发生。与其他的Condorcet系统不同，CIVS还支持权重的正比表示。
+</p><p>
+排序选项现在正被用于现实的投票中。例如，澳大利亚使用Single Transferable 
+Vote (STV, 又称IRV)。但是，Condorcet方法可以更好的发现投票者共同喜爱的选
+项。即便大部分人都更偏爱一个候选者，STV还是有可能选举出另一个候选者, 这里是
+<a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
+一个真实的例子</a>。
+</p>
+<p>
+更加安全的CIVS版本<a
+href="http://www.cs.cornell.edu/projects/civitas">Civitas</a>正在开发中。
+Civitas使用了更为复杂的密码协议来提供更强的匿名性，普遍可验证性和coercion 
+resistance。
+</p>
+</div>
+</td>
+<td valign="top">
+<div class="rlinks">
+<br><br>
+<table class="links">
+<tr><td valign="top">
+<ul>
+<li><a href="civs_create.html">创建投票</a></li>
+<li><a href="faq.html">常见问题</a></li>
+<li><a href="https://lists.cs.cornell.edu/mailman/listinfo/civs-users-l">
+    加入CIVS邮件列表</a></li>
+<li><a href="sec_priv.html">安全和隐私</a></li>
+<li><a href="rp.html">Condorcet实现</a></li>
+<li><a href="proportional.html">正比表示</a></li>
+<li><a href="changelog.html">CIVS软件</a></li>
+<li><a href="acks.html">致谢</a></li>
+</ul>
+</div>
+</td></tr>
+</table>
+</td></tr>
+<tr><td>
+<table class="links">
+<tr><td>
+尝试一个实名投票:
+<ul>
+<li>
+<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_43351ceed0adc47f&akey=dccf21c83061ac60">推荐一本好书</a>
+
+<li>
+<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_540fe382529392ba&akey=6cd77c06c48d8cd6">最喜欢的编程语言</a>
+</li>
+</li>
+<li>
+<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_117c0083572e13f2&akey=7a922729e2fd85e7">最佳电影</a></li>
+<li><a href="@SUGGESTION_BOX@">CIVS建议箱</a></li>
+<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&akey=55426123feb7e40b">欧洲旅行</a></li>
+<li><a href="public_elections.html">(更多)</a>
+</ul>
+</td></tr>
+</table>
+</td>
+</tr>
+</table>
+<hr>
+<div style="margin: 2ex">
+<p>
+The Condorcet Internet Voting Service has been run since 2003 by <a
+href="http://www.cs.cornell.edu/andru">Andrew Myers</a> at
+the <a href="http://www.cs.cornell.edu/">Cornell Computer Science
+Department</a>. Feedback and help are welcome.
+</p>
+<p><small>
+<b>Fine print:</b>
+This voting service is available for free, public use. No guarantees
+can be made that this service will be correct or available and
+under no conditions will the authors or service providers, including
+Cornell University, be liable for any damages whatsoever
+resulting from loss of use, data or profits, whether in an action of contract,
+negligence or other tortious action, arising out of or in connection with
+the use of this service.
+</small></p>
+</div>
+</body>
+</html>
