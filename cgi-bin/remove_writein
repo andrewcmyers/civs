@@ -26,12 +26,15 @@ my $to_remove = param('writein') + 0;
 
 if ($to_remove < 0 || $to_remove >= $num_choices) {
     print p("Sorry, not a valid candidate index.");
+    exit 0;
 }
 if (!IsWriteinName($choices[$to_remove])) {
     print p("Sorry, only write-in candidates can be removed");
+    exit 0;
 }
 if ($num_votes != 0) {
     print p("Sorry, votes have been cast already.");
+    exit 0;
 }
 
 for (my $i = $to_remove; $i < $num_choices-1; $i++) {
