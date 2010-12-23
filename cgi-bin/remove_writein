@@ -1,0 +1,56 @@
+#!@PERL@
+
+use strict;
+use warnings;
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use DB_File;
+
+my $thisurl = $civs_bin_path."/remove_writein@PERLEXT@";
+
+HTML_Header($tx->CIVS_Poll_Control);
+use election 1.02;
+
+CIVS_Header($tx->Poll_control);
+
+my $control_key = param('key');    
+my $authorization_key = param('akey');
+
+CheckElectionID;
+CheckControlKey($control_key);
+
+my $to_remove = param('writein') + 0;
+
+if ($to_remove < 0 || $to_remove >= $num_choices) {
+    print p("Sorry, not a valid candidate index.");
+}
+if (!IsWriteinName($choices[$to_remove])) {
+    print p("Sorry, only write-in candidates can be removed");
+}
+if ($num_votes != 0) {
+    print p("Sorry, votes have been cast already.");
+}
+
+for (my $i = $to_remove; $i < $num_choices-1; $i++) {
+    $choices[$i] = $choices[$i+1];
+}
+$num_choices--;
+my $new_choices = '';
+print h2('New candidate list');
+print '<ul>';
+for (my $i = 0; $i < $num_choices; $i++) {
+    print li($choices[$i]);
+    if ($i != 0) { $new_choices .= "\n"; }
+    $new_choices .= $choices[$i];
+}
+print '</ul>';
+$edata{'choices'} = $choices = $new_choices;
+
+my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
+$url .= "&akey=$authorization_key" if defined($authorization_key);
+print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>');
+
+exit 1;
