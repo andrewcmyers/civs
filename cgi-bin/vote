@@ -320,11 +320,11 @@ sub CanonicalizeName {
 sub ProjectName {
 # ProjectName(name) is a version of the name that is canonical but
 # also has all characters turned to lowercase and no whitespace.
-# This is useful for detecting similar names.
-    my $name = $_[0];
+# Two names are considered similar if their projections through this
+# function are identical.
+    my $name = lc $_[0];
     $name =~ s/[^\w]//g; # remove all nonalphanumeric characters
     $name =~ s/writein$//;
-    $name = lc $name;
     return $name;
 }
 

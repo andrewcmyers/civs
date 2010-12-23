@@ -86,6 +86,7 @@ form, input, textarea { font-size: 100%; }
 input[type=file] { background-color: #f8f0d0 }
 input, textarea, button { font-family: Verdana, helvetica, Arial, sans-serif;
            background-color: #fff8e0 }
+button.small_button { font-size: 80% }
 input:hover, button:hover, textarea:hover {background-color: #eeb}
 /* input[type=text]:active, textarea:active, input[type=file]:active
     {background-color: #ffa}  -- a little too 'active' */

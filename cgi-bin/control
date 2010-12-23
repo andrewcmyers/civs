@@ -94,7 +94,7 @@ if (!IsStarted) {
     }
 
 } else {    
-	&CloseDatabase;
+    &CloseDatabase;
     my $results_link;
     if ($restrict_results eq 'yes') {
 	$results_link = "";
@@ -182,11 +182,29 @@ if ($ballot_reporting eq 'yes') {
 print $cr, h2($tx->Description), p($description);
 print $cr, h2($tx->Candidates);
 print p($tx->the_top_n_will_win($num_winners));
-print "<ul>";
+print "<ul id='candidates'>$cr";
+
+print "<form method=\"POST\"
+	    action=\"$civs_bin_path/remove_writein@PERLEXT@\"
+	    enctype=\"multipart/form-data\"
+	    name=\"RemoveWritein\">", $cr;
+print hidden('id', $election_id);
+print hidden('key', $control_key);
+print hidden('akey', $authorization_key)
+	if defined($authorization_key);
+print hidden('writein', 'num');
+print hidden('writein_name', 'foo');
 for (my $j = 0; $j < $num_choices; $j++) {
-    print li($choices[$j]);
+    if (IsWriteinName($choices[$j]) && $num_votes < 1) {
+	print li($choices[$j], $cr,
+	    button(-name => "remove",
+	           -onclick => "document.RemoveWritein.elements.writein.value = '$j'; document.RemoveWritein.submit()",
+		   -class => 'small_button')), $cr;
+    } else {
+	print li($choices[$j], $cr);
+    }
 }
-print "</ul>";
+print "</ul></form>$cr";
 
 if ($external_ballots ne 'yes') {
     print $cr, h2($tx->Add_voters);

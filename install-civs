@@ -29,8 +29,8 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
     for f in civs_create.html* index.html* public_elections.html* \
 	proportional.html* sec_priv.html* acks.html* changelog.html* \
-	rp.html* faq.html* style.css results.js vote.js check123b.png \
-	sample-ballot.png vertstrip.png hebrew.css
+	rp.html* faq.html* style.css results.js vote.js \
+	check123b.png sample-ballot.png vertstrip.png hebrew.css
     do
 	case "$f" in
 	  *.html.*) dest="${HTMLDIR}/${f}${UTF8_SUFFIX}";;
@@ -57,7 +57,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
     done
 
     for f in add_voters beatpath.pm beatpath2.pm civs_common.pm close control \
-        create_election download_ballots upload_ballots results languages.pm \
+        create_election download_ballots remove_writein upload_ballots results languages.pm \
 	election.pm mail.pm start_election vote rp.pm runoff.pm admctrl.pm \
 	english.pm hungarian.pm italian.pm french.pm german.pm hebrew.pm \
 	portuguese.pm chinese.pm

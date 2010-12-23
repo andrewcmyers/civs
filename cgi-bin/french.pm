@@ -65,7 +65,7 @@ sub here_is_the_control_URL {
      envoyé au responsable de la consultation par courrier électronique.";
 }
 sub the_poll_is_in_progress {
-    'La consultation est en cours. Cliquer sur le bouton " Clôturer la consultation" pour la clôturer : ';
+    'La consultation est en cours. Cliquer sur le bouton "Clôturer la consultation" pour la clôturer : ';
 }
 
 sub CIVS_Poll_Creation {
