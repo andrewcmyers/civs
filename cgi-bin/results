@@ -1053,7 +1053,8 @@ sub PrintProportionalResults {
     $num_unbeaten = $#cwinner + 1;
     if ($num_unbeaten == 1) {
 	print RESULTS h2("Winning set of choices".$cr);
-	print RESULTS p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> winner of this poll was the following set of choices:");
+	print RESULTS p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> winner of this poll was the set of choices (" .
+	    flatten(renumber($committee[$cwinner[0]])) . '):');
     } else {
 	print RESULTS h2("Winning sets of choices$cr");
 	print RESULTS p("There were $num_unbeaten unbeaten sets:$cr");

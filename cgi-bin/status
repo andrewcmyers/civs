@@ -107,7 +107,9 @@ foreach my $entry (@entries) {
      my $num_auth, my $num_votes, my $started, my $stopped, my $auth_key,
      my $last_update)
 	= @{$entry};
-    $total_users += $num_votes;
+    if ($public ne 'Test') {
+	$total_users += $num_votes;
+    }
     push @rows, Tr(td([a({-href=>'$civs_bin_path/results@PERLEXT@?id='.$file},
 	small($title)),
 	"$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",

@@ -589,6 +589,7 @@ sub SendKeys {
 	    if (!($description =~ m/^(\s)*$/)) {
 		$html .= '<div style="border-style: solid; border-width: 1px; background-color: #f0f0f0; color: black">'.$cr.$cr;
 		$html .= '<b>' . $tx->Description_of_poll . '</b>' . $cr;
+		$description =~ s/([\r\n])\.([\r\n])/\1 .\2/g; # escape lone dot
 		$html .= $description.'</div>'.$cr;
 	    }
 	    $html .= $cr.$cr.'<p>'. $tx->if_you_would_like_to_vote_please_visit;

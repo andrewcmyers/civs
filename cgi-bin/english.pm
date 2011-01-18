@@ -159,7 +159,7 @@ sub ending_poll_cannot_be_undone {
     'Ending a poll is an operation that cannot be undone. Continue?';
 }
 sub writeins_have_been_disabled {
-    'Write-in candidates have been disabled';
+    'Write-in choices have been disabled';
 }
 sub disallow_further_writeins {
     'Disallow further write-ins';
@@ -226,9 +226,9 @@ sub Add_voters {
 sub the_top_n_will_win { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
-	$wintxt = "candidate";
+	$wintxt = "choice";
     } else {
-	$wintxt = "$_[1] candidates";
+	$wintxt = "$_[1] choice";
     }
     return "The top $wintxt will win.";
 }
@@ -299,7 +299,7 @@ sub page_header_CIVS_Vote { # election_title
 
 sub ballot_reporting_is_enabled {
     'Ballot reporting is enabled for this poll.
-     Your ballot (the rankings you assign to candidates)
+     Your ballot (the rankings you assign to choices)
      will be made public when the poll ends.';
 }
 sub instructions1 { # num_winners, end, name, email
@@ -621,10 +621,10 @@ sub Writeins_currently_allowed {
 }
 
 sub Writeins_allowed {
-    'Write-in candidates are allowed.';
+    'Write-in choices are allowed.';
 }
 sub Writeins_not_allowed {
-    'Write-in candidates are not allowed.';
+    'Write-in choices are not allowed.';
 }
 sub Detailed_ballot_reporting_enabled {
     'Detailed ballot reporting is enabled.';
@@ -679,7 +679,7 @@ sub Actual_votes_cast { #num_votes
     "Actual votes cast: $_[1]";
 }
 sub Number_of_winning_candidates {
-    'Number of winning candidates: ';
+    'Number of winning choices: ';
 }
 sub Poll_actually_has { #winmsg
     my $winmsg = '1 winner';
