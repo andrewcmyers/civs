@@ -158,7 +158,9 @@ sub rank_candidates_internal {
     my @pairs = ();
     my @strongest_defeat = ();
     my @affirmed, my @committed, my @current, my @saved_current;
+    main::NewProgressPhase(0.1);
     for (my $j = 0; $j < $num_choices; $j++) {
+	main::ReportProgress(($j + 1) / ($num_choices + 1));
 	for (my $k = 0; $k < $num_choices; $k++) {
 	    $committed[$j][$k] = 0;
 	    $affirmed[$j][$k] = 0;
@@ -168,6 +170,8 @@ sub rank_candidates_internal {
 	}
     }
     @pairs = sort order_pairs @pairs;
+
+    main::NewProgressPhase(1.0);
 
     my $last_pair = 'none'; # reference to the last pair considered
     my $bunch_index = 0; # Which of several identical-strength pairs this is.
@@ -244,7 +248,7 @@ sub rank_candidates_internal {
 	} else {
 	    if (!$denied_any) {
 		$denied_report .=
-		    p($tx->Some_voter_preferences_were_ignored).'<ul>';
+		    p($tx->Some_voter_preferences_were_already_rankedd).'<ul>';
 		$denied_any = 1;
 	    }
 	    $denied_report .=
@@ -260,20 +264,19 @@ sub rank_candidates_internal {
 
     # Now construct the ordering on candidates
     my $num_ranked = 0;
-    my @ignore, my @ordering, my @rp_choice_index;
+    my @already_ranked, my @ordering, my @rp_choice_index;
     while ($num_ranked < $num_choices) {
 	my @winner = ();
 	for (my $i = 0; $i < $num_choices; $i++) {
-	    if (!$ignore[$i]) {
+	    if (!$already_ranked[$i]) {
 		my $won = 1;
 		for (my $j = 0; $j < $num_choices; $j++) {
-		    if (!$ignore[$j]) {
+		    if (!$already_ranked[$j]) {
 			if ($affirmed[$j][$i] > $affirmed[$i][$j]) {
 			    $won = 0;
 			    last;
 			}
-			if ($use_strongest_defeat &&
-			    $affirmed[$j][$i] && $affirmed[$i][$j]) {
+			if ($use_strongest_defeat) {
 			    $b = $strongest_defeat[$i];
 			    $a = $strongest_defeat[$j];
 			    if (&order_pairs > 0) {
@@ -289,7 +292,7 @@ sub rank_candidates_internal {
 	push @result, [@winner];
 	foreach my $j (@winner) {
 	    $rp_choice_index[$num_ranked++] = $j;
-	    $ignore[$j] = 1;
+	    $already_ranked[$j] = 1;
 	}
     }
 
