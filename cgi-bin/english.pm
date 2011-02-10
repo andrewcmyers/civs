@@ -802,6 +802,9 @@ sub Some_voter_preferences_were_ignored {
     'Some voter preferences were ignored because they
      conflict with other, stronger preferences:'
 }
+sub Some_voter_preferences_were_already_ranked {
+    'Some voter preferences were already ranked.'
+}
 
 sub preference_description {
     "The $_[1]&ndash;$_[2] preference for $_[3] over $_[4]."

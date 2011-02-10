@@ -248,7 +248,7 @@ sub rank_candidates_internal {
 	} else {
 	    if (!$denied_any) {
 		$denied_report .=
-		    p($tx->Some_voter_preferences_were_already_rankedd).'<ul>';
+		    p($tx->Some_voter_preferences_were_already_ranked).'<ul>';
 		$denied_any = 1;
 	    }
 	    $denied_report .=
