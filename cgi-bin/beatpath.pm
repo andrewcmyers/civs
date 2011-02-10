@@ -56,6 +56,7 @@ sub min {
 sub transitive_closure {
   my $cycle = 0;
   for (my $k = 0; $k < $n; $k++) {
+    main::ReportProgress($k/($n+1.0));
     for (my $i = 0; $i < $n; $i++) {
       for (my $j = 0; $j < $n; $j++) {
 # consider going from i to j via k

@@ -108,6 +108,8 @@ sub CacheTime {
 
 my $cache_time = &CacheTime;
 my $progress_level = 0.0;
+my $progress_base = 0.0;
+my $progress_max = 1.0;
 
 if (param('fresh') || param('Compare') ||             # Can force a refresh
 
@@ -162,14 +164,25 @@ sub StartProgressMeter {
 }
 
 # Report progress back to STDOUT. Called from within election computations.
-# Expects a number between 0 and 1.
+# Expects a number between 0 and 1. Should be greater than the last call
+# to ReportProgress within the same phase.
 sub ReportProgress {
-    (my $x) = @_;
-    if ($x - $progress_level > 0.01) {
-	print '<script>report_progress(', $x, ');</script>', $cr;
-	$progress_level = $x;
+    (my $v) = @_; # virtual progress (within current phase)
+    my $real = ($progress_max - $progress_base) * $v + $progress_base;
+    if ($real - $progress_level > 0.01 || $real < $progress_level) {
+	print '<script>report_progress(', $real, ');</script>', $cr;
+	$progress_level = $real;
     }
     STDOUT->flush();
+}
+
+# NewProgressPhase(max) starts a new phase. "max" is the fraction of
+# remaining time to allot to this phase.
+sub NewProgressPhase {
+    my $new_max = $_[0];
+    $progress_base = $progress_level;
+    $progress_level = 0.0;
+    $progress_max = (1.0 - $progress_base) * $new_max + $progress_base;
 }
 
 # Call when results are finished, to remove progress meter.
@@ -421,6 +434,8 @@ sub BallotReport {
 
 sub ComputeNonproportionalResults {
     # Compute condorcet winner and set up $matrix and $beatpath
+    # print pre('computing nonproportional results');
+    if ($proportional eq 'yes') { NewProgressPhase(0.1); }
     $condorcet_winner = -1;
     for (my $j = 0; $j < $num_choices; $j++) {
 	if ($condorcet_winner < 0) { $condorcet_winner = $j; }
@@ -611,6 +626,8 @@ our %visited;
 
 sub PrintProportionalResults {
 # first sort the choices by the ordinary election algorithm
+    # print pre('printing proportional results');
+    NewProgressPhase(0.2);
     @voter_keys = split /[\r\n]+/, $recorded_voters;
     for (my $j = 0; $j < $num_choices; $j++) {
 	$choice_index[$j] = $j;
@@ -775,7 +792,10 @@ sub PrintProportionalResults {
     }
     #print RESULTS "num choices = $num_choices, num winners = $num_winners\n";
 
+
     if ($num_choices > $num_winners) {
+	NewProgressPhase(0.9);
+	# print pre('computing committee choices');
 # need to throw out some choices...
 # XXX This all needs to be reimplemented more carefully
 
@@ -890,6 +910,7 @@ sub PrintProportionalResults {
 # requires: $beaten[0..$num_beaten-1] is a set of 
 #   committees known to be beaten (or matched) transitively by c
 	    $iters++;
+	    ReportProgress(sqrt(sqrt($iters/500.0)));
 	    if ($iters > 500) { return; } # truncate runaway search
 	    $depth++;
 
@@ -975,7 +996,8 @@ sub PrintProportionalResults {
 	    $beaten[$cci] = $save_beaten;
 	    # dprint "<b>Done with ".flatten(renumber($comm))."</b>\n";
 	    $depth--;
-	}
+	} # end of visit definition
+
 	visit($curr_comm);
 
 	# $num_unbeaten = $#committee + 1;
@@ -1001,6 +1023,7 @@ sub PrintProportionalResults {
     if ($prop_details) {
 	print RESULTS '<pre>'.b('Adding obvious contenders:').$cr;
     }
+    # print pre('Constructing the choices');
     for (my $j = 0; $j <= $num_winners; $j++) {
 	@a = ();
 	for (my $k = 0; $k <= $num_winners; $k++) {
@@ -1024,7 +1047,10 @@ sub PrintProportionalResults {
     while ($divisor < $num_votes) { $divisor *= 10; }
 
 
+    #print pre('Building the matrix');
+    NewProgressPhase(0.5);
     for (my $j = 0; $j <= $#committee; $j++) {
+	ReportProgress(($j+0.0)/$#committee);
 	for (my $k = 0; $k < $j; $k++) {
 	    my $curr_comm = $committee[$j];
 	    my $new_comm = $committee[$k];
@@ -1043,6 +1069,7 @@ sub PrintProportionalResults {
     if ($prop_details) {
 	print RESULTS '</pre>';
     }
+    NewProgressPhase(1.0);
     $beatpath::n = $#committee + 1;
     &beatpath::rank_candidates();
     @cresult = @beatpath::result;
