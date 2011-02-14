@@ -281,6 +281,7 @@ sub rank_candidates_internal {
 			    $a = $strongest_defeat[$j];
 			    if (&order_pairs > 0) {
 				$won = 0;
+				# print pre("$i has a stronger defeat than $j: $b vs. $a");
 				last;
 			    }
 			}
