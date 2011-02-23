@@ -99,12 +99,12 @@ results are now cached, so the system has become much more scalable.
 <p>
 However, CIVS hasn't been stress-tested at 10,000 voters or higher. The server
 is implemented in Perl, so it can easily handle 4,000 voters per hour. If your
-voters don't show up faster than that, it should be fine no matter how many
-voters there are.  If you want to have a private poll, the system will only
-allow you to add 1,000 voters at a time, but in principle you can have as many
-voters as you want. Note that using the experimental proportional method for
-your poll can dramatically increase the load on the CIVS server, so avoid that
-mode for large polls.
+voters don't show up faster than that, and they usually don't, it should be
+fine no matter how many voters there are.  If you want to have a private poll,
+the system will only allow you to add 1,000 voters at a time, but in principle
+you can have as many voters as you want. Note that using the experimental
+proportional method for your poll can dramatically increase the load on the
+CIVS server, so avoid that mode for large polls.
 <li>
 
 <b>How reliable is CIVS?</b>
@@ -117,7 +117,7 @@ since 2006. Each poll is stored in a separate database, so if there
 <li>
 <b>A complete ranking of choices could embarrass some candidates.
 Can I avoid that?</b>
-Ordinarily, full poll results are available to every voter. However,
+By default, full poll results are available to every voter. However,
 you can designate a smaller set of people who are allowed to see the poll
 results. They can then report the winners to the voters, using some mechanism
 outside of CIVS.
@@ -148,6 +148,17 @@ above all times.  Assuming your voters followed instructions,
 the poll result will have all places ranked above all times, and their
 relative rankings will match what you would have gotten if you had run two separate polls.
 
+<li><b>What happens if I enter a voter's email address wrong?</b>
+
+They will not receive their voter key and will be unable to vote.  If you do
+determine that you entered a bad email address for a voter, you can add them
+again under the correct email address.  If the bad address wasn't a good
+address for the wrong person, a bounce message may come back to the CIVS
+supervisor, and you may receive an email identifying such bounces. However,
+don't count on learning all the bad addresses this way: bounce notifications
+may not be sent, parsing email bounces is fragile, and the supervisor may not
+have time to help you.  The best policy is to verify all emails that you give
+to CIVS before adding voters.
 </ol>
 
 <a name="running">
