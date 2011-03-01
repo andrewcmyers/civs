@@ -127,8 +127,6 @@ if ($voting_enabled) {
 }
 print '</tr>',$cr;
 
-print hidden('voter', $voter); # nearly obsolete
-print hidden('voter_key', $old_voter_key); # nearly obsolete
 print hidden('key', $voter_key);
 print hidden('id', $election_id);
 print hidden('akey', $authorization_key);
@@ -214,10 +212,20 @@ print hr();
 
 print '<p id="sort_button"> Sort the choices by their current rank:
        <input type="submit" value="Sort" name="SortChoices"></p>';
+print '</form>', $cr;
 
 if ($writeins eq 'yes') {
-    print '<p>'.$tx->write_in_a_choice.' <input type="text" size="60" name="writein">';
-    print '<input type="submit" value="', $tx->Add_writein, '" name="AddWritein"></p>';
+    print $cr, '<form method="POST"
+        action="'.$thisurl.'"
+        enctype="multipart/form-data"
+        name="AddWritein">', $cr;
+    print '<p>', $tx->write_in_a_choice, $cr,
+	' <input type="text" size="60" name="writein">';
+    print '<input type="submit" value="', $tx->Add_writein, '" name="AddWritein"></p>', $cr;
+    print hidden('key', $voter_key);
+    print hidden('id', $election_id);
+    print hidden('akey', $authorization_key);
+    print '</form>', $cr;
 }
 # if ($voting_enabled) {
 #   print '<p>Read rankings from a saved voting page: ';
@@ -228,7 +236,6 @@ if ($writeins eq 'yes') {
 #    your rankings and then just save this web page in your browser)</p>';
 # print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
 
-print "</form>", $cr;
 
 if ($voting_enabled && $public eq 'yes') {
     print p($tx->if_you_have_already_voted("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id"));
