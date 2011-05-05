@@ -228,7 +228,7 @@ sub the_top_n_will_win { # num_winners
     if ($_[1] == 1) {
 	$wintxt = "choice";
     } else {
-	$wintxt = "$_[1] choice";
+	$wintxt = "$_[1] choices";
     }
     return "The top $wintxt will win.";
 }
