@@ -2,9 +2,12 @@ package spanish;
 
 our $VERSION = 1.0;
 
-sub lang {
-    "es-ES"
-}
+use lib '@CGIBINDIR@';
+
+use english;
+our @ISA = ('english'); # go to AmE module for missing methods
+
+sub lang { 'es-ES' }
 
 sub init { 
     my $self = {}; 
@@ -51,11 +54,11 @@ sub Sorry_the_server_is_busy {
 # civs_create
 
 sub mail_has_been_sent { 
-    "El correo ha sido enviado a la dirección que nos ha facilitado (<tt> $_[1] </ tt >)."; 
+    "El correo ha sido enviado a la dirección que nos ha facilitado (<tt> $_[1] </tt >)."; 
 } 
 
 sub click_on_the_URL_to_start { 
-    "Haga clic en la dirección en que el correo electrónico para iniciar la encuesta: <strong> $_[1] </ strong>."
+    "Haga clic en la dirección en que el correo electrónico para iniciar la encuesta: <strong> $_[1] </strong>."
 } 
 
 sub here_is_the_control_URL { 
@@ -131,7 +134,7 @@ Para obtener más información acerca de la votación de Condorcet Internet Serv
 # Inicio 
 
 sub poll_started { 
-    'La encuesta <strong>'.$_[ un ].'</ strong> se ha iniciado. '; 
+    'La encuesta <strong>'.$_[ un ].'</strong> se ha iniciado. '; 
 } 
 
 # De control 
@@ -171,7 +174,7 @@ sub this_is_a_test_poll {
 } 
 
 sub poll_supervisor {# nombre, correo electrónico 
-    "Encuesta supervisor: $_[1] (<tt> $_[2] </ tt>)"; 
+    "Encuesta supervisor: $_[1] (<tt> $_[2] </tt>)"; 
 } 
 sub no_authorized_yet {# esperando 
     "0 ($_[1] los votantes será autorizado cuando la encuesta se inicia)"; 
@@ -233,7 +236,7 @@ sub add_voter_instructions {
     "Introduzca las direcciones de correo electrónico de los electores, uno por línea. Estos 
     pueden ser nuevos votantes o electores existentes que no han votado todavía. 
     En un sondeo privado, lo que la dirección de correo electrónico de un ya 
-    existentes <strong> votante no </ strong> permiten que el voto de los votantes en dos ocasiones. 
+    existentes <strong> votante no </strong> permiten que el voto de los votantes en dos ocasiones. 
     Sólo se volverá a enviar al votante una invitación a votar. 
     En una encuesta pública, sólo un gesto simbólico, se hace para evitar 
     voto múltiple. " 
@@ -250,8 +253,8 @@ sub File_to_upload_ballots_from {
 sub This_is_a_public_poll_plus_link { 
     my $url = $_[1]; 
     "Esta es una encuesta pública. Compartir el siguiente enlace 
-con los votantes para que puedan votar: </ p> 
-<a <tt> href=\"$url\"> $url </ a> </ tt> "; 
+    con los votantes para que puedan votar: </p> 
+    <tt><a href=\"$url\">$url</a></tt>"; 
 } 
 sub The_poll_has_ended { 
     'La encuesta ha terminado. '; 
@@ -294,21 +297,21 @@ sub page_header_CIVS_Vote {# election_title
 } 
 
 sub ballot_reporting_is_enabled { 
-    "Presentación de informes de boleta está habilitado para esta encuesta. 
+    'Presentación de informes de boleta está habilitado para esta encuesta. 
      Su boleta (la clasificación que se asigna a las opciones) 
-     se harán públicos cuando se termina la encuesta."; 
+     se harán públicos cuando se termina la encuesta. '
 } 
 sub instructions1 {# num_winners, al final, el nombre, correo electrónico 
     my $wintxt; 
     if ($_[1] == 1) { 
-$Wintxt = "opción preferida único"; 
-    Else {} 
-$Wintxt ="$_[ 1] opciones preferidas "; 
+	$wintxt = "opción preferida único"; 
+    } else { 
+	$wintxt ="$_[ 1] opciones preferidas "; 
     } 
-    "Sólo el wintxt $ganará las elecciones. <p> 
-La encuesta termina <b> $_[2] </ b>. 
-El supervisor de la encuesta es de $_[3] (<tt> $_[4] </ tt>). 
-Póngase en contacto con el supervisor de la encuesta si necesita ayuda. " 
+    "Sólo el $wintxt $ganará las elecciones. <p> 
+    La encuesta termina <b>$_[2]</b>. 
+    El supervisor de la encuesta es de $_[3] (<tt>$_[4]</tt>). 
+    Póngase en contacto con el supervisor de la encuesta si necesita ayuda. " 
 } 
 sub instructions2 {# no_opinion, combined_ratings proporcional, civs_url 
     my ($self, $no_opinion, $apoyo, $combinado, $civs_url) = @ _; 
@@ -324,16 +327,16 @@ sub instructions2 {# no_opinion, combined_ratings proporcional, civs_url
 	rango más bajo posible. ". $cr; 
     }
     if ($no_opinion) { 
-	$ret .= "<b>Nota:</b>&ldquo;No opinion&rdquo;
+	$ret .= "<b>Nota:</b> &ldquo;No opinion&rdquo;
 	<i>no</i> es el mismo que el rango más bajo posible, sino que significa 
 	que no optar por clasificar esta elección con respecto a la 
-	otras opciones </ p>."; 
+	otras opciones.</p>"; 
     } 
     if ($prop) { 
 	$Ret .= "<p> Esta encuesta se decidió usar un Condorcet experimental basado
 	en método diseñado para proporcionar la representación proporcional. Se
 	supone por el algoritmo de votación que desea que el rango de la mayoría de
-	su <i> preferido ganar </ i> opción de ser lo más alta posible, y si dos
+	su <i> preferido ganar </i> opción de ser lo más alta posible, y si dos
 	conjuntos de ganar elecciones ponerse de acuerdo sobre la elección que
 	prefiere la mayoría, entonces decidirá entre ellos con la opción preferida
 	segundo, y etc."; 
@@ -342,7 +345,7 @@ sub instructions2 {# no_opinion, combined_ratings proporcional, civs_url
 	algoritmo de Condorcet, diseñado para proporcionar proporcional 
 	representación. 
 	Por favor, cada una de las opciones después de un 
-	<b> peso </ b> que expresa la cantidad que desea que 
+	<b> peso </b> que expresa la cantidad que desea que 
 	elección para formar parte del conjunto ganador de las elecciones. 
 	Se supone por el algoritmo de votación que desea 
 	la suma de pesos de ganar elecciones a ser tan grande 
@@ -353,7 +356,7 @@ sub instructions2 {# no_opinion, combined_ratings proporcional, civs_url
 	Doesn\'t ayudará a hacer su peso más grande 
 	que otros votantes \'pesos, debido a que su peso sólo se comparan 
 	uno contra el otro. '. 
-	"<a Href=\"$civs_url/proportional.html\"> [Ver más información] </ a> </ p>."; 
+	"<a Href=\"$civs_url/proportional.html\"> [Ver más información] </a> </p>."; 
     } 
     return $ret; 
 }
@@ -368,7 +371,7 @@ sub Weight {
 } 
 
 sub address_will_be_visible { 
-    '<strong> Su dirección de correo electrónico será visible </ strong> junto con su boleta. '; 
+    '<strong> Su dirección de correo electrónico será visible </strong> junto con su boleta. '; 
 } 
 
 sub ballot_will_be_anonymous { 
@@ -377,7 +380,7 @@ sub ballot_will_be_anonymous {
 } 
 
 sub submit_ranking { 
-    'Enviar ranking'; 
+    'Enviar'; 
 } 
 
 sub only_writeins_are_permitted { 
@@ -424,8 +427,8 @@ sub if_you_have_already_voted {#url
     "Si ya han votado, puede ver <a href=\"$_[1]\"> la actual encuesta de resultados </a>." 
 } 
 sub thank_you_for_voting {# título, el recibo 
-    "Gracias. Su voto por <strong> $_[1] </ strong> ha sido 
-se logra lanzar. Su recibo de votante es <code> $_[2] </ code>. " 
+    "Gracias. Su voto por <strong> $_[1] </strong> ha sido 
+se logra lanzar. Su recibo de votante es <code> $_[2] </code>. " 
 } 
 sub name_of_writein_is_empty { 
     "Nombre de la escritura en la elección está vacío"; 
@@ -460,7 +463,7 @@ sub Authorization_failure {
 } 
 
 sub already_ended {# título 
-    "Esta encuesta (<strong> $_[1] </ strong>) ya se ha terminado."; 
+    "Esta encuesta (<strong> $_[1] </strong>) ya se ha terminado."; 
 } 
 sub Poll_not_yet_ended { 
     "Encuesta no terminado todavía"; 
@@ -529,9 +532,9 @@ sub CIVS_poll_supervisor {#nombre
     "\"$_[1], el supervisor de la encuesta CIVS \"" 
 } 
 sub voter_mail_intro {# título, nombre, EMAIL_ADDR 
-"Una votación por Internet elección de Condorcet servicio llamado <b> $_[1] </ b> se ha creado. 
+"Una votación por Internet elección de Condorcet servicio llamado <b> $_[1] </b> se ha creado. 
 Usted ha sido designado como elector por el supervisor de elecciones, 
-$_[2] (<a href=\"mailto:$_[3] ($_[2])\"> $_[3] </ a >).</ p> "; 
+$_[2] (<a href=\"mailto:$_[3] ($_[2])\"> $_[3] </a >).</p> "; 
 } 
 sub Description_of_poll { 
     'Descripción de la encuesta:'; 
@@ -549,7 +552,7 @@ destruyó el registro de su dirección de correo electrónico y no divulgará ni
 acerca de si o cómo han votado."; 
 } 
 sub This_is_a_nonanonymous_poll { 
-"El supervisor de la encuesta ha decidido hacer de esto una <strong> encuesta no anónimo </ strong>. Si 
+"El supervisor de la encuesta ha decidido hacer de esto una <strong> encuesta no anónimo </strong>. Si 
 de votar, cómo votó será visible al público junto con su 
 dirección de correo electrónico. Si usted no vota, el supervisor de la encuesta también podrán 
 para determinar esto."; 
@@ -560,7 +563,7 @@ sub poll_has_been_announced_to_end {# election_end
 } 
 
 sub To_view_the_results_at_the_end { 
-    "Para ver los resultados de la encuesta una vez que ha terminado, visite: </ p> $_[1]"; 
+    "Para ver los resultados de la encuesta una vez que ha terminado, visite: </p> $_[1]"; 
 } 
 
 sub For_more_information { 
