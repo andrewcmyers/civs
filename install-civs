@@ -60,7 +60,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
         create_election download_ballots remove_writein upload_ballots results languages.pm \
 	election.pm mail.pm start_election vote rp.pm runoff.pm admctrl.pm \
 	english.pm hungarian.pm italian.pm french.pm german.pm hebrew.pm \
-	portuguese.pm chinese.pm
+	portuguese.pm chinese.pm spanish.pm
     do
 	target="${CGIBINDIR}/${f}"
 	if test -n "$PERLEXT"
