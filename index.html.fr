@@ -107,8 +107,7 @@ contrainte. </p>
       </div>
       </td>
       <td valign="top">
-      <div class="rlinks"><br>
-      <br>
+      <div class="bubble">
       <table class="links">
         <tbody>
           <tr>
@@ -135,6 +134,7 @@ contrainte. </p>
     </tr>
     <tr>
       <td>
+      <div class="bubble">
       <table class="links">
         <tbody>
           <tr>
@@ -161,6 +161,7 @@ en Europe</a></li>
           </tr>
         </tbody>
       </table>
+      </div>
       </td>
     </tr>
   </tbody>

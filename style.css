@@ -12,7 +12,7 @@ div.normal_text { max-width: 80ex; margin: 0 auto }
 div.home { text-align: justify; padding: 1em;
            width: 700px}
 
-div.rlinks { width: 100%; }
+div.bubble { width: 100%; }
 
 a            { text-decoration: none }
 a:link       { color: #339966; background-color: transparent; font-weight: bold }
@@ -131,7 +131,7 @@ table.matrix, table.rankings { border: solid 1px #aac }
 table.rankings tr td { text-indent: -3ex; padding-left: 3ex }
 table.rankings tr td ol { text-indent: 0ex }
 
-.links {
+div.bubble {
     background-image: url('vertstrip.png');
     border-color: #bbc;
     border-style: solid;
@@ -140,7 +140,13 @@ table.rankings tr td ol { text-indent: 0ex }
     -moz-box-shadow: 3px 3px 5px #aaa;
     -webkit-box-shadow: 3px 3px 5px #aaa;
     box-shadow: 3px 3px 5px #aaa;
-    margin: 5px
+}
+table.links {
+    margin: 5px;
+    background-color: transparent
+}
+ul.news {
+    font-size: 90%
 }
 
 table.links tr td {

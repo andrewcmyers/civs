@@ -83,8 +83,7 @@ A Civitas sokkal fejlettebb kriptográfiai protokolokat használ a névtelenség
 </div>
 </td>
 <td valign="top">
-<div class="rlinks">
-<br><br>
+<div class="bubble">
 <table class="links">
 <tr><td valign="top">
 <ul>
@@ -103,6 +102,7 @@ CIVS levelezőlista (angol)</a></li>
 </table>
 </td></tr>
 <tr><td>
+<div class="bubble">
 <table class="links">
 <tr><td>
 Próbálj ki néhány nyílt szavazást! (Angolul)
@@ -121,6 +121,7 @@ Próbálj ki néhány nyílt szavazást! (Angolul)
 </ul>
 </td></tr>
 </table>
+</div>
 </td>
 </tr>
 </table>
