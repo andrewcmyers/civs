@@ -14,8 +14,8 @@ use languages;
 # rank A over B, and L is the number of ballots that rank B
 # over A.
 #
-# Direct beats are totally ordered, with losing votes only considered
-# if winning votes are tied:
+# Direct beats are totally ordered, with losing votes mattering
+# only if winning votes are tied:
 #   (W1,L1) > (W2,L2) iff (W1 > W2) or (W1 = W2 and L1 < L2)
 #
 # Therefore:
