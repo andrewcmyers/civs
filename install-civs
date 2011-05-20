@@ -56,6 +56,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	< "$f" > "$dest"
     done
 
+    echo -n "copying:"
     for f in add_voters beatpath.pm beatpath2.pm civs_common.pm close control \
         create_election download_ballots remove_writein upload_ballots results languages.pm \
 	election.pm mail.pm start_election vote rp.pm runoff.pm admctrl.pm \
@@ -70,7 +71,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	      *) target="${target}${PERLEXT}";;
 	    esac
 	fi
-	#echo "copying cgi-bin/$f"
+	echo -n " cgi-bin/$f"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
 	     -e 's|@THISHOST@|'$THISHOST'|' \
@@ -89,6 +90,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	 	 < "cgi-bin/$f" > "$target"
 	chmod a+x "$target"
     done
+    echo; echo
 
     if [ ! -s $CIVSDATADIR/private_host_id ]; then
 	echo "*********************************************";
