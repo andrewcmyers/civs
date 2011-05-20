@@ -134,7 +134,7 @@ Para obtener más información acerca de la votación de Condorcet Internet Serv
 # Inicio 
 
 sub poll_started { 
-    'La encuesta <strong>'.$_[ un ].'</strong> se ha iniciado. '; 
+    'La encuesta <strong>'.$_[1].'</strong> se ha iniciado. '; 
 }
 
 # De control 
@@ -225,11 +225,11 @@ sub Add_voters {
 sub the_top_n_will_win {# num_winners 
     my $wintxt; 
     if ($_[1] == 1) { 
-$Wintxt = "elección"; 
-    Else {} 
-$Wintxt = "$_[1] opciones"; 
+	$wintxt = "elección"; 
+    } else { 
+	$wintxt = "$_[1] opciones"; 
     } 
-    return "El wintxt superior $va a ganar."; 
+    return "El $wintxt superior va a ganar."; 
 }
 
 sub add_voter_instructions { 
