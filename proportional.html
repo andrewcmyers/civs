@@ -287,6 +287,89 @@ counterexamples have been found, there is no proof that the current
 implementation always finds the winning committee according to the
 above criteria.
 </p>
+
+<h2>A longer example</h2>
+
+<p>The following test case for proportional Condorcet methods was suggested by
+David Gamble. In this case, two of four candidates are to be elected
+(<i>k</i>=2). The combined-weights criterion is used, and 100 voters assign
+weights to the candidates as follows:
+</p>
+
+<table>
+<tr><td>Group W (34 voters): A=99, D=70, B=40, C=10
+<tr><td>Group X (23 voters): B=99, D=98, C=97, A=0
+<tr><td>Group Y (22 voters): C=99, D=98, B=97, A=0
+<tr><td>Group Z (21 voters): D=99, C=98, B=97, A=0
+</pre>
+
+The 
+W=34:
+	f=1	f=2
+AB      99	139
+AC	99	109
+AD	99	169
+BC	40	50
+BD	70	110
+CD	70	80
+
+X=23:
+	f=1	f=2
+AB      99	99
+AC	99	109
+AD	99	169
+BC	99	196
+BD	99	197
+CD	99	195
+
+Y=22:
+	f=1	f=2
+AB	97	97
+AC	99	99
+AD	98	98
+BC	99	196
+BD	98	195
+CD	99	197
+
+Z=21:
+	f=1	f=2
+AB	97	97
+AC	98	98
+AD	99	99
+BC	98	195
+BD	99	196
+CD	99	197
+
+
+Preference matrix:
+	AB	AC	AD	BC	BD	CD
+AB	-	0	0	W	W	W
+AC      XYZ	-	Y	W	W	W
+AD	WXYZ	WXZ	-	W	W	W
+BC	XYZ	XYZ	XYZ	-	Y	0
+BD	XYZ	XYZ	XYZ	WXZ	-	XW
+CD	XYZ	XYZ	XYZ     WYZ	Y	-
+
+The Condorcet winner is BD.
+
+There are a lot of subtle things going on here. The
+real contenders are BC, BD, and CD because of the
+consensus among voters X,Y, and Z. With 34 voters,
+group W isn't big enough to guarantee its first
+choice is picked. However, it does get its second and
+third choices because of the influence it exerts on
+the choice among BC, BD and CD.
+
+The most interesting contest is BD vs. CD:
+  X and W get to look at both candidates in making the choice, because
+  34+23 > 50%. If W were less than 28, they would be both indifferent
+  and the winner would be CD instead. On the other side, Z and Y only
+  get to look at 1 candidate, so Z is indifferent and only Y opposes.
+  oppose. Since X+W > Y, BD wins.
+
+-- Andrew
+
+
 </div>
 
 </body></html>
