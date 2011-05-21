@@ -58,7 +58,7 @@ span.explain {font-size: 75%; color: #404040 }
 
 p, ul, li {background-color: transparent}
 
-h1, h2, h3   { font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
+h1, h2, h3, span.paragraph { font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
 
 table.banner a:link { color: white }
 table.banner a:visited { color: white }
@@ -200,3 +200,4 @@ table.ballots th {background-color: transparent; color: black; font-size: 70%}
 li b, strong { color: #842 }
 
 #move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }
+
