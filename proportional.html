@@ -48,11 +48,12 @@ For example, suppose that 60% of the voters want candidates <i>a</i>, <i>b</i>,
 <i>c</i>, <i>d</i>, and <i>e</i>, in that order, and 40% want <i>x</i>,
 <i>y</i>, <i>z</i>, <i>u</i>, and <i>v</i>.  Ordinary Condorcet voting will
 rank <i>a</i>, <i>b</i>, <i>c</i>, <i>d</i>, and <i>e</i> higher than the other
-five candidates, because a majority likes them better. For some tasks, this is
-the right way to run the election. However, if the election is selecting a
-five-person committee to represent the whole population, choosing the committee
-<i>abcde</i> would mean 40% have no representation at all. The proportional
-representation algorithm used by CIVS would elect the committee <i>abcxy</i>,
+five candidates, because a majority likes them better. For some tasks, electing
+these five (<i>a</i>, <i>b</i>, <i>c</i>, <i>d</i>, <i>e</i>) is
+the right way to run the election. However, if the goal is to find a
+five-person committee that fairly represents the whole population, the committee
+<i>abcde</i> gives 40% no representation at all. By contrast, the proportional
+representation algorithm used by CIVS elects the committee <i>abcxy</i>,
 achieving perfect proportional representation.
 
 <p>In general, if there are <i>n</i> blocs of voters who always choose candidates from
@@ -63,21 +64,27 @@ number of candidates may be rounded up or down.
 
 <h2>Determining the winning committee</h2>
 
+The goal of the election method is to select a committee,
+which is a set of <i>k</i> choices, in a proportional way.
 The rule used is a generalization of ordinary Condorcet
-voting. First, the voters' preferences, expressed on
-individual candidates, are lifted to obtain their preferences on whole <i>committees</i> of
-<i>k</i> members. Then using the preferences on whole committees, a
+voting. Voters express their preferences on
+individual candidates in the usual way as a ranking.
+These rankings are then <i>lifted</i> to obtain the
+preferences of the voters with respect to whole committees.
+Finally, using the preferences on whole committees, a
 standard Condorcet method is used to pick the &ldquo;best&rdquo;
 committee in the Condorcet sense.
-The key to making this method proportional
-is to lift the preferences in a way that doesn't simply let a
-majority dictate the composition of the entire committee.
+The key to making this method proportional is how the
+the preferences on individual candidates are lifted to preferences
+on committees. This lifting does not in general allow a
+majority to dictate the composition of the entire committee:
+minorities can influence who is elected.
 
 <h3><i>f</i>-Preferences</h3>
 <p>
 Lifting preferences from candidates to committees
 is achieved through what we call <i>f</i>-preferences.  A given voter
-has an <i>f</i>-preference for possible committee <i>A</i> over another,
+has an <i>f</i>-preference for one possible committee <i>A</i> over another,
 <i>B</i>, if the voter prefers <i>A</i> to <i>B</i> when considering
 in each committee <b>only</b> the <i>f</i> candidates most preferred
 by that voter.  For example, a voter has a 1-preference for committee <i>A</i> over
@@ -89,12 +96,28 @@ Determining whether a given voter prefers one pair (or generally, set) of
 candidates over another set is a separate issue that is discussed below.
 </p>
 
+<p>
+<span class="paragraph">Example.</span>
+Suppose that a voter's ballot contains the ranking <i>a</i> &gt;
+<i>b</i> &gt; <i>c</i> &gt; <i>d</i> &gt; <i>e</i>. That is, candidate <i>a</i>
+is most preferred and candidate <i>e</i> is least preferred among those listed. 
+Such a voter has a 1-preference for committee <i>abc</i> over committee <i>bcd</i>,
+because looking at the favorite candidate in each committee, we see <i>a &gt; b</i>.
+In fact, the voter also has a 2-preference and a 3-preference, because <i>b &gt; c</i>
+and also <i>c &gt; d</i>.
+Considering instead the committees <i>abe</i> and <i>ade</i>,
+the voter has no 1-preference (the most-preferred candidate in each committee is <i>a</i>),
+but does have a 2-preference and a 3-preference for <i>abe</i> over <i>ade</i> because
+<i>b&gt;d</i>, and therefore <i>ab</i> is preferred over <i>ad</i> (the 2-preference) and also
+<i>abe</i> is preferred over <i>ade</i> (the 3-preference).
+</p>
+
 
 <h3>Comparing committees</h3>
 <p>
 A Condorcet method requires that we be able to be able to compare two choices
 pairwise, and derive the strength of the voters' preference between
-each pair. In this case the choices are committees. To compare two committees,
+each pair. In this case the choices are committees rather than candidates. To compare two committees,
 we compute the aggregate <i>f</i>-preference of the voters for all values of
 <i>f</i> between
 1 and <i>k</i>. The aggregate <i>f</i>-preference for committee <i>A</i> over committee <i>B</i> is the
@@ -103,31 +126,43 @@ number of voters with an <i>f</i>-preference for <i>A</i> over <i>B</i>.
 
 <h3>Proportional preferences</h3>
 <p>
-Suppose that the number of voters
-with an <i>f</i>-preference for committee A
-over committee <i>B</i> is <i>v</i> and that there are
-<i>n</i> voters overall. Then the <i>f</i>-preference for
-committee <i>A</i> over committee <i>B</i> is <b>proportionally valid</b> if
-<i>v</i>(<i>k</i>+1)/<i>n</i> &#8805; <i>f</i>.
-Invalid preferences are usually ignored in deciding the winner; to decide whether
-committee <i>A</i> is preferred over committee B, we find the
+Suppose that the aggregate <i>f</i>-preference for committee A over committee
+<i>B</i> is <i>v</i> and that there are <i>n</i> voters overall. Then the
+aggregate <i>f</i>-preference for committee <i>A</i> over committee <i>B</i> is
+<b>proportionally valid</b> if <i>v</i>(<i>k</i>+1)/<i>n</i> &#8805; <i>f</i>.
+To decide whether committee <i>A</i> is preferred over committee B, we find the
 largest <i>f</i> such that <i>v</i> voters have a proportionally valid
-<i>f</i>-preference for one of the two committees. This <i>v</i>
-becomes the strength of the preference in the ordinary
-Condorcet sense; we call this the <b>proportional preference</b>.
-If there is no proportional preference
-for one committee over the other, then the full <i>k</i>-preference
-(the <b>nonproportional preference</b>) is used to break the tie. This rule allows majorities to break ties
-in cases where the minority is indifferent.</p>
-<p>For <i>k</i>=1, this voting
-method is simply an ordinary Condorcet method. For
-larger <i>k</i>, it yields proportional results. In the
-initial example, the 60% have no proportionally valid preference for
+aggregate <i>f</i>-preference for one of the two committees. This <i>v</i> we
+call the <b>proportional preference</b> for committee <i>A</i> over <i>B</i>.
+The aggregate <i>k</i>-preference for committee <i>A</i> over <i>B</i> we call
+the <b>nonproportional preference</b>, whether it is proportionally valid or
+not.
+</p>
+<p>
+To find the committee that wins the election, we use some Condorcet method.
+The choice of Condorcet method is orthogonal to this proportional method,
+because it can be used with any Condorcet method applied at the committee
+level. Condorcet methods require that choices can be compared pairwise
+according to some total order; in this case, the committees are compared
+pairwise according to the proportional preferences between them. For
+<i>k</i>=1, this voting method is simply an ordinary Condorcet method. For
+larger <i>k</i>, it yields proportional results.  
+</p>
+
+<p>As an additional refinement, it is helpful to break ties between the
+proportional preferences of two committees by using the nonproportional
+preferences. This rule allows majorities to have their choice when the minority
+is indifferent.</p>
+
+<p>
+<span class="paragraph">Example.</span>
+In the initial example, voters in the 60% bloc have no proportionally valid preference for
 <i>abcde</i> over <i>abcxy</i> because their maximum
 proportionally valid preference is a 3-preference (because 3/6 &le; 60% &lt; 4/6).
 The 40%, on the other hand, have a valid 2-preference for <i>abcxy</i>
-(because 2/6 &le; 40% &lt; 3/6). Therefore, <i>abcxy</i>
-is the winning committee, achieving proportionality.</p>
+(because 2/6 &le; 40% &lt; 3/6).
+Therefore, <i>abcxy</i> beats <i>abcde</i> by an aggregate 2-preference of 40%&ndash;0%,
+and in fact, <i>abcxy</i> is the winning committee. Thus proportionality is achieved.</p>
 
 <h3>Fairness</h3>
 
@@ -220,6 +255,7 @@ best candidates. In the examples above, <i>x</i> would be preferred to
 most-preferred candidate in each committee is equally preferred, then the
 second-most preferred candidate is used, and so on up to candidate <i>f</i>.
 </p>
+
 
 <h2>Algorithm</h2>
 
