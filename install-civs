@@ -57,7 +57,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
     done
 
     echo -n "copying:"
-    for f in add_voters beatpath.pm beatpath2.pm civs_common.pm close control \
+    for f in add_voters beatpath.pm beatpath2.pm civs_common.pm voting.pm close control \
         create_election download_ballots remove_writein upload_ballots results languages.pm \
 	election.pm mail.pm start_election vote rp.pm runoff.pm admctrl.pm \
 	english.pm hungarian.pm italian.pm french.pm german.pm hebrew.pm \

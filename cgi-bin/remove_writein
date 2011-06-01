@@ -22,18 +22,27 @@ my $authorization_key = param('akey');
 CheckElectionID;
 CheckControlKey($control_key);
 
+sub GoBackLink {
+	my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
+	$url .= "&akey=$authorization_key" if defined($authorization_key);
+	print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>');
+}
+
 my $to_remove = param('writein') + 0;
 
 if ($to_remove < 0 || $to_remove >= $num_choices) {
     print p("Sorry, not a valid candidate index.");
+    GoBackLink;
     exit 0;
 }
 if (!IsWriteinName($choices[$to_remove])) {
     print p("Sorry, only write-in candidates can be removed");
+    GoBackLink;
     exit 0;
 }
 if ($num_votes != 0) {
     print p("Sorry, votes have been cast already.");
+    GoBackLink;
     exit 0;
 }
 
@@ -41,6 +50,7 @@ for (my $i = $to_remove; $i < $num_choices-1; $i++) {
     $choices[$i] = $choices[$i+1];
 }
 $num_choices--;
+
 my $new_choices = '';
 print h2('New candidate list');
 print '<ul>';
@@ -50,10 +60,9 @@ for (my $i = 0; $i < $num_choices; $i++) {
     $new_choices .= $choices[$i];
 }
 print '</ul>';
+
 $edata{'choices'} = $choices = $new_choices;
 
-my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
-$url .= "&akey=$authorization_key" if defined($authorization_key);
-print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>');
+GoBackLink;
 
 exit 1;
