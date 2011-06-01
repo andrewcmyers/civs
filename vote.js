@@ -423,22 +423,25 @@ function tx(t) {
 
 function setup() {
     var button = document.getElementById("sort_button");
-    button.parentNode.removeChild(button);
-    var jsnohelp = document.getElementById("jsnohelp");
-    var jshelp = document.getElementById("jshelp");
-    var curtext = jshelp.childNodes[0];
-    jsnohelp.style.display = 'none';
-    jshelp.style.display = 'block';
+    if (button != null) {
+	button.parentNode.removeChild(button);
+
+	var jsnohelp = document.getElementById("jsnohelp");
+	var jshelp = document.getElementById("jshelp");
+	var curtext = jshelp.childNodes[0];
+	jsnohelp.style.display = 'none';
+	jshelp.style.display = 'block';
+
+	document.CastVote.move_top.disabled = false;
+	document.CastVote.move_up.disabled = false;
+	document.CastVote.make_tie.disabled = false;
+	document.CastVote.move_down.disabled = false;
+	document.CastVote.move_bottom.disabled = false;
+    }
 
     preftable = document.getElementById("preftable");
     prefsection = preftable.rows[0].parentNode;
     num_choices = preftable.rows.length - 1;
-
-    document.CastVote.move_top.disabled = false;
-    document.CastVote.move_up.disabled = false;
-    document.CastVote.make_tie.disabled = false;
-    document.CastVote.move_down.disabled = false;
-    document.CastVote.move_bottom.disabled = false;
 
     cur_top = 1;
     cur_bot = num_choices;

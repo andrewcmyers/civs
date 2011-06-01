@@ -201,3 +201,4 @@ li b, strong { color: #842 }
 
 #move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }
 
+textarea.paste { font-family: Courier, fixed; font-size: 80% }
