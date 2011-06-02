@@ -102,8 +102,8 @@ sub creation_email_public_link { # url
 "; 
 }
 sub for_more_information_about_CIVS { # url
-"For more information about the Condorcet Internet Voting Service, see
-  $_[1] "; 
+    "Para obtener más información acerca de la votación de Condorcet Internet Service, consulte
+  $_[1]"
 }
 
 sub Sending_result_key { # addr
@@ -113,13 +113,13 @@ sub Results_of_CIVS_poll { # title
     "Results of CIVS poll: $_[1]";
 }
 sub Results_key_email_body { # title, url, civs_home
-"A new CIVS poll has been created named \"$_[1]\".
-You have been designated as a user who is permitted to see the
-result of this poll.
+"Una nueva encuesta CIVS ha sido creado con nombre \"$_[1]\".
+Usted ha sido designado como un usuario que está autorizado a ver las
+resultado de esta encuesta.
 
-Save this email. If you lose it you will not have access to
-the results. Once the poll has been closed, results will be
-available at the following URL:
+Guardar este mensaje. Si lo pierde no tendrá acceso a
+los resultados. Una vez que la encuesta ha sido cerrada, los resultados serán
+disponible en la siguiente URL:
 
   $_[2] 
 
