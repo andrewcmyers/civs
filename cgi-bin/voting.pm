@@ -116,7 +116,7 @@ sub GenerateVoteForm {
 
     if ($writeins eq 'yes') {
 	print $cr, '<form method="POST"
-	    action="'.$main::thisurl.'"
+	    action="http://@THISHOST@'.$civs_bin_path.'/vote@PERLEXT@"
 	    enctype="multipart/form-data"
 	    name="AddWritein">', $cr;
 	print '<p>', $tx->write_in_a_choice, $cr,

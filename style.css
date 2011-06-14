@@ -27,7 +27,7 @@ th              { font-family: Verdana, Arial, helvetica, sans-serif;
 #settings {
     font-size: 90%;
     background-color: #e8e8f0;
-    float: right; display: float;
+    float: right;
     margin-left: 15px;
     padding: 5px;
     border: solid 1px #bbc;
@@ -50,7 +50,7 @@ div.emphasized {
   border-color: #cca
 }
 
-input#vote {font-size:130%; font-weight: medium; background-color: #dd8;
+input#vote {font-size:130%; font-weight: normal; background-color: #dd8;
             margin: 0 auto}
 input#vote:hover {background-color: #ff6}
 

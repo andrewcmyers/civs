@@ -425,10 +425,15 @@ function setup() {
     var button = document.getElementById("sort_button");
     if (button != null) {
 	button.parentNode.removeChild(button);
+    }
 
-	var jsnohelp = document.getElementById("jsnohelp");
-	var jshelp = document.getElementById("jshelp");
+
+    var jsnohelp = document.getElementById("jsnohelp");
+    var jshelp = document.getElementById("jshelp");
+
+    if (jshelp != null) {
 	var curtext = jshelp.childNodes[0];
+
 	jsnohelp.style.display = 'none';
 	jshelp.style.display = 'block';
 
