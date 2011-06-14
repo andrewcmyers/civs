@@ -49,10 +49,10 @@ sub GenerateVoteForm {
 	my $k = $choice_index[$i];
 	my $selected = $rank[$k];
 	my $choice = $choices[$k];
-	if ($js_ui) {
+	if ($js_ui && $voting_enabled) {
 	    print "<tr onClick=\"select_row(this, event.shiftKey||event.ctrlKey);\"><td class=choice>$choice</td>", $cr;
 	} else {
-	    print "<tr><td class=choice>$choice</td>", $cr;
+	    print "<tr><td class=inactive_choice>$choice</td>", $cr;
 	}
 	if ($voting_enabled) {
 	    if ($proportional ne 'yes' || !$use_combined_ratings) {
