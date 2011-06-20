@@ -94,6 +94,29 @@ function sort_rows() {
     selected = newselected;
     //alert("permutation: " + diag);
     read_rows();
+    set_row_borders();
+}
+
+function set_row_borders() {
+    for (var i = 0; i < num_choices; i++) {
+	set_row_style(i);
+    }
+}
+
+function set_row_style(i) {
+    if (selected[i]) {
+	if (i < num_choices-1 && rank[i] == rank[i+1]) {
+	    rows[i].setAttribute('class', 'selected tied');
+	} else {
+	    rows[i].setAttribute('class', 'selected');
+	}
+    } else {
+	if (i < num_choices-1 && rank[i] == rank[i+1]) {
+	    rows[i].setAttribute('class', 'tied');
+	} else {
+	    rows[i].setAttribute('class', null);
+	}
+    }
 }
 
 // select the indicated row object. add is true
@@ -102,14 +125,12 @@ function sort_rows() {
 function select_row(row, add) {
     for (var i = 0; i < num_choices; i++) {
         if (!add) {
-                rows[i].className = null;
-                selected[i] = false;
+	    selected[i] = false;
         }
         if (rows[i] == row) {
-                selected[i] = !selected[i];
-                if (selected[i]) row.className = "selected";
-                else row.className = null;
-        }
+	    selected[i] = !selected[i];
+	}
+	set_row_style(i);
     }
 }
 
@@ -194,6 +215,7 @@ function do_make_tie() {
         if (selected[i])
             if (set_rank(i, min_rank)) i--;
     }
+    set_row_borders();
 }
 
 // move the selected choices up
@@ -249,6 +271,7 @@ function do_move_up () {
             // we have an empty rank to push the old rank down to
             if (set_rank(i, rank[i]+1)) i--;
     }
+    set_row_borders();
 }
 
 // move the selected choices down
@@ -310,6 +333,7 @@ function do_move_down () {
             if (set_rank(i, rank[i] - 1)) i--;
         }
     }
+    set_row_borders();
 }
 
 // move the suggested choices to the top ranking (1)
@@ -334,6 +358,7 @@ function do_move_top() {
         }
     }
     cur_top++;
+    set_row_borders();
 }
 
 // move the suggested choices to the bottom possible ranking
@@ -358,6 +383,7 @@ function do_move_bottom() {
         }
     }
     cur_bot--;
+    set_row_borders();
 }
 
 // Correct the ranks of the rows after a row is dragged.
@@ -403,6 +429,7 @@ function drag_update(e, u) {
         i++;
     }
     read_rows();
+    set_row_borders();
 }
 
 // initialize the UI
@@ -457,3 +484,4 @@ function setup() {
 			'axis':'y', 
 			'update':drag_update});
 }
+//vim: sw=4 ts=8

@@ -9,7 +9,7 @@ body { margin: 0;
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
-div.home { text-align: justify; padding: 1em;
+div.home { text-align: justify; padding: 1em 2em 0 0;
            width: 700px}
 
 div.bubble { width: 100%; }
@@ -117,8 +117,11 @@ td.lose { font-family: Courier New, courier, fixed; text-align:center;
 	  background-color: #ffd0d0; font-weight: bold }
 td.count { text-align: center; font-family: Courier New, courier, fixed }
 th.choice { text-align: left }
+table#preftable tr { border-style: none none solid none; border-bottom-color: black; border-bottom-width: 1px; border-collapse: collapse }
+table#preftable tr.tied { border-color: #ccc; border-bottom-style: dashed; border-bottom-width: 1px; border-collapse: collapse }
+table#preftable td { border-style: none; } 
+table#preftable td.choice { cursor: move; padding-right: 1em }
 table#preftable tr:hover td.choice { background-color: #f0f0ff }
-table#preftable td.choice { cursor: move }
 table#preftable tr.selected:hover td.choice { background-color: #ffffe0 }
 table#preftable { border-style: outset;
 		  margin: 0 auto;
