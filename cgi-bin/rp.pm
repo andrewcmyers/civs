@@ -49,6 +49,14 @@ sub order_pairs {
     }
 }
 
+sub unparse {
+    if (!defined($_[0])) {
+	return 'undefined';
+    }
+    my @p = @{$_[0]};
+    return "($p[0] vs. $p[1] : $p[2]-$p[3])";
+}
+
 # Compute the transitive closure using the Floyd-Warshall
 # algorithm. This is only used for debugging purposes.
 sub Floyd_Warshall {
@@ -156,7 +164,6 @@ sub rank_candidates_internal {
     my $denied_report = '';
 
     my @pairs = ();
-    my @strongest_defeat = ();
     my @affirmed, my @committed, my @current, my @saved_current;
     main::NewProgressPhase(0.1);
     for (my $j = 0; $j < $num_choices; $j++) {
@@ -240,11 +247,6 @@ sub rank_candidates_internal {
 		    $affirmed[$j][$k] = $current[$j][$k];
 		}
 	    }
-	    # print pre("  affirmed.");
-	    if ($strongest_defeat[$loser] eq '') {
-		$strongest_defeat[$loser] = $pair_ref;
-		# print pre("Strongest defeat for $lname is $winvotes-$losevotes");
-	    }
 	} else {
 	    if (!$denied_any) {
 		$denied_report .=
@@ -262,34 +264,81 @@ sub rank_candidates_internal {
 
     if ($denied_any) { $denied_report .= '</ul>'; }
 
-    # Now construct the ordering on candidates
+    # Now find the candidates in the current group
     my $num_ranked = 0;
     my @already_ranked, my @ordering, my @rp_choice_index;
     while ($num_ranked < $num_choices) {
-	my @winner = ();
+    # print '<hr>';
+	my @group;
+	my @in_group;
 	for (my $i = 0; $i < $num_choices; $i++) {
 	    if (!$already_ranked[$i]) {
-		my $won = 1;
+		my $still_in = 1;
 		for (my $j = 0; $j < $num_choices; $j++) {
 		    if (!$already_ranked[$j]) {
 			if ($affirmed[$j][$i] > $affirmed[$i][$j]) {
-			    $won = 0;
+			    $still_in = 0;
 			    last;
 			}
-			if ($use_strongest_defeat) {
-			    $b = $strongest_defeat[$i];
-			    $a = $strongest_defeat[$j];
+		    }
+		}
+		if ($still_in) {
+		    push @group, $i;
+		    $in_group[$i] = 1;
+		    # print pre("candidate group includes $i");
+		}
+	    }
+	}
+# find the strongest defeats of candidates within the group by
+# candidates not yet ranked.
+	my @strongest_defeat;
+	foreach my $i (@group) {
+	    # print pre("Computing SD of $i");
+	    foreach (my $j = 0; $j < $num_choices; $j++) {
+		if (!$already_ranked[$j]) {
+		    if ($matrix[$j][$i] > $matrix[$i][$j]) {
+# this is a defeat that should be considered. Is it the strongest?
+			$b = [($j, $i, $matrix[$j][$i], $matrix[$i][$j])];
+			if (!defined($strongest_defeat[$i])) {
+			    $strongest_defeat[$i] = $b;
+			    my $ub =&unparse($b); 
+			    #print pre("  Initializing SD of $i to $ub");
+			} else {
+			    $a = $strongest_defeat[$i];
 			    if (&order_pairs > 0) {
-				$won = 0;
-				# print pre("$i has a stronger defeat than $j: $b vs. $a");
-				last;
+				$strongest_defeat[$i] = $b;
+				my $ub =&unparse($b); 
+				my $ua =&unparse($a); 
+				# print pre("  Updating SD of $i to $ub (was $ua)");
 			    }
 			}
 		    }
 		}
-		if ($won) { push @winner, $i; }
 	    }
 	}
+	my @winner;
+	foreach my $i (@group) {
+	    my $won = 1;
+	    foreach my $j (@group) {
+		$a = $strongest_defeat[$i];
+		$b = $strongest_defeat[$j];
+		my $ub =&unparse($b); 
+		my $ua =&unparse($a); 
+		if ($j == $i || !defined($a)) { next; }
+		# print pre("comparing defeats of $i and $j : $ua and $ub");
+		if (!defined($b) || &order_pairs < 0) {
+		    # print pre("  Removing $i from group, stronger defeat than $j ($ua vs $ub)");
+		    $won = 0;
+		    last;
+		}
+	    }
+	    if ($won) {
+		my $ud = &unparse($strongest_defeat[$i]);
+		# print pre("$i is in the next winner set, SD was $ud");
+		push @winner, $i;
+	    }
+	}
+
 	push @result, [@winner];
 	foreach my $j (@winner) {
 	    $rp_choice_index[$num_ranked++] = $j;
