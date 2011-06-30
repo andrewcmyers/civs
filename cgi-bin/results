@@ -111,6 +111,10 @@ my $progress_level = 0.0;
 my $progress_base = 0.0;
 my $progress_max = 1.0;
 
+if ($restrict_results eq 'yes') {
+    &election::ReportResultReaders;
+}
+
 if (param('fresh') || param('Compare') ||             # Can force a refresh
 
      ($last_vote_time > $cache_time &&                # Recompute if out of date
@@ -202,9 +206,6 @@ sub ComputeResults {
 	    enctype="multipart/form-data"
 	    name="changeSettings">';
     print RESULTS span($tx->Supervisor($name, &Email($email_addr))), br;
-    if ($restrict_results eq 'yes') {
-	&election::ReportResultReaders;
-    }
     print RESULTS span($tx->Announced_end_of_poll($election_end)), br, $cr;
     if (IsStopped) {
 	my $close_time = $vdata_copy{'close_time'};
