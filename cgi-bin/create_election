@@ -26,12 +26,20 @@ if ($filter_tags ne 'no') {
 	table => $ok,
 	td => {colspan => [], rowspan => []},
 	tr => $ok,
+        s => $ok,
+        strike => $ok,
+        kbd => $ok,
 	dl => $ok, dt => $ok, dd => $ok,
+        br => $ok,
+        var => $ok,
+        dfn => $ok,
+        cite => $ok,
+        samp => $ok,
 	span => $ok, div => $ok,
 	small => $ok,
 	p => {align => ['left' | 'right' | 'center']},
-	ol => {type => ['a', '1', 'A']},
-	ul => $ok});
+	ol => {type => ['a', '1', 'A']}
+    });
 }
 
 # Filter tags from a string, if $filter_tags is not 'no'
