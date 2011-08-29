@@ -109,7 +109,10 @@ if ($ballot_reporting eq 'yes') {
     }
 }
 
-&voting::GenerateVoteForm($voter_key, $authorization_key, [@choice_index], [@rank], $js_ui, 0);
+&voting::GenerateVoteForm($voter_key, $authorization_key, [@choice_index], [@rank], $js_ui, 0,
+    ($ballot_reporting eq 'yes' && 
+     $reveal_voters eq 'yes' &&
+     $public));
 
 # if ($voting_enabled) {
 #   print '<p>Read rankings from a saved voting page: ';
@@ -168,6 +171,9 @@ sub ProcessVote {
     }
     if ($reveal_voters eq 'yes') {
 	$vdata{"voter key of $ballot_key"} = $voter_key;
+	if ($public eq 'yes') {
+	    $edata{"email_addr $voter_key"} = param('email_address');
+	}
     }
 
 	# Now, update matrix.

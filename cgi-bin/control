@@ -111,7 +111,10 @@ if (!IsStarted) {
 	    if (!defined($shuffle) || $shuffle ne 'no') {
 		fisher_yates_shuffle(\@choice_index);
 	    }
-	    &voting::GenerateVoteForm('', $authorization_key, [@choice_index], [@rank], $js_ui, 1);
+	    &voting::GenerateVoteForm('', $authorization_key, [@choice_index], [@rank], $js_ui, 1,
+		($ballot_reporting eq 'yes' && 
+		$reveal_voters eq 'yes' &&
+		$public));
 	    print '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>', $cr;
 	    print '<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>', $cr;
 	    print '<script src="@CIVSURL@/vote.js"></script>', $cr;

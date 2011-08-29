@@ -210,7 +210,7 @@
   <p><input type=file name="addresses_file"></p>
 
   <h3>More options <small>(mouse over each check box for more information)</small></h3>
-  <p><input type="checkbox" name="public" value="yes"
+  <input type="checkbox" name="public" value="yes"
       title="In a public poll, you receive a single URL that any voter can
 	use to cast their vote. Thus, it can be posted on email distribution
 	lists. However, there is only a token attempt to prevent multiple voting, based on voters' IP addresses. If you want to make sure that voters only
@@ -222,20 +222,20 @@
   Make this a test poll: read all votes from a file.
 <br>
   <input type="checkbox" name="restrict_results" value="yes"
-         onClick="rrparent.appendChild(rrcontrol);"
+         onClick="rrparent.appendChild(rrcontrol); "
 	 title="By default, poll results can be seen by anyone who votes in
 	 the poll. If you want to restrict the results to some other set
 	 of people, use this option.">
     Make results available only to a limited set of users.
-<br>
-    <span>
-    <p class="suboption" id="rrcontrol">
+    <div class="parent_wrapper">
+    <div class="suboption" id="rrcontrol">
     Enter email addresses of users permitted to view poll results:
     (All voters can see these email addresses)
-    </br>
+    <br>
     <textarea rows="2" name="result_addrs" cols="50"></textarea>
-    </p>
-    </span>
+    </div>
+    </div>
+<br>
   <input type="checkbox" name="ballot_reporting" value="yes"
          onClick="rvparent.appendChild(rvcontrol);"
 	 title="This option allows any poll participant to
@@ -243,26 +243,30 @@
 	 information about the voters who cast these ballots is
 	 not revealed unless the next option is checked.">
   Enable detailed ballot reporting. 
-  <span>
-  <p class="suboption" id="reveal_voters">
+  <div class="parent_wrapper">
+  <div class="suboption" id="reveal_voters">
   <input type="checkbox" name="reveal_voters" value="yes">
-  In detailed ballot report, also reveal the identity of the voter
-  with each ballot.<br>Voters are <i class="warning">not</i> anonymous if this is checked, nor does the server discard voter email addresses as it normally does.
-  Voters are warned about this lack of anonymity.
-  </p>
-  </span><br>
+  In detailed ballot report, also reveal the identity of the voter with each
+  ballot.<br>Voters are <i class="warning">not</i> anonymous if this is
+  checked, nor does the server discard voter email addresses as it normally
+  does.  Voters are warned about this lack of anonymity.
+  </div>
+  </div>
+<br>
   <input type="checkbox" name="writeins" value="yes"
    title="You can allow write-ins with this option. However, write-ins are
  at a big disadvantage if they occur after some votes have been cast. Therefore,
  when this option is selected, there is a write-in phase in which ballots cannot
  be cast. The supervisor must explicitly enable voting.">
-  Allow voters to write in new choices.<br>
+  Allow voters to write in new choices.
+<br>
   <input type="checkbox" name="shuffle" value="no"
   title="By default, poll choices are presented in a randomly shuffled
   order on each ballot. For some polls, such as choosing a meeting time,
   it will be more convenient for voters to see the choices in exactly
   the order given above.">
-  Present choices on voting page in exactly the given order.<br>
+  Present choices on voting page in exactly the given order.
+<br>
   <input type="checkbox" name="no_opinion" value="yes"
     title="The &#x22;no opinion&#x22; option can have unexpected effects. Be sure to read in the FAQ about how to use it, and inform voters accordingly.">
   Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
@@ -278,16 +282,16 @@
 	 agree.  Click the 'more information' link to
 	 find out more about how this mode works.">
   Enforce proportional representation [<a href="proportional.html">more information</a>]</br>
-  <span>
-   <p class="suboption" id="prcontrol">
+  <div class="parent_wrapper">
+   <div class="suboption" id="prcontrol">
     For proportional representation, voters are assumed to be maximizing:<br>
     <input type="radio" name="rating_interpretation"
        value="best_choice"
        checked> rank of their favorite choice<br>
     <input type="radio" name="rating_interpretation"
        value="combined_ratings"> combined weights of selected choices<br>
-   </p>
-  </span>
+   </div>
+  </div>
 
 <div class="emphasized">
   Make sure your e-mail address is correct, because poll information will

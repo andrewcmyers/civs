@@ -138,6 +138,11 @@ sub poll_started {
     'The poll <strong>'.$_[1].'</strong> has been started.';
 }
 
+sub sending_keys_now {
+    'Sending voter invitations now. Do not navigate away from this page
+     until all invitations are sent.'
+}
+
 # control
 
 sub CIVS_Poll_Control {
@@ -361,6 +366,13 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     }
     return $ret;
 }
+
+sub Identifier_request {
+    "<p>Please give your email address or other recognizable identifier:  \r\n".
+    '<input type="text" name="email_address" size="50"></p>'.
+    "\r\n"
+}
+
 sub Rank {
     'Rank';
 }

@@ -7,7 +7,7 @@ use strict;
 
 sub GenerateVoteForm {
 
-    my ($voter_key, $authorization_key, $choice_index_ref, $rank_ref, $js_ui, $lean) = @_;
+    my ($voter_key, $authorization_key, $choice_index_ref, $rank_ref, $js_ui, $lean, $askforid) = @_;
 
     my @choice_index = @{$choice_index_ref};
     my @rank = @{$rank_ref};
@@ -21,6 +21,10 @@ sub GenerateVoteForm {
       action="http://@THISHOST@'.$civs_bin_path.'/vote@PERLEXT@"
       enctype="multipart/form-data"
       name="CastVote">', $cr;
+
+    if ($askforid) {
+	    print $tx->Identifier_request();
+    }
 
     print '<table class="form" id="ballot" border="0" cellpadding="5" cellspacing="0"><tr><td>', $cr;
 
