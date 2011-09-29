@@ -184,6 +184,9 @@ my $restrict_results = SetBinaryParameter('restrict_results', 'no');
 my $result_addrs;
 if ($restrict_results eq 'yes') {
     $edata{'result_addrs'} = $result_addrs = param('result_addrs');
+    if ($results_addrs eq '') {
+        Fatal_CIVS_Error('No email addresses were given to send election results to. This should have been caught by JavaScript input validation.');
+    }
 }
 
 HTML_Header($tx->CIVS_Poll_Creation);
