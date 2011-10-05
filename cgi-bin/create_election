@@ -259,7 +259,7 @@ sub SendResultKey {
 	    print pre($tx->Invalid_email_address($addr));
 	    next;
 	}
-	print pre(b($tx->Sending_result_key($addr)));
+	print $tx->Sending_result_key($addr);
 
 	my $url = "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
 	my $civs_supervisor = '@SUPERVISOR@';
@@ -277,5 +277,5 @@ sub SendResultKey {
     }
     CloseMail;
 
-    print pre(b($tx->Done_sending_result_key($addr)));
+    print $tx->Done_sending_result_key();
 }

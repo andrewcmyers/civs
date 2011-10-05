@@ -56,7 +56,7 @@ sub mail_has_been_sent {
 }
 
 sub click_on_the_URL_to_start {
-    "Click on the URL in that email to start the poll: <strong>$_[1]</strong>.";
+    "Click on the URL in that email to start the poll &ldquo;$_[1]&rdquo;.";
 }
 
 sub here_is_the_control_URL {
@@ -108,10 +108,10 @@ sub for_more_information_about_CIVS { # url
 }
 
 sub Sending_result_key { # addr
-    "Sending result key to '$_[1]'. Please wait.";
+    "<p>Sending result key to <tt>$_[1]</tt>. Please allow this to complete...<br>"
 }
 sub Done_sending_result_key { # addr
-    'Done sending result key.'
+    '...done sending result key.</p>'
 }
 sub Results_of_CIVS_poll { # title
     "Results of CIVS poll: $_[1]";
