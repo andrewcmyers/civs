@@ -108,7 +108,10 @@ sub for_more_information_about_CIVS { # url
 }
 
 sub Sending_result_key { # addr
-    "Sending result key to '$_[1]'";
+    "Sending result key to '$_[1]'. Please wait.";
+}
+sub Done_sending_result_key { # addr
+    'Done sending result key.'
 }
 sub Results_of_CIVS_poll { # title
     "Results of CIVS poll: $_[1]";

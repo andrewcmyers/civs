@@ -234,11 +234,17 @@ print p($tx->click_on_the_URL_to_start($title));
     print pre("<a href=\"$url\">$url</a>");
 }
 
+if ($restrict_results eq 'yes') {
+    SendResultKey($result_key);
+}
 
-print end_html();
 Log("Election $title ($election_id) created by $email_addr");
 untie %edata;
+print end_html();
 
+exit 0;
+
+####################################
 # Send authorized result viewers an email containing the URL that
 # allows viewing results.
 sub SendResultKey {
@@ -270,11 +276,6 @@ sub SendResultKey {
 	Send "."; ConsumeSMTP;
     }
     CloseMail;
+
+    print pre(b($tx->Done_sending_result_key($addr)));
 }
-
-if ($restrict_results eq 'yes') {
-    SendResultKey($result_key);
-}
-
-
-exit 0;
