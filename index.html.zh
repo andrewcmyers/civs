@@ -1,10 +1,12 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>CIVS在线投票服务（Condorcet Internet Voting Service）</title>
 <base href="@CIVSURL@/">
-<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="style.css">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
 </head>
 
@@ -93,9 +95,9 @@ resistance。
 <li><a href="changelog.html">CIVS软件</a></li>
 <li><a href="acks.html">致谢</a></li>
 </ul>
-</div>
 </td></tr>
 </table>
+</div>
 </td></tr>
 <tr><td>
 <table class="links">
@@ -103,16 +105,15 @@ resistance。
 尝试一个实名投票:
 <ul>
 <li>
-<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_43351ceed0adc47f&akey=dccf21c83061ac60">推荐一本好书</a>
+<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_43351ceed0adc47f&amp;akey=dccf21c83061ac60">推荐一本好书</a>
 
 <li>
-<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_540fe382529392ba&akey=6cd77c06c48d8cd6">最喜欢的编程语言</a>
-</li>
+<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_540fe382529392ba&amp;akey=6cd77c06c48d8cd6">最喜欢的编程语言</a>
 </li>
 <li>
-<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_117c0083572e13f2&akey=7a922729e2fd85e7">最佳电影</a></li>
+<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_117c0083572e13f2&amp;akey=7a922729e2fd85e7">最佳电影</a></li>
 <li><a href="@SUGGESTION_BOX@">CIVS建议箱</a></li>
-<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&akey=55426123feb7e40b">欧洲旅行</a></li>
+<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&amp;akey=55426123feb7e40b">欧洲旅行</a></li>
 <li><a href="public_elections.html">(更多)</a>
 </ul>
 </td></tr>

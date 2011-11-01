@@ -1,10 +1,12 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Condorcet Internet Szavazási Szolgáltatás</title>
 <base href="@CIVSURL@/">
-<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="style.css">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
 </head>
 
@@ -97,9 +99,9 @@ CIVS levelezőlista (angol)</a></li>
 <li><a href="changelog.html">CIVS szoftver</a></li>
 <li><a href="acks.html">Köszönetnyilvánítások</a></li>
 </ul>
-</div>
 </td></tr>
 </table>
+</div>
 </td></tr>
 <tr><td>
 <div class="bubble">
@@ -108,15 +110,14 @@ CIVS levelezőlista (angol)</a></li>
 Próbálj ki néhány nyílt szavazást! (Angolul)
 <ul>
 <li>
-<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_43351ceed0adc47f&akey=dccf21c83061ac60">Javasolj egy jó könyvet</a>
+<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_43351ceed0adc47f&amp;akey=dccf21c83061ac60">Javasolj egy jó könyvet</a>
 
 <li>
-<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_540fe382529392ba&akey=6cd77c06c48d8cd6">Kedvenc programozási nyelv</a>
+<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_540fe382529392ba&amp;akey=6cd77c06c48d8cd6">Kedvenc programozási nyelv</a>
 </li>
-</li>
-<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_4e62bfdb14d5f61e&akey=3f460c25aaa1f858">Kedvenc mozik</a></li>
+<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_4e62bfdb14d5f61e&amp;akey=3f460c25aaa1f858">Kedvenc mozik</a></li>
 <li><a href="@SUGGESTION_BOX@">CIVS ötletláda</a></li>
-<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&akey=55426123feb7e40b">Európai vakáció</a></li>
+<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&amp;akey=55426123feb7e40b">Európai vakáció</a></li>
 <li><a href="public_elections.html">(még több)</a>
 </ul>
 </td></tr>

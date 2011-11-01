@@ -7,7 +7,6 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
   <meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
-  <meta name="GENERATOR" content="OpenOffice.org 3.1  (Linux)">
   <style type="text/css">
 	<!--
 		@page { margin: 2cm }
