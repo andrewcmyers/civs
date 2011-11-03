@@ -11,9 +11,6 @@ div.normal_text { max-width: 80ex; margin: 0 auto }
 
 div.home { text-align: justify; padding: 1em 2em 0 0;
            width: 700px}
-
-div.bubble { width: 100%; }
-
 a            { text-decoration: none }
 a:link       { color: #339966; background-color: transparent; font-weight: bold }
 a:visited    { color: #009999; background-color: transparent; font-weight: bold }
@@ -141,12 +138,18 @@ div.bubble {
     background-image: url('vertstrip.png');
     border-color: #bbc;
     border-style: solid;
-    border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
+    border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 8px;
     border-width: 1px;
     -moz-box-shadow: 3px 3px 5px #aaa;
     -webkit-box-shadow: 3px 3px 5px #aaa;
     box-shadow: 3px 3px 5px #aaa;
 }
+
+div.bubble table { padding: 0; margin: 4px; background-color: transparent }
+div.bubble ul { padding: 0; margin: 0; background-color: transparent }
+div.bubble li { text-indent: 0; padding: 0; list-style: none; border-top: solid 1px #aaa; margin: 0; background-color: transparent}
+div.bubble li:first-child { border-top: none }
+
 table.links {
     margin: 5px;
     background-color: transparent
