@@ -679,7 +679,7 @@ sub Number_of_winning_candidates {
 sub Poll_actually_has { #winmsg
     my $winmsg = '1 vincitore';
     if ($_[1] != 1) {
-	$winmsg = $real_nwin.' vincitori';
+	$winmsg = ''.$_[1].' vincitori';
     }
     "&nbsp;(la votazione ha effettivamente avuto $winmsg)";
 }

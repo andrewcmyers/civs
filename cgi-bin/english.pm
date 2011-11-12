@@ -93,6 +93,9 @@ poll. To start and stop the poll, please use the following URL:
 
   $_[2]
 
+Save this email and keep it private. If you lose it you will not be able
+to control the poll.
+
 ";
 }
 sub creation_email_public_link { # url
@@ -699,7 +702,7 @@ sub Number_of_winning_candidates {
 sub Poll_actually_has { #winmsg
     my $winmsg = '1 winner';
     if ($_[1] != 1) {
-	$winmsg = $real_nwin.' winners';
+	$winmsg = $_[1].' winners';
     }
     "&nbsp;(Poll actually has $winmsg)";
 }

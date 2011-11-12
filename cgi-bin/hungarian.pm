@@ -672,10 +672,7 @@ sub Number_of_winning_candidates {
     'A győztes lehetőségek száma: ';
 }
 sub Poll_actually_has { #real_nwin
-    my $winmsg = '1';
-    if ($_[1] != 1) {
-	$winmsg = $_[1];
-    }
+    my $winmsg = $_[1];
     "&nbsp;(A szavazásnak valójában $winmsg győztese van.)";
 }
 sub poll_description_hdr {
