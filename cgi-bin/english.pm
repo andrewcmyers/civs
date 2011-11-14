@@ -574,10 +574,9 @@ destroyed the record of your email address and will not release any information
 about whether or how you have voted.';
 }
 sub This_is_a_nonanonymous_poll {
-'The poll supervisor has decided to make this a <strong>non-anonymous poll</strong>.  If
-you vote, how you voted will be publicly visible along with your
-email address. If you do not vote, the poll supervisor will also be able
-to determine this.';
+    'The poll supervisor has decided to make this a <strong>non-anonymous poll</strong>.
+If you vote, your email address and how you voted will be visible to anyone
+who has been given access to the poll results.'
 }
 
 sub poll_has_been_announced_to_end { #election_end
