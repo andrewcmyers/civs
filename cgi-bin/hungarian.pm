@@ -1,9 +1,9 @@
 package hungarian;
 
 use lib '@CGIBINDIR@';
-use english;
+use base_language;
 
-our @ISA = ('english'); # go to AmE module for missing methods
+our @ISA = ('base_language'); # go to this module for missing methods
 
 sub lang { return 'hu-HU'; }
 

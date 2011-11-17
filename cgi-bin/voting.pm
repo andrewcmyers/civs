@@ -62,11 +62,10 @@ sub GenerateVoteForm {
 	    if ($proportional ne 'yes' || !$use_combined_ratings) {
 		print "<td><select size=1 name=\"C$k\" onChange=\"sort_rows()\">", $cr;
 		for (my $j = 1; $j <= $num_choices; $j++) {
-		    if ($j == $selected) {
-				print "  <option selected>$j</option>", $cr;
-		    } else {
-				print "  <option>$j</option>", $cr;
-		    }
+		    my $selattr;
+		    my $ord = $tx->ordinal_of($j);
+		    if ($j == $selected) { $selattr = ' selected' }
+		    print "  <option value=\"$j\" label=\"$ord\" $selattr>$ord</option>", $cr;
 		}
 		if ($proportional ne 'yes' && $no_opinion eq 'yes') {
 		    if ($selected eq "No opinion") {

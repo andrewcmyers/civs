@@ -37,6 +37,7 @@ th              { font-family: Verdana, Arial, helvetica, sans-serif;
 table { background-color: #e8e8f0 }
 table.matrix { background-color: #e0e0f0 }
 table.form { background-color: transparent }
+table#main { margin: 0 auto }
 table#ballot { margin: 0 auto }
 table#ballot td { vertical-align: top; }
 div.emphasized {
@@ -134,8 +135,13 @@ table.matrix, table.rankings { border: solid 1px #aac }
 table.rankings tr td { text-indent: -3ex; padding-left: 3ex }
 table.rankings tr td ol { text-indent: 0ex }
 
+td#navbubbles {
+    width: 35ex;
+    vertical-align: top;
+}
 div.bubble {
     background-image: url('vertstrip.png');
+    padding: 3px 6px 3px 2px;
     border-color: #bbc;
     border-style: solid;
     border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 8px;
@@ -146,9 +152,11 @@ div.bubble {
 }
 
 div.bubble table { padding: 0; margin: 4px; background-color: transparent }
-div.bubble ul { padding: 0; margin: 0; background-color: transparent }
+div.bubble ul { width: 100%; padding: 0ex; margin: 1px 7px 1px 3px; background-color: transparent }
 div.bubble li { text-indent: 0; padding: 0; list-style: none; border-top: solid 1px #aaa; margin: 0; background-color: transparent}
 div.bubble li:first-child { border-top: none }
+
+div.bubble h3 { padding-top: 0; margin-top: 0 }
 
 table.links {
     margin: 5px;
@@ -207,7 +215,7 @@ table#civs_uses {font-size: 90%}
 table.ballots {font-size: 80%; border: solid 1px #aac}
 table.ballots th {background-color: transparent; color: black; font-size: 70%}
 
-li b, strong { color: #842 }
+li b, td > b, strong { color: #842 }
 
 #move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }
 

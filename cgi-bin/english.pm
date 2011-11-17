@@ -1,8 +1,10 @@
 package english;
 
-our $VERSION = 1.10;
+use base_language;
 
-sub lang { 'en-US'; }
+our $VERSION = 1.20;
+our @ISA = ('base_language'); # go to base_language module for missing methods
+sub lang { 'en-US' }
 
 sub init {
     my $self = {};
@@ -12,16 +14,16 @@ sub init {
 
 # civs_common
 sub style_file {
-    'style.css';
+    'style.css'
 }
 sub Condorcet_Internet_Voting_Service {
-    'Condorcet Internet Voting Service';
+    'Condorcet Internet Voting Service'
 }
 sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
-    'Condorcet Internet Voting Service';
+    'Condorcet Internet Voting Service'
 }
 sub about_civs {
-    'About CIVS';
+    'About CIVS'
 }
 sub create_new_poll {
     'Create new poll';
@@ -33,16 +35,16 @@ sub FAQ {
     'FAQ';
 }
 sub CIVS_suggestion_box {
-    'CIVS suggestion box';
+    'CIVS suggestion box'
 }
 sub unable_to_process {
-    'CIVS is unable to process your request because of an internal error.';
+    'CIVS is unable to process your request because of an internal error.'
 }
 sub CIVS_Error {
-    'CIVS Error';
+    'CIVS Error'
 }
 sub CIVS_server_busy {
-    'CIVS server busy';
+    'CIVS server busy'
 }
 sub Sorry_the_server_is_busy {
     'Sorry, the CIVS web server is very busy right now and
@@ -308,10 +310,25 @@ sub page_header_CIVS_Vote { # election_title
     'CIVS Vote: '.$_[1];
 }
 
+sub ordinal_of {
+    my $n = $_[1];
+    if ($n >= 4 && $n < 20) {
+	return $n.'th'
+    } elsif ($n % 10 == 1) {
+	return $n.'st'
+    } elsif ($n % 10 == 2) {
+	return $n.'nd'
+    } elsif ($n % 10 == 3) {
+	return $n.'rd'
+    } else {
+	return $n.'th'
+    }
+}
+
 sub ballot_reporting_is_enabled {
     'Ballot reporting is enabled for this poll.
      Your ballot (the rankings you assign to choices)
-     will be made public when the poll ends.';
+     will be visible in the poll results when the poll ends.';
 }
 sub instructions1 { # num_winners, end, name, email
     my $wintxt;
@@ -391,6 +408,18 @@ sub Weight {
 
 sub address_will_be_visible {
     '<strong>Your email address will be visible</strong> along with your ballot.';
+}
+
+sub however_results_restricted {
+    my @users = @{$_[1]};
+    my $r = ' However, results will be made available only to a limited set of users: ';
+    my $first=1;
+    foreach my $u (@users) {
+	if (!$first) { $r .= ', '; $first=0; }
+	$r .= "<tt>$u</tt>";
+    }
+    $r .= '.';
+    return $r;
 }
 
 sub ballot_will_be_anonymous {
@@ -653,7 +682,8 @@ sub Voter_identities_will_be_kept_anonymous {
     'Voter identities will be kept anonymous';
 }
 sub Voter_identities_will_be_public {
-    'Voter identities (email) will be publicly associated with their ballots.';
+'Voter identities (email) along with their ballots will be
+visible to those authorized to see poll results.'
 }
 sub Condorcet_completion_rule {
     'Condorcet completion rule:';

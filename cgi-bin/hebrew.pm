@@ -1,5 +1,9 @@
 package hebrew;
 
+use lib '@CGIBINDIR@';
+use base_language;
+our @ISA = ('base_language'); # go to AmE module for missing methods
+
 sub lang { 'he-IL'; }
 
 sub init {
