@@ -410,18 +410,6 @@ sub address_will_be_visible {
     '<strong>Your email address will be visible</strong> along with your ballot.';
 }
 
-sub however_results_restricted {
-    my @users = @{$_[1]};
-    my $r = ' However, results will be made available only to a limited set of users: ';
-    my $first=1;
-    foreach my $u (@users) {
-	if (!$first) { $r .= ', '; $first=0; }
-	$r .= "<tt>$u</tt>";
-    }
-    $r .= '.';
-    return $r;
-}
-
 sub ballot_will_be_anonymous {
     ' However, your ballot will still be anonymous:
       no personally identifying information will appear.';

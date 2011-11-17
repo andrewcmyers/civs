@@ -23,6 +23,7 @@ civs/lockserv.c
 civs/rp.html
 civs/cgi-bin/add_voters
 civs/cgi-bin/admctrl.pm
+civs/cgi-bin/base_language.pm
 civs/cgi-bin/beatpath.pm
 civs/cgi-bin/beatpath2.pm
 civs/cgi-bin/chinese.pm
@@ -39,6 +40,7 @@ civs/cgi-bin/german.pm
 civs/cgi-bin/hebrew.pm
 civs/cgi-bin/hungarian.pm
 civs/cgi-bin/italian.pm
+civs/cgi-bin/spanish.pm
 civs/cgi-bin/languages.pm
 civs/cgi-bin/language-skel.pm
 civs/cgi-bin/mail.pm
