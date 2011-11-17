@@ -12,9 +12,9 @@ div.normal_text { max-width: 80ex; margin: 0 auto }
 div.home { text-align: justify; padding: 1em 2em 0 0;
            width: 700px}
 a            { text-decoration: none }
-a:link       { color: #339966; background-color: transparent; font-weight: bold }
-a:visited    { color: #009999; background-color: transparent; font-weight: bold }
-a:hover      { color: #0000FF; background-color: transparent }
+a:link       { color: #389; background-color: transparent; font-weight: bold }
+a:visited    { color: #278; background-color: transparent; font-weight: bold }
+a:hover      { color: #49a; background-color: transparent }
 
 th              { font-family: Verdana, Arial, helvetica, sans-serif;
                   color: white;
@@ -56,7 +56,12 @@ span.explain {font-size: 75%; color: #404040 }
 
 p, ul, li {background-color: transparent}
 
-h1, h2, h3, span.paragraph { font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
+h1, h2, h3, span.paragraph {
+    font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif;
+    color: #258;
+    background-color: transparent;
+    font-weight: bold
+}
 
 table.banner a:link { color: white }
 table.banner a:visited { color: white }
