@@ -24,10 +24,10 @@ sub about_civs {
     'About CIVS';
 }
 sub create_new_poll {
-    'Create new poll';
+    'Create new poll'
 }
 sub about_security_and_privacy {
-    'About security and privacy';
+    'About security and privacy'
 }
 sub FAQ {
     'FAQ';
@@ -251,19 +251,29 @@ sub add_voter_instructions {
     multiple voting.";
 }
 sub Upload_file {
-    'Upload file: ';
+    'Upload file: '
 }
 sub Load_ballot_data {
-    'Load ballot data';
+    'Load ballot data'
 }
 sub File_to_upload_ballots_from {
-    'File to upload ballots from:';
+    'File to upload ballots from:'
+}
+sub Or_paste_this_code {
+    'Or paste this HTML code into your own web page:'
 }
 sub This_is_a_public_poll_plus_link {
-    my $url = $_[1];
-    "This is a public poll. Share the following link
-	with voters to allow them to vote:</p><p>
-	&nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
+    my ($self, $url, $pub) = @_;
+    if ($pub) {
+	return "This is a public poll. Share the following link
+	    with voters to allow them to vote:</p><p>
+	    &nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>. This
+	    poll will also be publicized by CIVS.";
+    } else {
+	return "This is a public poll. Share the following link
+	    with voters to allow them to vote:</p><p>
+	    &nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
+    }
 }
 sub The_poll_has_ended {
     'The poll has ended.';

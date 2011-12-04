@@ -28,11 +28,12 @@ CheckControlKey($control_key);
 CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 if ($external_ballots ne 'yes') {
-    print p("Error: this election does not allow loading of external ballots");
+    print p("Error: this election does not allow external ballots to be uploaded");
     exit 0;
 }
 
 my $ballot_file = upload('ballot_data');
+print pre("Ballot file: $ballot_file");
 my $lineno = 0;
 my @errors = ();
 my $num_ballots = 0;
@@ -44,6 +45,7 @@ while (<$ballot_file>) {
     s/(\s)*$//g;
     if (m/^#/) { next; }
     my $multiplier = 1;
+    print pre("Line $lineno: $_"), $cr;
     if (m/^.*(x|X)/) {
 	($multiplier, my $dummy, $_) = m/(^.*)(x|X)(.*$)/;
         s/^(\s)+//g;
@@ -61,6 +63,11 @@ while (<$ballot_file>) {
     for (my $cnt = 0; $cnt < $multiplier; $cnt++) {
 	for (my $i = 0; $i < $num_choices; $i++) {
 	    my $rank = $indices[$i];
+	    if ($proportional eq 'yes' && $use_combined_ratings) {
+		$ballots[$num_ballots][$i] = 0 + $rank;
+		print pre("rank $rank seen"), $cr;
+		next;
+	    }
 	    if ($rank eq '-') { $rank = 'No opinion'; }
 	    if ($rank =~ m/^[0-9]*$/ &&
 		$rank >= 1 &&

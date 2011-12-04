@@ -24,7 +24,7 @@ BEGIN {
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
-    $election_end $public $writeins $allow_voting $voting_enabled
+    $election_end $public $publicize $writeins $allow_voting $voting_enabled
     $shuffle $proportional $external_ballots
     $use_combined_ratings $choices @choices $num_choices $num_auth $num_votes
     $recorded_voters $ballot_reporting $reveal_voters $authorization_key
@@ -48,7 +48,7 @@ our ($election_dir, $started_file, $stopped_file, $election_data, $election_log,
 
 our (%edata, %vdata);
 our ($name, $title, $email_addr, $description, $num_winners, $addresses,
-     @addresses, $election_begin, $election_end, $public, $writeins, $allow_voting, $voting_enabled,
+     @addresses, $election_begin, $election_end, $public, $publicize, $writeins, $allow_voting, $voting_enabled,
      $proportional, $use_combined_ratings, $external_ballots,
      $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
@@ -90,6 +90,7 @@ sub init {
     $election_begin = $edata{'election_begin'};
     $election_end = $edata{'election_end'};
     $public = $edata{'public'};
+    $publicize = $edata{'publicize'};
     $writeins = $edata{'writeins'};
     $allow_voting = $edata{'allow_voting'};
     $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
@@ -378,7 +379,8 @@ sub CheckControlKey {
 }
 
 sub ElectionUsesAuthorizationKey {
-    return (defined($edata{'hash_authorization_key'}));
+    return (defined($edata{'hash_authorization_key'}) &&
+	    $edata{'hash_authorization_key'} ne 'none');
 }
 
 sub CheckAuthorizationKey {
@@ -386,8 +388,8 @@ sub CheckAuthorizationKey {
     if (!&ElectionUsesAuthorizationKey) {
         # if the hash doesn't exist in the database, then this is
         # an election that was created before authorization keys
-        # were added to the CIVS design.  In order to keep those elections
-        # running, we'll go ahead and let the key check pass. 
+        # were added to the CIVS design. Or it is a publicized election.
+        # In either case the test passes.
         return 1;
     }
     if (!defined($authorization_key)) {

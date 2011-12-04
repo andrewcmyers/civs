@@ -18,7 +18,7 @@ BEGIN {
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error
                       &unique_elements &civs_hash &system_load &CheckLoad
-		      $remote_ip_address $languages $tx);
+		      $remote_ip_address $languages $tx &FileTimestamp);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -284,6 +284,18 @@ sub CheckLoad {
 	CIVS_Header($tx->CIVS_server_busy);
 	print p($tx->Sorry_the_server_is_busy);
 	exit 0;
+    }
+}
+
+sub FileTimestamp {
+    my $fname = $_[0];
+    (my $dev, my $ino, my $mode, my $nlink, my $uid, my $gid, my $rdev, my $size,
+	my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
+	    = stat($fname);
+    if ($mtime eq '') {
+	return 0; # no cache file
+    } else {
+	return $mtime;
     }
 }
 

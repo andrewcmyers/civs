@@ -29,6 +29,8 @@ if ($filter_tags ne 'no') {
         s => $ok,
         strike => $ok,
         kbd => $ok,
+	strong => $ok,
+	b => $ok,
 	dl => $ok, dt => $ok, dd => $ok,
         br => $ok,
         var => $ok,
@@ -156,6 +158,7 @@ SetBinaryParameter('no_opinion', 'no');
 SetBinaryParameter('shuffle', 'yes');
 SetBinaryParameter('proportional', 'no');
 SetBinaryParameter('external_ballots', 'no');
+my $publicize = SetBinaryParameter('publicize', 'no');
 
 $edata{'choices'} = $choices;
 
@@ -199,10 +202,19 @@ my $control_key = SecureNonce();
 my $authorization_key = SecureNonce();
 my $result_key = SecureNonce();
 $edata{'hash_control_key'} = civs_hash($control_key);
-$edata{'hash_authorization_key'} = civs_hash($authorization_key);
+if ($publicize eq 'yes') {
+    $authorization_key = '';
+    $edata{'hash_authorization_key'} = 'none';
+} else {
+    $edata{'hash_authorization_key'} = civs_hash($authorization_key);
+}
 $edata{'hash_result_key'} = civs_hash($result_key);
 
 my $url = "http://$thishost$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key";
+
+if ($publicize eq 'yes') {
+    $url = "http://$thishost$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
+}
 
 if (!($local_debug)) {
 
@@ -218,7 +230,11 @@ Send 'Content-Type: text/plain; charset="utf-8"';
 Send "";
 Send $tx->creation_email_info1($title,$url);
 if ($public eq 'yes') {
-    Send $tx->creation_email_public_link("http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
+    if ($publicize eq 'yes') {
+	Send $tx->creation_email_public_link("http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id");
+    } else {
+	Send $tx->creation_email_public_link("http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
+    }
 }
 Send $tx->for_more_information_about_CIVS($civs_home);
 Send "."; ConsumeSMTP;

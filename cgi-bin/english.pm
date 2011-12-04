@@ -264,12 +264,6 @@ sub Load_ballot_data {
 sub File_to_upload_ballots_from {
     'File to upload ballots from:';
 }
-sub This_is_a_public_poll_plus_link {
-    my $url = $_[1];
-    "This is a public poll. Share the following link
-	with voters to allow them to vote:</p><p>
-	&nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
-}
 sub The_poll_has_ended {
     'The poll has ended.';
 }

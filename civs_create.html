@@ -1,3 +1,5 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
 <head>
@@ -11,13 +13,13 @@
     function trim(str)
     {
         return str.replace(/^\s+|\s+$/g, '')
-    };
+    }
     function validateEmail(str)   // element to be validated
     {
 	var str = trim(str);  // value of field with whitespace trimmed off
 	var email = /^[^@]+@[^@.]+\.[^@]*\w\w$/
 	return email.test(str);
-    };
+    }
 
     function validate() {
 	var numerrs = 0;
@@ -71,25 +73,7 @@
 	return false;
     }
 
-    var prcontrol, prparent;
-    var rvcontrol, rvparent;
-    var rrcontrol, rrparent;
-
-    function setup() {
-	prcontrol = document.getElementById("prcontrol");
-	prparent = prcontrol.parentNode;
-	prparent.removeChild(prcontrol);
-
-	rvcontrol = document.getElementById("reveal_voters");
-	rvparent = rvcontrol.parentNode;
-	rvparent.removeChild(rvcontrol);
-
-        rrcontrol = document.getElementById("rrcontrol");
-	rrparent = rrcontrol.parentNode;
-	rrparent.removeChild(rrcontrol);
-    }
-
-    function render_text(prefix, ta_id, span_id, clss) {
+    function render_text(prefix, ta_id, span_id) {
 	var span = document.getElementById(span_id);
 	var ta = document.getElementById(ta_id);
 	span.innerHTML = '<div class="' + clss + '">' + prefix + ta.value + "</div>";
@@ -107,6 +91,13 @@
 	}
 	span.innerHTML = "<ul>" + html + "</ul>";
 	return 1;
+    }
+
+    function make_invisible(id) {
+	document.getElementById(id).style.display = 'none'
+    }
+    function make_visible(id) {
+	document.getElementById(id).style.display = 'block'
     }
 </script>
 
@@ -213,67 +204,75 @@
 
   <h3>More options <small>(mouse over each check box for more information)</small></h3>
   <input type="checkbox" name="public" value="yes"
+      onClick="make_visible('publicize')"
       title="In a public poll, you receive a single URL that any voter can
 	use to cast their vote. Thus, it can be posted on email distribution
 	lists. However, there is only a token attempt to prevent multiple voting, based on voters' IP addresses. If you want to make sure that voters only
 	vote once, use a private poll instead.">
   Make this a public poll.
-<br>
+    <div class="suboption" id="publicize">
+    <input type="checkbox" name="publicize" value="yes"
+      title="CIVS will announce this poll on its list of public polls and possibly elsewhere.
+	    Anyone who views the list will be able to vote.">
+    Have CIVS publicize this election.
+    </div>
+    <div>
   <input type="checkbox" name="external_ballots" value="yes"
       title="If you want to upload all the voting ballots yourself, check this box. Voters cannot vote in such a poll. This is useful if you are trying to understand how the various voting methods work, or if you have obtained ballots from some source outside CIVS.">
   Make this a test poll: read all votes from a file.
-<br>
+</div>
+<div>
   <input type="checkbox" name="restrict_results" value="yes"
-         onClick="rrparent.appendChild(rrcontrol); "
+         onClick="make_visible('rrcontrol')"
 	 title="By default, poll results can be seen by anyone who votes in
 	 the poll. If you want to restrict the results to some other set
 	 of people, use this option.">
     Make results available only to a limited set of users.
-    <div class="parent_wrapper">
     <div class="suboption" id="rrcontrol">
     Enter email addresses of users permitted to view poll results:
     (All voters can see these email addresses)
     <br>
     <textarea rows="2" name="result_addrs" cols="50"></textarea>
     </div>
-    </div>
-<br>
+</div>
+<div>
   <input type="checkbox" name="ballot_reporting" value="yes"
-         onClick="rvparent.appendChild(rvcontrol);"
+         onClick="make_visible('reveal_voters')"
 	 title="This option allows any poll participant to
 	 view the rankings on each ballot. However, identifying
 	 information about the voters who cast these ballots is
 	 not revealed unless the next option is checked.">
   Enable detailed ballot reporting. 
-  <div class="parent_wrapper">
   <div class="suboption" id="reveal_voters">
-  <input type="checkbox" name="reveal_voters" value="yes">
-  In detailed ballot report, also reveal the identity of the voter with each
-  ballot.<br>Voters are <i class="warning">not</i> anonymous if this is
-  checked, nor does the server discard voter email addresses as it normally
-  does.  Voters are warned about this lack of anonymity.
+    <input type="checkbox" name="reveal_voters" value="yes">
+    In detailed ballot report, also reveal the identity of the voter with each
+    ballot.<br>Voters are <i class="warning">not</i> anonymous if this is
+    checked, nor does the server discard voter email addresses as it normally
+    does.  Voters are warned about this lack of anonymity.
   </div>
-  </div>
-<br>
+</div>
+<div>
   <input type="checkbox" name="writeins" value="yes"
    title="You can allow write-ins with this option. However, write-ins are
  at a big disadvantage if they occur after some votes have been cast. Therefore,
  when this option is selected, there is a write-in phase in which ballots cannot
  be cast. The supervisor must explicitly enable voting.">
   Allow voters to write in new choices.
-<br>
+</div>
+<div>
   <input type="checkbox" name="shuffle" value="no"
   title="By default, poll choices are presented in a randomly shuffled
   order on each ballot. For some polls, such as choosing a meeting time,
   it will be more convenient for voters to see the choices in exactly
   the order given above.">
   Present choices on voting page in exactly the given order.
-<br>
+</div>
+<div>
   <input type="checkbox" name="no_opinion" value="yes"
     title="The &#x22;no opinion&#x22; option can have unexpected effects. Be sure to read in the FAQ about how to use it, and inform voters accordingly.">
   Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
   <input type="checkbox" name="proportional" value="yes"
-         onClick="prparent.appendChild(prcontrol)"
+         onClick="make_visible('prcontrol')"
 	 title="The proportional mode is useful only for multiwinner
 	 elections, where you want to make sure that the voters' desires
 	 are expressed proportionally. Otherwise a majority of voters can
@@ -284,7 +283,6 @@
 	 agree.  Click the 'more information' link to
 	 find out more about how this mode works.">
   Enforce proportional representation [<a href="proportional.html">more information</a>]</br>
-  <div class="parent_wrapper">
    <div class="suboption" id="prcontrol">
     For proportional representation, voters are assumed to be maximizing:<br>
     <input type="radio" name="rating_interpretation"
@@ -293,7 +291,7 @@
     <input type="radio" name="rating_interpretation"
        value="combined_ratings"> combined weights of selected choices<br>
    </div>
-  </div>
+</div>
 
 <div class="emphasized">
   Make sure your e-mail address is correct, because poll information will
@@ -307,7 +305,10 @@
 </div>
 
 <script type="text/javascript">
-  setup();
+    make_invisible('publicize');
+    make_invisible('prcontrol');
+    make_invisible('reveal_voters');
+    make_invisible('rrcontrol');
 </script>
 </body>
 

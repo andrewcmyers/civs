@@ -29,7 +29,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
     for f in civs_create.html* index.html* public_elections.html* \
 	proportional.html* sec_priv.html* acks.html* changelog.html* \
-	rp.html* faq.html* style.css results.js vote.js \
+	rp.html* publicized_polls.html* faq.html* style.css results.js vote.js top_polls.js \
 	check123b.png sample-ballot.png vertstrip.png hebrew.css
     do
 	case "$f" in
@@ -58,8 +58,8 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
     echo -n "copying:"
     for f in add_voters beatpath.pm beatpath2.pm civs_common.pm voting.pm close control \
-        create_election download_ballots remove_writein upload_ballots results languages.pm \
-	election.pm mail.pm start_election vote rp.pm runoff.pm admctrl.pm \
+        create_election download_ballots remove_writein upload_ballots results top_polls.pm get_top_polls languages.pm \
+	election.pm mail.pm start_election vote publicize_election rp.pm runoff.pm admctrl.pm \
 	base_language.pm english.pm hungarian.pm italian.pm french.pm german.pm hebrew.pm \
 	portuguese.pm chinese.pm spanish.pm
     do

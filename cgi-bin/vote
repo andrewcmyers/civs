@@ -20,6 +20,7 @@ my $thisurl = $civs_bin_path."/vote@PERLEXT@";
 
 use election;
 use voting;
+use top_polls;
 
 # There are many different ways to enter this script.
 # 1. As the initial page one uses to cast a vote in a private election
@@ -30,6 +31,8 @@ use voting;
 # 4. To sort the choices
 # 5. To add a writein
 # 6. To reload a set of rankings
+
+my $top_polls_refresh = 24 * 3600; # daily refresh
 
 my $voter = param('voter'); # nearly obsolete
 my $old_voter_key = param('voter_key'); # nearly obsolete
@@ -157,6 +160,9 @@ sub ProcessVote {
 	}
 	$rank[$i] = $rank;
     }
+    if ($publicize eq 'yes') {
+	&LogPublicVote;
+    }
     
     # Record vote, but not voter
     my $voter_ballot_release_key = SecureNonce();
@@ -199,7 +205,7 @@ sub ProcessVote {
 
     print p($tx->thank_you_for_voting($title,
 				$election_id."/".$voter_ballot_release_key));
-    
+
     # This is code to be enabled later, when we implement ballot checking.
     #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
 
@@ -207,6 +213,27 @@ sub ProcessVote {
     print end_html();
 
     exit 0
+}
+
+sub LogPublicVote {
+    my $public_vote_log = $home. "/elections/public_vote.log";
+    if (!sysopen OUT, $public_vote_log, O_WRONLY|O_CREAT|O_APPEND) {
+	&Log("Could not open publicized log file $public_vote_log");
+	return;
+    }
+    my $msg = time().' '.$election_id.' '.$title.$cr;
+    print OUT $msg;
+    close(OUT);
+
+    my $top_polls = $home . "/elections/top_polls.html";
+    my $top_polls_time = &FileTimestamp($top_polls);
+
+    if (time() - $top_polls_time > $top_polls_refresh) {
+
+        top_polls::find_top_polls(10, 0.01);
+
+    } else {
+    }
 }
 
 sub CanonicalizeName {

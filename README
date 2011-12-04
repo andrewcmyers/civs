@@ -1,11 +1,13 @@
-Version 2.15
+Version 2.16
 Condorcet Internet Voting System
-February 2011
+December 2011
 Copyright 2011, Andrew C. Myers
 
 This is a source release of the CIVS voting system software. If you
 simply want to run an election, it may be easier just to use the
 existing CIVS election server running at Cornell University.
+See the file INSTALL for information about how to set up your own
+server.
 
 Permission to use, copy, modify, and distribute this
 software and its documentation for any purpose and without

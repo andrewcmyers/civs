@@ -89,12 +89,12 @@ if (!IsStarted) {
     if ($external_ballots eq 'yes') {
 	print p($tx->this_is_a_test_poll), $cr;
     } elsif ($public eq 'yes') {
-		my $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
-		$url .= "&akey=$authorization_key" 
-			if defined($authorization_key);
-		print p($tx->This_is_a_public_poll_plus_link($url)), $cr;
-
-	    print p('Or paste this HTML code into your own web page:');
+	    my $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
+	    $url .= "&akey=$authorization_key" 
+		    if defined($authorization_key) && $authorization_key ne '';
+	    print p($tx->This_is_a_public_poll_plus_link($url, $publicize eq 'yes')), $cr;
+	    
+	    print p($tx->Or_paste_this_code);
 	    print '<textarea class="paste" rows=8 cols=90>';
 	    my @choice_index, my @rank;
 	    my $js_ui = 1;

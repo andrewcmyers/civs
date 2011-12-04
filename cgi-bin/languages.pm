@@ -18,6 +18,12 @@ our $accept_language;
 our $tx;
 our $log;
 
+# First column: name of package
+# Second column: Language tags (forced to lower case)
+#    See also http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+#    and RFC 5646 (http://tools.ietf.org/html/rfc5646)
+# Third column: quality/priority. Multiplied by whatever the
+#   user agent provides.
 my @variants =
   (['english', 'en-us', 1.0],
    ['english', 'en', 1.0],
@@ -36,7 +42,8 @@ my @variants =
    ['chinese', 'zh-cn', 0.95],
    ['chinese', 'zh', 0.90],
    ['spanish', 'es', 0.90],
-   ['spanish', 'es-es', 0.95]
+   ['spanish', 'es-es', 0.95],
+   ['russian', 'ru', 0.95]
   );
 
 # Result: &init() determines the current language preference using the

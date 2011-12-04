@@ -8,6 +8,7 @@
 <base href="@CIVSURL@/">
 <link rel="stylesheet" type="text/css" href="style.css">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+<script type="text/javascript" src="http://@THISHOST@@CIVSURL@/top_polls.js"></script>
 </head>
 
 <body>
@@ -105,6 +106,7 @@ provide strong anonymity, universal verifiability, and coercion resistance.
 	<li><a href="proportional.html">Proportional representation</a></li>
 	<li><a href="changelog.html">CIVS software</a></li>
 	<li><a href="acks.html">Acknowledgments</a></li>
+	<li><a href="@SUGGESTION_BOX@">Suggestion box</a>
     </ul>
 </div>
 </td></tr>
@@ -112,28 +114,20 @@ provide strong anonymity, universal verifiability, and coercion resistance.
 <div class="bubble">
 <h3>&nbsp;CIVS news</h3>
 <ul class="news">
-<li><strong>5/20/11:</strong>
-A trial localization of CIVS to Spanish is now available (set your browser's
-language preferences to see it).  Feedback and corrections welcome.
+<li><strong>12/11:</strong>
+Polls can now be publicized by CIVS itself, and the most popular polls
+appear below.</li>
+<li><strong>6/11:</strong>
+Public-poll voting forms can now be embedded into other web pages.
+</li>
 </ul>
 </div>
 </td></tr>
 <tr><td>
 <div class="bubble">
-<h3>Try a public poll:</h3>
-<ul>
-<li>
-<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_6d3db58589520629&amp;akey=77b16251195da930">Recommend a good book</a>
-</li>
-<li>
-<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_540fe382529392ba&amp;akey=6cd77c06c48d8cd6">Favorite programming language</a>
-</li>
-<li>
-<a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_117c0083572e13f2&amp;akey=7a922729e2fd85e7">Best Movies Ever</a></li>
-<li><a href="@SUGGESTION_BOX@">CIVS suggestion box</a></li>
-<li><a href="http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&amp;akey=55426123feb7e40b">European Vacation</a></li>
-<li><a href="public_elections.html">(more)</a>
-</ul>
+<h3>Top public polls: <a href="publicized_polls.html">[see more]</a></h3>
+<div id="top_polls">
+</div>
 </div>
 </td>
 </tr>
@@ -158,5 +152,6 @@ the use of this service.
 </small></p>
 </div>
 </div>
+<script>fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@')</script>
 </body>
 </html>

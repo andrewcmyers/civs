@@ -92,21 +92,13 @@ if (!defined($algorithms{$algorithm})) {
 my $cache_file = "$election_dir/results_win=$num_winners,alg=$algorithm,lang=".$tx->lang;
 if ($proportional eq 'yes') { $cache_file .= ",prop,comb=$use_combined_ratings"; }
 
-# Return the timestamp on the cache file, or 0 if no cache file
-sub CacheTime {
-    (my $dev, my $ino, my $mode, my $nlink, my $uid, my $gid, my $rdev, my $size,
-	my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
-	    = stat($cache_file);
-    if ($mtime eq '') {
-	print '<!-- No cache file -->', $cr;
-	return 0; # no cache file
-    } else {
-	print "<!-- Cache file timestamp: $mtime -->", $cr;
-	return $mtime;
-    }
-}
+my $cache_time = &FileTimestamp($cache_file);
 
-my $cache_time = &CacheTime;
+if ($cache_time == 0) {
+    print '<!-- No cache file -->', $cr;
+} else {
+    print "<!-- Cache file timestamp: $mtime -->", $cr;
+}
 my $progress_level = 0.0;
 my $progress_base = 0.0;
 my $progress_max = 1.0;
@@ -118,7 +110,7 @@ if ($restrict_results eq 'yes') {
 if (param('fresh') || param('Compare') ||             # Can force a refresh
 
      ($last_vote_time > $cache_time &&                # Recompute if out of date
-      time() - $cache_time > 5) ||                    # and cache at least 5 sec
+      time() - $cache_time > 15) ||                    # and cache at least 5 sec
                                                       # old.
 
      ($last_vote_time eq '' && $cache_time == 0)) {   # Recompute old if no cache
