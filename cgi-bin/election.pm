@@ -380,7 +380,8 @@ sub CheckControlKey {
 
 sub ElectionUsesAuthorizationKey {
     return (defined($edata{'hash_authorization_key'}) &&
-	    $edata{'hash_authorization_key'} ne 'none');
+	    $edata{'hash_authorization_key'} ne 'none' &&
+	    $publicize ne 'yes');
 }
 
 sub CheckAuthorizationKey {

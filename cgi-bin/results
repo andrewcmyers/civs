@@ -97,7 +97,7 @@ my $cache_time = &FileTimestamp($cache_file);
 if ($cache_time == 0) {
     print '<!-- No cache file -->', $cr;
 } else {
-    print "<!-- Cache file timestamp: $mtime -->", $cr;
+    print "<!-- Cache file timestamp: $cache_time -->", $cr;
 }
 my $progress_level = 0.0;
 my $progress_base = 0.0;

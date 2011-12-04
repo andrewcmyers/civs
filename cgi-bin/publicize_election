@@ -6,15 +6,13 @@ use warnings;
 use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard);
-use Digest::MD5 qw(md5_hex);
 use DB_File;
 
 HTML_Header("Publicize poll");
 CIVS_Header("Publicize poll");
 use election 1.02;
-use voting;
 
-if (param('key') ne 'shipitnow') {
+if (param('key') ne '@ADMIN_KEY@') {
     print strong('Authorization error');
     print end_html();
     exit 0;

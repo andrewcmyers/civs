@@ -46,6 +46,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+	     -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
 	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
@@ -57,11 +58,13 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
     done
 
     echo -n "copying:"
-    for f in add_voters beatpath.pm beatpath2.pm civs_common.pm voting.pm close control \
-        create_election download_ballots remove_writein upload_ballots results ajax.pm get_top_polls languages.pm \
-	election.pm mail.pm start_election vote publicize_election rp.pm runoff.pm admctrl.pm \
-	base_language.pm english.pm hungarian.pm italian.pm french.pm german.pm hebrew.pm \
-	portuguese.pm chinese.pm spanish.pm
+    for f in add_voters beatpath.pm beatpath2.pm civs_common.pm		      \
+        voting.pm close control create_election download_ballots	      \
+        remove_writein upload_ballots results top_polls.pm get_top_polls      \
+        languages.pm election.pm mail.pm start_election vote refresh_top_polls\
+        publicize_election rp.pm runoff.pm admctrl.pm base_language.pm	      \
+        english.pm hungarian.pm italian.pm french.pm german.pm hebrew.pm      \
+        portuguese.pm chinese.pm spanish.pm
     do
 	target="${CGIBINDIR}/${f}"
 	if test -n "$PERLEXT"
@@ -80,6 +83,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+	     -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
 	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
 	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
