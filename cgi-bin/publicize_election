@@ -1,0 +1,46 @@
+#!@PERL@
+
+use strict;
+use warnings;
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use CGI qw(:standard);
+use Digest::MD5 qw(md5_hex);
+use DB_File;
+
+HTML_Header("Publicize poll");
+CIVS_Header("Publicize poll");
+use election 1.02;
+use voting;
+
+if (param('key') ne 'shipitnow') {
+    print strong('Authorization error');
+    print end_html();
+    exit 0;
+}
+if ($edata{'public'} ne 'yes') {
+    print p("Election $title is not public");
+    exit 1;
+}
+
+if (param('action') ne 'unpublish') {
+    if ($edata{'publicize'} eq 'yes') {
+	print p("Election $title is already being publicized");
+	exit 1;
+    }
+    $edata{'publicize'} = 'yes';
+    print p("Publication successful.");
+} else {
+    if ($edata{'publicize'} ne 'yes') {
+	print p("Election $title is already not publicized");
+	exit 1;
+    }
+    $edata{'publicize'} = 'no';
+    print p("Unpublication successful.");
+}
+
+untie %edata;
+print end_html();
+
+exit 0;
