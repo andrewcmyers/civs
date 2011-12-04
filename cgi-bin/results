@@ -378,9 +378,9 @@ sub DetailsHeader {
 	'</button></p>', $cr;
 
     print RESULTS '<div id="details">';
-    print RESULTS '<button id="hide_details" onclick="hide_details();">',
-     $tx->Hide_details, '</button><h2>',
-     $tx->Result_details, '</h2>', $cr;
+    print RESULTS '<h2>', $tx->Result_details,
+	'<button id="hide_details" onclick="hide_details();">',
+	$tx->Hide_details, '</button></h2>', $cr;
 }
 
 # Generate a ballot report or say that it hasn't been enabled.

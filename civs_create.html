@@ -89,10 +89,10 @@
 	rrparent.removeChild(rrcontrol);
     }
 
-    function render_text(prefix, ta_id, span_id) {
+    function render_text(prefix, ta_id, span_id, clss) {
 	var span = document.getElementById(span_id);
 	var ta = document.getElementById(ta_id);
-	span.innerHTML =  prefix + ta.value;
+	span.innerHTML = '<div class="' + clss + '">' + prefix + ta.value + "</div>";
 	return 1;
     }
 
@@ -102,7 +102,8 @@
 	var names = ta.value.split(/[\r\n]+/g);
 	var html = "";
 	for (i = 0; i < names.length; i++) {
-	    html = html + "<li>" + names[i] + "</li>";
+	    if (names[i] != "")
+		html = html + "<li>" + names[i] + "</li>";
 	}
 	span.innerHTML = "<ul>" + html + "</ul>";
 	return 1;
@@ -160,7 +161,7 @@
 	<small>(<b>Note:</b> polls must be stopped manually)</small>
     </td>
     <td><input type="text" name="election_end" id="election_end" size="30"
-          onchange="render_text('<br><i>Preview</i>: Poll ends ', 'election_end', 'rendered_end')">
+          onchange="render_text('<br><i>Preview</i>: Poll ends ', 'election_end', 'rendered_end', 'poll_end')">
 	 <span class="rendering" id="rendered_end"></span>
 </td>
   </tr>
@@ -180,10 +181,11 @@
     <tr>
       <td><textarea id="description" valign="top" rows="5" name="description" cols="60"></textarea>
       </td>
-      <td><input type="button" value="Preview&gt;&gt;"
+      <td><input type="button" value="Preview &#9656;"
 	    onClick="render_text('<h2>Poll description</h2>',
 				 'description',
-				 'rendered_description')"></td>
+				 'rendered_description',
+				 'description')"></td>
       <td valign="top"><span class="rendering" id="rendered_description"></span></td>
     </tr>
   </table>
@@ -196,7 +198,7 @@
   <tr><td>
     <textarea rows="5" name="choices" cols="60" id="choices"></textarea></td>
     <td>
-      <td><input type="button" value="Preview&gt;&gt;"
+      <td><input type="button" value="Preview &#9656;"
 	    onClick="render_list('choices', 'rendered_choices')"></td>
       <td valign="top"><span class="rendering" id="rendered_choices"></span></td>
     </tr>

@@ -48,10 +48,6 @@ div.emphasized {
   border-color: #cca
 }
 
-input#vote {font-size:130%; font-weight: normal; background-color: #dd8;
-            margin: 0 auto}
-input#vote:hover {background-color: #ff6}
-
 span.explain {font-size: 75%; color: #404040 }
 
 p, ul, li {background-color: transparent}
@@ -86,11 +82,33 @@ h1  { font-size: 200%; text-align: center}
 h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
-input[type=file] { background-color: #f8f0d0 }
+input[type="file"] { background-color: #f8f0d0 }
 input, textarea, button { font-family: Verdana, helvetica, Arial, sans-serif;
            background-color: #fff8e0 }
 button.small_button { font-size: 80% }
-input:hover, button:hover, textarea:hover {background-color: #eeb}
+button#hide_details { margin-left: 2ex }
+
+input#vote {font-size:130%; font-weight: normal; background-color: #ffc;
+            margin: 0 auto}
+input#vote:hover, input[type="submit"]:hover {background-color: #ff4}
+
+input[type="button"], button {
+    border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+input[type="button"], button, input[type="text"] {
+    border: solid 1px #bbb }
+input[type="submit"] {
+    border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+    background-color: #ffc;
+    border: 1px solid #666;
+}
+textarea { border: solid 1px #bbb }
+input[type="file"]:hover,
+  input[type="button"]:hover,
+  input[type="text"]:hover,
+  textarea:hover {
+    background-color: #eec
+}
 /* input[type=text]:active, textarea:active, input[type=file]:active
     {background-color: #ffa}  -- a little too 'active' */
 
@@ -199,7 +217,7 @@ div.description { border: solid 1px #bbb;
 #jshelp ol {text-align: left; width: 36ex}
 p#jsnohelp {text-align: left; width: 36ex}
 
-div#details { border: solid 1px #ccb; background-color: #fffcee;
+div#details { border: solid 1px #ccb; background-color: #eee;
               color: black; padding: 5px; margin: 5px;
 	      display: none }
 
