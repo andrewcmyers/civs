@@ -22,10 +22,21 @@ sub find_top_polls {
     my $top_polls_full_temp = $home. "/elections/top_polls_full.$$";
     my $top_polls_out = $home. "/elections/top_polls.html";
     my $top_polls_full = $home. "/elections/top_polls_full.html";
+    my $reduced_log = $home. "/elections/public_vote.log.temp";
 
     open(IN, $public_vote_log);
+    if (!sysopen NEWLOG, $reduced_log, O_WRONLY|O_CREAT|O_TRUNC) {
+	&Log("Could not open public vote log temp output file $reduced_log");
+	return;
+    }
 
     while (<IN>) {
+      if ($_ =~ m/^= /) {
+	my ($sum, $time, $eid, $usage, $title) = split /\s+/, $_, 5;
+	$elections{$eid} = [($time, $usage)];
+	$title =~ s/\s+$//;
+	$titles{$eid} = $title;
+      } else {
 	my ($time, $eid, $title) = split /\s+/, $_, 3;
 	if (defined($title)) {
 	    $title =~ s/\s+$//;
@@ -37,17 +48,24 @@ sub find_top_polls {
 	    $elections{$eid} = [($time, 1.0)];
 	} else {
 	    my ($prevtime, $prevu) = @{$r};
-	    my $usage = 1.0 + $prevu * exp(($prevtime - $time) * $decay);
+	    my $usage = 1.0;
+	    my $kt = ($prevtime - $time) * $decay;
+	    if ($kt > -30.0) { $usage += $prevu * exp($kt); }
 	    $elections{$eid} = [($time, $usage)];
 	    # print "Updated $eid to $usage\n";
 	}
+      }
     }
     my @eids;
+    my $now = time();
     foreach my $eid (keys %elections) {
 	my ($t, $u) = @{$elections{$eid}};
-	$u *= exp(($t - time()) * $decay);
+	my $kt = ($t - $now) * $decay;
+	if ($kt > -30.0) { $u *= exp($kt); } else { $u = 0; }
 	$elections{$eid} = $u;
 	push @eids, $eid;
+
+	print NEWLOG "= $now $eid $u $titles{$eid}\r\n";
     }
 
     sub cmp {
@@ -66,7 +84,7 @@ sub find_top_polls {
 	return;
     }
     if (!sysopen FULL, $top_polls_full_temp, O_WRONLY|O_CREAT|O_TRUNC) {
-	&Log("Could not open top polls temp output file $top_polls_temp");
+	&Log("Could not open top polls temp output file $top_polls_full_temp");
 	return;
     }
     print OUT '<ul>';
@@ -87,8 +105,10 @@ sub find_top_polls {
     print OUT "</ul>\r\n";
     close(OUT);
     close(FULL);
+    close(NEWLOG);
     rename($top_polls_temp, $top_polls_out);
     rename($top_polls_full_temp, $top_polls_full);
+    rename($reduced_log, $public_vote_log);
 }
 
 1; # ok!
