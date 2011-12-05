@@ -119,7 +119,7 @@ foreach my $entry (@entries) {
 	$started,
 	$stopped,
 	small($last_update),
-	a({-href=>"delete_election.pl?id=$file&pwd=foo",
+	a({-href=>"delete_election.pl?id=$file&key=@ADMIN_KEY@",
 	   -onClick => "return confirm('Are you sure you want to permanently delete this?"},"Delete"),
 	$cr,
 	]));

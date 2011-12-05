@@ -1,0 +1,26 @@
+#!@PERL@
+
+use strict;
+use warnings;
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use CGI qw(:standard);
+use top_polls;
+
+HTML_Header("Refresh top polls");
+CIVS_Header("Refresh top polls");
+
+if (param('key') ne '@ADMIN_KEY@') {
+    print strong('Authorization error');
+    print end_html();
+    exit 0;
+}
+
+top_polls::find_top_polls(10, 0.01);
+
+print p("Top polls have been refreshed.");
+
+print end_html();
+
+exit 0;
