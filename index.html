@@ -126,7 +126,7 @@ Public-poll voting forms can now be embedded into other web pages.
 <tr><td>
 <div class="bubble">
 <h3>Top public polls: <a href="publicized_polls.html">[see more]</a></h3>
-<div id="top_polls">
+<div id="top_polls" class="small_list">
 Loading...
 </div>
 </div>
@@ -153,6 +153,6 @@ the use of this service.
 </small></p>
 </div>
 </div>
-<script>fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@')</script>
+<script type="text/javascript">fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@')</script>
 </body>
 </html>

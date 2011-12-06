@@ -19,6 +19,10 @@ undef $/;
 &HTML_Header("CIVS Server Status");
 &CIVS_Header("Server Status");
 
+if (param('key') ne '@ADMIN_KEY@') {
+    print p("Password missing or wrong");
+    exit 1;
+}
 my $elections_dir = $home."/elections/";
 opendir(DIR, $elections_dir) or die "Can't open directory $elections_dir: $!";
 
@@ -50,6 +54,7 @@ while (defined(my $file = readdir(DIR))) {
 	$email_addr = "(no addr)";
     }
     my $public = (defined($edata{'public'}) && $edata{'public'} eq 'yes') ? "Public" : "Private";
+    if ($edata{'publicize'} eq 'yes') { $public .= '+' }
     if (defined($edata{'external_ballots'}) &&
 	  $edata{'external_ballots'} eq 'yes')
 	{ $public = 'Test'; }
@@ -110,7 +115,7 @@ foreach my $entry (@entries) {
     if ($public ne 'Test') {
 	$total_users += $num_votes;
     }
-    push @rows, Tr(td([a({-href=>'$civs_bin_path/results@PERLEXT@?id='.$file},
+    push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=".$file},
 	small($title)),
 	"$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
 	$public,

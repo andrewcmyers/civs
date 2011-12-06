@@ -181,6 +181,8 @@ div.bubble li:first-child { border-top: none }
 
 div.bubble h3 { padding-top: 0; margin-top: 0 }
 
+div.small_list { font-size: 90% }
+
 table.links {
     margin: 5px;
     background-color: transparent
