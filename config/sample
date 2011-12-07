@@ -70,3 +70,7 @@ SUGGESTION_BOX='http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_5
 # options turned on to support other languages.
 EN_SUFFIX='.en'
 UTF8_SUFFIX='.utf8'
+
+# Password/key for site administrator. Must be defined to
+# something secret. Current definition is a placeholder.
+ADMIN_KEY=''
