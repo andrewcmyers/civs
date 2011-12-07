@@ -33,7 +33,7 @@ if ($external_ballots ne 'yes') {
 }
 
 my $ballot_file = upload('ballot_data');
-print pre("Ballot file: $ballot_file");
+# print pre("Ballot file: $ballot_file");
 my $lineno = 0;
 my @errors = ();
 my $num_ballots = 0;
@@ -45,11 +45,14 @@ while (<$ballot_file>) {
     s/(\s)*$//g;
     if (m/^#/) { next; }
     my $multiplier = 1;
-    print pre("Line $lineno: $_"), $cr;
+    # print pre("Line $lineno: $_"), $cr;
     if (m/^.*(x|X)/) {
-	($multiplier, my $dummy, $_) = m/(^.*)(x|X)(.*$)/;
+	($multiplier, my $dummy, $_) = m/^\s*([^ xX]*)\s*(x|X)(.*$)/;
+
+
         s/^(\s)+//g;
-	if (!($multiplier =~ m/^(0|[1-9][0-9]*/)$)) {
+	s/(\s)*$//g;
+	if (!($multiplier =~ m/^(0|[1-9][0-9]*)$/)) {
 	    push @errors, "Line $lineno: ballot multiplier $multiplier not a number";
 	    next;
 	}
@@ -65,7 +68,7 @@ while (<$ballot_file>) {
 	    my $rank = $indices[$i];
 	    if ($proportional eq 'yes' && $use_combined_ratings) {
 		$ballots[$num_ballots][$i] = 0 + $rank;
-		print pre("rank $rank seen"), $cr;
+		# print pre("rank $rank seen"), $cr;
 		next;
 	    }
 	    if ($rank eq '-') { $rank = 'No opinion'; }
