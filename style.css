@@ -42,6 +42,8 @@ table#ballot { margin: 0 auto }
 table#ballot td { vertical-align: top; }
 div.emphasized {
   background-color: #ffffd0; margin: 0px auto;
+  font-size: 80%;
+  max-width: 80ex;
   padding: 5px;
   border-style: solid;
   border-width: 1px;
@@ -49,6 +51,8 @@ div.emphasized {
 }
 
 span.explain {font-size: 75%; color: #404040 }
+
+div.poll_end {display: inline}
 
 p, ul, li {background-color: transparent}
 

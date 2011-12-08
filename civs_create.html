@@ -73,10 +73,10 @@
 	return false;
     }
 
-    function render_text(prefix, ta_id, span_id) {
+    function render_text(prefix, ta_id, span_id, clss) {
 	var span = document.getElementById(span_id);
 	var ta = document.getElementById(ta_id);
-	span.innerHTML = '<div class="' + clss + '">' + prefix + ta.value + "</div>";
+	span.innerHTML = prefix + '<div class="' + clss + '">' + ta.value + "</div>";
 	return 1;
     }
 
@@ -152,20 +152,20 @@
 	<small>(<b>Note:</b> polls must be stopped manually)</small>
     </td>
     <td><input type="text" name="election_end" id="election_end" size="30"
-          onchange="render_text('<br><i>Preview</i>: Poll ends ', 'election_end', 'rendered_end', 'poll_end')">
+          onchange="render_text('<br><i>Preview</i>: Poll ends ', 'election_end', 'rendered_end', 'poll_end', 'poll_end_preview')">
 	 <span class="rendering" id="rendered_end"></span>
 </td>
   </tr>
   </table>
 
-<div class="emphasized"><small>
+<div class="emphasized">
   Your name and e-mail address are used when sending e-mail to
   voters. Your name should be recognizable to voters, and the e-mail
   address must work, because CIVS emails you the information needed to
   control the poll. Make sure your spam filter does not
   block mail from <kbd>@SUPERVISOR@</kbd> (or check your spam folder if
   the mail does not arrive!).
-  </small></div>
+  </div>
 
   <p>Description of the poll and available choices (most HTML tags ok):<br>
   <table class="form">
