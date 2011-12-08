@@ -15,7 +15,7 @@ my %elections; # map to [(last_time_stamp, usage_level)]
 my %titles;
 
 sub find_top_polls {
-    my ($max_publicized, $min_usage) = @_;
+    my ($max_publicized, $max_full, $min_usage) = @_;
     my $home = '@CIVSDATADIR@';
     my $public_vote_log = $home. "/elections/public_vote.log"; # must be consistent with 'vote'.
     my $top_polls_temp = $home. "/elections/top_polls.$$";
@@ -91,7 +91,7 @@ sub find_top_polls {
     print FULL '<ul>';
     my $count = 0;
     foreach my $id (@eids) {
-	if ($elections{$id} < $min_usage) { last; }
+	if ($elections{$id} < $min_usage || $count >= $max_full) { last; }
 	my @line = ('<li>',
 			'<a href="http://@THISHOST@@CIVSBINURL@',
 			    '/vote@PERLEXT@?id=' , $id , '">' , escapeHTML($titles{$id}),
