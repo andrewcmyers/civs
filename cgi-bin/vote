@@ -92,6 +92,8 @@ if ($load) {
     &Load;
 }
 
+print '<div class="normal_text"><br>', $cr;
+
 if ($voting_enabled) {
     &IntroduceVoting;
 } else {
@@ -116,6 +118,8 @@ if ($ballot_reporting eq 'yes') {
     }
 }
 
+print '</div>', $cr;
+
 &voting::GenerateVoteForm($voter_key, $authorization_key, [@choice_index], [@rank], $js_ui, 0,
     ($ballot_reporting eq 'yes' && 
      $reveal_voters eq 'yes' &&
@@ -132,7 +136,8 @@ if ($ballot_reporting eq 'yes') {
 
 
 if ($voting_enabled && $public eq 'yes') {
-    print p($tx->if_you_have_already_voted("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id"));
+    print div({class => 'normal_text'}, 
+	p($tx->if_you_have_already_voted("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id")));
 }
 
 print end_html();
@@ -359,14 +364,15 @@ sub Load {
 
 
 sub IntroduceWriteins {
-    print p($description), $cr;
+    print div({class => 'description'}, p($description)), $cr;
+
     print p($tx->instructions1($num_winners, $election_end,
 			       $name, $email_addr)), $cr;
     print p($tx->only_writeins_are_permitted), $cr;
 }
 
 sub IntroduceVoting {
-    print p($description), $cr;
+    print div({class => 'description'}, p($description)), $cr;
 
     print p($tx->instructions1($num_winners, $election_end,
 			       $name, $email_addr)), $cr;

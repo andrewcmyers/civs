@@ -343,7 +343,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
 	$ret = "Give each of the following choices
 	    a rank, where a smaller-numbered rank means that you
 	    prefer that choice more.
-	    For example, give your top choice the rank 1.
+	    For example, give your top choice the rank &ldquo;1st&rdquo;.
 	    Give choices the same rank if you have no
 	    preference between them. You do not have to use all the
 	    possible ranks. All choices initially have the
