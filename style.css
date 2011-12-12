@@ -166,6 +166,17 @@ td#navbubbles {
     width: 35ex;
     vertical-align: top;
 }
+div#topmenu {
+    position: relative;
+    background: #119;
+    top: -1.5ex;
+}
+div#topmenu a:hover {
+    color: yellow;
+}
+div#topmenu a {
+    color: white;
+}
 div.bubble {
     background-image: url('vertstrip.png');
     padding: 3px 6px 3px 2px;
@@ -177,7 +188,6 @@ div.bubble {
     -webkit-box-shadow: 3px 3px 5px #aaa;
     box-shadow: 3px 3px 5px #aaa;
 }
-
 div.bubble table { padding: 0; margin: 4px; background-color: transparent }
 div.bubble ul { width: 100%; padding: 0ex; margin: 1px 7px 1px 3px; background-color: transparent }
 div.bubble li { text-indent: 0; padding: 0; list-style: none; border-top: solid 1px #aaa; margin: 0; background-color: transparent}
