@@ -29,6 +29,7 @@ opendir(DIR, $elections_dir) or die "Can't open directory $elections_dir: $!";
 my @entries;
 
 my $total_users = 0;
+my $total_auth = 0;
 
 while (defined(my $file = readdir(DIR))) {
     next if !defined($file);
@@ -113,6 +114,7 @@ foreach my $entry (@entries) {
      my $last_update)
 	= @{$entry};
     if ($public ne 'Test') {
+        $total_auth += $num_auth;
 	$total_users += $num_votes;
     }
     push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=".$file},
@@ -130,7 +132,7 @@ foreach my $entry (@entries) {
 	]));
 }
 
-print p("Total users: $total_users"), $cr;
+print p("Total votes cast: $total_users, total authorized: $num_auth"), $cr;
 
 print table({-class => 'status'}, @rows);
             
