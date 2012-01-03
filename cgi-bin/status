@@ -132,7 +132,7 @@ foreach my $entry (@entries) {
 	]));
 }
 
-print p("Total votes cast: $total_users, total authorized: $num_auth"), $cr;
+print p("Total votes cast: $total_users, total authorized: $total_auth"), $cr;
 
 print table({-class => 'status'}, @rows);
             
