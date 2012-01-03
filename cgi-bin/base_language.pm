@@ -327,7 +327,7 @@ sub instructions1 { # num_winners, end, name, email
     } else {
 	$wintxt="$_[1] favorite choices";
     }
-    "Only the $wintxt will win the poll.<p>
+    "Only the $wintxt will win the poll.<br />
 	    The poll ends <b>$_[2]</b>.
 	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
 	    Contact the poll supervisor if you need help.";

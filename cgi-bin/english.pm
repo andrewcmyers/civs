@@ -324,65 +324,6 @@ sub ballot_reporting_is_enabled {
      Your ballot (the rankings you assign to choices)
      will be visible in the poll results when the poll ends.';
 }
-sub instructions1 { # num_winners, end, name, email
-    my $wintxt;
-    if ($_[1] == 1) {
-	$wintxt="single favorite choice";
-    } else {
-	$wintxt="$_[1] favorite choices";
-    }
-    "Only the $wintxt will win the poll.<p>
-	    The poll ends <b>$_[2]</b>.
-	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
-	    Contact the poll supervisor if you need help.";
-}
-sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
-    my $ret;
-    if (!$prop || !$combined) {
-	$ret = "Give each of the following choices
-	    a rank, where a smaller-numbered rank means that you
-	    prefer that choice more.
-	    For example, give your top choice the rank &ldquo;1st&rdquo;.
-	    Give choices the same rank if you have no
-	    preference between them. You do not have to use all the
-	    possible ranks. All choices initially have the
-	    lowest possible rank. ". $cr;
-	if ($no_opinion) {
-	    $ret .= '<b>Note:</b> &ldquo;No opinion&rdquo;
-		    is <i>not</i> the same as the lowest possible rank; it means
-		    that you choose not to rank this choice with respect to the
-		    other choices.</p>';
-	}
-	if ($prop) {
-	    $ret .= '<p>This poll is decided using an experimental Condorcet-based
-	    method designed to provide proportional representation. It is assumed
-	    by the voting algorithm that you want the ranking of your most
-	    preferred <i>winning</i> choice to be as high as possible, and if two
-	    sets of winning choices agree on the choice you prefer most, then you
-	    would decide between them using the second most preferred choice, and
-	    so on. ';
-	}
-    } else {
-	$ret = '<p>This poll is decided using an experimental
-	Condorcet-based algorithm designed to provide proportional
-	representation.
-	Please give each of the following choices a
-	<b>weight</b> that expresses how much you want that
-	choice to be part of the winning set of choices.
-	It is assumed by the voting algorithm that you want
-	  the sum of weights of winning choices to be as large
-	as possible.  All choices
-	are currently given a weight of zero, meaning that you
-	have no interest in seeing them win.
-	Weights cannot be negative or larger than 999.
-	It doesn\'t help you to make your weights larger
-	than other voters\' weights, because your weights are only compared
-	against each other.'.
-	"<a href=\"$civs_url/proportional.html\">[See more information]</a>.</p>";
-    }
-    return $ret;
-}
 
 sub Identifier_request {
     "<p>Please give your email address or other recognizable identifier:  \r\n".
@@ -443,11 +384,11 @@ sub buttons_are_deactivated {
 	your browser does not support Javascript.';
 }
 sub ranking_instructions {
-       'Rank the choices in one of three ways:
+       '<p>Rank the choices in one of three ways:</p>
 	<ol>
-	    <li>drag the rows
-	    <li>use pulldowns in Rank column
-	    <li>select rows and use buttons above
+	    <li>drag the rows</li>
+	    <li>use pulldowns in Rank column</li>
+	    <li>select rows and use buttons above</li>
 	</ol>';
 }
 

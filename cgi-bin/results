@@ -128,14 +128,12 @@ open (RESULTS, "<$cache_file");
 while (<RESULTS>) { print $_; }
 close (RESULTS);
 
-print end_html();
-
-exit 0;
+CIVS_End;
 
 ###########################################################################################
 
 sub Email {
-    return "<span class='email'>$_[0]</span>";
+    return "<span class=\"email\">$_[0]</span>";
 }
 
 # These variables are global to the results computations.
@@ -145,9 +143,9 @@ my (%visited);
 
 # Start the progress meter (sends to STDOUT)
 sub StartProgressMeter {
-    print '<p id=compute_msg><i>'. $tx->computing_results. '</i></p>', $cr;
-    print '<table id="completion_meter" cellpadding=0><tr><td id="completed_meter" width=0px height=2ex></td><td id="incomplete_meter" width=100%</td></tr></table>',$cr;
-    print '<script>
+    print '<p id="compute_msg"><i>'. $tx->computing_results. '</i></p>', $cr;
+    print '<table id="completion_meter" cellpadding="0"><tr><td id="completed_meter" width="0px" height="2ex"></td><td id="incomplete_meter" width="100%"></td></tr></table>',$cr;
+    print '<script type="text/javascript">
        var complete = document.getElementById("completed_meter");
        var incomplete = document.getElementById("incomplete_meter");
        function report_progress(x) {
@@ -166,7 +164,7 @@ sub ReportProgress {
     (my $v) = @_; # virtual progress (within current phase)
     my $real = ($progress_max - $progress_base) * $v + $progress_base;
     if ($real - $progress_level > 0.01 || $real < $progress_level) {
-	print '<script>report_progress(', $real, ');</script>', $cr;
+	print '<script type="text/javascript">report_progress(', $real, ');</script>', $cr;
 	$progress_level = $real;
     }
     STDOUT->flush();
@@ -183,7 +181,7 @@ sub NewProgressPhase {
 
 # Call when results are finished, to remove progress meter.
 sub ReportCompletion {
-    print '<script>
+    print '<script type="text/javascript">
 	document.getElementById("compute_msg").style.display = "none";
 	document.getElementById("completion_meter").style.display = "none";
 	</script>', $cr;
@@ -193,7 +191,7 @@ sub ReportCompletion {
 # output file RESULTS. Generate progress reports appropriately.
 sub ComputeResults {
 
-    print RESULTS '<span id="settings"><form method="GET"
+    print RESULTS '<div id="settings"><form method="get"
 	    action="'.$thisurl.'"
 	    enctype="multipart/form-data"
 	    name="changeSettings">';
@@ -215,10 +213,10 @@ sub ComputeResults {
     print RESULTS $tx->Actual_votes_cast($num_votes), br, $cr;
 
     print RESULTS $tx->Number_of_winning_candidates;
-    print RESULTS '<input type="text" size=2
+    print RESULTS '<input type="text" size="2"
 	    name="num_winners"
-	    onChange="newSettings()"
-	    value="'.$num_winners.'">';
+	    onchange="newSettings()"
+	    value="', $num_winners, '" />';
     print RESULTS hidden('id', $election_id);
     if (defined(param('rkey'))) {
 	print RESULTS hidden('rkey', param('rkey'));
@@ -239,51 +237,52 @@ sub ComputeResults {
 	}
 	print RESULTS ' is used to identify each voter\'s preferred set of choices.'.br();
     }
+    my $checked = ' checked="checked"';
     my $bw_checked = '';
     my $rp_checked = '';
     my $mam_checked = '';
     my $runoff_checked = '';
     if ($algorithm eq 'civs_ranked_pairs') {
-	$rp_checked = 'checked';
+	$rp_checked = $checked;
     } elsif ($algorithm eq 'mam') {
-	$mam_checked = 'checked';
+	$mam_checked = $checked;
     } elsif ($algorithm eq 'runoff') {
-	$runoff_checked = 'checked';
+	$runoff_checked = $checked;
     } else {
-	$bw_checked = 'checked';
+	$bw_checked = $checked;
     }
 
     print RESULTS $tx->Condorcet_completion_rule,
-	          $tx->What_is_this($civs_url.'/rp.html'),'
-        <br><blockquote>
+	          $tx->What_is_this($civs_url.'/rp.html'), BR,
+       '<blockquote>
 	<input type="radio"
 	    name="algorithm"
-	    onClick="newSettings()"
+	    onclick="newSettings()"
 	    value="beatpath" ',
 	    $bw_checked,
-	'> Schulze/Beatpath/CSSD<br>
-	<input type="radio"
-	    name="algorithm",
-	    onClick="newSettings()"
+	' /> Schulze/Beatpath/CSSD', BR,
+	'<input type="radio"
+	    name="algorithm"
+	    onclick="newSettings()"
 	    value="civs_ranked_pairs"',
 	    $rp_checked,
-	'> CIVS Ranked Pairs<br>
-	<input type="radio"
-	    name="algorithm",
-	    onClick="newSettings()"
+	' /> CIVS Ranked Pairs', BR,
+	'<input type="radio"
+	    name="algorithm"
+	    onclick="newSettings()"
 	    value="mam"',
 	    $mam_checked,
-	'> MAM<br>
-	<input type="radio"
-	    name="algorithm",
-	    onClick="newSettings()"
+	' /> MAM', BR,
+	'<input type="radio"
+	    name="algorithm"
+	    onclick="newSettings()"
 	    value="runoff"',
 	    $runoff_checked,
-	'> Condorcet-IRV';
-	print RESULTS '<br><input type="submit" id="recomplete" value="Update">';
+	' /> Condorcet-IRV', BR;
+	print RESULTS '<input type="submit" id="recomplete" value="Update" />';
 
     # print RESULTS '&nbsp;<input type="submit" name="submit" value="Update display options">';
-    print RESULTS '</blockquote></form></span>',$cr;
+    print RESULTS '</blockquote></form></div>',$cr;
 
     print RESULTS h2($tx->poll_description_hdr), $cr,
 	'<div class="description">',
@@ -317,22 +316,22 @@ sub PrintMatrix {
     my $zerodot = $_[4];
 
     print RESULTS '<table class="matrix">'.$cr;
-    print RESULTS '<tr><td>&nbsp;</td><td>&nbsp;</td>';
+    print RESULTS '<tr>', td('&nbsp;'), td('&nbsp;');
     for (my $jj = 0; $jj < $n; $jj++) {
 		my $j1 = $jj + 1;
-		print RESULTS '<th width=20px>'.$j1.'.</th>';
+		print RESULTS th({-width => "20px"}, $j1);
     }
     print RESULTS '</tr>', $cr;
     for (my $jj = 0; $jj < $n; $jj++) {
 	my $j = $choice_index[$jj];
 	my $j1 = $jj + 1;
 	print RESULTS '<tr>';
-	print RESULTS '<th align=left>'.$j1.'.&nbsp;'.$choices[$j].'</th>'.$cr;
-	print RESULTS "<td width=40px>&nbsp;</td>\n";
+	print RESULTS '<th align="left">', $j1, '.&nbsp;', $choices[$j], '</th>', $cr;
+	print RESULTS td({-width=>"40px"}, '&nbsp;'), $cr;
 	for (my $kk = 0; $kk < $n; $kk++) {
 	    my $k = $choice_index[$kk];
 	    if ($j == $k) {
-		print RESULTS '<td class="count">-';
+		print RESULTS td({-class => 'count'}, '-');
 	    } else {
 		my $w = $m[$j][$k];
 		my $l = $m[$k][$j];
@@ -365,7 +364,7 @@ sub DetailsHeader {
     # print RESULTS hr(),$cr;
     print RESULTS '<p id="show_details">',
 	$tx->some_result_details_not_shown, 
-	'<button onclick=\'show_details();\'>',
+	'<button onclick="show_details();">',
 	    $tx->Show_details, 
 	'</button></p>', $cr;
 
@@ -515,14 +514,14 @@ sub PrintRanking {
 	    }
 	    if ($condorcet_winner != -1 &&
 		$condorcet_winner != $winner[$i]) {
-		print RESULTS '<span class=explain>',
+		print RESULTS '<span class="explain">',
 				$tx->loss_explanation2($choices[$condorcet_winner],
 				    $matrix[$condorcet_winner][$winner[$i]],
 				    $matrix[$winner[$i]][$condorcet_winner]),
 			      '</span>';
 	    }
 	    if ($explanation ne '') {
-		print RESULTS '<span class=explain>'.$explanation.'</span>';
+		print RESULTS '<span class="explain">'.$explanation.'</span>';
 	    }
 	    $choice_rank[$winner[$i]] = $j++;
 	    if (0 && $explanation ne '') {
@@ -1073,8 +1072,8 @@ sub PrintProportionalResults {
     $num_unbeaten = $#cwinner + 1;
     if ($num_unbeaten == 1) {
 	print RESULTS h2("Winning set of choices".$cr);
-	print RESULTS p("The <a href=\"@CIVSURL@/proportional.html\">apparent</a> winner of this poll was the set of choices (" .
-	    flatten(renumber($committee[$cwinner[0]])) . '):');
+	print RESULTS p('The <a href="@CIVSURL@/proportional.html">apparent</a> winner of this poll was the set of choices (', 
+	    flatten(renumber($committee[$cwinner[0]])), '):');
     } else {
 	print RESULTS h2("Winning sets of choices$cr");
 	print RESULTS p("There were $num_unbeaten unbeaten sets:$cr");
@@ -1086,7 +1085,7 @@ sub PrintProportionalResults {
 	for (my $j = 0; $j < $num_winners; $j++) {
 	    $j1 = $mapped_comm[$j];
 	    $j2 = $choice_index[$j1 - 1];
-	    print RESULTS "<li value=\"$j1\"> <b>$choices[$j2]</b>".$cr;
+	    print RESULTS "<li value=\"$j1\"> <b>$choices[$j2]</b>", $cr;
 	}
 	print RESULTS '</ol></td>';
     }
@@ -1131,7 +1130,7 @@ sub PrintProportionalResults {
     Just enter the numbers of the choices (from 1 to $num_choices) in each set, with the
     numbers of one set's choices in the left column and the numbers of the other's
     in the right column.");
-    print RESULTS '<form method="POST"
+    print RESULTS '<form method="post"
 	    action="'.$thisurl.'#comparison"
 	    enctype="multipart/form-data"
 	    name="CompareSets">';
@@ -1144,7 +1143,7 @@ sub PrintProportionalResults {
 	$comparison_request = 0;
     }
     @curr_comm = split /,/, $committee[$cwinner[0]];
-    print RESULTS '<tr><th width=40px>Set 1</th><th width=40px>Set 2</th></tr>';
+    print RESULTS '<tr><th width="40px">Set 1</th><th width="40px">Set 2</th></tr>';
     for (my $i = 1; $i <= $num_winners; $i++) {
 	my $besti = $curr_comm[$i-1];
 	my $li, $ri;

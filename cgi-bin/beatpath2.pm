@@ -196,19 +196,19 @@ sub print_details {
     Print '<tr><td>&nbsp;</td><td>&nbsp;</td>';
     for (my $jj = 0; $jj < $n; $jj++) {
 		my $j1 = $jj + 1;
-		Print '<th width=20px>'.$j1.'.</th>';
+		Print '<th width="20px">'.$j1.'.</th>';
     }
     Print '</tr>'.$cr;
     for (my $jj = 0; $jj < $n; $jj++) {
 	my $j = $choice_index[$jj];
 	my $j1 = $jj + 1;
 	Print '<tr>';
-	Print '<th align=left>'.$j1.'.&nbsp;'.$choices[$j].'</th>'.$cr;
-	Print "<td width=40px>&nbsp;</td>\n";
+	Print '<th align="left">', $j1, '.&nbsp;', $choices[$j], '</th>', $cr;
+	Print '<td width="40px">&nbsp;</td>', $cr;
 	for (my $kk = 0; $kk < $n; $kk++) {
 	    my $k = $choice_index[$kk];
 	if ($j == $k) {
-		Print '<td class="count">-';
+		Print '<td class="count">-</td>';
 	    } else {
 		my $w = $m->[$j][$k];
 		my $wlabel = "$w->[0]<small>&ndash;$w->[1]</small>";

@@ -92,7 +92,7 @@ if ($load) {
     &Load;
 }
 
-print '<div class="normal_text"><br>', $cr;
+print '<div class="normal_text">', BR;
 
 if ($voting_enabled) {
     &IntroduceVoting;
@@ -140,9 +140,8 @@ if ($voting_enabled && $public eq 'yes') {
 	p($tx->if_you_have_already_voted("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id")));
 }
 
-print end_html();
-
-exit 0;
+&CIVS_End;
+###############################
 
 sub ProcessVote {
     my $vote = '';
@@ -215,9 +214,8 @@ sub ProcessVote {
     #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
 
     PointToResults;
-    print end_html();
 
-    exit 0
+    CIVS_End;
 }
 
 sub LogPublicVote {
