@@ -111,4 +111,8 @@ sub find_top_polls {
     rename($reduced_log, $public_vote_log);
 }
 
+sub standard_refresh {
+    find_top_polls(10, 1000, 0.00001);
+}
+
 1; # ok!

@@ -17,7 +17,7 @@ if (param('key') ne '@ADMIN_KEY@') {
     exit 0;
 }
 
-top_polls::find_top_polls(10, 1000, 0.001);
+&top_polls::standard_refresh;
 
 print p("Top polls have been refreshed.");
 

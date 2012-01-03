@@ -234,10 +234,7 @@ sub LogPublicVote {
     my $top_polls_time = &FileTimestamp($top_polls);
 
     if (time() - $top_polls_time > $top_polls_refresh) {
-
-        top_polls::find_top_polls(10, 1000, 0.001);
-
-    } else {
+        &top_polls::standard_refresh;
     }
 }
 
