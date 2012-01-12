@@ -51,12 +51,14 @@ our %edata_copy = %edata;
 &CloseDatabase;
 &UnlockElection; # try to avoid blocking out other people
 
-if ($public ne 'yes') {
-    &CheckStopped;
-}
+if (param('admin_key') ne '@ADMIN_KEY@') {
+    if ($public ne 'yes') {
+	&CheckStopped;
+    }
 
-if ($restrict_results eq 'yes') {
-    &CheckResultKey(param('rkey'));
+    if ($restrict_results eq 'yes') {
+	&CheckResultKey(param('rkey'));
+    }
 }
 
 print br();

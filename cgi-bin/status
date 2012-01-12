@@ -117,7 +117,8 @@ foreach my $entry (@entries) {
         $total_auth += $num_auth;
 	$total_users += $num_votes;
     }
-    push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=".$file},
+    push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=".$file.
+			         '&admin_key=@ADMIN_KEY@'},
 	small($title)),
 	"$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
 	$public,
@@ -126,7 +127,7 @@ foreach my $entry (@entries) {
 	$started,
 	$stopped,
 	small($last_update),
-	a({-href=>"delete_election.pl?id=$file&key=@ADMIN_KEY@",
+	a({-href=>'delete_election.pl?id='.$file.'&key=@ADMIN_KEY@',
 	   -onClick => "return confirm('Are you sure you want to permanently delete this?"},"Delete"),
 	$cr,
 	]));

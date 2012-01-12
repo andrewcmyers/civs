@@ -16,11 +16,11 @@ fi
 
 . $1 || exit 1
 
-echo "Read settings file"
+echo "Read settings file."
 
 if test -z "$ADMIN_KEY"
 then
-    echo 'Must define $ADMIN_KEY in' $1
+    echo 'ERROR: Must define $ADMIN_KEY in' $1 'to be something secret.'
     exit 1
 fi
 
@@ -68,7 +68,8 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
         voting.pm close control create_election download_ballots	      \
         remove_writein upload_ballots results top_polls.pm get_top_polls      \
         languages.pm election.pm mail.pm start_election vote refresh_top_polls\
-        publicize_election status rp.pm runoff.pm admctrl.pm base_language.pm \
+        publicize_election status delete_election.pl			      \
+	rp.pm runoff.pm admctrl.pm base_language.pm			      \
         english.pm hungarian.pm italian.pm french.pm german.pm hebrew.pm      \
         portuguese.pm chinese.pm spanish.pm
     do
@@ -77,6 +78,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	then
 	    case $target in
 	      *.pm) ;;
+	      *.pl) ;;
 	      *) target="${target}${PERLEXT}";;
 	    esac
 	fi
