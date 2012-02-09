@@ -411,6 +411,11 @@ sub BallotReport {
 		    unshift @row, "$i. ";
 		    $i++;
 		}
+		if ($proportional eq 'yes' && !$use_combined_ratings) {
+		    for (my $i = 1; $i <= $#row; $i++) {
+			$row[$i] = $num_choices - $row[$i];
+		    }
+		}
 		push @rows, td(\@row);
 	    }
 
