@@ -58,11 +58,11 @@ sub mail_has_been_sent {
 }
 
 sub click_on_the_URL_to_start { 
-    "Haga clic en la dirección en que el correo electrónico para iniciar la encuesta: <strong>$_[1]</strong>."
+    "Haga clic en la dirección que aparece en que el correo electrónico para iniciar la encuesta: <strong>$_[1]</strong>."
 }
 
 sub here_is_the_control_URL { 
-    "Aquí está la dirección para controlar la nueva encuesta. En funcionamiento normal 
+    "Esta es la dirección para controlar la nueva encuesta. En funcionamiento normal 
              esto sería enviado al supervisor a través del correo electrónico."; 
 }
 sub the_poll_is_in_progress { 
@@ -95,7 +95,7 @@ sub creation_email_info1 { # title, url
   $_[2]"
 }
 sub creation_email_public_link { # url
-"Because this is a public poll, you may direct voters to the following URL:
+"Dado que es una encuesta pública, puedes dirigir a los votantes a la siguiente URL:
 
   $_[1] 
 
@@ -107,23 +107,23 @@ sub for_more_information_about_CIVS { # url
 }
 
 sub Sending_result_key { # addr
-    "Sending result key to '$_[1]'";
+    "Enviando la clave de resultado a '$_[1]'";
 }
 sub Results_of_CIVS_poll { # title
-    "Results of CIVS poll: $_[1]";
+    "Resultados de la encuesta CIVS: $_[1]";
 }
 sub Results_key_email_body { # title, url, civs_home
-"Una nueva encuesta CIVS ha sido creado con nombre \"$_[1]\".
-Usted ha sido designado como un usuario que está autorizado a ver las
+"Ha sido creada una nueva encuesta CIVS con nombre \"$_[1]\".
+Usted ha sido designado como un usuario que está autorizado a ver el
 resultado de esta encuesta.
 
-Guardar este mensaje. Si lo pierde no tendrá acceso a
-los resultados. Una vez que la encuesta ha sido cerrada, los resultados serán
-disponible en la siguiente URL:
+Guarde este mensaje, si lo pierde no tendrá acceso a
+los resultados. Una vez que la encuesta haya sido cerrada, los resultados estarán
+disponibles en la siguiente URL:
 
   $_[2] 
 
-Esta URL es privada. Permitir el acceso de usuarios no autorizados a esta 
+Esta URL es privada. El acceso de usuarios no autorizados a esta 
 URL les permitirá ver los resultados de la encuesta. 
 Para obtener más información acerca de la votación de Condorcet Internet Service, consulte 
   $_[3] 
@@ -140,44 +140,44 @@ sub poll_started {
 # De control 
 
 sub CIVS_Poll_Control { 
-    "CIVS control encuesta"
+    "Encuesta de control CIVS"
 }
 sub Poll_control { 
     "Encuesta de control"
 }
 sub poll_has_not_yet_started { 
-    "La encuesta no ha comenzado todavía. Pulse este botón para empezar: "
+    "La encuesta no ha comenzado aún. Pulse este botón para empezar: "
 }
 sub Start_poll { 
-    'La encuesta de Inicio '
+    'Inicio de la encuesta'
 }
 sub End_poll { 
-    'La encuesta final'
+    'Fin de la encuesta'
 }
 sub ending_poll_cannot_be_undone { 
-    'Finalización de una encuesta es una operación que no se puede deshacer. Continuar?'; 
+    'La finalización de una encuesta es una operación que no se puede deshacer. ¿Continuar?'; 
 }
 sub writeins_have_been_disabled { 
-    'Escribir-en las opciones han sido con discapacidad'
+    'Se ha deshabilitado la escritura en las opciones'
 }
 sub disallow_further_writeins { 
-    'No permitir más escribir-ins '; 
+    'No permitir más escrituras en las opciones'; 
 }
 sub voting_disabled_during_writeins {
-    'El voto es desactivado durante la escritura en fase.'
+    'El voto está desactivado durante la escritura en las opciones.'
 }
 sub allow_voting_during_writeins { 
-    "Permitir a los votantes durante la escritura-en fase"; 
+    "Se permite votar durante la escritura en las opciones"; 
 }
 sub this_is_a_test_poll { 
     'Esta es una encuesta de prueba. '; 
 }
 
 sub poll_supervisor {# nombre, correo electrónico 
-    "Encuesta supervisor: $_[1] (<tt>$_[2]</tt>)"; 
+    "Supervisor de encuesta: $_[1] (<tt>$_[2]</tt>)"; 
 }
 sub no_authorized_yet {# esperando 
-    "0 ($_[1] los votantes será autorizado cuando la encuesta se inicia)"; 
+    "0 ($_[1] los votantes será autorizados cuando la encuesta se inicie)"; 
 }
 sub total_authorized_voters {# num_auth_string 
     "Total de votantes autorizados: $_[1]"; 
@@ -186,31 +186,30 @@ sub actual_votes_so_far {#numero
     "Votos reales emitidos hasta la fecha: $_[1]"; 
 }
 sub poll_ends {# end 
-    "Encuesta termina $_[1]."; 
+    "La encuesta termina el $_[1]."; 
 }
 sub Poll_results_available_to_all_voters_when_poll_completes { 
-    'Resultados de la encuesta a disposición de todos los votantes, cuando la encuesta completa. '; 
+    'Los resultados estarán a disposición de todos los votantes cuando se complete la encuesta. '; 
 }
 sub Voters_can_choose_No_opinion { 
     "Los votantes pueden elegir la opción no tengo opinión "; 
 }
 sub Voting_is_disabled_during_writeins { 
-    "El voto es desactivado durante la escritura en el período."; 
+    "El voto está desactivado durante la escritura en las opciones"; 
 }
 sub Poll_results_will_be_available_to_the_following_users { 
-    'Resultados de la encuesta estarán disponibles sólo para los siguientes usuarios: '; 
+    'Los resultados de la encuesta estarán disponibles sólo para los siguientes usuarios: '; 
 }
 sub Poll_results_are_now_available_to_the_following_users { 
-    "Resultados de la encuesta están disponibles sólo para los siguientes usuarios, 
-que fueron enviados a principios de un correo electrónico con una dirección 
-Ver resultados: "; 
+    "Los resultados de la encuesta, que fueron enviados primero por correo electrónico,
+ están ya disponibles sólo para los siguientes usuarios: "; 
 }
 sub results_available_to_the_following_users { 
-    'Los resultados de esta encuesta han sido puestos en libertad sólo a un conjunto limitado de usuarios: '; 
+    'Los resultados están disponibles sólo para los siguientes usuarios: '; 
 }
 
 sub Poll_results_are_available {#url
-    "<a href=\"$_[1]\">Ver resultados de la encuesta </a>"; 
+    "<a href=\"$_[1]\">Ver los resultados de la encuesta </a>"; 
 }
 sub Description { 
     'Descripción:'; 
@@ -219,7 +218,7 @@ sub Candidates {
     'Los candidatos: '; 
 }
 sub Add_voters { 
-    'Añadir los votantes'
+    'Añadir votantes'
 }
 
 sub the_top_n_will_win {# num_winners 
@@ -235,11 +234,10 @@ sub the_top_n_will_win {# num_winners
 sub add_voter_instructions { 
     "Introduzca las direcciones de correo electrónico de los electores, uno por línea. Estos 
     pueden ser nuevos votantes o electores existentes que no han votado todavía. 
-    En un sondeo privado, lo que la dirección de correo electrónico de un ya 
-    existentes <strong>votante no</strong> permiten que el voto de los votantes en dos ocasiones. 
-    Sólo se volverá a enviar al votante una invitación a votar. 
-    En una encuesta pública, sólo un gesto simbólico, se hace para evitar 
-    voto múltiple. " 
+    En un sondeo privado, por lo que la dirección de correo electrónico de un votante ya 
+    existente <strong>no permite</strong> el voto por segunda vez. Sólo se enviará al 
+    votante una invitación a votar. En una encuesta pública, sólo un gesto simbólico, se hace para evitar 
+    el voto múltiple. " 
 }
 sub Upload_file { 
     'Subir archivo:'; 
@@ -252,8 +250,8 @@ sub File_to_upload_ballots_from {
 }
 sub This_is_a_public_poll_plus_link { 
     my $url = $_[1]; 
-    "Esta es una encuesta pública. Compartir el siguiente enlace 
-    con los votantes para que puedan votar: </p> 
+    "Esta es una encuesta pública. Comparte el siguiente enlace 
+    con los votantes para que puedan participar: </p> 
     <tt><a href=\"$url\">$url</a></tt>"; 
 }
 sub The_poll_has_ended { 
@@ -263,23 +261,23 @@ sub The_poll_has_ended {
 # Añadir los votantes 
 
 sub CIVS_Adding_Voters { 
-    'CIVS: Agregar los votantes'; 
+    'CIVS: Añadir votantes'; 
 }
 sub Adding_voters { 
-    "Adición de los votantes"; 
+    "Añadir los votantes"; 
 }
 
 sub Sorry_voters_can_only_be_added_to_poll_in_progress { 
-    'Lo siento, sólo los votantes pueden agregar a una encuesta en curso.'; 
+    'Lo siento, los votantes sólo se pueden añadir a una encuesta en curso.'; 
 }
 
 sub Total_of_x_voters_authorized {# x 
     if ($_[1] == 0) { 
-	'No los votantes autorizados a votar todavía. '; 
+	'No hay votantes autorizados todavía. '; 
     } elsif ($_[1] == 1) { 
 	'Sólo un votante autorizado a votar hasta ahora. '; 
     } else {
-	"Total de $_[1] los votantes autorizados a votar."; 
+	"Hay un total de $_[1] votantes autorizados a participar."; 
     } 
 }
 
@@ -297,81 +295,81 @@ sub page_header_CIVS_Vote {# election_title
 }
 
 sub ballot_reporting_is_enabled { 
-    'Presentación de informes de boleta está habilitado para esta encuesta. 
-     Su boleta (la clasificación que se asigna a las opciones) 
-     se harán públicos cuando se termina la encuesta. '
+    'La presentación de informes está habilitada para esta encuesta. 
+     Su cuestionario (la clasificación que se asigna a las opciones) 
+     se hará público cuando se termine la encuesta. '
 }
 sub instructions1 {# num_winners, al final, el nombre, correo electrónico 
     my $wintxt; 
     if ($_[1] == 1) { 
-	$wintxt = "opción preferida único"; 
+	$wintxt = "única opción preferida"; 
     } else { 
 	$wintxt ="$_[ 1] opciones preferidas "; 
     } 
-    "Sólo el $wintxt $ganará las elecciones. <p> 
+    "Sólo el $wintxt ganará las elecciones. <p> 
     La encuesta termina <b>$_[2]</b>. 
-    El supervisor de la encuesta es de $_[3] (<tt>$_[4]</tt>). 
+    El supervisor de la encuesta es $_[3] (<tt>$_[4]</tt>). 
     Póngase en contacto con el supervisor de la encuesta si necesita ayuda. " 
 }
 sub instructions2 {# no_opinion, combined_ratings proporcional, civs_url 
     my ($self, $no_opinion, $apoyo, $combinado, $civs_url) = @ _; 
     my $ret; 
     if (! $prop || !$combinados) { 
-	$Ret = "Dar a cada uno de las siguientes opciones 
-	un rango, donde un pequeño rango de número significa que usted 
-	prefieren que la elección más. 
-	Por ejemplo, dar su mejor opción el rango 1. 
-	Dar opciones del mismo valor si no tiene 
-	preferencia entre ellos. Usted no tiene que utilizar todos los 
-	filas posibles. Todas las opciones tienen, en principio la 
-	rango más bajo posible. ". $cr; 
+	$Ret = "Dar a cada una de las siguientes opciones 
+	una puntuación, donde un valor pequeño significa que usted 
+	prefieren esa opción. 
+	Por ejemplo, su mejor opción tendrá una puntuación de 1. 
+	Puede dar opciones del mismo valor si no tiene 
+	preferencia entre ellos. No tiene que utilizar todas las 
+	filas posibles. Todas las opciones tienen, en principio la puntuación 
+        más baja posible. ". $cr; 
     }
     if ($no_opinion) { 
-	$ret .= "<b>Nota:</b> &ldquo;No opinion&rdquo;
-	<i>no</i> es el mismo que el rango más bajo posible, sino que significa 
-	que no optar por clasificar esta elección con respecto a la 
+	$ret .= "<b>Nota:</b> &ldquo;Sin opinión&rdquo;
+	<i>no</i> es igual que la puntuación más baja posible, sino que significa 
+	que optas por no calificar esta elección con respecto a la 
 	otras opciones.</p>"; 
     } 
     if ($prop) { 
-	$Ret .= "<p> Esta encuesta se decidió usar un Condorcet experimental basado
-	en método diseñado para proporcionar la representación proporcional. Se
-	supone por el algoritmo de votación que desea que el rango de la mayoría de
-	su <i> preferido ganar </i> opción de ser lo más alta posible, y si dos
-	conjuntos de ganar elecciones ponerse de acuerdo sobre la elección que
-	prefiere la mayoría, entonces decidirá entre ellos con la opción preferida
-	segundo, y etc."; 
+	$Ret .= "<p> En esta encuesta se decide usando un método experimental basado
+	en Condorcet y diseñado para proporcionar una representación proporcional. Se
+	supone por el algoritmo de votación que desea que la puntuación de 
+	su opción <i> preferida para ganar </i> sea lo más alta posible, y si dos
+	conjuntos de opciones coinciden sobre la elección que
+	prefiere la mayoría, entonces decidirá entre ellos con su opción preferida,
+	y así sucesivamente."; 
     } else {
-	$Ret = '<p> Esta encuesta se decidió usar un experimentales 
-	algoritmo de Condorcet, diseñado para proporcionar proporcional 
-	representación. 
-	Por favor, cada una de las opciones después de un 
-	<b>peso</b> que expresa la cantidad que desea que 
-	elección para formar parte del conjunto ganador de las elecciones. 
-	Se supone por el algoritmo de votación que desea 
-	la suma de pesos de ganar elecciones a ser tan grande 
-	como sea posible. Todas las opciones 
-	En este momento una ponderación de cero, lo que significa que 
-	no tienen ningún interés en ver a ganar. 
-	Pesos no puede ser negativo o mayor que 999. 
-	Doesn\'t ayudará a hacer su peso más grande 
-	que otros votantes \'pesos, debido a que su peso sólo se comparan 
+	$Ret = '<p> Esta encuesta se decide usando un método experimental 
+	basado en el algoritmo de Condorcet, diseñado para proporcionar una representación
+	proporcional. 
+	Por favor, otorgue a cada una de las opciones un 
+	<b>peso</b> que expresa cuánto desea que esa
+	elección forme parte del conjunto ganador. 
+	Se supone por el algoritmo de votación que desea que
+	la suma de pesos de las opciones ganadoras sea tan grande 
+	como sea posible. Todas las opciones inicialmente 
+	tienen una puntuación de cero, lo que significa que 
+	no tiene ningún interés en ver a ninguna ganar. 
+	Los pesos no pueden ser negativos o mayores que 999. 
+	No ayudará hacer su peso más grande 
+	que el de otros votantes, debido a que sus pesos sólo se comparan 
 	uno contra el otro. '. 
-	"<a Href=\"$civs_url/proportional.html\"> [Ver más información] </a> </p>."; 
+	"<a Href=\"$civs_url/proportional.html\"> [Para más información] </a> </p>."; 
     } 
     return $ret; 
 }
 sub Rank {
-    'Rango'; 
+    'Posición'; 
 }
 sub Choice { 
-    'Choice'; 
+    'Elección'; 
 }
 sub Weight { 
-    'Weight'; 
+    'Peso'; 
 }
 
 sub address_will_be_visible { 
-    '<strong>Su dirección de correo electrónico será visible</strong> junto con su boleta. '; 
+    '<strong>Su dirección de correo electrónico será visible</strong> junto con su encuesta. '; 
 }
 
 sub ballot_will_be_anonymous { 
@@ -384,20 +382,20 @@ sub submit_ranking {
 }
 
 sub only_writeins_are_permitted { 
-    "El voto no es todavía permitido en esta encuesta. Sin embargo, 
-             usted puede ver las opciones disponibles y escribir en los nuevos 
+    "El voto no esta todavía habilitado en esta encuesta. Sin embargo, 
+    usted puede ver las opciones disponibles y escribir nuevas 
     opciones. Utilice el campo de texto de abajo para escribir en nuevas opciones." 
 }
 
 sub Add_writein { 
-    'Añadir escribir en '
+    'Añadir una opción '
 }
 
 sub to_top { 
-    'Arriba'; 
+    'Ir al principio'; 
 }
 sub to_bottom { 
-    'Hacia abajo'; 
+    'Ir al final'; 
 }
 sub move_up { 
     'Subir'; 
@@ -406,17 +404,17 @@ sub move_down {
     'Bajar'; 
 }
 sub make_tie { 
-    'Make empate';
+    'Hacer empatar';
 }
 sub buttons_are_deactivated { 
-    "Estos botones están desactivados, porque su navegador no soporta Javascript."; 
+    "Estos botones están desactivados porque su navegador no soporta Javascript."; 
 }
 sub ranking_instructions { 
-       'Rango de las opciones en una de tres maneras: 
+       'Clasifique las opciones en una de tres maneras: 
 <ol> 
 <li> arrastre las filas 
-<li> jalones uso en nivel de columna 
-<li> filas seleccionar y utilizar los botones arriba 
+<li> use los desplegables
+<li> seleccione filas y utilice los botones que hay arriba 
 </ol> '; 
 }
 
@@ -424,32 +422,32 @@ sub write_in_a_choice {
     'Escribir en una nueva opción: '; 
 }
 sub if_you_have_already_voted {#url
-    "Si ya han votado, puede ver <a href=\"$_[1]\"> la actual encuesta de resultados </a>." 
+    "Si ya ha votado, puede ver <a href=\"$_[1]\"> los resultados de la encuesta actual </a>." 
 }
 sub thank_you_for_voting {# título, el recibo 
-    "Gracias. Su voto por <strong>$_[1]</strong> ha sido 
-se logra lanzar. Su recibo de votante es <code> $_[2] </code>. " 
+    "Gracias. Su voto por <strong>$_[1]</strong> ha sido hecho correctamente. 
+    Su recibo como votante es <code> $_[2] </code>. " 
 }
 sub name_of_writein_is_empty { 
-    "Nombre de la escritura en la elección está vacío"; 
+    "El nombre de la opción está vacío"; 
 }
 sub writein_too_similar { 
-    "Lo siento, el nombre de la escritura en es demasiado similar a una opción existente"; 
+    "Lo siento, el nombre de la opción en es demasiado similar a otra existente"; 
 }
 
 # Elecciones 
 
 sub vote_has_already_been_cast { 
-    "La votación ya se ha fundido con su clave de elector."; 
+    "La votación ya se ha enviado con su clave de elector."; 
 }
 sub following_URL_will_report_results { 
-    'La dirección URL siguiente informe resultados de la encuesta una vez que la encuesta termina: '; 
+    'La siguiente dirección URL informará de los resultados una vez que la encuesta termine: '; 
 }
 sub following_URL_reports_results { 
-    "El siguiente URL los informes de los resultados de la encuesta actual: "; 
+    "La siguiente URL informa de los resultados de la encuesta actual: "; 
 }
 sub Already_voted { 
-    "Ya hemos votado"; 
+    "Ya ha votado"; 
 }
 sub Error { 
     "Error"; 
@@ -466,17 +464,17 @@ sub already_ended {# título
     "Esta encuesta (<strong>$_[1]</strong>) ya se ha terminado."; 
 }
 sub Poll_not_yet_ended { 
-    "Encuesta no terminado todavía"; 
+    "La encuesta no ha terminado todavía"; 
 }
 sub The_poll_has_not_yet_been_ended {# title, nombre, correo electrónico 
-    "Esta encuesta ($_[1]) aún no ha sido terminado por su supervisor, $_[2] ($_[3])."; 
+    "Esta encuesta ($_[1]) aún no ha sido finalizada por su supervisor, $_[2] ($_[3])."; 
 }
 sub The_results_of_this_completed_poll_are_here { 
-    "Los resultados de esta encuesta completa está aquí:"; 
+    "Los resultados de esta encuesta finalizada está aquí:"; 
 }
 
 sub No_write_access_to_lock_poll { 
-    "¿No tienen el acceso de escritura necesarias para bloquear la votación. "; 
+    "No tienen permisos de escritura para bloquear la votación. "; 
 }
 sub This_poll_has_already_been_started {# título 
     "Esta encuesta ($_[1]) ya se ha iniciado."; 
@@ -493,47 +491,48 @@ sub Your_voter_key_is_invalid__check_mail {# votantes
     "La clave de elector no es válido, $votantes. 
      Usted debería haber recibido una URL correcta por correo electrónico. " 
    } else { 
-    "La clave de elector no es válido Usted debe haber recibido una URL correcta por correo electrónico.."; 
+    "La clave de elector no es válido. Usted debe haber recibido una URL correcta por correo electrónico."; 
    } 
 }
 sub Invalid_result_key  {#tecla
-    "No válido de resultado clave: \"$_[1]\". Usted debería haber recibido una dirección URL correcta para 
+    "Clave de resultado no válida: \"$_[1]\". Usted debería haber recibido una dirección URL correcta para 
         ver resultados de la encuesta por correo electrónico. Este error se ha registrado. " 
 }
 sub Invalid_control_key {# tecla
-    "No válido de control clave Debería haber recibido una dirección URL correcta para el control de la encuesta por correo electrónico Este error se ha registrado..."; 
+    "Clave de control no válida. Debería haber recibido una dirección URL correcta para el control de la
+     encuesta por correo electrónico Este error se ha registrado."; 
 }
 sub Invalid_voting_key { 
-    "Clave no válida la votación Debería haber recibido una dirección URL correcta para la votación por correo electrónico Este error se ha registrado."; 
+    "Clave de votación no válida. Debería haber recibido una dirección URL correcta para la votación por correo electrónico. Este error se ha registrado."; 
 }
 sub Invalid_poll_id { 
-    "Encuesta no válida de identificación"
+    "Identificador de encuesta no válido"
 }
 sub Poll_id_not_valid {# Identificación 
-    "La encuesta identificador \"$_[1]\" no es válida."
+    "El identificador de la encuesta \"$_[1]\" no es válido."
 }
 sub Unable_to_append_to_poll_log { 
-    'No se puede añadir en el registro electoral.'
+    'No se puede añadir al registro de la votación.'
 }
 sub Voter_v_already_authorized { 
-    "Votantes \"$_[1]\" ya está autorizada. 
-     La clave de elector se resienten al votante."
+    "El votante \"$_[1]\" ya está autorizado. 
+     La clave de elector se volverá a enviar al votante."
 }
 sub Invalid_email_address_hdr {# dir
     "Dirección de correo electrónico no válida"; 
 }
 sub Invalid_email_address {# dir
-    "No válida dirección de correo electrónico: $_[1]"; 
+    "Dirección de correo electrónico no válida: $_[1]"; 
 }
 sub Sending_mail_to_voter_v { 
-    "El envío de correo a los votantes \"$[1]\"..."; 
+    "Enviando correo electrónico al votante \"$[1]\"..."; 
 }
 sub CIVS_poll_supervisor {#nombre
     "\"$_[1], el supervisor de la encuesta CIVS \"" 
 }
 sub voter_mail_intro {# título, nombre, EMAIL_ADDR 
-"Una votación por Internet elección de Condorcet servicio llamado <b>$_[1]</b> se ha creado. 
-Usted ha sido designado como elector por el supervisor de elecciones, 
+"Una votación Condorcet por Internet llamada <b>$_[1]</b> se ha creado. 
+Usted ha sido designado como elector por el supervisor de la votación, 
 $_[2] (<a href=\"mailto:$_[3] ($_[2])\"> $_[3] </a >).</p> "; 
 }
 sub Description_of_poll { 
@@ -543,23 +542,22 @@ sub if_you_would_like_to_vote_please_visit {
     "Si usted quiere votar, por favor visite la siguiente dirección URL: "; 
 }
 sub This_is_your_private_URL { 
-'Esta es tu URL privada. No se lo dé a nadie más, porque podría utilizar 
-a votar por usted.'; 
+'Esta es su URL privada. No se lo dé a nadie más, porque podría utilizarla
+para votar por usted.'; 
 }
 sub Your_privacy_will_not_be_violated { 
-"Su privacidad no serán violados por votación. El servicio de votación ya ha 
-destruyó el registro de su dirección de correo electrónico y no divulgará ninguna información 
-acerca de si o cómo han votado."; 
+"Su privacidad no será violada por votar. El servicio de votación ya ha 
+destruido el registro de su dirección de correo electrónico y no divulgará ninguna información 
+acerca de usted o de cómo han votado."; 
 }
 sub This_is_a_nonanonymous_poll { 
-"El supervisor de la encuesta ha decidido hacer de esto una <strong>encuesta no anónimo</strong>. Si 
-de votar, cómo votó será visible al público junto con su 
-dirección de correo electrónico. Si usted no vota, el supervisor de la encuesta también podrán 
-para determinar esto."; 
+"El supervisor de la encuesta ha decidido hacer de esto una <strong>encuesta no anónima</strong>. Si 
+usted votar, su voto será visible al público junto con su 
+dirección de correo electrónico."; 
 }
 
 sub poll_has_been_announced_to_end {# election_end 
-    "La encuesta ha sido anunciada para poner fin a $_[1]."; 
+    "La encuesta ha sido anunciada para finalizar el $_[1]."; 
 }
 
 sub To_view_the_results_at_the_end { 
@@ -609,30 +607,30 @@ sub CIVS_poll_result {
     "CIVS resultado de la encuesta"; 
 }
 sub Poll_results {#title
-    "Resultados de Encuesta: $_[1]"; 
+    "Resultados de la encuesta: $_[1]"; 
 }
 
 sub Writeins_currently_allowed { 
-    "Escribir-en las opciones están permitidos."; 
+    "Añadir opciones está permitido."; 
 }
 
 sub Writeins_allowed { 
-    "Escribir-en las opciones están permitidos."; 
+    "Añadir opciones está permitido."; 
 }
 sub Writeins_not_allowed { 
-    "Escribir-en las opciones no están permitidas."; 
+    "Añadir opciones no está permitido."; 
 }
 sub Detailed_ballot_reporting_enabled { 
-    "Presentación de informes detallados boleta está habilitado."; 
+    "El informe detallado de la votación está habilitado."; 
 }
 sub Detailed_ballot_reporting_disabled { 
-    "Presentación de informes de votación detallada con discapacidad."; 
+    "El informe detallado de la votación no está habilitado."; 
 }
 sub Voter_identities_will_be_kept_anonymous { 
-    "Las identidades del votante se mantendrá anónima";
+    "La identidad del votante se mantendrá anónima";
 }
 sub Voter_identities_will_be_public { 
-    "Las identidades del votante (correo electrónico) se harán públicos asociados con su voto. "; 
+    "La identidad del votante (correo electrónico) se hará pública asociada con su voto. "; 
 }
 sub Condorcet_completion_rule { 
     "La regla de Condorcet ejecución: "; 
@@ -651,53 +649,53 @@ sub Announced_end_of_poll {
 }
 sub Actual_time_poll_closed {# tiempo de cierre 
     if ($_[1] == 0) { 
-	"El tiempo real de la encuesta cerrada: $_[1]" 
+	"El tiempo real de cierre de la encuesta: $_[1]" 
     } else {
-	'La encuesta de tiempo real cerrada: <script>document.write (new Date ('.
+	'El tiempo real de cierre de la encuesta: <script>document.write (new Date ('.
 	    ($_[1] * 1000) .
 	') toLocaleString())</script>.' 
     } 
 }
 sub Poll_not_ended { 
-    "Encuesta no ha terminado todavía."; 
+    "La encuesta no ha terminado todavía."; 
 }
 sub This_is_a_test_poll { 
     "Esta es una encuesta de prueba. "; 
 }
 sub This_is_a_private_poll {# num_auth 
-    "Encuesta privada ($_[1] los votantes autorizados)"; 
+    "Esta es una encuesta privada para ($_[1] votantes autorizados)"; 
 }
 sub This_is_a_public_poll { 
     "Esta es una encuesta pública. "; 
 }
 
 sub Actual_votes_cast {# num_votes 
-    "Votos emitidos real: $_[1]"; 
+    "Votos emitidos reales: $_[1]"; 
 }
 sub Number_of_winning_candidates { 
-    'Número de ganar elecciones:'; 
+    'Número de candidatos a ganar elecciones:'; 
 }
 sub Poll_actually_has {# winmsg 
     my $winmsg = '1 ganador'; 
     if ($_[1] != 1) { 
-	$winmsg = $_[1].' los ganadores'; 
+	$winmsg = $_[1].' ganadores'; 
     } 
-    "(Encuesta de hecho tiene $winmsg)"; 
+    "(La encuesta tiene $winmsg)"; 
 }
 sub poll_description_hdr { 
-    'Descripción Encuesta '
+    'Descripción de la encuesta '
 }
 sub Ranking_result { 
     'Resultado'
 }
 sub x_beats_y {# x l w 
-    "$_[1] latidos $_[2], $_[3 ]-$_[ 4]"; 
+    "$_[1] vence a $_[2], $_[3 ]-$_[ 4]"; 
 }
 sub x_ties_y {# x l w 
-    "$_[1] lazos $_[2], $_[3 ]-$_[ 4]"; 
+    "$_[1] empata con $_[2], $_[3 ]-$_[ 4]"; 
 }
 sub x_loses_to_y {# x l w 
-    "$_[1] pierde a $_[2], $_[3 ]-$_[ 4]"; 
+    "$_[1] pierde con $_[2], $_[3 ]-$_[ 4]"; 
 }
 sub some_result_details_not_shown { 
     'Por razones de simplicidad, algunos detalles del resultado de la encuesta no se muestran. '
@@ -709,25 +707,25 @@ sub Hide_details {
     'Ocultar detalles'
 }
 sub Result_details { 
-    'Detalles de resultados'
+    'Detalles de los resultados'
 }
 sub Ballot_report { 
-    'Informe de boleta'
+    'Informe del formulario'
 }
 sub Ballots_are_shown_in_random_order { 
-    'Las boletas se muestran en un orden al azar generados.'; 
+    'Los formularios se muestran en un orden generado al azar.'; 
 }
 sub Download_ballots_as_a_CSV {# url
-    "[<a href=\"$_[1]\"> papeletas descargar en formato CSV </a>]"
+    "[<a href=\"$_[1]\"> descargue todo el formulario en formato CSV </a>]"
 }
 sub No_ballots_were_cast { 
-    'No hay votos fueron emitidos en esta encuesta.'
+    'No hay votos emitidos en esta encuesta.'
 }
 sub Ballot_reporting_was_not_enabled { 
-    'Boleta de presentación de informes no se ha habilitado para esta encuesta.'
+    'El informe de los formularios no se ha habilitado para esta encuesta.'
 }
 sub Tied { 
-    '<i>Atado</i>:'
+    '<i>Empate</i>:'
 }
 sub loss_explanation {# loss_to, favor, en contra 
     ', Pierde a ' . $_[1] . ' de ' . $_[2] . '-' . $_[3]; 
@@ -739,10 +737,10 @@ sub Condorcet_winner_explanation {
     '(Ganador de Condorcet: concursos gana con todas las otras opciones)'
 }
 sub undefeated_explanation { 
-    '(No derrotado en una contienda frente a otra opción)'
+    '(No derrotado en ninguna contienda con otra opción)'
 }
 sub Choices_shown_in_red_have_tied { 
-    "Las opciones se muestran en rojo han atado para ser seleccionado. 
+    "Las opciones que se muestran en rojo han empatado. 
 	Si lo desea, para seleccionar entre ellos al azar. " 
 }
 sub Condorcet_winner { 
@@ -759,31 +757,30 @@ sub What_is_this {# url
 # rp
 
 sub All_prefs_were_affirmed { 
-    "Todas las preferencias se afirmaron. Todos los 
+    "Todas las preferencias se confirmaron. Todos los 
     los métodos de Condorcet estarán de acuerdo con este ranking."; 
 }
 
 sub Presence_of_a_green_entry_etc { 
     'La presencia de una entrada de verde por debajo de 
     la diagonal (y correspondiente rojo arriba) 
-    significa que la preferencia fue ignorado por 
-    entraba en conflicto con otras preferencias, más fuerte.'; 
+    significa que la preferencia fue ignorado porque 
+    entraba en conflicto con otras preferencias, más fuertes.'; 
 }
 sub Random_tie_breaking_used { 
-    "Ruptura al azar de empate se utilizó para 
-    llegar a este ordenamiento, de acuerdo con el MAM 
-    algoritmo. Esto puede haber afectado el orden 
-    de las elecciones."; 
+    "Su utilizó ruptura al azar de un empate para 
+    llegar a este orden, de acuerdo con el algoritmo MAM.
+    Esto puede haber afectado el orden de las opciones."; 
 }
 sub No_random_tie_breaking_used { 
-    'No hay lazo que rompe al azar que se necesitaba para llegar a este pedido. '; 
+    'No hubo ningún empate que romper al azar para llegar a esta clasificación. '; 
 }
 
 # beatpath
 
 sub beatpath_matrix_explanation { 
     'La siguiente matriz muestra la fuerza del más fuerte 
-    beatpath conectar cada par de opciones. La opción 1 se sitúa por encima de 
+    beatpath conecta cada par de opciones. La opción 1 se sitúa por encima de 
     opción 2, si hay un líder fuerte beatpath 1 a 2 
     que cualquier líder 2 a 1.'
 }
@@ -795,8 +792,8 @@ sub no_pref {
 #rp
 
 sub Some_voter_preferences_were_ignored { 
-    'Algunas preferencias de los votantes fueron ignoradas, ya que 
-     conflicto con las preferencias de otros, más fuerte: ' 
+    'Algunas preferencias de los votantes fueron ignoradas, ya que hay
+     conflicto con otras preferencias, más fuertes: ' 
 }
 
 sub preference_description { 
