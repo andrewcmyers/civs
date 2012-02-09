@@ -123,7 +123,7 @@ print '</div>', $cr;
 &voting::GenerateVoteForm($voter_key, $authorization_key, [@choice_index], [@rank], $js_ui, 0,
     ($ballot_reporting eq 'yes' && 
      $reveal_voters eq 'yes' &&
-     $public));
+     $public eq 'yes'));
 
 # if ($voting_enabled) {
 #   print '<p>Read rankings from a saved voting page: ';
