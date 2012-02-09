@@ -180,11 +180,12 @@ print $cr,
     <h1>&nbsp;', $tx->Condorcet_Internet_Voting_Service, '</h1>
     </td>
     <td width="0%" nowrap="nowrap" valign="top" align="right">',
-    a({-href => $civs_home}, $tx->about_civs), BR,
-    a({-href => "$civs_url/civs_create.html"}, $tx->create_new_poll), BR,
-    a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
-    a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
-    a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
+	a({-href => $civs_home}, $tx->about_civs), BR,
+	a({-href => "$civs_url/publicized_polls.html"}, $tx->public_polls), BR,
+	a({-href => "$civs_url/civs_create.html"}, $tx->create_new_poll), BR,
+	a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
+	a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
+	a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
     '</td>
   </tr>
   <tr>

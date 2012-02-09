@@ -23,11 +23,14 @@ sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
 sub about_civs {
     'About CIVS';
 }
+sub public_polls {
+    'Public polls'
+}
 sub create_new_poll {
     'Create new poll'
 }
 sub about_security_and_privacy {
-    'About security and privacy'
+    'Security and privacy'
 }
 sub FAQ {
     'FAQ';

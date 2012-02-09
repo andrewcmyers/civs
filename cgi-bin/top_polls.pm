@@ -8,7 +8,7 @@ use Fcntl qw(:DEFAULT);
 
 use lib '@CGIBINDIR@';
 
-my $days_per_decay = 2.0;
+my $days_per_decay = 4.0;
 my $decay = 1.0/86400.0/$days_per_decay;
 
 my %elections; # map to [(last_time_stamp, usage_level)]
