@@ -25,14 +25,16 @@ if (!IsStarted) {
     error("This poll does not exist or has not been started");
 }
 
-if ($public ne 'yes') {
-    if (!IsStopped) {
-	error("This poll has not yet been closed");
+if (param('admin_key') ne '@ADMIN_KEY@') {
+    if ($public ne 'yes') {
+	if (!IsStopped) {
+	    error("This poll has not yet been closed");
+	}
     }
-}
 
-if ($ballot_reporting ne 'yes') {
-    error("Ballot reporting is not enabled for this poll");
+    if ($ballot_reporting ne 'yes') {
+	error("Ballot reporting is not enabled for this poll");
+    }
 }
 
 print header(-type=>'application/text', -attachment=>'civs_ballots.csv');
