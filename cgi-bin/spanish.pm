@@ -731,7 +731,7 @@ sub loss_explanation {# loss_to, favor, en contra
     ', pierde a ' . $_[1] . ' de ' . $_[2] . '-' . $_[3]; 
 }
 sub loss_explanation2 { 
-    '&nbsp;&nbsp;pierde a'.$_[1].' por '.$_[2].'-'.$_[3]; 
+    '&nbsp;&nbsp;pierde a '.$_[1].' por '.$_[2].'-'.$_[3]; 
 }
 sub Condorcet_winner_explanation { 
     '&nbsp;&nbsp;(Ganador de Condorcet: concursos gana con todas las otras opciones)'
