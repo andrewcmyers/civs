@@ -728,13 +728,13 @@ sub Tied {
     '<i>Empate</i>:'
 }
 sub loss_explanation {# loss_to, favor, en contra 
-    ', Pierde a ' . $_[1] . ' de ' . $_[2] . '-' . $_[3]; 
+    ', pierde a ' . $_[1] . ' de ' . $_[2] . '-' . $_[3]; 
 }
 sub loss_explanation2 { 
-    'Pierde a'.$_[1].' por'.$_[2].'-'.$_[3]; 
+    '&nbsp;&nbsp;pierde a'.$_[1].' por '.$_[2].'-'.$_[3]; 
 }
 sub Condorcet_winner_explanation { 
-    '(Ganador de Condorcet: concursos gana con todas las otras opciones)'
+    '&nbsp;&nbsp;(Ganador de Condorcet: concursos gana con todas las otras opciones)'
 }
 sub undefeated_explanation { 
     '(No derrotado en ninguna contienda con otra opción)'
