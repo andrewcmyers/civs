@@ -20,4 +20,25 @@ open (IN, $top_polls);
 
 print <IN>;
 
+
+if (@LOG_HOME_VISITS@) {
+    my $remote_ip_address;
+    if ('@USING_ISA@') {
+        $remote_ip_address = http('HTTP_IPREMOTEADDR');
+        if (!defined($remote_ip_address)) {
+            $remote_ip_address = http('HTTP_REMOTE_ADDRESS');
+        }
+        if (!defined($remote_ip_address)) {
+            $remote_ip_address = remote_addr();
+        }
+    } else {
+        $remote_ip_address = remote_addr();
+    }  
+    
+    my $civs_log = $home . '/log';
+    open (LOG, ">>$civs_log");
+    print LOG "$now $remote_ip_address home-page-visit\r\n";
+    close(LOG);
+}
+
 exit 0;
