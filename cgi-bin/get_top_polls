@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use CGI qw(:standard);
+use POSIX qw(strftime);
 
 use lib '@CGIBINDIR@';
 
@@ -36,6 +37,7 @@ if (@LOG_HOME_VISITS@) {
     }  
     
     my $civs_log = $home . '/log';
+    my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open (LOG, ">>$civs_log");
     print LOG "$now $remote_ip_address home-page-visit\r\n";
     close(LOG);

@@ -74,3 +74,6 @@ UTF8_SUFFIX='.utf8'
 # Password/key for site administrator. Must be defined to
 # something secret. Current definition is a placeholder.
 ADMIN_KEY=''
+
+# Log visits to the home page?
+LOG_HOME_VISITS=
