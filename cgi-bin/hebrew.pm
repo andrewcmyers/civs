@@ -4,7 +4,7 @@ use lib '@CGIBINDIR@';
 use base_language;
 our @ISA = ('base_language'); # go to AmE module for missing methods
 
-sub lang { 'he-IL'; }
+sub lang { 'he-IL' }
 
 sub init {
     my $self = {};
@@ -14,41 +14,44 @@ sub init {
 
 # civs_common
 sub style_file {
-    'hebrew.css';
+    'hebrew.css'
 }
 
 sub Condorcet_Internet_Voting_Service {
-    'שירות הצבעה אינטרנטי קונדורסט';
+    'שירות הצבעה אינטרנטי קונדורסט'
 }
 sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
-    'שירות הצבעה אינטרנטי קונדורסט';
+    'שירות הצבעה אינטרנטי קונדורסט'
 }
 sub about_civs {
-    'אודות CIVS';
+    'אודות CIVS'
+}
+sub public_polls {
+    'הציבור בסקרים'
 }
 sub create_new_poll {
-    'צור הצבעה חדשה';
+    'צור הצבעה חדשה'
 }
 sub about_security_and_privacy {
-    'אודות אבטחה ופרטיות';
+    'אודות אבטחה ופרטיות'
 }
 sub FAQ {
-    'שאלות ותשובות נפוצות';
+    'שאלות ותשובות נפוצות'
 }
 sub CIVS_suggestion_box {
-    'תיבת הצעות ל-CIVS';
+    'תיבת הצעות ל-CIVS'
 }
 sub unable_to_process {
-    'מערכת ה-CIVS אינה יכולה לעבד את בקשתך בשל שגיאה פנימית.';
+    'מערכת ה-CIVS אינה יכולה לעבד את בקשתך בשל שגיאה פנימית.'
 }
 sub CIVS_Error {
-    'שגיאת CIVS';
+    'שגיאת CIVS'
 }
 sub CIVS_server_busy {
-    'שרת ה-CIVS עסוק';
+    'שרת ה-CIVS עסוק'
 }
 sub Sorry_the_server_is_busy {
-'צר לנו, שרת הרשת של CIVS עסוק מאד כרגע, ואינו יכול לטפל בבקשות נוספות. אנא נסו שנית מעט מאוחר יותר. ';
+'צר לנו, שרת הרשת של CIVS עסוק מאד כרגע, ואינו יכול לטפל בבקשות נוספות. אנא נסו שנית מעט מאוחר יותר. '
 }
 
 # civs_create
