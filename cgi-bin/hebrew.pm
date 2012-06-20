@@ -172,7 +172,7 @@ sub this_is_a_test_poll {
 }
 
 sub poll_supervisor { # name, email
-    "מפקח הצבעה:$_[1] (<tt>$_[2]</tt>)";
+    "מפקח הצבעה:$_[1] <tt>($_[2])</tt>";
 }
 sub no_authorized_yet { #waiting
     "0 ($_[1] מצביעים יאושרו בעת פתיחת ההצבעה)";
@@ -305,7 +305,7 @@ sub instructions1 { # num_winners, end, name, email
     }
     "רק $wintxt ינצח(ו) בהצבעה.<p>
 	    ההצבעה מסתיימת <b>$_[2]</b>.
-	    מפקח ההצבעה הוא $_[3] (<tt>$_[4]</tt>).
+	    מפקח ההצבעה הוא <tt>$_[4]&gt;</tt> $_[3]<tt>&gt;</tt>.
 	    צור קשר עם מפקח ההצבעה אם אתה זקוק לעזרה.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
