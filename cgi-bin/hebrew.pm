@@ -172,19 +172,19 @@ sub this_is_a_test_poll {
 }
 
 sub poll_supervisor { # name, email
-    "מפקח הצבעה:$_[1] <tt>($_[2])</tt>";
+    "<tt>$_[2]&gt;</tt> $_[1]<tt>&gt;</tt>"
 }
 sub no_authorized_yet { #waiting
-    "0 ($_[1] מצביעים יאושרו בעת פתיחת ההצבעה)";
+    "0 ($_[1] מצביעים יאושרו בעת פתיחת ההצבעה)"
 }
 sub total_authorized_voters { # num_auth_string
-    "סך הכל מצביעים מורשים:$_[1]";
+    "סך הכל מצביעים מורשים:$_[1]"
 }
 sub actual_votes_so_far { # num
-    "הצבעות בפועל עד עתה: $_[1]";
+    "הצבעות בפועל עד עתה: $_[1]"
 }
 sub poll_ends { # end
-    "ההצבעה מסתיימת $_[1].";
+    "ההצבעה מסתיימת $_[1]."
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
     'תוצאות ההצבעה יהיו זמינות לכל המצביעים עם השלמת ההצבעה.';
