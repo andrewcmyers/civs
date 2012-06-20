@@ -628,7 +628,7 @@ sub computing_results {
     'מחשב תוצאות...';
 }
 sub Supervisor { #name, email
-    "מפקח: $_[1] ($_[2])";
+    "מפקח: <tt>$_[2]&gt;</tt> $_[1]<tt>&gt;</tt>"
 }
 sub Announced_end_of_poll {
     "הוכרז על סיום ההצבעה: $_[1]";
