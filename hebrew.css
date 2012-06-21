@@ -7,8 +7,7 @@ body, table, p, ul, li, td  {
 body { margin: 0;
        background-color: #fffff8 }
 
-div { direction: rtl }
-p { direction: rtl }
+div, p, h1, h2, h3, h4, td { direction: rtl }
 div.contents {padding-left: 2em; padding-right: 2em; text-align: right }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
