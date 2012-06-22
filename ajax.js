@@ -4,7 +4,9 @@ function fetch_content(id, url) {
 
     if (window.XMLHttpRequest) { // Mozilla, Safari, ...
 	req = new XMLHttpRequest();
-	req.overrideMimeType('text/xml');
+	if (req.overrideMimeType) {
+	    req.overrideMimeType('text/xml');
+	}
     } else if (window.ActiveXObject) { // IE
 	req = new ActiveXObject("Microsoft.XMLHTTP");
     }
