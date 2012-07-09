@@ -1,0 +1,34 @@
+#!@PERL@
+#
+# Monitor the status of a CIVS election server. The URL of this script
+# should be kept private.
+
+use strict;
+use warnings;
+
+use lib '@CGIBINDIR@';
+# use admctrl;
+use civs_common;
+
+use CGI qw(:standard);
+use File::stat;
+use DB_File;
+use POSIX qw(strftime);
+
+&HTML_Header('CIVS maintenance');
+&CIVS_Header('Clearing result caches');
+
+if (param('key') ne '@ADMIN_KEY@') {
+    print p("Password missing or wrong");
+    exit 1;
+}
+my $elections_dir = $home."/elections/";
+
+open (RESULTS, "find $elections_dir -name 'results_*' |");
+
+while (<RESULTS>) {
+    chomp;
+    print 'Removing ', tt($_), br();
+    unlink($_) || die 'Failed.';
+}
+print end_html();
