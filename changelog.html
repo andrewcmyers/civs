@@ -98,95 +98,95 @@ connection with the use or performance of this software.
 Recent updates
 </h2>
 <ul>
-<li>2.16 (not released yet):
+<li>2.16 (not released yet):</li>
     <ul>
-	<li>Support for voting HTML that can be pasted into other web pages (public polls only).
+	<li>Support for voting HTML that can be pasted into other web pages (public polls only).</li>
 	<li>Publication support. Top public polls now listed on home page.</li>
-	<li>Localization for Spanish (currently poor)
-        <li>Allow tracking voter identity in public elections
+	<li>Localization for Spanish.</li>
+        <li>Allow tracking voter identity in public elections.</li>
 	<li>Clearer explanation of anonymity rules for elections with restricted
-	    results.
+	    results.</li>
     </ul>
-<li>2.15 (February 2011):
+<li>2.15 (February 2011):</li>
     <ul>
-	<li>Support for Hebrew, Portuguese, Chinese (<a href="acks.html">done by volunteers</a>)
-	<li>Bug fixes for UTF-8 email
-        <li>Other localization bug fixes
-	<li>Supervisors can remove write-ins before voting starts.
+	<li>Support for Hebrew, Portuguese, Chinese (<a href="acks.html">done by volunteers</a>)</li>
+	<li>Bug fixes for UTF-8 email</li>
+        <li>Other localization bug fixes</li>
+	<li>Supervisors can remove write-ins before voting starts.</li>
     </ul>
-<li>2.14 (May 2010):
+<li>2.14 (May 2010):</li>
     <ul>
-	<li>Improvements to the look of the voting page.
-	<li>Internationalization support including consistent use of UTF-8
-	<li>Localization for Hungarian, Italian, French, and German
+	<li>Improvements to the look of the voting page.</li>
+	<li>Internationalization support including consistent use of UTF-8</li>
+	<li>Localization for Hungarian, Italian, French, and German</li>
     (<a href="acks.html">done by volunteers</a>)
     </ul>
-<li>2.13 (February 2010):
+<li>2.13 (February 2010):</li>
     <ul>
-	<li>Better algorithm for setting drag-and-drop rankings.
-	<li>Support multipliers in test ballot format
-	<li>Clearer explanation of proportional mode
+	<li>Better algorithm for setting drag-and-drop rankings.</li>
+	<li>Support multipliers in test ballot format</li>
+	<li>Clearer explanation of proportional mode</li>
     </ul>
 
-<li>2.12 (November 2009):
+<li>2.12 (November 2009):</li>
 <ul>
-<li>Drag-and-drop voting UI
-<li>Support for test polls in which ballots are uploaded.
-<li>Start time of polls recorded.
-<li>Better write-in filtering.
-<li>Fixed interaction with rigorous SMTP servers.
+<li>Drag-and-drop voting UI.</li>
+<li>Support for test polls in which ballots are uploaded.</li>
+<li>Start time of polls recorded.</li>
+<li>Better write-in filtering.</li>
+<li>Fixed interaction with rigorous SMTP servers.</li>
 </ul>
 
-<li>2.11 (December 2008):
+<li>2.11 (December 2008):</li>
 <ul>
-<li>Elections are now called "polls" uniformly, per a user suggestion.
+<li>Elections are now called "polls" uniformly, per a user suggestion.</li>
 <li>Results are now cached, which should improve server performance
-a great deal for large polls.
+a great deal for large polls.</li>
 <li>Schulze/beatpath algorithm now uses "against" preferences in addition to
 "for" preferences. It now tends to agree with CIVS RP more often, perhaps
-because it no longer throws away information that CIVS RP uses.
+because it no longer throws away information that CIVS RP uses.</li>
 <li>All completion methods are now in a standardized form, which makes
 it easy to add new completion methods. It requires writing a Perl package
 that implements <code>rank_candidates</code> and <code>print_details</code>,
-and modifying two tables at the top of the "results" script.
+and modifying two tables at the top of the "results" script.</li>
 
-<li>Some formatting cleanup of code.
+<li>Some formatting cleanup of code.</li>
 </ul>
-<li>2.10 (August 2008):
+<li>2.10 (August 2008):</li>
 <ul>
 <li>Elections with write-ins now have voting initially disabled. It can
 be enabled explicitly from the control page. This allows write-ins to
-be on the same footing as other choices.
+be on the same footing as other choices.</li>
 <li>The election results page has a progress bar, which gives reassuring
-feedback for the more expensive completion methods.
+feedback for the more expensive completion methods.</li>
 </ul>
 </li>
-<li>2.9 (January 2008):
+<li>2.9 (January 2008):</li>
 <ul>
 <li>Added filtering of HTML tags to remove possible XSS attacks, etc. Most
-useful HTML markup still permitted.
-<li>Cleanup of code and documentation.
-<li>Fixed a small but crippling bug in restricted release of results.
+useful HTML markup still permitted.</li>
+<li>Cleanup of code and documentation.</li>
+<li>Fixed a small but crippling bug in restricted release of results.</li>
 </ul>
-<li>2.8:
+<li>2.8:</li>
 <ul>
-<li>Better checking of email addresses to prevent sending bogus emails.
-<li>Voter emails now come from CIVS supervisor instead of election supervisor.
+<li>Better checking of email addresses to prevent sending bogus emails.</li>
+<li>Voter emails now come from CIVS supervisor instead of election supervisor.</li>
 <li>Cleaned-up completion algorithm code allows adding new completion
-    algorithms more easily.
-<li>Corrected description of runoff.
+    algorithms more easily.</li>
+<li>Corrected description of runoff.</li>
 </ul>
-<li>2.7:
+<li>2.7:</li>
 <ul>
-<li>Ability to release election results only to a limited set of users.
-<li>Better client-side sanity checking at election creation.
-<li>Previewing of election description and choice list.
-<li>Another completion algorithm (runoff)
+<li>Ability to release election results only to a limited set of users.</li>
+<li>Better client-side sanity checking at election creation.</li>
+<li>Previewing of election description and choice list.</li>
+<li>Another completion algorithm (runoff)</li>
 <li>Better factoring out of completion algorithms to allow future
-    algorithms to be added more easily.
-<li>Allow voters' identity to be revealed as an election option
+    algorithms to be added more easily.</li>
+<li>Allow voters' identity to be revealed as an election option</li>
 <li>Mail to voters is now HTML+ASCII (should be made optional) to help
-    get through spam filters.
+    get through spam filters.</li>
 </ul>
 </ul>
 
