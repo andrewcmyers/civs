@@ -182,11 +182,10 @@ sub allow_voting_during_writeins {
     "Allow voting during write-in phase";
 }
 sub this_is_a_test_poll {
-    'This is a test poll.';
+    'This is a test poll.'
 }
-
 sub poll_supervisor { # name, email
-    "Poll supervisor: $_[1] (<tt>$_[2]</tt>)";
+    "Poll supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>"
 }
 sub no_authorized_yet { #waiting
     "0 ($_[1] voters will be authorized when the poll is started)";
@@ -686,7 +685,7 @@ sub computing_results {
     'Computing results...';
 }
 sub Supervisor { #name, email
-    "Supervisor: $_[1] ($_[2])";
+    "Supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>";
 }
 sub Announced_end_of_poll {
     "Announced end of poll: $_[1]";

@@ -10,7 +10,7 @@ div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
 div.home { text-align: justify; padding: 1em 2em 0 0;
-           width: 700px}
+           max-width: 80ex}
 a            { text-decoration: none }
 a:link       { color: #389; background-color: transparent; font-weight: bold }
 a:visited    { color: #278; background-color: transparent; font-weight: bold }
@@ -83,7 +83,7 @@ table.banner h2 { color: white }
 	       background-color: transparent }
 .symbol      { font-family: Symbol, symbol }
 
-h1  { font-size: 200%; text-align: center}
+h1  { font-size: 240%; text-align: center}
 h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
@@ -171,12 +171,16 @@ div#topmenu {
     position: relative;
     background: #119;
     top: -1.5ex;
+    font-size: 110%;
 }
 div#topmenu a:hover {
     color: yellow;
 }
 div#topmenu a {
     color: white;
+}
+div#topmenu li {
+    padding: 0.2ex 0
 }
 div.bubble {
     background-image: url('vertstrip.png');

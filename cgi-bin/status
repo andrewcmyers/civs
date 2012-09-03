@@ -76,15 +76,21 @@ while (defined(my $file = readdir(DIR))) {
     my $stopped = (-e $stopped_file) ? "Yes" : "No";
     my $auth_key = (defined($edata{'hash_authorization_key'})) ? "Yes" : "No";
     my $st = stat($election_dir."/vote_log");
-    my $mtime;
+    if (!defined($st)) {
+	$st = stat($election_dir."/stopped");
+    }
+    if (!defined($st)) {
+	$st = stat($election_dir."/vote_data");
+    }
+    if (!defined($st)) {
+	$st = stat($election_dir);
+    }
     my $last_update = 'N/A';
+    my $mtime;
     if (defined($st)) {
 	$mtime = $st->mtime;
-    } else {
-	my $std = stat($election_dir);
-	$mtime = $std->mtime;
+	$last_update = localtime($mtime);
     }
-    $last_update = localtime($mtime);
     if (defined($title)) {
 	$title = "\"$title\"";
     } else {
@@ -117,8 +123,9 @@ foreach my $entry (@entries) {
         $total_auth += $num_auth;
 	$total_users += $num_votes;
     }
-    push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=".$file.
-			         '&admin_key=@ADMIN_KEY@'},
+    push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=$file".
+			         '&admin_key=@ADMIN_KEY@',
+			  -target=>"_blank"},
 	small($title)),
 	"$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
 	$public,

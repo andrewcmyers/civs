@@ -10,7 +10,7 @@ use lib '@CGIBINDIR@';
 
 my $days_per_decay = 4.0;
 my $decay = 1.0/86400.0/$days_per_decay;
-my $usage_bottom = 1.0e-17;
+my $usage_bottom = 1.0e-12;
 
 my %elections; # map to [(last_time_stamp, usage_level)]
 my %titles;
