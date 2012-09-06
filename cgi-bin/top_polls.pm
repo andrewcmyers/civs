@@ -60,6 +60,7 @@ sub find_top_polls {
     my @eids;
     my $now = time();
     foreach my $eid (keys %elections) {
+	next unless -d $home.'/elections/'.$eid;
 	my ($t, $u) = @{$elections{$eid}};
 	my $kt = ($t - $now) * $decay;
 	if ($kt > -30.0) { $u *= exp($kt); } else { $u = 0; }
