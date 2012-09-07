@@ -9,8 +9,16 @@ body { margin: 0;
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
-div.home { text-align: justify; padding: 1em 2em 0 0;
+div.home { text-align: justify;
+           padding: 1em 1em 0 1em;
+           border-right: 1px solid #bbb;
+           border-left: 1px solid #bbb;
+           margin-right: 1em;
            max-width: 80ex}
+div#footnote {
+    border-top: 1px solid #bbb;
+}
+
 a            { text-decoration: none }
 a:link       { color: #389; background-color: transparent; font-weight: bold }
 a:visited    { color: #278; background-color: transparent; font-weight: bold }
