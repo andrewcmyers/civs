@@ -60,6 +60,7 @@ div.emphasized {
 }
 
 span.explain {font-size: 75%; color: #404040 }
+span.explain img {max-height: 40px}
 
 div.poll_end {display: inline}
 
