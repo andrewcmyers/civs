@@ -5,13 +5,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Condorcet Internet Voting Service</title>
-<base href="@CIVSURL@/">
 <link rel="stylesheet" type="text/css" href="style.css">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
 <script type="text/javascript" src="@CIVSURL@/ajax.js"></script>
 </head>
 
-<body width="540px">
+<body>
 
 <table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
   <tbody><tr>
@@ -26,7 +25,7 @@
 
 <table id="main" class="form">
 <tr>
-<td rowspan="3" valign="top">
+<td rowspan="1" valign="top">
 <div class="home">
 <p>CIVS is a free Internet voting service that makes it easy to conduct
 polls.  Each voter ranks a set of possible choices.  Individual voter
@@ -114,8 +113,6 @@ provide strong anonymity, universal verifiability, and coercion resistance.
 	<li><a href="@SUGGESTION_BOX@">Suggestion box</a>
     </ul>
 </div>
-</td></tr>
-<tr><td>
 <div class="bubble">
 <h3>&nbsp;CIVS news</h3>
 <ul class="news">
@@ -127,8 +124,6 @@ Public-poll voting forms can now be embedded into other web pages.
 </li>
 </ul>
 </div>
-</td></tr>
-<tr><td>
 <div class="bubble">
 <h3>Top public polls: <a class="small" href="publicized_polls.html">[see more]</a></h3>
 <div id="top_polls" class="small_list">
@@ -140,13 +135,13 @@ Loading...
 </table>
 
 <div id="footnote" style="margin: 2ex">
-<p><small>
+<p>
 The Condorcet Internet Voting Service has been run since 2003 by <a
 href="http://www.cs.cornell.edu/andru">Andrew Myers</a> at
 the <a href="http://www.cs.cornell.edu/">Cornell Computer Science
 Department</a>. This is CIVS version 2.16. Feedback and help are welcome.
-</small></p>
-<p><small>
+</p>
+<p>
 <b>Fine print:</b>
 This voting service is available for free, public use. No guarantees
 can be made that this service will be correct or available and
@@ -155,7 +150,7 @@ Cornell University, be liable for any damages whatsoever
 resulting from loss of use, data or profits, whether in an action of contract,
 negligence or other tortious action, arising out of or in connection with
 the use of this service.
-</small></p>
+</p>
 </div>
 </div>
 <script type="text/javascript">fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@')</script>

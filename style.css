@@ -17,6 +17,8 @@ div.home { text-align: justify;
            max-width: 80ex}
 div#footnote {
     border-top: 1px solid #bbb;
+    text-align: justify;
+    font-size: 80%;
 }
 
 a            { text-decoration: none }
@@ -45,7 +47,7 @@ th              { font-family: Verdana, Arial, helvetica, sans-serif;
 
 table { background-color: #e8e8f0 }
 table.matrix { background-color: #e0e0f0 }
-table.form { background-color: transparent }
+table.form { background-color: transparent; text-align: left }
 table#main { margin: 0 auto }
 table#ballot { margin: 0 auto }
 table#ballot td { vertical-align: top; }
@@ -193,6 +195,7 @@ div#topmenu li {
 }
 div.bubble {
     background-image: url('vertstrip.png');
+    margin-bottom: 2em;
     padding: 3px 6px 3px 2px;
     border-color: #bbc;
     border-style: solid;
