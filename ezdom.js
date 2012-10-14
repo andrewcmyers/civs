@@ -1,7 +1,7 @@
 // A few useful tags. Add more!
 var tags = [
     'ul', 'li', 'ol', 'p', 'b', 'i', 'em', 'table', 'tbody', 'tr', 'td', 'div',
-    'span'
+    'span', 'h1', 'h2', 'h3', 'h4', 'a', 'br'
 ];
 
 /* Append k as a child of n. Create a text node if k is a string.
@@ -20,18 +20,18 @@ function app(n, k) {
  *   attributes: an object containing additional attributes to be copied to
  *      the node.
  */
-function node(tag, kids, attributes) {
+function node(tag) {
     var n = document.createElement(tag);
-    if (kids.constructor == Array)
-	for (var i in kids) app(n, kids[i]);
-    else
-	app(n, kids);
-    if (attributes != undefined) {
-	// if you get an error here, you probably forgot array brackets
-	for (var prop in attributes) {
-	    n[prop] = attributes[prop];
-	}
+    var firstkid = 1;
+    var attr = arguments[1];
+    //alert("in node with " + arguments.length + " arguments. tag: " + tag + ' attr: ' + attr);
+    if (attr != undefined && attr.constructor == Object) {
+	for (var prop in attr)
+	    n[prop] = attr[prop];
+	firstkid = 2;
     }
+    for (var i = firstkid; i < arguments.length; i++)
+	app(n, arguments[i]);
     return n;
 }
 
@@ -41,8 +41,16 @@ function install_tag(tag) {
 // This must be done in a separate function to get the scoping of the
 // captured variable 'tag' right.
 
-    window[tag] = function(kids, attributes) {
-	return node(tag, kids, attributes)
+    window[tag] = function(args) {
+	var nargs = new Array(tag);
+	nargs.length = arguments.length+1;
+	//alert('applying ' + tag + ' to ' + arguments.length + " args ") ;
+	for (var i = 0; i < arguments.length; i++) {
+	    //alert("arg " + (i+1) + " = " + arguments[i]);
+	    nargs[i+1] = arguments[i];
+	}
+	//alert('applying node to ' + nargs + ' ' + nargs.length);
+	return node.apply(node, nargs);
     }
 }
 

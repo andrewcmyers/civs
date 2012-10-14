@@ -3,75 +3,38 @@
 <html>
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Condorcet Internet Voting Service: Acknowledgments</title>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Condorcet Internet Voting Service: Acknowledgments</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+    <script src="ezdom.js" type="text/javascript"></script>
+    <script src="civs_hdr.js" type="text/javascript"></script>
 </head>
 
 <body>
 
-<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
-  <tbody><tr>
-    <td width="100%" valign="top" nowrap>
-      <h1>&nbsp;Condorcet Internet Voting
-      Service</h1>
-    </td>
-    <td width=0% nowrap valign=top align=right>
-	<a href="@CIVSHOME@">About CIVS</a><br>
-	<a href="@CIVSURL@/publicized_polls.html">Public polls</a><br>
-	<a href="@CIVSURL@/civs_create.html">Create new poll</a><br>
-	<a href="@CIVSURL@/sec_priv.html">Security and privacy</a><br>
-	<a href="@CIVSURL@/faq.html">FAQ</a>
-    </td>
-  </tr>
-  <tr>
-    <td width="100%" valign="top" nowrap colspan=2>
-      <h2 align="center">Credits and acknowledgments</h2>
-    </td>
-  </tr>
-</tbody>
-</table>
+<script type="text/javascript">
+var body = document.getElementsByTagName('body')[0];
+body.appendChild(create_header("Credits and Acknowledgments"));
+body.appendChild(
+   div({className: "contents"},
+       p("Andrew Myers built the initial version of the system."),
+       p("Michael Clarkson designed and implemented the protocols that ",
+         "protect voter identity. He also added the ballot reporting feature ",
+	 "and cleaned up the code quite a bit."),
+       p("Nate Nystrom and TP Wong helped design the user interface."),
+       p("David Gamble gave helpful critiques of the proportional representation method. ",
+         "Steve Eppley gave useful pointers on MAM and related methods. ",
+         "Chris Benham helped with the \"runoff\" method."),
+       p("Localization for languages other than English was provided by ",
+	 "volunteers: Árpád Magosányi (Hungarian), ",
+	 "Jacopo Corbetta (Italian), Pascal Levasseur and Michel Billard Sarakawa (French), ",
+	 "Julian Mehnle (German), Tom Dromi and Roey Perlstein-Dvir (Hebrew), ",
+	 "Benhur Stein (Portuguese), Danfeng Zhang (Chinese), and Luis García (Spanish)."),
+       p("Contributions and feedback are always welcome!"),
+       ul(li( 'Additional language support would be great if there are more volunteers out ',
+	      ' there.  Adding support for a new language is pretty easy and does not require ',
+	      ' programming expertise.'))));
+</script>
 
-<div class="contents">
-
-<p>
-Andrew Myers built the initial version of the system.
-</p>
-
-<p>
-Michael Clarkson designed and implemented the protocols that
-protect voter identity. He also added the ballot reporting feature
-and cleaned up the code quite a bit.
-</p>
-
-<p>Nate Nystrom and TP Wong helped design the user interface.</p>
-
-<p>David Gamble gave helpful critiques of
-the proportional representation method.
-Steve Eppley gave useful pointers on MAM and
-related methods.
-Chris Benham helped with the "runoff" method.</p>
-
-<p>Localization for languages other than English was provided by
-volunteers: &Aacute;rp&aacute;d Magos&aacute;nyi (Hungarian), 
-Jacopo Corbetta (Italian), Pascal Levasseur
-and Michel Billard Sarakawa (French),
-Julian Mehnle (German), Tom Dromi and Roey Perlstein-Dvir (Hebrew),
-Benhur Stein (Portuguese), Danfeng Zhang (Chinese), and Luis Garc&iacute;a (Spanish).
-</p>
-
-<p>Contributions and feedback are always welcome!</p>
-<ul>
-<li>
-Additional language support would be great if there are more volunteers out
-there.  Adding support for a new language is pretty easy and does not require
-programming expertise.
-</li>
-</ul>
-
-</p>
-</div>
-
-</body>
 </html>
