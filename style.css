@@ -180,7 +180,7 @@ td#navbubbles {
 }
 div#topmenu {
     position: relative;
-    background: #119;
+    background: #338;
     top: -1.5ex;
     font-size: 110%;
 }
@@ -194,7 +194,8 @@ div#topmenu li {
     padding: 0.2ex 0
 }
 div.bubble {
-    background-image: url('vertstrip.png');
+    /* background-image: url('vertstrip.png'); */
+    background-color: #fff0e8;
     margin-bottom: 2em;
     padding: 3px 6px 3px 2px;
     border-color: #bbc;
