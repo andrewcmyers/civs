@@ -195,9 +195,6 @@ sub poll_ends { # end
 sub Poll_results_available_to_all_voters_when_poll_completes {
     'Poll results available to all voters when poll completes.';
 }
-sub Voters_can_choose_No_opinion {
-    'Voters can choose &ldquo;No opinion&rdquo;';
-}
 sub Voting_is_disabled_during_writeins {
     'Voting is disabled during the write-in period.';
 }
