@@ -118,9 +118,11 @@ if (param('fresh') || param('Compare') ||             # Can force a refresh
      ($last_vote_time eq '' && $cache_time == 0)) {   # Recompute old if no cache
     print "<!-- Computing fresh results -->", $cr;
     &StartProgressMeter;
-    open (RESULTS, ">$cache_file");
+    my $nonce = &SecureNonce;
+    open (RESULTS, ">$cache_file.$nonce");
     &ComputeResults;
     close (RESULTS);
+    rename("$cache_file.$nonce", "$cache_file");
     &ReportCompletion;
 } else {
     print "<!-- Reusing cached results -->", $cr;
