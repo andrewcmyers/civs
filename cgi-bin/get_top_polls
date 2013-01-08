@@ -9,7 +9,13 @@ use lib '@CGIBINDIR@';
 
 my $home = '@CIVSDATADIR@';
 
-my $top_polls = $home . "/elections/top_polls.html";
+my $file = 'top_polls.html';
+
+if (param('full') eq 'yes') {
+    $file = 'top_polls_full.html';
+}
+
+my $top_polls = "$home/elections/$file";
 
 undef $/;
 
