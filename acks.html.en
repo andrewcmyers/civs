@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Condorcet Internet Voting Service: Acknowledgments</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+    <script src="ezdom.js" type="text/javascript"></script>
+    <script src="civs_hdr.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<script type="text/javascript">
+var body = document.getElementsByTagName('body')[0];
+body.appendChild(create_header("Credits and Acknowledgments"));
+body.appendChild(
+   div({className: "contents"},
+       p("Andrew Myers built the initial version of the system."),
+       p("Michael Clarkson designed and implemented the protocols that ",
+         "protect voter identity. He also added the ballot reporting feature ",
+	 "and cleaned up the code quite a bit."),
+       p("Nate Nystrom and TP Wong helped design the user interface."),
+       p("David Gamble gave helpful critiques of the proportional representation method. ",
+         "Steve Eppley gave useful pointers on MAM and related methods. ",
+         "Chris Benham helped with the \"runoff\" method."),
+       p("Localization for languages other than English was provided by ",
+	 "volunteers: Árpád Magosányi (Hungarian), ",
+	 "Jacopo Corbetta (Italian), Pascal Levasseur and Michel Billard Sarakawa (French), ",
+	 "Julian Mehnle (German), Tom Dromi and Roey Perlstein-Dvir (Hebrew), ",
+	 "Benhur Stein (Portuguese), Danfeng Zhang (Chinese), and Luis García (Spanish)."),
+       p("Contributions and feedback are always welcome!"),
+       ul(li( 'Additional language support would be great if there are more volunteers out ',
+	      ' there.  Adding support for a new language is pretty easy and does not require ',
+	      ' programming expertise.'))));
+</script>
+
+</html>
