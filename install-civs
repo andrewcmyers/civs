@@ -34,9 +34,9 @@ TestAndCreateDir $CIVSDATADIR/elections;
 rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
     for f in civs_create.html* index.html* public_elections.html* \
-	proportional.html* sec_priv.html* acks.html* changelog.html* \
+	proportional.html* sec_priv.html* acks.html.en changelog.html* \
 	rp.html* publicized_polls.html* faq.html* style.css results.js vote.js ajax.js \
-	check123b.png sample-ballot.png vertstrip.png hebrew.css
+	ezdom.js civs_hdr.js check123b.png sample-ballot.png vertstrip.png hebrew.css
     do
 	case "$f" in
 	  *.html.*) dest="${HTMLDIR}/${f}${UTF8_SUFFIX}";;

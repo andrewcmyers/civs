@@ -107,6 +107,7 @@ sub find_top_polls {
 	print FULL @line;
     }
     print OUT "</ul>\r\n";
+    print FULL "</ul>\r\n";
     close(OUT);
     close(FULL);
     close(NEWLOG);
@@ -116,7 +117,7 @@ sub find_top_polls {
 }
 
 sub standard_refresh {
-    find_top_polls(10, 1000, 0.00001);
+    find_top_polls(10, 1000, 0.000001);
 }
 
 1; # ok!
