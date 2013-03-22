@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use CGI qw(:standard);
 use POSIX qw(strftime);
+use languages;
 
 use lib '@CGIBINDIR@';
 
@@ -29,6 +30,9 @@ print <IN>;
 
 
 if (@LOG_HOME_VISITS@) {
+    my $languages = http('Accept-Language');
+    if (!defined($languages)) { $languages = 'unspecified-lang' }
+
     my $remote_ip_address;
     if ('@USING_ISA@') {
         $remote_ip_address = http('HTTP_IPREMOTEADDR');
@@ -45,7 +49,8 @@ if (@LOG_HOME_VISITS@) {
     my $civs_log = $home . '/log';
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open (LOG, ">>$civs_log");
-    print LOG "$now $remote_ip_address home-page-visit\r\n";
+    # print LOG "$now $remote_ip_address home-page-visit\r\n";
+    print LOG "$now $remote_ip_address home-page-visit $languages\r\n";
     close(LOG);
 }
 
