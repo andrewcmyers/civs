@@ -99,6 +99,15 @@
     function make_visible(id) {
 	document.getElementById(id).style.display = 'block'
     }
+    function preview_description() {
+	render_text('<h2>Poll description</h2>',
+		    'description',
+		    'rendered_description',
+		    'description')
+    }
+    function preview_choices() {
+	render_list('choices', 'rendered_choices')
+    }
 </script>
 
 </head>
@@ -171,13 +180,11 @@
   <p>Description of the poll and available choices (most HTML tags ok):<br>
   <table class="form">
     <tr>
-      <td><textarea id="description" valign="top" rows="5" name="description" cols="60"></textarea>
+      <td><textarea id="description" valign="top" rows="5" name="description" cols="60"
+		    onchange="preview_description()"></textarea>
       </td>
       <td><input type="button" value="Preview &#9656;"
-	    onClick="render_text('<h2>Poll description</h2>',
-				 'description',
-				 'rendered_description',
-				 'description')"></td>
+	    onClick="preview_description()">
       <td valign="top"><span class="rendering" id="rendered_description"></span></td>
     </tr>
   </table>
@@ -188,10 +195,10 @@
   <p align="left">
   <table class="form">
   <tr><td>
-    <textarea rows="5" name="choices" cols="60" id="choices"></textarea></td>
+    <textarea rows="5" name="choices" cols="60" id="choices" onchange="preview_choices()"></textarea></td>
     <td>
       <td><input type="button" value="Preview &#9656;"
-	    onClick="render_list('choices', 'rendered_choices')"></td>
+	    onClick="preview_choices()"></td>
       <td valign="top"><span class="rendering" id="rendered_choices"></span></td>
     </tr>
   </table>
