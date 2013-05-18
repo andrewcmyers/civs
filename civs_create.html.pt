@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<title>Condorcet Internet Voting Service</title>
+<link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+<link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<script type="text/javascript">
+    function trim(str)
+    {
+        return str.replace(/^\s+|\s+$/g, '')
+    }
+    function validateEmail(str)   // element to be validated
+    {
+	var str = trim(str);  // value of field with whitespace trimmed off
+	var email = /^[^@]+@[^@.]+\.[^@]*\w\w$/
+	return email.test(str);
+    }
+
+    function validate() {
+	var numerrs = 0;
+	var errs = new Array;
+	if (!validateEmail(document.forms.CreateElection.email_addr.value)) {
+	    errs[numerrs++] = 'O e-mail do supervisor é inválido.';
+	}
+	if (!(document.forms.CreateElection.num_winners.value >= 1)) {
+	    errs[numerrs++] = 'Deve haver no mínimo um vencedor.';
+	}
+	if (document.forms.CreateElection.proportional.checked &&
+	    !(document.forms.CreateElection.num_winners.value > 1)) {
+	    errs[numerrs++] =
+		'A representação proporcional requer no mínimo um vencedor.';
+	}
+	if (document.forms.CreateElection.choices.value == '' &&
+	    document.forms.CreateElection.choices_file.value == '') {
+	    errs[numerrs++] = 'Deve haver no mínimo duas opções para a votação.';
+	}
+	if (document.forms.CreateElection.restrict_results.checked) {
+	    var rs = document.forms.CreateElection.result_addrs.value;
+	    var ra = rs.split(/[\r\n]+/g);
+	    var nr = 0;
+	    for (i = 0; i < ra.length; i++) {
+		if (ra[i] == '') continue;
+		if (!validateEmail(ra[i])) {
+		    errs[numerrs++] =
+			'O e-mail do destinatário dos resultados é inválido: ' + ra[i];
+		} else {
+		    nr++;
+		}
+	    }
+	    if (nr == 0) {
+		errs[numerrs++] =
+		    'Você não indicou nenhum usuário que possa consultar o resultado da votação.';
+	    }
+	}
+	if (numerrs == 0) return true;
+	if (numerrs == 1) {
+	    alert(errs[0]);
+	} else {
+	    var msg = 'Erros:\n';
+	    for (i = 0; i < numerrs; i++) {
+		msg += (i+1);
+		msg += '. ';
+		msg += errs[i];
+		msg += "\n";
+	    }
+	    alert(msg);
+	}
+	return false;
+    }
+
+    function render_text(prefix, ta_id, span_id, clss) {
+	var span = document.getElementById(span_id);
+	var ta = document.getElementById(ta_id);
+	span.innerHTML = prefix + '<div class="' + clss + '">' + ta.value + "</div>";
+	return 1;
+    }
+
+    function render_list(ta_id, span_id) {
+	var span = document.getElementById(span_id);
+	var ta = document.getElementById(ta_id);
+	var names = ta.value.split(/[\r\n]+/g);
+	var html = "";
+	for (i = 0; i < names.length; i++) {
+	    if (names[i] != "")
+		html = html + "<li>" + names[i] + "</li>";
+	}
+	span.innerHTML = "<ul>" + html + "</ul>";
+	return 1;
+    }
+
+    function make_invisible(id) {
+	document.getElementById(id).style.display = 'none'
+    }
+    function make_visible(id) {
+	document.getElementById(id).style.display = 'block'
+    }
+</script>
+
+</head>
+
+<body>
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>&nbsp;Serviço de Votação Condorcet pela Internet (CIVS)</h1>
+    </td>
+    <td width=0% nowrap valign=top align=right>
+	<a href="@CIVSHOME@">Sobre o CIVS</a><br>
+	<a href="@CIVSURL@/publicized_polls.html">Votações públicas</a><br>
+	<a class="here" href="@CIVSURL@/civs_create.html">Criar uma nova votação</a><br>
+	<a href="@CIVSURL@/sec_priv.html">Sobre segurança e privacidade</a><br>
+	<a href="@CIVSURL@/faq.html">Perguntas frequentes</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" valign="top" nowrap colspan=2>
+      <h2 align="center">Criar uma nova votação</h2>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<div class="contents">
+
+<form method="POST"
+    action="@CIVSBINURL@/create_election@PERLEXT@"
+    enctype="multipart/form-data"
+    accept-charset="UTF-8"
+    name="CreateElection"
+    onsubmit="return validate()">
+  <table class="form">
+  <tr>
+    <td align=right>Nome da votação (p. ex., <b>Representante para o Colegiado</b>):</td>
+    <td><input type="text" name="title" size="50"></td>
+  <tr>
+    <td align=right>Nome do supervisor (você):</td>
+    <td><input type="text" name="name" size="20">
+  </td>
+  <tr>
+    <td align=right>E-mail do supervisor:</td>
+    <td><input type="text" name="email_addr" size="20"
+      onchange="if (!validateEmail(this.value)) { alert('E-mail inválido') }" >
+    </td>
+  </tr>
+  <tr>
+    <td valign=top align=right>Data e hora de encerramento da votação:<br>
+	<small>(<b>Obs.:</b> votações devem ser encerradas manualmente)</small>
+    </td>
+    <td><input type="text" name="election_end" id="election_end" size="30"
+          onchange="render_text('<br><i>Visualizar</i>: Encerramento da votação ', 'election_end', 'rendered_end', 'poll_end', 'poll_end_preview')">
+	 <span class="rendering" id="rendered_end"></span>
+</td>
+  </tr>
+  </table>
+
+<div class="emphasized">
+  Seu nome e endereço de e-mail são usados para envio de e-mail aos 
+  eleitores. Seu nome deve ser conhecido pelos eleitores e seu
+  e-mail deve ser válido, pois o CIVS enviará a você toda a
+  informação necessária para controlar a votação. Certifique-se de
+  que seu filtro de spam não bloqueie e-mails de <kbd>@SUPERVISOR@</kbd> 
+  (ou verifique sua caixa de spam se não receber a mensagem do CIVS!).
+  </div>
+
+  <p>Descrição da votação e opções disponíveis (você pode incluir tags HTML):<br>
+  <table class="form">
+    <tr>
+      <td><textarea id="description" valign="top" rows="5" name="description" cols="60"></textarea>
+      </td>
+      <td><input type="button" value="Visualizar &#9656;"
+	    onClick="render_text('<h2>Descrição da votação</h2>',
+				 'description',
+				 'rendered_description',
+				 'description')"></td>
+      <td valign="top"><span class="rendering" id="rendered_description"></span></td>
+    </tr>
+  </table>
+  </p>
+
+  <p>Digite as opções (candidatos), uma por linha,
+     ou faça upload de um arquivo contendo todas as opções:</p>
+  <p align="left">
+  <table class="form">
+  <tr><td>
+    <textarea rows="5" name="choices" cols="60" id="choices"></textarea></td>
+    <td>
+      <td><input type="button" value="Visualizar &#9656;"
+	    onClick="render_list('choices', 'rendered_choices')"></td>
+      <td valign="top"><span class="rendering" id="rendered_choices"></span></td>
+    </tr>
+  </table>
+  </p>
+  <p align="left"><input type=file name="choices_file"></p>
+  <p>Quantas opções vencerão: <input type="text" name="num_winners" size="5" value="1"></p>
+  <p>E-mails de até 1000 eleitores, um por linha.
+  É possível adicionar eleitores mais tarde.</p>
+  <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
+  <p><input type=file name="addresses_file"></p>
+
+  <h3>Mais configurações <small>(passe o mouse sobre cada caixa de opção para ver mais informações)</small></h3>
+  <input type="checkbox" name="public" value="yes"
+      onClick="make_visible('publicize')"
+     title="Em uma votação pública, você receberá uma única URL para uso de todos os eleitores. Esta URL poderá ser enviada a listas de e-mail. Para evitar que um eleitor vote várias vezes, o CIVS verifica apenas o endereço IP do eleitor. Se você quer garantir que os eleitores votem apenas uma vez, é preverível fazer uma votação privada.">
+  Habilitar como votação pública.
+    <div class="suboption" id="publicize">
+    <input type="checkbox" name="publicize" value="yes"
+      title="CIVS irá anunciar esta votação na sua lista de votações públicas e possivelmente em outros locais. Quem visualizar a lista será capaz de votar.">
+    Permitir que o CIVS anuncie esta votação.
+    </div>
+    <div>
+  <input type="checkbox" name="external_ballots" value="yes"
+      title="Marque esta opção se você desejar fazer upload dos votos. Eleitores não podem votar neste tipo de votação. Esta opção é útil se você quiser entender como funcionam os métodos de votação, ou se você obtiver os votos de outras fontes externas ao CIVS.">
+  Habilitar como votação de teste: leitura de votos a partir de um arquivo.
+</div>
+<div>
+  <input type="checkbox" name="restrict_results" value="yes"
+         onClick="make_visible('rrcontrol')"
+	 title="Por padrão, os resultados da votação podem ser vistos por todos os eleitores. Se você quiser restringir os resultados a algum outro grupo de pessoas, use esta opção.">
+    Divulgar os resultados somente a alguns usuários.
+    <div class="suboption" id="rrcontrol">
+    Digite os e-mails de usuários habilitados a visualizar o resultado da votação:
+    (todos os eleitores poderão ver esses e-mails)
+    <br>
+    <textarea rows="2" name="result_addrs" cols="50"></textarea>
+    </div>
+</div>
+<div>
+  <input type="checkbox" name="ballot_reporting" value="yes"
+         onClick="make_visible('reveal_voters')"
+     title="Esta opção permite que qualquer participante da votação veja os detalhes de cada voto. Entretanto, a identificação dos eleitores não é revelada a não ser que esta opção seja habilitada.">
+  Habilitar relatório detalhado de votos. 
+  <div class="suboption" id="reveal_voters">
+    <input type="checkbox" name="reveal_voters" value="yes">
+    No relatório detalhado de votos, revele também a identidade do eleitor.<br>
+    Com esta opção, eleitores <i class="warning">não</i> ficarão anônimos e o sistema
+    não irá descartar os e-mails de eleitores como normalmente é feito. Os eleitores
+    serão advertidos sobre esta falta de anonimato.
+  </div>
+</div>
+<div>
+  <input type="checkbox" name="writeins" value="yes"
+   title="Você pode permitir que eleitores indiquem novas opções de candidatos. Entretanto, novos candidatos estarão em desvantagem se forem adicionados após a votação começar. Assim, quando esta opção for selecionada, haverá uma fase de indicação de novos candidatos, durante a qual os eleitores não poderão votar. O supervisor deverá habilitar a votação explicitamente.">
+  Permitir que eleitores indiquem outras opções.
+</div>
+<div>
+  <input type="checkbox" name="shuffle" value="no"
+  title="Por padrão, a página de votação mostra as opções em uma ordem aleatória para cada eleitor. Para algumas votações, como por exemplo para escolha de um horário de reunião, é mais conveniente que os eleitores vejam as opções exatamente na ordem em que foram especificadas.">
+  Mostrar opções na página de votação exatamente na ordem especificada.
+</div>
+<div>
+  <input type="checkbox" name="no_opinion" value="yes"
+    title="A opção &#x22;abstenção&#x22; pode ter efeitos inesperados. Consulte a seção de Perguntas Frequentes para saber como usar corretamente esta opção e informe os eleitores sobre esta configuração.">
+  Permitir que eleitores escolham &ldquo;abstenção&rdquo; para algumas opções.<br>
+  <input type="checkbox" name="proportional" value="yes"
+         onClick="make_visible('prcontrol')"
+	 title="O modo de representação proporcional é útil somente para eleições com múltiplos vencedores, onde deseja-se garantir que as preferências dos eleitores sejam expressas proporcionalmente. Em caso contrário, a maioria dos eleitores pode decidir todos os vencedores. O modo proporcional é muito mais lento que o modo não proporcional, e não deve ser usado em casos onde existam muitas opções e muitos vencedores. Na maioria dos casos, mas não em todos, os resultados dos modos proporcional e não-proporcional são os mesmos. Clique no link 'mais informações' para saber mais sobre como este modo funciona.">
+  Forçar representação proporcional [<a href="proportional.html">mais informações</a>]</br>
+   <div class="suboption" id="prcontrol">
+    Na representação proporcional, assume-se que os eleitores irão maximizar:<br>
+    <input type="radio" name="rating_interpretation"
+       value="best_choice"
+       checked> a classificação da sua opção favorita<br>
+    <input type="radio" name="rating_interpretation"
+       value="combined_ratings"> os pesos combinados das opções escolhidas<br>
+   </div>
+</div>
+
+<div class="emphasized">
+  Certifique-se de que seu endereço de e-mail esteja correto, pois as informações sobre a votação
+  serão enviadas a você por e-mail. Eleitores não serão informados sobre a existência da
+  votação enquanto você não responder a este e-mail.
+  </div>
+  <p style="margin-left: 5ex">
+    <input type="submit" value="Criar votação" name="submit">
+  </p>
+</form>
+</div>
+
+<script type="text/javascript">
+    make_invisible('publicize');
+    make_invisible('prcontrol');
+    make_invisible('reveal_voters');
+    make_invisible('rrcontrol');
+</script>
+</body>
+
+</html>

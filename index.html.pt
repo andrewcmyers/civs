@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Condorcet Internet Voting Service</title>
+<base href="@CIVSURL@/">
+<link rel="stylesheet" type="text/css" href="style.css">
+<link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>
+</head>
+
+<body width="540px">
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>Serviço de Votação Condorcet pela Internet (CIVS)</h1>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<div class="contents">
+
+<table id="main" class="form">
+<tr>
+<td rowspan="3" valign="top">
+<div class="home">
+<p>CIVS é um serviço gratuito que permite facilmente realizar votações pela Internet.
+Cada eleitor classifica um conjunto de opções possíveis. Classificações individuais 
+dos eleitores são combinadas em uma classificação geral anônima. CIVS já tem mais
+de 80.000 usuários, em muitas votações que decidiram, por exemplo:
+</p>
+
+<table id="civs_uses" class="form">
+<tr><td>
+<ul>
+<li>Diretores de organizações</li>
+<li>Horários de reuniões</li>
+<li>Membros de comitês</li>
+<li>Nomes de projetos e domínios</li>
+<li>Ganhadores de prêmios</li>
+</ul>
+</td>
+<td>
+<ul>
+<li>Restaurantes favoritos</li>
+<li>Filmes preferidos</li>
+<li>Menus de festa</li>
+<li>Seleções de clubes literários</li>
+<li>Músicas favoritas</li>
+</ul>
+</td>
+<td><ul>
+<li>Presentes</li>
+<li>Logotipos</li>
+<li>Deciões de projeto</li>
+<li>Palestrantes convidados</li>
+<li>Estatutos de organizações</li>
+</ul></td></tr>
+</table>
+
+<p><strong>Como funciona:</strong>
+Qualquer pessoa pode criar votações no CIVS, mas somente eleitores
+autorizados participam da votação. Os eleitores e o supervisor da
+votação devem ter e-mail e acesso à Web. Quando uma votação é iniciada,
+cada eleitor recebe por e-mail uma URL para emitir seu voto.
+Também é possível criar votações públicas, em que não é necessário informar
+os e-mails dos eleitores; neste caso, é permitido somente um voto por endereço IP.
+</p>
+
+<p>
+<strong>Por que votação por preferência?</strong>
+Neste tipo de votação, os eleitores classificam as opções conforme suas preferências, em vez de apenas indicar sua opção favorita. Assim, a votação coleta mais opiniões dos eleitores, levando a resultados mais precisos. Isso também ajuda a evitar empates e dispersão de votos.
+</p><p>
+Votações por preferência são realizadas em eleições reais. Por exemplo, a Austrália usa o método de Voto Único Transferível (do inglês, Single Transferable Vote - STV, também conhecido como Instant Runnof Voting - IRV). Entretanto, os métodos de Condorcet suportados pelo CIVS são melhores do que o método STV na identificação de candidatos de consenso. O método STV pode eleger um candidato mesmo que a maioria dos eleitores prefira outro, e isso 
+<a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
+de fato já aconteceu em eleições reais</a>. Diferentemente de outros sistemas baseados em métodos de Condorcet, o CIVS possui um modo de representação proporcional.
+</p>
+<p>
+Uma versão altamente segura do CIVS, chamada <a
+href="http://www.cs.cornell.edu/projects/civitas">Civitas</a> está em desenvolvimento. Civitas usa protocolos de criptografia mais sofisticados para reforçar anonimidade, verificabilidade universal e resistência à coerção.
+</p>
+</div>
+</td>
+<td id="navbubbles">
+<div class="bubble" id="topmenu">
+    <ul>
+	<li><a href="civs_create.html">Criar uma votação</a></li>
+	<li><a href="faq.html">Perguntas frequentes</a></li>
+	<li><a href="https://lists.cs.cornell.edu/mailman/listinfo/civs-users-l">
+	    Assinar a lista de e-mail do CIVS</a></li>
+	<li><a href="sec_priv.html">Segurança e privacidade</a></li>
+	<li><a href="rp.html">Métodos de Condorcet</a></li>
+	<li><a href="proportional.html">Representação proporcional</a></li>
+	<li><a href="changelog.html">Software CIVS</a></li>
+	<li><a href="acks.html">Agradecimentos</a></li>
+	<li><a href="@SUGGESTION_BOX@">Caixa de sugestões</a>
+    </ul>
+</div>
+</td></tr>
+<tr><td>
+<div class="bubble">
+<h3>&nbsp;Notícias CIVS</h3>
+<ul class="news">
+<li><strong>3/13:</strong>
+CIVS ultrapassou a casa dos 100.000 votos e parece estar se tornando cada vez mais popular.</li>
+</ul>
+</div>
+</td></tr>
+<tr><td>
+<div class="bubble">
+<h3>Votações públicas mais populares: <a class="small" href="publicized_polls.html">[veja mais]</a></h3>
+<div id="top_polls" class="small_list">
+Carregando...
+</div>
+</div>
+</td>
+</tr>
+</table>
+<hr>
+<div style="margin: 2ex">
+<p><small>
+O Serviço de Votação Condorcet pela Internet (CIVS) é gerenciado desde 2003 por <a
+href="http://www.cs.cornell.edu/andru">Andrew Myers</a>, do <a href="http://www.cs.cornell.edu/">Departamento
+de Ciência da Computação da Cornell University</a>. Esta versão do CIVS é a 2.16. Sugestões e ajuda são sempre bem-vindos.
+</small></p>
+<p><small>
+<b>Letras miúdas:</b>
+Este serviço de votação é disponibilizado para uso público e gratuito. Não é oferecida nenhuma garantia de que este serviço seja correto ou continue disponível. Os autores ou provedores do serviço, incluindo a Cornell University, não se responsabilizam por quaisquer danos resultantes de perda de uso, dados ou lucros, seja em ações decorrentes de contrato, negligência ou qualquer outra ação tortuosa, advinda ou em ligação com o uso deste serviço.
+</small></p>
+</div>
+</div>
+<script type="text/javascript">fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@')</script>
+</body>
+</html>
