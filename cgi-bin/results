@@ -226,7 +226,7 @@ sub ComputeResults {
 	print RESULTS hidden('rkey', param('rkey'));
     }
     if ($real_nwin != $num_winners) {
-	print RESULTS $tx->Poll_actually_has($num_winners);
+	print RESULTS $tx->Poll_actually_has($real_nwin);
     }
 
     print RESULTS br();
