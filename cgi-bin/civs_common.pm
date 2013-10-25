@@ -306,7 +306,7 @@ sub FileTimestamp {
     (my $dev, my $ino, my $mode, my $nlink, my $uid, my $gid, my $rdev, my $size,
 	my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
 	    = stat($fname);
-    if ($mtime eq '') {
+    if (!defined($mtime) || $mtime eq '') {
 	return 0; # no cache file
     } else {
 	return $mtime;
