@@ -11,7 +11,7 @@ use top_polls;
 HTML_Header("Refresh top polls");
 CIVS_Header("Refresh top polls");
 
-if (param('key') ne '@ADMIN_KEY@') {
+if (!defined(param('key')) || param('key') ne '@ADMIN_KEY@') {
     print strong('Authorization error');
     print end_html();
     exit 0;

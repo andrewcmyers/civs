@@ -55,7 +55,7 @@ while (defined(my $file = readdir(DIR))) {
 	$email_addr = "(no addr)";
     }
     my $public = (defined($edata{'public'}) && $edata{'public'} eq 'yes') ? "Public" : "Private";
-    if ($edata{'publicize'} eq 'yes') { $public .= '+' }
+    if (defined($edata{'publicize'}) && $edata{'publicize'} eq 'yes') { $public .= '+' }
     if (defined($edata{'external_ballots'}) &&
 	  $edata{'external_ballots'} eq 'yes')
 	{ $public = 'Test'; }
@@ -120,8 +120,12 @@ foreach my $entry (@entries) {
      my $last_update)
 	= @{$entry};
     if ($public ne 'Test') {
-        $total_auth += $num_auth;
-	$total_users += $num_votes;
+        if ($num_auth ne '&ndash;') {
+	    $total_auth += $num_auth;
+	}
+        if ($num_votes ne '&ndash;') {
+	    $total_users += $num_votes;
+	}
     }
     push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=$file".
 			         '&admin_key=@ADMIN_KEY@',

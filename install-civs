@@ -83,7 +83,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	      *) target="${target}${PERLEXT}";;
 	    esac
 	fi
-	echo -n " cgi-bin/$f"
+	echo " ->$target"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
 	     -e 's|@THISHOST@|'$THISHOST'|' \

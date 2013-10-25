@@ -50,7 +50,7 @@ BEGIN {
 	use IO::Handle;
 	use CGI::Carp qw(carpout set_message fatalsToBrowser);
 	open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or 
-		#die "Unable to open @CIVSDATADIR@/cgi-log: $!\n";
+		die "Unable to open @CIVSDATADIR@/cgi-log: $!\n".(`id`);
 	autoflush CGILOG;
 	carpout(\*CGILOG);
 	set_message(\&Fatal_CIVS_Error);
