@@ -19,3 +19,47 @@ function show_details() {
     document.getElementById("details").style.display = "block";
     document.getElementById("show_details").style.display = "none";
 }
+
+function edit_description() {
+    var para = document.getElementById("description");
+    var texta = document.getElementById("description_edit");
+    para.style.display = 'none';
+    texta.style.display = 'block';
+    document.getElementById("edit_description_button").style.display = 'none';
+    document.getElementById("save_description_button").style.display = 'block';
+    texta.value = para.innerHTML;
+}
+function save_description() {
+    var para = document.getElementById("description");
+    var texta = document.getElementById("description_edit");
+    para.innerHTML = texta.value;
+    texta.style.display = 'none';
+    para.style.display = 'block';
+    document.getElementById("edit_description_button").style.display = 'block';
+    document.getElementById("save_description_button").style.display = 'none';
+
+    post_new_description(para.innerHTML);
+}
+
+function clear(node) {
+    if (node == undefined) return;
+    while (node.firstChild) node.removeChild(node.firstChild);
+}
+
+function popup(id, msg) {
+    var elem = document.getElementById(id);
+    clear(elem);
+    app(elem, msg);
+    elem.style.display = 'inline';
+    setTimeout(function() {
+	document.getElementById(id).style.display = 'none';
+    }, 1000);
+}
+
+function post_new_description(desc) {
+    post_to_url("edit_poll@PERLEXT@", { id: election_id, description: desc }, 
+	function(response) {
+	    popup("save_popup", "saved");
+	},
+	function(err) { alert(err); });
+}

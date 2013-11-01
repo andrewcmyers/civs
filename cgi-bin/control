@@ -14,7 +14,7 @@ use mail;
 
 my $thisurl = $civs_bin_path."/control@PERLEXT@";
 
-HTML_Header($tx->CIVS_Poll_Control);
+HTML_Header($tx->CIVS_Poll_Control, 'results.js');
 use election 1.02;
 use voting;
 
@@ -207,7 +207,27 @@ if ($ballot_reporting eq 'yes') {
     print $tx->Detailed_ballot_reporting_disabled;
 }
  
-print $cr, h2($tx->Description), p($description);
+print $cr, "<script src=\"@CIVSURL@/ajax.js\"></script>";
+print $cr, "<script>var election_id = '$election_id'</script>";
+print $cr, h2($tx->Description);
+print $cr, "<div>";
+print $cr, div({-id=>'description'}, $description);
+print $cr, div({-id => "save_popup", -class => "popup"}, "saved?");
+print $cr, "</div>";
+print $cr, button(-name => 'edit_description',
+	          -id => 'edit_description_button',
+	          -value => $tx->Edit_button,
+		  -onclick => "edit_description()");
+print $cr, textarea(-id => "description_edit",
+	            -name => "description_edit",
+	            -default => $description,
+		    -rows => 10,
+		    -columns => 60);
+print $cr, button(-name => 'save_description',
+	          -id => 'save_description_button',
+	          -value => $tx->Save_button,
+		  -onclick => "save_description()");
+
 print $cr, h2($tx->Candidates);
 print p($tx->the_top_n_will_win($num_winners));
 print "<ul id='candidates'>$cr";
@@ -226,6 +246,7 @@ for (my $j = 0; $j < $num_choices; $j++) {
     if (IsWriteinName($choices[$j]) && $num_votes < 1) {
 	print li($choices[$j], $cr,
 	    button(-name => "remove",
+	           -value => $tx->Remove_button,
 	           -onclick => "document.RemoveWritein.elements.writein.value = '$j'; document.RemoveWritein.submit()",
 		   -class => 'small_button')), $cr;
     } else {

@@ -146,17 +146,18 @@ sub HTML_Header {
 			 -encoding => 'utf-8',
 			 -style => {'src' => "@CIVSURL@/$style"});
       } else {
-	print header(-charset => 'utf-8', -content_language => $tx->lang),
-	      start_html(-title => $title,
-	                 -lang => $tx->lang,
-			 -encoding => 'utf-8',
-			 -style => {'src' => "@CIVSURL@/$style"},
-			 -head => Link({ -rel => "shortcut icon",
-			                 -href => "http://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
-			 -script => [{'src' => "@CIVSURL@/$js"},
-				    {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
-				               {'src' => "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}], 
-				   -onLoad => "setup()");
+        print header(-charset => 'utf-8', -content_language => $tx->lang),
+              start_html(-title => $title,
+                         -lang => $tx->lang,
+                         -encoding => 'utf-8',
+                         -style => {'src' => "@CIVSURL@/$style"},
+                         -head => Link({ -rel => "shortcut icon",
+                                         -href => "http://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
+                         -script => [{'src' => "@CIVSURL@/$js"},
+                                     {'src' => "@CIVSURL@/ezdom.js"},
+                                     {'src' => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
+                                     {'src' => "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}], 
+                         -onLoad => "setup()");
       }
     }
     $html_header_printed = 1;

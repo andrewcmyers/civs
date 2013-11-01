@@ -277,3 +277,7 @@ li b, td > b, strong { color: #842 }
 #move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }
 
 textarea.paste { font-family: Courier, fixed; font-size: 80% }
+
+textarea#description_edit { display: none }
+input#save_description_button { display: none }
+.popup { border: 1px solid black; background-color: #ffffd0; font-size: 80%; position: relative; left: 3em; bottom: 3ex; display: none }

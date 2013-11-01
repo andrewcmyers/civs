@@ -1,30 +1,43 @@
-// A few useful tags. Add more!
+// Making it very convenient to create DOM nodes from JavaScript.
+// Andrew Myers, June 2013.
+
+// A few useful tags. More could be added.
 var tags = [
-    'ul', 'li', 'ol', 'p', 'b', 'i', 'em', 'table', 'tbody', 'tr', 'td', 'div',
-    'span', 'h1', 'h2', 'h3', 'h4', 'a', 'br'
+    'ul', 'li', 'ol', 'p', 'b', 'i', 'em', 'table', 'thead', 'tbody', 'tr',
+    'td', 'th', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'a', 'br', 'input',
+    'blockquote', 'select', 'option', 'sup', 'sub', 'strong', 'pre', 'canvas',
+    'button'
 ];
 
 /* Append k as a child of n. Create a text node if k is a string.
  */
 function app(n, k) {
-    if (typeof k == "string")
+    if (typeof k == "string") {
 	n.appendChild(document.createTextNode(k));
-    else
+    } else if (typeof k == "number") {
+        n.appendChild(document.createTextNode(k.toString()))
+    } else if (k.constructor == Array) {
+        for (i in k) {
+	    app(n, k[i]);
+        }
+    } else {
 	n.appendChild(k);
+    }
+    return n;
 }
 
 /* Create an HTML DOM element with children and, optionally, attributes.
  *   tag: the tag name, e.g. 'p', 'ul', etc.
- *   kids: either an array of elements or a single element.
- *         a 'kid' that is a string causes a text node child to be created.
  *   attributes: an object containing additional attributes to be copied to
  *      the node.
+ *   kids: a variable length sequence of element arguments. Arguments may be
+ *         strings, in which case a text node is created. An argument that is
+ *         an array causes all of its contained elements to be inserted.
  */
 function node(tag) {
     var n = document.createElement(tag);
     var firstkid = 1;
     var attr = arguments[1];
-    //alert("in node with " + arguments.length + " arguments. tag: " + tag + ' attr: ' + attr);
     if (attr != undefined && attr.constructor == Object) {
 	for (var prop in attr)
 	    n[prop] = attr[prop];
@@ -44,12 +57,9 @@ function install_tag(tag) {
     window[tag] = function(args) {
 	var nargs = new Array(tag);
 	nargs.length = arguments.length+1;
-	//alert('applying ' + tag + ' to ' + arguments.length + " args ") ;
 	for (var i = 0; i < arguments.length; i++) {
-	    //alert("arg " + (i+1) + " = " + arguments[i]);
 	    nargs[i+1] = arguments[i];
 	}
-	//alert('applying node to ' + nargs + ' ' + nargs.length);
 	return node.apply(node, nargs);
     }
 }

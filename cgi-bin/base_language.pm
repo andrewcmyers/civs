@@ -161,10 +161,19 @@ sub poll_has_not_yet_started {
     'The poll has not yet started. Press this button to start it: ';
 }
 sub Start_poll {
-    'Start poll';
+    'Start poll'
 }
 sub End_poll {
-    'End poll';
+    'End poll'
+}
+sub Edit_button {
+    'edit'
+}
+sub Save_button {
+    'save'
+}
+sub Remove_button {
+    'remove'
 }
 sub ending_poll_cannot_be_undone {
     'Ending a poll is an operation that cannot be undone. Continue?';

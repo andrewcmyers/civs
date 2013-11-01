@@ -69,7 +69,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
         voting.pm close control create_election download_ballots	      \
         remove_writein upload_ballots results top_polls.pm get_top_polls      \
         languages.pm election.pm mail.pm start_election vote refresh_top_polls\
-        publicize_election status clear_caches delete_election.pl	      \
+        publicize_election status clear_caches delete_election.pl edit_poll   \
 	rp.pm runoff.pm admctrl.pm base_language.pm			      \
         english.pm hungarian.pm italian.pm french.pm german.pm hebrew.pm      \
         portuguese.pm chinese.pm spanish.pm

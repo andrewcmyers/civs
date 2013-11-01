@@ -1,0 +1,65 @@
+#!@PERL@
+
+use strict;
+use warnings;
+use CGI qw(:standard);
+use POSIX qw(strftime);
+use HTML::TagFilter;
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use election;
+
+my $home = '@CIVSDATADIR@';
+
+undef $/;
+
+print CGI::header(-charset => 'utf-8');
+# print CGI::start_html(-title => $title,
+		      #-encoding => 'utf-8');
+
+my $tf;
+my $filter_tags = '@FILTER_TAGS@';
+if ($filter_tags ne 'no') {
+    $tf = new HTML::TagFilter;
+    my $ok = {all => []};
+    $tf->allow_tags({
+	table => $ok,
+	td => {colspan => [], rowspan => []},
+	tr => $ok,
+        s => $ok,
+        strike => $ok,
+        kbd => $ok,
+	strong => $ok,
+	b => $ok,
+	dl => $ok, dt => $ok, dd => $ok,
+        br => $ok,
+        var => $ok,
+        dfn => $ok,
+        cite => $ok,
+        samp => $ok,
+	span => $ok, div => $ok,
+	small => $ok,
+	p => {align => ['left' | 'right' | 'center']},
+	ol => {type => ['a', '1', 'A']}
+    });
+}
+
+# Filter tags from a string, if $filter_tags is not 'no'
+sub Filter {
+    if ($filter_tags ne 'no') {
+	return $tf->filter($_[0]);
+    } else {
+	return $_[0];
+    }
+}
+
+my $description = &Filter(param('description'));
+
+$edata{'description'} = $description;
+
+print "OK";
+
+Log("Poll edited");
+
+exit 0;
