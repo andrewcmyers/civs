@@ -208,7 +208,8 @@ if ($ballot_reporting eq 'yes') {
 }
  
 print $cr, "<script src=\"@CIVSURL@/ajax.js\"></script>";
-print $cr, "<script>var election_id = '$election_id'</script>";
+print $cr, "<script>var election_id = '$election_id'";
+print $cr, "var control_key = '$control_key'</script>";
 print $cr, h2($tx->Description);
 print $cr, "<div>";
 print $cr, div({-id=>'description'}, $description);

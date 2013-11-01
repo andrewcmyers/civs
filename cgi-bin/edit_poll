@@ -10,6 +10,11 @@ use lib '@CGIBINDIR@';
 use civs_common;
 use election;
 
+my $control_key = param('key');    
+
+CheckElectionID;
+CheckControlKey($control_key);
+
 my $home = '@CIVSDATADIR@';
 
 undef $/;
