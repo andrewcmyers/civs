@@ -117,7 +117,7 @@ sub find_top_polls {
 }
 
 sub standard_refresh {
-    find_top_polls(10, 1000, 0.000001);
+    find_top_polls(10, 1000, 0.0000001);
 }
 
 1; # ok!
