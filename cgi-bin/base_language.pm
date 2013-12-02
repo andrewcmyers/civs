@@ -270,6 +270,25 @@ sub Load_ballot_data {
 sub File_to_upload_ballots_from {
     'File to upload ballots from:'
 }
+sub Upload_instructions {
+    'Upload a text file formatted with one ballot per line. Each
+      line contains the ranks of the N choices, which are numbers from 1
+      to N, or a dash (<kbd>-</kbd>) to represent no opinion. Ranks should be
+      separated by whitespace or a comma. Lines may be terminated
+      with LF or CR/LF. Whitespace is ignored; lines whose first
+      non-whitespace character is # are also ignored. A line may begin
+      with <i>m</i><kbd>X</kbd> where <i>m</i> is a number, which
+      signifies <i>m</i> identical ballots described by the rest of
+      the line.'
+}
+sub Examples_of_ballots {
+    'Examples of ballots:'
+}
+sub Ballot_examples {
+    '1,4,3,2,5        <i>A simple ballot ranking five choices.</i>
+    5 - 2 - 3        <i>Another ranking of five choices. Dashes indicate unranked choices.</i>
+    8X1 4 3 2 5      <i>Eight ballots like the first example ballot.</i>'
+}
 sub Or_paste_this_code {
     'Or paste this HTML code into your own web page:'
 }
