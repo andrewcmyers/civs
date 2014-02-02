@@ -30,6 +30,7 @@ my @entries;
 
 my $total_users = 0;
 my $total_auth = 0;
+my $num_polls = 0;
 
 while (defined(my $file = readdir(DIR))) {
     next if !defined($file);
@@ -37,6 +38,7 @@ while (defined(my $file = readdir(DIR))) {
     next unless -d "$elections_dir/$file";   # skip non-directories
     next unless $file =~ m/^E_[0123456789abcdef]+/;   # skip non-elections
     
+    $num_polls++;
     my $election_dir = "$elections_dir/$file";
     my $election_data = $election_dir."/election_data";
     my $vote_data = $election_dir."/vote_data";
@@ -144,7 +146,7 @@ foreach my $entry (@entries) {
 	]));
 }
 
-print p("Total votes cast: $total_users, total authorized: $total_auth"), $cr;
+print p("Number of polls: $num_polls, total votes cast: $total_users, total authorized: $total_auth"), $cr;
 
 print table({-class => 'status'}, @rows);
             
