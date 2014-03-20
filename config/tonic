@@ -9,3 +9,4 @@ CIVSURL='/civs'
 SMTPHOST='smtp.cs.cornell.edu'
 ADDTOPATH=':\\cygdrive\\c\\cygwin\\bin'
 LOCALDEBUG=1
+ADMIN_KEY=foo
