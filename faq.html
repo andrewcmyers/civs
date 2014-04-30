@@ -95,6 +95,11 @@ they are the ones that unananimously (n&ndash;0) beat this pseudo-choice.
 (This is handy for scheduling meetings where everyone needs to be present.)
 </li>
 
+<li><b>How many candidates/choices can I meaningfully rank with a poll?</b> It
+depends on the number of voters. Empirically, it seems that to rank the top N
+choices, you should have at least 3N voters.
+</li>
+
 <li><b>How big a poll can I run?</b>
 
 CIVS is used regularly for polls with hundreds of voters.  You can set up a
@@ -111,11 +116,12 @@ the system will only allow you to add 1,000 voters at a time, but in principle
 you can have as many voters as you want. Note that using the experimental
 proportional method for your poll can dramatically increase the load on the
 CIVS server, so avoid that mode for large polls.
+</p>
 <li>
 
 <b>How reliable is CIVS?</b>
 
-There have been no data losses due to hardware failure on the Cornell
+There have been no known data losses due to hardware failure on the Cornell
 installation, and no problems with poll results being corrupted due to bugs,
 since 2006. Each poll is stored in a separate database, so if there
 <strong>were</strong> data corruption, it could can affect only one poll.

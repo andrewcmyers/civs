@@ -193,6 +193,12 @@ sub allow_voting_during_writeins {
 sub this_is_a_test_poll {
     'This is a test poll.'
 }
+sub file_to_upload_from {
+    'File to upload ballots from:'
+}
+sub Load_ballots {
+    'Load ballots'
+}
 sub poll_supervisor { # name, email
     "Poll supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>"
 }

@@ -285,9 +285,9 @@ if ($external_ballots ne 'yes') {
     print hidden('akey', $authorization_key)
 	    if defined($authorization_key);
 
-    print 'File to upload ballots from:',
+    print $tx->file_to_upload_from,
 	input({type=>'file', name=>'ballot_data'}), $cr;
-    print input({type=>'submit', value=>'Load ballots', name=>'load_ballots'});
+    print input({type=>'submit', value=>$tx->Load_ballots, name=>'load_ballots'});
 
     print p({class=>'explanation'}, small($tx->Upload_instructions)), $cr,
       p($tx->Examples_of_ballots), $cr,
