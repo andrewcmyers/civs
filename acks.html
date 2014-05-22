@@ -19,11 +19,12 @@ var body = document.getElementsByTagName('body')[0];
 body.appendChild(create_header("Credits and Acknowledgments"));
 body.appendChild(
    div({className: "contents"},
-       p("Andrew Myers built the initial version of the system."),
+       p("Andrew Myers built the initial version of the system and has maintained it."),
        p("Michael Clarkson designed and implemented the protocols that ",
          "protect voter identity. He also added the ballot reporting feature ",
-	 "and cleaned up the code quite a bit."),
+	 "and cleaned up the code."),
        p("Nate Nystrom and TP Wong helped design the user interface."),
+       p("Florian Weimer and Eyvind Niklasson helped identify and fix security issues."),
        p("David Gamble gave helpful critiques of the proportional representation method. ",
          "Steve Eppley gave useful pointers on MAM and related methods. ",
          "Chris Benham helped with the \"runoff\" method."),
@@ -33,9 +34,9 @@ body.appendChild(
 	 "Julian Mehnle (German), Tom Dromi and Roey Perlstein-Dvir (Hebrew), ",
 	 "Benhur Stein and Andrea Charão (Portuguese), Danfeng Zhang (Chinese), and Luis García (Spanish)."),
        p("Contributions and feedback are always welcome!"),
-       ul(li( 'Additional language support would be great if there are more volunteers out ',
-	      ' there.  Adding support for a new language is pretty easy and does not require ',
-	      ' programming expertise.'))));
+       ul(li('Additional language support would be great if there are more volunteers out ',
+	     ' there.  Adding support for a new language is pretty easy and requires ',
+	     ' minimal programming expertise.'))));
 </script>
 
 </html>
