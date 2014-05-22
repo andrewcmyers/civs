@@ -324,7 +324,7 @@ sub CheckVoterKey {
 }
 
 sub IsWriteinName {
-    return ($_[0] =~ m/\(write-in\)$/);
+    $_[0] =~ m/\(write-in\)$/
 }
 
 sub CheckNotVoted {
@@ -440,19 +440,19 @@ sub CheckAuthorizationKeyForVoting {
 }
 
 sub IsWellFormedElectionID {
-    return $election_id =~ m/^E_[0123456789abcdef]+/;
+    $election_id =~ m/^E_[0-9a-f]+$/
 }
 
 sub CheckElectionID {
     if (!IsWellFormedElectionID) {
-    if (defined($election_id) && $election_id ne '') {
-        print h1($tx->Invalid_poll_id);
-        print p($tx->Poll_id_not_valid($election_id));
-        Log("Attempt to provide a bogus poll identifier: \"$election_id\"");
-        $election_id = '';
-    }
-    print end_html();
-    exit 0;
+	if (defined($election_id) && $election_id ne '') {
+	    print h1($tx->Invalid_poll_id);
+	    print p($tx->Poll_id_not_valid($election_id));
+	    Log("Attempt to provide a bogus poll identifier: \"$election_id\"");
+	    $election_id = '';
+	}
+	print end_html();
+	exit 0;
     }
 }
 
