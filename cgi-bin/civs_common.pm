@@ -161,6 +161,7 @@ sub HTML_Header {
       }
     }
     $html_header_printed = 1;
+    $generated_header = 1;
 }
 
 sub BR {
@@ -168,6 +169,8 @@ sub BR {
 }
 
 sub CIVS_Header {
+    &HTML_Header($_[0]);
+    if ($civs_header_printed) { return; }
     my $suggestion_box = '@SUGGESTION_BOX@';
 print 
  '<table border="0" width="100%" cellspacing="0" cellpadding="7" class="banner">';

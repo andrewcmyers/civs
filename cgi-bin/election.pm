@@ -65,11 +65,13 @@ my ($db_is_open, $election_is_locked);
 sub init {
     # Get election ID
     $election_id = param('id') or do {
-        print h1($tx->Error), p($tx->No_poll_ID), end_html();
+	&CIVS_Header($tx->Error);
+        print p($tx->No_poll_ID), end_html();
         exit 0;
     };
     &IsWellFormedElectionID or do {
-        print h1($tx->Error), p($tx->Ill_formed_poll_ID($election_id)), end_html();
+	&CIVS_Header($tx->Error);
+        print p($tx->Ill_formed_poll_ID($election_id)), end_html();
         exit 0;
     };
     
