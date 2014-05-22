@@ -64,8 +64,14 @@ my ($db_is_open, $election_is_locked);
 
 sub init {
     # Get election ID
-    $election_id = param('id') or die "No poll ID provided\n";
-    &IsWellFormedElectionID or die "Ill-formed poll ID: $election_id\n";
+    $election_id = param('id') or {
+        print h1($tx->Error), p($tx->No_poll_ID), end_html();
+        exit 0;
+    };
+    &IsWellFormedElectionID or {
+        print h1($tx->Error), p($tx->Ill_formed_poll_ID), end_html();
+        exit 0;
+    };
     
     # Set up filename paths
     $election_dir = $home."/elections/".$election_id;

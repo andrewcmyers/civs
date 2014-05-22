@@ -513,6 +513,12 @@ sub writein_too_similar {
 
 # election
 
+sub No_poll_ID {
+    "No poll ID was provided. Perhaps a copy-paste error?"
+}
+sub Ill_formed_poll_ID {
+    "An ill-formed poll identifier was provided. Perhaps a copy-paste error? (" . $_[0] . ")"
+}
 sub vote_has_already_been_cast {
     "A vote has already been cast using your voter key.";
 }
