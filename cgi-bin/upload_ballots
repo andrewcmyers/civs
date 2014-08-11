@@ -43,7 +43,8 @@ while (<$ballot_file>) {
     $lineno++;
     s/^(\s)*//g;
     s/(\s)*$//g;
-    if (m/^#/) { next; }
+    if (m/^#/) { next; } # skip comments
+    if (m/^$/) { next; } # skip blank lines
     my $multiplier = 1;
     # print pre("Line $lineno: $_"), $cr;
     if (m/^.*(x|X)/) {
