@@ -125,9 +125,6 @@ saranno disponibili al seguente indirizzo:
 Questo indirizzo va mantenuto riservato. Evitare che utenti non autorizzati
 vengano a conoscenza dell'indirizzo della pagina dei risultati.
 
-Per maggiori informazioni sul servizio di voto Condorcet on-line:
-  $_[3]
-
 ";
 }
   

@@ -125,8 +125,6 @@ disponibles en la siguiente URL:
 
 Esta URL es privada. El acceso de usuarios no autorizados a esta 
 URL les permitirá ver los resultados de la encuesta. 
-Para obtener más información acerca de la votación de Condorcet Internet Service, consulte 
-  $_[3] 
 
 "; 
 }

@@ -126,8 +126,7 @@ sub Results_key_email_body { # title, url, civs_home
 
 此链接是私有的。让未经授权用户获得该链接将使其能查看此次投票的结果。
 请查看
-  $_[3]
-来获得更多关于CIVS网络投票服务的信息
+
 ";
 }
   

@@ -288,7 +288,8 @@ sub SendResultKey {
 	SendHeader 'Subject', $tx->Results_of_CIVS_poll($title);
 	Send 'Content-Type: text/plain; charset="utf-8"';
 	Send "";
-	Send $tx->Results_key_email_body($title,$url,$civs_home);
+	Send $tx->Results_key_email_body($title,$url);
+	Send $tx->for_more_information_about_CIVS($civs_home);
 	Send "."; ConsumeSMTP;
     }
     CloseMail;
