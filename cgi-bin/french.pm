@@ -132,11 +132,6 @@ suivant :
 Ce lien est destiné à votre seul usage. Permettre à un tiers d'utiliser
 ce lien lui donnera accès aux résultats de la consultation.
 
-Le lien Internet suivant vous permet d'accéder à plus d'informations
-concernant le Service de Vote Internet Condorcet (CIVS) :
-
-  $_[3]
-
 ";
 }
   

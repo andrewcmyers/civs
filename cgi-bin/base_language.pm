@@ -132,8 +132,6 @@ available at the following URL:
 
 This URL is private. Allowing unauthorized users access to this
 URL will permit them to see the poll results.
-For more information about the Condorcet Internet Voting Service, see
-  $_[3]
 
 ";
 }

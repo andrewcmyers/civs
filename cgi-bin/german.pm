@@ -134,8 +134,6 @@ geschlossen ist, ist das Ergebnis unter der folgenden URL abrufbar:
 
 Diese URL ist geheim. Die Weitergabe dieser URL an Unberechtigte
 ermöglicht diesen die Einsicht des Abstimmungsergebnisses.
-Für weitere Informationen über den Condorcet Internet Voting Service siehe:
-  $_[3]
 
 ";
 }

@@ -127,8 +127,6 @@ Quando a votação for encerrada, os resultados estarão disponíveis em:
 
 Esse endereço é privado. Caso usuários não autorizados tenham
 acesso a esse endereço, poderão ver os resultados da votação.
-Para mais informação sobre o CIVS, acesse
-  $_[3]
 
 ";
 }
