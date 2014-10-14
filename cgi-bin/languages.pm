@@ -27,6 +27,8 @@ our $log;
 my @variants =
   (['english', 'en-us', 1.0],
    ['english', 'en', 1.0],
+   ['english', 'en-gb', 0.90],
+   ['english', 'en-au', 0.90],
    ['hungarian', 'hu-hu', 0.95],
    ['hungarian', 'hu', 0.95],
    ['italian', 'it', 0.95],
