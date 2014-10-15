@@ -1,9 +1,0 @@
-TOMCAT=/usr/local/pkg/jakarta-tomcat-5.5.9/webapps
-SERVLET_DIR=$TOMCAT/civs
-HTML_DIR=$SERVLET_DIR
-SERVLET_NAME=civs
-STYLE_SHEET_URL=style.css
-CIVS_DATA_DIR=/home/andru/upg/civs/java/data
-CIVS_URL=http://balm.cs.cornell.edu:8080/civs
-SERVLET_URL=${CIVS_URL}/main
-LOCAL_DEBUG=1
