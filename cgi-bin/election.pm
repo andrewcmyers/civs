@@ -578,7 +578,7 @@ sub SendKeys {
             Send "data"; ConsumeSMTP;
 	    SendHeader ('From',
 		$tx->CIVS_poll_supervisor($name),
-		"<$email_addr>");
+		"<$civs_supervisor>");
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $email_addr);
 	    SendHeader('Message-ID', "<$messageid>");
