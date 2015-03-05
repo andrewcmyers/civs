@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>CIVS在线投票服务（Condorcet Internet Voting Service）</title>
 <base href="@CIVSURL@/">
+<link rel="canonical" href="@CIVSURL@">
 <link rel="stylesheet" type="text/css" href="style.css">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
 </head>
