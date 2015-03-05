@@ -116,16 +116,9 @@ provide strong anonymity, universal verifiability, and coercion resistance.
 </div>
 <div class="bubble">
 <h3>&nbsp;CIVS news</h3>
-<ul class="news">
-<li>
-<strong>10/13:</strong>
-CIVS has moved to a dedicated server.
-</li>
-<li>
-<strong>11/13:</strong> A poll's description can be edited,
-even while the poll is running.</li>
-</li>
-</ul>
+<div id="newsfeed">
+No current news.
+</div>
 </div>
 <div class="bubble">
 <h3>Top public polls: <a class="small" href="publicized_polls.html">[see more]</a></h3>
@@ -156,6 +149,9 @@ the use of this service.
 </p>
 </div>
 </div>
-<script type="text/javascript">fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@')</script>
+<script type="text/javascript">
+    fetch_content('newsfeed', 'news.html');
+    fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@');
+</script>
 </body>
 </html>
