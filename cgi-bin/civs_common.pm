@@ -53,7 +53,7 @@ BEGIN {
 		die "Unable to open @CIVSDATADIR@/cgi-log: $!\n".(`id`);
 	autoflush CGILOG;
 	carpout(\*CGILOG);
-	set_message(\&Fatal_CIVS_Error);
+	# set_message(\&Fatal_CIVS_Error);
 	$local_debug = "@LOCALDEBUG@";
 }
 

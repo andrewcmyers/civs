@@ -577,7 +577,7 @@ sub SendKeys {
             Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
 	    SendHeader ('From',
-		$tx->CIVS_poll_supervisor($name),
+		$tx->CIVS_poll_supervisor($name).
 		"<$civs_supervisor>");
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $email_addr);

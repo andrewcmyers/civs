@@ -44,7 +44,7 @@ my @variants =
    ['chinese', 'zh-cn', 0.95],
    ['chinese', 'zh', 0.90],
    ['spanish', 'es', 0.90],
-   ['spanish', 'es-es', 0.95]
+   ['spanish', 'es-es', 0.95],
    ['thai', 'th', 0.95],
   );
 
@@ -56,7 +56,8 @@ sub init {
     $accept_language = lc $accept_language;
     my @reqs = split /\s*,\s*/, $accept_language;
     my @choices, my @qualities;
-    for (my $i = 0; $i <= $#reqs; $i++) {
+    my $i;
+    for ($i = 0; $i <= $#reqs; $i++) {
 	my $lang, my $quality = 1.0;
 	if ($reqs[$i] =~ /;/) {
 	    ($lang, $quality) = ($reqs[$i] =~ m/^(\S+)\s*;\s*q\s*=\s*(.*)$/s);
@@ -70,7 +71,7 @@ sub init {
     my $language = 'english'; #default
     my $best = 0.0;
 
-    for (my $i = 0; $i <= $#variants; $i++) {
+    for ($i = 0; $i <= $#variants; $i++) {
 	my @row = @{$variants[$i]};
 	for (my $j = 0; $j <= $#choices; $j++) {
 	    if ($row[1] eq $choices[$j] &&
