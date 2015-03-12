@@ -340,9 +340,9 @@ sub CheckNotVoted {
     if ($used_voter_keys{&civs_hash($voter_key)}) {
 	print h1($tx->Already_voted);
 	print p($tx->vote_has_already_been_cast);
-	PointToResults;
-        TrySomePolls;
-        CIVS_End;
+	&PointToResults;
+        &main::TrySomePolls;
+        &CIVS_End;
 
 	if ($voter_key) {
 	    ElectionLog("Election: $title ($election_id) : Saw second vote "

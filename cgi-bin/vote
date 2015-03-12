@@ -51,6 +51,14 @@ if ($js_ui) {
 
 CIVS_Header($title);
 
+sub TrySomePolls {
+    print p($tx->try_some_public_polls);
+    print '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>';
+    print div({id=>"top_polls", class=>"small_list"}, "Loading...");
+    print '<script type="text/javascript">fetch_content("top_polls", "http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';
+}
+
+
 CheckElectionID;
 CheckStarted;
 CheckNotStopped;
@@ -217,13 +225,6 @@ sub ProcessVote {
 
     TrySomePolls;
     CIVS_End;
-}
-
-sub TrySomePolls {
-    print p($tx->try_some_public_polls);
-    print '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>';
-    print div({id=>"top_polls", class=>"small_list"}, "Loading...");
-    print '<script type="text/javascript">fetch_content("top_polls", "http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';
 }
 
 sub LogPublicVote {
