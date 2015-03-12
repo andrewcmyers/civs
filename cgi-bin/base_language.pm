@@ -503,7 +503,7 @@ sub thank_you_for_voting { #title, receipt
 	successfully cast. Your voter receipt is <code>$_[2]</code>.";
 }
 sub try_some_public_polls {
-    "If you still feel like voting, try one of these public polls:"
+    "Feel like voting on something else? Try one of these public polls:"
 }
 sub name_of_writein_is_empty {
     "Name of write-in choice is empty";
