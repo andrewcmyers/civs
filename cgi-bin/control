@@ -88,7 +88,7 @@ if (!IsStarted) {
     }
     if ($external_ballots eq 'yes') {
 	print p($tx->this_is_a_test_poll), $cr;
-    } elsif ($public eq 'yes') {
+    } elsif (defined($public) && $public eq 'yes') {
 	    my $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
 	    $url .= "&akey=$authorization_key" 
 		    if defined($authorization_key) && $authorization_key ne '';

@@ -340,8 +340,10 @@ sub CheckNotVoted {
     if ($used_voter_keys{&civs_hash($voter_key)}) {
 	print h1($tx->Already_voted);
 	print p($tx->vote_has_already_been_cast);
-	PointToResults;
-	print end_html();
+	&PointToResults;
+        &main::TrySomePolls;
+        &CIVS_End;
+
 	if ($voter_key) {
 	    ElectionLog("Election: $title ($election_id) : Saw second vote "
 		    . "from voter key $voter_key");
@@ -577,7 +579,7 @@ sub SendKeys {
             Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
 	    SendHeader ('From',
-		$tx->CIVS_poll_supervisor($name),
+		$tx->CIVS_poll_supervisor($name).
 		"<$civs_supervisor>");
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $email_addr);
