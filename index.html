@@ -150,8 +150,10 @@ the use of this service.
 </div>
 </div>
 <script type="text/javascript">
-    fetch_content('newsfeed', '@CIVSURL@/news.html');
-    fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@');
+    fetch_content('newsfeed', '@CIVSURL@/news.html',
+	function() {
+	    fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@');
+	});
 </script>
 </body>
 </html>
