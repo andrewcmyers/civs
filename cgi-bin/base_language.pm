@@ -523,11 +523,21 @@ sub Ill_formed_poll_ID {
 sub vote_has_already_been_cast {
     "A vote has already been cast using your voter key.";
 }
+#deprecated, use future_result_link
 sub following_URL_will_report_results {
     'The following URL will report poll results once the poll ends:';
 }
+sub future_result_link {
+    (my $self, my $url) = @_;
+    "The following URL will report poll results once the poll ends: <tt>$url</tt>"
+}
+#deprecated
 sub following_URL_reports_results {
-    'The following URL reports the current poll results:';
+    "The following URL reports the results of the poll"
+}
+sub current_result_link {
+    (my $self, my $url) = @_;
+    "<a href=\"$url\" class=result_link>See current poll results</a>"
 }
 sub Already_voted {
     'Already voted';
@@ -553,8 +563,14 @@ sub The_poll_has_not_yet_been_ended { #title, name, email
     "This poll ($_[1]) has not yet been ended by its supervisor,
     $_[2] ($_[3]).";
 }
+
+# deprecated
 sub The_results_of_this_completed_poll_are_here {
     'The results of this completed poll are here:';
+}
+sub completed_results_link {
+    (my $self, my $url) = @_;
+    "<a href=\"$url\" class=result_link>See completed poll results</a>"
 }
 
 sub No_write_access_to_lock_poll {

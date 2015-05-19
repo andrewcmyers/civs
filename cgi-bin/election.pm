@@ -233,14 +233,14 @@ sub CheckStarted {
 
 sub PointToResults {
     if ($restrict_results ne 'yes') {
+	my $url = "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id";
+	print '<p>';
 	if ($public eq 'no') {
-		print '<p>', $tx->following_URL_will_report_results, br, $cr;
-	    } else {
-		print '<p>', $tx->following_URL_reports_results, br, $cr;
-
+	    print $tx->future_result_link($url);
+	} else {
+	    print $tx->current_result_link($url);
 	}
-	print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-	<tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
+	print '</p>', $cr;
     } else {
 	print p($tx->Poll_results_will_be_available_to_the_following_users);
 	print '<ul>';
