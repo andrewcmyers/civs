@@ -26,6 +26,7 @@ a:link       { color: #389; background-color: transparent; font-weight: bold }
 a:visited    { color: #278; background-color: transparent; font-weight: bold }
 a:hover      { color: #49a; background-color: transparent }
 a.small      { font-size: 80% }
+a.result_link { border: 2px solid #389; padding: 2px }
 
 th              { font-family: Verdana, Arial, helvetica, sans-serif;
                   color: white;
