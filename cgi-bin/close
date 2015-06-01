@@ -34,7 +34,7 @@ if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
     print h1($tx->Poll_ended($title));
     print p($tx->The_poll_has_been_ended($election_end));
     if ($restrict_results ne 'yes') {
-	print p("<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
+	print p("<a href=\"@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
 	".$tx->View_poll_results.'</a>');
     } else {
 	print p($tx->poll_results_available_to_authorized_users);

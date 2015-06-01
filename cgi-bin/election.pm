@@ -239,8 +239,8 @@ sub PointToResults {
 		print '<p>', $tx->following_URL_reports_results, br, $cr;
 
 	}
-	print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-	<tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
+	print "<a href=\"@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
+	<tt>@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
     } else {
 	print p($tx->Poll_results_will_be_available_to_the_following_users);
 	print '<ul>';
@@ -274,8 +274,8 @@ sub PointToResultsComplete {
     &ReportResultReaders;
   } else {
     print "<p>", $tx->The_results_of_this_completed_poll_are_here, br, $cr;
-    print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-       <tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
+    print "<a href=\"@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
+       <tt>@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
   }
 }
 
@@ -541,7 +541,7 @@ sub SendKeys {
 
         my $url = "";
         if ($public eq 'yes') {
-            $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
+            $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
             $url .= "&akey=$authorization_key"
                 if (&ElectionUsesAuthorizationKey);
         } else {
@@ -554,7 +554,7 @@ sub SendKeys {
                 $voter_keys{$hash_voter_key} = 1;
                 $num_auth++; $edata{'num_auth'} = $num_auth;
             }
-            $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
+            $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
                         ."&key=$voter_key";
         }
 
@@ -617,7 +617,7 @@ sub SendKeys {
 	    $html .= $cr."</p><p>".$tx->poll_has_been_announced_to_end($election_end);
             if ($restrict_results ne 'yes') {
 		$html .= ' ' .
-		  $tx->To_view_the_results_at_the_end(MakeURL("http://$thishost$civs_bin_path/".
+		  $tx->To_view_the_results_at_the_end(MakeURL("@PROTO@://$thishost$civs_bin_path/".
 				"results@PERLEXT@?id=$election_id"));
 	    }
 	    $html .= '<p>' . $tx->For_more_information . $cr .
