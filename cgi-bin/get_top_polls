@@ -4,9 +4,9 @@ use strict;
 use warnings;
 use CGI qw(:standard);
 use POSIX qw(strftime);
-use languages;
 
 use lib '@CGIBINDIR@';
+use languages;
 
 my $home = '@CIVSDATADIR@';
 
