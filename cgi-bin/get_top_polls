@@ -29,7 +29,7 @@ open (IN, $top_polls);
 print <IN>;
 
 
-if (@LOG_HOME_VISITS@) {
+if ('@LOG_HOME_VISITS@') {
     my $languages = http('Accept-Language');
     if (!defined($languages)) { $languages = 'unspecified-lang' }
 
