@@ -45,6 +45,7 @@ if ($filter_tags ne 'no') {
         samp => $ok,
 	span => $ok, div => $ok,
 	small => $ok,
+	a => { 'href' },
 	p => {align => ['left' | 'right' | 'center']},
 	ol => {type => ['a', '1', 'A']}
     });
