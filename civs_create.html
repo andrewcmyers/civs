@@ -178,7 +178,7 @@
   the mail does not arrive!).
   </div>
 
-  <p>Description of the poll and available choices (most HTML tags ok):<br>
+  <p>Description of the poll and available choices (many HTML tags ok):<br>
   <table class="form">
     <tr>
       <td><textarea id="description" valign="top" rows="5" name="description" cols="60"
@@ -206,24 +206,43 @@
   </p>
   <p align="left"><input type=file name="choices_file"></p>
   <p>How many choices will win: <input type="text" name="num_winners" size="5" value="1"></p>
-  <p>The e-mail addresses of up to 1000 voters, one per line.
-  Voters can also be added later.</p>
-  <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
-  <p><input type=file name="addresses_file"></p>
+<!--
+<p>The e-mail addresses of up to 1000 voters, one per line.
+Voters can also be added later.</p>
+<p><textarea rows="2" name="addresses" cols="50"></textarea></p>
+<p><input type=file name="addresses_file"></p>
+-->
+  <p>Do you want the poll to be <em>public</em> or <em>private</em>?</p>
+  <div id="pubpriv_choice">
+  <div class="pubpriv" width="50%">
+  <input type="radio" name="public" value="no" checked="checked">
+  <strong>Private</strong>
+  <p>Each voter receives their own unique URL for voting, and can only vote once.
+     The voters' email addresses must be provided to the system so it can
+     tell them their voting URL, but the system forgets their addresses
+     immediately after the email is sent. You can add voters after the poll has
+     been created.
+  </p>
+  </div>
+  <div class="pubpriv" width="50%">
+  <input type="radio" name="public" value="yes"
+      onClick="make_visible('publicize')">
+
+  <strong>Public</strong>
+  <p>
+    There is a single URL that any voter can use to cast their vote, and it is
+    your job to distribute it.  However, there is only a token attempt to
+    prevent multiple voting, based on voters' IP addresses. If you want to make
+    sure that voters only vote once, use a private poll instead.
+  </p>
+  </div>
+  </div>
 
   <h3>More options <small>(mouse over each check box for more information)</small></h3>
-  <input type="checkbox" name="public" value="yes"
-      onClick="make_visible('publicize')"
-      title="In a public poll, you receive a single URL that any voter can
-	use to cast their vote. Thus, it can be posted on email distribution
-	lists. However, there is only a token attempt to prevent multiple voting, based on voters' IP addresses. If you want to make sure that voters only
-	vote once, use a private poll instead.">
-  Make this a public poll.
-    <div class="suboption" id="publicize">
+    <div class="option" id="publicize">
     <input type="checkbox" name="publicize" value="yes"
-      title="CIVS will announce this poll on its list of public polls and possibly elsewhere.
-	    Anyone who views the list will be able to vote.">
-    Have CIVS publicize this election.
+      title="CIVS will announce this poll on its list of public polls and possibly elsewhere.  Anyone who views the list will be able to vote.">
+    Have CIVS publicize this election on its home page.
     </div>
     <div>
   <input type="checkbox" name="external_ballots" value="yes"
@@ -232,11 +251,12 @@
 </div>
 <div>
   <input type="checkbox" name="restrict_results" value="yes"
-         onClick="make_visible('rrcontrol')"
-	 title="By default, poll results can be seen by anyone who votes in
-	 the poll. If you want to restrict the results to some other set
-	 of people, use this option.">
-    Make results available only to a limited set of users.
+         onClick="make_visible('rrcontrol')">
+    Do not release results to all voters.
+    <div class="emphasized">By default, the results of a poll are visible to
+    all voters.  Select this option to restrict the visibility to some smaller
+    set of people.
+    </div>
     <div class="suboption" id="rrcontrol">
     Enter email addresses of users permitted to view poll results:
     (All voters can see these email addresses)
@@ -247,33 +267,24 @@
 <div>
   <input type="checkbox" name="ballot_reporting" value="yes"
          onClick="make_visible('reveal_voters')"
-	 title="This option allows any poll participant to
-	 view the rankings on each ballot. However, identifying
-	 information about the voters who cast these ballots is
-	 not revealed unless the next option is checked.">
+	 title="This option allows any poll participant to view the rankings on each ballot. However, identifying information about the voters who cast these ballots is not revealed unless the next option is checked.">
   Enable detailed ballot reporting. 
   <div class="suboption" id="reveal_voters">
-    <input type="checkbox" name="reveal_voters" value="yes">
+    <input type="checkbox" name="reveal_voters" value="yes" />
     In detailed ballot report, also reveal the identity of the voter with each
-    ballot.<br>Voters are <i class="warning">not</i> anonymous if this is
+    ballot.<p class=emphasized>Voters are <i class="warning">not</i> anonymous if this is
     checked, nor does the server discard voter email addresses as it normally
-    does.  Voters are warned about this lack of anonymity.
+    does.  Voters are warned about this lack of anonymity.</p>
   </div>
 </div>
 <div>
   <input type="checkbox" name="writeins" value="yes"
-   title="You can allow write-ins with this option. However, write-ins are
- at a big disadvantage if they occur after some votes have been cast. Therefore,
- when this option is selected, there is a write-in phase in which ballots cannot
- be cast. The supervisor must explicitly enable voting.">
+   title="You can allow write-ins with this option. However, write-ins are at a big disadvantage if they occur after some votes have been cast. Therefore, when this option is selected, there is a write-in phase in which ballots cannot be cast. The supervisor must explicitly enable voting.">
   Allow voters to write in new choices.
 </div>
 <div>
   <input type="checkbox" name="shuffle" value="no"
-  title="By default, poll choices are presented in a randomly shuffled
-  order on each ballot. For some polls, such as choosing a meeting time,
-  it will be more convenient for voters to see the choices in exactly
-  the order given above.">
+  title="By default, poll choices are presented in a randomly shuffled order on each ballot. For some polls, such as choosing a meeting time, it will be more convenient for voters to see the choices in exactly the order given above.">
   Present choices on voting page in exactly the given order.
 </div>
 <div>
@@ -282,15 +293,7 @@
   Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
   <input type="checkbox" name="proportional" value="yes"
          onClick="make_visible('prcontrol')"
-	 title="The proportional mode is useful only for multiwinner
-	 elections, where you want to make sure that the voters' desires
-	 are expressed proportionally. Otherwise a majority of voters can
-	 decide all of the winners. Proportional mode is much slower than
-	 the regular nonproportional mode, and should not be used in cases where there
-	 are a lot of choices and a lot of winners. In most cases, but not
-	 all, the results from the proportional and nonproportional mode
-	 agree.  Click the 'more information' link to
-	 find out more about how this mode works.">
+	 title="The proportional mode is useful only for multiwinner elections, where you want to make sure that the voters' desires are expressed proportionally. Otherwise a majority of voters can decide all of the winners. Proportional mode is much slower than the regular nonproportional mode, and should not be used in cases where there are a lot of choices and a lot of winners. In most cases, but not all, the results from the proportional and nonproportional mode agree.  Click the 'more information' link to find out more about how this mode works.">
   Enforce proportional representation [<a href="proportional.html">more information</a>]</br>
    <div class="suboption" id="prcontrol">
     For proportional representation, voters are assumed to be maximizing:<br>
@@ -302,7 +305,7 @@
    </div>
 </div>
 
-<div class="emphasized">
+<br><div class="emphasized">
   Make sure your e-mail address is correct, because poll information will
   be emailed to you. Voters will not be informed of the poll's
   existence until you respond to this e-mail message.
