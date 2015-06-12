@@ -84,7 +84,7 @@ table.banner a.here, table.banner a.here:link, table.banner a.here:visited {
 }
 
 table.banner { /* background-image: url('sample-ballot.png'); */
-               background-color: #b11b1b;
+               background-color: #008;
 	       background-position: center left;
 	       background-repeat: repeat-x}
 table.banner h1 { color: white }
