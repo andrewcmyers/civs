@@ -26,12 +26,12 @@ a:link       { color: #389; background-color: transparent; font-weight: bold }
 a:visited    { color: #278; background-color: transparent; font-weight: bold }
 a:hover      { color: #49a; background-color: transparent }
 a.small      { font-size: 80% }
-a.result_link { border: 2px solid #389; padding: 2px }
+a.result_link { background-color: #00355f; color: white; padding: 5px 8px}
 
 th              { font-family: Verdana, Arial, helvetica, sans-serif;
                   color: white;
-		  background-color: #000080;
-		  border-color: #000080;
+		  background-color: #00355f;
+		  border-color: #00355f;
 		  font-weight: bold }
 #settings {
     font-size: 90%;
