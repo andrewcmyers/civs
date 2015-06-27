@@ -5,6 +5,9 @@
 # changed to point to another installation.
 CIVSHOME='http://www.cs.cornell.edu/andru/civs.html'
 
+# The protocol for accessing CIVS (http or https)
+PROTO=http
+
 # The address of the web server that is hosting CIVS (may include port number)
 THISHOST='MyServer.MyUniversity.edu'
 
@@ -36,7 +39,7 @@ CGIBINDIR='/home/username/public_cgi-bin/civs'
 CIVSDATADIR='/home/username/civs'
 
 # The URL path to the CIVS CGI scripts.  This is relative to $THISHOST.
-# I.e., the scripts will be found at http://$THISHOST$CIVSBINURL.
+# I.e., the scripts will be found at $PROTO://$THISHOST$CIVSBINURL.
 CIVSBINURL='/cgi-bin/username/civs'
 
 # The URL to the homepage of the CIVS server, relative to http://$THISHOST

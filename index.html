@@ -152,7 +152,7 @@ the use of this service.
 <script type="text/javascript">
     fetch_content('newsfeed', '@CIVSURL@/news.html',
 	function() {
-	    fetch_content('top_polls', 'http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@');
+	    fetch_content('top_polls', '@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@');
 	});
 </script>
 </body>

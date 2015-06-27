@@ -210,10 +210,10 @@ if ($publicize eq 'yes') {
 }
 $edata{'hash_result_key'} = civs_hash($result_key);
 
-my $url = "http://$thishost$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key";
+my $url = "@PROTO@://$thishost$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key";
 
 if ($publicize eq 'yes') {
-    $url = "http://$thishost$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
+    $url = "@PROTO@://$thishost$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
 }
 
 if (!($local_debug)) {
@@ -231,9 +231,9 @@ Send "";
 Send $tx->creation_email_info1($title,$url);
 if ($public eq 'yes') {
     if ($publicize eq 'yes') {
-	Send $tx->creation_email_public_link("http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id");
+	Send $tx->creation_email_public_link("@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id");
     } else {
-	Send $tx->creation_email_public_link("http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
+	Send $tx->creation_email_public_link("@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
     }
 }
 Send $tx->for_more_information_about_CIVS($civs_home);
@@ -277,7 +277,7 @@ sub SendResultKey {
 	}
 	print $tx->Sending_result_key($addr);
 
-	my $url = "http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
+	my $url = "@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
 	my $civs_supervisor = '@SUPERVISOR@';
 	Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
 	Send "rcpt to:<$addr>"; ConsumeSMTP;

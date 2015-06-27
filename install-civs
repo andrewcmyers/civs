@@ -47,6 +47,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	echo "copying $f to $dest"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
+	     -e 's|@PROTO@|'$PROTO'|' \
 	     -e 's|@THISHOST@|'$THISHOST'|' \
 	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
 	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
@@ -87,6 +88,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	echo " ->$target"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
+	     -e 's|@PROTO@|'$PROTO'|' \
 	     -e 's|@THISHOST@|'$THISHOST'|' \
 	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
 	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
