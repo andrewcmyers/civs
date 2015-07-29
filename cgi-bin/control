@@ -89,7 +89,7 @@ if (!IsStarted) {
     if ($external_ballots eq 'yes') {
 	print p($tx->this_is_a_test_poll), $cr;
     } elsif (defined($public) && $public eq 'yes') {
-	    my $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
+	    my $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
 	    $url .= "&akey=$authorization_key" 
 		    if defined($authorization_key) && $authorization_key ne '';
 	    print p($tx->This_is_a_public_poll_plus_link($url, $publicize eq 'yes')), $cr;
@@ -115,8 +115,8 @@ if (!IsStarted) {
 		($ballot_reporting eq 'yes' && 
 		$reveal_voters eq 'yes' &&
 		$public));
-	    print '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>', $cr;
-	    print '<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>', $cr;
+	    print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>', $cr;
+	    print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>', $cr;
 	    print '<script src="@CIVSURL@/vote.js"></script>', $cr;
 	    print '<script>setup()</script>', $cr;
 	    print '</textarea><br>';

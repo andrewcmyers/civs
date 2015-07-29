@@ -20,7 +20,7 @@ function read_from_url(url, cont, err, mimetype) {
             }
         }
     }
-    if (!url.match(/^http:/)) {
+    if (!url.match(/^https?:/)) {
         var prefix = location.href;
         url = prefix.replace(/\/[^\/]*$/, '/') + url;
     }
@@ -47,7 +47,7 @@ function post_to_url(url, params, cont, err, mimetype) {
             }
         }
     }
-    if (!url.match(/^http:/)) {
+    if (!url.match(/^https?:/)) {
         var prefix = location.href;
         url = prefix.replace(/\/[^\/]*$/, '/') + url;
     }
