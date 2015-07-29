@@ -97,7 +97,7 @@ sub find_top_polls {
     foreach my $id (@eids) {
 	if ($elections{$id} < $min_usage || $count >= $max_full) { last; }
 	my @line = ('<li>',
-			'<a href="http://@THISHOST@@CIVSBINURL@',
+			'<a href="@PROTO@://@THISHOST@@CIVSBINURL@',
 			    '/vote@PERLEXT@?id=' , $id , '">' , escapeHTML($titles{$id}),
 			'</a>',
 		    '</li>', "\r\n");
