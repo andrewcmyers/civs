@@ -234,7 +234,7 @@ sub results_available_to_the_following_users {
 }
 
 sub Poll_results_are_available { #url
-    "<a href=\"$_[1]\">See poll results</a>";
+    "<a href=\"$_[1]\">Go to poll results</a>";
 }
 sub Description {
     'Description:';
@@ -537,7 +537,7 @@ sub following_URL_reports_results {
 }
 sub current_result_link {
     (my $self, my $url) = @_;
-    "<a href=\"$url\" class=result_link>See current poll results</a>"
+    "<a href=\"$url\" class=result_link>Go to current poll results</a>"
 }
 sub Already_voted {
     'Already voted';
@@ -570,7 +570,7 @@ sub The_results_of_this_completed_poll_are_here {
 }
 sub completed_results_link {
     (my $self, my $url) = @_;
-    "<a href=\"$url\" class=result_link>See completed poll results</a>"
+    "<a href=\"$url\" class=result_link>Go to completed poll results</a>"
 }
 
 sub No_write_access_to_lock_poll {
