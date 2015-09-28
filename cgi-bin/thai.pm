@@ -1,8 +1,11 @@
-package base_language;
+package thai;
+
+use base_language;
 
 our $VERSION = 1.00;
+our @ISA = ('base_language'); # go to base_language module for missing methods
 
-sub lang { 'en-US'; }
+sub lang { 'th'; }
 
 sub init {
     my $self = {};
@@ -15,123 +18,117 @@ sub style_file {
     'style.css';
 }
 sub Condorcet_Internet_Voting_Service {
-    'Condorcet Internet Voting Service';
+    'บริการโหวตทางอินเทอร์เน็ตแบบ Condorcet (CIVS)';
 }
 sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
     'Condorcet Internet Voting Service';
 }
 sub about_civs {
-    'About CIVS';
+    'เกี่ยวกับ CIVS';
 }
 sub public_polls {
-    'Public polls'
+    'โพลสาธารณะ';
 }
 sub create_new_poll {
-    'Create new poll'
+    'สร้างโพลใหม่'
 }
 sub about_security_and_privacy {
-    'Security and privacy'
+    'เกี่ยวกับความปลอดภัยและความเป็นส่วนตัว';
 }
 sub FAQ {
-    'FAQ';
+    'คำถามถามบ่อย';
 }
 sub CIVS_suggestion_box {
-    'CIVS suggestion box';
+    'กล่องรับความคิดเห็น CIVS';
 }
 sub unable_to_process {
-    'CIVS is unable to process your request because of an internal error.';
+    'ระบบไม่สามารถดำเนินการตามคำขอของคุณได้เนื่องจากมีข้อขัดข้องภายในระบบ';
 }
 sub CIVS_Error {
-    'CIVS Error';
+    'ข้อผิดพลาดจาก CIVS';
 }
 sub CIVS_server_busy {
-    'CIVS server busy';
+    'แม่ข่ายของระบบกำลังทำงานหนักในขณะนี้';
 }
 sub Sorry_the_server_is_busy {
-    'Sorry, the CIVS web server is very busy right now and
-     cannot handle more requests. Please try again a little later.';
+    'ขออภัย แม่ข่ายของระบบถูกใช้งานหนักมากในขณะนี้และไม่สามารถรับคำร้องขอได้มากกว่านี้ โปรดลองใช้บริการใหม่ในภายหลัง';
 }
 
 # civs_create
 
 sub mail_has_been_sent {
-    "Mail has been sent to the address you provided (<tt>$_[1]</tt>).";
+    "เราได้ส่งอีเมลไปยังที่อยู่ที่คุณให้มาแล้ว (<tt>$_[1]</tt>)";
 }
 
 sub click_on_the_URL_to_start {
-    "Click on the URL in that email to start the poll &ldquo;$_[1]&rdquo;.";
+    "กรุณากดลิงก์ในอีเมลเพื่อเริ่มโพล &ldquo;$_[1]&rdquo;.";
 }
 
 sub here_is_the_control_URL {
-    'Here is the URL to control the new poll. In ordinary operation
-             this would be sent to the supervisor via e-mail.';
+    'ลิงก์นี้ใช้สำหรับควบคุมโพลใหม่ โดยปกติแล้วระบบจะส่งลิงก์นี้ไปยังผู้ดูแลโพลทางอีเมล';
 }
 sub the_poll_is_in_progress {
-    'The poll is in progress. Press this button to end it: ';
+    'โพลยังคงเปิดอยู่ กดปุ่มนี้เพื่อหยุดการลงคะแนนเพิ่มเติม: ';
 }
 
 sub CIVS_Poll_Creation {
-    "CIVS Poll Creation";
+    "การสร้างโพล CIVS";
 }
 sub Poll_created {
-    "Poll created: $_[1]"
+    "โพล $_[1] ได้ถูกสร้างขึ้นแล้ว"
 }
 
 sub Address_unacceptable { #addr
-    "The address \"$_[1]\" is not acceptable";
+    "ที่อยู่ \"$_[1]\" ผิดรูปแบบจากที่ระบบต้องการ";
 }
 sub Poll_must_have_two_choices {
-    'A poll must have at least two choices.';
+    'โพลต้องมีอย่างน้อยสองตัวเลือก';
 }
 sub Poll_directory_not_writeable {
-    "The poll directory is not writeable";
+    "สารบบโพลไม่สามารถบันทึกข้อมูลได้ ณ ขณะนี้";
 }
 sub CIVS_poll_created {
- "CIVS poll created: $_[1]";
+ "โพล CIVS $_[1] ได้ถูกสร้างขึ้นแล้ว";
 }
 sub creation_email_info1 { # title, url
-"This email acknowledges the creation of a new poll,
-$_[1]. You have been designated as the supervisor of this
-poll. To start and stop the poll, please use the following URL:
+"อีเมลนี้แจ้งให้ท่านทราบว่าโพล $_[1] ได้ถูกสร้างแล้ว  คุณคือผู้ดูแลโพลนี้  โปรดใช้ที่อยู่นี้ในการเริ่มและหยุดโพล:
 
   $_[2]
+
+โปรดเก็บอีเมลนี้ไว้เป็นการส่วนตัวในที่ที่ปลอดภัย  หากคุณทำอีเมลฉบับนี้หาย คุณจะไม่สามารถควบคุมโพลนี้ได้
 
 ";
 }
 sub creation_email_public_link { # url
-"Because this is a public poll, you may direct voters to the following URL:
+"เนื่องจากโพลนี้เป็นโพลสาธารณะ ท่านสามารถส่งลิงก์นี้ให้กับผู้ลงคะแนนได้โดยตรง:
 
   $_[1]
 
 ";
 }
 sub for_more_information_about_CIVS { # url
-"For more information about the Condorcet Internet Voting Service, see
+"ดูข้อมูลเพิ่มเติมเกี่ยวกับบริการโหวตทางอินเทอร์เน็ตแบบ Condorcet ได้ที่
   $_[1]";
 }
 
 sub Sending_result_key { # addr
-    "<p>Sending result key to <tt>$_[1]</tt>. Please allow this to complete...<br>"
+    "<p>กำลังส่ง result key ไปยัง <tt>$_[1]</tt>  โปรดรอการยืนยันความถูกต้อง...<br>"
 }
 sub Done_sending_result_key { # addr
-    '...done sending result key.</p>'
+    '...ส่ง result key เรียบร้อยแล้ว</p>'
 }
 sub Results_of_CIVS_poll { # title
-    "Results of CIVS poll: $_[1]";
+    "ผลของโพล CIVS: $_[1]";
 }
 sub Results_key_email_body { # title, url, civs_home
-"A new CIVS poll has been created named \"$_[1]\".
-You have been designated as a user who is permitted to see the
-result of this poll.
+"ระบบได้สร้างโพล CIVS ใหม่ชื่อ \"$_[1]\" เรียบร้อยแล้ว
+คุณได้รับอนุญาตจากระบบให้ดูผลโพลนี้ได้
 
-Save this email. If you lose it you will not have access to
-the results. Once the poll has been closed, results will be
-available at the following URL:
+โปรดเก็บอีเมลนี้ไว้ในที่ที่ปลอดภัย  หากคุณทำอีเมลฉบับนี้หาย คุณจะไม่สามารถดูผลโพลนี้ได้ คุณสามารถดูผลโพลนี้ได้จากที่อยู่นี้หลังจากโพลปิดแล้ว:
 
   $_[2]
 
-This URL is private. Allowing unauthorized users access to this
-URL will permit them to see the poll results.
+ที่อยู่นี้เป็นความลับ ผู้ใช้ใดๆ ที่ได้รับที่อยู่นี้จะสามารถดูผลโพลได้ โปรดรักษาความเป็นส่วนบุคคลของที่อยู่ที่ท่านได้รับ
 
 ";
 }
@@ -139,7 +136,7 @@ URL will permit them to see the poll results.
 # start
 
 sub poll_started {
-    'The poll <strong>'.$_[1].'</strong> has been started.';
+    'โพล <strong>'.$_[1].'</strong> ได้เริ่มขึ้นแล้ว';
 }
 
 sub sending_keys_now {
@@ -150,28 +147,28 @@ sub sending_keys_now {
 # control
 
 sub CIVS_Poll_Control {
-    "CIVS Poll Control";
+    "ควบคุมโพล CIVS";
 }
 sub Poll_control {
-    "Poll Control";
+    "ควบคุมโพล";
 }
 sub poll_has_not_yet_started {
-    'The poll has not yet started. Press this button to start it: ';
+    'โพลยังไม่ได้เริ่ม กดปุ่มนี้เพื่ออนุมัติการลงมติ: ';
 }
 sub Start_poll {
-    'Start poll'
+    'เริ่มโพล';
 }
 sub End_poll {
-    'End poll'
+    'จบโพล';
 }
 sub Edit_button {
-    'edit'
+    'แก้ไข'
 }
 sub Save_button {
-    'save'
+    'บันทึก'
 }
 sub Remove_button {
-    'remove'
+    'ลบออก'
 }
 sub ending_poll_cannot_be_undone {
     'Ending a poll is an operation that cannot be undone. Continue?';
@@ -234,7 +231,7 @@ sub results_available_to_the_following_users {
 }
 
 sub Poll_results_are_available { #url
-    "<a href=\"$_[1]\">Go to poll results</a>";
+    "<a href=\"$_[1]\">See poll results</a>";
 }
 sub Description {
     'Description:';
@@ -266,13 +263,13 @@ sub add_voter_instructions {
     multiple voting.";
 }
 sub Upload_file {
-    'Upload file: '
+    'Upload file: ';
 }
 sub Load_ballot_data {
-    'Load ballot data'
+    'Load ballot data';
 }
 sub File_to_upload_ballots_from {
-    'File to upload ballots from:'
+    'File to upload ballots from:';
 }
 sub Upload_instructions {
     'Upload a text file formatted with one ballot per line. Each
@@ -483,7 +480,7 @@ sub buttons_are_deactivated {
 	your browser does not support Javascript.';
 }
 sub ranking_instructions {
-       'Rank the choices in one of three ways:
+       '<p>Rank the choices in one of three ways:</p>
 	<ol>
 	    <li>drag the rows
 	    <li>use pulldowns in Rank column
@@ -503,7 +500,7 @@ sub thank_you_for_voting { #title, receipt
 	successfully cast. Your voter receipt is <code>$_[2]</code>.";
 }
 sub try_some_public_polls {
-    "Feel like voting on something else? Try one of these public polls:"
+    "If you still feel like voting, try one of these public polls:"
 }
 sub name_of_writein_is_empty {
     "Name of write-in choice is empty";
@@ -523,21 +520,11 @@ sub Ill_formed_poll_ID {
 sub vote_has_already_been_cast {
     "A vote has already been cast using your voter key.";
 }
-#deprecated, use future_result_link
 sub following_URL_will_report_results {
     'The following URL will report poll results once the poll ends:';
 }
-sub future_result_link {
-    (my $self, my $url) = @_;
-    "The following URL will report poll results once the poll ends: <tt>$url</tt>"
-}
-#deprecated
 sub following_URL_reports_results {
-    "The following URL reports the results of the poll"
-}
-sub current_result_link {
-    (my $self, my $url) = @_;
-    "<a href=\"$url\" class=result_link>Go to current poll results</a>"
+    'The following URL reports the current poll results:';
 }
 sub Already_voted {
     'Already voted';
@@ -563,14 +550,8 @@ sub The_poll_has_not_yet_been_ended { #title, name, email
     "This poll ($_[1]) has not yet been ended by its supervisor,
     $_[2] ($_[3]).";
 }
-
-# deprecated
 sub The_results_of_this_completed_poll_are_here {
     'The results of this completed poll are here:';
-}
-sub completed_results_link {
-    (my $self, my $url) = @_;
-    "<a href=\"$url\" class=result_link>Go to completed poll results</a>"
 }
 
 sub No_write_access_to_lock_poll {
@@ -651,8 +632,8 @@ about whether or how you have voted.';
 }
 sub This_is_a_nonanonymous_poll {
 'The poll supervisor has decided to make this a <strong>non-anonymous poll</strong>.  If
-you vote, how you voted will be publicly visible along with your
-email address. If you do not vote, the poll supervisor will also be able
+you vote, your email address and how you voted will be visible to anyone who has been given
+access to the poll results.  If you do not vote, the poll supervisor will also be able
 to determine this.';
 }
 
@@ -730,7 +711,8 @@ sub Voter_identities_will_be_kept_anonymous {
     'Voter identities will be kept anonymous';
 }
 sub Voter_identities_will_be_public {
-    'Voter identities (email) will be publicly associated with their ballots.';
+    'Voter identities (email) along with their ballots will be
+visible to those authorized to see poll results.';
 }
 sub Condorcet_completion_rule {
     'Condorcet completion rule:';

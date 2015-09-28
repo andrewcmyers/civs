@@ -233,14 +233,14 @@ sub CheckStarted {
 
 sub PointToResults {
     if ($restrict_results ne 'yes') {
+	my $url = "@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id";
+	print '<p>';
 	if ($public eq 'no') {
-		print '<p>', $tx->following_URL_will_report_results, br, $cr;
-	    } else {
-		print '<p>', $tx->following_URL_reports_results, br, $cr;
-
+	    print $tx->future_result_link($url);
+	} else {
+	    print $tx->current_result_link($url);
 	}
-	print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-	<tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
+	print '</p>', $cr;
     } else {
 	print p($tx->Poll_results_will_be_available_to_the_following_users);
 	print '<ul>';
@@ -274,8 +274,8 @@ sub PointToResultsComplete {
     &ReportResultReaders;
   } else {
     print "<p>", $tx->The_results_of_this_completed_poll_are_here, br, $cr;
-    print "<a href=\"http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
-       <tt>http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
+    print "<a href=\"@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
+       <tt>@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id</tt></a></p>\n";
   }
 }
 
@@ -340,8 +340,10 @@ sub CheckNotVoted {
     if ($used_voter_keys{&civs_hash($voter_key)}) {
 	print h1($tx->Already_voted);
 	print p($tx->vote_has_already_been_cast);
-	PointToResults;
-	print end_html();
+	&PointToResults;
+        &main::TrySomePolls;
+        &CIVS_End;
+
 	if ($voter_key) {
 	    ElectionLog("Election: $title ($election_id) : Saw second vote "
 		    . "from voter key $voter_key");
@@ -539,7 +541,7 @@ sub SendKeys {
 
         my $url = "";
         if ($public eq 'yes') {
-            $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
+            $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
             $url .= "&akey=$authorization_key"
                 if (&ElectionUsesAuthorizationKey);
         } else {
@@ -552,7 +554,7 @@ sub SendKeys {
                 $voter_keys{$hash_voter_key} = 1;
                 $num_auth++; $edata{'num_auth'} = $num_auth;
             }
-            $url = "http://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
+            $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
                         ."&key=$voter_key";
         }
 
@@ -577,7 +579,7 @@ sub SendKeys {
             Send "rcpt to:<$v>"; ConsumeSMTP;
             Send "data"; ConsumeSMTP;
 	    SendHeader ('From',
-		$tx->CIVS_poll_supervisor($name),
+		$tx->CIVS_poll_supervisor($name).
 		"<$civs_supervisor>");
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $email_addr);
@@ -615,7 +617,7 @@ sub SendKeys {
 	    $html .= $cr."</p><p>".$tx->poll_has_been_announced_to_end($election_end);
             if ($restrict_results ne 'yes') {
 		$html .= ' ' .
-		  $tx->To_view_the_results_at_the_end(MakeURL("http://$thishost$civs_bin_path/".
+		  $tx->To_view_the_results_at_the_end(MakeURL("@PROTO@://$thishost$civs_bin_path/".
 				"results@PERLEXT@?id=$election_id"));
 	    }
 	    $html .= '<p>' . $tx->For_more_information . $cr .

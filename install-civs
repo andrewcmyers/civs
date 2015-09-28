@@ -35,8 +35,9 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
     for f in civs_create.html* index.html* public_elections.html* \
 	proportional.html* sec_priv.html* acks.html changelog.html* \
+        news.html* \
 	rp.html* publicized_polls.html* faq.html* style.css results.js vote.js ajax.js \
-	ezdom.js civs_hdr.js check123b.png sample-ballot.png vertstrip.png hebrew.css
+	ezdom.js civs_hdr.js hebrew.css
     do
 	case "$f" in
 	  *.html.*) dest="${HTMLDIR}/${f}${UTF8_SUFFIX}";;
@@ -46,6 +47,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	echo "copying $f to $dest"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
+	     -e 's|@PROTO@|'$PROTO'|' \
 	     -e 's|@THISHOST@|'$THISHOST'|' \
 	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
 	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
@@ -86,6 +88,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	echo " ->$target"
 	sed  -e 's|@PERL@|'$PERL'|' \
 	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
+	     -e 's|@PROTO@|'$PROTO'|' \
 	     -e 's|@THISHOST@|'$THISHOST'|' \
 	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
 	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
@@ -103,6 +106,12 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	 	 < "cgi-bin/$f" > "$target"
 	chmod a+x "$target"
+    done
+    mkdir -p "${HTMLDIR}/images"
+    for f in check123b.png sample-ballot.png vertstrip.png checkmarks.png;
+    do
+	dest="${HTMLDIR}/images/${f}"
+        cp "$f" "$dest"
     done
     echo; echo
 

@@ -424,7 +424,7 @@ sub BallotReport {
 	    print RESULTS table({-class=>'ballots'},
 		    Tr(\@rows));
 	    print RESULTS p($tx->Ballots_are_shown_in_random_order);
-	    print RESULTS p($tx->Download_ballots_as_a_CSV("http://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"));
+	    print RESULTS p($tx->Download_ballots_as_a_CSV("@PROTO@://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"));
         } else {
 	    print RESULTS p($tx->No_ballots_were_cast);
 	}

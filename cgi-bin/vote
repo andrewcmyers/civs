@@ -51,6 +51,14 @@ if ($js_ui) {
 
 CIVS_Header($title);
 
+sub TrySomePolls {
+    print p($tx->try_some_public_polls);
+    print '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>';
+    print div({id=>"top_polls", class=>"small_list"}, "Loading...");
+    print '<script type="text/javascript">fetch_content("top_polls", "@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';
+}
+
+
 CheckElectionID;
 CheckStarted;
 CheckNotStopped;
@@ -137,7 +145,7 @@ print '</div>', $cr;
 
 if ($voting_enabled && $public eq 'yes') {
     print div({class => 'normal_text'}, 
-	p($tx->if_you_have_already_voted("http://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id")));
+	p($tx->if_you_have_already_voted("@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id")));
 }
 
 &CIVS_End;
@@ -215,10 +223,7 @@ sub ProcessVote {
 
     PointToResults;
 
-    print p($tx->try_some_public_polls);
-    print '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>';
-    print div({id=>"top_polls", class=>"small_list"}, "Loading...");
-    print '<script type="text/javascript">fetch_content("top_polls", "http://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';
+    TrySomePolls;
     CIVS_End;
 }
 

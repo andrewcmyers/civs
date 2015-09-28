@@ -1,7 +1,7 @@
 body, table, p, ul, li, td  {
     font-family: Verdana, Arial, helvetica, sans-serif;
     font-size: 100%;
-    color: black
+    color: #222;
 }
 body { margin: 0;
        background-color: #ffffff }
@@ -26,11 +26,12 @@ a:link       { color: #389; background-color: transparent; font-weight: bold }
 a:visited    { color: #278; background-color: transparent; font-weight: bold }
 a:hover      { color: #49a; background-color: transparent }
 a.small      { font-size: 80% }
+a.result_link { background-color: #00355f; color: white; padding: 5px 8px}
 
 th              { font-family: Verdana, Arial, helvetica, sans-serif;
                   color: white;
-		  background-color: #000080;
-		  border-color: #000080;
+		  background-color: #00355f;
+		  border-color: #00355f;
 		  font-weight: bold }
 #settings {
     font-size: 90%;
@@ -51,14 +52,15 @@ table.form { background-color: transparent; text-align: left }
 table#main { margin: 0 auto }
 table#ballot { margin: 0 auto }
 table#ballot td { vertical-align: top; }
-div.emphasized {
+.emphasized {
   background-color: #ffffd0; margin: 0px auto;
   font-size: 80%;
   max-width: 80ex;
   padding: 5px;
   border-style: solid;
   border-width: 1px;
-  border-color: #cca
+  border-color: #cca;
+  text-indent: 0px;
 }
 
 span.explain {font-size: 75%; color: #404040 }
@@ -70,7 +72,7 @@ p, ul, li {background-color: transparent}
 
 h1, h2, h3, span.paragraph {
     font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif;
-    color: #258;
+    color: #842;
     background-color: transparent;
     font-weight: bold
 }
@@ -82,8 +84,8 @@ table.banner a.here, table.banner a.here:link, table.banner a.here:visited {
     color: #bdf
 }
 
-table.banner { background-image: url('sample-ballot.png');
-               background-color: #008;
+table.banner { background-color: #0D61A5;
+                /* background-image: url('sample-ballot.png'); */
 	       background-position: center left;
 	       background-repeat: repeat-x}
 table.banner h1 { color: white }
@@ -180,7 +182,7 @@ td#navbubbles {
 }
 div#topmenu {
     position: relative;
-    background: #338;
+    background: #00355f;
     top: -1.5ex;
     font-size: 110%;
 }
@@ -197,7 +199,7 @@ div.bubble {
     /* background-image: url('vertstrip.png'); */
     background-color: #fff0e8;
     margin-bottom: 2em;
-    padding: 3px 6px 3px 2px;
+    padding: 3px 6px 3px 5px;
     border-color: #bbc;
     border-style: solid;
     border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 8px;
@@ -231,7 +233,7 @@ table.links tr td {
 
 tr.selected { background-color: #ffffd0 }
 
-table.banner h1 {text-shadow: white 2px 2px 4px }
+/* table.banner h1 {text-shadow: white 2px 2px 4px } */
 table.banner td {white-space: nowrap}
 p.suboption, div.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
 div.parent_wrapper {display: inline}
@@ -245,7 +247,7 @@ div.description { border: solid 1px #bbb;
 		  margin-right: 20px;
 		    -moz-border-radius: 8px;
 		    -webkit-border-radius: 8px;
-		  background-color: #f0f0f0; color: black; padding: 5px;
+		  background-color: #f0f0f0; color: #222; padding: 5px;
 		  font-family: Verdana, Arial, helvetica, sans-serif; }
 #jshelp p {text-align: left; width: 36ex}
 #jshelp ol {text-align: left; width: 36ex}
@@ -281,3 +283,9 @@ textarea.paste { font-family: Courier, fixed; font-size: 80% }
 textarea#description_edit { display: none }
 input#save_description_button { display: none }
 .popup { border: 1px solid black; background-color: #ffffd0; font-size: 80%; position: relative; left: 3em; bottom: 3ex; display: none }
+
+.pubpriv p {font-size: 80%}
+#pubpriv_choice {border-top: 1px solid #bbb; margin-top: 0.5ex}
+#pubpriv_choice > div {border-left: 1px solid #bbb; padding-left: 1em}
+#pubpriv_choice > div:first-child {border-left: none; float: left; padding-right: 1em}
+div.pubpriv {display: inline-block; width: 45%; min-width: 30ex; padding-top: 0.5ex}
