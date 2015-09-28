@@ -103,7 +103,8 @@ sub creation_email_public_link { # url
 ";
 }
 sub for_more_information_about_CIVS { # url
-"A Condorcet Szavazási Szolgáltatásról bővebb információkárt lásd:
+"A Condorcet Internet Szavazási szolgáltatásról további információkat
+az alábbi címen találsz:
   $_[1]";
 }
 
@@ -125,10 +126,6 @@ Ha a szavazás lezárult, az eredmények a következő címen lesznek elérhető
 
 Ez a cím bizalmas. Ha jogosulatlan személyek számára ismertté válik ez a cím,
 akkor megnézhetik a szavazás eredményét.
-A Condorcet Internet Szavazási szolgáltatásról további információkat
-az alábbi címen találsz:
-
-  $_[3]
 
 ";
 }
