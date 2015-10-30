@@ -72,7 +72,7 @@ p, ul, li {background-color: transparent}
 
 h1, h2, h3, span.paragraph {
     font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif;
-    color: #842;
+    color: #a52;
     background-color: transparent;
     font-weight: bold
 }
@@ -274,7 +274,7 @@ table#civs_uses {font-size: 90%}
 table.ballots {font-size: 80%; border: solid 1px #aac}
 table.ballots th {background-color: transparent; color: black; font-size: 70%}
 
-li b, td > b, strong { color: #842 }
+li b, td > b, strong { color: #a52 }
 
 #move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }
 
