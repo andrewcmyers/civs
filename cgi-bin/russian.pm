@@ -186,9 +186,9 @@ sub sending_keys_now {
 # sub writeins_have_been_disabled {
 #     'Write-in choices have been disabled'
 # }
-# sub disallow_further_writeins {
-#     'Disallow further write-ins'
-# }
+sub disallow_further_writeins {
+    'Запретить добавление дополнительных вариантов'
+}
 # sub voting_disabled_during_writeins {
 #     'Voting is currently disabled during the write-in phase.'
 # }
