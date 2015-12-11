@@ -110,7 +110,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	chmod a+x "$target"
     done
     mkdir -p "${HTMLDIR}/images"
-    for f in check123b.png sample-ballot.png vertstrip.png checkmarks.png;
+    for f in check123b.png sample-ballot.png vertstrip.png check-civs.png;
     do
 	dest="${HTMLDIR}/images/${f}"
         cp "$f" "$dest"
