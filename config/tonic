@@ -75,3 +75,5 @@ ADMIN_KEY='frobo'
 
 # Log visits to the home page?
 LOG_HOME_VISITS=
+
+DONATE_URL=http://www.cs.cornell.edu/andru/donate.html
