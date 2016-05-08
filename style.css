@@ -77,6 +77,10 @@ h1, h2, h3, span.paragraph {
     font-weight: bold
 }
 
+.content h1 {
+    background-color: #0d61a5
+}
+
 table.banner a:link { color: white }
 table.banner a:visited { color: white }
 table.banner a:hover { color: yellow }
