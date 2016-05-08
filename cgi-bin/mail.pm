@@ -54,7 +54,7 @@ sub CheckAddr {
     (my $addr) = @_;
     chomp $addr;
 
-    return ($addr =~ m/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|[A-Z]{3}|asia|coop|info|mobi|name|travel|aero|jobs|museum)$/i);
+    return ($addr =~ m/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|[A-Z]{3}|[A-Z]{4}|[A-Z]{5}|[A-Z]{6})$/i);
 }
 
 sub TrimAddr {
