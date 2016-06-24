@@ -33,18 +33,20 @@ StartElection;
 
 print p($tx->poll_started($title)), $cr;
 
-print p($tx->sending_keys_now), $cr;
+if ($#addresses >= 0) {
+    print p($tx->sending_keys_now), $cr;
 
-print '<pre>'.$cr;
-if ($#addresses > $max_voters) {
-    print h2("Sorry, more than $max_voters voters are currently not allowed\n");
-    exit 1;
+    print '<pre>'.$cr;
+    if ($#addresses > $max_voters) {
+        print h2("Sorry, more than $max_voters voters are currently not allowed\n");
+        exit 1;
+    }
+
+
+    SendKeys($authorization_key, \@addresses);
+
+    print $tx->Done, '</pre>', $cr;
 }
-
-
-SendKeys($authorization_key, \@addresses);
-
-print $tx->Done, '</pre>', $cr;
 
 print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key\">".$tx->Go_back_to_poll_control.'</a>');
 

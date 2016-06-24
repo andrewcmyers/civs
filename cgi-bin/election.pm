@@ -71,7 +71,7 @@ sub init {
     };
     &IsWellFormedElectionID or do {
 	&CIVS_Header($tx->Error);
-        print p($tx->Ill_formed_poll_ID($election_id)), end_html();
+        print p($tx->Ill_formed_poll_ID(escapeHTML($election_id))), end_html();
         exit 0;
     };
     
