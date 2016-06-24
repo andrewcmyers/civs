@@ -487,9 +487,6 @@ sub PrintRanking {
 	} else {
 	    $tie = 0;
 	}
-# A bit torn on whether to escapeHTML() the names of the
-# candidates here. What about writeins, especially on a
-# public election?
 	for (my $i = 0; $i <= $#winner; $i++) {
 	    if ($i > 0) { print RESULTS '<br>', $cr; }
 	    if ($tie) { print RESULTS '<span class=warning>'; }
