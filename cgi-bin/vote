@@ -296,7 +296,7 @@ sub AddWritein {
 	# This function has a race condition.  The effect of two concurrent 
 	# writeins is not clear.  Nor is the effect of a concurrent writein
 	# and vote, or even request for the candidate list.
-    my $writein = CanonicalizeName(param('writein'));
+    my $writein = &CanonicalizeName(&Filter(param('writein')));
     my $ok = 1;
     if ($writein eq '') {
 	print p(b($tx->name_of_writein_is_empty)), $cr;

@@ -5,6 +5,7 @@ no strict 'refs';
 use warnings;
 use POSIX ":sys_wait_h";
 use Socket;
+use HTML::TagFilter;
 
 # Export the package interface
 BEGIN {
@@ -18,7 +19,7 @@ BEGIN {
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
                       &unique_elements &civs_hash &system_load &CheckLoad
-		      $remote_ip_address $languages $tx &FileTimestamp &BR);
+		      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -264,6 +265,43 @@ sub SecureNonce {
 # Generate a cryptographic hash of the arguments.
 sub civs_hash {
     return substr(md5_hex(@_),0,16);
+}
+
+my $filter_tags = '@FILTER_TAGS@';
+
+my $tf;
+if ($filter_tags ne 'no') {
+    $tf = new HTML::TagFilter;
+    my $ok = {all => []};
+    $tf->allow_tags({
+	table => $ok,
+	td => {colspan => [], rowspan => []},
+	tr => $ok,
+        s => $ok,
+        strike => $ok,
+        kbd => $ok,
+	strong => $ok,
+	b => $ok,
+	dl => $ok, dt => $ok, dd => $ok,
+        br => $ok,
+        var => $ok,
+        dfn => $ok,
+        cite => $ok,
+        samp => $ok,
+	span => $ok, div => $ok,
+	small => $ok,
+	p => {align => ['left' | 'right' | 'center']},
+	ol => {type => ['a', '1', 'A']}
+    });
+}
+
+# Filter tags from a string, if $filter_tags is not 'no' (which is probably dangerous)
+sub Filter {
+    if ($filter_tags ne 'no') {
+	return $tf->filter($_[0]);
+    } else {
+	return $_[0];
+    }
 }
 
 # From the Perl Cookbook, p. 121
