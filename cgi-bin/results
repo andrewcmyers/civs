@@ -223,7 +223,7 @@ sub ComputeResults {
 	    value="', $num_winners, '" />';
     print RESULTS hidden('id', $election_id);
     if (defined(param('rkey'))) {
-	print RESULTS hidden('rkey', param('rkey'));
+	print RESULTS hidden('rkey', escapeHTML(param('rkey')));
     }
     if ($real_nwin != $num_winners) {
 	print RESULTS $tx->Poll_actually_has($real_nwin);
@@ -1154,8 +1154,8 @@ sub PrintProportionalResults {
 	my $besti = $curr_comm[$i-1];
 	my $li, $ri;
 	if ($comparison_request) {
-	    $li = param("L$i");
-	    $ri = param("R$i");
+	    $li = 0+param("L$i");
+	    $ri = 0+param("R$i");
 	} else {
 	    $li = $choice_rank[$curr_comm[$i-1]];
 	    $ri = "?";
@@ -1168,7 +1168,7 @@ sub PrintProportionalResults {
     print RESULTS hidden('num_winners', $num_winners);
     print RESULTS hidden('algorithm', $algorithm);
     if (defined(param('rkey'))) {
-	print RESULTS hidden('rkey', param('rkey'));
+	print RESULTS hidden('rkey', escapeHTML(param('rkey')));
     }
     print RESULTS '<input type="submit" value="Compare sets" name="Compare">';
     print RESULTS '</form>';

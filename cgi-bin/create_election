@@ -17,7 +17,7 @@ my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 
 ### Initial parameter checking
 
-my $email_addr = param('email_addr');
+my $email_addr = escapeHTML(param('email_addr'));
 $email_addr = mail::TrimAddr($email_addr);
 if (!&CheckAddr($email_addr)) {
     HTML_Header($tx->Invalid_email_address_hdr);
