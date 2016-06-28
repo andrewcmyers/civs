@@ -17,13 +17,13 @@ my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 
 ### Initial parameter checking
 
-my $email_addr = escapeHTML(param('email_addr'));
+my $email_addr = param('email_addr');
 $email_addr = mail::TrimAddr($email_addr);
 if (!&CheckAddr($email_addr)) {
     HTML_Header($tx->Invalid_email_address_hdr);
     CIVS_Header();
     print h1($tx->Invalid_email_address_hdr);
-    print p($tx->Address_unacceptable($email_addr));
+    print p($tx->Address_unacceptable(escapeHTML($email_addr)));
     print end_html();
     exit 0;
 }
