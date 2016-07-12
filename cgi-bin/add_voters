@@ -38,6 +38,11 @@ if (!IsStarted || IsStopped) {
     exit 0;
 }
 
+if ($#new_addresses >= @MAX_VOTER_ADD@) {
+    print h1($tx->Error), p($tx->Too_many_voters_added);
+    exit 0;
+}
+
 print "<pre>\n";
 GetPrivateHostID;
 
