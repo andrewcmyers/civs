@@ -183,6 +183,9 @@ if ($local_debug) {
 }	
 print $cr,
  '<tr>
+    <td>
+      <img src="@CIVSURL@/images/check-civs.png" style="border: none"/>
+    </td>
     <td width="100%" valign="top" nowrap="nowrap">
     <h1>&nbsp;', $tx->Condorcet_Internet_Voting_Service, '</h1>
     </td>
