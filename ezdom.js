@@ -6,7 +6,7 @@ var tags = [
     'ul', 'li', 'ol', 'p', 'b', 'i', 'em', 'table', 'thead', 'tbody', 'tr',
     'td', 'th', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'a', 'br', 'input',
     'blockquote', 'select', 'option', 'sup', 'sub', 'strong', 'pre', 'canvas',
-    'button'
+    'button', 'img'
 ];
 
 /* Append k as a child of n. Create a text node if k is a string.
