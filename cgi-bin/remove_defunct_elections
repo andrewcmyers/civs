@@ -1,0 +1,171 @@
+#!/usr/bin/perl
+#
+# List and remove all elections with 0 votes cast that are more than a week old.
+#
+# Must have parameter doit=yes to actually remove elections. Otherwise
+# elections are merely listed.
+#
+# Based on 'status'. TODO: clean up.
+
+use strict;
+use warnings;
+
+use lib '@CGIBINDIR@';
+# use admctrl;
+use civs_common;
+
+use CGI qw(:standard);
+use File::stat;
+use DB_File;
+use POSIX qw(strftime);
+undef $/;
+
+my $doit = 0;
+
+&HTML_Header("CIVS Server Status");
+&CIVS_Header("Server Status");
+
+if (param('key') ne '@ADMIN_KEY@') {
+    print p("Password missing or wrong");
+    exit 1;
+}
+if (param('doit') eq 'yes') {
+    $doit = 1;
+}
+
+my $elections_dir = $home."/elections/";
+opendir(DIR, $elections_dir) or die "Can't open directory $elections_dir: $!";
+
+my @entries;
+
+my $total_users = 0;
+my $total_auth = 0;
+my $num_polls = 0;
+
+while (defined(my $file = readdir(DIR))) {
+    next if !defined($file);
+    next if $file =~/^\.\.?$/;    # skip . and ..
+    next unless -d "$elections_dir/$file";   # skip non-directories
+    next unless $file =~ m/^E_[0123456789abcdef]+/;   # skip non-elections
+    
+    $num_polls++;
+    my $election_dir = "$elections_dir/$file";
+    my $election_data = $election_dir."/election_data";
+    my $vote_data = $election_dir."/vote_data";
+    my $started_file = $election_dir."/started";
+	my $stopped_file = $election_dir."/stopped";
+
+    my (%edata, %vdata);
+    tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
+    tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
+
+    my $name = $edata{'name'};
+    if (!defined($name)) { $name = '(undefined)'; }
+    my $title = $edata{'title'};
+    my $email_addr = $edata{'email_addr'};
+    if (!defined($email_addr)) {
+	$email_addr = "(no addr)";
+    }
+    my $public = (defined($edata{'public'}) && $edata{'public'} eq 'yes') ? "Public" : "Private";
+    if (defined($edata{'publicize'}) && $edata{'publicize'} eq 'yes') { $public .= '+' }
+    if (defined($edata{'external_ballots'}) &&
+	  $edata{'external_ballots'} eq 'yes')
+	{ $public = 'Test'; }
+    my $num_auth = $edata{'num_auth'};
+    if (!defined($num_auth)) { $num_auth = '&ndash;'; }
+    my $num_votes = $vdata{'num_votes'};
+    if (!defined($num_votes)) { $num_votes = '&ndash;'; }
+    my $started;
+    if (-e $started_file) {
+	if (defined($edata{'election_begin'})) {
+	    $started = '<small>'.localtime($edata{'election_begin'}).'</small>';
+	} else {
+	    $started = "Yes";
+	}
+    } else {
+	$started = "No";
+    }
+    my $stopped = (-e $stopped_file) ? "Yes" : "No";
+    my $auth_key = (defined($edata{'hash_authorization_key'})) ? "Yes" : "No";
+    my $st = stat($election_dir."/vote_log");
+    if (!defined($st)) {
+	$st = stat($election_dir."/stopped");
+    }
+    if (!defined($st)) {
+	$st = stat($election_dir."/vote_data");
+    }
+    if (!defined($st)) {
+	$st = stat($election_dir);
+    }
+    my $last_update = 'N/A';
+    my $mtime;
+    if (defined($st)) {
+	$mtime = $st->mtime;
+	$last_update = localtime($mtime);
+    }
+    my $skip = 0;
+    if (time - $mtime < 86400 * 7) { $skip = 1 }
+    if (defined($title)) {
+	$title = "\"$title\"";
+    } else {
+	$title = '(no title)';
+    }
+
+    if (!$skip) {
+    push @entries,
+     [($mtime, $file, $election_dir, $name, $email_addr, $public,
+       $num_auth, $num_votes, $started, $stopped, $auth_key, $last_update)];
+    }
+
+    untie %edata;
+    untie %vdata;
+}
+
+our $compares = '';
+
+@entries = sort { $b->[0] <=> $a->[0] } @entries;
+
+my @rows = ();
+push @rows, th(['Title', 'Supervisor', 'Type', '# Auth',
+                'Votes', 'Start', 'Stopped',
+                'Last update', 'Delete']);
+
+foreach my $entry (@entries) {
+    (my $mtime, my $file, my $title, my $name, my $email_addr, my $public,
+     my $num_auth, my $num_votes, my $started, my $stopped, my $auth_key,
+     my $last_update)
+	= @{$entry};
+    if ($num_votes ne '&ndash;') { next }
+    if ($public ne 'Test') {
+        if ($num_auth ne '&ndash;') {
+	    $total_auth += $num_auth;
+	}
+        if ($num_votes ne '&ndash;') {
+	    $total_users += $num_votes;
+	}
+    }
+    push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=$file".
+			         '&admin_key=@ADMIN_KEY@',
+			  -target=>"_blank"},
+	small($title)),
+	"omitted",
+	$public,
+	$num_auth,
+	$num_votes,
+	$started,
+	$stopped,
+	small($last_update),
+	a({-href=>'delete_election@PERLEXT@?id='.$file.'&key=@ADMIN_KEY@',
+	   -onClick => "return confirm('Are you sure you want to permanently delete this?"},"Delete"),
+	$cr,
+	]));
+    if ($doit) {
+	system("/bin/rm -r '$title'");
+    }
+}
+
+print p("Number of polls: $num_polls, total votes cast: $total_users, total authorized: $total_auth"), $cr;
+
+print table({-class => 'status'}, @rows);
+            
+print end_html();
