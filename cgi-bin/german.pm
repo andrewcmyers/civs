@@ -440,6 +440,10 @@ sub vote_has_already_been_cast {
 sub following_URL_will_report_results {
     'Das Ergebnis wird nach Abstimmungsschluss unter der folgenden URL einsehbar sein:';
 }
+sub future_result_link {
+    (my $self, my $url) = @_;
+    "Das Ergebnis wird nach Abstimmungsschluss unter der folgenden URL einsehbar sein: <tt>$url</tt>";
+}
 sub following_URL_reports_results {
     'Das derzeitige Abstimmungsergebnis ist unter der folgenden URL einsehbar:';
 }
