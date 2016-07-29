@@ -1,4 +1,4 @@
-package language_name; # replace with the name of your language, e.g. spanish.
+package russian;
 
 our $VERSION = 1.0;
 
@@ -20,11 +20,11 @@ sub style_file {
 }
 
 sub Condorcet_Internet_Voting_Service {
-    'Кондорсе Интернет Голосование Сервис'
+    'Кондорсе Интернет Голосование Сервис (CIVS)'
 }
 
 sub Condorcet_Internet_Voting_Service_email_hdr { # Note: charset may be limited 
-    'Кондорсе Интернет Голосование Сервис'
+    'Кондорсе Интернет Голосование Сервис (CIVS)'
 }
 
 sub about_civs {
@@ -62,7 +62,7 @@ sub Sorry_the_server_is_busy {
 # civs_create
 
 sub mail_has_been_sent {
-    "E-mail был отправлен на указанный вами адрес. (<tt>$_[1]</tt>)."
+    "Почта был отправлен на указанный вами адрес. (<tt>$_[1]</tt>)."
 }
 
 sub click_on_the_URL_to_start {
@@ -85,7 +85,7 @@ sub Poll_created {
 }
 
 sub Address_unacceptable { #addr
-    "Адрес \ "$ _ [1] \" не является приемлемым"
+    "Адрес \"$ _ [1] \" не является приемлемым"
 }
 sub Poll_must_have_two_choices {
     'Опрос должен иметь как минимум два варианта.'
@@ -316,9 +316,9 @@ sub disallow_further_writeins {
 # 	    &nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
 #     }
 # }
-# sub The_poll_has_ended {
-#     'The poll has ended.'
-# }
+sub The_poll_has_ended {
+    'Опрос закончился.'
+}
 
 # # add voters
 
@@ -361,65 +361,62 @@ sub disallow_further_writeins {
 #      Your ballot (the rankings you assign to choices)
 #      will be made public when the poll ends.'
 # }
-# sub instructions1 { # num_winners, end, name, email
-#     my $wintxt;
-#     if ($_[1] == 1) {
-# 	$wintxt="single favorite choice";
-#     } else {
-# 	$wintxt="$_[1] favorite choices";
-#     }
-#     "Only the $wintxt will win the poll.<br />
-# 	    The poll ends <b>$_[2]</b>.
-# 	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
-# 	    Contact the poll supervisor if you need help."
-# }
-# sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-#     my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
-#     my $ret;
-#     if (!$prop || !$combined) {
-# 	$ret = "Give each of the following choices
-# 	    a rank, where a smaller-numbered rank means that you
-# 	    prefer that choice more.
-# 	    For example, give your top choice the rank 1.
-# 	    Give choices the same rank if you have no
-# 	    preference between them. You do not have to use all the
-# 	    possible ranks. All choices initially have the
-# 	    lowest possible rank. ". $cr;
-# 	if ($no_opinion) {
-# 	    $ret .= '<b>Note:</b> &ldquo;No opinion&rdquo;
-# 		    is <i>not</i> the same as the lowest possible rank; it means
-# 		    that you choose not to rank this choice with respect to the
-# 		    other choices.</p>';
-# 	}
-# 	if ($prop) {
-# 	    $ret .= '<p>This poll is decided using an experimental Condorcet-based
-# 	    method designed to provide proportional representation. It is assumed
-# 	    by the voting algorithm that you want the ranking of your most
-# 	    preferred <i>winning</i> choice to be as high as possible, and if two
-# 	    sets of winning choices agree on the choice you prefer most, then you
-# 	    would decide between them using the second most preferred choice, and
-# 	    so on. ';
-# 	}
-#     } else {
-# 	$ret = '<p>This poll is decided using an experimental
-# 	Condorcet-based algorithm designed to provide proportional
-# 	representation.
-# 	Please give each of the following choices a
-# 	<b>weight</b> that expresses how much you want that
-# 	choice to be part of the winning set of choices.
-# 	It is assumed by the voting algorithm that you want
-# 	  the sum of weights of winning choices to be as large
-# 	as possible.  All choices
-# 	are currently given a weight of zero, meaning that you
-# 	have no interest in seeing them win.
-# 	Weights cannot be negative or larger than 999.
-# 	It doesn\'t help you to make your weights larger
-# 	than other voters\' weights, because your weights are only compared
-# 	against each other.'.
-# 	"<a href=\"$civs_url/proportional.html\">[See more information]</a>.</p>";
-#     }
-#     return $ret;
-# }
+ sub instructions1 { # num_winners, end, name, email
+     my $wintxt;
+     if ($_[1] == 1) {
+ 	$wintxt="единственный любимый выбор";
+     } else {
+       $wintxt = $_[1]."любимых выборы"
+     }
+ 	"Только $wintxt выиграет опрос.<br />
+ 	    Опрос заканчивается <b>$_[2]</b>.
+ 	    Руководитель опроса $_[3] (<tt>$_[4]</tt>).
+            Обратитесь к руководителю опроса, если вам нужна помощь."
+ }
+ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
+     my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
+     my $ret;
+     if (!$prop || !$combined) {
+        $ret = 'Дайте каждому из следующих вариантов в ранге, где меньше
+        номером ранг означает, что вы кластеризацию Этот выбор станет ежевика.
+        Например, дайте ваш лучший выбор в ранг 1. Указать выбор один и тот же
+        ранг, если у вас нет предпочтения между ними. Вы не должны использовать
+        все возможные ряды. Все выборы изначально имеют самый низкий возможный
+        ранг.'. $cr;
+ 	if ($no_opinion) {
+            $ret .= '<b>Примечания</b>: «Нет мнение» <i>не</i> так же, как
+            самого низкого ранга возможно; Это означает, что Вы выбираете не
+            ранжировать этот выбор относительно других вариантов выбора. </p>';
+ 	}
+ 	if ($prop) {
+ 	    $ret .= '<p>This poll is decided using an experimental Condorcet-based
+ 	    method designed to provide proportional representation. It is assumed
+ 	    by the voting algorithm that you want the ranking of your most
+ 	    preferred <i>winning</i> choice to be as high as possible, and if two
+ 	    sets of winning choices agree on the choice you prefer most, then you
+ 	    would decide between them using the second most preferred choice, and
+ 	    so on. ';
+ 	}
+     } else {
+ 	$ret = '<p>This poll is decided using an experimental
+ 	Condorcet-based algorithm designed to provide proportional
+ 	representation.
+ 	Please give each of the following choices a
+ 	<b>weight</b> that expresses how much you want that
+ 	choice to be part of the winning set of choices.
+ 	It is assumed by the voting algorithm that you want
+ 	  the sum of weights of winning choices to be as large
+ 	as possible.  All choices
+ 	are currently given a weight of zero, meaning that you
+ 	have no interest in seeing them win.
+ 	Weights cannot be negative or larger than 999.
+ 	It doesn\'t help you to make your weights larger
+ 	than other voters\' weights, because your weights are only compared
+ 	against each other.'.
+ 	"<a href=\"$civs_url/proportional.html\">[See more information]</a>.</p>";
+     }
+     return $ret;
+ }
 
 # sub Identifier_request {
 #     "<p>Please give your email address or other recognizable identifier:  \r\n".
@@ -427,13 +424,14 @@ sub disallow_further_writeins {
 #     "\r\n"
 # }
 
-# sub Rank { 'Rank' }
-# sub Choice { 'Choice' }
-# sub Weight { 'Weight' }
+sub Rank { 'Ранг' }
+sub Choice { 'Выбор' }
+sub Weight { 'Вес' }
 
-# sub ordinal_of {
-#     "$_[1]"
-# }
+sub ordinal_of {
+    my $ending = '-го';
+    return "$_[1]".$ending;
+}
 
 # sub address_will_be_visible {
 #     '<strong>Your email address will be visible</strong> along with your ballot.'
@@ -456,65 +454,64 @@ sub disallow_further_writeins {
 #       no personally identifying information will appear.'
 # }
 
-# sub submit_ranking {
-#     'Submit ranking'
-# }
+sub submit_ranking {
+    'Добавить рейтинг'
+}
 
-# sub only_writeins_are_permitted {
-#     'Voting is not yet permitted in this poll. However,
-#              you may view the available choices and write in new
-# 	     choices. Use the text field below to write in new choices.'
-# }
+ sub only_writeins_are_permitted {
+    'Голосование еще не разрешено в этом опросе. Тем не менее, вы можете
+    просмотреть список доступных вариантов и писать новые выборы. Используйте
+    текстовое поле ниже, чтобы писать новые выборы.'
+ }
 
-# sub Add_writein {
-#     'Add write-in'
-# }
+sub Add_writein {
+   'Добавить запись в выбор.'
+}
 
-# sub to_top {
-#     'to top'
-# }
-# sub to_bottom {
-#     'to bottom'
-# }
-# sub move_up {
-#     'move up'
-# }
-# sub move_down {
-#     'move down'
-# }
-# sub make_tie {
-#     'make tie'
-# }
+sub to_top {
+    'Перейти к началу'
+}
+sub to_bottom {
+    'двигаться вниз'
+}
+sub move_up {
+    'Переместить вверх'
+}
+sub move_down {
+    'Переместить вниз'
+}
+sub make_tie {
+    'Сделать равными'
+}
 # sub buttons_are_deactivated {
 #     'These buttons are deactivated because
 # 	your browser does not support Javascript.'
 # }
-# sub ranking_instructions {
-#        'Rank the choices in one of three ways:
-# 	<ol>
-# 	    <li>drag the rows
-# 	    <li>use pulldowns in Rank column
-# 	    <li>select rows and use buttons above
-# 	</ol>'
-# }
+ sub ranking_instructions {
+    'Ранжируйте выбор в одном из трех способов:
+ 	<ol>
+ 	    <li>перетащите строки
+ 	    <li>Используйте отжимания в колонке "ранга"
+ 	    <li>Выберите строки и используйте кнопки выше.
+ 	</ol>'
+ }
 
-# sub write_in_a_choice {
-#     'Write in a new choice: '
-# }
-# sub if_you_have_already_voted { #url
-#     "If you have already voted, you may see
-# 	<a href=\"$_[1]\">the current poll results</a>."
-# }
-# sub thank_you_for_voting { #title, receipt
-#     "Thank you. Your vote for <strong>$_[1]</strong> has been
-# 	successfully cast. Your voter receipt is <code>$_[2]</code>."
-# }
-# sub name_of_writein_is_empty {
-#     "Name of write-in choice is empty"
-# }
-# sub writein_too_similar {
-#     "Sorry, the name of the write-in is too similar to an existing choice"
-# }
+sub write_in_a_choice {
+'Написать в новый выбор:'
+}
+sub if_you_have_already_voted { #url
+    "Если вы уже голосовали, вы можете увидеть <a href=\"$_[1]\">текущие
+    результаты опроса</a>."
+}
+sub thank_you_for_voting { #title, receipt
+ "Спасибо. Ваш голос за <strong>$_[1]</strong> был успешно брошен. Квитанция избиратель <code>$_[2]</code>."
+}
+sub name_of_writein_is_empty {
+    'Название приказная в выборе пуст.'
+}
+sub writein_too_similar {
+    'К сожалению, название вписанный слишком похож на существующий выбор'
+}
 
 # # election
 
