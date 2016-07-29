@@ -562,13 +562,16 @@ sub poll_has_been_announced_to_end { #election_end
 }
 
 sub To_view_the_results_at_the_end {
-    'Das Ergebnis wird nach Abstimmungsschluss hier einsehbar sein:</p>';
+    "Das Ergebnis wird nach Abstimmungsschluss hier einsehbar sein:</p> $_[1]"
 }
 
 sub For_more_information {
-'Für weitere Informationen über den Condorcet Internet Voting Service siehe:';
+    'Für weitere Informationen über den Condorcet Internet Voting Service siehe:';
 }
 
+sub poll_email_subject { # title
+    "Abstimmung: $_[1]"
+}
 
 # close
 
