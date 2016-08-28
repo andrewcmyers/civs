@@ -12,7 +12,7 @@ my $home = '@CIVSDATADIR@';
 
 my $file = 'top_polls.html';
 
-if (param('full') eq 'yes') {
+if (defined(param('full')) && param('full') eq 'yes') {
     $file = 'top_polls_full.html';
 }
 
