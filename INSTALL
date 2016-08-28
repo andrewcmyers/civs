@@ -1,9 +1,9 @@
 Condorcet Internet Voting System
-Copyright © 2015, Andrew C. Myers
+Copyright © 2016, Andrew C. Myers
 
 INSTALLATION INSTRUCTIONS
 
-1. Create a configuration file.  You will find it helpful to use 
+1. Create a configuration file.  You will find it helpful to use
    config/sample as a template.  The configuration file specifies
    certain constants that localize the CIVS installation to your system:
    file system paths, URLs, email addresses, server names, etc.
@@ -16,38 +16,44 @@ INSTALLATION INSTRUCTIONS
    Of course, you would replace "my_config_file" with the name of the file
    you created in step 1.
 
-   Check for any errors reported by the install script and try to     
-   correct them.  The most likely warning that the install script     
-   will report is that the $CIVSDATADIR/private_host_id file does     
-   not exist.  The data in this file acts as the server's private     
-   key.  There is no requirement on the format of this file.  It is   
-   suggested that you fill it with some number of randomly-generated  
-   bits, but English text will suffice.                               
+   Check for any errors reported by the install script and try to
+   correct them.  The most likely warning that the install script
+   will report is that the $CIVSDATADIR/private_host_id file does
+   not exist.  The data in this file acts as the server's private
+   key.  There is no requirement on the format of this file.  It is
+   suggested that you fill it with some number of randomly-generated
+   bits, but English text will suffice.
 
-3. Your server must support content negotiation on languages. For       
-   Apache, you should enable the MultiViews option on at least the CIVS 
-   document directory and the CIVS CGI directory. Make sure that the    
-   following modules are enabled: mod_cgi, mod_negotiation, mod_mime.   
-   Also, you will want to Include the httpd-languages.conf file if it   
-   exists.                                                              
+3. Apache is the only explicitly supported web server, though the system
+   may be able to work with other servers. The server must support content
+   negotiation on languages.
 
-4. Test the server installation by browsing to $CIVSURL, creating     
-   an election, adding yourself as a voter, opening the election,     
-   voting in the election, closing the election, and viewing the      
-   results. You may need to obtain some Perl packages, especially     
+   For Apache:
+   * Enable the MultiViews option on at least the CIVS document directory
+     ($HTMLDIR) and the CIVS CGI directory ($CGIBINDIR).
+   * Make sure that the following modules are enabled: mod_cgi,
+     mod_negotiation, mod_mime.
+   * Include the httpd-languages.conf file if it exists, possibly in a
+     subdirectory such as extra/.
+   * Add index.html.var to the DirectoryIndex option.
+
+4. Test the server installation by browsing to $CIVSURL, creating
+   an election, adding yourself as a voter, opening the election,
+   voting in the election, closing the election, and viewing the
+   results. You may need to obtain some Perl packages, especially
    HTML::TagFilter.
 
 Good luck!
 
 ACKNOWLEDGEMENTS
 
-  Several people have worked on CIVS and its design. 
+  Several people have worked on CIVS and its design.
 
     Andrew Myers built the initial version of the system and has maintained it.
     Michael Clarkson designed and implemented the protocols that are used to
     protect voter identity.  He also added the ballot reporting feature and
     cleaned up the code quite a bit.
-    
+
     Nate Nystrom gave good suggestions on the the user interface,  David Gamble
     helpfully critiqued the proportional representation method, and Steve
     Eppley gave useful pointers on MAM and related methods.
@@ -61,8 +67,8 @@ ACKNOWLEDGEMENTS
 
     Contributions and feedback are always welcome!
 
-    Additional language support would be great if there are more      
-    volunteers out there. Some languages frequently used in CIVS      
-    polls but that are not yet supported include Spanish, Russian,    
-    and Norwegian. Adding support for a new language is pretty easy   
-    and does not require programming expertise.                       
+    Additional language support would be great if there are more
+    volunteers out there. Some languages frequently used in CIVS
+    polls but that are not yet supported include Spanish, Russian,
+    and Norwegian. Adding support for a new language is pretty easy
+    and does not require programming expertise.
