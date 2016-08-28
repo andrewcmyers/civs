@@ -33,13 +33,13 @@ TestAndCreateDir $CIVSDATADIR/elections;
 
 rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
-    for f in civs_create.html* index.html* public_elections.html* \
-	proportional.html* sec_priv.html* acks.html changelog.html* \
-        news.html* \
-	rp.html* publicized_polls.html* faq.html* style.css results.js vote.js ajax.js \
-	ezdom.js civs_hdr.js hebrew.css
+    for f in civs_create.html* index.html* public_elections.html*	      \
+        proportional.html* sec_priv.html* acks.html changelog.html* news.html*\
+        *.var rp.html* publicized_polls.html* faq.html* style.css results.js  \
+        vote.js ajax.js ezdom.js civs_hdr.js hebrew.css
     do
 	case "$f" in
+	  *.var)    dest="${HTMLDIR}/${f}";;
 	  *.html.*) dest="${HTMLDIR}/${f}${UTF8_SUFFIX}";;
 	  *.html)   dest="${HTMLDIR}/${f}${EN_SUFFIX}";;
 	  *)        dest="${HTMLDIR}/${f}";;
@@ -65,6 +65,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	     -e 's|@DONATE_URL@|'$DONATE_URL'|' \
+	     -e 's|@UTF8_SUFFIX@|'$UTF8_SUFFIX'|' \
 	< "$f" > "$dest"
     done
 

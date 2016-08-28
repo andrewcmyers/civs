@@ -1,0 +1,17 @@
+URI: civs_create.html
+
+URI: civs_create.html.en
+Content-type: text/html
+Content-language: en
+
+URI: civs_create.html.fr@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: fr
+
+URI: civs_create.html.hu@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: hu
+
+URI: civs_create.html.pt@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: pt

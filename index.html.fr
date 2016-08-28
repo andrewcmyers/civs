@@ -1,37 +1,40 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="fr-FR">
+
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Condorcet Internet Voting Service</title>
-  <base href="@CIVSURL@/">
-  <link rel="canonical" href="@CIVSURL@">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
-  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
-  <style type="text/css">
-	<!--
-		@page { margin: 2cm }
-		P { margin-bottom: 0.21cm }
-	--></style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Condorcet Internet Voting Service</title>
+<base href="@CIVSURL@/">
+<link rel="canonical" href="@CIVSURL@">
+<link rel="stylesheet" type="text/css" href="style.css">
+<link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>
 </head>
+
 <body>
-<table class="banner" border="0" cellpadding="7" cellspacing="0"
- width="100%">
-  <tbody>
-    <tr>
-      <td nowrap="nowrap" valign="top" width="100%">
-      <h1>Service de Vote Internet Condorcet (CIVS)<br>
-      </h1>
-      </td>
-    </tr>
-  </tbody>
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td>
+      <img width="113" src="@CIVSURL@/images/check-civs.png" style="border: none"/>
+    </td>
+    <td width="100%" valign="top" nowrap>
+      <h1>Service de Vote Internet Condorcet (CIVS)</h1>
+    </td>
+  </tr>
+</tbody>
 </table>
-<table class="form">
-  <tbody>
-    <tr>
-      <td rowspan="2">
-      <div class="home">
-      <p>CIVS est un service gratuit permettant d'organiser facilement
+
+<div class="contents">
+
+<table id="main" class="form">
+<tr>
+<td rowspan="1" valign="top">
+<div class="home">
+<p>
+CIVS est un service gratuit permettant d'organiser facilement
 des consultations électorales et des sondages d'opinion en utilisant
 Internet. Chaque participant à la consultation ou au sondage peut
 classer une série de propositions. La
@@ -39,33 +42,31 @@ combinaison de ces choix permet de construire un classement global qui
 synthétise l'opinion des participants. CIVS a été utilisé pour un grand
 nombre de consultations électorales et sondages d'opinion permettant de
 choisir : </p>
-      <table id="civs_uses" class="form">
-        <tbody>
-          <tr>
-            <td>
-            <ul>
-              <li>Des responsables d'organisation</li>
-              <li>Des horaires de réunion<br>
-              </li>
-              <li>Des membres de comités<br>
-              </li>
-              <li>Des nom de projets, logos, nom de domaines</li>
-              <li>Des lauréats de diplômes</li>
-            </ul>
-            </td>
-            <td>
-            <ul>
-              <li>Des restaurants</li>
-              <li>Des films</li>
-              <li>Le menu des fêtes</li>
-              <li>Des sélections de club littéraire</li>
-              <li>Des musiques favorites</li>
-            </ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p><strong>Comment cela fonctionne :</strong> N'importe qui peut
+
+<table id="civs_uses" class="form">
+<tr><td>
+<ul>
+<li>Des responsables d'organisation</li>
+<li>Des horaires de réunion</li>
+<li>Des membres de comités</li>
+<li>Des nom de projets, logos, nom de domaines</li>
+<li>Des lauréats de diplômes</li>
+</ul>
+</td>
+<td>
+<ul>
+<li>Des restaurants</li>
+<li>Des films</li>
+<li>Le menu des fêtes</li>
+<li>Des sélections de club littéraire</li>
+<li>Des musiques favorites</li>
+</ul>
+</td>
+</tr>
+</table>
+
+<p><strong>Comment cela fonctionne :</strong>
+</p>N'importe qui peut
 créer une consultation, mais seulement les participants autorisés en
 seront informés. Les participants et le
 responsable de la consultation doivent posséder une adresse
@@ -75,12 +76,12 @@ création de la consultation, les participants reçoivent un courrier
 vote.
 Pour les consultations publiques il est possible de ne pas imposer la
 possession d'une adresse email, dans ce cas un seul vote est accepté
-par adresse Internet (IP) </p>
-      <p> <strong>Vote par préférence : </strong>Les participants à
-la consultation classent par ordre de préférence les candidats ou les
+par adresse Internet (IP) 
+<p>
+<strong>Vote par préférence : </strong>
+Les participants à la consultation classent par ordre de préférence les candidats ou les
 propositions qui leur sont soumis. Les participants ne sont pas
-limités
-à un seul choix. Comparée à d'autres méthode de consultation
+limités à un seul choix. Comparée à d'autres méthode de consultation
 électorale,
 cette méthode permet de prendre en compte plus d'informations provenant
 des participants. Cette méthode de vote aide à éviter les ex-æquo
@@ -104,76 +105,47 @@ Civitas utilise des protocoles cryptographiques beaucoup plus
 sophistiqués que ceux de CIVS. Ces protocoles permettent de garantir un
 anonymat fort, une vérification universelle et une résistance à la
 contrainte. </p>
-      </div>
-      </td>
-      <td valign="top">
-      <div class="bubble">
-      <table class="links">
-        <tbody>
-          <tr>
-            <td valign="top">
-            <ul>
-              <li><a href="civs_create.html">Créer une consultation</a></li>
-              <li><a href="faq.html">FAQ</a></li>
-              <li><a
- href="https://lists.cs.cornell.edu/mailman/listinfo/civs-users-l">S'abonner
-à la liste de distribution de CIVS</a></li>
-              <li><a href="sec_priv.html">Sécurité et Confidentialité<br>
-                </a></li>
-              <li><a href="rp.html">Paradoxe de Condorcet</a></li>
-              <li><a href="proportional.html">Représentation proportionnelle</a></li>
-              <li><a href="changelog.html">Logiciel CIVS</a></li>
-              <li><a href="acks.html">Remerciements</a></li>
-            </ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-      <div class="bubble">
-      <table class="links">
-        <tbody>
-          <tr>
-            <td>Essayer une consultation publique :
-            <ul>
-              <li> <a
- href="http://www.cs.cornell.edu/w8/%7Eandru/cgi-perl/civs/vote.pl?id=E_43351ceed0adc47f&amp;akey=dccf21c83061ac60">Recommander
-un bon livre</a> </li>
-              <li><a
- href="http://www.cs.cornell.edu/w8/%7Eandru/cgi-perl/civs/vote.pl?id=E_540fe382529392ba&amp;akey=6cd77c06c48d8cd6">Langage
-de programmation préféré</a> </li>
-              <li><a
- href="http://www.cs.cornell.edu/w8/%7Eandru/cgi-perl/civs/vote.pl?id=E_4e62bfdb14d5f61e&amp;akey=3f460c25aaa1f858">Films
-préférés</a></li>
-              <li><a href="@SUGGESTION_BOX@">Suggérer de nouvelles
-fonctionnalités pour CIVS<br>
-                </a></li>
-              <li><a
- href="http://www.cs.cornell.edu/w8/%7Eandru/cgi-perl/civs/vote.pl?id=E_ddfd7ba8d78043e1&amp;akey=55426123feb7e40b">Vacances
-en Europe</a></li>
-              <li><a href="public_elections.html">(autres)</a> </li>
-            </ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
-      </td>
-    </tr>
-  </tbody>
+</div>
+</td>
+<td id="navbubbles">
+<div class="bubble" id="topmenu">
+    <ul>
+	<li><a href="civs_create.html">Créer une consultation</a></li>
+	<li><a href="faq.html">FAQ</a></li>
+	<li><a href="mailto:civs-users-l-request@cornell.edu?Body=Set%20the%20subject%20to%20%22join%22%20and%20erase%20these%20instructions%20%28leave%20body%20blank%29">
+	    S'abonner à la liste de distribution de CIVS</a></li>
+	<li><a href="sec_priv.html">Sécurité et Confidentialité</a></li>
+	<li><a href="rp.html">Paradoxe de Condorcet</a></li>
+	<li><a href="proportional.html">Représentation proportionnelle</a></li>
+	<li><a href="changelog.html">Logiciel CIVS</a></li>
+	<li><a href="acks.html">Remerciements</a></li>
+	<li><a href="@SUGGESTION_BOX@">boîte à suggestion</a>
+    </ul>
+</div>
+<div class="bubble">
+<h3>&nbsp;CIVS news</h3>
+<div id="newsfeed">
+No current news.
+</div>
+</div>
+<div class="bubble">
+<h3>Top public polls: <a class="small" href="publicized_polls.html">[see more]</a></h3>
+<div id="top_polls" class="small_list">
+Loading...
+</div>
+</div>
+</td>
+</tr>
 </table>
-<hr>
-<div style="margin: 2ex;">
-<p>Le Service de Vote Internet Condorcet (CIVS) est administré depuis
-2005 par <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> au
-<a href="http://www.cs.cornell.edu/">Cornell Computer Science
-Department</a>. Vos suggestions sont bienvenues.
+
+<div id="footnote" style="margin: 2ex">
+<p>
+The Condorcet Internet Voting Service has been run since 2003 by <a
+href="http://www.cs.cornell.edu/andru">Andrew Myers</a> at
+the <a href="http://www.cs.cornell.edu/">Cornell Computer Science
+Department</a>. This is CIVS version 2.17. Feedback, help, and
+<a href="@DONATE_URL@">donations to support this free service</a> are welcome.
 </p>
-<p><small>
 <b>Précisions utiles :</b> Ce service de consultation électorale et de
 sondage d'opinion est
 disponible gratuitement pour un usage public. L'auteur, le fournisseur
@@ -184,5 +156,12 @@ exacts. En aucun cas l'auteur, le fournisseur de service et
 l'Université de Cornell ne pourront être considérés comme responsable
 pour quelque dommage qu'il soit en relation avec l'usage de ce service.</small></p>
 </div>
+</div>
+<script type="text/javascript">
+    fetch_content('newsfeed', '@CIVSURL@/news.html',
+	function() {
+	    fetch_content('top_polls', '@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@');
+	});
+</script>
 </body>
 </html>
