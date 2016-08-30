@@ -29,7 +29,7 @@ BEGIN {
     $use_combined_ratings $choices @choices $num_choices $num_auth $num_votes
     $recorded_voters $ballot_reporting $reveal_voters $authorization_key
     %used_voter_keys $restrict_results $result_addrs $hash_result_key $no_opinion
-    $last_vote_time $election_begin
+    $close_time $last_vote_time $election_begin
     %voter_keys %edata %vdata);
 }
 
@@ -53,7 +53,8 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $choices, @choices, $num_choices, $num_auth,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
      $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
-     $restrict_results, $result_addrs, $hash_result_key, $last_vote_time);
+     $restrict_results, $result_addrs, $hash_result_key, $last_vote_time,
+     $close_time);
 
 our $civs_supervisor = '@SUPERVISOR@';
 
@@ -111,6 +112,7 @@ sub init {
     $shuffle = $edata{'shuffle'};
     $no_opinion = $edata{'no_opinion'} or $no_opinion = 'yes';
     $num_votes = $vdata{'num_votes'} or $num_votes = 0;
+    $close_time = $vdata{'close_time'};
     $recorded_voters = $vdata{'recorded_voters'};
     $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';
     $external_ballots = $edata{'external_ballots'} or $external_ballots = 'no';
@@ -186,7 +188,6 @@ sub OpenDatabase {
         or die "Unable to tie poll db=$election_data: $!\n";
     tie %vdata, "DB_File", $vote_data, &O_CREAT|&O_RDWR, 0666, $DB_HASH
 	or die "Unable to tie voter db=$vote_data: $!\n";
-    
 
     $db_is_open = 1;
 }

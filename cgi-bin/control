@@ -131,11 +131,14 @@ if (!IsStarted) {
 	$results_link =
 	    $tx->Poll_results_are_available("$civs_bin_path/results@PERLEXT@?id=$election_id");
     }
-    print p($tx->The_poll_has_ended, $results_link);
+    print p($tx->The_poll_has_ended, $results_link), $cr;
+    if (defined($close_time)) {
+        print $tx->Actual_time_poll_closed($close_time), br(), $cr;
+    }
 }
 
 my $num_auth_string;
-if (IsStarted or $num_auth) {
+if (IsStarted or defined($num_auth) && $num_auth) {
     $num_auth_string = "$num_auth"
 } else {
     my $waiting = $#addresses + 1;

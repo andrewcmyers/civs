@@ -202,7 +202,7 @@ sub ComputeResults {
     print RESULTS span($tx->Supervisor($name, &Email($email_addr))), br;
     print RESULTS span($tx->Announced_end_of_poll($election_end)), br, $cr;
     if (IsStopped) {
-	my $close_time = $vdata_copy{'close_time'};
+	# my $close_time = $vdata_copy{'close_time'};
 	print RESULTS $tx->Actual_time_poll_closed($close_time), br, $cr;
     } else {
 	print RESULTS $tx->Poll_not_ended, br, $cr;
