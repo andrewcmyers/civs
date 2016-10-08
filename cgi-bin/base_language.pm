@@ -213,7 +213,7 @@ sub poll_ends { # end
     "Poll ends $_[1]."
 }
 sub email_load {
-    "Email load: $_[1]"
+    "Email load: ".sprintf("%4.1g", $_[1])
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
     'Poll results available to all voters when poll completes.'

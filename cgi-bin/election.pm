@@ -121,7 +121,7 @@ sub init {
     $result_addrs = $edata{'result_addrs'};
     $hash_result_key = 0;
     $last_vote_time = $vdata{'last_vote_time'};
-    $email_load = $edata{'email_load'} # timestamp num_mails
+    $email_load = $edata{'email_load'}; # timestamp num_mails
     if ($restrict_results eq 'yes') {
 	$hash_result_key = $edata{'hash_result_key'};
     }
@@ -530,7 +530,7 @@ sub SetEmailLoad {
     $edata{'email_load'} = $email_load;
 }
 
-my $mail_period = 1; // days over which mail is counted
+my $mail_period = 1; # days over which mail is counted
 
 # get the email load for this election.
 # requires: $_[0] is current time.
@@ -540,8 +540,8 @@ sub GetEmailLoad {
     my $day = 86400;
     if (defined($email_load)) {
         my @load_fields = split / /, $email_load, 2;
-        my $kt = ($load[0] - $now) / $mail_period / $day;
-        my $load = $load[1];
+        my $kt = ($load_fields[0] - $now) / $mail_period / $day;
+        $load = $load_fields[1];
 	if ($kt > -30.0) { $load *= exp($kt); } else { $load = 0; }
     }
     return $load;

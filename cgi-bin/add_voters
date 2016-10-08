@@ -18,9 +18,9 @@ my $thisurl = $civs_bin_path."/add_voters@PERLEXT@";
 my $new_addresses = param('new_addresses');
 my $new_addresses_file = upload('new_addresses_file');
 if (defined($new_addresses_file)) {
-	while (<$new_addresses_file>) {
+    while (<$new_addresses_file>) {
     	$new_addresses .= $_;
-	}
+    }
 }
 my @new_addresses = split /[\r\n]+/, $new_addresses;
 
