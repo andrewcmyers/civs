@@ -213,7 +213,7 @@ sub poll_ends { # end
     "Poll ends $_[1]."
 }
 sub email_load {
-    "Email load: ".sprintf("%4.1g", $_[1])
+    "Email load: ".sprintf("%4.2f", $_[1])
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
     'Poll results available to all voters when poll completes.'
@@ -332,7 +332,7 @@ sub Too_many_voters_added {
     'Sorry, you can only add @MAX_VOTER_ADD@ voters at a time.'
 }
 sub Too_much_email {
-    'Sorry, CIVS has to place limits on how much email is generated. Please add more voters later.'
+    'Sorry, CIVS places limits on how much email is generated. Please add more voters later.'
 }
 
 sub Total_of_x_voters_authorized { # x
