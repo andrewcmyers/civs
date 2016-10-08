@@ -170,6 +170,7 @@ if ($restrict_results eq 'yes') {
 }
 print $tx->actual_votes_so_far($num_votes), br(), $cr;
 print $tx->poll_ends($election_end), br(), $cr;
+print $tx->email_load(GetEmailLoad(time())), br(), $cr;
 
 if ($writeins eq 'yes') {
     print $tx->Writeins_allowed, br(), $cr;

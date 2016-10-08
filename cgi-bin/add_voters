@@ -42,6 +42,10 @@ if ($#new_addresses >= @MAX_VOTER_ADD@) {
     print h1($tx->Error), p($tx->Too_many_voters_added);
     exit 0;
 }
+if (GetEmailLoad(time()) >= @MAX_EMAIL_LOAD@) {
+    print h1($tx->Error), p($tx->Too_much_email);
+    exit 0;
+}
 
 print "<pre>\n";
 GetPrivateHostID;

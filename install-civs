@@ -62,6 +62,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@USING_ISA@|'$USING_ISA'|' \
 	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
 	     -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
+	     -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
 	     -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	     -e 's|@DONATE_URL@|'$DONATE_URL'|' \
@@ -106,6 +107,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@USING_ISA@|'$USING_ISA'|' \
 	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
 	     -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
+	     -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
 	     -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	     -e 's|@DONATE_URL@|'$DONATE_URL'|' \

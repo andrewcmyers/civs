@@ -20,7 +20,7 @@ BEGIN {
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
-    &IsWriteinName
+    &IsWriteinName &GetEmailLoad
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
@@ -29,7 +29,7 @@ BEGIN {
     $use_combined_ratings $choices @choices $num_choices $num_auth $num_votes
     $recorded_voters $ballot_reporting $reveal_voters $authorization_key
     %used_voter_keys $restrict_results $result_addrs $hash_result_key $no_opinion
-    $close_time $last_vote_time $election_begin
+    $close_time $last_vote_time $election_begin $email_load
     %voter_keys %edata %vdata);
 }
 
@@ -54,7 +54,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
      $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
      $restrict_results, $result_addrs, $hash_result_key, $last_vote_time,
-     $close_time);
+     $close_time, $email_load);
 
 our $civs_supervisor = '@SUPERVISOR@';
 
@@ -121,6 +121,7 @@ sub init {
     $result_addrs = $edata{'result_addrs'};
     $hash_result_key = 0;
     $last_vote_time = $vdata{'last_vote_time'};
+    $email_load = $edata{'email_load'} # timestamp num_mails
     if ($restrict_results eq 'yes') {
 	$hash_result_key = $edata{'hash_result_key'};
     }
@@ -522,6 +523,29 @@ sub SendBody {
     Send "--$boundary--";
 }
 
+# Record the email load for this election
+sub SetEmailLoad {
+    (my $now, my $load) = @_;
+    $email_load = "$now $load";
+    $edata{'email_load'} = $email_load;
+}
+
+my $mail_period = 1; // days over which mail is counted
+
+# get the email load for this election.
+# requires: $_[0] is current time.
+sub GetEmailLoad {
+    (my $now) = @_;
+    my $load = 0;
+    my $day = 86400;
+    if (defined($email_load)) {
+        my @load_fields = split / /, $email_load, 2;
+        my $kt = ($load[0] - $now) / $mail_period / $day;
+        my $load = $load[1];
+	if ($kt > -30.0) { $load *= exp($kt); } else { $load = 0; }
+    }
+    return $load;
+}
 
 # Construct new voter keys for all of the voters sent in @_.
 # Send all of the voters their keys, with logging to STDOUT.
@@ -531,6 +555,8 @@ sub SendKeys {
     my $authorization_key = shift;
     my $addresses_ref = shift;
     my @addresses =  &unique_elements( @{$addresses_ref} );
+    my $now = time();
+    my $load = GetEmailLoad($now);
     if (!($local_debug)) { ConnectMail; }
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
@@ -539,6 +565,7 @@ sub SendKeys {
 	    print $tx->Invalid_email_address($v), $cr;
 	    next;
 	}
+        $load++;
 
         my $url = "";
         if ($public eq 'yes') {
@@ -629,6 +656,7 @@ sub SendKeys {
             Send '.'; ConsumeSMTP;
         }
     }
+    SetEmailLoad($now, $load);
     if (!($local_debug)) {
         CloseMail;
     }

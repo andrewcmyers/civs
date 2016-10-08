@@ -201,33 +201,36 @@ sub poll_supervisor { # name, email
     "Poll supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>"
 }
 sub no_authorized_yet { #waiting
-    "0 ($_[1] voters will be authorized when the poll is started)";
+    "0 ($_[1] voters will be authorized when the poll is started)"
 }
 sub total_authorized_voters { # num_auth_string
-    "Total authorized voters: $_[1]";
+    "Total authorized voters: $_[1]"
 }
 sub actual_votes_so_far { # num
-    "Actual votes cast thus far: $_[1]";
+    "Actual votes cast thus far: $_[1]"
 }
 sub poll_ends { # end
-    "Poll ends $_[1].";
+    "Poll ends $_[1]."
+}
+sub email_load {
+    "Email load: $_[1]"
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
-    'Poll results available to all voters when poll completes.';
+    'Poll results available to all voters when poll completes.'
 }
 sub Voters_can_choose_No_opinion {
     'Voters can choose &ldquo;No opinion&rdquo;.';
 }
 sub Voting_is_disabled_during_writeins {
-    'Voting is disabled during the write-in period.';
+    'Voting is disabled during the write-in period.'
 }
 sub Poll_results_will_be_available_to_the_following_users {
-    'Poll results will be available only to the following users:';
+    'Poll results will be available only to the following users:'
 }
 sub Poll_results_are_now_available_to_the_following_users {
     'Poll results are now available only to the following users,
 	    who were earlier sent an email containing a URL for
-	     viewing results:';
+	     viewing results:'
 }
 sub results_available_to_the_following_users {
     'The results of this poll have been released only to a limited set of users:';
@@ -323,7 +326,13 @@ sub Adding_voters {
 }
 
 sub Sorry_voters_can_only_be_added_to_poll_in_progress {
-    'Sorry, voters can only be added to an poll in progress.';
+    'Sorry, voters can only be added to an poll in progress.'
+}
+sub Too_many_voters_added {
+    'Sorry, you can only add @MAX_VOTER_ADD@ voters at a time.'
+}
+sub Too_much_email {
+    'Sorry, CIVS has to place limits on how much email is generated. Please add more voters later.'
 }
 
 sub Total_of_x_voters_authorized { # x
