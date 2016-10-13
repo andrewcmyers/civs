@@ -213,7 +213,11 @@ sub poll_ends { # end
     "Poll ends $_[1]."
 }
 sub email_load {
-    "Email load: ".sprintf("%4.2f", $_[1])
+    my $msg = "Email load: ".sprintf("%4.2f", $_[1]);
+    if ($_[1] > @MAX_EMAIL_LOAD@) {
+        $msg .= "(Must be less than @MAX_EMAIL_LOAD@ to send email)";
+    }
+    return $msg;
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
     'Poll results available to all voters when poll completes.'
