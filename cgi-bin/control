@@ -24,8 +24,10 @@ my $authorization_key = param('akey');
 CIVS_Header($tx->Poll_control);
 
 CheckElectionID;
-CheckControlKey($control_key);
-CheckAuthorizationKeyForAddingVoter($authorization_key);
+if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
+    CheckControlKey($control_key);
+    CheckAuthorizationKeyForAddingVoter($authorization_key);
+}
 
 print h1("$title");
   
