@@ -121,6 +121,7 @@ SetBinaryParameter('shuffle', 'yes');
 SetBinaryParameter('proportional', 'no');
 SetBinaryParameter('external_ballots', 'no');
 my $publicize = SetBinaryParameter('publicize', 'no');
+if ($public eq 'no') $publicize = 'no';
 
 $edata{'choices'} = $choices;
 
