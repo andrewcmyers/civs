@@ -84,17 +84,17 @@ sub GenerateVoteForm {
     }
     print '</table></td>', $cr;
     if ($js_ui && !$lean && $voting_enabled) {
-	print '<td rowspan="2" width="0" valign="top" align="center">
-	    <input type="button" id="move_top" disabled="disabled" value="'.$tx->to_top.'"
-	    onclick="do_move_top()" /><br />
-	    <input type="button" id="move_up" disabled="disabled" value="'.$tx->move_up.'"
-	    onclick="do_move_up()" /><br />
-	    <input type="button" id="make_tie" disabled="disabled" value="'.$tx->make_tie.'"
-	    onclick="do_make_tie()" /><br />
-	    <input type="button" id="move_down" disabled="disabled" value="'.$tx->move_down.'"
-	    onclick="do_move_down()" /><br />
-	    <input type="button" id="move_bottom" disabled="disabled" value="'.$tx->to_bottom.'"
-	    onclick="do_move_bottom()" />
+	print '<td rowspan="2" width="0" valign="top" align="left">
+	    <input type="button" class="move_but" id="move_top" disabled="disabled" value="'.$tx->to_top.'"
+                onclick="do_move_top()" /><br />
+	    <input type="button" class="move_but" id="move_up" disabled="disabled" value="'.$tx->move_up.'"
+                onclick="do_move_up()" /><br />
+	    <input type="button" class="move_but" id="make_tie" disabled="disabled" value="'.$tx->make_tie.'"
+                onclick="do_make_tie()" /><br />
+	    <input type="button" class="move_but" id="move_down" disabled="disabled" value="'.$tx->move_down.'"
+                onclick="do_move_down()" /><br />
+	    <input type="button" class="move_but" id="move_bottom" disabled="disabled" value="'.$tx->to_bottom.'"
+                onclick="do_move_bottom()" />
 	    <table class="form"><tr><td>
 	    <p id="jsnohelp">',
 	    $tx->buttons_are_deactivated,
