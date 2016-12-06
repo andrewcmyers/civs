@@ -110,7 +110,7 @@ sub GenerateVoteForm {
 
 
     if ($voting_enabled) {
-	print '<tr><td><input id="vote" type="submit" value="'.$tx->submit_ranking.'" name="Vote" /></td></tr>', $cr;
+	print '<tr><td style="height: 100%"><input id="vote" type="submit" value="'.$tx->submit_ranking.'" name="Vote" /></td></tr>', $cr;
     }
 
     print '</table>', $cr;
