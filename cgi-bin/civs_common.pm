@@ -176,34 +176,30 @@ sub CIVS_Header {
     if ($civs_header_printed) { return; }
     my $suggestion_box = '@SUGGESTION_BOX@';
 print 
- '<table border="0" width="100%" cellspacing="0" cellpadding="7" class="banner">';
+ '<div class="banner">';
 if ($local_debug) {
-	print '<tr><td width="100%" align=center bgcolor=yellow colspan=2>',
-	      'LOCAL DEBUG MODE</td></tr>';
+	print '<div style="text-align: center; background-color: yellow; width: 100%">',
+	      'LOCAL DEBUG MODE</div>';
 }	
 print $cr,
- '<tr>
-    <td>
+ '<div class=bannerpart id=bannericon>
       <img src="@CIVSURL@/images/check-civs.png" style="border: none"/>
-    </td>
-    <td width="100%" valign="top" nowrap="nowrap">
+  </div>
+  <div class=bannerpart>
     <h1>&nbsp;', $tx->Condorcet_Internet_Voting_Service, '</h1>
-    </td>
-    <td width="0%" nowrap="nowrap" valign="top" align="right">',
+  </div>
+  <div class=bannerpart id=bannermenu>',
 	a({-href => $civs_home}, $tx->about_civs), BR,
 	a({-href => "$civs_url/publicized_polls.html"}, $tx->public_polls), BR,
 	a({-href => "$civs_url/civs_create.html"}, $tx->create_new_poll), BR,
 	a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
 	a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
 	a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
-    '</td>
-  </tr>
-  <tr>
-    <td width="100%" valign="top" nowrap="nowrap" colspan="2">
+    '</div><br>
+  <div class=bannerpart>
     <h2 align="center">', $_[0], '</h2>
-    </td>
-  </tr>
-</table>
+  </div>
+</div>
 
 <div class="contents">
 ';
