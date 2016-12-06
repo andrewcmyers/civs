@@ -117,9 +117,6 @@ input#vote:hover, input[type="submit"]:hover {background-color: #ff4}
 input[type="button"], button {
     border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
 }
-#move_top, #move_up, #make_tie, #move_down {
-    margin-bottom: 0.5ex
-}
 input[type="button"], button, input[type="text"] {
     border: solid 1px #bbb }
 input[type="submit"] {
@@ -283,7 +280,10 @@ table.ballots th {background-color: transparent; color: black; font-size: 70%}
 
 li b, td > b, strong { color: #a52 }
 
-#move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }
+#move_top, #move_up, #make_tie, #move_down, #move_bottom {
+    font-size: 90%;
+    margin-bottom: 0.5ex;
+}
 
 textarea.paste { font-family: Courier, fixed; font-size: 80% }
 
