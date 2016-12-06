@@ -81,19 +81,25 @@ h1, h2, h3, span.paragraph {
     background-color: #0d61a5
 }
 
-table.banner a:link { color: white }
-table.banner a:visited { color: white }
-table.banner a:hover { color: yellow }
-table.banner a.here, table.banner a.here:link, table.banner a.here:visited {
+.banner a:link { color: white }
+.banner a:visited { color: white }
+.banner a:hover { color: yellow }
+.banner a.here, .banner a.here:link, .banner a.here:visited {
     color: #bdf
 }
 
-table.banner { background-color: #0D61A5;
-                /* background-image: url('sample-ballot.png'); */
-	       background-position: center left;
-	       background-repeat: repeat-x}
-table.banner h1 { color: white }
-table.banner h2 { color: white }
+#bannermenu {float: right; padding: 1ex}
+#bannericon {float: left}
+
+.banner { background-color: #0D61A5;
+            overflow: hidden;
+                /* background-image: url('sample-ballot.png');
+             background-position: center left;
+             background-repeat: repeat-x */}
+.banner h1 { color: white }
+.banner h2 { color: white }
+
+.bannerpart { background-color: transparent; display: inline-block; padding: 0.7ex }
 
 /* used for mathematics */
 .math        { color: black; font-family: Times New Roman, serif;
@@ -241,7 +247,6 @@ table.links tr td {
 tr.selected { background-color: #ffffd0 }
 
 /* table.banner h1 {text-shadow: white 2px 2px 4px } */
-table.banner td {white-space: nowrap}
 p.suboption, div.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
 div.parent_wrapper {display: inline}
 div.list {padding: 1px 0px 1px 2ex}
@@ -256,9 +261,9 @@ div.description { border: solid 1px #bbb;
 		    -webkit-border-radius: 8px;
 		  background-color: #f0f0f0; color: #222; padding: 5px;
 		  font-family: Verdana, Arial, helvetica, sans-serif; }
-#jshelp p {text-align: left; width: 36ex}
-#jshelp ol {text-align: left; width: 36ex}
-p#jsnohelp {text-align: left; width: 36ex}
+#jshelp p {text-align: left }
+#jshelp ol {text-align: left }
+p#jsnohelp {text-align: left }
 
 div#details { border: solid 1px #ccb; background-color: #eee;
               color: black; padding: 5px; margin: 5px;
