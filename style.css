@@ -10,11 +10,12 @@ div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
 div.home { text-align: left;
-           padding: 1em 1em 0 1em;
+           padding: 1ex 1ex 0 1ex;
            border-right: 1px solid #bbb;
            border-left: 1px solid #bbb;
-           margin: 0 auto;
+           margin: 0 auto 0 5%;
            max-width: 80ex}
+
 div#footnote {
     border-top: 1px solid #bbb;
     text-align: justify;
@@ -48,7 +49,8 @@ th              { font-family: Verdana, Arial, helvetica, sans-serif;
 
 table { background-color: #e8e8f0 }
 table.matrix { background-color: #e0e0f0 }
-table.form { background-color: transparent; text-align: left }
+table.form   { background-color: transparent; text-align: left }
+table.form td { font-size: 100% }
 table#main { margin: 0 auto }
 table#ballot { margin: 0 auto }
 table#ballot td { vertical-align: top; }
@@ -145,7 +147,8 @@ input#download {
     color: white;
     border-style: solid;
     border-color: black;
-    font-weight: bold
+    font-weight: bold;
+    font-size: 110%;
 }
 input#download:hover {
     background-color: #88f
