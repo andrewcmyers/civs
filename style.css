@@ -9,11 +9,11 @@ body { margin: 0;
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
-div.home { text-align: justify;
+div.home { text-align: left;
            padding: 1em 1em 0 1em;
            border-right: 1px solid #bbb;
            border-left: 1px solid #bbb;
-           margin-right: 1em;
+           margin: 0 auto;
            max-width: 80ex}
 div#footnote {
     border-top: 1px solid #bbb;
@@ -106,7 +106,7 @@ h1, h2, h3, span.paragraph {
 	       background-color: transparent }
 .symbol      { font-family: Symbol, symbol }
 
-h1  { font-size: 240%; text-align: center}
+h1  { font-size: 5vw; text-align: center}
 h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
@@ -186,10 +186,6 @@ table.matrix, table.rankings { border: solid 1px #aac }
 table.rankings tr td { text-indent: -3ex; padding-left: 3ex }
 table.rankings tr td ol { text-indent: 0ex }
 
-td#navbubbles {
-    width: 35ex;
-    vertical-align: top;
-}
 div#topmenu {
     position: relative;
     background: #00355f;
@@ -205,10 +201,15 @@ div#topmenu a {
 div#topmenu li {
     padding: 0.2ex 0
 }
+div.bubbles {
+    width: 33ex;
+    vertical-align: top;
+    float: right
+}
 div.bubble {
     /* background-image: url('vertstrip.png'); */
     background-color: #fff0e8;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
     padding: 3px 6px 3px 5px;
     border-color: #bbc;
     border-style: solid;
@@ -217,6 +218,7 @@ div.bubble {
     -moz-box-shadow: 3px 3px 5px #aaa;
     -webkit-box-shadow: 3px 3px 5px #aaa;
     box-shadow: 3px 3px 5px #aaa;
+    margin-left: 1em;
 }
 div.bubble table { padding: 0; margin: 4px; background-color: transparent }
 div.bubble ul { width: 100%; padding: 0ex; margin: 1px 7px 1px 3px; background-color: transparent }
@@ -279,7 +281,8 @@ dd { font-size: 90%; margin-left: 3em }
 table#completion_meter { border-style: solid; border-width: 1px; border-color: black; width: 250px; padding: 0; margin: 0}
 td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
 td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
-table#civs_uses {font-size: 90%}
+#civs_uses ul {font-size: 90%; color: green}
+#civs_uses > div { display: inline-block; text-align: left }
 table.ballots {font-size: 80%; border: solid 1px #aac}
 table.ballots th {background-color: transparent; color: black; font-size: 70%}
 
