@@ -1,7 +1,7 @@
 // requires ezdom.js
 function create_header(title) {
     return div({className: "banner"},
-                div({className: "bannerpart"}, img({width: 113, src: "@CIVSURL@/images/check-civs.png",
+                div({className: "bannerpart", id: "bannericon"}, img({width: 113, src: "@CIVSURL@/images/check-civs.png",
                        style: "border: none"})),
                 div({className: "bannerpart"}, h1("Condorcet Internet Voting Service")),
 		div({className: "bannerpart", id: "bannermenu"},
