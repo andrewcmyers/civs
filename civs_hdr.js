@@ -11,5 +11,5 @@ function create_header(title) {
                     a({href: "@CIVSURL@/sec_priv.html"}, "Security and privacy"), br(),
                     a({href: "@CIVSURL@/faq.html"}, "FAQ"), br()
 		), br(),
-                div(h2({align: "center"}, title)))
+                div(h2({textAlign: "center"}, title)))
 }
