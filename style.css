@@ -108,7 +108,7 @@ h1, h2, h3, span.paragraph {
 	       background-color: transparent }
 .symbol      { font-family: Symbol, symbol }
 
-h1  { font-size: 5vw; text-align: center}
+h1  { font-size: 5vmin; text-align: center; max-width: 120ex}
 h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
