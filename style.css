@@ -99,7 +99,7 @@ h1, h2, h3, span.paragraph {
              background-position: center left;
              background-repeat: repeat-x */}
 .banner h1 { color: white }
-.banner h2 { color: white }
+.banner h2 { color: white; text-align: center }
 
 .bannerpart { background-color: transparent; display: inline-block; padding: 0.7ex }
 
