@@ -99,6 +99,7 @@ h1, h2, h3, span.paragraph {
              background-position: center left;
              background-repeat: repeat-x */}
 .banner h1 { color: white }
+/* .banner h1 {text-shadow: white 2px 2px 4px } */
 .banner h2 { color: white; text-align: center }
 
 .bannerpart { background-color: transparent; display: inline-block; padding: 0.7ex }
@@ -248,7 +249,6 @@ table.links tr td {
 
 tr.selected { background-color: #ffffd0 }
 
-/* table.banner h1 {text-shadow: white 2px 2px 4px } */
 p.suboption, div.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
 div.parent_wrapper {display: inline}
 div.list {padding: 1px 0px 1px 2ex}
