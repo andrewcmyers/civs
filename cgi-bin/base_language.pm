@@ -215,7 +215,7 @@ sub poll_ends { # end
 sub email_load {
     my $msg = "Email load: ".sprintf("%4.2f", $_[1]);
     if ($_[1] > @MAX_EMAIL_LOAD@) {
-        $msg .= "(Must be less than @MAX_EMAIL_LOAD@ to send email)";
+        $msg .= " (Must be less than @MAX_EMAIL_LOAD@ to send email)";
     }
     return $msg;
 }
