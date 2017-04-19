@@ -1,13 +1,13 @@
 body, table, p, ul, li, td  {
-    font-family: Verdana, helvetica, Arial, sans-serif;
+    font-family: Verdana, Helvetica, Arial, sans-serif;
     font-size: 100%;
     color: #222;
 }
 body { margin: 0;
        background-color: #ffffff }
 
-div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
-div.normal_text { max-width: 80ex; margin: 0 auto }
+div.contents { min-width: 30em; margin:0 10em; text-align: left }
+div.normal_text {  }
 
 div.home { text-align: left;
            padding: 1ex 1ex 0 1ex;
@@ -29,7 +29,7 @@ a:hover      { color: #49a; background-color: transparent }
 a.small      { font-size: 80% }
 a.result_link { background-color: #00355f; color: white; padding: 5px 8px}
 
-th              { font-family: Verdana, helvetica, Arial, sans-serif;
+th              { font-family: Verdana, Helvetica, Arial, sans-serif;
                   color: white;
 		  background-color: #00355f;
 		  border-color: #00355f;
@@ -73,7 +73,7 @@ div.poll_end {display: inline}
 p, ul, li {background-color: transparent}
 
 h1, h2, h3, span.paragraph {
-    font-family: Optima, Trebuchet MS, Verdana, helvetica, Arial, sans-serif;
+    font-family: Optima, 'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;
     color: #a52;
     background-color: transparent;
     font-weight: bold
@@ -105,7 +105,7 @@ h1, h2, h3, span.paragraph {
 .bannerpart { background-color: transparent; display: inline-block; padding: 0.7ex }
 
 /* used for mathematics */
-.math        { color: black; font-family: Times New Roman, serif;
+.math        { color: black; font-family: 'Times New Roman', serif;
 	       background-color: transparent }
 .symbol      { font-family: Symbol, symbol }
 
@@ -114,7 +114,7 @@ h2  { font-size: 140%; }
 h3  { font-size: 120%; }
 form, input, textarea { font-size: 100%; }
 input[type="file"] { background-color: #f8f0d0 }
-input, textarea, button { font-family: Verdana, helvetica, Arial, sans-serif;
+input, textarea, button { font-family: Verdana, Helvetica, sans-serif;
            background-color: #fff8e0 }
 button.small_button { font-size: 80% }
 button#hide_details { margin-left: 2ex }
@@ -155,20 +155,22 @@ input#download:hover {
     background-color: #88f
 }
 
-pre, xmp { font-family: Courier, monospace; margin-left: 1em;
+
+pre, xmp { font-family: 'Courier Prime', Courier, monospace; margin-left: 1em;
 	   font-size: 90% }
-kbd, tt, code { font-family: Courier, monospace; font-size: 90% }
-td { font-family: Verdana, Arial, helvetica, sans-serif; font-size: 100%; }
+kbd, tt, code { font-family: 'Courier Prime', Courier, monospace; font-size: 90% }
+td { font-family: Verdana, Helvetica, Arial, sans-serif; font-size: 100%; }
 
 td.recitation { background-color: #FFF0d0 }
 
-td.win { font-family: Courier, fixed; text-align:center;
+td.win { font-family: 'Courier Prime', Courier, monospace; text-align:center;
 	 background-color: #d0ffd0; font-weight: bold }
-td.tie { font-family: Courier, fixed; text-align:center;
+td.tie { font-family: 'Courier Prime', Courier, monospace; text-align:center;
 	 background-color: #ffffd0; font-weight: bold }
-td.lose { font-family: Courier, courier, fixed; text-align:center;
+td.lose { font-family: 'Courier Prime', Courier, monospace; text-align:center;
 	  background-color: #ffd0d0; font-weight: bold }
-td.count { text-align: center; font-family: Courier, fixed }
+td.count { text-align: center; font-family: 'Courier Prime', Courier, monospace; }
+
 th.choice { text-align: left }
 table#preftable tr { border-style: none none groove none; border-bottom-color: #e8e8f0; border-bottom-width: 2px; border-collapse: collapse }
 table#preftable tr.tied { border-color: #ccc; border-style: none none dashed none; border-bottom-width: 1px; border-collapse: collapse; padding-bottom: 2px }
@@ -252,17 +254,18 @@ tr.selected { background-color: #ffffd0 }
 p.suboption, div.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
 div.parent_wrapper {display: inline}
 div.list {padding: 1px 0px 1px 2ex}
-span.email {font-family: Courier New, courier, fixed; font-weight: 600}
+span.email {font-family: 'Courier Prime', Courier, monospace; font-weight: 600}
 .warning {color: red}
 
 div.description { border: solid 1px #bbb;
 		  border-radius: 8px;
-		  max-width: 70ex;
-		  margin-right: 20px;
+		  column-width: 30em; -moz-column-width:30em; -webkit-column-width:30em;
 		    -moz-border-radius: 8px;
 		    -webkit-border-radius: 8px;
 		  background-color: #f0f0f0; color: #222; padding: 5px;
-		  font-family: Verdana, helvetica, Arial, sans-serif; }
+
+		  font-family: Verdana, Helvetica, Arial, sans-serif; }
+
 #jshelp p {text-align: left; font-size: 90% }
 #jshelp ol {text-align: left; font-size: 90% }
 p#jsnohelp {text-align: left; font-size: 90% }
@@ -296,7 +299,7 @@ li b, td > b, strong { color: #a52 }
     margin-bottom: 0.5ex;
 }
 
-textarea.paste { font-family: Courier, fixed; font-size: 80% }
+textarea.paste { font-family: 'Courier Prime', Courier, monospace; font-size: 80% }
 
 textarea#description_edit { display: none }
 input#save_description_button { display: none }
