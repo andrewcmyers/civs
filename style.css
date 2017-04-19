@@ -1,5 +1,5 @@
 body, table, p, ul, li, td  {
-    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-family: Verdana, helvetica, Arial, sans-serif;
     font-size: 100%;
     color: #222;
 }
@@ -29,7 +29,7 @@ a:hover      { color: #49a; background-color: transparent }
 a.small      { font-size: 80% }
 a.result_link { background-color: #00355f; color: white; padding: 5px 8px}
 
-th              { font-family: Verdana, Arial, helvetica, sans-serif;
+th              { font-family: Verdana, helvetica, Arial, sans-serif;
                   color: white;
 		  background-color: #00355f;
 		  border-color: #00355f;
@@ -73,7 +73,7 @@ div.poll_end {display: inline}
 p, ul, li {background-color: transparent}
 
 h1, h2, h3, span.paragraph {
-    font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif;
+    font-family: Optima, Trebuchet MS, Verdana, helvetica, Arial, sans-serif;
     color: #a52;
     background-color: transparent;
     font-weight: bold
@@ -155,20 +155,20 @@ input#download:hover {
     background-color: #88f
 }
 
-pre, xmp { font-family: Courier New, Courier, monospace; margin-left: 1em;
+pre, xmp { font-family: Courier, monospace; margin-left: 1em;
 	   font-size: 90% }
-kbd, tt, code { font-family: Courier New, Courier, monospace; font-size: 90% }
+kbd, tt, code { font-family: Courier, monospace; font-size: 90% }
 td { font-family: Verdana, Arial, helvetica, sans-serif; font-size: 100%; }
 
 td.recitation { background-color: #FFF0d0 }
 
-td.win { font-family: Courier New, courier, fixed; text-align:center;
+td.win { font-family: Courier, fixed; text-align:center;
 	 background-color: #d0ffd0; font-weight: bold }
-td.tie { font-family: Courier New, courier, fixed; text-align:center;
+td.tie { font-family: Courier, fixed; text-align:center;
 	 background-color: #ffffd0; font-weight: bold }
-td.lose { font-family: Courier New, courier, fixed; text-align:center;
+td.lose { font-family: Courier, courier, fixed; text-align:center;
 	  background-color: #ffd0d0; font-weight: bold }
-td.count { text-align: center; font-family: Courier New, courier, fixed }
+td.count { text-align: center; font-family: Courier, fixed }
 th.choice { text-align: left }
 table#preftable tr { border-style: none none groove none; border-bottom-color: #e8e8f0; border-bottom-width: 2px; border-collapse: collapse }
 table#preftable tr.tied { border-color: #ccc; border-style: none none dashed none; border-bottom-width: 1px; border-collapse: collapse; padding-bottom: 2px }
@@ -262,7 +262,7 @@ div.description { border: solid 1px #bbb;
 		    -moz-border-radius: 8px;
 		    -webkit-border-radius: 8px;
 		  background-color: #f0f0f0; color: #222; padding: 5px;
-		  font-family: Verdana, Arial, helvetica, sans-serif; }
+		  font-family: Verdana, helvetica, Arial, sans-serif; }
 #jshelp p {text-align: left; font-size: 90% }
 #jshelp ol {text-align: left; font-size: 90% }
 p#jsnohelp {text-align: left; font-size: 90% }
