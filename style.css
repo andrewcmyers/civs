@@ -6,8 +6,8 @@ body, table, p, ul, li, td  {
 body { margin: 0;
        background-color: #ffffff }
 
-div.contents { min-width: 30em; margin:0 10em; text-align: left }
-div.normal_text {  }
+div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
+div.normal_text { max-width: 80ex; margin: 0 auto }
 
 div.home { text-align: left;
            padding: 1ex 1ex 0 1ex;
@@ -259,7 +259,8 @@ span.email {font-family: 'Courier Prime', Courier, monospace; font-weight: 600}
 
 div.description { border: solid 1px #bbb;
 		  border-radius: 8px;
-		  column-width: 30em; -moz-column-width:30em; -webkit-column-width:30em;
+                  max-width: 80ex;
+                  margin-right: 20px;
 		    -moz-border-radius: 8px;
 		    -webkit-border-radius: 8px;
 		  background-color: #f0f0f0; color: #222; padding: 5px;
