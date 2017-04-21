@@ -64,10 +64,8 @@ sub rank_candidates {
     while ($num_ranked < $n) {
         my @best;
         my $minimax;
-        #$log .= "picking rank $num_ranked<br>";
         for (my $i = 0; $i < $n; $i++) {
             next if $ranked[$i];
-            #$log .= "considering $i<br>";
 
             my $idefs = $defeats->[$i];
             my $j = 0;
@@ -77,17 +75,15 @@ sub rank_candidates {
             }
             if ($j > $#{$idefs}) {
                 @best = ($i);
-                #$log .= "  undefeated: $i<br>";
+                #$log .= "  undefeated best: $i<br>";
                 last
             } else {
                 my $d = $idefs->[$j];
-                if ($#best == -1 ||
-                &compare_defeats($d, $minimax) > 0) {
+                if ($#best == -1 || &compare_defeats($d, $minimax) > 0) {
                     @best = ($i);
                     $minimax = $d;
                     #$log .= "  new best: $i<br>";
-                } elsif ($#best != -1 &&
-                    &compare_defeats($d, $minimax) == 0) {
+                } elsif ($#best != -1 && &compare_defeats($d, $minimax) == 0) {
                     push @best, $i;
                     #$log .= "  tied best: $i<br>";
                 } else {
