@@ -28,6 +28,7 @@ civs/cgi-bin/italian.pm
 civs/cgi-bin/language-skel.pm
 civs/cgi-bin/languages.pm
 civs/cgi-bin/mail.pm
+civs/cgi-bin/minimax.pm
 civs/cgi-bin/portuguese.pm
 civs/cgi-bin/publicize_election
 civs/cgi-bin/refresh_top_polls
