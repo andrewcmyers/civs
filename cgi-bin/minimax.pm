@@ -68,22 +68,25 @@ sub rank_candidates {
             next if $ranked[$i];
 
             my $idefs = $defeats->[$i];
-            my $j = 0;
-            for (; $j <= $#{$idefs}; $j++) {
-                my $d = $idefs->[$j];
-                if (!$ranked[$d->[0]]) { last }
+            my $d;
+            while (@{$idefs}) {
+                $d = $idefs->[0];
+                if ($ranked[$d->[0]]) {
+                    shift @{$idefs}
+                } else {
+                    last
+                }
             }
-            if ($j > $#{$idefs}) {
+            if (!@{$idefs}) {
                 @best = ($i);
                 #$log .= "  undefeated best: $i<br>";
                 last
             } else {
-                my $d = $idefs->[$j];
-                if ($#best == -1 || &compare_defeats($d, $minimax) > 0) {
+                if (!@best || &compare_defeats($d, $minimax) > 0) {
                     @best = ($i);
                     $minimax = $d;
                     #$log .= "  new best: $i<br>";
-                } elsif ($#best != -1 && &compare_defeats($d, $minimax) == 0) {
+                } elsif (@best && &compare_defeats($d, $minimax) == 0) {
                     push @best, $i;
                     #$log .= "  tied best: $i<br>";
                 } else {
@@ -95,7 +98,7 @@ sub rank_candidates {
             $ranked[$i] = 1;
         }
         push @rankings, \@best;
-        $num_ranked += $#best + 1;
+        $num_ranked += @best;
     }
     return (\@rankings, $log . '</ul>');
 }
