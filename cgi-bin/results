@@ -18,6 +18,7 @@ use beatpath;
 use beatpath2;
 use rp;
 use runoff;
+use minimax;
 
 my $thisurl = $civs_bin_path."/results@PERLEXT@";
 
@@ -26,12 +27,14 @@ my %algorithms = ('beatpath_winner', 'beatpath', # obsolete
                   'beatpath', 'beatpath2',
                   'civs_ranked_pairs', 'rp',
 		  'mam', 'rp',
-		  'runoff', 'runoff');
+		  'runoff', 'runoff',
+                  'minimax', 'minimax');
 
 # maps legal algorithm modules to 1
 my %algorithm_modules = ('beatpath2', 1,
                          'rp', 1,
-			 'runoff', 1);
+			 'runoff', 1,
+                         'minimax', 1);
 
 # CheckLoad;
 # timeout(30);
@@ -245,6 +248,7 @@ sub ComputeResults {
     my $bw_checked = '';
     my $rp_checked = '';
     my $mam_checked = '';
+    my $minimax_checked = '';
     my $runoff_checked = '';
     if ($algorithm eq 'civs_ranked_pairs') {
 	$rp_checked = $checked;
@@ -252,6 +256,8 @@ sub ComputeResults {
 	$mam_checked = $checked;
     } elsif ($algorithm eq 'runoff') {
 	$runoff_checked = $checked;
+    } elsif ($algorithm eq 'minimax') {
+	$minimax_checked = $checked;
     } else {
 	$bw_checked = $checked;
     }
@@ -280,12 +286,17 @@ sub ComputeResults {
 	'<input type="radio"
 	    name="algorithm"
 	    onclick="newSettings()"
+	    value="minimax"',
+	    $minimax_checked,
+	' /> Minimax', BR,
+	'<input type="radio"
+	    name="algorithm"
+	    onclick="newSettings()"
 	    value="runoff"',
 	    $runoff_checked,
 	' /> Condorcet-IRV', BR;
 	print RESULTS '<input type="submit" id="recomplete" value="Update" />';
 
-    # print RESULTS '&nbsp;<input type="submit" name="submit" value="Update display options">';
     print RESULTS '</blockquote></form></div>',$cr;
 
     print RESULTS h2($tx->poll_description_hdr), $cr,
