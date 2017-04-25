@@ -30,7 +30,7 @@ use strict;
 sub compare_defeats {
     (my $a, my $b) = @_;
     $a->[1] == $b->[1] ? 
-            $a->[2] <=> $b->[2]
+            ($a->[2] - $a->[1]) - ($b->[2] - $b->[1])
           : $b->[1] <=> $a->[1]
 }
 sub compare_defeats_sort { compare_defeats($a, $b) }
