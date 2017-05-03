@@ -98,7 +98,6 @@ sub rank_candidates {
             next if $i == $j;
             if ($matrix->[$i][$j] < $matrix->[$j][$i]) {
                 push @def, [($j, $matrix->[$j][$i], $matrix->[$i][$j])];
-# note: includes all defeats and ties
             }
         }
         $defeats->[$i] = [ sort compare_defeats_sort @def ];
@@ -126,7 +125,6 @@ sub rank_candidates {
 
             my $cmp = &compare_candidates($defeats->[$i], $defeats->[$j]);
 
-            #$log .= $cc_log;
             if ($cmp > 0) {
                 @best = ($i);
                 #$log .= "  new best: $i<br>";
@@ -137,7 +135,7 @@ sub rank_candidates {
             # else { $log .= "  not the current best<br>"; }
         }
         my $r = $num_ranked+1;
-        $log .= "Rank $r:<br>";
+        $log .= "<li>Rank $r:<br>";
         foreach my $i (@best) {
             $ranked[$i] = 1;
             $log .= "&nbsp;&nbsp;choice $i : " . &defeats_to_string($defeats->[$i]) . "<br>";
