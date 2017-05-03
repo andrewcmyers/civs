@@ -63,12 +63,10 @@ sub compare_candidates {
 
     while (1) {
         while ($i < @{$d1} && $ranked->[$d1->[$i]->[0]]) {
-# could splice here
-            $i++;
+            splice @{$d1}, $i, 1;
         }
         while ($j < @{$d2} && $ranked->[$d2->[$j]->[0]]) {
-# could splice here
-            $j++;
+            splice @{$d2}, $j, 1;
         }
         my $u1 = ($i >= @{$d1});
         my $u2 = ($j >= @{$d2});
