@@ -1,7 +1,5 @@
 package minimax;
 
-use CGI qw(:standard);
-use civs_common;
 use strict;
 
 # rank_candidates($n, $matrix, $ballots) : construct a ranking of the choices.
@@ -34,6 +32,40 @@ sub compare_defeats {
     ($a->[1] <=> $b->[1])
 }
 sub compare_defeats_sort { compare_defeats($a, $b) }
+
+# compare_candidates($def1, $def2, $ranked):
+# compare two candidates based on their current lists of defeats, provided as
+# array references.  The individual defeats in the list must be sorted in
+# order of decreasing strength. A candidate is considered 'stronger' if
+# its defeats are weaker.
+# Any defeat involving a ranked candidate (as defined by @{$ranked}) is
+# invalid and should be ignored. Such defeats may be removed from the
+# the list when encountered.
+sub compare_candidates {
+    (my $def1, my $def2, my $ranked) = @_;
+
+    my $i = 0, my $j = 0;
+    my $d1, my $d2;
+
+    while (1) {
+        while ($i < @{$def1} && $ranked->[$i]->[0]) {
+            $i++;
+        }
+        while ($j < @{$def2} && $ranked->[$j]->[0]) {
+            $j++;
+        }
+        my $undef1 = ($i < @{$def1});
+        my $undef2 = ($j < @{$def2});
+        return $undef1 <=> $undef2 if ($undef1 || $undef2);
+
+        my $cmp = &compare_defeats($def1->[$i], $def2->[$j]);
+
+        return $cmp if $cmp;
+
+        $i++;
+        $j++;
+    }
+}
 
 sub rank_candidates {
     my ($n, $matrix, $ballots, $choices) = @_;
@@ -69,14 +101,6 @@ sub rank_candidates {
 
             my $idefs = $defeats->[$i];
             my $d;
-            while (@{$idefs}) {
-                $d = $idefs->[0];
-                if ($ranked[$d->[0]]) {
-                    shift @{$idefs}
-                } else {
-                    last
-                }
-            }
             if (!@{$idefs}) {
                 @best = ($i);
                 #$log .= "  undefeated best: $i<br>";
