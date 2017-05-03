@@ -49,9 +49,11 @@ sub compare_candidates {
 
     while (1) {
         while ($i < @{$def1} && $ranked->[$i]->[0]) {
+# could splice here
             $i++;
         }
         while ($j < @{$def2} && $ranked->[$j]->[0]) {
+# could splice here
             $j++;
         }
         my $undef1 = ($i < @{$def1});
@@ -95,28 +97,22 @@ sub rank_candidates {
 
     while ($num_ranked < $n) {
         my @best;
-        my $minimax;
         for (my $i = 0; $i < $n; $i++) {
             next if $ranked[$i];
-
-            my $idefs = $defeats->[$i];
-            my $d;
-            if (!@{$idefs}) {
+            if (!@best) {
+                # $log .= "  undefeated best: $i<br>";
                 @best = ($i);
-                #$log .= "  undefeated best: $i<br>";
-                last
-            } else {
-                if (!@best || &compare_defeats($d, $minimax) > 0) {
-                    @best = ($i);
-                    $minimax = $d;
-                    #$log .= "  new best: $i<br>";
-                } elsif (@best && &compare_defeats($d, $minimax) == 0) {
-                    push @best, $i;
-                    #$log .= "  tied best: $i<br>";
-                } else {
-                    #$log .= "  not the current best<br>";
-                }
+                next
             }
+
+            my $cmp = &compare_defeats($defeats->[$i], $defeats->[$best[0]]);
+            if ($cmp > 0) {
+                @best = ($i);
+            } elsif ($cmp == 0) {
+                push @best, $i;
+                # $log .= "  tied best: $i<br>";
+            } 
+            # else { $log .= "  not the current best<br>"; }
         }
         foreach my $i (@best) {
             $ranked[$i] = 1;
