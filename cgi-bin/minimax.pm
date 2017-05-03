@@ -33,6 +33,21 @@ sub compare_defeats {
 }
 sub compare_defeats_sort { compare_defeats($a, $b) }
 
+sub defeat_to_string {
+    (my $d) = @_;
+    "Vs. $d->[0] : ($d->[1] - $d->[2]) "
+}
+
+sub defeats_to_string {
+    my $result = '';
+    (my $defs) = @_;
+    $result = "undefeated" if !@{$defs};
+    foreach my $d (@{$defs}) {
+        $result .= defeat_to_string($d)
+    }
+    $result
+}
+
 # compare_candidates($def1, $def2, $ranked):
 # compare two candidates based on their current lists of defeats, provided as
 # array references.  The individual defeats in the list must be sorted in
@@ -42,27 +57,25 @@ sub compare_defeats_sort { compare_defeats($a, $b) }
 # invalid and should be ignored. Such defeats may be removed from the
 # the list when encountered.
 sub compare_candidates {
-    (my $def1, my $def2, my $ranked) = @_;
+    (my $d1, my $d2, my $ranked) = @_;
 
     my $i = 0, my $j = 0;
-    my $d1, my $d2;
 
     while (1) {
-        while ($i < @{$def1} && $ranked->[$i]->[0]) {
+        while ($i < @{$d1} && $ranked->[$d1->[$i]->[0]]) {
 # could splice here
             $i++;
         }
-        while ($j < @{$def2} && $ranked->[$j]->[0]) {
+        while ($j < @{$d2} && $ranked->[$d2->[$j]->[0]]) {
 # could splice here
             $j++;
         }
-        my $undef1 = ($i < @{$def1});
-        my $undef2 = ($j < @{$def2});
-        return $undef1 <=> $undef2 if ($undef1 || $undef2);
+        my $u1 = ($i >= @{$d1});
+        my $u2 = ($j >= @{$d2});
+        return $u1 <=> $u2 if ($u1 || $u2);
 
-        my $cmp = &compare_defeats($def1->[$i], $def2->[$j]);
-
-        return $cmp if $cmp;
+        my $cmp = &compare_defeats($d1->[$i], $d2->[$j]);
+        return $cmp if $cmp != 0;
 
         $i++;
         $j++;
@@ -85,7 +98,7 @@ sub rank_candidates {
         my @def;
         for (my $j = 0; $j < $n; $j++) {
             next if $i == $j;
-            if ($matrix->[$i][$j] <= $matrix->[$j][$i]) {
+            if ($matrix->[$i][$j] < $matrix->[$j][$i]) {
                 push @def, [($j, $matrix->[$j][$i], $matrix->[$i][$j])];
 # note: includes all defeats and ties
             }
@@ -99,23 +112,37 @@ sub rank_candidates {
         my @best;
         for (my $i = 0; $i < $n; $i++) {
             next if $ranked[$i];
+            #$log .= "choice $i: " . &defeats_to_string($defeats->[$i]) . "<br>\r\n";
             if (!@best) {
-                # $log .= "  undefeated best: $i<br>";
+                 #$log .= "  first unranked: $i<br>";
                 @best = ($i);
-                next
+                if (@{$defeats->[$i]}) {
+                    next
+                } else {
+                     #$log .= "  undefeated! $i<br>";
+                    last
+                }
             }
+            my $j = $best[0];
+            #$log .= "  comparing $i against current best: $j " . &defeats_to_string($defeats->[$j]) . "<br>";
 
-            my $cmp = &compare_defeats($defeats->[$i], $defeats->[$best[0]]);
+            my $cmp = &compare_candidates($defeats->[$i], $defeats->[$j]);
+
+            #$log .= $cc_log;
             if ($cmp > 0) {
                 @best = ($i);
+                #$log .= "  new best: $i<br>";
             } elsif ($cmp == 0) {
                 push @best, $i;
-                # $log .= "  tied best: $i<br>";
+                #$log .= "  tied best: $i<br>";
             } 
             # else { $log .= "  not the current best<br>"; }
         }
+        my $r = $num_ranked+1;
+        $log .= "Rank $r:<br>";
         foreach my $i (@best) {
             $ranked[$i] = 1;
+            $log .= "&nbsp;&nbsp;choice $i : " . &defeats_to_string($defeats->[$i]) . "<br>";
         }
         push @rankings, \@best;
         $num_ranked += @best;
