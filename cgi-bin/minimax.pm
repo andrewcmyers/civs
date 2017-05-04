@@ -96,9 +96,7 @@ sub rank_candidates {
         my @def;
         for (my $j = 0; $j < $n; $j++) {
             next if $i == $j;
-            if ($matrix->[$i][$j] < $matrix->[$j][$i]) {
-                push @def, [($j, $matrix->[$j][$i], $matrix->[$i][$j])];
-            }
+            push @def, [($j, $matrix->[$j][$i], $matrix->[$i][$j])];
         }
         $defeats->[$i] = [ sort compare_defeats_sort @def ];
     }
