@@ -35,7 +35,7 @@ sub compare_defeats_sort { compare_defeats($a, $b) }
 
 sub defeat_to_string {
     (my $d) = @_;
-    "Vs. $d->[0] : ($d->[1] - $d->[2]) "
+    "vs. $d->[0] : ($d->[1] - $d->[2]) "
 }
 
 sub defeats_to_string {
@@ -136,7 +136,8 @@ sub rank_candidates {
         $log .= "<li>Rank $r:<br>";
         foreach my $i (@best) {
             $ranked[$i] = 1;
-            $log .= "&nbsp;&nbsp;choice $i : " . &defeats_to_string($defeats->[$i]) . "<br>";
+            my $nm = $choices->[$i];
+            $log .= "&nbsp;&nbsp;$nm ($i): " . &defeats_to_string($defeats->[$i]) . "<br>";
         }
         push @rankings, \@best;
         $num_ranked += @best;

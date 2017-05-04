@@ -4,13 +4,14 @@ use CGI qw(:standard);
 use civs_common;
 use strict;
 
-# rank_candidates($n, $mref, $bref) : construct a ranking of the choices.
+# rank_candidates($n, $mref, $bref, $choices) : construct a ranking of the choices.
 #
 # Arguments:
-#   n is the number of choices
-#   mref is a reference to an n x n preference matrix
-#   bref is a reference to a list of ballots, where each ballot
+#   $n is the number of choices
+#   $mref is a reference to an n x n preference matrix
+#   $bref is a reference to a list of ballots, where each ballot
 #     is a reference to a list containing the ranking of the candidates.
+#   $choices is a reference to a list of candidate names
 #
 # Returns: a list ($rankings, $log), where:
 #   $rankings is a reference to a list of references to lists. An element

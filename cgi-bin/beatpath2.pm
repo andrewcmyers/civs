@@ -156,7 +156,7 @@ sub winners {
 # 
 # See runoff.pm for a more detailed spec.
 #
-# Note: $ballots and $choices are not used by this ranking algorithm.
+# Note: $ballots is not used by this ranking algorithm.
 #
 sub rank_candidates {
   my ($n, $prefs, $ballots, $choices) = @_;
