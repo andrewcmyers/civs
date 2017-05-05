@@ -121,7 +121,7 @@ sub rank_candidates {
             my $j = $best[0];
             #$log .= "  comparing $i against current best: $j " . &defeats_to_string($defeats->[$j]) . "<br>";
 
-            my $cmp = &compare_candidates($defeats->[$i], $defeats->[$j]);
+            my $cmp = &compare_candidates($defeats->[$i], $defeats->[$j], \@ranked);
 
             if ($cmp > 0) {
                 @best = ($i);
@@ -139,6 +139,7 @@ sub rank_candidates {
             my $nm = $choices->[$i];
             $log .= "&nbsp;&nbsp;$nm ($i): " . &defeats_to_string($defeats->[$i]) . "<br>";
         }
+        $log .= "<pre>" . @{$ranked} . "</pre>";
         push @rankings, \@best;
         $num_ranked += @best;
     }
