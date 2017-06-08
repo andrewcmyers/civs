@@ -139,7 +139,6 @@ sub rank_candidates {
             my $nm = $choices->[$i];
             $log .= "&nbsp;&nbsp;$nm ($i): " . &defeats_to_string($defeats->[$i]) . "<br>";
         }
-        $log .= "<pre>" . @{$ranked} . "</pre>";
         push @rankings, \@best;
         $num_ranked += @best;
     }
