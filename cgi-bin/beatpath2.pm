@@ -144,7 +144,7 @@ sub winners {
       }
     }
   }
-  return [@winner];
+  [@winner]
 }
 
 # rank_candidates($prefs, $n, $ballots, $choices):
