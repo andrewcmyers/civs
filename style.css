@@ -9,6 +9,12 @@ body { margin: 0;
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
+/* override with better layout for large displays */
+@media (min-width: 50em) {
+div.contents { padding-left:0; padding-right:0; min-width: 30em; margin:0 10em; text-align: left }
+div.normal_text { max-width:none; }
+}
+
 div.home { text-align: left;
            padding: 1ex 1ex 0 1ex;
            border-right: 1px solid #bbb;
@@ -264,8 +270,12 @@ div.description { border: solid 1px #bbb;
 		    -moz-border-radius: 8px;
 		    -webkit-border-radius: 8px;
 		  background-color: #f0f0f0; color: #222; padding: 5px;
-
 		  font-family: Verdana, Helvetica, Arial, sans-serif; }
+
+/* override with better layout for large displays */
+@media (min-width: 50em) {
+div.description { max-width:none; margin-right:0; column-width: 30em; -moz-column-width:30em; -webkit-column-width:30em; }
+}
 
 #jshelp p {text-align: left; font-size: 90% }
 #jshelp ol {text-align: left; font-size: 90% }
