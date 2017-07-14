@@ -480,16 +480,6 @@ sub SetupMatrix {
 sub ComputeNonproportionalResults {
     # print pre('computing nonproportional results');
     if ($proportional eq 'yes') { NewProgressPhase(0.1); }
-#    $beatpath::n = $num_choices;
-#    for (my $j = 0; $j < $num_choices; $j++) {
-#	for (my $k = 0; $k < $num_choices; $k++) {
-#            $beatpath::matrix[$j][$k] = $matrix[$j][$k];
-#	}
-#    }
-#    &beatpath::rank_candidates();
-#    @result = @beatpath::result;
-#    @closure_matrix = @beatpath::closure_matrix;
-#    @choice_index = @beatpath::choice_index;
 
     (my $rref, my $log) = 
 	&minimax::rank_candidates($num_choices, \@matrix, 0, \@choices);
@@ -623,12 +613,6 @@ sub PrintReport {
     my $rank_candidates = $module.'::rank_candidates';
     my $print_details = $module.'::print_details';
 
-    if ($module eq 'beatpath') {
-	PrintRanking [@result], [@matrix];
-	print RESULTS '</div>';
-	return;
-    }
-
     if (!$algorithm_modules{$module}) {
 	print RESULTS p("Algorithm module $module for algorithm $algorithm not valid");
 	print RESULTS '</div>';
@@ -701,7 +685,6 @@ sub PrintProportionalResults {
 	    $closure_matrix[$j][$k] = $beatpath::closure_matrix[$j][$k];
 	}
     }
-    #@closure_matrix = @beatpath::closure_matrix;
     $j = 0;
     for (my $rank = 0; $rank <= $#result; $rank++) {
 	my @winner = @{$result[$rank]};
