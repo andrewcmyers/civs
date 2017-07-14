@@ -36,6 +36,8 @@ my %algorithm_modules = ('beatpath2', 1,
 			 'runoff', 1,
                          'minimax', 1);
 
+my $default_algorithm = 'minimax';
+
 # CheckLoad;
 # timeout(30);
 
@@ -72,9 +74,11 @@ if (defined($nwin_param) && $nwin_param > 0 &&
     $nwin_param < $num_choices) {
 	$num_winners = 0+$nwin_param;
 }
+
 my $algorithm = param('algorithm');
-if (!defined($algorithm) || $algorithm eq '')
-{ $algorithm = 'beatpath'; }
+if (!defined($algorithm) || $algorithm eq '') {
+    $algorithm = $default_algorithm;
+}
 
 my $real_prop = $proportional;
 my $show_prop = param('proportional');
@@ -258,14 +262,22 @@ sub ComputeResults {
 	$runoff_checked = $checked;
     } elsif ($algorithm eq 'minimax') {
 	$minimax_checked = $checked;
-    } else {
+    } elsif ($algorithm eq 'beatpath') {
 	$bw_checked = $checked;
+    } else {
+	$minimax_checked = $checked; # default
     }
 
     print RESULTS $tx->Condorcet_completion_rule,
 	          $tx->What_is_this($civs_url.'/rp.html'), BR,
-       '<blockquote>
-	<input type="radio"
+       '<blockquote>',
+	'<input type="radio"
+	    name="algorithm"
+	    onclick="newSettings()"
+	    value="minimax"',
+	    $minimax_checked,
+	' /> Minimax', BR,
+	'<input type="radio"
 	    name="algorithm"
 	    onclick="newSettings()"
 	    value="beatpath" ',
@@ -286,12 +298,6 @@ sub ComputeResults {
 	'<input type="radio"
 	    name="algorithm"
 	    onclick="newSettings()"
-	    value="minimax"',
-	    $minimax_checked,
-	' /> Minimax', BR,
-	'<input type="radio"
-	    name="algorithm"
-	    onclick="newSettings()"
 	    value="runoff"',
 	    $runoff_checked,
 	' /> Condorcet-IRV', BR;
@@ -304,10 +310,10 @@ sub ComputeResults {
 	p($description),
 	'</div>', $cr;
 
-
-    &ComputeNonproportionalResults;   # needed regardless of the election type
+    &SetupMatrix;
 
     if ($proportional eq 'yes') {
+        &ComputeNonproportionalResults;
 	&PrintProportionalResults;
     } else { 
 
@@ -424,11 +430,9 @@ sub BallotReport {
 		    unshift @row, "$i. ";
 		    $i++;
 		}
-		if ($proportional eq 'yes' && !$use_combined_ratings) {
-		    for (my $i = 1; $i <= $#row; $i++) {
-			$row[$i] = $num_choices - $row[$i];
-		    }
-		}
+                for (my $i = 1; $i <= $#row; $i++) {
+                    $row[$i] = &FixProp($row[$i])
+                }
 		push @rows, td(\@row);
 	    }
 
@@ -444,35 +448,56 @@ sub BallotReport {
     }
 }
 
-sub ComputeNonproportionalResults {
-    # Compute condorcet winner and set up $matrix and $beatpath
-    # print pre('computing nonproportional results');
-    if ($proportional eq 'yes') { NewProgressPhase(0.1); }
+# Fix a ballot ranking so it is correct for nonproportional computations
+sub FixProp {
+    if ($real_prop eq 'yes' && !$use_combined_ratings) {
+        return $num_choices - $_[0];
+    } else {
+        return $_[0];
+    }
+}
+
+sub SetupMatrix {
+    # Compute condorcet winner and set up (nonproportional) $matrix
     $condorcet_winner = -1;
     for (my $j = 0; $j < $num_choices; $j++) {
 	if ($condorcet_winner < 0) { $condorcet_winner = $j; }
 	for (my $k = 0; $k < $num_choices; $k++) {
 	    my $n; $n = $vdata_copy{"$j.$k"} or $n = 0;
+            $n = &FixProp($n);
 	    $matrix[$j][$k] = $n;
 	    if ($j != $k) {
 		my $m; $m = $vdata_copy{"$k.$j"} or $m = 0;
+                $m = &FixProp($m);
 		if ($n <= $m && $condorcet_winner == $j) {
-			$condorcet_winner = -1; # can't be this one
+                    $condorcet_winner = -1; # can't be this one
 		}
 	    }
 	}
     }
+}
 
-    $beatpath::n = $num_choices;
-    for (my $j = 0; $j < $num_choices; $j++) {
-	for (my $k = 0; $k < $num_choices; $k++) {
-		    $beatpath::matrix[$j][$k] = $matrix[$j][$k];
-	}
-    }
-    &beatpath::rank_candidates();
-    @result = @beatpath::result;
-    @closure_matrix = @beatpath::closure_matrix;
-    @choice_index = @beatpath::choice_index;
+sub ComputeNonproportionalResults {
+    # print pre('computing nonproportional results');
+    if ($proportional eq 'yes') { NewProgressPhase(0.1); }
+#    $beatpath::n = $num_choices;
+#    for (my $j = 0; $j < $num_choices; $j++) {
+#	for (my $k = 0; $k < $num_choices; $k++) {
+#            $beatpath::matrix[$j][$k] = $matrix[$j][$k];
+#	}
+#    }
+#    &beatpath::rank_candidates();
+#    @result = @beatpath::result;
+#    @closure_matrix = @beatpath::closure_matrix;
+#    @choice_index = @beatpath::choice_index;
+
+    (my $rref, my $log) = 
+	&minimax::rank_candidates($num_choices, \@matrix, 0, \@choices);
+
+    (my $ciref, my $crref) = &MakeChoiceIndex($rref);
+
+    @result = @{$rref};
+    @choice_index = @{$ciref};
 }
 
 sub PrintRanking {
@@ -1130,7 +1155,7 @@ sub PrintProportionalResults {
 
     print RESULTS p('This is the voting preference matrix,
              reporting maximal valid proportional preferences.
-	     Fractions indicate nonproportional preferences, which
+	     Fractional digits indicate nonproportional preferences, which
 	     help break ties in proportional preference.');
     STDOUT->flush();
     
