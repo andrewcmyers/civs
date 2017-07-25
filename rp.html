@@ -73,15 +73,17 @@ doesn't matter what completion rule is used.
 
 <h3>Supported completion rules</h3>
 
-<p>CIVS currently supports four rules for Condorcet completion:
-The <a href="http://en.wikipedia.org/wiki/Schulze_method">Schulze method</a>
+<p>CIVS currently supports five rules for Condorcet completion:
+<a href="https://en.wikipedia.org/wiki/Minimax_Condorcet">Minimax</a> (also known
+as Simpson–Kramer),
+<a href="http://en.wikipedia.org/wiki/Schulze_method">Schulze</a>
 (also known as Beatpath Winner and
 Cloneproof Schwartz Sequential Dropping),
 <a href="http://alumnus.caltech.edu/~seppley/">
 Maximize Affirmed Majorities</a> (MAM), a deterministic variant of MAM
 called <a href="#rp">CIVS Ranked Pairs</a>, and a runoff-based
 Condorcet algorithm called <a href="#runoff">Condorcet-IRV</a>.
-The first two rules are described
+The first three rules are described
 elsewhere (follow the links); CIVS Ranked Pairs and Condorcet-IRV are
 described below. 
 </p>
@@ -91,36 +93,36 @@ CIVS does not impose a completion rule; in fact, anyone viewing the results of
 an election can see what the results would have been with each of the rules. It
 is probably a good idea for the election supervisor to decide on an rule ahead
 of time, and include it in the election description.  On the other hand, all
-four rules usually agree with each other, especially on the ranking of the
+five rules usually agree with each other, especially on the ranking of the
 first few choices.
 </p>
 
 <h2>Which completion rule should I use?</h2>
 <p>
 Usually it doesn't matter which completion rule is used, because there is a
-Condorcet winner, in which case all the rules will agree.  If all four rules
+Condorcet winner, in which case all the rules will agree.  If all five rules
 agree, you can be confident that you're getting the right result.  However,
 it's a good idea to commit to the rule you're going to use ahead of time, to
 avoid arguments later on.
 </p>
 
 <p>
-The different rules have advantages and disadvantages. Beatpath Winner (Schulze)
-can be computed very cheaply using the Floyd-Warshall all-pairs-shortest-paths
-algorithm. Because of its simplicity and computational efficiency,
-it is probably the best known and most widely used method.
+The different rules have advantages and disadvantages. Minimax is the cheapest
+to compute and finds the choice that in one sense is closest to being the Condorcet winner.
+Beatpath Winner (Schulze) can also be computed fairly cheaply using the
+Floyd-Warshall all-pairs-shortest-paths algorithm. These two are probably the
+best known and most widely used methods.
 The two ranked-pairs rules (CIVS Ranked Pairs and MAM) are more
-expensive to compute.  If there are <i>n</i> choices, the ranked pairs
+expensive.  If there are <i>n</i> choices, the ranked pairs
 algorithms are about <i>n</i> times slower than Beatpath Winner. This
 slowdown is only noticeable if there are many choices (more than twenty).
-Anecdotally, Beatpath Winner seems to be less stable than the other three
-rules, in the sense that adding one ballot to the set of ballots can have a
+Anecdotally, Beatpath Winner seems to be less stable than the other rules
+in the sense that adding one ballot to the set of ballots can have a
 large effect on the rankings, perhaps because one ballot can create a
 long new beatpath with global effects.
-Methods based on ranked pairs seem to be
-more stable in the sense that a given voter's ballot tends not to affect the
+Minimax tends to be the most stable in the sense that a given voter's ballot cannot affect the
 ordering as much. The difference between the two ranked pairs methods,
-CIVS Ranked Pairs and MAM, is that MAM uses a sophisticated random tie-breaking method, whereas
+CIVS Ranked Pairs and MAM, is that MAM uses a random tie-breaking method, whereas
 CIVS Ranked Pairs is completely deterministic. Thus, the result of running MAM
 is not determined by just the ballots cast. Comparison of the results of MAM
 and CIVS RP will show if randomization was needed and used by MAM.  If there is
