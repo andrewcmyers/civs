@@ -9,9 +9,13 @@ var tags = [
     'button', 'img'
 ];
 
-/* Append k as a child of n. Create a text node if k is a string.
+/* Appends the second and following arguments as children of n.
+   Creates a text node for arguments that are strings or numbers.
+   Returns n.
  */
-function app(n, k) {
+function app(n) {
+  for (var i = 1; i < arguments.length; i++) {
+    var k = arguments[i];
     if (typeof k == "string") {
 	n.appendChild(document.createTextNode(k));
     } else if (typeof k == "number") {
@@ -23,7 +27,8 @@ function app(n, k) {
     } else {
 	n.appendChild(k);
     }
-    return n;
+  }
+  return n;
 }
 
 /* Create an HTML DOM element with children and, optionally, attributes.

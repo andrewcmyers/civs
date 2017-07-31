@@ -16,9 +16,8 @@
 <body>
 
 <script type="text/javascript">
-var body = document.getElementsByTagName('body')[0];
-body.appendChild(create_header("Credits and Acknowledgments"));
-body.appendChild(
+app(document.body,
+   create_header("Credits and Acknowledgments"),
    div({className: "contents"},
        p("Andrew Myers built the initial version of the system and has maintained it."),
        p("Michael Clarkson designed and implemented the protocols that ",
