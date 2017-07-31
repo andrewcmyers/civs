@@ -1,12 +1,26 @@
 // Making it very convenient to create DOM nodes from JavaScript.
-// Andrew Myers, June 2013.
+// by Andrew Myers, June 2013.
+//
+// For all tags listed in the array "tags" below, it creates functions
+// with the same name that create DOM nodes. For example, the p() function
+// creates a DOM node corresponding to HTML <p>...</p>.
+//
+// Each function accepts an optional first argument that is a map from
+// attribute names to values. The optional second and following arguments
+// may either be DOM nodes, strings, numbers, or arrays. Strings and numbers
+// are converted to text nodes; arrays are flattened as though each element
+// in the array was provided as an argument.
+//
+// Example: p({className: "short"}, em("this"), a({href: "http://"}, "link"))
+// The result is equivalent to:
+//          <p class="short"><em>this</em><a href="http://">link</a></p>
 
 // A few useful tags. More could be added.
 var tags = [
     'ul', 'li', 'ol', 'p', 'b', 'i', 'em', 'table', 'thead', 'tbody', 'tr',
     'td', 'th', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'a', 'br', 'input',
     'blockquote', 'select', 'option', 'sup', 'sub', 'strong', 'pre', 'canvas',
-    'button', 'img'
+    'button', 'img', 'hr'
 ];
 
 /* Appends the second and following arguments as children of n.
