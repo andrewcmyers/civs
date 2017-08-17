@@ -36,7 +36,7 @@ function app(n) {
     } else if (typeof k == "number") {
         n.appendChild(document.createTextNode(k.toString()))
     } else if (k.constructor == Array) {
-        for (var j = 0; j < k.length; j++) {
+        for (var j in k) {
 	    app(n, k[j])
         }
     } else {

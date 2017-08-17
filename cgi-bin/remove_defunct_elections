@@ -105,6 +105,7 @@ while (defined(my $file = readdir(DIR))) {
     }
     my $skip = 0;
     if (time - $mtime < 86400 * 7) { $skip = 1 }
+    if ($edata{'writeins'} eq 'yes') { $skip = 1 }
     if (defined($title)) {
 	$title = "\"$title\"";
     } else {
@@ -112,9 +113,9 @@ while (defined(my $file = readdir(DIR))) {
     }
 
     if (!$skip) {
-    push @entries,
-     [($mtime, $file, $election_dir, $name, $email_addr, $public,
-       $num_auth, $num_votes, $started, $stopped, $auth_key, $last_update)];
+        push @entries,
+        [($mtime, $file, $election_dir, $name, $email_addr, $public,
+        $num_auth, $num_votes, $started, $stopped, $auth_key, $last_update)];
     }
 
     untie %edata;
