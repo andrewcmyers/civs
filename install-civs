@@ -79,7 +79,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
         delete_election.pl edit_poll rp.pm runoff.pm minimax.pm		      \
         admctrl.pm base_language.pm english.pm hungarian.pm italian.pm	      \
         french.pm german.pm hebrew.pm portuguese.pm chinese.pm		      \
-        spanish.pm thai.pm russian.pm
+        spanish.pm thai.pm russian.pm remove_defunct_elections
     do
 	target="${CGIBINDIR}/${f}"
 	if test -n "$PERLEXT"
