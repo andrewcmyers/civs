@@ -6,6 +6,7 @@ use warnings;
 use POSIX ":sys_wait_h";
 use Socket;
 use HTML::TagFilter;
+use HTML::Entities;
 
 # Export the package interface
 BEGIN {
@@ -296,11 +297,10 @@ if ($filter_tags ne 'no') {
 
 # Filter tags from a string, if $filter_tags is not 'no' (which is probably dangerous)
 sub Filter {
-    if ($filter_tags ne 'no') {
-	return $tf->filter($_[0]);
-    } else {
-	return $_[0];
-    }
+    my $s = decode_entities($_[0]);
+    return ($filter_tags ne 'no'
+               ? $tf->filter($s)
+               : $s)
 }
 
 # From the Perl Cookbook, p. 121
