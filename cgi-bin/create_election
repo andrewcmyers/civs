@@ -158,7 +158,6 @@ if ($restrict_results eq 'yes') {
 HTML_Header($tx->CIVS_Poll_Creation);
 CIVS_Header($tx->Poll_created($title));
 
-# print pre("public = $public");
 print "<pre>";
 
 my $control_key = SecureNonce();

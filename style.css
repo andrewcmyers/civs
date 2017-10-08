@@ -218,7 +218,7 @@ div.bubbles {
     vertical-align: top;
     float: right
 }
-div.bubble {
+div.bubble, div.trysomepolls {
     /* background-image: url('vertstrip.png'); */
     background-color: #fff0e8;
     margin-bottom: 1em;

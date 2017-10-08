@@ -214,7 +214,7 @@ sub ProcessVote {
     #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
 
     PointToResults;
-    TrySomePolls;
+    print &TrySomePolls();
     CIVS_End;
 }
 

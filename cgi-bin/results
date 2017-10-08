@@ -136,7 +136,8 @@ if (param('fresh') || param('Compare') ||             # Can force a refresh
 }
 
 open (RESULTS, "<$cache_file");
-while (<RESULTS>) { print $_; }
+my $results = do { local $/; <RESULTS> };
+print $results;
 close (RESULTS);
 
 CIVS_End;
@@ -625,14 +626,15 @@ sub PrintReport {
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
     
     &PrintRanking($rref, \@matrix);
+    print RESULTS '<div class=trysomepolls>', $cr,
+        &TrySomePolls(), $cr,
+        '</div>', $cr;
     &DetailsHeader;
     &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
     &BallotReport;
     &$print_details($log, $num_choices, \@choices, $ciref);
 
-    print RESULTS '</div>';
-
-    TrySomePolls;
+    print RESULTS '</div>', $cr;
 }
 
 ############################################################

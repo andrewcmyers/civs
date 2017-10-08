@@ -229,10 +229,12 @@ sub Fatal_CIVS_Error {
 }
 
 sub TrySomePolls {
-    print p($tx->try_some_public_polls);
-    print '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>';
-    print div({id=>"top_polls", class=>"small_list"}, "Loading...");
-    print '<script type="text/javascript">fetch_content("top_polls", "@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';
+    return $cr
+        . p($tx->try_some_public_polls)
+        . '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>'
+        . div({id=>"top_polls", class=>"small_list"}, "Loading...")
+        . '<script type="text/javascript">fetch_content("top_polls", '
+        . '"@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';
 }
 
 # Log the string provided
