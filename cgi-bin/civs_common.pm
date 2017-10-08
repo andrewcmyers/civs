@@ -20,7 +20,8 @@ BEGIN {
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
                       &unique_elements &civs_hash &system_load &CheckLoad
-		      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter);
+		      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
+                      &TrySomePolls);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -225,6 +226,13 @@ sub Fatal_CIVS_Error {
 	print pre(@_) if $local_debug;
 	print end_html();
 	exit 0;
+}
+
+sub TrySomePolls {
+    print p($tx->try_some_public_polls);
+    print '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>';
+    print div({id=>"top_polls", class=>"small_list"}, "Loading...");
+    print '<script type="text/javascript">fetch_content("top_polls", "@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';
 }
 
 # Log the string provided

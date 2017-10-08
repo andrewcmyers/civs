@@ -51,14 +51,6 @@ if ($js_ui) {
 
 CIVS_Header($title);
 
-sub TrySomePolls {
-    print p($tx->try_some_public_polls);
-    print '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>';
-    print div({id=>"top_polls", class=>"small_list"}, "Loading...");
-    print '<script type="text/javascript">fetch_content("top_polls", "@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';
-}
-
-
 CheckElectionID;
 CheckStarted;
 CheckNotStopped;
@@ -222,7 +214,6 @@ sub ProcessVote {
     #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
 
     PointToResults;
-
     TrySomePolls;
     CIVS_End;
 }

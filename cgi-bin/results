@@ -631,6 +631,8 @@ sub PrintReport {
     &$print_details($log, $num_choices, \@choices, $ciref);
 
     print RESULTS '</div>';
+
+    TrySomePolls;
 }
 
 ############################################################
