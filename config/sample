@@ -3,7 +3,7 @@
 # Where the "About CIVS" links point.
 # Currently a pointer to the Cornell CIVS installation, can be
 # changed to point to another installation.
-CIVSHOME='http://www.cs.cornell.edu/andru/civs.html'
+CIVSHOME='http://civs.cs.cornell.edu'
 
 # The protocol for accessing CIVS (http or https)
 PROTO=http
