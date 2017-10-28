@@ -85,7 +85,7 @@ if (!mkdir($election_dir)) {
     HTML_Header($tx->CIVS_Poll_Creation);
     CIVS_Header();
     print h1($tx->Error);
-    print p($tx->Poll_directory_not_writeable);
+    print p($tx->Poll_directory_not_writeable($election_dir));
     print end_html();
     exit 0;
 }

@@ -84,7 +84,7 @@ sub Poll_must_have_two_choices {
     'A poll must have at least two choices.';
 }
 sub Poll_directory_not_writeable {
-    "The poll directory is not writeable";
+    "Configuration error? Unable to create the poll directory <tt>$_[1]</tt>"
 }
 sub CIVS_poll_created {
  "CIVS poll created: $_[1]";

@@ -29,21 +29,21 @@ PERL='/usr/bin/perl'
 # installation is under user <username>, that the web server
 # recognizes public_html as a source for web documents, and that
 # the web server is willing to run CGI scripts from public_cgi-bin.
-HTMLDIR='/home/username/public_html/civs'
-CGIBINDIR='/home/username/public_cgi-bin/civs'
+HTMLDIR='/var/www/html/civs'
+CGIBINDIR='/usr/lib/cgi-bin/civs'
 
 # The filesystem path on the web server to the directory containing
 # the CIVS data for each election.  This directory contains the server's
 # private key, all the ballots cast in elections, etc.  So it would be
 # advisable for this *not* to be publicly accessible.
-CIVSDATADIR='/home/username/civs'
+CIVSDATADIR='/home/username/civs-data'
 
 # The URL path to the CIVS CGI scripts.  This is relative to $THISHOST.
 # I.e., the scripts will be found at $PROTO://$THISHOST$CIVSBINURL.
-CIVSBINURL='/cgi-bin/username/civs'
+CIVSBINURL='/cgi-bin/civs'
 
 # The URL to the homepage of the CIVS server, relative to http://$THISHOST
-CIVSURL='/~username/civs'
+CIVSURL='/civs'
 
 # The extension that should be added to Perl scripts so that the
 # web server will recognize them as such.
@@ -83,7 +83,7 @@ UTF8_SUFFIX='.utf8'
 
 # Password/key for site administrator. Must be defined to
 # something secret. Current definition is a placeholder.
-ADMIN_KEY=''
+ADMIN_KEY='CHANGE ME NOW'
 
 # Log visits to the home page?
 LOG_HOME_VISITS=
