@@ -12,7 +12,7 @@ SUPERVISOR='andru@cs.cornell.edu'
 
 # The address of the SMTP server that CIVS will use to send email.
 # This server must be willing to accept email from $SUPERVISOR.
-SMTPHOST='appsmtp.mail.cornell.edu'
+SMTP_HOST='appsmtp.mail.cornell.edu'
 
 # The filesystem path on the web server to the Perl interpreter
 PERL='/usr/bin/perl'

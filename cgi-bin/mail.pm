@@ -6,6 +6,9 @@ package mail;   # should be CIVS::Mail
 use strict;
 use warnings;
 use MIME::Base64;
+use Authen::SASL;
+use Net::SMTP;
+use IO::Socket::SSL;
 
 # Export the package interface
 BEGIN {
@@ -14,8 +17,9 @@ BEGIN {
 
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
-    @EXPORT      = qw(&Send &ConsumeSMTP &ConnectMail &CloseMail
-		      &CheckAddr &TrimAddr &SendHeader);
+    @EXPORT      = qw(&OpenMail &CloseMail &MailFrom &MailTo
+                      &StartMailData &EndMailData &Send &SendHeader
+                      &CheckAddr &TrimAddr);
 }
 
 # Package imports
@@ -23,29 +27,15 @@ use civs_common;
 use Socket;
 
 # Non-exported package globals
-our $sin;
+our $smtp;
 our $verbose;
+our $use_ssl = @SMTP_USE_SSL@;
 
 &init;
 
 # Initialize package
 sub init {
-	# connect(SMTP, $sin) || print "Can't connect\n";
-
-	$verbose = 0;
-}
-
-sub Init_mail_socket {
-    my $proto = getprotobyname('tcp');
-    socket(SMTP, &PF_INET, &SOCK_STREAM, $proto) ||
-	print "can't open socket: $!\n";
-    my $port = getservbyname('smtp', 'tcp') ||
-	print "can't get port\n";
-    if ($port eq '') { exit 1; }
-    my $iaddr = gethostbyname('@SMTPHOST@') ||
-	print "no such host\n";
-    if ($iaddr eq '') { exit 1; }
-    $sin = pack_sockaddr_in($port, $iaddr);
+    $verbose = 0;
 }
 
 # Package functions
@@ -71,57 +61,77 @@ sub Send {
 	    print $s."\n"; STDOUT->flush();
 	}
 	if (!($local_debug)) {
-	    print SMTP $s."\r\n";
+            $smtp->datasend($s."\r\n");
 	}
-    }
-}
-
-# Read a response from the SMTP server after making sure it has all
-# pending input. Return zero iff an error code is reported.
-sub SendSMTP {
-    if ($local_debug) { return 1; }
-    SMTP->flush;
-    while (<SMTP>) {
-	if ($verbose) {
-	    print $_; STDOUT->flush();
-	}
-	if ($_ =~ m/^[123][0-9][0-9] /) { last; }
-	if ($_ =~ m/^[45][0-9][0-9] /) { print "SMTP server rejects request: $_"; return 0; }
-    }
-    return 1;
-}
-
-# Like SendSMTP, but terminates if there is an error.
-sub ConsumeSMTP {
-    if (!SendSMTP) {
-	exit 1;
     }
 }
 
 # Set up a connection to the SMTP server so email can be sent
-sub ConnectMail {
+# No actual connection is created in local debug mode.
+sub OpenMail {
     if ($local_debug) {
 	print "<pre>\r\n";
-	return;
+        return 1
     }
-    &Init_mail_socket;
-    if (connect(SMTP, $sin)) {
-        #print STDERR "SMTP Connection established\n";
-	ConsumeSMTP;
-	Send 'helo @THISHOST@';
-	ConsumeSMTP;
-    } else {
-	die "Can't connect to SMTP server: $!\n";
+    $smtp = Net::SMTP->new('@SMTP_HOST@',
+       Hello => '@THISHOST@',
+       SSL => @SMTP_USE_SSL@,
+       Port => @SMTP_PORT@,
+       Timeout => 5
+    );
+    if (!defined($smtp)) {
+        print $@, $cr;
+        return 0
+    }
+    print 'Connecting to: ', $smtp->domain, $cr;
+    if (@SMTP_STARTTLS@) {
+        if (!$smtp->starttls(SSL_verify_mode => SSL_VERIFY_NONE)) {
+            print 'STARTTLS failed', $cr;
+            print $@, $cr;
+            return 0
+        }
+    }
+    if ('@SMTP_AUTH_USER@' ne '') {
+        if (!$smtp->auth('@SMTP_AUTH_USER@', '@SMTP_AUTH_PASSWD@')) {
+            print 'Authentication for @SMTP_AUTH_USER@ failed.', $cr;
+            print $@, $cr;
+            return 0
+        }
+    }
+    print 'Connection established', $cr;
+    1
+}
+
+sub MailFrom {
+    (my $sender) = @_;
+    if (!$smtp->mail($sender)) {
+        print $@, $cr;
+    }
+}
+
+sub MailTo {
+    if (!$smtp->recipient(@_)) {
+        print $@, $cr;
+    }
+}
+
+sub StartMailData {
+    if (!$smtp->data()) {
+        print $@, $cr;
+    }
+}
+sub EndMailData {
+    if (!$smtp->dataend()) {
+        print $@, $cr;
     }
 }
 
 # Close the connection to the SMTP server.
 sub CloseMail {
-    Send 'quit';
     if ($local_debug) {
 	print '</pre>';
     } else {
-	close SMTP;
+        $smtp->quit();
     }
 }
 
@@ -130,7 +140,7 @@ sub SendHeader {
     my $first = 1;
     my $text = '';
     foreach my $section (@_) {
-	# print CGI::pre('Section: ', $section);
+	# print 'Section: ', $section;
 	if (!$first) { $text .= "\r\n " }
 	$first = 0;
 	if ($section =~ m/[\200-\377]/) {
@@ -151,7 +161,7 @@ sub SendHeader {
 	}
     }
     Send $header . ': ' . $text;
-    # print CGI::pre($header. ': '. $text);
+    # print $header, ': ', $text;
 }
  
 1; #ok

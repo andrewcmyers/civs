@@ -557,7 +557,7 @@ sub SendKeys {
     my @addresses =  &unique_elements( @{$addresses_ref} );
     my $now = time();
     my $load = GetEmailLoad($now);
-    if (!($local_debug)) { ConnectMail; }
+    OpenMail;
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
 	if ($v eq '') { next; }
@@ -603,9 +603,12 @@ sub SendKeys {
 	    my $uniqueid = &SecureNonce;
 	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
-	    Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
-            Send "rcpt to:<$v>"; ConsumeSMTP;
-            Send "data"; ConsumeSMTP;
+            MailFrom($civs_supervisor);
+            MailTo($v);
+	    #Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
+            #Send "rcpt to:<$v>"; ConsumeSMTP;
+            #Send "data"; ConsumeSMTP;
+            StartMailData();
 	    SendHeader ('From',
 		$tx->CIVS_poll_supervisor($name),
 		"<$civs_supervisor>");
@@ -653,7 +656,7 @@ sub SendKeys {
 </body>
 </html>';
 	    SendBody $html;
-            Send '.'; ConsumeSMTP;
+            EndMailData;
         }
     }
     SetEmailLoad($now, $load);
