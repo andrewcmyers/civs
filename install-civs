@@ -55,7 +55,11 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
-	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
+	     -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
+	     -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
+	     -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|' \
+	     -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
+	     -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
 	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	     -e 's|@PERLEXT@|'$PERLEXT'|' \
@@ -101,7 +105,12 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
 	     -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
-	     -e 's|@SMTPHOST@|'$SMTPHOST'|' \
+	     -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
+	     -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
+	     -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|' \
+	     -e 's|@SMTP_STARTTLS@|'$SMTP_STARTTLS'|' \
+	     -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
+	     -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
 	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	     -e 's|@PERLEXT@|'$PERLEXT'|' \

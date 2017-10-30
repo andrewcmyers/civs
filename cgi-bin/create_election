@@ -179,34 +179,39 @@ if ($publicize eq 'yes') {
 }
 
 if (!($local_debug)) {
+    if (OpenMail) {
+        my $civs_supervisor = '@SUPERVISOR@';
+        MailFrom($civs_supervisor);
+        MailTo($email_addr);
+        StartMailData;
+        SendHeader 'From', "$civs_supervisor (Condorcet Internet Voting Service)";
+        SendHeader 'To',  "$email_addr ($name)";
+        SendHeader 'Subject', $tx->CIVS_poll_created($title);
+        Send 'Content-Type: text/plain; charset="utf-8"';
+        Send '';
+        Send $tx->creation_email_info1($title,$url);
+        if ($public eq 'yes') {
+            if ($publicize eq 'yes') {
+                Send $tx->creation_email_public_link("@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id");
+            } else {
+                Send $tx->creation_email_public_link("@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
+            }
+        }
+        Send $tx->for_more_information_about_CIVS($civs_home);
+        EndMailData;
+        CloseMail;
 
-ConnectMail;
-my $civs_supervisor = '@SUPERVISOR@';
-Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
-Send "rcpt to:<$email_addr>"; ConsumeSMTP;
-Send "data"; ConsumeSMTP;
-SendHeader 'From', "$civs_supervisor (Condorcet Internet Voting Service)";
-SendHeader 'To',  "$email_addr ($name)";
-SendHeader 'Subject', $tx->CIVS_poll_created($title);
-Send 'Content-Type: text/plain; charset="utf-8"';
-Send "";
-Send $tx->creation_email_info1($title,$url);
-if ($public eq 'yes') {
-    if ($publicize eq 'yes') {
-	Send $tx->creation_email_public_link("@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id");
+        print "</pre>\n";
+
+        print p($tx->mail_has_been_sent($email_addr));
+        print p($tx->click_on_the_URL_to_start($title));
     } else {
-	Send $tx->creation_email_public_link("@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
+        print p("Could not connect to SMTP server", tt('@SMTP_HOST@'));
+        Log("Failed to send email to supervisor of $election_id");
+        untie %edata;
+        print end_html();
+        exit 0;
     }
-}
-Send $tx->for_more_information_about_CIVS($civs_home);
-Send "."; ConsumeSMTP;
-CloseMail;
-
-print "</pre>\n";
-
-print p($tx->mail_has_been_sent($email_addr));
-print p($tx->click_on_the_URL_to_start($title));
-
 } else { # debugging mode
     print p($tx->here_is_the_control_URL);
     print pre("<a href=\"$url\">$url</a>");
@@ -228,7 +233,7 @@ exit 0;
 sub SendResultKey {
     my $result_key = shift;
 
-    ConnectMail;
+    OpenMail;
     my @result_addrs = split /\s+/, $result_addrs;
     foreach my $addr (@result_addrs) {
 	$addr = TrimAddr($addr);
@@ -241,18 +246,18 @@ sub SendResultKey {
 
 	my $url = "@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
 	my $civs_supervisor = '@SUPERVISOR@';
-	Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
-	Send "rcpt to:<$addr>"; ConsumeSMTP;
-	Send "data"; ConsumeSMTP;
+        MailFrom($civs_supervisor);
+        MailTo($addr);
+        StartMailData;
 	SendHeader 'From', "$civs_supervisor (".
 	    $tx->Condorcet_Internet_Voting_Service_email_hdr.')';
 	SendHeader 'To', $addr;
 	SendHeader 'Subject', $tx->Results_of_CIVS_poll($title);
-	Send 'Content-Type: text/plain; charset="utf-8"';
+	SendHeader 'Content-Type', 'text/plain; charset="utf-8"';
 	Send "";
 	Send $tx->Results_key_email_body($title,$url);
 	Send $tx->for_more_information_about_CIVS($civs_home);
-	Send "."; ConsumeSMTP;
+        EndMailData;
     }
     CloseMail;
 
