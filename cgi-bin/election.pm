@@ -603,12 +603,10 @@ sub SendKeys {
 	    my $uniqueid = &SecureNonce;
 	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
-            MailFrom($civs_supervisor);
-            MailTo($v);
-	    #Send "mail from:<$civs_supervisor>"; ConsumeSMTP;
-            #Send "rcpt to:<$v>"; ConsumeSMTP;
-            #Send "data"; ConsumeSMTP;
-            StartMailData();
+            MailFrom($civs_supervisor) &&
+            MailTo($v) &&
+            StartMailData() || next;
+
 	    SendHeader ('From',
 		$tx->CIVS_poll_supervisor($name),
 		"<$civs_supervisor>");
