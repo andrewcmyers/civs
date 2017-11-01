@@ -37,7 +37,7 @@ INSTALLATION INSTRUCTIONS
      subdirectory such as extra/.
    * Add index.html.var to the DirectoryIndex option (may be in dir.conf)
 
-4. Install necessary Perl modules using cpan or cpanm (cpanminus):
+4. Install necessary Perl modules using apt-get, cpan or cpanm (cpanminus):
 
    For basic operation:
 
