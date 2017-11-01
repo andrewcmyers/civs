@@ -181,9 +181,12 @@ if ($publicize eq 'yes') {
 if (!($local_debug)) {
     if (OpenMail) {
         my $civs_supervisor = '@SUPERVISOR@';
-        MailFrom($civs_supervisor);
-        MailTo($email_addr);
-        StartMailData;
+        MailFrom($civs_supervisor) &&
+        MailTo($email_addr) &&
+        StartMailData || do {
+            CloseMail;
+            exit 0;
+        };
         SendHeader 'From', "$civs_supervisor (Condorcet Internet Voting Service)";
         SendHeader 'To',  "$email_addr ($name)";
         SendHeader 'Subject', $tx->CIVS_poll_created($title);

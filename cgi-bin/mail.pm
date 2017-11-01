@@ -83,47 +83,53 @@ sub OpenMail {
         print $@, $cr;
         return 0
     }
-    print 'Connecting to: ', $smtp->domain, $cr;
+    # print 'Connected to: ', $smtp->domain, $cr;
     if (@SMTP_STARTTLS@) {
         if (!$smtp->starttls(SSL_verify_mode => SSL_VERIFY_NONE)) {
-            print 'STARTTLS failed', $cr;
-            print $@, $cr;
+            print 'STARTTLS failed:', $smtp->message(), $cr;
             return 0
         }
     }
     if ('@SMTP_AUTH_USER@' ne '') {
         if (!$smtp->auth('@SMTP_AUTH_USER@', '@SMTP_AUTH_PASSWD@')) {
-            print 'Authentication for @SMTP_AUTH_USER@ failed.', $cr;
-            print $@, $cr;
+            print 'Authentication for @SMTP_AUTH_USER@ failed.',
+               $smtp->message(), $cr;
             return 0
         }
     }
-    print 'Connection established, sending mail...', $cr;
     1
 }
 
 sub MailFrom {
     (my $sender) = @_;
     if (!$smtp->mail($sender)) {
-        print $@, $cr;
+        print "MailFrom:", $smtp->message(), $cr;
+        return 0
     }
+    1
 }
 
 sub MailTo {
     if (!$smtp->recipient(@_)) {
-        print $@, $cr;
+        print "To: ", $smtp->message(), $cr;
+        return 0
     }
+    1
 }
 
 sub StartMailData {
     if (!$smtp->data()) {
-        print $@, $cr;
+        print "StartMailData:", $smtp->message(), $cr;
+        return 0
     }
+    1
 }
 sub EndMailData {
     if (!$smtp->dataend()) {
-        print $@, $cr;
+        print "EndMailData: ", $smtp->message(), $cr;
+        return 0
     }
+    1
 }
 
 # Close the connection to the SMTP server.
