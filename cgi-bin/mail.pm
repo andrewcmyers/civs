@@ -98,7 +98,7 @@ sub OpenMail {
             return 0
         }
     }
-    print 'Connection established', $cr;
+    print 'Connection established, sending mail...', $cr;
     1
 }
 
