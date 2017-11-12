@@ -1,7 +1,6 @@
 package mail;   # should be CIVS::Mail
 
-# TODO: This package should be rewritten to be a wrapper around 
-# Mail::Mailer or Net::SMTP.
+# This package is a wrapper around Net::SMTP.
 
 use strict;
 use warnings;

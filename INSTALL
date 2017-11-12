@@ -35,13 +35,30 @@ INSTALLATION INSTRUCTIONS
      mod_negotiation, mod_mime.
    * Include the httpd-languages.conf file if it exists, possibly in a
      subdirectory such as extra/.
-   * Add index.html.var to the DirectoryIndex option.
+   * Add index.html.var to the DirectoryIndex option (may be in dir.conf)
 
-4. Test the server installation by browsing to $CIVSURL, creating
+4. Install necessary Perl modules using apt-get, cpan or cpanm (cpanminus):
+
+   For basic operation:
+
+      HTML::TagFilter
+      HTML::Parser
+      HTML::Tagset
+      URI::Escape
+      CGI
+      Net::SMTP
+      Authen::SASL
+
+   For TLS support:
+
+      IO:Socket::SSL
+      Net::SSLeay (possibly)
+      Also install openssl and libssl-dev
+
+5. Test the server installation by browsing to $CIVSURL, creating
    an election, adding yourself as a voter, opening the election,
    voting in the election, closing the election, and viewing the
-   results. You may need to obtain some Perl packages, especially
-   HTML::TagFilter.
+   results.
 
 Good luck!
 
