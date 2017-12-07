@@ -396,6 +396,10 @@ sub DetailsHeader {
 	$tx->Hide_details, '</button></h2>', $cr;
 }
 
+sub DetailsFooter {
+    print RESULTS '</div>', $cr;
+}
+
 # Generate a ballot report or say that it hasn't been enabled.
 sub BallotReport {
     if ($ballot_reporting eq 'yes') {
@@ -626,15 +630,19 @@ sub PrintReport {
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
     
     &PrintRanking($rref, \@matrix);
-    print RESULTS '<div class=trysomepolls>', $cr,
-        &TrySomePolls(), $cr,
-        '</div>', $cr;
     &DetailsHeader;
-    &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
-    &BallotReport;
-    &$print_details($log, $num_choices, \@choices, $ciref);
+      &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
+      &BallotReport;
+      &$print_details($log, $num_choices, \@choices, $ciref);
+    &DetailsFooter;
+    &AdvertisePolls;
+}
 
-    print RESULTS '</div>', $cr;
+sub AdvertisePolls {
+    print RESULTS
+        '<div class=trysomepolls>', $cr,
+          &TrySomePolls(), $cr,
+        '</div>', $cr;
 }
 
 ############################################################
