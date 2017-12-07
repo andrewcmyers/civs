@@ -683,7 +683,7 @@ sub poll_description_hdr {
     'Descrizione della votazione';
 }
 sub Ranking_result {
-    'Ranking result';
+    'Classifica risultante';
 }
 sub x_beats_y { # x y w l 
     "$_[1] batte $_[2] $_[3]&ndash;$_[4]";
