@@ -48,7 +48,6 @@ sub trim {
 }
 foreach my $ch (@c1) {
     $ch = &trim($ch);
-    $ch =~ s/--/\&mdash;/g;
     $ch = &Filter($ch);
     if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
