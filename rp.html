@@ -36,20 +36,24 @@ Condorcet methods were invented by
 <a href="http://en.wikipedia.org/wiki/Marquis_de_Condorcet">
 Marie Jean Antoine Nicolas de Caritat, marquis de Condorcet</a>.
 </p>
-<p>
-Condorcet election methods have been called Instant Round-Robin Voting because
-they use the voters' rankings to compare every choice against every other in
-head-to-head contests. Intuitively, it would not make sense if the winner lost
-in a head-to-head contest with some other choice.  Condorcet methods aim to
-prevent such an outcome.
 
-</p>
 <p>
-The voters are considered to collectively have a preference for choice A over
-choice B if A is ranked higher than B on more ballots than B is ranked higher
-than A on. If the voters prefer a choice A to every other choice, choice A is
-the <b>Condorcet winner</b> (CW).  An election method is a <b>Condorcet method</b> if it is guaranteed to elect the Condorcet winner, when one exists. 
+Condorcet election methods use the voters' rankings to compare every choice
+(alternative) against every other in head-to-head contests. Intuitively, it
+would not make sense if the winner of an election would lose a head-to-head
+contest with some other choice. Condorcet methods aim to prevent such an
+outcome.
 </p>
+
+<p>
+The voters are considered to collectively have a preference for choice
+A over choice B if A is ranked higher than B on more ballots than B
+is ranked higher than A on. If the voters prefer a choice A to every
+other choice, choice A is the <b>Condorcet winner</b> (CW).  An election
+method is a <b>Condorcet method</b> if it is guaranteed to elect the
+Condorcet winner, when one exists.
+</p>
+
 <p>
 Although there is usually a Condorcet winner, especially when there are
 many voters, it is possible that there isn't one.
@@ -99,36 +103,37 @@ first few choices.
 
 <h2>Which completion rule should I use?</h2>
 <p>
-Usually it doesn't matter which completion rule is used, because there is a
-Condorcet winner, in which case all the rules will agree.  If all five rules
-agree, you can be confident that you're getting the right result.  However,
-it's a good idea to commit to the rule you're going to use ahead of time, to
-avoid arguments later on.
+Usually it doesn't matter which completion rule is used, because there
+is a Condorcet winner, in which case all the rules will agree.  If all
+five rules agree, you can be confident that you're getting the right
+result.  However, it's a good idea to commit to the rule you're going
+to use ahead of time, to avoid arguments later on.
 </p>
 
 <p>
-The different rules have advantages and disadvantages. Minimax is the cheapest
-to compute and finds the choice that in one sense is closest to being the Condorcet winner.
-Beatpath Winner (Schulze) can also be computed fairly cheaply using the
-Floyd-Warshall all-pairs-shortest-paths algorithm. These two are probably the
-best known and most widely used methods.
-The two ranked-pairs rules (CIVS Ranked Pairs and MAM) are more
-expensive.  If there are <i>n</i> choices, the ranked pairs
-algorithms are about <i>n</i> times slower than Beatpath Winner. This
-slowdown is only noticeable if there are many choices (more than twenty).
-Anecdotally, Beatpath Winner seems to be less stable than the other rules
-in the sense that adding one ballot to the set of ballots can have a
-large effect on the rankings, perhaps because one ballot can create a
-long new beatpath with global effects.
-Minimax tends to be the most stable in the sense that a given voter's ballot cannot affect the
-ordering as much. The difference between the two ranked pairs methods,
-CIVS Ranked Pairs and MAM, is that MAM uses a random tie-breaking method, whereas
-CIVS Ranked Pairs is completely deterministic. Thus, the result of running MAM
-is not determined by just the ballots cast. Comparison of the results of MAM
-and CIVS RP will show if randomization was needed and used by MAM.  If there is
-a lot of concern about strategic voting (particularly, burying attacks),
-Condorcet-IRV is a reasonable choice.
-</p>
+The different rules have advantages and disadvantages. Minimax is
+the cheapest to compute and finds the choice that in one sense is
+closest to being the Condorcet winner.  Schulze (Beatpath Winner)
+can also be computed fairly cheaply using the Floyd-Warshall
+all-pairs-shortest-paths algorithm. These two are probably the best
+known and most widely used methods.  The two ranked-pairs rules (CIVS
+Ranked Pairs and MAM) are more expensive.  If there are <i>n</i>
+choices, the ranked pairs algorithms are about <i>n</i> times slower
+than Schulze. This slowdown is only noticeable if there are many
+choices (more than twenty).  The rankings produced by minimax tend
+to be the most stable in the sense that a given voter's ballot
+does not affect the ordering much. The difference between the two
+ranked pairs methods, CIVS Ranked Pairs and MAM, is that MAM uses a
+random tie-breaking method, whereas CIVS Ranked Pairs is completely
+deterministic. Thus, the result of running MAM is not determined by
+just the ballots cast. Comparison of the results of MAM and CIVS RP
+will show if randomization was needed and used by MAM.  If there is a
+lot of concern about strategic voting (particularly, burying attacks),
+Condorcet-IRV is a reasonable choice. </p>
+
+<a name="minimax">
+<h2>Minimax</h2>
+</a>
 
 <a name="rp">
 <h2>CIVS Ranked Pairs</h2>
@@ -158,20 +163,20 @@ into account.
 </p>
 
 <p>
-The major difference between CIVS Ranked Pairs and MAM is
-the rule on when to keep a preference. In CIVS RP, a preference is
-kept exactly when it does not create any <i>new</i> cycles when considered in
-conjunction with <i>strictly stronger</i>, kept preferences. Thus, preferences
-of equal strength may be kept even though in conjunction they produce a new
+The major difference between CIVS Ranked Pairs and MAM is the rule on
+when to keep a preference. In CIVS RP, a preference is kept exactly when
+it does not create any <i>new</i> cycles when considered in conjunction
+with <i>strictly stronger</i>, kept preferences. Thus, preferences of
+equal strength may be kept even though in conjunction they produce a new
 cycle, as long as <i>individually</i> they do not.
 </p>
 <p>
-CIVS RP is a deterministic method that does not use randomness, unlike MAM (and
-some other voting methods).  Voting methods that rely on randomness need to
-have a mechanism for generating randomness in a trustworthy way, because
-otherwise the voting system itself might cheat by generating randomness until
-the best possible outcome is achieved from the viewpoint of whoever controls
-the randomness.
+CIVS RP is a deterministic method that does not use randomness, unlike
+MAM (and some other voting methods).  Voting methods that rely on
+randomness need to have a mechanism for generating randomness in a
+trustworthy way, because otherwise the voting system itself might cheat
+by generating randomness until the best possible outcome is achieved
+from the viewpoint of whoever controls the randomness.
 </p>
 
 <h3>Ranking the choices</h3>
@@ -199,18 +204,19 @@ germane for this comparison).
 The Condorcet-IRV rule is a Condorcet completion rule that uses an IRV-like
 process to perform Condorcet completion. It was originally proposed by
 Thomas Hill of England's Electoral Reform Society.
-Given a set of choices, this
-algorithm finds the top-ranked choice (or choices) in the following way.  If
-there is a Condorcet winner, that is the top-ranked choice. Otherwise, for each
-choice, the ballots are examined to see on how many of the ballots that choice
-is the highest ranked among the choices being considered.  Call this number the
-top count for the choice. The choice with the smallest count is removed from
-consideration and the process repeats, looking for a CW among the remaining
-choices. (If multiple choices tie for having the smallest top count, one is
-randomly picked for removal.) Eventually, there will either be a Condorcet
-winner, or the remaining choices will all have the same top count. The
-remaining choice or choices are then considered the top-ranked choices among
-the set.  CIVS repeats this algorithm to construct a ranking of all choices.
+Given a set of choices, this algorithm finds the top-ranked choice (or
+choices) in the following way.  If there is a Condorcet winner, that
+is the top-ranked choice. Otherwise, for each choice, the ballots are
+examined to see on how many of the ballots that choice is the highest
+ranked among the choices being considered.  Call this number the top
+count for the choice. The choice with the smallest count is removed
+from consideration and the process repeats, looking for a CW among the
+remaining choices. (If multiple choices tie for having the smallest
+top count, one is randomly picked for removal.) Eventually, there will
+either be a Condorcet winner, or the remaining choices will all have
+the same top count. The remaining choice or choices are then considered
+the top-ranked choices among the set.  CIVS repeats this algorithm to
+construct a ranking of all choices.
 </p>
 <p>
 Note that although this rule uses a runoff procedure to eliminate
