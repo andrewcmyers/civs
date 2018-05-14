@@ -25,9 +25,11 @@ my $cr = "\n";
 
 if (! -r $election_data) {
     print STDERR "Cannot access election data at $election_data\n";
+    exit 1
 }
 if (! -r $vote_data) {
     print STDERR "Cannot access ballot data at $vote_data\n";
+    exit 1
 }
 
 my %edata, my %vdata;
