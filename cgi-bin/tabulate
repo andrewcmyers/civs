@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -I/Users/andru/civs/cgi-bin
 
 use strict;
 use warnings;
@@ -17,6 +17,8 @@ if ($#ARGV != 1) {
 
 my $algorithm = $ARGV[0];
 my $election_dir = $ARGV[1];
+
+eval "use $algorithm";
 
 my $election_data = $election_dir."/election_data";
 my $vote_data = $election_dir."/vote_data";
@@ -126,7 +128,7 @@ sub PrintMatrix {
 		} elsif ($w == $l) {
 		    print "$tie,";
 		} else {
-		    print '$w to $l';
+		    print "$w to $l";
 		}
 		if ($zerodot && $w == 0) {
 		    print '.';
@@ -180,12 +182,9 @@ sub PrintRanking {
     for (my $rank = 0; $rank <= $#result; $rank++) {
 	my @winner = @{$result[$rank]};
 	# find the explanatory defeat
-	print ''.($j+1).'. ';
+	printf '%4d. ', $j+1;
 	my $ranksize = $#winner + 1;
-	if ($ranksize > 1) {
-	    print $tie, $cr;
-	}
-	    my $tie;
+        my $tie;
 	if ($num_seen < $num_winners &&
 	    $num_seen + $ranksize > $num_winners) {
 	    $tie = 1;
@@ -194,11 +193,12 @@ sub PrintRanking {
 	    $tie = 0;
 	}
 	for (my $i = 0; $i <= $#winner; $i++) {
-	    if ($i > 0) { print $cr; }
+	    if ($i > 0) { print $cr, '      '; }
             print $choices[$winner[$i]];
 	    $choice_rank[$winner[$i]] = $j++;
 	}
 	$num_seen += $#winner + 1;
+	print $cr;
     }
 }
 
@@ -261,7 +261,7 @@ sub PrintReport {
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
     
     &PrintRanking($rref, \@matrix);
-    &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
-    &BallotReport;
-    &$print_details($log, $num_choices, \@choices, $ciref);
+    # &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
+    # &$print_details($log, $num_choices, \@choices, $ciref);
+
 }
