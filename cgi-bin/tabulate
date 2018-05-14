@@ -1,0 +1,267 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use DB_File;
+# use beatpath;
+# use beatpath2;
+# use rp;
+# use runoff;
+# use minimax;
+
+if ($#ARGV != 1) {
+    print STDERR "Usage: tabulate <algorithm> <election_dir> ...\n";
+    exit 1;
+}
+
+my $algorithm = $ARGV[0];
+my $election_dir = $ARGV[1];
+
+my $election_data = $election_dir."/election_data";
+my $vote_data = $election_dir."/vote_data";
+my $tie = "=";
+my $cr = "\n";
+
+if (! -r $election_data) {
+    print STDERR "Cannot access election data at $election_data\n";
+}
+if (! -r $vote_data) {
+    print STDERR "Cannot access ballot data at $vote_data\n";
+}
+
+my %edata, my %vdata;
+
+my $db = tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
+my $vdb = tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
+
+my ($name, $title, $email_addr, $description, $num_winners, $addresses,
+     @addresses, $election_begin, $election_end, $public, $publicize, $writeins, $allow_voting, $voting_enabled,
+     $proportional, $use_combined_ratings, $external_ballots,
+     $choices, @choices, $num_choices, $num_auth,
+     $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
+     $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
+     $restrict_results, $result_addrs, $hash_result_key, $last_vote_time,
+     $close_time, $email_load);
+
+&ExtractData;
+&SetupMatrix;
+&PrintReport($algorithm);
+
+# Extract data from databases. This should be factored out into
+# common code that is used both here and in election.pm
+sub ExtractData {
+    $name = $edata{'name'};
+    if (!defined($name)) {
+        print STDERR "Cannot read election data file -- wrong BDB version?\n";
+        exit 1;
+    }
+    $title = $edata{'title'};
+    $email_addr = $edata{'email_addr'};
+    $description = $edata{'description'};
+    $num_winners = $edata{'num_winners'};
+    $addresses = $edata{'addresses'} or $addresses = "";
+    @addresses = split /[\r\n]+/, $addresses;
+    $election_begin = $edata{'election_begin'};
+    $election_end = $edata{'election_end'};
+    $public = $edata{'public'};
+    $publicize = $edata{'publicize'};
+    $writeins = $edata{'writeins'};
+    $allow_voting = $edata{'allow_voting'} || 'no';
+    $voting_enabled = (($writeins && $writeins ne 'yes') || $allow_voting eq 'yes');
+    $proportional = $edata{'proportional'} or $proportional = "";
+    $use_combined_ratings = $edata{'use_combined_ratings'};
+    $choices = $edata{'choices'} or $choices = "";
+    @choices = split /[\r\n]+/, $choices;
+    $num_choices = $#choices + 1;
+    $num_auth = $edata{'num_auth'};
+    $shuffle = $edata{'shuffle'};
+    $no_opinion = $edata{'no_opinion'} or $no_opinion = 'yes';
+    $num_votes = $vdata{'num_votes'} or $num_votes = 0;
+    $close_time = $vdata{'close_time'};
+    $recorded_voters = $vdata{'recorded_voters'};
+    $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';
+    $external_ballots = $edata{'external_ballots'} or $external_ballots = 'no';
+    $reveal_voters = $edata{'reveal_voters'} or $reveal_voters = '';
+    $restrict_results = $edata{'restrict_results'};
+    $result_addrs = $edata{'result_addrs'};
+    $hash_result_key = 0;
+    $last_vote_time = $vdata{'last_vote_time'};
+    $email_load = $edata{'email_load'}; # timestamp num_mails
+    if ($restrict_results eq 'yes') {
+	$hash_result_key = $edata{'hash_result_key'};
+    }
+}
+
+# PrintMatrix(n, m, choices, choice_index, zerodot) prints out the matrix with
+# the order of the choices defined by choice_index: choice_index[i] is the
+# index of the i'th choice (in choices and m).
+sub PrintMatrix {
+    my $n = $_[0];
+    my @m = @{$_[1]};
+    my @choices = @{$_[2]};
+    my @choice_index = @{$_[3]};
+    my $zerodot = $_[4];
+
+    print ',';
+    for (my $jj = 0; $jj < $n; $jj++) {
+		my $j1 = $jj + 1;
+		print $j1, ',';
+    }
+    for (my $jj = 0; $jj < $n; $jj++) {
+	my $j = $choice_index[$jj];
+	my $j1 = $jj + 1;
+	print "$j1,";
+	for (my $kk = 0; $kk < $n; $kk++) {
+	    my $k = $choice_index[$kk];
+	    if ($j == $k) {
+		print "-,";
+	    } else {
+		my $w = $m[$j][$k];
+		my $l = $m[$k][$j];
+		my $choicesj = $choices[$j]; $choicesj =~ s/<[^>]*>//gs;
+		my $choicesk = $choices[$k]; $choicesk =~ s/<[^>]*>//gs;
+		if ($w > $l) {
+		    print $w;
+		} elsif ($w == $l) {
+		    print "$tie,";
+		} else {
+		    print '$w to $l';
+		}
+		if ($zerodot && $w == 0) {
+		    print '.';
+		} else {
+		    print $w;
+		}
+		print $cr;
+	    }
+	}
+    }
+}
+
+my $condorcet_winner;
+my (@result, @matrix, @closure_matrix, @choice_index, @choice_rank);
+
+# Fix a ballot ranking so it is correct for nonproportional computations
+sub FixProp {
+    if ($proportional eq 'yes' && !$use_combined_ratings) {
+        return $num_choices - $_[0];
+    } else {
+        return $_[0];
+    }
+}
+
+sub SetupMatrix {
+    # Compute condorcet winner and set up (nonproportional) $matrix
+    $condorcet_winner = -1;
+    for (my $j = 0; $j < $num_choices; $j++) {
+	if ($condorcet_winner < 0) { $condorcet_winner = $j; }
+	for (my $k = 0; $k < $num_choices; $k++) {
+	    my $n; $n = $vdata{"$j.$k"} or $n = 0;
+            $n = &FixProp($n);
+	    $matrix[$j][$k] = $n;
+	    if ($j != $k) {
+		my $m; $m = $vdata{"$k.$j"} or $m = 0;
+                $m = &FixProp($m);
+		if ($n <= $m && $condorcet_winner == $j) {
+                    $condorcet_winner = -1; # can't be this one
+		}
+	    }
+	}
+    }
+}
+
+sub PrintRanking {
+    my @result = @{$_[0]};
+    my @matrix = @{$_[1]};
+    my $had_tie = 0;
+    my $j = 0;
+    my $num_seen = 0;
+    for (my $rank = 0; $rank <= $#result; $rank++) {
+	my @winner = @{$result[$rank]};
+	# find the explanatory defeat
+	print ''.($j+1).'. ';
+	my $ranksize = $#winner + 1;
+	if ($ranksize > 1) {
+	    print $tie, $cr;
+	}
+	    my $tie;
+	if ($num_seen < $num_winners &&
+	    $num_seen + $ranksize > $num_winners) {
+	    $tie = 1;
+	    $had_tie = 1;
+	} else {
+	    $tie = 0;
+	}
+	for (my $i = 0; $i <= $#winner; $i++) {
+	    if ($i > 0) { print $cr; }
+            print $choices[$winner[$i]];
+	    $choice_rank[$winner[$i]] = $j++;
+	}
+	$num_seen += $#winner + 1;
+    }
+}
+
+sub details_bookmark {
+    return a({-name=>"details"}, "");
+}
+
+sub Log {
+    print STDERR @_, "\n";
+}
+
+sub MakeChoiceIndex {
+    my @rankings = @{$_[0]};
+    my $j = 0;
+    my @choice_index = ();
+    my @choice_rank = ();
+    for (my $rank = 0; $rank <= $#rankings; $rank++) {
+	my @winner = @{$rankings[$rank]};
+	for (my $i = 0; $i <= $#winner; $i++) {
+	    $choice_index[$j] = $winner[$i];
+	    $choice_rank[$winner[$i]] = $j + 1;
+	    $j++;
+	}
+    }
+    return ([@choice_index], [@choice_rank]);
+}
+
+sub ProcessBallots {
+    my @voters = @{$_[0]};
+    my @ballots = ();
+    foreach my $voter_key (@voters) {
+	my $ballot = $vdata{$voter_key}; 
+	if (!defined($ballot)) {
+	    &Log("Lost ballot for voter key $voter_key?");
+	} else {
+	    my @row = split /,/, $ballot;
+	    push @ballots, \@row;
+	}
+    }
+    return \@ballots;
+}
+
+sub PrintReport {
+    no strict 'refs';
+    (my $module) = @_;
+    my @voters = split /\n/, $vdata{'recorded_voters'};
+    my $bref = &ProcessBallots(\@voters);
+    my $rank_candidates = $module.'::rank_candidates';
+    my $print_details = $module.'::print_details';
+
+#   if (!$algorithm_modules{$module}) {
+#     print RESULTS p("Algorithm module $module for algorithm $algorithm not valid");
+#     print RESULTS '</div>';
+#     return;
+#   }
+
+    (my $rref, my $log) = 
+	&$rank_candidates($num_choices, \@matrix, $bref, \@choices);
+
+    (my $ciref, my $crref) = &MakeChoiceIndex($rref);
+    
+    &PrintRanking($rref, \@matrix);
+    &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
+    &BallotReport;
+    &$print_details($log, $num_choices, \@choices, $ciref);
+}
