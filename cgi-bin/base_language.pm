@@ -210,7 +210,7 @@ sub actual_votes_so_far { # num
     "Actual votes cast thus far: $_[1]"
 }
 sub poll_ends { # end
-    "Poll ends $_[1]."
+    "Announced end of poll: $_[1]"
 }
 sub email_load {
     my $msg = "Email load: ".sprintf("%4.2f", $_[1]);
