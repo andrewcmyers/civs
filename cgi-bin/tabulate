@@ -18,7 +18,7 @@ if ($#ARGV != 1) {
 my $algorithm = $ARGV[0];
 my $election_dir = $ARGV[1];
 
-eval "use $algorithm";
+require "$algorithm.pm";
 
 my $election_data = $election_dir."/election_data";
 my $vote_data = $election_dir."/vote_data";
