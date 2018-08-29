@@ -12,6 +12,7 @@ use mail;
 use Socket;
 use IO::Handle;
 use MIME::Base64;
+use send_result_key;
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 
