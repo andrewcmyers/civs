@@ -24,6 +24,6 @@ print CGI::header(-charset => 'utf-8');
 
 print "OK";
 
-Log("Resent result keys: $election_id");
+Log("Resent result keys: $election_id = $hash_result_key");
 
 exit 0;
