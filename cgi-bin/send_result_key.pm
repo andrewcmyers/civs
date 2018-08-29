@@ -28,9 +28,9 @@ use Digest::MD5 qw(md5_hex);
 # Send authorized result viewers an email containing the URL that
 # allows viewing results.
 sub SendResultKey {
-    my $result_key = shift;
+    (my $election_id, my $title, my $result_addrs, my $result_key) = @_;
 
-    OpenMail;
+    if (!$local_debug) { OpenMail }
     my @result_addrs = split /\s+/, $result_addrs;
     foreach my $addr (@result_addrs) {
 	$addr = TrimAddr($addr);
@@ -60,7 +60,7 @@ sub SendResultKey {
             print p('Here is the result key that would have been sent: ', $result_key);
         }
     }
-    CloseMail;
+    if (!$local_debug) { CloseMail }
 
     print $tx->Done_sending_result_key();
 }

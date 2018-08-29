@@ -221,7 +221,7 @@ if (!($local_debug)) {
 }
 
 if ($restrict_results eq 'yes') {
-    SendResultKey($result_key);
+    SendResultKey($election_id, $title, $result_addrs, $result_key);
 }
 
 Log("Election $title ($election_id) created by $email_addr");
