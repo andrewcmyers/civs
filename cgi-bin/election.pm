@@ -18,7 +18,7 @@ BEGIN {
     &LockElection &UnlockElection &StartElection &IsStarted
     &CheckStarted &PointToResults &IsStopped &CheckNotStopped
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
-    &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
+    &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys &SendResultKey
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
     &IsWriteinName &GetEmailLoad
     $election_id $election_dir $started_file $stopped_file
@@ -419,8 +419,11 @@ sub CheckAuthorizationKey {
 
 sub CheckResultKey {
     my $result_key = shift;
-    if (defined($result_key) &&
-	&civs_hash($result_key) eq $hash_result_key) {
+    if (defined($result_key) && (
+	&civs_hash($result_key) eq $hash_result_key
+# originally CIVS stored the hash of the key, but this provides little
+# added security while interfering with usability
+     || $result_key eq $hash_result_key)) {
 	return;
     }
     ElectionLog("Election: $title ($election_id) : invalid attempt to view election results (wrong key)");
@@ -664,4 +667,44 @@ sub SendKeys {
     STDOUT->flush();
 }
 
+####################################
+# Send authorized result viewers an email containing the URL that
+# allows viewing results.
+sub SendResultKey {
+    my $result_key = shift;
+
+    OpenMail;
+    my @result_addrs = split /\s+/, $result_addrs;
+    foreach my $addr (@result_addrs) {
+	$addr = TrimAddr($addr);
+	if ($addr eq '') { next; }
+	if (!(CheckAddr($addr))) {
+	    print pre($tx->Invalid_email_address($addr));
+	    next;
+	}
+	print $tx->Sending_result_key($addr);
+
+        if (!$local_debug) {
+            my $url = "@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
+            my $civs_supervisor = '@SUPERVISOR@';
+            MailFrom($civs_supervisor);
+            MailTo($addr);
+            StartMailData;
+            SendHeader 'From', "$civs_supervisor (".
+                $tx->Condorcet_Internet_Voting_Service_email_hdr.')';
+            SendHeader 'To', $addr;
+            SendHeader 'Subject', $tx->Results_of_CIVS_poll($title);
+            SendHeader 'Content-Type', 'text/plain; charset="utf-8"';
+            Send "";
+            Send $tx->Results_key_email_body($title,$url);
+            Send $tx->for_more_information_about_CIVS($civs_home);
+            EndMailData;
+        } else {
+            print p('Here is the result key that would have been sent: ', $result_key);
+        }
+    }
+    CloseMail;
+
+    print $tx->Done_sending_result_key();
+}
 1; # ok!

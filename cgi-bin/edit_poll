@@ -20,8 +20,6 @@ my $home = '@CIVSDATADIR@';
 undef $/;
 
 print CGI::header(-charset => 'utf-8');
-# print CGI::start_html(-title => $title,
-		      #-encoding => 'utf-8');
 
 my $description = &Filter(param('description'));
 

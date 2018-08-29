@@ -167,6 +167,12 @@ sub End_poll {
 sub Edit_button {
     'edit'
 }
+sub ResendLink_button {
+    'resend link'
+}
+sub ResendLinkAck {
+    'sent'
+}
 sub Save_button {
     'save'
 }

@@ -154,7 +154,13 @@ if ($restrict_results eq 'yes') {
     if (IsStopped) {
 	print $tx->Poll_results_are_now_available_to_the_following_users, br, $cr;
     } else {
-	print $tx->Poll_results_will_be_available_to_the_following_users, br, $cr;
+        my $ack = $tx->ResendLinkAck;
+	print $tx->Poll_results_will_be_available_to_the_following_users, '&nbsp;',
+                button(-name => 'resend_results_link',
+                       -id => 'resend_results_link_button',
+                       -value => $tx->ResendLink_button,
+		       -onclick => "resendResultsLink('$ack')"),
+                div({-id => "resend_popup", -class => "popup"}, "sent?"), br;
     }
     my @result_addrs = split /(\r\n)+/, $result_addrs;
     print '<ul>';

@@ -61,7 +61,6 @@ function post_to_url(url, params, cont, err, mimetype) {
     req.send(data);
 }
 
-
 // fetch the contents from the URL "url" into the DOM node with id attribute
 // "id".  Once successful, apply the optionally provided function "cont()".
 function fetch_content(id, url, cont) {
