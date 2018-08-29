@@ -1,0 +1,28 @@
+#!@PERL@
+
+use strict;
+use warnings;
+use CGI qw(:standard);
+use POSIX qw(strftime);
+use HTML::TagFilter;
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use election;
+
+my $control_key = param('key');    
+
+CheckElectionID;
+CheckControlKey($control_key);
+
+my $home = '@CIVSDATADIR@';
+
+print CGI::header(-charset => 'utf-8');
+
+&SendResultKey();
+
+print "OK";
+
+Log("Resent result keys: $election_id");
+
+exit 0;
