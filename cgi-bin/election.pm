@@ -18,7 +18,7 @@ BEGIN {
     &LockElection &UnlockElection &StartElection &IsStarted
     &CheckStarted &PointToResults &IsStopped &CheckNotStopped
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
-    &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys &SendResultKey
+    &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
     &IsWriteinName &GetEmailLoad
     $election_id $election_dir $started_file $stopped_file
