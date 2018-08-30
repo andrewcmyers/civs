@@ -9,6 +9,7 @@ use HTML::TagFilter;
 use lib '@CGIBINDIR@';
 use civs_common;
 use election;
+use send_result_key;
 
 my $control_key = param('key');    
 
