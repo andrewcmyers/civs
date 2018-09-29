@@ -449,10 +449,9 @@ sub ordinal_of {
 #     return $r;
 # }
 
-# sub ballot_will_be_anonymous {
-#     ' However, your ballot will still be anonymous:
-#       no personally identifying information will appear.'
-# }
+sub ballot_will_be_anonymous {
+    'Однако ваш бюллетень по-прежнему будет анонимным: персональная идентификационная информация не появится.'
+}
 
 sub submit_ranking {
     'Добавить рейтинг'
@@ -497,7 +496,7 @@ sub make_tie {
  }
 
 sub write_in_a_choice {
-'Написать в новый выбор:'
+    'Написать в новый выбор:'
 }
 sub if_you_have_already_voted { #url
     "Если вы уже голосовали, вы можете увидеть <a href=\"$_[1]\">текущие
@@ -515,12 +514,14 @@ sub writein_too_similar {
 
 # # election
 
-# sub No_poll_ID {
-#     "No poll ID was provided. Perhaps a copy-paste error?"
-# }
-# sub Ill_formed_poll_ID {
-#     "An ill-formed poll identifier was provided. Perhaps a copy-paste error? (" . $_[1] . ")"
-# }
+sub No_poll_ID {
+    'Нет идентификатора опроса. Возможно, ошибка копирования-вставки?'
+}
+
+sub Ill_formed_poll_ID {
+    'Был предоставлен неверно сформированный идентификатор опроса. Возможно, ошибка копирования-вставки?'
+}
+
 # sub vote_has_already_been_cast {
 #     "A vote has already been cast using your voter key."
 # }
@@ -530,12 +531,12 @@ sub writein_too_similar {
 # sub following_URL_reports_results {
 #     'The following URL reports the current poll results:'
 # }
-# sub Already_voted {
-#     'Already voted'
-# }
-# sub Error {
-#     'Error'
-# }
+sub Already_voted {
+    'Уже проголосовали.'
+}
+sub Error {
+    'Ошибка.'
+}
 # sub Invalid_key {
 #     'Invalid key. You should have received a correct URL for
 #         controlling the poll by email. This error has been logged.'
@@ -547,9 +548,9 @@ sub writein_too_similar {
 # sub already_ended { # title 
 #     "This poll (<strong>$_[1]</strong>) has already been ended."
 # }
-# sub Poll_not_yet_ended {
-#     "Poll not yet ended"
-# }
+sub Poll_not_yet_ended {
+    'Опрос еще не закончился.'
+}
 # sub The_poll_has_not_yet_been_ended { #title, name, email
 #     "This poll ($_[1]) has not yet been ended by its supervisor,
 #     $_[2] ($_[3])."

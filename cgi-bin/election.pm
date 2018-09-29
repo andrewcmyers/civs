@@ -419,8 +419,11 @@ sub CheckAuthorizationKey {
 
 sub CheckResultKey {
     my $result_key = shift;
-    if (defined($result_key) &&
-	&civs_hash($result_key) eq $hash_result_key) {
+    if (defined($result_key) && (
+	&civs_hash($result_key) eq $hash_result_key
+# originally CIVS stored the hash of the key, but this provides little
+# added security while interfering with usability
+     || $result_key eq $hash_result_key)) {
 	return;
     }
     ElectionLog("Election: $title ($election_id) : invalid attempt to view election results (wrong key)");
@@ -663,5 +666,3 @@ sub SendKeys {
     }
     STDOUT->flush();
 }
-
-1; # ok!

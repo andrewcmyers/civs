@@ -9,6 +9,7 @@ use HTML::TagFilter;
 use lib '@CGIBINDIR@';
 use civs_common;
 use election;
+use send_result_key;
 
 my $control_key = param('key');    
 
@@ -17,16 +18,13 @@ CheckControlKey($control_key);
 
 my $home = '@CIVSDATADIR@';
 
-undef $/;
-
 print CGI::header(-charset => 'utf-8');
 
-my $description = &Filter(param('description'));
-
-$edata{'description'} = $description;
+&SendResultKey($election_id, $title, $result_addrs, $hash_result_key);
+# Note: hash_result_key is no longer a hash.
 
 print "OK";
 
-Log("Poll edited: " . $election_id);
+Log("Resent result keys: $election_id = $hash_result_key");
 
 exit 0;

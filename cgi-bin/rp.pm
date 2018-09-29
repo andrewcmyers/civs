@@ -112,11 +112,12 @@ sub TransitiveClosure {
 sub rank_candidates {
     my ($num_choices, $mref, $bref, $choices) = @_;
     my @ballots = @{$bref};
-    fisher_yates_shuffle [@ballots];
+    civs_common::fisher_yates_shuffle [@ballots]; 
 
     if ($main::algorithm eq 'mam') {
 	$mam = 1;
 	&create_RVH([@ballots], $num_choices);
+
     } else {
 	    $mam = 0;
 	}

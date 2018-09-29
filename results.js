@@ -41,6 +41,15 @@ function save_description() {
     post_new_description(para.innerHTML);
 }
 
+function resendResultsLink() {
+    post_to_url("resend_link@PERLEXT@",
+	{ id: election_id, key: control_key }, 
+	function(response) {
+	    popup("resend_popup", "sent");
+	},
+	function(err) { alert(err); });
+}
+
 function clear(node) {
     if (node == undefined) return;
     while (node.firstChild) node.removeChild(node.firstChild);

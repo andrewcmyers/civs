@@ -104,20 +104,7 @@ sub creation_email_public_link { # url
 
 ";
 }
-sub for_more_information_about_CIVS { # url
-"For more information about the Condorcet Internet Voting Service, see
-  $_[1]";
-}
 
-sub Sending_result_key { # addr
-    "<p>Sending result key to <tt>$_[1]</tt>. Please allow this to complete...<br>"
-}
-sub Done_sending_result_key { # addr
-    '...done sending result key.</p>'
-}
-sub Results_of_CIVS_poll { # title
-    "Results of CIVS poll: $_[1]";
-}
 sub Results_key_email_body { # title, url, civs_home
 "A new CIVS poll has been created named \"$_[1]\".
 You have been designated as a user who is permitted to see the
@@ -183,9 +170,6 @@ sub total_authorized_voters { # num_auth_string
 }
 sub actual_votes_so_far { # num
     "Actual votes cast thus far: $_[1]";
-}
-sub poll_ends { # end
-    "Poll ends $_[1].";
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
     'Poll results available to all voters when poll completes.';
@@ -593,9 +577,6 @@ sub undefined_algorithm {
 }
 sub computing_results {
     'Computing results...';
-}
-sub Announced_end_of_poll {
-    "Announced end of poll: $_[1]";
 }
 sub Actual_time_poll_closed { # close time
     if ($_[1] == 0) {

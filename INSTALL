@@ -30,7 +30,8 @@ INSTALLATION INSTRUCTIONS
 
    For Apache:
    * Enable the MultiViews option on at least the CIVS document directory
-     ($HTMLDIR) and the CIVS CGI directory ($CGIBINDIR).
+     ($HTMLDIR) and the CIVS CGI directory ($CGIBINDIR), and use
+     the directive "AddHandler type-map .var" for both these directories.
    * Make sure that the following modules are enabled: mod_cgi,
      mod_negotiation, mod_mime.
    * Include the httpd-languages.conf file if it exists, possibly in a

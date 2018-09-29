@@ -10,26 +10,26 @@ if ($#ARGV < 0) {
 }
 
 for (my $i = 0; $i <= $#ARGV; $i++) {
-$election_dir = $ARGV[$i];
+    $election_dir = $ARGV[$i];
 
-$election_data = $election_dir."/election_data";
-$vote_data = $election_dir."/vote_data";
+    $election_data = $election_dir."/election_data";
+    $vote_data = $election_dir."/vote_data";
 
-print "Election data file = $election_data\n";
+    print "Election data file = $election_data\n";
 
-$db = tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
-$vdb = tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
+    $db = tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
+    $vdb = tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
-print "Election data:\n";
-foreach $name (keys %edata) {
-    print $name . ": " .$edata{$name} ."\n";
-}
-print "Voting data:\n";
-foreach $name (keys %vdata) {
-    print $name . ": " .$vdata{$name} ."\n";
-}
+    print "Election data:\n";
+    foreach $name (keys %edata) {
+        print $name . ": " .$edata{$name} ."\n";
+    }
+    print "Voting data:\n";
+    foreach $name (keys %vdata) {
+        print $name . ": " .$vdata{$name} ."\n";
+    }
 
-untie %edata;
+    untie %edata;
 }
 
 exit 0;
