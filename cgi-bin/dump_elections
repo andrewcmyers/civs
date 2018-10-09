@@ -39,17 +39,9 @@ foreach my $election_dir (@ARGV) {
         # print STDERR "Cannot access ballot data at $vote_data\n";
         next
     }
-    if (!$first_election) {
-        print ",\n";
-    } else {
-        $first_election = 0;
-    }
-    print "  {\n";
     my $election_id = $election_dir;
     $election_id =~ s|/*$||;
     $election_id =~ s|^.*/||;
-    print "    \"election_id\" : \"$election_id\",\n";
-
     tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
@@ -58,6 +50,14 @@ foreach my $election_dir (@ARGV) {
     if (!defined($recorded_voters)) { next }
     my @voters = split /\n/, $recorded_voters;
     my @ballots = @{&ProcessBallots(\@voters)};
+
+    if (!$first_election) {
+        print ",\n";
+    } else {
+        $first_election = 0;
+    }
+    print "  {\n";
+    print "    \"election_id\" : \"$election_id\",\n";
 
     print "    \"num_choices\" : $num_choices,\n";
 if ($reveal_private_info) {
@@ -130,6 +130,9 @@ sub ProcessBallots {
 
 # Fix a ballot ranking so it is correct for nonproportional computations
 sub FixProp {
+    if ($_[0] eq 'No opinion' || $_[0] eq '') {
+        return "\"?\"";
+    }
     if ($proportional eq 'yes' && !$use_combined_ratings) {
         return $num_choices - $_[0];
     } else {
