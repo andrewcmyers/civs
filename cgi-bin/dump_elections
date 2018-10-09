@@ -19,11 +19,6 @@ print " \"elections\" : [\n";
 
 my $first_election = 1;
 foreach my $election_dir (@ARGV) {
-    if (!$first_election) {
-        print ",\n";
-    } else {
-        $first_election = 0;
-    }
     my $election_data = $election_dir."/election_data";
     my $vote_data = $election_dir."/vote_data";
     my $tie = "=";
@@ -37,8 +32,13 @@ foreach my $election_dir (@ARGV) {
         exit 1
     }
     if (! -r $vote_data) {
-        print STDERR "Cannot access ballot data at $vote_data\n";
-        exit 1
+        # print STDERR "Cannot access ballot data at $vote_data\n";
+        next
+    }
+    if (!$first_election) {
+        print ",\n";
+    } else {
+        $first_election = 0;
     }
     print "  {\n";
     my $election_id = $election_dir;

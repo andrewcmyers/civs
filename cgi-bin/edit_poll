@@ -27,6 +27,6 @@ $edata{'description'} = $description;
 
 print "OK";
 
-Log("Poll edited: " . $election_id);
+Log("Poll description edited: " . $election_id);
 
 exit 0;

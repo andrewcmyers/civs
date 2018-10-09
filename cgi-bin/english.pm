@@ -190,7 +190,7 @@ sub results_available_to_the_following_users {
 }
 
 sub Poll_results_are_available { #url
-    "<a href=\"$_[1]\">See poll results</a>";
+    "<a href=\"$_[1]\">[&nbsp;See poll results&nbsp;]</a>";
 }
 sub Description {
     'Description:';
