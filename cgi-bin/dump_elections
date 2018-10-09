@@ -7,12 +7,16 @@ use DB_File;
 use election_utils;
 
 if ($#ARGV < 0) {
-    print STDERR "Usage: dump_elections <election_dir> ...\n";
+    print STDERR "Usage: dump_elections [-p] <election_dir> ...\n";
     exit 1;
 }
 
 my %edata, my %vdata;
 my $reveal_private_info = 1;
+if ($ARGV[0] eq '-p') {
+    $reveal_private_info = 0;
+    shift @ARGV;
+}
 
 print "{\n";
 print " \"elections\" : [\n";
@@ -51,6 +55,7 @@ foreach my $election_dir (@ARGV) {
 
     &GetElectionData(\%edata, \%vdata);
 
+    if (!defined($recorded_voters)) { next }
     my @voters = split /\n/, $recorded_voters;
     my @ballots = @{&ProcessBallots(\@voters)};
 
