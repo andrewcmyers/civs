@@ -266,11 +266,6 @@ div.description { border: solid 1px #bbb;
 		  background-color: #f0f0f0; color: #222; padding: 5px;
 		  font-family: Verdana, Helvetica, Arial, sans-serif; }
 
-/* override with better layout for large displays */
-@media (min-width: 50em) {
-div.description { max-width:none; margin-right:0; column-width: 30em; -moz-column-width:30em; -webkit-column-width:30em; }
-}
-
 #jshelp p {text-align: left; font-size: 90% }
 #jshelp ol {text-align: left; font-size: 90% }
 p#jsnohelp {text-align: left; font-size: 90% }
