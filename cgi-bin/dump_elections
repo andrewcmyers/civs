@@ -1,0 +1,134 @@
+#!/usr/bin/perl -I/Users/andru/civs/cgi-bin
+
+use strict;
+use warnings;
+
+use DB_File;
+use election_utils;
+
+if ($#ARGV < 0) {
+    print STDERR "Usage: dump_elections <election_dir> ...\n";
+    exit 1;
+}
+
+my %edata, my %vdata;
+my $reveal_private_info = 1;
+
+print "{\n";
+print " \"elections\" : [\n";
+
+my $first_election = 1;
+foreach my $election_dir (@ARGV) {
+    if (!$first_election) {
+        print ",\n";
+    } else {
+        $first_election = 0;
+    }
+    my $election_data = $election_dir."/election_data";
+    my $vote_data = $election_dir."/vote_data";
+    my $tie = "=";
+    my $cr = "\n";
+    if (! -r $election_data) {
+        print STDERR "Cannot access election data at $election_data\n";
+        exit 1
+    }
+    if (! -r $election_data) {
+        print STDERR "Cannot access election data at $election_data\n";
+        exit 1
+    }
+    if (! -r $vote_data) {
+        print STDERR "Cannot access ballot data at $vote_data\n";
+        exit 1
+    }
+    print "  {\n";
+    my $election_id = $election_dir;
+    $election_id =~ s|/*$||;
+    $election_id =~ s|^.*/||;
+    print "    \"election_id\" : \"$election_id\",\n";
+
+    tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
+    tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
+
+    &GetElectionData(\%edata, \%vdata);
+
+    my @voters = split /\n/, $recorded_voters;
+    my @ballots = @{&ProcessBallots(\@voters)};
+
+    print "    \"num_choices\" : $num_choices,\n";
+if ($reveal_private_info) {
+    print "    \"choices\" :\n";
+    print "      [\n";
+    my $first = 1;
+    foreach my $choice (@choices) {
+      if (!$first) {
+        print ",\n        ";
+      } else {
+        $first = 0;
+        print "        ";
+      }
+      print "\"$choice\"";
+    }
+    print "\n      ],\n";
+}
+    my $num_ballots = @ballots;
+    print "    \"num_ballots\" : $num_ballots,\n";
+    print "    \"ballots\" :\n";
+    print "      [";
+    my $first_ballot = 1;
+    foreach $b (@ballots) {
+        if (!$first_ballot) {
+            print ",\n";
+        } else {
+            print "\n";
+            $first_ballot = 0;
+        }
+        my @row = @{$b};
+        my $first = 1;
+        foreach my $rank (@row) {
+            if (!$first) {
+                print ", ";
+            } else {
+                $first = 0;
+                print "        [ ";
+            }
+            print &FixProp($rank);
+        }
+        print " ]";
+    }
+    print "\n      ]\n";
+
+    untie %edata; untie %vdata;
+    print "  }";
+}
+
+print "\n ]\n";
+print "}\n";
+
+sub Log {
+    print STDERR @_, "\n";
+}
+
+sub ProcessBallots {
+    my @voters = @{$_[0]};
+    my @ballots = ();
+    foreach my $voter_key (@voters) {
+	my $ballot = $vdata{$voter_key}; 
+	if (!defined($ballot)) {
+	    &Log("Lost ballot for voter key $voter_key?");
+	} else {
+	    my @row = split /,/, $ballot;
+	    push @ballots, \@row;
+	}
+    }
+    return \@ballots;
+}
+
+# Fix a ballot ranking so it is correct for nonproportional computations
+sub FixProp {
+    if ($proportional eq 'yes' && !$use_combined_ratings) {
+        return $num_choices - $_[0];
+    } else {
+        return $_[0];
+    }
+}
+
