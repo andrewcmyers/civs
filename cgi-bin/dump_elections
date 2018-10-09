@@ -51,7 +51,10 @@ foreach my $election_dir (@ARGV) {
 
     if (!defined($recorded_voters)) { next }
     my @voters = split /\n/, $recorded_voters;
-    my @ballots = @{&ProcessBallots(\@voters)};
+    my @ballots = @{&ProcessBallots(\@voters, $election_id)};
+
+# XXX indent/comma management is quite ad hoc here and should be
+# XXX done more systematically.
 
     if (!$first_election) {
         print ",\n";
@@ -124,13 +127,20 @@ sub Log {
     print STDERR @_, "\n";
 }
 
+# ProcessBallots($vref, $election_id):
+#   vref: reference to an array of voter ids (strings)
+#   election_id: the election id
+# Returns a reference to a new array of arrays in which each entry
+# is the array of rankings entered by the corresponding voter.
+#
 sub ProcessBallots {
     my @voters = @{$_[0]};
+    my $election_id = $_[1];
     my @ballots = ();
     foreach my $voter_key (@voters) {
 	my $ballot = $vdata{$voter_key}; 
 	if (!defined($ballot)) {
-	    &Log("Lost ballot for voter key $voter_key?");
+	    &Log("Election $election_id: Missing ballot for voter key $voter_key");
 	} else {
 	    my @row = split /,/, $ballot;
 	    push @ballots, \@row;
