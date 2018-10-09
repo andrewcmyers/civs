@@ -51,7 +51,7 @@ foreach my $election_dir (@ARGV) {
 
     if (!defined($recorded_voters)) { next }
     my @voters = split /\n/, $recorded_voters;
-    my @ballots = @{&ProcessBallots(\@voters)};
+    my @ballots = @{&ProcessBallots(\@voters, $election_id)};
 
     if (!$first_election) {
         print ",\n";
@@ -126,11 +126,12 @@ sub Log {
 
 sub ProcessBallots {
     my @voters = @{$_[0]};
+    my $election_id = $_[1];
     my @ballots = ();
     foreach my $voter_key (@voters) {
 	my $ballot = $vdata{$voter_key}; 
 	if (!defined($ballot)) {
-	    &Log("Lost ballot for voter key $voter_key?");
+	    &Log("$election_id: Lost ballot for voter key $voter_key?");
 	} else {
 	    my @row = split /,/, $ballot;
 	    push @ballots, \@row;
