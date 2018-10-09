@@ -75,19 +75,21 @@ if ($reveal_private_info) {
     }
     print "\n      ],\n";
 }
+    print "    \"test\" : \"", ($external_ballots eq "yes") ? "yes" : "no", "\",\n";
     my $num_ballots = @ballots;
     print "    \"num_ballots\" : $num_ballots,\n";
     print "    \"ballots\" :\n";
     print "      [";
     my $first_ballot = 1;
     foreach $b (@ballots) {
+        my @row = @{$b};
+        if ($num_choices != @row) { next }
         if (!$first_ballot) {
             print ",\n";
         } else {
             print "\n";
             $first_ballot = 0;
         }
-        my @row = @{$b};
         my $first = 1;
         foreach my $rank (@row) {
             if (!$first) {
@@ -130,6 +132,9 @@ sub ProcessBallots {
 
 # Fix a ballot ranking so it is correct for nonproportional computations
 sub FixProp {
+    if ($_[0] eq 'No opinion' || $_[0] eq '') {
+        return "\"?\"";
+    }
     if ($proportional eq 'yes' && !$use_combined_ratings) {
         return $num_choices - $_[0];
     } else {
