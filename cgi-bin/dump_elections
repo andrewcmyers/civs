@@ -2,9 +2,11 @@
 
 use strict;
 use warnings;
+use POSIX;
 
 use DB_File;
 use election_utils;
+use Scalar::Util qw(&looks_like_number);
 
 if ($#ARGV < 0) {
     print STDERR "Usage: dump_elections [-p] <election_dir> ...\n";
@@ -39,17 +41,9 @@ foreach my $election_dir (@ARGV) {
         # print STDERR "Cannot access ballot data at $vote_data\n";
         next
     }
-    if (!$first_election) {
-        print ",\n";
-    } else {
-        $first_election = 0;
-    }
-    print "  {\n";
     my $election_id = $election_dir;
     $election_id =~ s|/*$||;
     $election_id =~ s|^.*/||;
-    print "    \"election_id\" : \"$election_id\",\n";
-
     tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
@@ -59,6 +53,21 @@ foreach my $election_dir (@ARGV) {
     my @voters = split /\n/, $recorded_voters;
     my @ballots = @{&ProcessBallots(\@voters)};
 
+    if (!$first_election) {
+        print ",\n";
+    } else {
+        $first_election = 0;
+    }
+    print "  {\n";
+    print "    \"election_id\" : \"$election_id\",\n";
+
+    if ($proportional ne 'yes') {
+      print "    \"mode\" : \"nonproportional\",\n";
+    } elsif ($use_combined_ratings) {
+      print "    \"mode\" : \"proportional weighted\",\n";
+    } else {
+      print "    \"mode\" : \"proportional\",\n";
+    }
     print "    \"num_choices\" : $num_choices,\n";
 if ($reveal_private_info) {
     print "    \"choices\" :\n";
@@ -83,7 +92,7 @@ if ($reveal_private_info) {
     my $first_ballot = 1;
     foreach $b (@ballots) {
         my @row = @{$b};
-        if ($num_choices != @row) { next }
+        if (@row != $num_choices) { next }
         if (!$first_ballot) {
             print ",\n";
         } else {
@@ -132,13 +141,13 @@ sub ProcessBallots {
 
 # Fix a ballot ranking so it is correct for nonproportional computations
 sub FixProp {
-    if ($_[0] eq 'No opinion' || $_[0] eq '') {
+    if ($_[0] eq 'No opinion' || $_[0] eq '' || !looks_like_number($_[0])) {
         return "\"?\"";
     }
     if ($proportional eq 'yes' && !$use_combined_ratings) {
-        return $num_choices - $_[0];
+        return int($num_choices - $_[0]);
     } else {
-        return $_[0];
+        return int($_[0]);
     }
 }
 
