@@ -9,18 +9,12 @@ body { margin: 0;
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
-/* override with better layout for large displays */
-@media (min-width: 50em) {
-div.contents { padding-left:0; padding-right:0; min-width: 30em; margin:0 10em; text-align: left }
-div.normal_text { max-width:none; }
-}
-
 div.home { text-align: left;
            padding: 1ex 1ex 0 1ex;
            border-right: 1px solid #bbb;
            border-left: 1px solid #bbb;
            margin: 0 auto 0 1vw;
-           max-width: 80ex}
+           max-width: 80ex }
 
 div#footnote {
     border-top: 1px solid #bbb;
