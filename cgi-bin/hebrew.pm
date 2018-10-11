@@ -744,7 +744,7 @@ sub What_is_this { # url
 # rp
 
 sub All_prefs_were_affirmed {
-    'כל ההעדפות אושרו. כל שיטות קונדורסט יתאימו לדירוג זה.';
+    'כל ההעדפות אושרו.'
 }
 
 sub Presence_of_a_green_entry_etc {

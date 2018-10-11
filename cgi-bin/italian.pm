@@ -750,8 +750,7 @@ sub Choices_in_individual_pref_order {
 # rp
 
 sub All_prefs_were_affirmed {
-    'Tutte le preferenze calcolate sono acicliche.
-    Ogni metodo Condorcet concorderebbe su questa classifica.';
+    'Tutte le preferenze calcolate sono acicliche.'
 }
 
 sub Presence_of_a_green_entry_etc {

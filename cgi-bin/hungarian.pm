@@ -743,8 +743,7 @@ sub Choices_in_individual_pref_order {
 # rp
 
 sub All_prefs_were_affirmed {
-    'Minden preferencia megerősített. Minden
-        Condorcet módszernél egyezni fog ez a sorrend.';
+    'Minden preferencia megerősített.'
 }
 
 sub Presence_of_a_green_entry_etc {

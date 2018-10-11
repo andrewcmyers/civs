@@ -754,8 +754,7 @@ sub Choices_in_individual_pref_order {
 # rp
 
 sub All_prefs_were_affirmed {
-    'Alle Präferenzen wurden bestätigt.
-     Alle Condorcet-Verfahren führen zu dieser Rangfolge.';
+    'Alle Präferenzen wurden bestätigt.'
 }
 
 sub Presence_of_a_green_entry_etc {

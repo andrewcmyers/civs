@@ -760,8 +760,7 @@ sub What_is_this { # url
 # rp
 
 sub All_prefs_were_affirmed {
-    'Todas as preferências foram confirmadas. Todos os
-		  métodos Condorcet resultarão na mesma ordem.';
+    'Todas as preferências foram confirmadas.'
 }
 
 sub Presence_of_a_green_entry_etc {

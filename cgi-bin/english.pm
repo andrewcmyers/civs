@@ -687,11 +687,6 @@ sub What_is_this { # url
 
 # rp
 
-sub All_prefs_were_affirmed {
-    'All preferences were affirmed. All
-		  Condorcet methods will agree with this ranking.';
-}
-
 sub Presence_of_a_green_entry_etc {
     'The presence of a green entry below
 	the diagonal (and a corresponding red one above)

@@ -755,8 +755,7 @@ sub What_is_this {# url
 # rp
 
 sub All_prefs_were_affirmed { 
-    "Todas las preferencias se confirmaron. Todos los 
-    los métodos de Condorcet estarán de acuerdo con este ranking."; 
+    'Todas las preferencias se confirmaron.'
 }
 
 sub Presence_of_a_green_entry_etc { 

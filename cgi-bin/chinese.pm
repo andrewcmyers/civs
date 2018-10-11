@@ -732,7 +732,7 @@ sub What_is_this { # url
 # rp
 
 sub All_prefs_were_affirmed {
-    '所有偏好已经确认。所有Condorcet方法都将遵循该排序。';
+    '所有偏好已经确认。';
 }
 
 sub Presence_of_a_green_entry_etc {

@@ -876,7 +876,7 @@ sub What_is_this { # url
 # rp
 
 sub All_prefs_were_affirmed {
-    'All preferences were affirmed.';
+    'All preferences were affirmed.'
 }
 
 sub Presence_of_a_green_entry_etc {
