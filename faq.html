@@ -138,6 +138,9 @@ for voters, but completely private.
 HTML <tt>&lt;img&gt;</tt> tag. Many standard HTML tags are supported,
 though there is filtering to block XSS attacks.
 
+<li><b>Can poll choices include Unicode characters including emojis?</b>
+No problem, assuming users' browsers know how to render them.
+
 <li><b>Why doesn't CIVS support my favorite election method (STV, ...)?</b>
 The focus has been on supporting Condorcet methods, which guarantee (when they can)
 that no one is preferred over the winner. However, the interface for adding new
@@ -172,7 +175,9 @@ emails that you give to CIVS before adding voters.
 CIVS uses your browser preference settings to decide what languages you speak,
 and it displays instructions and sends emails to voters in the most preferred
 language that it supports. If you are seeing a language other than the one you
-prefer to use, change your browser settings accordingly.
+prefer to use, change your browser settings accordingly. If your users speak
+multiple languages, you will want to write instructions in all the languages;
+CIVS does not translate for you.
 </ol>
 
 <h2><a name="running">Running a poll</a></h2>
@@ -204,6 +209,7 @@ it's a different voter as far as CIVS can tell. For security and privacy reasons
 CIVS doesn't record voter email or voter keys, so it has no way to send an already
 generated voter key to a new email address.
 </li>
+
 <li>
 <b>How long will poll results remain available?</b>
 We are making a best effort to keep poll results forever, for any poll
@@ -220,6 +226,10 @@ result recipients.
 <li><b>Can I make current poll results visible before the poll closes?</b>
 This increases the danger of strategic voting. However, it is the 
 behavior for &ldquo;public&rdquo; polls.
+
+<li><b>I lost the email that lets me see the election results. What do I do?</b>
+There is a button on the poll control page that lets
+the poll supervisor resend the link to you.
 
 <li><b>Why don't voters see the ballot in their favorite language?</b>
 CIVS supports several languages, including at least the following: English,
@@ -247,7 +257,7 @@ provided by volunteers. Adding support for a new language is not difficult and
 does not require programming expertise.
 </li>
 <li>
-CIVS currently supports five voting methods: algorithms for deciding winners.
+CIVS currently supports five algorithms for deciding winners.
 However, many other voting methods have been proposed. With tens of thousands
 of users, CIVS is a great place to evaluate voting methods. New voting methods
 can be plugged into CIVS in a modular way, by creating a new Perl module
@@ -256,8 +266,10 @@ that implements a well-defined interface.
 <li>
 Running CIVS takes resources, especially for large polls.
 The CIVS project <a href="http://www.cs.cornell.edu/andru/donate.html">
-welcomes donations</a>. The suggested donation is 1 penny per voter.
-Current donations are well below the level needed to support running CIVS.
+welcomes donations</a>. The suggested donation is 1 penny per voter, which
+is actually still well below the level needed to support running CIVS. If
+your organization is running polls with hundreds of voters, please consider
+chipping in.
 </li>
 </div>
 </div>
