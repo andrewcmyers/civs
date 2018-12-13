@@ -13,6 +13,8 @@ if ($#ARGV < 0) {
     exit 1;
 }
 
+# TODO a more robust approach to quoting strings into JSON format is called for.
+
 my %edata, my %vdata;
 my $reveal_private_info = 1;
 if ($ARGV[0] eq '-p') {
@@ -90,7 +92,9 @@ foreach my $election_dir (@ARGV) {
     begin '{';
     my $props = 0;
     item $props++, "\"election_id\" : \"$election_id\"";
-
+    if ($reveal_private_info) {
+        item $props++, "\"title\" : \"$title\"";
+    }
     if ($proportional ne 'yes') {
       item $props++, qw("mode"), " : ", qw("nonproportional");
     } elsif ($use_combined_ratings) {
@@ -99,15 +103,15 @@ foreach my $election_dir (@ARGV) {
       item $props++, qw("mode"), " : ", qw("proportional");
     }
     item $props++, "\"num_choices\" : $num_choices";
-if ($reveal_private_info) {
-    item $props++, "\"choices\" : "; begin; begin "[";
-    my $nchoice = 0;
-    foreach my $choice (@choices) {
-      item $nchoice++, "\"$choice\"";
+    if ($reveal_private_info) {
+        item $props++, "\"choices\" : "; begin; begin "[";
+        my $nchoice = 0;
+        foreach my $choice (@choices) {
+          item $nchoice++, "\"$choice\"";
+        }
+        end "]";
+        end;
     }
-    end "]";
-    end;
-}
     item $props++, qw("test"), ' : "', (($external_ballots eq "yes") ? "yes" : "no"), '"';
     my $num_ballots = @ballots;
     item $props++, "\"num_ballots\" : $num_ballots";
