@@ -15,6 +15,7 @@ use lib '@CGIBINDIR@';
 use civs_common;
 
 use CGI qw(:standard);
+use URI::Escape;
 use File::stat;
 use DB_File;
 use POSIX qw(strftime);
@@ -146,7 +147,7 @@ foreach my $entry (@entries) {
 	}
     }
     push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=$file".
-			         '&admin_key=@ADMIN_KEY@',
+			         '&admin_key='.uri_escape('@ADMIN_KEY@'),
 			  -target=>"_blank"},
 	small($title)),
 	"omitted",
