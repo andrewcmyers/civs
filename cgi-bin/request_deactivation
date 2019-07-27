@@ -20,9 +20,8 @@ if (!CheckAddr($address)) {
 }
 
 my $code = param("code");
-&GetPrivateHostID;
 my $optouts = &GetOptouts();
-my $opted_out = $optouts->{civs_hash($address)};
+my $opted_out = &CheckOptOut($optouts, $address);
 
 # if (param("check") eq "true") {
 #    if ($opted_out) { print 1 }
@@ -30,17 +29,25 @@ my $opted_out = $optouts->{civs_hash($address)};
 #    exit 0
 # }
 
+sub DeactivationCode {
+    my ($address) = @_;
+    if (!defined($private_host_id)) {
+        &GetPrivateHostID;
+    }
+    return civs_hash('deactivation', $address, $private_host_id);
+}
+
 if (!defined($code)) {
 # This is a request to send a code
 
     print start_html(), h1("Deactivation request");
 
-    if ($optouts->{civs_hash($address)}) {
+    if ($opted_out) {
         print p("User has opted out of email.");
         exit 0;
     }
 
-    my $code = civs_hash('deactivation', $address, $private_host_id);
+    my $code = &DeactivationCode($address);
 
     OpenMail;
 
@@ -66,17 +73,18 @@ if (!defined($code)) {
     print "OK";
 } else {
 # This is a request to use a code.
-    my $expected_code = civs_hash('deactivation', $address, $private_host_id);
+    my $expected_code = &DeactivationCode($address);
     if ($code eq $expected_code) {
-        if ($optouts->{civs_hash($address)}) {
-            $optouts->{civs_hash($address)} = 0;
+        if (CheckOptOut($optouts, $address)) {
+            RemoveOptOut($optouts, $address);
+            SaveOptOuts($optouts);
             print 'activated';
         } else {
-            $optouts->{civs_hash($address)} = 1;
+            AddOptOut($optouts, $address);
+            SaveOptOuts($optouts);
             print 'deactivated';
         }
-        SaveOptOuts($optouts)
     } else {
-        print start_html(), p($tx->codes_dont_match);
+        print start_html(), p($tx->codes_dont_match), end_html();
     }
 }

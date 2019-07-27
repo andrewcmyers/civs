@@ -649,6 +649,9 @@ sub Invalid_email_address_hdr { # addr
 sub Invalid_email_address { # addr
     "Invalid email address: $_[1]";
 }
+sub Address_opted_out { # addr
+    "This address has opted out from CIVS e-mail: $_[1]"
+}
 sub Sending_mail_to_voter_v {
     "Sending mail to voter \"$_[1]\"...";
 }

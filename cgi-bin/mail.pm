@@ -18,7 +18,8 @@ BEGIN {
     @ISA         = qw(Exporter);
     @EXPORT      = qw(&OpenMail &CloseMail &MailFrom &MailTo
                       &StartMailData &EndMailData &Send &SendHeader
-                      &GetOptouts &SaveOptOuts &CheckAddr &TrimAddr);
+                      &GetOptouts &SaveOptOuts &RemoveOptOut &AddOptOut
+                      &CheckOptOut &CheckAddr &TrimAddr);
 }
 
 # Package imports
@@ -54,6 +55,18 @@ sub TrimAddr {
     return $addr;
 }
 
+sub CanonicalizeAddr {
+    (my $addr) = @_;
+    $addr = TrimAddr($addr);
+    $addr = lc $addr;
+    if ($addr =~ m/\@gmail.com$/) { # remove . from gmail addresses
+        (my $base) = $addr =~ m/^([^@]*)\@gmail.com/;
+        $base =~ s/\.//g;
+        $addr = $base.'@gmail.com';
+    }
+    return $addr;
+}
+
 my $optout_file = "@CIVSDATADIR@/do-not-email.txt";
 
 # Return a reference to a hash mapping the hashes of
@@ -67,7 +80,6 @@ sub GetOptouts {
         close(OPTOUTS);
         my @a = split /[\r\n]+/, $emails;
         foreach my $h (@a) {
-            $h = TrimAddr($h);
             $optouts{$h} = 1;
             # print "Opted out: ", $h, $cr;
         }
@@ -84,6 +96,28 @@ sub SaveOptOuts {
         }
     }
     close(OPTOUTS);
+}
+
+sub CheckOptOut {
+    my ($optouts, $addr) = @_;
+    $addr = &CanonicalizeAddr($addr);
+    if ($optouts->{civs_hash($addr)}) {
+        return 1
+    } else {
+        return 0
+    }
+}
+
+sub AddOptOut {
+    my ($optouts, $addr) = @_;
+    $addr = &CanonicalizeAddr($addr);
+    $optouts->{civs_hash($addr)} = 1;
+}
+
+sub RemoveOptOut {
+    my ($optouts, $addr) = @_;
+    $addr = &CanonicalizeAddr($addr);
+    $optouts->{civs_hash($addr)} = 0;
 }
 
 sub Send {
