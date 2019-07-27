@@ -560,10 +560,29 @@ sub SendKeys {
     my @addresses =  &unique_elements( @{$addresses_ref} );
     my $now = time();
     my $load = GetEmailLoad($now);
+    my %optouts;
+    my $optout_file = "@CIVSDATADIR@/do-not-email.txt";
+    if (-r $optout_file) {
+        undef $/;
+        open(OPTOUTS, "<$optout_file");
+        my $emails = <OPTOUTS>;
+        close(OPTOUTS);
+        my @a = split /[\r\n]+/, $emails;
+        foreach my $h (@a) {
+            $h = TrimAddr($h);
+            $optouts{$h} = 1;
+            # print "Opted out: ", $h, $cr;
+        }
+    }
     OpenMail;
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
-	if ($v eq '') { next; }
+	if ($v eq '') { next }
+        # print "Checking for hash ", &civs_hash($v), $cr;
+        if ($optouts{&civs_hash($v)}) {
+            print $tx->opted_out($v), $cr;
+            next
+        }
 	if (!CheckAddr($v)) {
 	    print $tx->Invalid_email_address($v), $cr;
 	    next;

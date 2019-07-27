@@ -34,8 +34,8 @@ PERL='/usr/bin/perl'
 # Probably these will not be the same directory.
 # These example directory names assume that the CIVS
 # installation is under user <username>, that the web server
-# recognizes public_html as a source for web documents, and that
-# the web server is willing to run CGI scripts from public_cgi-bin.
+# recognizes HTMLDIR as a source for web documents, and that
+# the web server is willing to run CGI scripts from CGIBINDIR.
 HTMLDIR='/var/www/html/civs'
 CGIBINDIR='/usr/lib/cgi-bin/civs'
 

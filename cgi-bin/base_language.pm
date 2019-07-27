@@ -105,6 +105,11 @@ sub creation_email_public_link { # url
 
 ";
 }
+
+sub opted_out { # addr
+  "Sorry, $_[1] has opted not to receive any email from CIVS."
+}
+
 sub for_more_information_about_CIVS { # url
 "For more information about the Condorcet Internet Voting Service, see
   $_[1]";
