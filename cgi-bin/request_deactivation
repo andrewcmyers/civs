@@ -1,0 +1,82 @@
+#!@PERL@
+
+use strict;
+use warnings;
+use CGI qw(:standard);
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use mail;
+
+my $civs_supervisor = '@SUPERVISOR@';
+
+my $address = param("address");
+
+print CGI::header(-charset => 'utf-8');
+
+if (!CheckAddr($address)) {
+    print start_html(), p("Illegal mail address <$address>");
+    exit 0;
+}
+
+my $code = param("code");
+&GetPrivateHostID;
+my $optouts = &GetOptouts();
+my $opted_out = $optouts->{civs_hash($address)};
+
+# if (param("check") eq "true") {
+#    if ($opted_out) { print 1 }
+#    else { print 0 }
+#    exit 0
+# }
+
+if (!defined($code)) {
+# This is a request to send a code
+
+    print start_html(), h1("Deactivation request");
+
+    if ($optouts->{civs_hash($address)}) {
+        print p("User has opted out of email.");
+        exit 0;
+    }
+
+    my $code = civs_hash('deactivation', $address, $private_host_id);
+
+    OpenMail;
+
+    if (MailFrom($civs_supervisor) && MailTo($address) && StartMailData()) {
+        my $uniqueid = &SecureNonce;
+        my $message_id = "CIVS-deactivation.$uniqueid\@$thishost";
+
+        SendHeader('From', "<$civs_supervisor>");
+        SendHeader('Sender', $civs_supervisor);
+        SendHeader('Reply-To', $civs_supervisor);
+        SendHeader('Message-ID', "<$message_id>");
+        SendHeader('To', "<$address>");
+        SendHeader('Subject', $tx->deactivation_code_subject);
+        SendHeader('Content-Transfer-Encoding', '8bit');
+        SendHeader('Return-Path', $civs_supervisor);
+        SendHeader('X-Mailer', 'CIVS');
+        Send('');
+        Send($tx->someone_has_requested($code));
+        EndMailData;
+    }
+    CloseMail;
+
+    print "OK";
+} else {
+# This is a request to use a code.
+    my $expected_code = civs_hash('deactivation', $address, $private_host_id);
+    if ($code eq $expected_code) {
+        if ($optouts->{civs_hash($address)}) {
+            $optouts->{civs_hash($address)} = 0;
+            print 'activated';
+        } else {
+            $optouts->{civs_hash($address)} = 1;
+            print 'deactivated';
+        }
+        SaveOptOuts($optouts)
+    } else {
+        print start_html(), p($tx->codes_dont_match);
+    }
+}

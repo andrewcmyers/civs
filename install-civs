@@ -36,7 +36,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
     for f in civs_create.html* index.html* public_elections.html*	      \
         proportional.html* sec_priv.html* acks.html changelog.html* news.html*\
         *.var rp.html* publicized_polls.html* faq.html* style.css results.js  \
-        vote.js ajax.js ezdom.js civs_hdr.js hebrew.css
+        vote.js ajax.js ezdom.js civs_hdr.js mail_mgmt.js hebrew.css
     do
 	case "$f" in
 	  *.var)    dest="${HTMLDIR}/${f}";;
@@ -79,8 +79,9 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
         voting.pm close control create_election download_ballots              \
         remove_writein upload_ballots results top_polls.pm get_top_polls      \
         languages.pm election.pm mail.pm start_election vote                  \
-        refresh_top_polls publicize_election status clear_caches              \
+        refresh_top_polls mail_mgmt publicize_election status clear_caches    \
         delete_election.pl edit_poll remove_defunct_elections                 \
+        request_deactivation                                                  \
         resend_link send_result_key.pm rp.pm runoff.pm minimax.pm             \
         admctrl.pm base_language.pm english.pm hungarian.pm italian.pm        \
         french.pm german.pm hebrew.pm portuguese.pm chinese.pm                \

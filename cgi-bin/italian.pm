@@ -565,7 +565,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-'Per maggiori informazioni sul servizio di voto Condorcet on-line (CIVS):';
+"Per maggiori informazioni sul servizio di voto Condorcet on-line (CIVS): $_[1]"
 }
 
 

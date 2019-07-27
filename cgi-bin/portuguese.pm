@@ -567,7 +567,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'Para mais informação sobre o CIVS, veja:';
+    'Para mais informação sobre o CIVS, veja: '.$_[1];
 }
 
 sub poll_email_subject { # title

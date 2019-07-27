@@ -500,10 +500,6 @@ sub To_view_the_results_at_the_end {
     "To view the results of the poll once it has ended, visit:</p> $_[1]";
 }
 
-sub For_more_information {
-    'For more information about the Condorcet Internet Voting Service, see:';
-}
-
 sub poll_email_subject { # title
     "Poll: $_[1]"
 }

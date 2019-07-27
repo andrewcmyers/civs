@@ -646,7 +646,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'For more information about the Condorcet Internet Voting Service, see:';
+    "For more information about the Condorcet Internet Voting Service, see:\r\n$_[1]"
 }
 
 sub poll_email_subject { # title

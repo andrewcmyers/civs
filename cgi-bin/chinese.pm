@@ -541,7 +541,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    '查看以下内容来获得更多关于CIVS在线投票服务的信息:';
+    '查看以下内容来获得更多关于CIVS在线投票服务的信息: ' . $_[1];
 }
 
 sub poll_email_subject { # title

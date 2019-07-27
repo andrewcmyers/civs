@@ -561,7 +561,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-'A Condorcet Internetes Szavazási Szolgáltatásról további információkat a következő címen tuhatsz meg:';
+  "A Condorcet Internetes Szavazási Szolgáltatásról további információkat a következő címen tuhatsz meg:\r\n$_[1]"
 }
 
 

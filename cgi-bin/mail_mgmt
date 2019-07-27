@@ -1,0 +1,31 @@
+#!@PERL@
+
+use strict;
+use warnings;
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use CGI qw(:standard);
+
+HTML_Header("Mail Management");
+CIVS_Header("Mail Management");
+
+print $cr, "<script src=\"@CIVSURL@/ajax.js\"></script>";
+print $cr, "<script src=\"@CIVSURL@/results.js\"></script>";
+print $cr, "<script src=\"@CIVSURL@/ezdom.js\"></script>";
+
+print $tx->mail_management_instructions,
+      hr(),
+      $tx->mail_address, textfield(-id => 'mail_address'),
+      "&nbsp;", button(-id => 'sendcode', -value => $tx->send_activation_code),
+      span({-id => "addr_popup", -class => "popup"}, "message"),
+      br(),
+      br(),
+      $tx->activation_code, textfield(-id => 'deactivation_code'), br(), br(),
+      button({-id => 'deactivate', -value => "Submit deactivation/reactivation", -disabled => 1}),
+      span({-id => "submit_popup", -class => "popup"}, "message"),
+      div({-id => "response_area"});
+
+print '<script type="text/javascript" src="@CIVSURL@/mail_mgmt.js"></script>', $cr;
+
+exit 0;

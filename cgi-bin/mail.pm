@@ -18,7 +18,7 @@ BEGIN {
     @ISA         = qw(Exporter);
     @EXPORT      = qw(&OpenMail &CloseMail &MailFrom &MailTo
                       &StartMailData &EndMailData &Send &SendHeader
-                      &CheckAddr &TrimAddr);
+                      &GetOptouts &SaveOptOuts &CheckAddr &TrimAddr);
 }
 
 # Package imports
@@ -54,10 +54,42 @@ sub TrimAddr {
     return $addr;
 }
 
+my $optout_file = "@CIVSDATADIR@/do-not-email.txt";
+
+# Return a reference to a hash mapping the hashes of
+# all the email addresses that have opted out to 1.
+sub GetOptouts {
+    my %optouts;
+    if (-r $optout_file) {
+        undef $/;
+        open(OPTOUTS, "<$optout_file");
+        my $emails = <OPTOUTS>;
+        close(OPTOUTS);
+        my @a = split /[\r\n]+/, $emails;
+        foreach my $h (@a) {
+            $h = TrimAddr($h);
+            $optouts{$h} = 1;
+            # print "Opted out: ", $h, $cr;
+        }
+    }
+    return \%optouts
+}
+
+sub SaveOptOuts {
+    my ($optouts) = @_;
+    open (OPTOUTS, ">$optout_file") || print "<i>Internal error saving opt-out information</i>", $cr;
+    foreach my $h (keys %$optouts) {
+        if ($optouts->{$h}) {
+            print OPTOUTS "$h\n"
+        }
+    }
+    close(OPTOUTS);
+}
+
 sub Send {
     foreach my $s (@_) {
 	if ($verbose || $local_debug) {
-	    print $s."\n"; STDOUT->flush();
+	    print CGI::escapeHTML($s)."\n"; STDOUT->flush();
 	}
 	if (!($local_debug)) {
             $smtp->datasend($s."\r\n");
@@ -101,7 +133,9 @@ sub OpenMail {
 
 sub MailFrom {
     (my $sender) = @_;
-    if (!$smtp->mail($sender)) {
+    if ($local_debug) {
+        print "From ", $sender, $cr;
+    } elsif (!$smtp->mail($sender)) {
         print "MailFrom:", $smtp->message(), $cr;
         return 0
     }
@@ -109,7 +143,9 @@ sub MailFrom {
 }
 
 sub MailTo {
-    if (!$smtp->recipient(@_)) {
+    if ($local_debug) {
+        print "To ", $_[0], $cr;
+    } elsif (!$smtp->recipient(@_)) {
         print "To: ", $smtp->message(), $cr;
         return 0
     }
@@ -117,14 +153,18 @@ sub MailTo {
 }
 
 sub StartMailData {
-    if (!$smtp->data()) {
+    if ($local_debug) {
+        print "--- Mail data begins ---", $cr;
+    } elsif (!$smtp->data()) {
         print "StartMailData:", $smtp->message(), $cr;
         return 0
     }
     1
 }
 sub EndMailData {
-    if (!$smtp->dataend()) {
+    if ($local_debug) {
+        print "--- Mail data ends ---", $cr;
+    } elsif (!$smtp->dataend()) {
         print "EndMailData: ", $smtp->message(), $cr;
         return 0
     }

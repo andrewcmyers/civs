@@ -1,5 +1,7 @@
 package base_language;
 
+use CGI qw(:standard);
+
 our $VERSION = 1.00;
 
 sub lang { 'en-US'; }
@@ -689,7 +691,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'For more information about the Condorcet Internet Voting Service, see:';
+    "For more information about the Condorcet Internet Voting Service, see:\r\n$_[1]"
 }
 
 sub poll_email_subject { # title
@@ -922,6 +924,37 @@ sub Some_voter_preferences_were_ignored {
 
 sub preference_description {
     "The $_[1]&ndash;$_[2] preference for $_[3] over $_[4]."
+}
+
+sub mail_management_instructions {
+    p("CIVS does not store e-mail addresses of voters and it only sends mail when
+       a poll supervisor requests that mail be sent.
+       You can prevent CIVS from sending you any future mail, by entering your email address below.").
+    p("Click the button on the right to request a deactivation code by e-mail. This authentication
+       step is necessary to prevent users from blocking others' email.").
+    p(b("Warning:"), "If you block mail from CIVS, it will be difficult to re-enable it, because CIVS
+      does user authentication using e-mail addresses. You will not be able to vote in any CIVS polls
+      and you will not be able to create CIVS polls.")
+}
+
+sub mail_address {
+    'E-mail address: '
+}
+sub activation_code {
+    'Deactivation code: '
+}
+sub send_activation_code {
+    'Send deactivation code by email'
+}
+sub codes_dont_match {
+    "Sorry, the provided code and e-mail address do not match. You can request another deactivation code above if you have not previously blocked e-mail from CIVS."
+}
+sub someone_has_requested {
+    "Someone has requested a code for preventing CIVS from sending e-mail " .
+    "to you. If it was you, you will know what to do with it. The code is $_[1]."
+}
+sub deactivation_code_subject {
+    "Deactivation code for CIVS mail"
 }
 
 1; # package succeeded!

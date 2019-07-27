@@ -570,7 +570,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'Für weitere Informationen über den Condorcet Internet Voting Service siehe:';
+    "Für weitere Informationen über den Condorcet Internet Voting Service siehe:\r\n$_[1]"
 }
 
 sub poll_email_subject { # title

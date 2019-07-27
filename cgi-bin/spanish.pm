@@ -563,7 +563,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information { 
-    "Para obtener más información acerca de la votación de Condorcet Internet Service, consulte: "; 
+    "Para obtener más información acerca de la votación de Condorcet Internet Service, consulte: \r\n$_[1]"; 
 }
 
 sub poll_email_subject {# título 

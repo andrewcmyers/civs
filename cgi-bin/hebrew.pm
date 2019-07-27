@@ -552,7 +552,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'למידע נוסף אודות שירות ההצבעה האינטרנ טי קונדורסט, ראה: ';
+    'למידע נוסף אודות שירות ההצבעה האינטרנ טי קונדורסט, ראה: '.$_[1];
 }
 
 sub poll_email_subject { # title
