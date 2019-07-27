@@ -953,8 +953,13 @@ sub codes_dont_match {
     "Sorry, the provided code and e-mail address do not match. You can request another deactivation code above if you have not previously blocked e-mail from CIVS."
 }
 sub someone_has_requested {
-    "Someone has requested a code for preventing CIVS from sending e-mail " .
-    "to you. If it was you, you will know what to do with it. The code is $_[1]."
+"Someone has requested a code for preventing CIVS from sending e-mail
+to you. If it was you, you will know what to do with it. The code is:
+
+    $_[1]
+
+Keep this email because you will need this code if you want to use the
+service in the future."
 }
 sub deactivation_code_subject {
     "Deactivation code for CIVS mail"
