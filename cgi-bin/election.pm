@@ -566,7 +566,7 @@ sub SendKeys {
 	$v = TrimAddr($v);
 	if ($v eq '') { next }
         # print "Checking for hash ", &civs_hash($v), $cr;
-        if ($optouts->{&civs_hash($v)}) {
+        if (&CheckOptOut($optouts, $v)) {
             print $tx->opted_out($v), $cr;
             next
         }

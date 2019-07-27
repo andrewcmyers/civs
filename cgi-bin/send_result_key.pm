@@ -32,14 +32,20 @@ sub SendResultKey {
 
     if (!$local_debug) { OpenMail }
     my @result_addrs = split /\s+/, $result_addrs;
+    my $optouts = &GetOptouts();
     foreach my $addr (@result_addrs) {
-	$addr = TrimAddr($addr);
+	$addr = &TrimAddr($addr);
 	if ($addr eq '') { next; }
-	if (!(CheckAddr($addr))) {
-	    print pre($tx->Invalid_email_address($addr));
+	print $tx->Sending_result_key($addr);
+
+	if (!(&CheckAddr($addr))) {
+	    print p($tx->Invalid_email_address($addr));
 	    next;
 	}
-	print $tx->Sending_result_key($addr);
+        if (&CheckOptOut($optouts, $addr)) {
+            print p($tx->opted_out($addr));
+            next;
+        }
 
         if (!$local_debug) {
             my $url = "@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
