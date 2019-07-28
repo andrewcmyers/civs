@@ -116,8 +116,9 @@ successfully run with a couple of thousand voters, and this is a load it should
 stand up to even if voters all try to vote around the same time. Election
 results are now cached, so the system has become much more scalable.
 <p>
-However, CIVS hasn't been stress-tested at 20,000 voters or higher. The server
-is implemented in Perl, so it can easily handle 4,000 voters per hour. If your
+However, CIVS hasn't been stress-tested on poll of 20,000 or more voters.
+The server is implemented in Perl, and it can easily handle 4,000
+voters per hour. If your
 voters don't show up faster than that, and they usually don't, it should be
 fine no matter how many voters there are.  If you want to have a private poll,
 the system will only allow you to add 1,000 voters at a time, but in principle
@@ -128,8 +129,8 @@ have to spread out the invitations over hours or days.
 </p>
 <p>
 Note that using the experimental proportional method for your poll can
-dramatically increase the load on the CIVS server, so avoid that mode for large
-polls, especially where there are a lot of candidates to choose from.
+dramatically increase the load on the CIVS server, so please avoid that mode
+for large polls, especially if there are many candidates to choose from.
 </p>
 <li>
 
