@@ -115,19 +115,18 @@ choices, you should have at least 3N voters.
 
 CIVS is used regularly for polls with hundreds of voters.  You can set up a
 public poll where any number of people can vote. Elections have been
-successfully run with a couple of thousand voters, and this is a load it should
+successfully run with several thousand voters, and this is a load it should
 stand up to even if voters all try to vote around the same time. Election
 results are now cached, so the system has become much more scalable.
 <p>
-However, CIVS hasn't been stress-tested on poll of 20,000 or more voters.
-The server is implemented in Perl, and it can easily handle 4,000
-voters per hour. If your
-voters don't show up faster than that, and they usually don't, it should be
-fine no matter how many voters there are.  If you want to have a private poll,
-the system will only allow you to add 1,000 voters at a time, but in principle
-you can have as many voters as you want. CIVS does limit the rate at which
+However, CIVS hasn't been stress-tested on polls of 20,000 or more voters.
+The server is implemented in Perl, and it can easily handle a few thousand voters per hour. If your
+voters don't show up faster than that&mdash;and they usually don't&mdash;it should be
+fine no matter how many voters there are.  For private polls,
+the system only allows adding 1,000 voters at a time, but there is no
+limit on the number of voters added eventually. CIVS does limit the rate at which
 new voters can be added to a poll by controlling how quickly it is willing
-to send out email invitations. For polls with more than 10,000 voters, you may
+to send out invitations by email. For polls with more than 10,000 voters, you may
 have to spread out the invitations over hours or days.
 </p>
 <p>
@@ -139,10 +138,11 @@ for large polls, especially if there are many candidates to choose from.
 
 <b>How reliable is CIVS?</b>
 
-There have been no known data losses due to hardware failure on the Cornell
-installation, and no problems with poll results being corrupted due to bugs,
-since 2006. Each poll is stored in a separate database, so if there
-<strong>were</strong> data corruption, it could can affect only one poll.
+There have been no known data losses due to hardware failure on
+the Cornell installation, and no problems with poll results being
+corrupted due to bugs, since 2006. Each poll is stored in a separate
+database, so if there <em>were</em> data corruption in a poll,
+it would affect only that poll.
 
 <li>
 <b>A complete ranking of choices could embarrass some candidates.
@@ -237,33 +237,38 @@ generated voter key to a new email address.
 
 <li>
 <b>How long will poll results remain available?</b>
+<br>
 We are making a best effort to keep poll results forever, for any poll
 that receives more than one vote and doesn't look like a test of the system.
-However, you may want to make a copy of the poll results page for
+However, it would be prudent to make a copy of the poll results page for
 posterity.
 </li>
 <li><b>Why doesn't the system notify voters when the poll has ended?</b>
+<br>
 Because it doesn't know who the voters are any more. Once voter keys are
 sent out, all information about the voters is destroyed. It's the job of
 the poll supervisor to close the poll and notify voters or
 result recipients.
 </li>
 <li><b>Can I make current poll results visible before the poll closes?</b>
+<br>
 This increases the danger of strategic voting. However, it is the 
 behavior for &ldquo;public&rdquo; polls.
 
 <li><b>I lost the email that lets me see the election results. What do I do?</b>
-There is a button on the poll control page that lets
-the poll supervisor resend the link to you.
+<br>
+Notify the poll supervisor.  A button on the poll control page lets the poll
+supervisor resend you the link.
 
 <li><b>Why don't voters see the ballot in their favorite language?</b>
+<br>
 CIVS supports several languages, including at least the following: English,
 German, French, Italian, Chinese, Hungarian, Hebrew, Portuguese, and Thai. The
 language used by CIVS is determined by the user's preferences, as set in the
-web browser.  For example, in Firefox, this is under the &ldquo;Content&rdquo;
-tab. If voters' preferred language is supported by CIVS, but is not
-displayed to them, then they have not set their language preferences
-correctly.
+web browser. If a voter's preferred language is supported by CIVS, but is not
+displayed to them, then they have not set their browser language preferences
+correctly. The contribution of support for additional languages or of
+improvements to existing language support is most welcome.
 </ol>
 <h2>Security and Privacy</h2>
 
