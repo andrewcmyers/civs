@@ -14,7 +14,8 @@ print $cr, "<script src=\"@CIVSURL@/ajax.js\"></script>";
 print $cr, "<script src=\"@CIVSURL@/results.js\"></script>";
 print $cr, "<script src=\"@CIVSURL@/ezdom.js\"></script>";
 
-print $tx->mail_management_instructions,
+print div({-class => 'normal_text'},
+      $tx->mail_management_instructions,
       hr(),
       $tx->mail_address, textfield(-id => 'mail_address'),
       "&nbsp;", button(-id => 'sendcode', -value => $tx->send_activation_code),
@@ -24,7 +25,7 @@ print $tx->mail_management_instructions,
       $tx->activation_code, textfield(-id => 'deactivation_code'), br(), br(),
       button({-id => 'deactivate', -value => "Submit deactivation/reactivation", -disabled => 1}),
       span({-id => "submit_popup", -class => "popup"}, "message"),
-      div({-id => "response_area"});
+      div({-id => "response_area"}));
 
 print '<script type="text/javascript" src="@CIVSURL@/mail_mgmt.js"></script>', $cr;
 
