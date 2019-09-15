@@ -1,0 +1,181 @@
+#!/usr/bin/perl -I/Users/andru/civs/cgi-bin
+
+use strict;
+use warnings;
+use POSIX;
+
+use DB_File;
+use election_utils;
+use Scalar::Util qw(&looks_like_number);
+
+if ($#ARGV < 0) {
+    print STDERR "Usage: dump_elections [-p] <election_dir> ...\n";
+    exit 1;
+}
+
+# TODO a more robust approach to quoting strings into JSON format is called for.
+
+my %edata, my %vdata;
+my $reveal_private_info = 1;
+if ($ARGV[0] eq '-p') {
+    $reveal_private_info = 0;
+    shift @ARGV;
+}
+
+my $indent = 0;
+my $tabstop = 2;
+
+sub begin {
+    $indent++;
+    if ($#_ >= 0) {
+        foreach my $x (@_) {
+            print $x
+        }
+        print "\n", " " x ($indent * $tabstop);
+    }
+}
+sub newline {
+    print "\n", " " x ($indent * $tabstop);
+}
+sub end {
+    $indent--;
+    if ($#_ >= 0) {
+        newline;
+        print $_[0];
+    }
+}
+sub item {
+    my $lines = shift @_;
+    if ($lines > 0) {
+        print ",";
+        newline;
+    }
+    foreach my $x (@_) {
+        print $x;
+    }
+}
+
+begin '{';
+begin qw("elections"), ' : [';
+
+my $election_count = 0;
+foreach my $election_dir (@ARGV) {
+    my $election_data = $election_dir."/election_data";
+    my $vote_data = $election_dir."/vote_data";
+    my $tie = "=";
+    my $cr = "\n";
+    if (! -r $election_data) {
+        print STDERR "Cannot access election data at $election_data\n";
+        exit 1
+    }
+    if (! -r $election_data) {
+        print STDERR "Cannot access election data at $election_data\n";
+        exit 1
+    }
+    if (! -r $vote_data) {
+        # print STDERR "Cannot access ballot data at $vote_data\n";
+        next
+    }
+    my $election_id = $election_dir;
+    $election_id =~ s|/*$||;
+    $election_id =~ s|^.*/||;
+    tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
+    tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
+
+    &GetElectionData(\%edata, \%vdata);
+
+    if (!defined($recorded_voters)) { next }
+    my @voters = split /\n/, $recorded_voters;
+    my @ballots = @{&ProcessBallots(\@voters, $election_id)};
+
+    item $election_count++;
+    begin '{';
+    my $props = 0;
+    item $props++, "\"election_id\" : \"$election_id\"";
+    if ($reveal_private_info) {
+        item $props++, "\"title\" : \"$title\"";
+    }
+    if ($proportional ne 'yes') {
+      item $props++, qw("mode"), " : ", qw("nonproportional");
+    } elsif ($use_combined_ratings) {
+      item $props++, qw("mode"), " : ", qw("proportional weighted");
+    } else {
+      item $props++, qw("mode"), " : ", qw("proportional");
+    }
+    item $props++, "\"num_choices\" : $num_choices";
+    if ($reveal_private_info) {
+        item $props++, "\"choices\" : "; begin; begin "[";
+        my $nchoice = 0;
+        foreach my $choice (@choices) {
+          item $nchoice++, "\"$choice\"";
+        }
+        end "]";
+        end;
+    }
+    item $props++, qw("test"), ' : "', (($external_ballots eq "yes") ? "yes" : "no"), '"';
+    my $num_ballots = @ballots;
+    item $props++, "\"num_ballots\" : $num_ballots";
+    item $props++, qw("ballots"), ' : '; begin; begin '[';
+    my $nballots = 0;
+    foreach $b (@ballots) {
+        my @row = @{$b};
+        if (@row != $num_choices) { next }
+        item $nballots++, '[ ';
+        my $first = 1;
+        foreach my $rank (@row) {
+            if (!$first) {
+                print ", ";
+            }
+            $first = 0;
+            print &FixProp($rank);
+        }
+        print ' ]';
+    }
+    end ']'; end;
+
+    untie %edata; untie %vdata;
+    end '}';
+}
+
+end ']';
+end '}';
+newline;
+
+sub Log {
+    print STDERR @_, "\n";
+}
+
+# ProcessBallots($vref, $election_id):
+#   vref: reference to an array of voter ids (strings)
+#   election_id: the election id
+# Returns a reference to a new array of arrays in which each entry
+# is the array of rankings entered by the corresponding voter.
+#
+sub ProcessBallots {
+    my @voters = @{$_[0]};
+    my $election_id = $_[1];
+    my @ballots = ();
+    foreach my $voter_key (@voters) {
+	my $ballot = $vdata{$voter_key}; 
+	if (!defined($ballot)) {
+	    &Log("Election $election_id: Missing ballot for voter key $voter_key");
+	} else {
+	    my @row = split /,/, $ballot;
+	    push @ballots, \@row;
+	}
+    }
+    return \@ballots;
+}
+
+# Fix a ballot ranking so it is correct for nonproportional computations
+sub FixProp {
+    if ($_[0] eq 'No opinion' || $_[0] eq '' || !looks_like_number($_[0])) {
+        return "\"?\"";
+    }
+    if ($proportional eq 'yes' && !$use_combined_ratings) {
+        return int($num_choices - $_[0]);
+    } else {
+        return int($_[0]);
+    }
+}
+

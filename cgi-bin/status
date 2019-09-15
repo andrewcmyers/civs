@@ -11,6 +11,7 @@ use lib '@CGIBINDIR@';
 use civs_common;
 
 use CGI qw(:standard);
+use URI::Escape;
 use File::stat;
 use DB_File;
 use POSIX qw(strftime);
@@ -130,7 +131,7 @@ foreach my $entry (@entries) {
 	}
     }
     push @rows, Tr(td([a({-href=>"$civs_bin_path/results@PERLEXT@?id=$file".
-			         '&admin_key=@ADMIN_KEY@',
+			         '&admin_key='.uri_escape('@ADMIN_KEY@'),
 			  -target=>"_blank"},
 	small($title)),
 	"$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
@@ -140,7 +141,7 @@ foreach my $entry (@entries) {
 	$started,
 	$stopped,
 	small($last_update),
-	a({-href=>'delete_election@PERLEXT@?id='.$file.'&key=@ADMIN_KEY@',
+	a({-href=>'delete_election@PERLEXT@?id='.$file.'&key='.uri_escape('@ADMIN_KEY@'),
 	   -onClick => "return confirm('Are you sure you want to permanently delete this?"},"Delete"),
 	$cr,
 	]));

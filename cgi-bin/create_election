@@ -28,6 +28,15 @@ if (!&CheckAddr($email_addr)) {
     print end_html();
     exit 0;
 }
+my $optouts = GetOptouts();
+if (CheckOptOut($optouts, $email_addr)) {
+    HTML_Header($tx->Invalid_email_address_hdr);
+    CIVS_Header();
+    print h1($tx->Invalid_email_address_hdr);
+    print p($tx->Address_opted_out(escapeHTML($email_addr)));
+    print end_html();
+    exit 0;
+}
 
 my $choices = param('choices');
 my @c1 = split /(\r\n)+/, $choices;

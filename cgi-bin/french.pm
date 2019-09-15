@@ -600,7 +600,7 @@ sub To_view_the_results_at_the_end {
 
 sub For_more_information {
 'Pour plus d\'informations concernant le Service de Vote Internet Condorcet
- (CIVS), consultez : ';
+ (CIVS), consultez : '."\r\n$_[1]";
 }
 
 

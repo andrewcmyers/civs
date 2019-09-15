@@ -567,7 +567,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'Para mais informação sobre o CIVS, veja:';
+    'Para mais informação sobre o CIVS, veja: '.$_[1];
 }
 
 sub poll_email_subject { # title
@@ -760,8 +760,7 @@ sub What_is_this { # url
 # rp
 
 sub All_prefs_were_affirmed {
-    'Todas as preferências foram confirmadas. Todos os
-		  métodos Condorcet resultarão na mesma ordem.';
+    'Todas as preferências foram confirmadas.'
 }
 
 sub Presence_of_a_green_entry_etc {

@@ -541,7 +541,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    '查看以下内容来获得更多关于CIVS在线投票服务的信息:';
+    '查看以下内容来获得更多关于CIVS在线投票服务的信息: ' . $_[1];
 }
 
 sub poll_email_subject { # title
@@ -732,7 +732,7 @@ sub What_is_this { # url
 # rp
 
 sub All_prefs_were_affirmed {
-    '所有偏好已经确认。所有Condorcet方法都将遵循该排序。';
+    '所有偏好已经确认。';
 }
 
 sub Presence_of_a_green_entry_etc {

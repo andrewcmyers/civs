@@ -9,18 +9,12 @@ body { margin: 0;
 div.contents {padding-left: 2em; padding-right: 2em; text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
-/* override with better layout for large displays */
-@media (min-width: 50em) {
-div.contents { padding-left:0; padding-right:0; min-width: 30em; margin:0 10em; text-align: left }
-div.normal_text { max-width:none; }
-}
-
 div.home { text-align: left;
            padding: 1ex 1ex 0 1ex;
            border-right: 1px solid #bbb;
            border-left: 1px solid #bbb;
            margin: 0 auto 0 1vw;
-           max-width: 80ex}
+           max-width: 80ex }
 
 div#footnote {
     border-top: 1px solid #bbb;
@@ -272,11 +266,6 @@ div.description { border: solid 1px #bbb;
 		  background-color: #f0f0f0; color: #222; padding: 5px;
 		  font-family: Verdana, Helvetica, Arial, sans-serif; }
 
-/* override with better layout for large displays */
-@media (min-width: 50em) {
-div.description { max-width:none; margin-right:0; column-width: 30em; -moz-column-width:30em; -webkit-column-width:30em; }
-}
-
 #jshelp p {text-align: left; font-size: 90% }
 #jshelp ol {text-align: left; font-size: 90% }
 p#jsnohelp {text-align: left; font-size: 90% }
@@ -314,7 +303,15 @@ textarea.paste { font-family: 'Courier Prime', Courier, monospace; font-size: 80
 
 textarea#description_edit { display: none }
 input#save_description_button { display: none }
-.popup { border: 1px solid black; background-color: #ffffd0; font-size: 80%; position: relative; left: 3em; bottom: 3ex; display: none }
+.popup {
+    border: 1px solid black;
+    background-color: #ffffd0;
+    font-size: 80%;
+    position: relative;
+    left: 3em;
+    bottom: 3ex;
+    display: none
+}
 
 .pubpriv p {font-size: 80%}
 #pubpriv_choice {border-top: 1px solid #bbb; margin-top: 0.5ex}

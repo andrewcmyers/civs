@@ -560,10 +560,16 @@ sub SendKeys {
     my @addresses =  &unique_elements( @{$addresses_ref} );
     my $now = time();
     my $load = GetEmailLoad($now);
+    my $optouts;
     OpenMail;
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
-	if ($v eq '') { next; }
+	if ($v eq '') { next }
+        # print "Checking for hash ", &civs_hash($v), $cr;
+        if (&CheckOptOut($optouts, $v)) {
+            print $tx->opted_out($v), $cr;
+            next
+        }
 	if (!CheckAddr($v)) {
 	    print $tx->Invalid_email_address($v), $cr;
 	    next;
@@ -649,11 +655,12 @@ sub SendKeys {
 	    $html .= $cr."</p><p>".$tx->poll_has_been_announced_to_end($election_end);
             if ($restrict_results ne 'yes') {
 		$html .= ' ' .
-		  $tx->To_view_the_results_at_the_end(MakeURL("@PROTO@://$thishost$civs_bin_path/".
+		  $tx->To_view_the_results_at_the_end(&MakeURL("@PROTO@://$thishost$civs_bin_path/".
 				"results@PERLEXT@?id=$election_id"));
 	    }
-	    $html .= '<p>' . $tx->For_more_information . $cr .
-		MakeURL($civs_home).'</p>
+	    $html .= '<p>'
+                  .   $tx->For_more_information(&MakeURL($civs_home))
+                  .  '</p>
 </body>
 </html>';
 	    SendBody $html;
@@ -661,8 +668,6 @@ sub SendKeys {
         }
     }
     SetEmailLoad($now, $load);
-    if (!($local_debug)) {
-        CloseMail;
-    }
+    CloseMail;
     STDOUT->flush();
 }

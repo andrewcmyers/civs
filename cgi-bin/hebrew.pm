@@ -552,7 +552,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'למידע נוסף אודות שירות ההצבעה האינטרנ טי קונדורסט, ראה: ';
+    'למידע נוסף אודות שירות ההצבעה האינטרנ טי קונדורסט, ראה: '.$_[1];
 }
 
 sub poll_email_subject { # title
@@ -744,7 +744,7 @@ sub What_is_this { # url
 # rp
 
 sub All_prefs_were_affirmed {
-    'כל ההעדפות אושרו. כל שיטות קונדורסט יתאימו לדירוג זה.';
+    'כל ההעדפות אושרו.'
 }
 
 sub Presence_of_a_green_entry_etc {

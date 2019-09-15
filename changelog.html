@@ -92,7 +92,17 @@ connection with the use or performance of this software.
 Recent updates
 </h2>
 <ul>
-<li>2.18 (Dec 2017):</li>
+<li>2.19 (not released yet):
+  <ul>
+    <li>Various corrections to explanations about properties of Condorcet methods.</li>
+    <li>Added script for exporting poll data in JSON format.</li>
+    <li>Added script for tabulating a poll from the command line.</li>
+    <li>Allow result keys to be resent.</li>
+    <li>Add missing credit for CIVS logo (Mike Kalashnikov).</li>
+    <li>Allow users to opt out from receiving any mail from CIVS.</li>
+  </ul>
+</li>
+<li>2.18 (Dec 2017):
     <ul>
       <li>Rate-limit the amount of email sent per poll.</li>
       <li>Allow the use of HTTPS via new config setting PROTO.
@@ -104,13 +114,13 @@ Recent updates
       <li>Added Minimax algorithm
       <li>Improved installation instructions
       <li>Support for SSL e-mail server
-    </ul>
-<li>2.17 (May 2014):</li>
+    </ul></li>
+<li>2.17 (May 2014):
     <ul>
       <li>Poll descriptions can now be edited by the poll supervisor.
       <li>Bug fixes: input sanitization, AJAX browser compatibility
       <li>Improved Portuguese support
-    </ul>
+    </ul></li>
 <li>2.16 (September 2012):</li>
     <ul>
 	<li>Support for HTML voting code that can be pasted into other web pages (public polls only).</li>
@@ -120,28 +130,27 @@ Recent updates
 	<li>Clearer explanation of anonymity rules for elections with restricted
 	    results.</li>
     </ul>
-<li>2.15 (February 2011):</li>
+<li>2.15 (February 2011):
     <ul>
 	<li>Support for Hebrew, Portuguese, Chinese (<a href="acks.html">done by volunteers</a>)</li>
 	<li>Bug fixes for UTF-8 email</li>
         <li>Other localization bug fixes</li>
 	<li>Supervisors can remove write-ins before voting starts.</li>
-    </ul>
-<li>2.14 (May 2010):</li>
+    </ul></li>
+<li>2.14 (May 2010):
     <ul>
 	<li>Improvements to the look of the voting page.</li>
 	<li>Internationalization support including consistent use of UTF-8</li>
 	<li>Localization for Hungarian, Italian, French, and German</li>
     (<a href="acks.html">done by volunteers</a>)
-    </ul>
-<li>2.13 (February 2010):</li>
+    </ul></li>
+<li>2.13 (February 2010):
     <ul>
 	<li>Better algorithm for setting drag-and-drop rankings.</li>
 	<li>Support multipliers in test ballot format</li>
 	<li>Clearer explanation of proportional mode</li>
-    </ul>
-
-<li>2.12 (November 2009):</li>
+    </ul></li>
+<li>2.12 (November 2009):
 <ul>
 <li>Drag-and-drop voting UI.</li>
 <li>Support for test polls in which ballots are uploaded.</li>
@@ -149,8 +158,8 @@ Recent updates
 <li>Better write-in filtering.</li>
 <li>Fixed interaction with rigorous SMTP servers.</li>
 </ul>
-
-<li>2.11 (December 2008):</li>
+</li>
+<li>2.11 (December 2008):
 <ul>
 <li>Elections are now called "polls" uniformly, per a user suggestion.</li>
 <li>Results are now cached, which should improve server performance
@@ -162,10 +171,9 @@ because it no longer throws away information that CIVS RP uses.</li>
 it easy to add new completion methods. It requires writing a Perl package
 that implements <code>rank_candidates</code> and <code>print_details</code>,
 and modifying two tables at the top of the "results" script.</li>
-
 <li>Some formatting cleanup of code.</li>
-</ul>
-<li>2.10 (August 2008):</li>
+</ul></li>
+<li>2.10 (August 2008):
 <ul>
 <li>Elections with write-ins now have voting initially disabled. It can
 be enabled explicitly from the control page. This allows write-ins to
@@ -174,22 +182,22 @@ be on the same footing as other choices.</li>
 feedback for the more expensive completion methods.</li>
 </ul>
 </li>
-<li>2.9 (January 2008):</li>
+<li>2.9 (January 2008):
 <ul>
 <li>Added filtering of HTML tags to remove possible XSS attacks, etc. Most
 useful HTML markup still permitted.</li>
 <li>Cleanup of code and documentation.</li>
 <li>Fixed a small but crippling bug in restricted release of results.</li>
 </ul>
-<li>2.8:</li>
+<li>2.8:
 <ul>
 <li>Better checking of email addresses to prevent sending bogus emails.</li>
-<li>Voter emails now come from CIVS supervisor instead of election supervisor.</li>
+<li>Voter emails now come from CIVS administrator instead of election supervisor.</li>
 <li>Cleaned-up completion algorithm code allows adding new completion
     algorithms more easily.</li>
 <li>Corrected description of runoff.</li>
-</ul>
-<li>2.7:</li>
+</ul></li>
+<li>2.7:
 <ul>
 <li>Ability to release election results only to a limited set of users.</li>
 <li>Better client-side sanity checking at election creation.</li>
@@ -201,6 +209,7 @@ useful HTML markup still permitted.</li>
 <li>Mail to voters is now HTML+ASCII (should be made optional) to help
     get through spam filters.</li>
 </ul>
+</li>
 </ul>
 
 </div></div>

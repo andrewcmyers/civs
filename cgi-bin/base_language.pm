@@ -1,8 +1,10 @@
 package base_language;
 
+use CGI qw(:standard);
+
 our $VERSION = 1.00;
 
-sub lang { 'en-US'; }
+sub lang { 'en-US' }
 
 sub init {
     my $self = {};
@@ -11,17 +13,18 @@ sub init {
 }
 
 # civs_common
+
 sub style_file {
-    'style.css';
+    'style.css'
 }
 sub Condorcet_Internet_Voting_Service {
-    'Condorcet Internet Voting Service';
+    'Condorcet Internet Voting Service'
 }
 sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
-    'Condorcet Internet Voting Service';
+    'Condorcet Internet Voting Service'
 }
 sub about_civs {
-    'About CIVS';
+    'About CIVS'
 }
 sub public_polls {
     'Public polls'
@@ -33,19 +36,19 @@ sub about_security_and_privacy {
     'Security and privacy'
 }
 sub FAQ {
-    'FAQ';
+    'FAQ'
 }
 sub CIVS_suggestion_box {
-    'CIVS suggestion box';
+    'CIVS suggestion box'
 }
 sub unable_to_process {
-    'CIVS is unable to process your request because of an internal error.';
+    'CIVS is unable to process your request because of an internal error.'
 }
 sub CIVS_Error {
-    'CIVS Error';
+    'CIVS Error'
 }
 sub CIVS_server_busy {
-    'CIVS server busy';
+    'CIVS server busy'
 }
 sub Sorry_the_server_is_busy {
     'Sorry, the CIVS web server is very busy right now and
@@ -96,6 +99,9 @@ poll. To start and stop the poll, please use the following URL:
 
   $_[2]
 
+Save this email and keep it private. If you lose it you will not be able
+to control the poll.
+
 ";
 }
 sub creation_email_public_link { # url
@@ -105,6 +111,11 @@ sub creation_email_public_link { # url
 
 ";
 }
+
+sub opted_out { # addr
+  "Sorry, $_[1] has opted not to receive any email from CIVS."
+}
+
 sub for_more_information_about_CIVS { # url
 "For more information about the Condorcet Internet Voting Service, see
   $_[1]";
@@ -247,7 +258,7 @@ sub results_available_to_the_following_users {
 }
 
 sub Poll_results_are_available { #url
-    "<a href=\"$_[1]\">Go to poll results</a>";
+    "<a href=\"$_[1]\">[&nbsp;See poll results&nbsp;]</a>";
 }
 sub Description {
     'Description:';
@@ -329,10 +340,10 @@ sub The_poll_has_ended {
 # add voters
 
 sub CIVS_Adding_Voters {
-    'CIVS: Adding Voters';
+    'CIVS: Adding Voters'
 }
 sub Adding_voters {
-    'Adding voters';
+    'Adding voters'
 }
 
 sub Sorry_voters_can_only_be_added_to_poll_in_progress {
@@ -365,13 +376,13 @@ sub Done {
 # vote
 
 sub page_header_CIVS_Vote { # election_title
-    'CIVS Vote: '.$_[1];
+    'CIVS Vote: '.$_[1]
 }
 
 sub ballot_reporting_is_enabled {
     'Ballot reporting is enabled for this poll.
      Your ballot (the rankings you assign to choices)
-     will be made public when the poll ends.';
+     will be visible in the poll results when the poll ends.'
 }
 sub instructions1 { # num_winners, end, name, email
     my $wintxt;
@@ -443,6 +454,7 @@ sub Rank { 'Rank' }
 sub Choice { 'Choice' }
 sub Weight { 'Weight' }
 
+# overridden in english.pm
 sub ordinal_of {
     "$_[1]"
 }
@@ -502,14 +514,13 @@ sub buttons_are_deactivated {
 	your browser does not support Javascript.';
 }
 sub ranking_instructions {
-       'Rank the choices in one of three ways:
+       '<p>Rank the choices in one of three ways:</p>
 	<ol>
-	    <li>drag the rows
-	    <li>use pulldowns in Rank column
-	    <li>select rows and use buttons above
+	    <li>drag the rows</li>
+	    <li>use pulldowns in Rank column</li>
+	    <li>select rows and use buttons above</li>
 	</ol>';
 }
-
 sub write_in_a_choice {
     'Write in a new choice: ';
 }
@@ -552,7 +563,7 @@ sub future_result_link {
 }
 #deprecated
 sub following_URL_reports_results {
-    "The following URL reports the results of the poll"
+    'The following URL reports the current poll results:'
 }
 sub current_result_link {
     (my $self, my $url) = @_;
@@ -642,11 +653,14 @@ sub Invalid_email_address_hdr { # addr
 sub Invalid_email_address { # addr
     "Invalid email address: $_[1]";
 }
+sub Address_opted_out { # addr
+    "This address has opted out from CIVS e-mail: $_[1]"
+}
 sub Sending_mail_to_voter_v {
     "Sending mail to voter \"$_[1]\"...";
 }
 sub CIVS_poll_supervisor { # name
-    "\"$_[1], CIVS poll supervisor\""
+    "\"$_[1] (CIVS poll supervisor)\""
 }
 sub voter_mail_intro { #title, name, email_addr
 "A Condorcet Internet Voting Service poll named <b>$_[1]</b> has been created.
@@ -669,11 +683,11 @@ destroyed the record of your email address and will not release any information
 about whether or how you have voted.';
 }
 sub This_is_a_nonanonymous_poll {
-'The poll supervisor has decided to make this a <strong>non-anonymous poll</strong>.  If
-you vote, how you voted will be publicly visible along with your
-email address. If you do not vote, the poll supervisor will also be able
-to determine this.';
+    'The poll supervisor has decided to make this a <strong>non-anonymous poll</strong>.
+If you vote, your email address and how you voted will be visible to anyone
+who has been given access to the poll results.'
 }
+
 
 sub poll_has_been_announced_to_end { #election_end
     "The poll has been announced to end $_[1].";
@@ -684,7 +698,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'For more information about the Condorcet Internet Voting Service, see:';
+    "For more information about the Condorcet Internet Voting Service, see:\r\n$_[1]"
 }
 
 sub poll_email_subject { # title
@@ -749,7 +763,8 @@ sub Voter_identities_will_be_kept_anonymous {
     'Voter identities will be kept anonymous';
 }
 sub Voter_identities_will_be_public {
-    'Voter identities (email) will be publicly associated with their ballots.';
+'Voter identities (email) along with their ballots will be
+visible to those authorized to see poll results.'
 }
 sub Condorcet_completion_rule {
     'Condorcet completion rule:';
@@ -797,7 +812,7 @@ sub Number_of_winning_candidates {
 sub Poll_actually_has { #winmsg
     my $winmsg = '1 winner';
     if ($_[1] != 1) {
-	$winmsg = $real_nwin.' winners';
+	$winmsg = $_[1].' winners';
     }
     "&nbsp;(Poll actually has $winmsg)";
 }
@@ -876,8 +891,7 @@ sub What_is_this { # url
 # rp
 
 sub All_prefs_were_affirmed {
-    'All preferences were affirmed. All
-		  Condorcet methods will agree with this ranking.';
+    'All preferences were affirmed.'
 }
 
 sub Presence_of_a_green_entry_etc {
@@ -918,6 +932,42 @@ sub Some_voter_preferences_were_ignored {
 
 sub preference_description {
     "The $_[1]&ndash;$_[2] preference for $_[3] over $_[4]."
+}
+
+sub mail_management_instructions {
+    p("CIVS does not store e-mail addresses of voters and it only sends mail when
+       a poll supervisor requests that mail be sent.
+       You can prevent CIVS from sending you any future mail, by entering your email address below.").
+    p("Click the button on the right to request a deactivation code by e-mail. This authentication
+       step is necessary to prevent users from blocking others' email.").
+    p(b("Warning:"), "If you block mail from CIVS, it will be difficult to re-enable it, because CIVS
+      does user authentication using e-mail addresses. You will not be able to vote in any CIVS polls
+      and you will not be able to create CIVS polls.")
+}
+
+sub mail_address {
+    'E-mail address: '
+}
+sub activation_code {
+    'Deactivation code: '
+}
+sub send_activation_code {
+    'Send deactivation code by email'
+}
+sub codes_dont_match {
+    "Sorry, the provided code and e-mail address do not match. You can request another deactivation code above if you have not previously blocked e-mail from CIVS."
+}
+sub someone_has_requested {
+"Someone has requested a code for preventing CIVS from sending e-mail
+to you. If it was you, you will know what to do with it. The code is:
+
+    $_[1]
+
+Keep this email because you will need this code if you want to use the
+service in the future."
+}
+sub deactivation_code_subject {
+    "Deactivation code for CIVS mail"
 }
 
 1; # package succeeded!

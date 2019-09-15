@@ -570,7 +570,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-    'Für weitere Informationen über den Condorcet Internet Voting Service siehe:';
+    "Für weitere Informationen über den Condorcet Internet Voting Service siehe:\r\n$_[1]"
 }
 
 sub poll_email_subject { # title
@@ -754,8 +754,7 @@ sub Choices_in_individual_pref_order {
 # rp
 
 sub All_prefs_were_affirmed {
-    'Alle Präferenzen wurden bestätigt.
-     Alle Condorcet-Verfahren führen zu dieser Rangfolge.';
+    'Alle Präferenzen wurden bestätigt.'
 }
 
 sub Presence_of_a_green_entry_etc {

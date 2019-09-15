@@ -561,7 +561,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information {
-'A Condorcet Internetes Szavazási Szolgáltatásról további információkat a következő címen tuhatsz meg:';
+  "A Condorcet Internetes Szavazási Szolgáltatásról további információkat a következő címen tuhatsz meg:\r\n$_[1]"
 }
 
 
@@ -743,8 +743,7 @@ sub Choices_in_individual_pref_order {
 # rp
 
 sub All_prefs_were_affirmed {
-    'Minden preferencia megerősített. Minden
-        Condorcet módszernél egyezni fog ez a sorrend.';
+    'Minden preferencia megerősített.'
 }
 
 sub Presence_of_a_green_entry_etc {
