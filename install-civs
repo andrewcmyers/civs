@@ -146,13 +146,13 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	echo "need to create your own key.  See the INSTALL file for more";
 	echo "information."
 	echo "";
-	openssl rand -base64 32 -out $CIVSDATADIR/private_host_id;
+	openssl rand -base64 -out $CIVSDATADIR/private_host_id 32;
 	echo "*********************************************";
     fi
 
 	if [ ! -s $CIVSDATADIR/nonce_seed ]; then
 		echo "Seeding the CIVS nonce generator.";
-		openssl rand -base64 32 -out $CIVSDATADIR/nonce_seed;
+		openssl rand -base64 -out $CIVSDATADIR/nonce_seed 32;
 	fi
 
     touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
