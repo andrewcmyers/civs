@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <string.h>
 #include <sys/types.h>
 
 void ignore() {}
