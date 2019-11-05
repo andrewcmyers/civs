@@ -188,6 +188,7 @@ if ($publicize eq 'yes') {
 }
 
 if (!($local_debug)) {
+    my $success = 1;
     if (OpenMail) {
         my $civs_supervisor = '@SUPERVISOR@';
         MailFrom($civs_supervisor) &&
@@ -210,15 +211,23 @@ if (!($local_debug)) {
             }
         }
         Send $tx->for_more_information_about_CIVS($civs_home);
-        EndMailData;
+        $success &= EndMailData;
         CloseMail;
 
         print "</pre>\n";
 
-        print p($tx->mail_has_been_sent($email_addr));
-        print p($tx->click_on_the_URL_to_start($title));
+        if ($success) {
+            print p($tx->mail_has_been_sent($email_addr));
+            print p($tx->click_on_the_URL_to_start($title));
+        } else {
+        }
     } else {
+        $success = 0;
         print p("Could not connect to SMTP server", tt('@SMTP_HOST@'));
+        Log("Failed to send email to supervisor of $election_id");
+    }
+    if (!$success) {
+        print p("Error sending mail to supervisor of election. Election not started.");
         Log("Failed to send email to supervisor of $election_id");
         untie %edata;
         print end_html();
