@@ -57,7 +57,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $close_time, $email_load);
 
 our $civs_supervisor = '@SUPERVISOR@';
-our $mail_mgmt_url = '@CIVSBINURL@/@CIVSBINURL@/mail_mgmt@PERLEXT@';
+our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 # Non-exported variables
 my ($db_is_open, $election_is_locked);
@@ -660,7 +660,7 @@ sub SendKeys {
 				"results@PERLEXT@?id=$election_id"));
 	    }
 	    $html .= '<p>'
-                  .   $tx->For_more_information(&MakeURL($civs_home, $mail_mgmt_url))
+                  .   $tx->For_more_information(&MakeURL($civs_home), &MakeURL($mail_mgmt_url))
                   .  '</p>
 </body>
 </html>';

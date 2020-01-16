@@ -15,8 +15,7 @@ use MIME::Base64;
 use send_result_key;
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
-
-my $mail_mgmt_url = '@CIVSBINURL@/@CIVSBINURL@/mail_mgmt@PERLEXT@';
+my $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 ### Initial parameter checking
 
