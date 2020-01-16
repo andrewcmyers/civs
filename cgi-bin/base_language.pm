@@ -116,11 +116,6 @@ sub opted_out { # addr
   "Sorry, $_[1] has opted not to receive any email from CIVS."
 }
 
-sub for_more_information_about_CIVS { # url
-"For more information about the Condorcet Internet Voting Service, see
-  $_[1]";
-}
-
 sub Sending_result_key { # addr
     "<p>Sending result key to <tt>$_[1]</tt>. Please allow this to complete...<br>"
 }
@@ -697,8 +692,10 @@ sub To_view_the_results_at_the_end {
     "To view the results of the poll once it has ended, visit:</p> $_[1]";
 }
 
-sub For_more_information {
-    "For more information about the Condorcet Internet Voting Service, see:\r\n$_[1]"
+sub For_more_information { # url, mail mgmt url
+  ($home, $mail_mgmt) = @_;
+  "For more information about the Condorcet Internet Voting Service, see
+   $home. To opt out from all future CIVS email, see $mail_mgmt";
 }
 
 sub poll_email_subject { # title
