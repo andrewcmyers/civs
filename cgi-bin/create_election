@@ -16,6 +16,8 @@ use send_result_key;
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 
+my $mail_mgmt_url = '@CIVSBINURL@/@CIVSBINURL@/mail_mgmt@PERLEXT@';
+
 ### Initial parameter checking
 
 my $email_addr = param('email_addr');
@@ -210,7 +212,7 @@ if (!($local_debug)) {
                 Send $tx->creation_email_public_link("@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
             }
         }
-        Send $tx->for_more_information_about_CIVS($civs_home);
+        Send $tx->For_more_information($civs_home, $mail_mgmt_url);
         $success &= EndMailData;
         CloseMail;
 

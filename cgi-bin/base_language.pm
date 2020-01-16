@@ -693,7 +693,7 @@ sub To_view_the_results_at_the_end {
 }
 
 sub For_more_information { # url, mail mgmt url
-  ($home, $mail_mgmt) = @_;
+  ($self, $home, $mail_mgmt) = @_;
   "For more information about the Condorcet Internet Voting Service, see
    $home. To opt out from all future CIVS email, see $mail_mgmt";
 }
