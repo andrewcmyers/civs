@@ -685,17 +685,21 @@ who has been given access to the poll results.'
 
 
 sub poll_has_been_announced_to_end { #election_end
-    "The poll has been announced to end $_[1].";
+    "The poll has been announced to end $_[1]."
 }
 
 sub To_view_the_results_at_the_end {
-    "To view the results of the poll once it has ended, visit:</p> $_[1]";
+    "To view the results of the poll once it has ended, visit:</p> $_[1]"
+}
+
+sub for_more_information_about_CIVS { # url
+  "For more information about the Condorcet Internet Voting Service, see $_[1]"
 }
 
 sub For_more_information { # url, mail mgmt url
   ($self, $home, $mail_mgmt) = @_;
   "For more information about the Condorcet Internet Voting Service, see
-   $home. To opt out from all future CIVS email, see $mail_mgmt";
+   $home. To opt out from all future CIVS email, see $mail_mgmt"
 }
 
 sub poll_email_subject { # title
@@ -705,43 +709,43 @@ sub poll_email_subject { # title
 # close
 
 sub CIVS_Ending_Poll {
-    'CIVS: Ending Poll';
+    'CIVS: Ending Poll'
 }
 
 sub Ending_poll {
-    'Ending a poll';
+    'Ending a poll'
 }
 sub View_poll_results {
-    'View poll results';
+    'View poll results'
 }
 sub Poll_ended { #title
-    "Poll ended: $_[1]";
+    "Poll ended: $_[1]"
 }
 
 sub The_poll_has_been_ended { #election_end
-    "The poll has been ended. It was announced to end $_[1].";
+    "The poll has been ended. It was announced to end $_[1]."
 }
 
 sub poll_results_available_to_authorized_users {
-    'The poll results are now available to authorized users.';
+    'The poll results are now available to authorized users.'
 }
 
 sub was_not_able_stop_the_poll {
-    'Was not able to stop the poll';
+    'Was not able to stop the poll'
 }
 
 
 # results
 
 sub CIVS_poll_result {
-    "CIVS poll result";
+    "CIVS poll result"
 }
 sub Poll_results { # title
-    "Poll Results: $_[1]";
+    "Poll Results: $_[1]"
 }
 
 sub Writeins_currently_allowed {
-    'Write-in choices are currently allowed.';
+    'Write-in choices are currently allowed.'
 }
 
 sub Writeins_allowed {
