@@ -76,9 +76,9 @@ sub GetOptouts {
     if (-r $optout_file) {
         undef $/;
         open(OPTOUTS, "<$optout_file");
-        my $emails = <OPTOUTS>;
+        my $hashes = <OPTOUTS>;
         close(OPTOUTS);
-        my @a = split /[\r\n]+/, $emails;
+        my @a = split /[\r\n]+/, $hashes;
         foreach my $h (@a) {
             $optouts{$h} = 1;
             # print "Opted out: ", $h, $cr;

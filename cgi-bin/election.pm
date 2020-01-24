@@ -561,7 +561,7 @@ sub SendKeys {
     my @addresses =  &unique_elements( @{$addresses_ref} );
     my $now = time();
     my $load = GetEmailLoad($now);
-    my $optouts;
+    my $optouts = &GetOptouts();
     OpenMail;
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);

@@ -31,6 +31,8 @@ my $opted_out = &CheckOptOut($optouts, $address);
 
 sub DeactivationCode {
     my ($address) = @_;
+    chomp $address;
+    $address = lc $address;
     if (!defined($private_host_id)) {
         &GetPrivateHostID;
     }
