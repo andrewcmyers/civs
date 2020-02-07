@@ -567,7 +567,8 @@ sub SendKeys {
 	$v = TrimAddr($v);
 	if ($v eq '') { next }
         # print "Checking for hash ", &civs_hash($v), $cr;
-        if (&CheckOptOut($optouts, $v)) {
+        print "Checking whether $email_addr can send to $v\n";
+        if (&CheckOptOutSender($optouts, $v, $email_addr)) {
             print $tx->opted_out($v), $cr;
             next
         }

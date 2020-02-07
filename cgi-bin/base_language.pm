@@ -113,7 +113,7 @@ sub creation_email_public_link { # url
 }
 
 sub opted_out { # addr
-  "Sorry, $_[1] has opted not to receive any email from CIVS."
+  "Sorry, you cannot send any email to $_[1] via CIVS."
 }
 
 sub Sending_result_key { # addr
@@ -952,11 +952,32 @@ sub mail_address {
 sub activation_code {
     'Deactivation code: '
 }
+sub filter_question {
+    'Filter pattern <small>(can be left blank; hover for help)</small>'
+}
+sub filter_explanation {
+    'You can enter one or more patterns here to specify which poll supervisors to prevent email from. The pattern can be the email address of a supervisor or a pattern describing email addresses.  The pattern may use * to represent any sequence of characters. For example, the pattern *@inmano.com would prevent supervisors with an @inmano.com address from sending you poll invitations. If you leave this field blank, deactivation/reactivation will apply to all email addresses.'
+}
 sub send_activation_code {
     'Send deactivation code by email'
 }
+sub cant_send_email {
+    'You cannot send this user email'
+}
+sub submit_deact_react {
+    'Submit deactivation/reactivation'
+}
 sub codes_dont_match {
     "Sorry, the provided code and e-mail address do not match. You can request another deactivation code above if you have not previously blocked e-mail from CIVS."
+}
+sub deactivation_successful {
+    my ($self, $pattern) = @_;
+    "CIVS will not send any more mail to this address if its sender
+     matches this pattern: \"$pattern\". You can reactivate mail from CIVS
+     only by using this web page with the same code you just used."
+}
+sub reactivation_successful {
+    'You have successfully reactivated mail to this address.'
 }
 sub someone_has_requested {
 "Someone has requested a code for preventing CIVS from sending e-mail

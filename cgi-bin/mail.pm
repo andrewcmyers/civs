@@ -18,8 +18,9 @@ BEGIN {
     @ISA         = qw(Exporter);
     @EXPORT      = qw(&OpenMail &CloseMail &MailFrom &MailTo
                       &StartMailData &EndMailData &Send &SendHeader
-                      &GetOptouts &SaveOptOuts &RemoveOptOut &AddOptOut
-                      &CheckOptOut &CheckAddr &TrimAddr);
+                      &GetOptouts &SaveOptOuts &RemoveOptOut
+                      &HasOptOuts &SetOptOutPatterns &CheckOptOutSender
+                      &CheckAddr &TrimAddr);
 }
 
 # Package imports
@@ -69,19 +70,26 @@ sub CanonicalizeAddr {
 
 my $optout_file = "@CIVSDATADIR@/do-not-email.txt";
 
+
 # Return a reference to a hash mapping the hashes of
-# all the email addresses that have opted out to 1.
+# all the email addresses that have opted out to a
+# reference to an array of blocked sender addresses.
 sub GetOptouts {
     my %optouts;
     if (-r $optout_file) {
         undef $/;
         open(OPTOUTS, "<$optout_file");
-        my $hashes = <OPTOUTS>;
+        my $data = <OPTOUTS>;
         close(OPTOUTS);
-        my @a = split /[\r\n]+/, $hashes;
-        foreach my $h (@a) {
-            $optouts{$h} = 1;
-            # print "Opted out: ", $h, $cr;
+        my @a = split /[\r\n]+/, $data;
+        foreach my $line (@a) {
+            (my $hash, my $rest) = split / /, $line, 2;
+            if ($rest eq '') {
+                $rest = "*" # backward compatibility
+            }
+            my @patterns = split / /, $rest;
+            $optouts{$hash} = \@patterns;
+            # print "Opted out: ", $hash, $cr;
         }
     }
     return \%optouts
@@ -91,33 +99,78 @@ sub SaveOptOuts {
     my ($optouts) = @_;
     open (OPTOUTS, ">$optout_file") || print "<i>Internal error saving opt-out information</i>", $cr;
     foreach my $h (keys %$optouts) {
-        if ($optouts->{$h}) {
-            print OPTOUTS "$h\n"
+        if (defined($optouts->{$h})) {
+            my @patterns = @{$optouts->{$h}};
+            print OPTOUTS "$h @patterns\n"
         }
     }
     close(OPTOUTS);
 }
 
-sub CheckOptOut {
-    my ($optouts, $addr) = @_;
-    $addr = &CanonicalizeAddr($addr);
-    if ($optouts->{civs_hash($addr)}) {
-        return 1
+sub optout_key {
+    civs_hash($_[0])
+}
+
+# Does this receiver have any opt-outs defined?
+sub HasOptOuts {
+    my ($optouts, $receiver) = @_;
+    $receiver = &CanonicalizeAddr($receiver);
+    return defined($optouts->{optout_key($receiver)});
+}
+
+# Report whether receiver has opted out from mail from sender.
+# Return 1 if so, 0 otherwise.
+sub CheckOptOutSender {
+    my ($optouts, $receiver, $sender) = @_;
+    $receiver = &CanonicalizeAddr($receiver);
+    $sender = &CanonicalizeAddr($sender);
+    my @patterns = @{$optouts->{optout_key($receiver)}};
+    foreach my $p (@patterns) {
+        if ($p eq '*') { return 1 }
+        $p =~ s/\*/.*/g;
+        $p = "\\A$p\\Z";
+        if ($sender =~ /[$p]/) { return 1 }
+    }
+    return 0;
+}
+
+# return whether an opt-out pattern is valid
+sub VerifyOptoutPattern {
+    (my $pattern) = @_;
+    if ($pattern =~ m/\A[a-zA-Z0-9\.*@]+\Z/) {
+        return 1;
     } else {
-        return 0
+        return 0;
     }
 }
 
-sub AddOptOut {
-    my ($optouts, $addr) = @_;
-    $addr = &CanonicalizeAddr($addr);
-    $optouts->{civs_hash($addr)} = 1;
+# Record patterns for a given receiving user.
+# Requires: patterns is a string containing
+# space-separated patterns, which need not
+# be valid (invalid ones will be ignored).
+# If there are no valid patterns then the
+# catch-all pattern * is recorded.
+sub SetOptOutPatterns {
+    (my $optouts, my $receiver, my $patterns) = @_;
+    my @patarr = split / +/, $patterns;
+    my @valid_pats = ();
+    for my $p (@patarr) {
+        if (&VerifyOptoutPattern($p)) {
+            push @valid_pats, $p;
+        }
+    }
+    if ($#valid_pats == -1) {
+        @valid_pats = ('*');
+    }
+    $receiver = &CanonicalizeAddr($receiver);
+    $optouts->{optout_key($receiver)} = \@valid_pats;
+    return "@valid_pats";
 }
 
 sub RemoveOptOut {
-    my ($optouts, $addr) = @_;
+    (my $optouts, my $addr) = @_;
     $addr = &CanonicalizeAddr($addr);
-    $optouts->{civs_hash($addr)} = 0;
+    delete $optouts->{optout_key($addr)};
 }
 
 sub Send {

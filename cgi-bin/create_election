@@ -30,7 +30,7 @@ if (!&CheckAddr($email_addr)) {
     exit 0;
 }
 my $optouts = GetOptouts();
-if (CheckOptOut($optouts, $email_addr)) {
+if (HasOptOuts($optouts, $email_addr)) {
     HTML_Header($tx->Invalid_email_address_hdr);
     CIVS_Header();
     print h1($tx->Invalid_email_address_hdr);
