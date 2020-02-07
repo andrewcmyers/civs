@@ -962,7 +962,7 @@ sub send_activation_code {
     'Send deactivation code by email'
 }
 sub cant_send_email {
-    'You cannot send this user email'
+    'You cannot send this user email.'
 }
 sub submit_deact_react {
     'Submit deactivation/reactivation'

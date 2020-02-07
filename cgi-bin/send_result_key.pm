@@ -28,7 +28,7 @@ use Digest::MD5 qw(md5_hex);
 # Send authorized result viewers an email containing the URL that
 # allows viewing results.
 sub SendResultKey {
-    (my $election_id, my $title, my $result_addrs, my $result_key) = @_;
+    my ($election_id, $supervisor, $title, $result_addrs, $result_key) = @_;
 
     if (!$local_debug) { OpenMail }
     my @result_addrs = split /\s+/, $result_addrs;
@@ -42,7 +42,7 @@ sub SendResultKey {
 	    print p($tx->Invalid_email_address($addr));
 	    next;
 	}
-        if (&CheckOptOut($optouts, $addr)) {
+        if (&CheckOptOutSender($optouts, $addr, $supervisor)) {
             print p($tx->opted_out($addr));
             next;
         }

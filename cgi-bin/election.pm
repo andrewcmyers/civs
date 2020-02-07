@@ -566,8 +566,7 @@ sub SendKeys {
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
 	if ($v eq '') { next }
-        # print "Checking for hash ", &civs_hash($v), $cr;
-        print "Checking whether $email_addr can send to $v\n";
+        # print "Checking whether $email_addr can send to $v\n";
         if (&CheckOptOutSender($optouts, $v, $email_addr)) {
             print $tx->opted_out($v), $cr;
             next

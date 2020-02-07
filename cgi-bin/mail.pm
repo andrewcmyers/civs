@@ -124,12 +124,18 @@ sub CheckOptOutSender {
     my ($optouts, $receiver, $sender) = @_;
     $receiver = &CanonicalizeAddr($receiver);
     $sender = &CanonicalizeAddr($sender);
-    my @patterns = @{$optouts->{optout_key($receiver)}};
+    my $mapping = $optouts->{optout_key($receiver)};
+    if (!defined($mapping)) {
+        return 0;
+    }
+    my @patterns = @{$mapping};
     foreach my $p (@patterns) {
         if ($p eq '*') { return 1 }
+        $p =~ s/\./\\./g;
         $p =~ s/\*/.*/g;
         $p = "\\A$p\\Z";
-        if ($sender =~ /[$p]/) { return 1 }
+        # print "Checking '$sender' against pattern '$p'\n";
+        if ($sender =~ m[$p]) { return 1 }
     }
     return 0;
 }
