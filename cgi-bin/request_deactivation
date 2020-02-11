@@ -54,7 +54,7 @@ if (!defined($code)) {
 
     my $code = &DeactivationCode($address);
 
-    if (@LOCALDEBUG@) {
+    if ("@LOCALDEBUG@") {
         print pre("Would email deactivation code $code to $address at this point.")
     } else {
         OpenMail;
@@ -95,7 +95,7 @@ if (!defined($code)) {
         }
     } else {
         print start_html(), p($tx->codes_dont_match);
-        if (@LOCALDEBUG@) {
+        if ("@LOCALDEBUG@") {
             print pre("expected code $expected_code");
         }
         print end_html();
