@@ -50,7 +50,7 @@ sub SendResultKey {
         if (!$local_debug) {
             my $url = "@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id&rkey=$result_key";
             my $civs_supervisor = '@SUPERVISOR@';
-            MailFrom($civs_supervisor);
+            MailFrom('@AUTH_SENDER@');
             MailTo($addr);
             StartMailData;
             SendHeader 'From', "$civs_supervisor (".

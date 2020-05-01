@@ -54,6 +54,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+	     -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
 	     -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
 	     -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
 	     -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \

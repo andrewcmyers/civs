@@ -59,7 +59,7 @@ if (!defined($code)) {
     } else {
         OpenMail;
 
-        if (MailFrom($civs_supervisor) && MailTo($address) && StartMailData()) {
+        if (MailFrom('@AUTH_SENDER@') && MailTo($address) && StartMailData()) {
             my $uniqueid = &SecureNonce;
             my $message_id = "CIVS-deactivation.$uniqueid\@$thishost";
 

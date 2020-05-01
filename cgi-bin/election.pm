@@ -57,6 +57,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $close_time, $email_load);
 
 our $civs_supervisor = '@SUPERVISOR@';
+our $auth_sender = '@AUTHSENDER@';
 our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 # Non-exported variables
@@ -613,7 +614,7 @@ sub SendKeys {
 	    my $uniqueid = &SecureNonce;
 	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
-            MailFrom($civs_supervisor) &&
+            MailFrom($auth_sender) &&
             MailTo($v) &&
             StartMailData() || next;
 
