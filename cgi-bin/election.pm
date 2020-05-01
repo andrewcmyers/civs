@@ -57,7 +57,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $close_time, $email_load);
 
 our $civs_supervisor = '@SUPERVISOR@';
-our $auth_sender = '@AUTHSENDER@';
+our $auth_sender = '@AUTH_SENDER@';
 our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 # Non-exported variables
