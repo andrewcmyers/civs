@@ -57,6 +57,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $close_time, $email_load);
 
 our $civs_supervisor = '@SUPERVISOR@';
+our $auth_sender = '@AUTH_SENDER@';
 our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 # Non-exported variables
@@ -566,8 +567,7 @@ sub SendKeys {
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
 	if ($v eq '') { next }
-        # print "Checking for hash ", &civs_hash($v), $cr;
-        print "Checking whether $email_addr can send to $v\n";
+        # print "Checking whether $email_addr can send to $v\n";
         if (&CheckOptOutSender($optouts, $v, $email_addr)) {
             print $tx->opted_out($v), $cr;
             next
@@ -614,7 +614,7 @@ sub SendKeys {
 	    my $uniqueid = &SecureNonce;
 	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
-            MailFrom($civs_supervisor) &&
+            MailFrom($auth_sender) &&
             MailTo($v) &&
             StartMailData() || next;
 

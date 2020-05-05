@@ -192,7 +192,7 @@ if (!($local_debug)) {
     my $success = 1;
     if (OpenMail) {
         my $civs_supervisor = '@SUPERVISOR@';
-        MailFrom($civs_supervisor) &&
+        MailFrom('@AUTH_SENDER@') &&
         MailTo($email_addr) &&
         StartMailData || do {
             CloseMail;
@@ -240,7 +240,7 @@ if (!($local_debug)) {
 }
 
 if ($restrict_results eq 'yes') {
-    SendResultKey($election_id, $title, $result_addrs, $result_key);
+    SendResultKey($election_id, $email_addr, $title, $result_addrs, $result_key);
 }
 
 Log("Election $title ($election_id) created by $email_addr");

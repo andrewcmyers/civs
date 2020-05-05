@@ -699,7 +699,7 @@ sub for_more_information_about_CIVS { # url
 sub For_more_information { # url, mail mgmt url
   ($self, $home, $mail_mgmt) = @_;
   "For more information about the Condorcet Internet Voting Service, see
-   $home. To opt out from all future CIVS email, see $mail_mgmt"
+   $home. To control future email sent from CIVS, see $mail_mgmt"
 }
 
 sub poll_email_subject { # title
@@ -962,7 +962,7 @@ sub send_activation_code {
     'Send deactivation code by email'
 }
 sub cant_send_email {
-    'You cannot send this user email'
+    'You cannot send this user email.'
 }
 sub submit_deact_react {
     'Submit deactivation/reactivation'
