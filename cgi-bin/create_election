@@ -165,6 +165,12 @@ if ($restrict_results eq 'yes') {
     }
 }
 
+if ($publicize eq 'yes') {
+    $edata{'ballot_reporting'} = 'no';
+    $edata{'reveal_voters'} = 'no';
+    $edata{'restrict_results'} = 'no';
+}
+
 HTML_Header($tx->CIVS_Poll_Creation);
 CIVS_Header($tx->Poll_created($title));
 
