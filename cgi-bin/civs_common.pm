@@ -146,7 +146,9 @@ sub HTML_Header {
 	                 -lang => $tx->lang,
 			 -head => [ Link({ -rel => "shortcut icon",
 			                    -href => "@PROTO@://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
-				    meta({-name => 'viewport', -content => 'width=device-width, initial-scale=1'}) ],
+				    meta({-name => 'viewport', -content => 'width=device-width, initial-scale=1'}),
+                                    meta({-name => 'referrer', -context => 'no-referrer'})
+                                  ],
 			 -encoding => 'utf-8',
 			 -style => {'src' => "@CIVSURL@/$style"});
       } else {
@@ -155,7 +157,9 @@ sub HTML_Header {
                          -lang => $tx->lang,
 			 -head => [ Link({ -rel => "shortcut icon",
 			                    -href => "@PROTO@://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
-				    meta({-name => 'viewport', -content => 'width=device-width, initial-scale=1'}) ],
+				    meta({-name => 'viewport', -content => 'width=device-width, initial-scale=1'}),
+                                    meta({-name => 'referrer', -context => 'no-referrer'})
+                                  ],
                          -encoding => 'utf-8',
                          -style => {'src' => "@CIVSURL@/$style"},
                          -script => [{'src' => "@CIVSURL@/$js"},
