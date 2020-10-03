@@ -7,6 +7,8 @@ use POSIX ":sys_wait_h";
 use Socket;
 use HTML::TagFilter;
 use HTML::Entities;
+use HTTP::Tiny;
+use MIME::Base64;
 
 # Export the package interface
 BEGIN {
@@ -38,8 +40,6 @@ our $local_debug;
 our $using_ISA = '@USING_ISA@';
 our $remote_ip_address;
 our $languages;
-
-
 
 # Package constructor
 BEGIN {
@@ -285,7 +285,29 @@ my $filter_tags = '@FILTER_TAGS@';
 
 my $tf;
 if ($filter_tags ne 'no') {
-    $tf = new HTML::TagFilter;
+    $tf = new HTML::TagFilter(
+      on_open_tag => sub {
+          my ($self, $tag, $attributes, $sequence) = @_;
+          if ($$tag eq 'img') {
+            my $src = $attributes->{'src'};
+            $attributes->{'src'} = '@CIVSURL@/images/check123b.png';
+            my $http = HTTP::Tiny->new({verify_SSL => 1});
+            my $response = $http->get($src);
+
+            if ($response->{status} eq 200) {
+                my $contenttype = $response->{headers}->{'content-type'};
+                my $content = $response->{content};
+                if (length $content < @MAX_IMAGE_SIZE@) {
+                    my $enc = MIME::Base64::encode_base64($content,'');
+                    my $newsrc = "data:$contenttype;base64,$enc";
+                    $attributes->{'src'} = $newsrc;
+                }
+            }
+          }
+          return;
+      }
+    );
+    $tf->xss_risky_attributes(qw(href background cite lowsrc));
     my $ok = {all => []};
     $tf->allow_tags({
 	table => $ok,
@@ -312,9 +334,11 @@ if ($filter_tags ne 'no') {
 # Filter tags from a string, if $filter_tags is not 'no' (which is probably dangerous)
 sub Filter {
     my $s = decode_entities($_[0]);
-    return ($filter_tags ne 'no'
+    my $result = ($filter_tags ne 'no'
                ? $tf->filter($s)
-               : $s)
+               : $s);
+    # Log "Filtering: " . $_[0] . " to " . $result;
+    return $result;
 }
 
 # From the Perl Cookbook, p. 121
