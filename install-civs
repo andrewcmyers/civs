@@ -115,6 +115,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@SMTP_STARTTLS@|'$SMTP_STARTTLS'|' \
 	     -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
 	     -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
+	     -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
 	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	     -e 's|@PERLEXT@|'$PERLEXT'|' \
