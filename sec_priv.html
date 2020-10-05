@@ -73,8 +73,8 @@ A private election offers much stronger security and
 authenticity guarantees. In particular, in public elections
 the IP address of the voter is used to determine whether
 that voter has already cast a vote. A malicious voter can
-easily cast multiple votes, and this is as good as one can
-reasonably expect an public election to be. For private
+easily cast multiple votes, which is as good as one can
+reasonably expect a public election to be. For private
 elections, voters receive a unique key by e-mail that
 permits them to vote just once. Further attempts to vote
 will be rejected. Voters can also be reissued voter keys without
@@ -139,7 +139,7 @@ how a voter voted.
 <li>The supervisor requests the creation of a new election,
 providing the election description and a list of voter
 e-mail addresses. These addresses are (temporarily) stored
-on the server.  If this is undesirable, the voters can be
+on the server.  If this temporary storage is undesirable, the voters can be
 added after the election is started, and their addresses
 will never be stored in cleartext.
 <li>The server generates three fresh nonces to use as the
@@ -150,7 +150,7 @@ e-mail in a URL.
 the server; the server stores the MD5 hash of the control
 and authorization keys and then forgets the keys.
 <li>The supervisor uses the URL in the email to start the
-election.  This proves that that the supervisor presented a
+election.  Providing the URL proves that the supervisor presented a
 real e-mail address.
 <li>The server hashes the provided authorization key and
 control key to make sure they match the stored hashes.
@@ -220,7 +220,7 @@ The server forgets <i>a</i>, <i>e</i> and <i>v</i>.
 <h2>Public election protocol</h2>
 
 <p>
-An public election works similarly to a private election.
+A public election works similarly to a private election.
 The difference is that every voter has the power to
 add himself as a voter: the URL generated at election
 creation time includes the authorization key. The voter's IP
@@ -262,7 +262,7 @@ The server generates a fresh nonce <i>r</i> to use as the
 voter receipt.
 <li>
 As in private elections, the server records the ballot indexed
-by the hash of the the receipt and the private host key.
+by the hash of the receipt and the private host key.
 <li>
 The server reports the receipt <i>r</i> to the voter and
 then forgets <i>r</i>. This enables later checking that the
@@ -271,7 +271,7 @@ of the voter.
 </ol>
 
 <p>
-Because the IP address in an public election is hashed using
+Because the IP address in a public election is hashed using
 the authorization key, server compromise does not enable the
 attacker to determine the IP addresses by dictionary attack.
 Of course, if the attacker has obtained the authorization
