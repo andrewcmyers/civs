@@ -21,8 +21,6 @@ my $top_polls = "$home/elections/$file";
 undef $/;
 
 print CGI::header(-charset => 'utf-8');
-# print CGI::start_html(-title => $title,
-		      #-encoding => 'utf-8');
 
 open (IN, $top_polls);
 
