@@ -98,7 +98,7 @@ sub find_top_polls {
 	if ($elections{$id} < $min_usage || $count >= $max_full) { last; }
 	my @line = ('<li>',
 			'<a href="@PROTO@://@THISHOST@@CIVSBINURL@',
-			    '/vote@PERLEXT@?id=' , $id , '">' , escapeHTML($titles{$id}),
+			    '/vote@PERLEXT@?id=' , $id , '">' , $titles{$id},
 			'</a>',
 		    '</li>', "\r\n");
 	if ($count++ < $max_publicized) {
