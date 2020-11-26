@@ -98,7 +98,7 @@ Le lien Internet suivant vous permet de démarrer ou d'arrêter le déroulement 
 ";
 }
 sub creation_email_public_link { # url
-"Cette consultation étant publique, vous pouvez communiquer aux participants le lien Internet suivant :
+"Cette consultation étant public, vous pouvez communiquer aux participants le lien Internet suivant :
 
   $_[1]
 
@@ -245,7 +245,7 @@ sub add_voter_instructions {
      bulletin secret, la saisie d'un participant déjà enregistré <strong>ne 
      permettra pas</strong> à ce participant de pouvoir voter une deuxième fois.
      Cette saisie ne provoquera que l'envoi d'un courrier électronique
-     d'invitation à la consultation. Dans le cas d'une élection publique,
+     d'invitation à la consultation. Dans le cas d'une élection public,
      un système de jeton est utilisé pour éviter les doublons.";
 }
 sub Upload_file {
@@ -259,7 +259,7 @@ sub File_to_upload_ballots_from {
 }
 sub This_is_a_public_poll_plus_link {
     my $url = $_[1];
-    "Ceci est une consultation publique. Partagez le lien Internet
+    "Ceci est une consultation public. Partagez le lien Internet
      ci-dessous avec les participants pour leur permettre d'exprimer leur
     suffrage :</p><p>&nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
 }
@@ -305,8 +305,8 @@ sub page_header_CIVS_Vote { # election_title
 }
 
 sub ballot_reporting_is_enabled {
-    'Cette consultation est publique.
-     Votre bulletin de vote sera donc rendu publique
+    'Cette consultation est public.
+     Votre bulletin de vote sera donc rendu public
      à la fin de la consultation.';
 }
 sub instructions1 { # num_winners, end, name, email
@@ -582,7 +582,7 @@ sub Your_privacy_will_not_be_violated {
 }
 sub This_is_a_nonanonymous_poll {
 'Le responsable de cette consultation à décidé que cette consultation serait
- <strong>publique</strong>. Si vous participez à cette consultation,
+ <strong>public</strong>. Si vous participez à cette consultation,
  votre choix de vote et votre adresse de courrier électronique seront
  communiqués aux autres participants de cette consultation.
  Si vous ne participez pas à cette consultation le responsable de la
@@ -698,7 +698,7 @@ sub This_is_a_private_poll { #num_auth
     "Vote à bulletin secret ($_[1] participants autorisés)";
 }
 sub This_is_a_public_poll {
-    'Ceci est une consultation publique.';
+    'Ceci est une consultation public.';
 }
 
 sub Actual_votes_cast { #num_votes
