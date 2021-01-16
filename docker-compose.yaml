@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file:
+      - docker/docker.env
+    volumes:
+      - data_fs:/data
+    ports:
+      - "8888:80"
+    stdin_open: true
+    tty: true
+    networks:
+     - civs
+
+volumes:
+  data_fs:
+
+networks:
+  civs:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-civs
