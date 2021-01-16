@@ -156,26 +156,26 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
 	if [ ! -s $CIVSDATADIR/nonce_seed ]; then
 		echo "Seeding the CIVS nonce generator.";
-		openssl rand -base64 -out $CIVSDATADIR/nonce_seed 32;
+		openssl rand -hex -out $CIVSDATADIR/nonce_seed 32;
 	fi
 
     touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
     chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
-	
-    if [ -e gettimeofday.exe ]; then 
+
+    if [ -e gettimeofday.exe ]; then
 	cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
     else
 	cp gettimeofday $CIVSDATADIR/gettimeofday
     fi
-    if [ -e timeout.exe ]; then 
+    if [ -e timeout.exe ]; then
 	cp timeout.exe $CIVSDATADIR/timeout.exe;
     else
 	cp timeout $CIVSDATADIR/timeout
     fi
-    if [ -e lockserv.exe ]; then 
+    if [ -e lockserv.exe ]; then
 	cp lockserv.exe $CIVSDATADIR/lockserv.exe;
     else
 	cp lockserv $CIVSDATADIR/lockserv
     fi
-	
+
 echo "Install completed.  Check for any errors reported above.";
