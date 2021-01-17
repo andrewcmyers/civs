@@ -86,7 +86,7 @@ sub Floyd_Warshall {
 # that is faster than a full Floyd-Warshall when the matrix
 # is already pretty much done.
 sub TransitiveClosure {
-    my ($mref, my $winner, my $loser, my $num_choices) = @_;
+    my ($mref, $winner, $loser, $num_choices) = @_;
     my $cycle = 0;
     my @worklist = ([($winner, $loser)]);
     while ($#worklist >= 0) {
