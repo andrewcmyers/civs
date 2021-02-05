@@ -26,7 +26,7 @@ use strict;
 
 # order defeats by weakness.
 sub compare_defeats {
-    (my $a, my $b) = @_;
+    my ($a, $b) = @_;
     (($b->[1] - $b->[2]) <=> ($a->[1] - $a->[2]))
     ||
     ($a->[1] <=> $b->[1])
@@ -34,13 +34,13 @@ sub compare_defeats {
 sub compare_defeats_sort { compare_defeats($a, $b) }
 
 sub defeat_to_string {
-    (my $d) = @_;
+    my ($d) = @_;
     "vs. $d->[0] : ($d->[1] - $d->[2]) "
 }
 
 sub defeats_to_string {
     my $result = '';
-    (my $defs) = @_;
+    my ($defs) = @_;
     $result = "undefeated" if !@{$defs};
     foreach my $d (@{$defs}) {
         $result .= defeat_to_string($d)
@@ -57,7 +57,7 @@ sub defeats_to_string {
 # invalid and should be ignored. Such defeats may be removed from the
 # the list when encountered.
 sub compare_candidates {
-    (my $d1, my $d2, my $ranked) = @_;
+    my ($d1, $d2, $ranked) = @_;
 
     my $i = 0, my $j = 0;
 
@@ -149,7 +149,7 @@ sub rank_candidates {
 # Print out to RESULTS the details of the election algorithm, using the
 # information in $log that was returned by rank_candidates.
 sub print_details {
-    (my $log) = @_;
+    my ($log) = @_;
     print main::RESULTS $log;
 }
  
