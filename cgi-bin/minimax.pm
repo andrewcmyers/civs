@@ -39,8 +39,8 @@ sub defeat_to_string {
 }
 
 sub defeats_to_string {
-    my $result = '';
     my ($defs) = @_;
+    my $result = '';
     $result = "undefeated" if !@{$defs};
     foreach my $d (@{$defs}) {
         $result .= defeat_to_string($d)
