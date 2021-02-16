@@ -28,7 +28,7 @@ BEGIN {
 }
 
 # The local_debug flag must be declared before the call to set_message (in
-# the package constructor, below), since the message handler uses 
+# the package constructor, below), since the message handler uses
 # local_debug.  The declaration has to be outside of the constructor block,
 # however, so that the flag has the correct (package-global) scope.  The
 # initialization of the flag, on the other hand, has to be inside
@@ -48,11 +48,11 @@ BEGIN {
 	# in the CGILOG file.  Compile-time errors aren't timestamped,
 	# unfortunately, but run-time ones are.  These are the errors
 	# that used to be put in the global Apache error log.
-	# It makes sense for every CGI script in CIVS to 
+	# It makes sense for every CGI script in CIVS to
 	# "use civs_common;" as its first action.
 	use IO::Handle;
 	use CGI::Carp qw(carpout set_message fatalsToBrowser);
-	open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or 
+	open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or
 		die "Unable to open @CIVSDATADIR@/cgi-log: $!\n".(`id`);
 	autoflush CGILOG;
 	carpout(\*CGILOG);
@@ -101,17 +101,21 @@ sub init {
 
 
 sub SetIPAddress {
-    if ($using_ISA) {
-	$remote_ip_address = http('HTTP_IPREMOTEADDR');
-	if (!defined($remote_ip_address)) {
-	    $remote_ip_address = http('HTTP_REMOTE_ADDRESS');
-	}
-	if (!defined($remote_ip_address)) {
-	    $remote_ip_address = remote_addr();
-	}
-    } else {
-	$remote_ip_address = remote_addr();
+  my $x_forwarded_for = http('HTTP_X_FORWARDED_FOR');
+  if (defined($x_forwarded_for)) {
+    $remote_ip_address = $x_forwarded_for;
+  }
+  elsif ($using_ISA) {
+    $remote_ip_address = http('HTTP_IPREMOTEADDR');
+    if (!defined($remote_ip_address)) {
+      $remote_ip_address = http('HTTP_REMOTE_ADDRESS');
     }
+    if (!defined($remote_ip_address)) {
+      $remote_ip_address = remote_addr();
+    }
+  } else {
+    $remote_ip_address = remote_addr();
+  }
 }
 
 sub SetLanguage {
@@ -165,7 +169,7 @@ sub HTML_Header {
                          -script => [{'src' => "@CIVSURL@/$js"},
                                      {'src' => "@CIVSURL@/ezdom.js"},
                                      {'src' => "@PROTO@://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
-                                     {'src' => "@PROTO@://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}], 
+                                     {'src' => "@PROTO@://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}],
                          -onLoad => "setup()");
       }
     }
@@ -181,12 +185,12 @@ sub CIVS_Header {
     &HTML_Header($_[0]);
     if ($civs_header_printed) { return; }
     my $suggestion_box = '@SUGGESTION_BOX@';
-print 
+print
  '<div class="banner">';
 if ($local_debug) {
 	print '<div style="text-align: center; background-color: yellow; width: 100%">',
 	      'LOCAL DEBUG MODE</div>';
-}	
+}
 print $cr,
  '<div class=bannerpart id=bannericon>
       <img src="@CIVSURL@/images/check-civs.png" style="border: none"/>
@@ -223,7 +227,7 @@ sub CIVS_End {
 sub Fatal_CIVS_Error {
 	&HTML_Header($tx->CIVS_Error) unless $html_header_printed;
 	&CIVS_Header($tx->Error) unless $civs_header_printed;
-	
+
 	print h2($tx->Error),
 	      p($tx->unable_to_process);
 	    print pre(@_);
@@ -257,7 +261,7 @@ sub SecureNonce {
     open(LOCK, $lockfile) or die "Can't open global lock file $lockfile: $!\n";
     flock LOCK, &LOCK_EX;
 
-    open(NONCEFILE, "<$nonce_seed_file") 
+    open(NONCEFILE, "<$nonce_seed_file")
 	    or die "Can't open nonce file for read: $!\n";
     my $seed = <NONCEFILE>;
     chomp $seed;
