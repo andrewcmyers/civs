@@ -228,11 +228,12 @@ the voter under their correct email address. You can check with the CIVS
 administrator whether the email bounced, assuming you were not notified.
 </li>
 
-<li><b>My poll closed itself without my asking for it. What's going on?</b>
+<li><b><a name="autoclosed">My poll closed itself without my asking for it. What's going on?</a></b>
 This odd behavior seems to be caused by a "safe links" feature of some Outlook
 installations. CIVS sends links through email; the mailer rewrites its links to
 go to a safe links site instead, which simulates clicking all the links in
-destination page. Unfortunately, one of those "links" is the button for closing
+the destination page (to make sure they're "safe").
+Unfortunately, one of those "links" is the button for closing
 the poll. The workaround is to manually copy the URL from the email and
 paste it into the browser, rather than clicking on the link in the email.
 Then go complain to your IT staff about their annoying "security feature".
