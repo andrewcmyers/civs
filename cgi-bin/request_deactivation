@@ -19,9 +19,12 @@ if (!CheckAddr($address)) {
     exit 0;
 }
 
-my $code = param("code");
+my $code = param('code');
 my $optouts = &GetOptouts();
-my $opted_out = &CheckOptOut($optouts, $address);
+my $opted_out = &HasOptOuts($optouts, $address);
+my $filter_pattern = param('filter_pattern');
+
+if (!defined($filter_pattern)) { $filter_pattern = '' }
 
 # if (param("check") eq "true") {
 #    if ($opted_out) { print 1 }
@@ -31,6 +34,8 @@ my $opted_out = &CheckOptOut($optouts, $address);
 
 sub DeactivationCode {
     my ($address) = @_;
+    chomp $address;
+    $address = lc $address;
     if (!defined($private_host_id)) {
         &GetPrivateHostID;
     }
@@ -43,48 +48,58 @@ if (!defined($code)) {
     print start_html(), h1("Deactivation request");
 
     if ($opted_out) {
-        print p("User has opted out of email.");
+        print p($tx->cant_send_email);
         exit 0;
     }
 
     my $code = &DeactivationCode($address);
 
-    OpenMail;
+    if ("@LOCALDEBUG@") {
+        print pre("Would email deactivation code $code to $address at this point.")
+    } else {
+        OpenMail;
 
-    if (MailFrom($civs_supervisor) && MailTo($address) && StartMailData()) {
-        my $uniqueid = &SecureNonce;
-        my $message_id = "CIVS-deactivation.$uniqueid\@$thishost";
+        if (MailFrom('@AUTH_SENDER@') && MailTo($address) && StartMailData()) {
+            my $uniqueid = &SecureNonce;
+            my $message_id = "CIVS-deactivation.$uniqueid\@$thishost";
 
-        SendHeader('From', "<$civs_supervisor>");
-        SendHeader('Sender', $civs_supervisor);
-        SendHeader('Reply-To', $civs_supervisor);
-        SendHeader('Message-ID', "<$message_id>");
-        SendHeader('To', "<$address>");
-        SendHeader('Subject', $tx->deactivation_code_subject);
-        SendHeader('Content-Transfer-Encoding', '8bit');
-        SendHeader('Return-Path', $civs_supervisor);
-        SendHeader('X-Mailer', 'CIVS');
-        Send('');
-        Send($tx->someone_has_requested($code));
-        EndMailData;
+            SendHeader('From', "<$civs_supervisor>");
+            SendHeader('Sender', $civs_supervisor);
+            SendHeader('Reply-To', $civs_supervisor);
+            SendHeader('Message-ID', "<$message_id>");
+            SendHeader('To', "<$address>");
+            SendHeader('Subject', $tx->deactivation_code_subject);
+            SendHeader('Content-Transfer-Encoding', '8bit');
+            SendHeader('Return-Path', $civs_supervisor);
+            SendHeader('X-Mailer', 'CIVS');
+            Send('');
+            Send($tx->someone_has_requested($code));
+            EndMailData;
+        }
+        CloseMail;
     }
-    CloseMail;
 
     print "OK";
 } else {
 # This is a request to use a code.
     my $expected_code = &DeactivationCode($address);
     if ($code eq $expected_code) {
-        if (CheckOptOut($optouts, $address)) {
+        if (HasOptOuts($optouts, $address) && $filter_pattern eq '') {
             RemoveOptOut($optouts, $address);
             SaveOptOuts($optouts);
-            print 'activated';
+            print 'activated '.$tx->reactivation_successful;
         } else {
-            AddOptOut($optouts, $address);
+            my $pats = SetOptOutPatterns($optouts, $address, $filter_pattern);
             SaveOptOuts($optouts);
-            print 'deactivated';
+            print "deactivated ".$tx->deactivation_successful($pats);
         }
     } else {
-        print start_html(), p($tx->codes_dont_match), end_html();
+        print start_html(), p($tx->codes_dont_match);
+        if ("@LOCALDEBUG@") {
+            print pre("expected code $expected_code");
+        }
+        print end_html();
     }
 }
+
+1;

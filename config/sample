@@ -15,6 +15,12 @@ THISHOST='MyServer.MyUniversity.edu'
 # probably be YOUR address.
 SUPERVISOR='username@MyUniversity.edu'
 
+# The email address used as the official SMTP sender. This is
+# is not included in the mail message itself. Ideally it should be
+# the same as SUPERVISOR, but some SMTP servers will require
+# a different address to be provided for authorization purposes.
+AUTH_SENDER="$SUPERVISOR"
+
 # The address of the SMTP server that CIVS will use to send email.
 # This server must be willing to accept email from $SUPERVISOR.
 SMTP_HOST='smtp.gmail.com'
@@ -79,6 +85,10 @@ MAX_VOTER_ADD=1000
 
 # Maximum number of emails sent per day per poll (low-pass-filtered)
 MAX_EMAIL_LOAD=5000
+
+
+# Maximum size of an image that can be embedded in a poll choice
+MAX_IMAGE_SIZE=1000000
 
 # A URL for people to visit to give suggestions. May be left empty.
 SUGGESTION_BOX='http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_5820adef7d6e8733&akey=51398305f80ae2cb'

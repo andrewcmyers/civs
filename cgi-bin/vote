@@ -237,11 +237,13 @@ sub LogPublicVote {
 }
 
 sub CanonicalizeName {
-# Strip leading whitespace and
-# remove all nonprintable characters
+# Strip leading whitespace, remove all nonprintable characters,
+# and sanitize HTML. This is used for writeins, so no HTML tags
+# are allowed.
     my $name = $_[0];
     $name =~ s/^(\s)+//;
     $name =~ s/(\s)+$//;
+    $name = escapeHTML($name);
     return $name;
 }
 
@@ -284,10 +286,10 @@ sub OrderChoices {
 }
 
 sub AddWritein {
-	# This function has a race condition.  The effect of two concurrent 
-	# writeins is not clear.  Nor is the effect of a concurrent writein
-	# and vote, or even request for the candidate list.
-    my $writein = &CanonicalizeName(&Filter(param('writein')));
+    # This function has a race condition.  The effect of two concurrent 
+    # writeins is not clear.  Nor is the effect of a concurrent writein
+    # and vote, or even a request for the candidate list.
+    my $writein = &CanonicalizeName(param('writein'));
     my $ok = 1;
     if ($writein eq '') {
 	print p(b($tx->name_of_writein_is_empty)), $cr;

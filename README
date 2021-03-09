@@ -1,10 +1,10 @@
-Version 2.19
+Version 2.20
 Condorcet Internet Voting System
-December 2018
+Oct 2020
 
-Copyright 2018, Andrew C. Myers
+Copyright 2020, Andrew C. Myers
 
-This is a source release of the CIVS voting system
+This is a open-source release of the CIVS voting system
 software. If you simply want to run an election, it may be
 easier just to use the existing CIVS election server running
 at Cornell University, at http://civs.cs.cornell.edu.  See

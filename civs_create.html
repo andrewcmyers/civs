@@ -228,7 +228,8 @@ Voters can also be added later.</p>
   <h3>More options <small>(mouse over each check box for more information)</small></h3>
     <div class="option" id="publicize">
     <input type="checkbox" name="publicize" value="yes"
-      title="CIVS will announce this poll on its list of public polls and possibly elsewhere.  Anyone who views the list will be able to vote.">
+      title="CIVS will announce this poll on its list of public polls and possibly elsewhere.  Anyone who views the list will be able to vote."
+      onclick="make_invisible('restrict_results_div'); make_invisible('reveal_voters_div')">
     Have CIVS publicize this election on its home page.
     </div>
     <div>
@@ -236,8 +237,8 @@ Voters can also be added later.</p>
       title="If you want to upload all the voting ballots yourself, check this box. Voters cannot vote in such a poll. This is useful if you are trying to understand how the various voting methods work, or if you have obtained ballots from some source outside CIVS.">
   Make this a test poll: read all votes from a file.
 </div>
-<div>
-  <input type="checkbox" name="restrict_results" value="yes"
+<div id='restrict_results_div'>
+  <input type="checkbox" id="restrict_results" name="restrict_results" value="yes"
          onClick="make_visible('rrcontrol')">
     Do not release results to all voters.
     <div class="emphasized">By default, the results of a poll are visible to
@@ -251,7 +252,7 @@ Voters can also be added later.</p>
     <textarea rows="2" name="result_addrs" cols="50"></textarea>
     </div>
 </div>
-<div>
+<div id='reveal_voters_div'>
   <input type="checkbox" name="ballot_reporting" value="yes"
          onClick="make_visible('reveal_voters')"
 	 title="This option allows any poll participant to view the rankings on each ballot. However, identifying information about the voters who cast these ballots is not revealed unless the next option is checked.">

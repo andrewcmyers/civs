@@ -57,6 +57,8 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $close_time, $email_load);
 
 our $civs_supervisor = '@SUPERVISOR@';
+our $auth_sender = '@AUTH_SENDER@';
+our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 # Non-exported variables
 my ($db_is_open, $election_is_locked);
@@ -560,13 +562,13 @@ sub SendKeys {
     my @addresses =  &unique_elements( @{$addresses_ref} );
     my $now = time();
     my $load = GetEmailLoad($now);
-    my $optouts;
+    my $optouts = &GetOptouts();
     OpenMail;
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
 	if ($v eq '') { next }
-        # print "Checking for hash ", &civs_hash($v), $cr;
-        if (&CheckOptOut($optouts, $v)) {
+        # print "Checking whether $email_addr can send to $v\n";
+        if (&CheckOptOutSender($optouts, $v, $email_addr)) {
             print $tx->opted_out($v), $cr;
             next
         }
@@ -612,7 +614,7 @@ sub SendKeys {
 	    my $uniqueid = &SecureNonce;
 	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
-            MailFrom($civs_supervisor) &&
+            MailFrom($auth_sender) &&
             MailTo($v) &&
             StartMailData() || next;
 
@@ -659,7 +661,7 @@ sub SendKeys {
 				"results@PERLEXT@?id=$election_id"));
 	    }
 	    $html .= '<p>'
-                  .   $tx->For_more_information(&MakeURL($civs_home))
+                  .   $tx->For_more_information(&MakeURL($civs_home), &MakeURL($mail_mgmt_url))
                   .  '</p>
 </body>
 </html>';

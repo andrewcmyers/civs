@@ -54,6 +54,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@CIVSURL@|'$CIVSURL'|' \
 	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
 	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+	     -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
 	     -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
 	     -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
 	     -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
@@ -67,6 +68,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
 	     -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
 	     -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
+	     -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
 	     -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	     -e 's|@DONATE_URL@|'$DONATE_URL'|' \
@@ -113,6 +115,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@SMTP_STARTTLS@|'$SMTP_STARTTLS'|' \
 	     -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
 	     -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
+	     -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
 	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
 	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
 	     -e 's|@PERLEXT@|'$PERLEXT'|' \
@@ -120,6 +123,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
 	     -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
 	     -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
+	     -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
 	     -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
 	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
 	     -e 's|@DONATE_URL@|'$DONATE_URL'|' \
@@ -146,32 +150,36 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 	echo "need to create your own key.  See the INSTALL file for more";
 	echo "information."
 	echo "";
-	openssl rand -base64 32 -out $CIVSDATADIR/private_host_id;
+	openssl rand -base64 -out $CIVSDATADIR/private_host_id 32;
 	echo "*********************************************";
     fi
 
 	if [ ! -s $CIVSDATADIR/nonce_seed ]; then
 		echo "Seeding the CIVS nonce generator.";
+<<<<<<< HEAD
 		openssl rand -base64 -out $CIVSDATADIR/nonce_seed 32;
+=======
+		openssl rand -hex -out $CIVSDATADIR/nonce_seed 32;
+>>>>>>> 7379b1b1071e4f190d7db70e4c7cc66d3de5e6e2
 	fi
 
     touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
     chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
-	
-    if [ -e gettimeofday.exe ]; then 
+
+    if [ -e gettimeofday.exe ]; then
 	cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
     else
 	cp gettimeofday $CIVSDATADIR/gettimeofday
     fi
-    if [ -e timeout.exe ]; then 
+    if [ -e timeout.exe ]; then
 	cp timeout.exe $CIVSDATADIR/timeout.exe;
     else
 	cp timeout $CIVSDATADIR/timeout
     fi
-    if [ -e lockserv.exe ]; then 
+    if [ -e lockserv.exe ]; then
 	cp lockserv.exe $CIVSDATADIR/lockserv.exe;
     else
 	cp lockserv $CIVSDATADIR/lockserv
     fi
-	
+
 echo "Install completed.  Check for any errors reported above.";

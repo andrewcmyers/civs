@@ -14,17 +14,22 @@ print $cr, "<script src=\"@CIVSURL@/ajax.js\"></script>";
 print $cr, "<script src=\"@CIVSURL@/results.js\"></script>";
 print $cr, "<script src=\"@CIVSURL@/ezdom.js\"></script>";
 
-print $tx->mail_management_instructions,
+print div({-class => 'normal_text'},
+      $tx->mail_management_instructions,
       hr(),
       $tx->mail_address, textfield(-id => 'mail_address'),
       "&nbsp;", button(-id => 'sendcode', -value => $tx->send_activation_code),
-      span({-id => "addr_popup", -class => "popup"}, "message"),
+      span({-id => 'addr_popup', -class => 'popup'}, 'message'),
       br(),
       br(),
-      $tx->activation_code, textfield(-id => 'deactivation_code'), br(), br(),
-      button({-id => 'deactivate', -value => "Submit deactivation/reactivation", -disabled => 1}),
-      span({-id => "submit_popup", -class => "popup"}, "message"),
-      div({-id => "response_area"});
+      $tx->activation_code, textfield(-id => 'deactivation_code'), br(),
+      span({-id => 'filter_question', -title => $tx->filter_explanation,
+           -style => 'display:none'},
+        $tx->filter_question, textfield(-id => 'filter_pattern')), br(),
+      br(),
+      button({-id => 'deactivate', -value => $tx->submit_deact_react, -disabled => 1}),
+      span({-id => 'submit_popup', -class => 'popup'}, 'message'),
+      div({-id => 'response_area'}));
 
 print '<script type="text/javascript" src="@CIVSURL@/mail_mgmt.js"></script>', $cr;
 

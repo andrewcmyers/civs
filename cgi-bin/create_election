@@ -15,6 +15,7 @@ use MIME::Base64;
 use send_result_key;
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
+my $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 ### Initial parameter checking
 
@@ -29,7 +30,7 @@ if (!&CheckAddr($email_addr)) {
     exit 0;
 }
 my $optouts = GetOptouts();
-if (CheckOptOut($optouts, $email_addr)) {
+if (HasOptOuts($optouts, $email_addr)) {
     HTML_Header($tx->Invalid_email_address_hdr);
     CIVS_Header();
     print h1($tx->Invalid_email_address_hdr);
@@ -164,6 +165,12 @@ if ($restrict_results eq 'yes') {
     }
 }
 
+if ($publicize eq 'yes') {
+    $edata{'ballot_reporting'} = 'no';
+    $edata{'reveal_voters'} = 'no';
+    $edata{'restrict_results'} = 'no';
+}
+
 HTML_Header($tx->CIVS_Poll_Creation);
 CIVS_Header($tx->Poll_created($title));
 
@@ -191,7 +198,7 @@ if (!($local_debug)) {
     my $success = 1;
     if (OpenMail) {
         my $civs_supervisor = '@SUPERVISOR@';
-        MailFrom($civs_supervisor) &&
+        MailFrom('@AUTH_SENDER@') &&
         MailTo($email_addr) &&
         StartMailData || do {
             CloseMail;
@@ -210,7 +217,7 @@ if (!($local_debug)) {
                 Send $tx->creation_email_public_link("@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id&akey=$authorization_key");
             }
         }
-        Send $tx->for_more_information_about_CIVS($civs_home);
+        Send $tx->For_more_information($civs_home, $mail_mgmt_url);
         $success &= EndMailData;
         CloseMail;
 
@@ -239,7 +246,7 @@ if (!($local_debug)) {
 }
 
 if ($restrict_results eq 'yes') {
-    SendResultKey($election_id, $title, $result_addrs, $result_key);
+    SendResultKey($election_id, $email_addr, $title, $result_addrs, $result_key);
 }
 
 Log("Election $title ($election_id) created by $email_addr");

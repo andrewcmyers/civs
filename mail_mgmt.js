@@ -11,10 +11,11 @@ var sendcode = document.getElementById("sendcode"),
     mail_address_input = document.getElementById("mail_address"),
     deactivation_code = document.getElementById("deactivation_code"),
     deactivate = document.getElementById("deactivate"),
+    filter_question = document.getElementById("filter_question"),
     response_area = document.getElementById("response_area")
 
 mail_address_input.addEventListener("change", () =>
-    post_to_url("request_deactivation@PERLEXT", { address: mail_address, check: true },
+    post_to_url("request_deactivation@PERLEXT@", { address: mail_address, check: true },
         deactivated => {
             deactivate.value = (deactivated == 1) ? reactivate_msg : deactivate_msg
         },
@@ -24,8 +25,15 @@ sendcode.addEventListener("click", () => {
   var mail_address = mail_address_input.value
   if (validateEmail(mail_address)) {
     post_to_url("request_deactivation@PERLEXT@", { address: mail_address },
-      () => popup("addr_popup", "Code requested. Check your email."),
-      () => popup("addr_popup", "Error requesting code."),
+      (msg) => {
+        if (msg == "OK") {
+            popup("addr_popup", "Code requested. Check your email.")
+        } else {
+            popup("addr_popup", "Code requested but something went wrong.")
+            response_area.innerHTML = msg
+        }
+      },
+      (e) => popup("addr_popup", "Error requesting code: " + e),
     )
   } else {
     popup("addr_popup", "bad e-mail address")
@@ -34,19 +42,24 @@ sendcode.addEventListener("click", () => {
 
 deactivate.addEventListener("click", () => {
     var mail_address = mail_address_input.value
-    post_to_url("request_deactivation@PERLEXT@", { address: mail_address, code: deactivation_code.value },
+    post_to_url("request_deactivation@PERLEXT@",
+        {
+            address: mail_address,
+            code: deactivation_code.value,
+            filter_pattern: filter_pattern.value
+        },
       t => {
           popup("submit_popup", "requested")
-          if (t == "deactivated") {
-              response_area.innerHTML =
-                  "<hr><p>CIVS will not send any more mail to this address. " +
-                  "You can reactivate mails from CIVS only by using this web page " +
-                  "with the same code you just used.</p>"
+          if (t.match(/^deactivated .*/)) {
+              let msg = t.split(" ");
+              msg.shift()
+              response_area.innerHTML = "<hr><p>" + msg.join(" ") + "</p>"
               deactivate.value = reactivate_msg
               sendcode.disabled = true
-          } else if (t == "activated") {
-              response_area.innerHTML =
-                  "<hr><p>You have successfully reactivated mail to this address.</p>"
+          } else if (t.match("^activated .*")) {
+              let msg = t.split(" ");
+              msg.shift()
+              response_area.innerHTML = "<hr><p>" + msg.join(" ") + "</p>"
               deactivate.value = deactivate_msg
               sendcode.disabled = false
           } else {
@@ -54,7 +67,7 @@ deactivate.addEventListener("click", () => {
           }
       },
       t => {
-          popup("submit_popup", "Error:")
+          popup("submit_popup", "Error:" + t)
           response_area.innerHTML = t
       }
     )
@@ -62,5 +75,11 @@ deactivate.addEventListener("click", () => {
    
 deactivation_code.addEventListener("input", (e) => {
   var v = deactivation_code.value.trim()
-  deactivate.disabled = (v.length != 16 || !/^[0-9a-f]+$/.test(v)) 
+  if (v.length != 16 || !/^[0-9a-f]+$/.test(v))  {
+    deactivate.disabled = true
+    filter_question.style.display = "none"
+  } else {
+    deactivate.disabled = false
+    filter_question.style.display = "block"
+  }
 })

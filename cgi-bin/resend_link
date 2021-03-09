@@ -20,7 +20,7 @@ my $home = '@CIVSDATADIR@';
 
 print CGI::header(-charset => 'utf-8');
 
-&SendResultKey($election_id, $title, $result_addrs, $hash_result_key);
+&SendResultKey($election_id, $email_addr, $title, $result_addrs, $hash_result_key);
 # Note: hash_result_key is no longer a hash.
 
 print "OK";
