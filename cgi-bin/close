@@ -25,6 +25,7 @@ CheckElectionID;
 CheckStarted;
 CheckControlKey($control_key);
 CheckNotStopped;
+CheckPostRequest;
 
 if (!sysopen(STOPPED, $stopped_file, O_CREAT|O_EXCL|O_RDWR)) {
     print h1($tx->Error), p($tx->was_not_able_stop_the_poll);
