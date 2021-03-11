@@ -156,11 +156,7 @@ rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 
 	if [ ! -s $CIVSDATADIR/nonce_seed ]; then
 		echo "Seeding the CIVS nonce generator.";
-<<<<<<< HEAD
-		openssl rand -base64 -out $CIVSDATADIR/nonce_seed 32;
-=======
 		openssl rand -hex -out $CIVSDATADIR/nonce_seed 32;
->>>>>>> 7379b1b1071e4f190d7db70e4c7cc66d3de5e6e2
 	fi
 
     touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
