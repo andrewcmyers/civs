@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Condorcet Internet Voting Service</title>
     <base href="@CIVSURL@/" />
-    <link rel="canonical" href="@CIVSURL@" />
+    <link rel="canonical" href="@CIVSURL@/" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon" />
-    <script type="text/javascript" src="@CIVSURL@/ajax.js"></script>
+    <script src="@CIVSURL@/ajax.js"></script>
 </head>
 
 <body>
@@ -144,7 +144,7 @@ negligence or other tortious action, arising out of or in connection with
 the use of this service.</p>
 </div>
 </div>
-<script type="text/javascript">
+<script>
     fetch_content('newsfeed', '@CIVSURL@/news.html',
 	function() {
 	    fetch_content('top_polls', '@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@');
