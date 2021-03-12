@@ -3,6 +3,15 @@ Copyright © 2016, Andrew C. Myers
 
 INSTALLATION INSTRUCTIONS
 
+## with Docker
+
+1. Edit configuration values in `docker/docker.env` as necessary (see
+   `config/sample` for variable documentation).
+
+2. `docker-compose up --build`
+
+## without Docker
+
 1. Create a configuration file.  You will find it helpful to use
    config/sample as a template.  The configuration file specifies
    certain constants that localize the CIVS installation to your system:
