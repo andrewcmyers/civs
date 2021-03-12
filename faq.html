@@ -1,6 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-                "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE HTML>
+<html lang="en-us">
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -9,16 +8,16 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="canonical" href="@CIVSURL@/faq.html">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
-<style type="text/css">
+<style>
   ol li { margin-top: 0.5ex }
 </style>
-<script src="ezdom.js" type="text/javascript"></script>
-<script src="civs_hdr.js" type="text/javascript"></script>
+<script src="ezdom.js"></script>
+<script src="civs_hdr.js"></script>
 </head>
 
 <body>
 
-<script type="text/javascript">
+<script>
 var body = document.getElementsByTagName('body')[0]
 body.appendChild(create_header("Frequently Asked Questions"))
 </script>
@@ -28,7 +27,7 @@ body.appendChild(create_header("Frequently Asked Questions"))
 
 <div class="links">
 <ul>
-<li><a href="#running">Questions about voting</a>
+<li><a href="#voting">Questions about voting</a>
 <li><a href="#setting_up">Questions about setting up a poll</a>
 <li><a href="#running">Questions about running a poll</a>
 <li><a href="sec_priv.html">Questions about security and privacy</a>
@@ -37,7 +36,7 @@ body.appendChild(create_header("Frequently Asked Questions"))
 </div>
 
 
-<h2><a name="#voting">Voting</a></h2>
+<h2 id="voting">Voting</h2>
 <ol>
 <li><b>What does &ldquo;no opinion&rdquo; mean?</b><br>
 It means you are providing no information about how this choice ranks with
@@ -89,7 +88,7 @@ deactivation code so you can reactivate e-mail later.
 </li>
 </ol>
 
-<h2><a name="setting_up">Setting up a poll</a></h2>
+<h2 id="setting_up">Setting up a poll</h2>
 <ol>
 <li><b>What is the difference between Condorcet voting and voting methods
 that I am familiar with?</b>
@@ -170,7 +169,7 @@ all voters an explanation of what those names stand for. Less convenient
 for voters, but completely private.
 
 <li><b>Can poll choices include images?</b> Sure. Just use an
-HTML <tt>&lt;img&gt;</tt> tag. Many standard HTML tags are supported,
+HTML <code>&lt;img&gt;</code> tag. Many standard HTML tags are supported,
 though there is filtering to block XSS attacks.
 
 <li><b>Can poll choices include Unicode characters including emojis?</b>
@@ -215,7 +214,7 @@ multiple languages, you will want to write instructions in all the languages;
 CIVS does not translate for you.
 </ol>
 
-<h2><a name="running">Running a poll</a></h2>
+<h2 id="running">Running a poll</h2>
 
 <ol>
 <li><b>Some voters never got their voter keys. What do I do?</b>
@@ -228,7 +227,7 @@ the voter under their correct email address. You can check with the CIVS
 administrator whether the email bounced, assuming you were not notified.
 </li>
 
-<li><b><a name="autoclosed">My poll closed itself without my asking for it. What's going on?</a></b>
+<li id="autoclosed"><b>My poll closed itself without my asking for it. What's going on?</b>
 This odd behavior seems to be caused by a "safe links" feature of some Outlook
 installations. CIVS sends links through email; the mailer rewrites its links to
 go to a safe links site instead, which simulates clicking all the links in
@@ -296,7 +295,7 @@ improvements to existing language support is most welcome.
 <p>For a discussion of security and privacy in CIVS, see
 <a href="sec_priv.html">here</a>.
 
-<h2><a name="helping">How can I help?</a></h2>
+<h2 id="helping">How can I help?</h2>
 <p>
 CIVS is a free service maintained and updated by volunteers. New feature
 suggestions and implementations are welcome. The
@@ -322,6 +321,7 @@ is actually still well below the level needed to support running CIVS. If
 your organization is running polls with hundreds of voters, please consider
 chipping in.
 </li>
+</ul>
 </div>
 </div>
 </body>
