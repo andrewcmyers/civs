@@ -189,7 +189,7 @@ if ($local_debug) {
 }	
 print $cr,
  '<div class=bannerpart id=bannericon>
-      <img src="@CIVSURL@/images/check-civs.png" style="border: none"/>
+      <img src="@CIVSURL@/images/check-civs.png" style="border: none" alt="CIVS logo"/>
   </div>
   <div class=bannerpart>
     <h1>&nbsp;', $tx->Condorcet_Internet_Voting_Service, '</h1>

@@ -2,7 +2,7 @@
 function create_header(title) {
     return div({className: "banner"},
                 div({className: "bannerpart", id: "bannericon"}, img({width: 113, src: "@CIVSURL@/images/check-civs.png",
-                       style: "border: none"})),
+                       style: "border: none", alt: "CIVS logo"})),
                 div({className: "bannerpart"}, h1("Condorcet Internet Voting Service")),
 		div({className: "bannerpart", id: "bannermenu"},
                     a({href: "@CIVSHOME@"}, "About CIVS"), br(),

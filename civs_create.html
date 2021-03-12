@@ -1,6 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-                "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE HTML>
+<html lang="en-us">
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -133,23 +132,24 @@ body.appendChild(create_header("Create a Poll"))
     onsubmit="return validate()">
   <table class="form">
   <tr>
-    <td align=right>Name of the poll (e.g., <b>The Democratic Primary</b>):</td>
-    <td><input type="text" name="title" size="50"></td>
+    <td align=right><label id="name_of_poll">Name of the poll (e.g., <b>The Democratic Primary</b>):</label></td>
+    <td><input type="text" title="Poll name" name="title" size="50" aria-labelledby="name_of_poll"></td>
   <tr>
-    <td align=right>Name of supervisor (you):</td>
-    <td><input type="text" name="name" size="20">
+    <td align=right><label id="supervisor_name">Name of supervisor (you):</label></td>
+    <td><input type="text" name="name" size="20" aria-labelledby="supervisor_name">
   </td>
   <tr>
-    <td align=right>E-mail address of supervisor:</td>
-    <td><input type="text" name="email_addr" size="20"
+    <td align=right><label id="supervisor_email">E-mail address of supervisor:</label></td>
+    <td><input type="text" name="email_addr" size="20" aria-labelledby="supervisor_email"
       onchange="if (!validateEmail(this.value)) { alert('Invalid email address') }" >
     </td>
   </tr>
   <tr>
-    <td valign=top align=right>Day and time you plan to stop the poll:<br>
+    <td valign=top align=right><label id="election_end_label">Day and time you plan to stop the poll:</label><br>
 	<small>(<b>Note:</b> polls must be stopped manually)</small>
     </td>
     <td><input type="text" name="election_end" id="election_end" size="30"
+               aria-labelledby="election_end_label"
           onchange="render_text('<br><i>Preview</i>: Poll ends ', 'election_end', 'rendered_end', 'poll_end', 'poll_end_preview')">
 	 <span class="rendering" id="rendered_end"></span>
 </td>
@@ -165,10 +165,11 @@ body.appendChild(create_header("Create a Poll"))
   the mail does not arrive!).
   </div>
 
-  <p>Description of the poll and available choices (many HTML tags ok):<br>
+  <p><label id="description_label">Description of the poll and available choices (many HTML tags ok):</label><br>
   <table class="form">
     <tr>
       <td><textarea id="description" valign="top" rows="5" name="description" cols="60"
+                    aria-labelledby="description_label"
 		    onchange="preview_description()"></textarea>
       </td>
       <td><input type="button" value="Preview &#9656;"
@@ -178,12 +179,14 @@ body.appendChild(create_header("Create a Poll"))
   </table>
   </p>
 
-  <p>Enter the names of all the choices (candidates),
-     one per line, or upload a file containing all the choices:</p>
+  <p><label id="choices_label">Enter the names of all the choices (candidates),
+     one per line, or upload a file containing all the choices:</label></p>
   <p align="left">
   <table class="form">
   <tr><td>
-    <textarea rows="5" name="choices" cols="60" id="choices" onchange="preview_choices()"></textarea></td>
+    <textarea rows="5" name="choices" cols="60" id="choices"
+        aria-labelledby="choices_label"
+        onchange="preview_choices()"></textarea></td>
     <td>
       <td><input type="button" value="Preview &#9656;"
 	    onClick="preview_choices()"></td>
@@ -191,18 +194,21 @@ body.appendChild(create_header("Create a Poll"))
     </tr>
   </table>
   </p>
-  <p align="left"><input type=file name="choices_file"></p>
-  <p>How many choices will win: <input type="text" name="num_winners" size="5" value="1"></p>
+  <p align="left"><input type=file aria-labelledby="choices_label" name="choices_file"></p>
+
+  <p><label id="num_winners_label">How many choices will win:</label>
+     <input type="text" name="num_winners" size="5" value="1" aria-labelledby="num_winners_label"></p>
 <!--
 <p>The e-mail addresses of up to 1000 voters, one per line.
 Voters can also be added later.</p>
 <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
 <p><input type=file name="addresses_file"></p>
 -->
-  <p>Do you want the poll to be <em>private</em> or <em>public</em>?</p>
+  <p><label id="public_or_private">Do you want the poll to be <em>private</em> or <em>public</em>?</label></p>
   <div id="pubpriv_choice">
+  <fieldset>
   <div class="pubpriv" width="50%">
-  <input type="radio" name="public" value="no" checked="checked">
+  <input type="radio" name="public" value="no" checked="checked" aria-labelledby="public_or_private">
   <strong>Private</strong>
   <p>Each voter receives their own unique URL for voting, and can only vote once.
      The voters' email addresses must be provided to the system so it can
@@ -212,7 +218,7 @@ Voters can also be added later.</p>
   </p>
   </div>
   <div class="pubpriv" width="50%">
-  <input type="radio" name="public" value="yes"
+  <input type="radio" name="public" value="yes" aria-labelledby="public_or_private"
       onClick="make_visible('publicize')">
 
   <strong>Public</strong>
@@ -223,6 +229,7 @@ Voters can also be added later.</p>
     sure that voters only vote once, use a private poll instead.
   </p>
   </div>
+  </fieldset>
   </div>
 
   <h3>More options <small>(mouse over each check box for more information)</small></h3>
@@ -239,17 +246,19 @@ Voters can also be added later.</p>
 </div>
 <div id='restrict_results_div'>
   <input type="checkbox" id="restrict_results" name="restrict_results" value="yes"
-         onClick="make_visible('rrcontrol')">
+         title="Restrict results" onClick="make_visible('rrcontrol')">
     Do not release results to all voters.
     <div class="emphasized">By default, the results of a poll are visible to
     all voters.  Select this option to restrict the visibility to some smaller
     set of people.
     </div>
     <div class="suboption" id="rrcontrol">
+    <label id="result_addrs_label">
     Enter email addresses of users permitted to view poll results:
     (All voters can see these email addresses)
+    </label>
     <br>
-    <textarea rows="2" name="result_addrs" cols="50"></textarea>
+    <textarea rows="2" aria-labelledby="result_addrs_label" name="result_addrs" cols="50"></textarea>
     </div>
 </div>
 <div id='reveal_voters_div'>
@@ -258,11 +267,12 @@ Voters can also be added later.</p>
 	 title="This option allows any poll participant to view the rankings on each ballot. However, identifying information about the voters who cast these ballots is not revealed unless the next option is checked.">
   Enable detailed ballot reporting. 
   <div class="suboption" id="reveal_voters">
-    <input type="checkbox" name="reveal_voters" value="yes" />
+    <input type="checkbox" name="reveal_voters" value="yes" aria-labelledby="reveal_voters_label"/>
+    <label id="reveal_voters_label">
     In detailed ballot report, also reveal the identity of the voter with each
     ballot.<p class=emphasized>Voters are <i class="warning">not</i> anonymous if this is
     checked, nor does the server discard voter email addresses as it normally
-    does.  Voters are warned about this lack of anonymity.</p>
+    does.  Voters are warned about this lack of anonymity.</label></p>
   </div>
 </div>
 <div>
@@ -284,11 +294,12 @@ Voters can also be added later.</p>
 	 title="The proportional mode is useful only for multiwinner elections, where you want to make sure that the voters' desires are expressed proportionally. Otherwise a majority of voters can decide all of the winners. Proportional mode is much slower than the regular nonproportional mode, and should not be used in cases where there are a lot of choices and a lot of winners. In most cases, but not all, the results from the proportional and nonproportional mode agree.  Click the 'more information' link to find out more about how this mode works.">
   Enforce proportional representation [<a href="proportional.html">more information</a>]</br>
    <div class="suboption" id="prcontrol">
-    For proportional representation, voters are assumed to be maximizing:<br>
+   <label id="prcontrol_label">
+    For proportional representation, voters are assumed to be maximizing:</label><br>
     <input type="radio" name="rating_interpretation"
-       value="best_choice"
+       value="best_choice" aria-labelledby="prcontrol_label"
        checked> rank of their favorite choice<br>
-    <input type="radio" name="rating_interpretation"
+    <input type="radio" name="rating_interpretation" aria-labelledby="prcontrol_label"
        value="combined_ratings"> combined weights of selected choices<br>
    </div>
 </div>

@@ -234,6 +234,7 @@ print $cr, button(-name => 'edit_description',
 print $cr, textarea(-id => "description_edit",
 	            -name => "description_edit",
 	            -default => $description,
+                    -title => "Description",
 		    -rows => 10,
 		    -columns => 60);
 print $cr, button(-name => 'save_description',
@@ -281,8 +282,8 @@ if ($external_ballots ne 'yes') {
     print hidden('key', $control_key);
     print hidden('akey', $authorization_key)
 	    if defined($authorization_key);
-    print p('<textarea rows="2" name="new_addresses" cols="50"></textarea>');
-    print p($tx->Upload_file, '<input id=new_addresses_file type=file name="new_addresses_file">');
+    print p('<textarea title="Voter addresses" rows="2" name="new_addresses" cols="50"></textarea>');
+    print p($tx->Upload_file, '<input title="Voter address file upload" id=new_addresses_file type=file name="new_addresses_file">');
     print '<input type="submit" value="'.$tx->Add_voters.'" name="add">';
     print '</form>';
 } else {

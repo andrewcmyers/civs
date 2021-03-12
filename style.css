@@ -23,8 +23,8 @@ div#footnote {
 }
 
 a            { text-decoration: none }
-a:link       { color: #389; background-color: transparent; font-weight: bold }
-a:visited    { color: #278; background-color: transparent; font-weight: bold }
+a:link       { color: #278; background-color: transparent; font-weight: bold }
+a:visited    { color: #167; background-color: transparent; font-weight: bold }
 a:hover      { color: #49a; background-color: transparent }
 a.small      { font-size: 80% }
 a.result_link { background-color: #00355f; color: white; padding: 5px 8px}
@@ -314,7 +314,6 @@ input#save_description_button { display: none }
 }
 
 .pubpriv p {font-size: 80%}
-#pubpriv_choice {border-top: 1px solid #bbb; margin-top: 0.5ex}
-#pubpriv_choice > div {border-left: 1px solid #bbb; padding-left: 1em}
-#pubpriv_choice > div:first-child {border-left: none; float: left; padding-right: 1em}
-div.pubpriv {display: inline-block; width: 45%; min-width: 30ex; padding-top: 0.5ex}
+div.pubpriv {display: inline-block; width: 45%; min-width: 30ex; padding: 0.5ex}
+#pubpriv_choice {background-color: #f8f8f8}
+fieldset {border-width: 1px}
