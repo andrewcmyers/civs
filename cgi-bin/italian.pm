@@ -529,7 +529,7 @@ sub CIVS_poll_supervisor {
 }
 sub voter_mail_intro { #title, name, email_addr
 "Una votazione di nome <b>$_[1]</b> è stata creata nel sistema di voto Condorcet on-line (CIVS).
-Sei stato designato come supervisore della votazione,
+Sei stato designato come votante dal supervisore del sondaggio,
 $_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
 }
 sub Description_of_poll {
@@ -544,7 +544,7 @@ Mantienilo privato, altrimenti altri potrebbero votare al tuo posto';
 }
 sub Your_privacy_will_not_be_violated {
 'La tua privacy non sarà compromessa in alcun modo dal voto. Il sistema
-di voto non ha mantenuto alcuna informazione che permetta di risalire al
+di voto non manterrà alcuna informazione che permetta di risalire al
 tuo indirizzo e-mail. Non sarà quindi rintracciabile né il tuo voto né
 una tua eventuale astensione.';
 }
