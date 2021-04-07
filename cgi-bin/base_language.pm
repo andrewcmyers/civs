@@ -935,6 +935,8 @@ sub preference_description {
     "The $_[1]&ndash;$_[2] preference for $_[3] over $_[4]."
 }
 
+# Mail management
+
 sub mail_management_instructions {
     p("CIVS does not store e-mail addresses of voters and it only sends mail when
        a poll supervisor requests that mail be sent.
