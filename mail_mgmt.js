@@ -14,12 +14,15 @@ var sendcode = document.getElementById("sendcode"),
     filter_question = document.getElementById("filter_question"),
     response_area = document.getElementById("response_area")
 
-mail_address_input.addEventListener("change", () =>
+mail_address_input.addEventListener("change", () => {
+    var mail_address = mail_address_input.value
     post_to_url("request_deactivation@PERLEXT@", { address: mail_address, check: true },
         deactivated => {
+            // response_area.innerHTML += "check: " + deactivated + "<br>"
             deactivate.value = (deactivated == 1) ? reactivate_msg : deactivate_msg
         },
-        () => {}))
+        () => {})
+})
 
 sendcode.addEventListener("click", () => {
   var mail_address = mail_address_input.value
@@ -42,6 +45,7 @@ sendcode.addEventListener("click", () => {
 
 deactivate.addEventListener("click", () => {
     var mail_address = mail_address_input.value
+    popup("submit_popup", "requested")
     post_to_url("request_deactivation@PERLEXT@",
         {
             address: mail_address,
@@ -49,7 +53,6 @@ deactivate.addEventListener("click", () => {
             filter_pattern: filter_pattern.value
         },
       t => {
-          popup("submit_popup", "requested")
           if (t.match(/^deactivated .*/)) {
               let msg = t.split(" ");
               msg.shift()

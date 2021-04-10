@@ -26,6 +26,9 @@ sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
 sub about_civs {
     'About CIVS'
 }
+sub new_user {
+    'Create user'
+}
 sub public_polls {
     'Public polls'
 }
@@ -935,23 +938,21 @@ sub preference_description {
     "The $_[1]&ndash;$_[2] preference for $_[3] over $_[4]."
 }
 
-# Mail management
-
 sub mail_management_instructions {
     p("CIVS does not store e-mail addresses of voters and it only sends mail when
        a poll supervisor requests that mail be sent.
        You can prevent CIVS from sending you any future mail, by entering your email address below.").
     p("Click the button on the right to request a deactivation code by e-mail. This authentication
-       step is necessary to prevent users from blocking others' email.").
+       step is necessary to prevent people from blocking other users' email.").
     p(b("Warning:"), "If you block mail from CIVS, it will be difficult to re-enable it, because CIVS
       does user authentication using e-mail addresses. You will not be able to vote in any CIVS polls
       and you will not be able to create CIVS polls.")
 }
 
 sub mail_address {
-    'E-mail address: '
+    'Email address: '
 }
-sub activation_code {
+sub deactivation_code {
     'Deactivation code: '
 }
 sub filter_question {
@@ -960,17 +961,17 @@ sub filter_question {
 sub filter_explanation {
     'You can enter one or more patterns here to specify which poll supervisors to prevent email from. The pattern can be the email address of a supervisor or a pattern describing email addresses.  The pattern may use * to represent any sequence of characters. For example, the pattern *@inmano.com would prevent supervisors with an @inmano.com address from sending you poll invitations. If you leave this field blank, deactivation/reactivation will apply to all email addresses.'
 }
-sub send_activation_code {
+sub send_deactivation_code {
     'Send deactivation code by email'
 }
 sub cant_send_email {
-    'You cannot send this user email.'
+    'You cannot send email to this user using CIVS. Email to this user must first be reactivated using a previously sent deactivation code.'
 }
 sub submit_deact_react {
     'Submit deactivation/reactivation'
 }
 sub codes_dont_match {
-    "Sorry, the provided code and e-mail address do not match. You can request another deactivation code above if you have not previously blocked e-mail from CIVS."
+    "Sorry, the provided code and email address do not match. You can request another code if you have not previously blocked email from CIVS."
 }
 sub deactivation_successful {
     my ($self, $pattern) = @_;
@@ -992,6 +993,55 @@ service in the future."
 }
 sub deactivation_code_subject {
     "Deactivation code for CIVS mail"
+}
+sub mail_mgmt_title {
+    'Mail Management'
+}
+
+## User activation
+
+sub user_activation {
+    'Create user'
+}
+sub user_activation_instructions {
+    my ($self, $mail_mgmt_url) = @_;
+    p('To vote in private CIVS polls, you must opt in to email
+	communication from the service. There are no automated mailings.
+	You only receive email from the service at the explicit request
+	of poll supervisors, containing credentials needed to vote in private
+	polls or to see the results of polls.').
+    p("To opt in, please enter your email and click the button below. You should then
+        receive an email containing an activation code.
+        Note that if you have previously opted out from email, you must use
+        the <a href=\"$mail_mgmt_url\">mail management page</a> to reactivate email.")
+}
+sub opt_in_label {
+    'Request activation code'
+}
+sub activation_code {
+    'Activation code: '
+}
+sub someone_has_requested_activation {
+    my ($self, $address, $code, $mail_mgmt_url) = @_;
+"Someone has requested that the CIVS voting system activate the email address <@address>
+for voting in polls. To activate this address, you will need the following activation code:
+
+    $code
+
+If you did not initiate this request, you can ignore this email.
+
+If you want to prevent further email from CIVS, see $mail_mgmt_url.
+"
+}
+sub already_activated {
+    'This email address is already activated.'
+}
+sub activation_successful
+{
+    'Email address successfully activated.'
+}
+sub submit_activation_code {
+    'Complete activation'
 }
 
 1; # package succeeded!

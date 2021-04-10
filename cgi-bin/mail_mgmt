@@ -7,8 +7,8 @@ use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard);
 
-HTML_Header("Mail Management");
-CIVS_Header("Mail Management");
+HTML_Header($tx->mail_mgmt_title);
+CIVS_Header($tx->mail_mgmt_title);
 
 print $cr, "<script src=\"@CIVSURL@/ajax.js\"></script>";
 print $cr, "<script src=\"@CIVSURL@/results.js\"></script>";
@@ -18,11 +18,11 @@ print div({-class => 'normal_text'},
       $tx->mail_management_instructions,
       hr(),
       $tx->mail_address, textfield(-id => 'mail_address'),
-      "&nbsp;", button(-id => 'sendcode', -value => $tx->send_activation_code),
+      "&nbsp;", button(-id => 'sendcode', -value => $tx->send_deactivation_code),
       span({-id => 'addr_popup', -class => 'popup'}, 'message'),
       br(),
       br(),
-      $tx->activation_code, textfield(-id => 'deactivation_code'), br(),
+      $tx->deactivation_code, textfield(-id => 'deactivation_code'), br(),
       span({-id => 'filter_question', -title => $tx->filter_explanation,
            -style => 'display:none'},
         $tx->filter_question, textfield(-id => 'filter_pattern')), br(),

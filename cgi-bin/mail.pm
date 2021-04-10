@@ -20,7 +20,7 @@ BEGIN {
                       &StartMailData &EndMailData &Send &SendHeader
                       &GetOptouts &SaveOptOuts &RemoveOptOut
                       &HasOptOuts &SetOptOutPatterns &CheckOptOutSender
-                      &CheckAddr &TrimAddr);
+                      &CheckAddr &TrimAddr &CanonicalizeAddr);
 }
 
 # Package imports
@@ -71,7 +71,7 @@ sub CanonicalizeAddr {
 my $optout_file = "@CIVSDATADIR@/do-not-email.txt";
 
 
-# Return a reference to a hash mapping the hashes of
+# Return a reference to a hash table that maps the hashes of
 # all the email addresses that have opted out to a
 # reference to an array of blocked sender addresses.
 sub GetOptouts {
@@ -101,7 +101,7 @@ sub SaveOptOuts {
     foreach my $h (keys %$optouts) {
         if (defined($optouts->{$h})) {
             my @patterns = @{$optouts->{$h}};
-            print OPTOUTS "$h @patterns\n"
+            print OPTOUTS $h, ' ', join(' ', @patterns), "\n";
         }
     }
     close(OPTOUTS);
@@ -111,11 +111,22 @@ sub optout_key {
     civs_hash($_[0])
 }
 
+# Is this receiver an activated user?
+sub UserActivated {
+    my ($optouts, $receiver) = @_;
+    $receiver = &CanonicalizeAddr($receiver);
+    return defined($optouts->{optout_key($receiver)});
+}
+
 # Does this receiver have any opt-outs defined?
 sub HasOptOuts {
     my ($optouts, $receiver) = @_;
     $receiver = &CanonicalizeAddr($receiver);
-    return defined($optouts->{optout_key($receiver)});
+    my $mapping = $optouts->{optout_key($receiver)};
+    if (!defined($mapping)) { return 0 }
+    my @patterns = @{$mapping};
+    if ($#patterns == 0 && $patterns[0] eq '+') { return 0 }
+    return 1;
 }
 
 # Report whether receiver has opted out from mail from sender.
@@ -130,6 +141,7 @@ sub CheckOptOutSender {
     }
     my @patterns = @{$mapping};
     foreach my $p (@patterns) {
+        if ($p eq '+') { return 0 }
         if ($p eq '*') { return 1 }
         $p =~ s/\./\\./g;
         $p =~ s/\*/.*/g;
@@ -143,6 +155,7 @@ sub CheckOptOutSender {
 # return whether an opt-out pattern is valid
 sub VerifyOptoutPattern {
     (my $pattern) = @_;
+    if ($pattern eq '+') { return 1 }
     if ($pattern =~ m/\A[a-zA-Z0-9\.*@]+\Z/) {
         return 1;
     } else {

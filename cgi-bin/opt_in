@@ -1,0 +1,36 @@
+#!@PERL@
+
+use strict;
+use warnings;
+
+use lib '@CGIBINDIR@';
+use civs_common;
+use CGI qw(:standard);
+
+HTML_Header($tx->user_activation);
+CIVS_Header($tx->user_activation);
+
+print $cr, "<script src=\"@CIVSURL@/ajax.js\"></script>";
+print $cr, "<script src=\"@CIVSURL@/results.js\"></script>";
+print $cr, "<script src=\"@CIVSURL@/ezdom.js\"></script>";
+
+my $mail_mgmt_url = '@CIVSBINURL@/mail_mgmt@PERLEXT@';
+
+print div({-class => 'normal_text'},
+      $tx->user_activation_instructions($mail_mgmt_url),
+      br(),
+      $tx->mail_address, textfield(-id => 'mail_address'),
+      "&nbsp;", button(-id => 'request_code', -value => $tx->opt_in_label),
+      span({-id => 'addr_popup', -class => 'popup'}, 'message'),
+      br(),
+      br(),
+      div({-id => 'code_area', -style => 'display: none'},
+        $tx->activation_code, textfield(-id => 'activation_code'),
+        button(-id => 'submit_code', -value => $tx->submit_activation_code),
+        span({-id => 'submit_popup', -class => 'popup'}, 'message')),
+      br(),
+      div({-id => 'response_area'}));
+
+print '<script type="text/javascript" src="@CIVSURL@/opt_in.js"></script>', $cr;
+
+exit 0;
