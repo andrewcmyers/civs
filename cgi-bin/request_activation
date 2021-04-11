@@ -9,6 +9,7 @@ use civs_common;
 use mail;
 
 my $civs_supervisor = '@SUPERVISOR@';
+my $mail_mgmt_url = '@PROTO@://@THISHOST@@CIVSBINURL@/mail_mgmt@PERLEXT@';
 
 my $address = param('address');
 my $code = param('code');
@@ -63,12 +64,12 @@ if (!defined($code)) {
             SendHeader('Reply-To', $civs_supervisor);
             SendHeader('Message-ID', "<$message_id>");
             SendHeader('To', "<$address>");
-            SendHeader('Subject', $tx->deactivation_code_subject);
+            SendHeader('Subject', $tx->activation_code_subject);
             SendHeader('Content-Transfer-Encoding', '8bit');
             SendHeader('Return-Path', $civs_supervisor);
             SendHeader('X-Mailer', 'CIVS');
             Send('');
-            Send($tx->someone_has_requested_activation($code));
+            Send($tx->someone_has_requested_activation($address, $code, $mail_mgmt_url));
             EndMailData;
         }
         CloseMail;

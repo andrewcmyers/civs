@@ -27,7 +27,7 @@ sub about_civs {
     'About CIVS'
 }
 sub new_user {
-    'Create user'
+    'Activate user'
 }
 sub public_polls {
     'Public polls'
@@ -1003,6 +1003,9 @@ sub mail_mgmt_title {
 sub user_activation {
     'Activate user'
 }
+sub activation_code_subject {
+    "Activation code for using CIVS"
+}
 sub user_activation_instructions {
     my ($self, $mail_mgmt_url) = @_;
     p('To vote in private CIVS polls, you must opt in to email
@@ -1024,14 +1027,14 @@ sub activation_code {
 }
 sub someone_has_requested_activation {
     my ($self, $address, $code, $mail_mgmt_url) = @_;
-"Someone has requested that the CIVS voting system activate the email address <@address>
+"Someone has requested that the CIVS voting system activate the email address <$address>
 for voting in polls. To activate this address, you will need the following activation code:
 
     $code
 
 If you did not initiate this request, you can ignore this email.
 
-If you want to prevent further email from CIVS, see $mail_mgmt_url.
+If you want to control further email from CIVS, use this link: $mail_mgmt_url.
 "
 }
 sub already_activated {
