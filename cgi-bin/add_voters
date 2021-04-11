@@ -24,7 +24,7 @@ if (defined($new_addresses_file)) {
 }
 my @new_addresses = split /[\r\n]+/, $new_addresses;
 
-HTML_Header($tx->CIVS_Adding_Voters);
+HTML_Header($tx->CIVS_Adding_Voters, 'add_voters.js');
 CIVS_Header($tx->Adding_voters);
 
 my $control_key = param('key');    
@@ -47,17 +47,32 @@ if (GetEmailLoad(time()) >= @MAX_EMAIL_LOAD@) {
     exit 0;
 }
 
-print "<pre>\n";
 GetPrivateHostID;
 
 # Send all of the voters their keys
-SendKeys($authorization_key, \@new_addresses);
+my @mail_failures = @{SendKeys($authorization_key, \@new_addresses)};
 
-print $tx->Total_of_x_voters_authorized($num_auth), $cr, '</pre>';
+print $tx->Total_of_x_voters_authorized($num_auth), $cr;
+
+if ($#mail_failures >= 0) {
+    print p($tx->see_the_failure_table), $cr;
+}
 
 my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
 $url .= "&akey=$authorization_key" if defined($authorization_key);
-print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>');
+print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>'), $cr;
+
+if ($#mail_failures >= 0) {
+    my @rows = Tr(th('Address'), th('Reason'));
+    foreach my $rowref (@mail_failures) {
+        my @row = @{$rowref};
+        push @rows, Tr(td($row[1]), td($tx->mail_failure_reason($row[0], $row[1])));
+    }
+    print div({-class => "centering"}, div({-id => 'mail_failures'},
+        button(-id => 'download_failures', -value => $tx->download_failures,
+                -onclick => 'export_failure_table()'),
+        table({-id => 'failure_table'}, @rows)));
+}
 
 print end_html();
 Log("$num_auth new voters added to $title ($election_id)");

@@ -78,7 +78,7 @@ if (!defined($code)) {
 # This is a request to use a code.
     my $expected_code = &ActivationCode($address);
     if ($code eq $expected_code) {
-        if (HasOptOuts($optouts, $address)) {
+        if (UserActivated($optouts, $address)) {
             print 'already ', $tx->already_activated;
         } else {
             my $pats = SetOptOutPatterns($optouts, $address, '+');
@@ -86,11 +86,10 @@ if (!defined($code)) {
             print 'activated ', $tx->activation_successful($pats);
         }
     } else {
-        print start_html(), p($tx->codes_dont_match);
+        print 'failed ', $tx->codes_dont_match;
         if ("@LOCALDEBUG@") {
-            print pre("expected code $expected_code");
+            print "expected $expected_code";
         }
-        print end_html();
     }
 }
 

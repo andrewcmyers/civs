@@ -70,7 +70,7 @@ sub click_on_the_URL_to_start {
 
 sub here_is_the_control_URL {
     'Here is the URL to control the new poll. In ordinary operation
-             this would be sent to the supervisor via e-mail.';
+             this would be sent to the supervisor via email.';
 }
 sub the_poll_is_in_progress {
     'The poll is in progress. Press this button to end it: ';
@@ -116,7 +116,7 @@ sub creation_email_public_link { # url
 }
 
 sub opted_out { # addr
-  "Sorry, you cannot send any email to $_[1] via CIVS."
+  "Sorry, you cannot send any email to &lt;$_[1]&gt; via CIVS."
 }
 
 sub Sending_result_key { # addr
@@ -279,9 +279,9 @@ sub the_top_n_will_win { # num_winners
 }
 
 sub add_voter_instructions {
-    "Enter e-mail addresses of voters, one per line. These
+    "Enter email addresses of voters, one per line. These
     may be new voters or existing voters who have not voted yet.
-    In a private poll, giving the e-mail address of an already 
+    In a private poll, giving the email address of an already 
     existing voter <strong>will not</strong> let that voter vote twice.
     It will only resend the voter an invitation to vote.
     In a public poll, only a token attempt is made to prevent
@@ -360,7 +360,7 @@ sub Total_of_x_voters_authorized { # x
     } elsif ($_[1] == 1) {
 	'Only 1 voter authorized to vote so far.';
     } else {
-	"Total of $_[1] voters authorized to vote.";
+	"A total of $_[1] voters are authorized to vote.";
     }
 }
 
@@ -652,7 +652,7 @@ sub Invalid_email_address { # addr
     "Invalid email address: $_[1]";
 }
 sub Address_opted_out { # addr
-    "This address has opted out from CIVS e-mail: $_[1]"
+    "This address has opted out from CIVS email: $_[1]"
 }
 sub Sending_mail_to_voter_v {
     "Sending mail to voter \"$_[1]\"...";
@@ -939,13 +939,13 @@ sub preference_description {
 }
 
 sub mail_management_instructions {
-    p("CIVS does not store e-mail addresses of voters and it only sends mail when
-       a poll supervisor requests that mail be sent.
-       You can prevent CIVS from sending you any future mail, by entering your email address below.").
-    p("Click the button on the right to request a deactivation code by e-mail. This authentication
+    p("CIVS does not store email addresses of voters and it only sends mail when
+       a poll supervisor who already knows your address requests that mail be sent.
+       You can prevent CIVS from sending you mail, by entering your email address below.").
+    p("Click the button on the right to request a deactivation code by email. This authentication
        step is necessary to prevent people from blocking other users' email.").
     p(b("Warning:"), "If you block mail from CIVS, it will be difficult to re-enable it, because CIVS
-      does user authentication using e-mail addresses. You will not be able to vote in any CIVS polls
+      does user authentication using email addresses. You will not be able to vote in any CIVS polls
       and you will not be able to create CIVS polls.")
 }
 
@@ -983,7 +983,7 @@ sub reactivation_successful {
     'You have successfully reactivated mail to this address.'
 }
 sub someone_has_requested {
-"Someone has requested a code for preventing CIVS from sending e-mail
+"Someone has requested a code for preventing CIVS from sending email
 to you. If it was you, you will know what to do with it. The code is:
 
     $_[1]
@@ -1001,16 +1001,17 @@ sub mail_mgmt_title {
 ## User activation
 
 sub user_activation {
-    'Create user'
+    'Activate user'
 }
 sub user_activation_instructions {
     my ($self, $mail_mgmt_url) = @_;
     p('To vote in private CIVS polls, you must opt in to email
-	communication from the service. There are no automated mailings.
+	communication from the service. CIVS does not store your email
+        address, and there are no automated mailings.
 	You only receive email from the service at the explicit request
 	of poll supervisors, containing credentials needed to vote in private
 	polls or to see the results of polls.').
-    p("To opt in, please enter your email and click the button below. You should then
+    p("To opt in, please enter your email address and click the button below. You should then
         receive an email containing an activation code.
         Note that if you have previously opted out from email, you must use
         the <a href=\"$mail_mgmt_url\">mail management page</a> to reactivate email.")
@@ -1042,6 +1043,26 @@ sub activation_successful
 }
 sub submit_activation_code {
     'Complete activation'
+}
+sub user_not_activated {
+    my ($self, $address) = @_;
+    "Sorry, no user has activated address &lt;$address&gt; to receive email.";
+}
+sub mail_failure_reason {
+    my ($self, $reason) = @_;
+    if ($reason eq 'not activated') {
+        return 'This email address has not been activated by the recipient.'
+    } elsif ($reason eq 'opted out') {
+        return 'This user has opted out from CIVS email.'
+    } else {
+        return 'Unknown reason'
+    }
+}
+sub see_the_failure_table {
+    'Sending mail to some voters did not succeed. See the table below.'
+}
+sub download_failures {
+    'Download table as CSV'
 }
 
 1; # package succeeded!

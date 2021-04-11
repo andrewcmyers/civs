@@ -18,7 +18,7 @@ BEGIN {
     @ISA         = qw(Exporter);
     @EXPORT      = qw(&OpenMail &CloseMail &MailFrom &MailTo
                       &StartMailData &EndMailData &Send &SendHeader
-                      &GetOptouts &SaveOptOuts &RemoveOptOut
+                      &GetOptouts &SaveOptOuts &RemoveOptOut &UserActivated
                       &HasOptOuts &SetOptOutPatterns &CheckOptOutSender
                       &CheckAddr &TrimAddr &CanonicalizeAddr);
 }

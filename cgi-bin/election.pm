@@ -570,14 +570,21 @@ sub SendKeys {
     my $now = time();
     my $load = GetEmailLoad($now);
     my $optouts = &GetOptouts();
+    my @failures = ();
     OpenMail;
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
 	if ($v eq '') { next }
         # print "Checking whether $email_addr can send to $v\n";
+        if (!&UserActivated($optouts, $v)) {
+            push @failures, [('not activated', $v)];
+            # print $tx->user_not_activated($v), $cr;
+            next;
+        }
         if (&CheckOptOutSender($optouts, $v, $email_addr)) {
-            print $tx->opted_out($v), $cr;
-            next
+            push @failures, [('opted out', $v)];
+            # print $tx->opted_out($v), $cr;
+            next;
         }
 	if (!CheckAddr($v)) {
 	    print $tx->Invalid_email_address($v), $cr;
@@ -679,4 +686,5 @@ sub SendKeys {
     SetEmailLoad($now, $load);
     CloseMail;
     STDOUT->flush();
+    return \@failures;
 }

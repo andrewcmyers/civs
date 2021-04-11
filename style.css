@@ -318,3 +318,10 @@ input#save_description_button { display: none }
 div.pubpriv {display: inline-block; width: 45%; min-width: 30ex; padding: 0.5ex}
 #pubpriv_choice {background-color: #f8f8f8}
 fieldset {border-width: 1px}
+
+div.centering { text-align: center }
+#mail_failures table { margin: 0 auto }
+#mail_failures th {
+    text-align: center;
+    padding: 0.5ex
+}

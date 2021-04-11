@@ -44,7 +44,7 @@ sub DeactivationCode {
 if (!defined($code)) {
 # This is a request to send a code
 
-    print start_html(), h1("Deactivation request");
+    print start_html(), h2("Deactivation request");
 
     if ($opted_out) {
         print p($tx->cant_send_email);
@@ -84,7 +84,7 @@ if (!defined($code)) {
     my $expected_code = &DeactivationCode($address);
     if ($code eq $expected_code) {
         if (HasOptOuts($optouts, $address) && $filter_pattern eq '') {
-            RemoveOptOut($optouts, $address);
+            my $pats = SetOptOutPatterns($optouts, $address, '+');
             SaveOptOuts($optouts);
             print 'activated '.$tx->reactivation_successful;
         } else {
