@@ -1059,7 +1059,9 @@ sub mail_failure_reason {
     }
 }
 sub see_the_failure_table {
-    'Sending mail to some voters did not succeed. See the table below.'
+    'It was not possible to send mail to some voters. They will not be able to vote
+    until they receive their personal key in their email, so you may wish to contact
+    them directly. See the table below for details.'
 }
 sub download_failures {
     'Download table as CSV'
