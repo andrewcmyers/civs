@@ -15,6 +15,9 @@ use election;
 
 my $thisurl = $civs_bin_path."/add_voters@PERLEXT@";
 
+my $activate_url = "@PROTO@://".$thishost.$civs_bin_path."/opt_in@PERLEXT@";
+my $mail_mgmt_url = "@PROTO@://".$thishost.$civs_bin_path."/mail_mgmt@PERLEXT@";
+
 my $new_addresses = param('new_addresses');
 my $new_addresses_file = upload('new_addresses_file');
 if (defined($new_addresses_file)) {
@@ -55,7 +58,7 @@ my @mail_failures = @{SendKeys($authorization_key, \@new_addresses)};
 print $tx->Total_of_x_voters_authorized($num_auth), $cr;
 
 if ($#mail_failures >= 0) {
-    print p($tx->see_the_failure_table), $cr;
+    print p($tx->see_the_failure_table($activate_url, $mail_mgmt_url)), $cr;
 }
 
 my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";

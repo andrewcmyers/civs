@@ -1062,9 +1062,14 @@ sub mail_failure_reason {
     }
 }
 sub see_the_failure_table {
-    'It was not possible to send mail to some voters. They will not be able to vote
+    my ($self, $activate_url, $mail_mgmt_url) = @_;
+    "It was not possible to send mail to some voters. They will not be able to vote
     until they receive their personal key in their email, so you may wish to contact
-    them directly. See the table below for details.'
+    them directly. See the table below for details. Voters may find the following
+    links useful:
+    <ul>
+    <li>Activate an email address with CIVS: <a href='$activate_url'>$activate_url</a></li>
+    <li>Deactivate/reactivate an email address: <a href='$mail_mgmt_url'>$mail_mgmt_url</a></li>"
 }
 sub download_failures {
     'Download table as CSV'
