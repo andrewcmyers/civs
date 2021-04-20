@@ -68,7 +68,7 @@ sub CanonicalizeAddr {
     return $addr;
 }
 
-my $optout_file = "@CIVSDATADIR@/do-not-email.txt";
+my $optout_file = "@CIVSDATADIR@/email-control.txt";
 
 
 # Return a reference to a hash table that maps the hashes of
