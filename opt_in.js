@@ -63,10 +63,12 @@ submit_code.addEventListener("click", () => {
               let msg = t.split(" ");
               msg.shift()
               response_area.innerHTML = "<hr><p>" + msg.join(" ") + "</p>"
-          } else if (t.match("^already .*")) {
+          } else if (t.match("^already .*") || t.match("^failed .*")) {
               let msg = t.split(" ");
               msg.shift()
               response_area.innerHTML = "<hr><p>" + msg.join(" ") + "</p>"
+          } else {
+              response_area.innerHTML = "<hr><p><b>Unexpected error:</b> " + t + "</p>"
           }
       },
       t => {

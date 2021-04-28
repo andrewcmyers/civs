@@ -94,7 +94,7 @@ if (!defined($code)) {
     } else {
         print 'failed ', $tx->codes_dont_match;
         if ("@LOCALDEBUG@") {
-            print "expected $expected_code";
+            print "<br>Expected code: $expected_code";
         }
     }
 }
