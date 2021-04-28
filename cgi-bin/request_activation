@@ -25,12 +25,7 @@ my $code = param('code');
 my $optouts = &GetOptouts();
 my $opted_out = &HasOptOuts($optouts, $address);
 
-# if (param("check") eq "true") {
-#    if ($opted_out) { print 1 }
-#    else { print 0 }
-#    exit 0
-# }
-
+# The activation code for this address
 sub ActivationCode {
     my ($address) = @_;
     $address = &CanonicalizeAddr($address);
@@ -38,6 +33,15 @@ sub ActivationCode {
         &GetPrivateHostID;
     }
     return civs_hash('activation', $address, $private_host_id);
+}
+
+# Canonicalize an activation code.
+# Trims off leading and trailing whitespace.
+sub CleanCode {
+    my ($code) = @_;
+    $code =~ s/^(\s)+//;
+    $code =~ s/(\s)+$//;
+    return $code;
 }
 
 if (!defined($code)) {
@@ -77,6 +81,7 @@ if (!defined($code)) {
     }
 } else {
 # This is a request to use a code.
+    $code = &CleanCode($code);
     my $expected_code = &ActivationCode($address);
     if ($code eq $expected_code) {
         if (UserActivated($optouts, $address)) {
