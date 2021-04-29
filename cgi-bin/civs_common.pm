@@ -23,7 +23,7 @@ BEGIN {
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
                       &unique_elements &civs_hash &system_load &CheckLoad
 		      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
-                      &TrySomePolls);
+                      &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -250,13 +250,22 @@ sub Log {
     close(CIVS_LOG);
 }
 
+sub AcquireGlobalLock {
+    open(LOCK, $lockfile) or die "Can't open global lock file $lockfile: $!\n";
+    flock LOCK, &LOCK_EX;
+}
+
+sub ReleaseGlobalLock {
+    flock LOCK, &LOCK_UN;
+    close(LOCK);
+}
+
 # SecureNonce() is an unpredictable nonce that cannot
 # be predicted from the future state of the system (except
 # for data derived from the nonce itself).
 sub SecureNonce {
-    GetPrivateHostID;
-    open(LOCK, $lockfile) or die "Can't open global lock file $lockfile: $!\n";
-    flock LOCK, &LOCK_EX;
+    &GetPrivateHostID;
+    &AcquireGlobalLock;
 
     open(NONCEFILE, "<$nonce_seed_file") 
 	    or die "Can't open nonce file for read: $!\n";
@@ -272,8 +281,7 @@ sub SecureNonce {
 	or die "Can't open nonce file for write: $!\n";
     print NONCEFILE $seed.$cr;
     close(NONCEFILE);
-    flock LOCK, &LOCK_UN;
-    close(LOCK);
+    &ReleaseGlobalLock;
     return $ret;
 }
 

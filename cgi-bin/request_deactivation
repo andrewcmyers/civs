@@ -19,6 +19,8 @@ if (!CheckAddr($address)) {
     exit 0;
 }
 
+&AcquireGlobalLock;
+
 my $code = param('code');
 my $optouts = &GetOptouts();
 my $opted_out = &HasOptOuts($optouts, $address);
@@ -43,6 +45,8 @@ sub DeactivationCode {
 
 if (!defined($code)) {
 # This is a request to send a code
+
+    &ReleaseGlobalLock;
 
     print start_html(), h2("Deactivation request");
 
@@ -99,6 +103,7 @@ if (!defined($code)) {
         }
         print end_html();
     }
+    &ReleaseGlobalLock;
 }
 
 1;

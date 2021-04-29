@@ -21,6 +21,8 @@ if (!CheckAddr($address)) {
     exit 0;
 }
 
+&AcquireGlobalLock;
+
 my $code = param('code');
 my $optouts = &GetOptouts();
 my $opted_out = &HasOptOuts($optouts, $address);
@@ -46,6 +48,8 @@ sub CleanCode {
 
 if (!defined($code)) {
 # This is a request to send a code
+
+    &ReleaseGlobalLock;
 
     if ($opted_out) {
         print start_html(), p($tx->cant_send_email), end_html();
@@ -97,6 +101,7 @@ if (!defined($code)) {
             print "<br>Expected code: $expected_code";
         }
     }
+    &ReleaseGlobalLock;
 }
 
 1;
