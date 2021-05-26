@@ -8,6 +8,7 @@ use MIME::Base64;
 use Authen::SASL;
 use Net::SMTP;
 use IO::Socket::SSL;
+use Fcntl;
 
 # Export the package interface
 BEGIN {
@@ -68,7 +69,7 @@ sub CanonicalizeAddr {
     return $addr;
 }
 
-my $optout_file = "@CIVSDATADIR@/email-control.txt";
+my $optout_file = "@CIVSDATADIR@/elections/email-control.txt";
 
 
 # Return a reference to a hash table that maps the hashes of
@@ -97,7 +98,12 @@ sub GetOptouts {
 
 sub SaveOptOuts {
     my ($optouts) = @_;
-    open (OPTOUTS, ">$optout_file") || print "<i>Internal error saving opt-out information</i>", $cr;
+    my $temp_output = "$optout_file.$$";
+    if (!sysopen OPTOUTS, $temp_output, O_WRONLY|O_CREAT|O_TRUNC) {
+	&Log("Could not open top polls temp output file $temp_output");
+        print "<i>Internal error saving opt-out information (open)</i>", $cr;
+	return;
+    }
     foreach my $h (keys %$optouts) {
         if (defined($optouts->{$h})) {
             my @patterns = @{$optouts->{$h}};
@@ -105,6 +111,10 @@ sub SaveOptOuts {
         }
     }
     close(OPTOUTS);
+    if (!rename($temp_output, $optout_file)) {
+	&Log("Could not rename top polls temp output file $temp_output");
+        print "<i>Internal error saving opt-out information (rename $temp_output $optout_file)</i>", $cr;
+    }
 }
 
 sub optout_key {
