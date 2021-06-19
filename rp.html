@@ -1,26 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-                "http://www.w3.org/TR/html4/loose.dtd">
-<html><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CIVS completion algorithms</title>
   <link rel="canonical" href="@CIVSURL@/rp.html">
   <link rel="stylesheet" type="text/css" href="style.css" />
   <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
-  <script src="ezdom.js" type="text/javascript"></script>
-  <script src="civs_hdr.js" type="text/javascript"></script>
+  <script src="ezdom.js"></script>
+  <script src="civs_hdr.js"></script>
 </head>
 
 <body>
 
-<script type="text/javascript">
+<script>
 var body = document.getElementsByTagName('body')[0]
 body.appendChild(create_header("Condorcet completion in CIVS"))
 </script>
 
 <div class="contents">
 <div style="text-align: center; float: right; padding: 0 0 2em 2em">
-<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Nicolas_de_Condorcet.PNG/168px-Nicolas_de_Condorcet.PNG"><br>
+<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Nicolas_de_Condorcet.PNG/168px-Nicolas_de_Condorcet.PNG" alt="The Marquis de Condorcet"><br>
 The Marquis de Condorcet
 </div>
 
@@ -136,9 +136,7 @@ will show if randomization was needed and used by MAM. If there is a
 lot of concern about strategic voting (particularly, burying attacks),
 Condorcet-IRV is a reasonable candidate. </p>
 
-<a name="minimax">
-<h2>Minimax-PM</h2>
-</a>
+<h2 id=minimax>Minimax-PM</h2>
 
 <p>
 <a href="https://en.wikipedia.org/wiki/Minimax_Condorcet">Minimax</a> (also known
@@ -164,9 +162,7 @@ Darlington's simulation-based study</a> showed Minimax-PM to be the best
 Condorcet method.
 </p>
 
-<a name="rp">
-<h2>CIVS Ranked Pairs</h2>
-</a>
+<h2 id=rp>CIVS Ranked Pairs</h2>
 
 <p>The CIVS Ranked Pairs completion rule is a deterministic
 variant of Eppley's MAM method;
@@ -225,9 +221,7 @@ that preferences involving candidates from higher-ranked Schwartz sets are not
 germane for this comparison).
 </p>
 
-<a name="runoff">
-<h2>Condorcet-IRV</h2>
-</a>
+<h2 id=runoff>Condorcet-IRV</h2>
 
 <p>
 The Condorcet-IRV rule is a Condorcet completion rule that uses an IRV-like
