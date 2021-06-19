@@ -52,10 +52,10 @@ CGIBINDIR='/usr/lib/cgi-bin/civs'
 CIVSDATADIR='/home/username/civs-data'
 
 # The URL path to the CIVS CGI scripts.  This is relative to $THISHOST.
-# I.e., the scripts will be found at $PROTO://$THISHOST$CIVSBINURL.
+# I.e., the scripts will be found at ${PROTO}://$THISHOST$CIVSBINURL.
 CIVSBINURL='/cgi-bin/civs'
 
-# The URL to the homepage of the CIVS server, relative to http://$THISHOST
+# The URL to the homepage of the CIVS server, relative to ${PROTO}://$THISHOST
 CIVSURL='/civs'
 
 # The extension that should be added to Perl scripts so that the
