@@ -1042,7 +1042,19 @@ sub already_activated {
 }
 sub activation_successful
 {
-    'Email address successfully activated.'
+    (my $self, my $pats, my $invites) = @_;
+    my @invites = @{$invites};
+    if ($#invites >= 0) {
+        my @rows = ();
+        foreach $invite (@invites) {
+            (my $url, my $title) = @{$invite};
+            push @rows, a({-href => $url}, $title);
+        }
+        return div(p('Email address successfully activated. Pending poll invitation(s):'),
+                   ul(\@rows));
+    } else {
+        'Email address successfully activated.'
+    }
 }
 sub submit_activation_code {
     'Complete activation'

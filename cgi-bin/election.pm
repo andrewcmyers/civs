@@ -559,6 +559,33 @@ sub GetEmailLoad {
     return $load;
 }
 
+# Return the proper URL for the voter.  Also update $num_auth and $voter_keys
+# appropriately, and print a message about the user already being authorized if
+# they are.
+#
+sub VotingUrl {
+    (my $v, my $election_id, my $authorization_key) = @_;
+    my $url = "";
+    if ($public eq 'yes') {
+        $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
+        $url .= "&akey=$authorization_key"
+            if (&ElectionUsesAuthorizationKey);
+    } else {
+        my $voter_key = &GenerateVoterKey($v, $authorization_key);
+        my $hash_voter_key = civs_hash($voter_key);
+        $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
+                    ."&key=$voter_key";
+        if ($voter_keys{$hash_voter_key}) {
+            # This email address has already been added to the poll
+            print $tx->Voter_v_already_authorized($v), ' ';
+        } else {
+            $voter_keys{$hash_voter_key} = 1;
+            $num_auth++; $edata{'num_auth'} = $num_auth;
+        }
+    }
+    return $url
+}
+
 # Construct new voter keys for all of the voters sent in @_.
 # Send all of the voters their keys, with logging to STDOUT.
 # Record the keys in the database, and update the number of
@@ -575,15 +602,17 @@ sub SendKeys {
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
 	if ($v eq '') { next }
+        my $url = &VotingUrl($v, $election_id, $authorization_key);
+
         # print "Checking whether $email_addr can send to $v\n";
         if (!&UserActivated($optouts, $v)) {
             push @failures, [('not activated', $v)];
-            # print $tx->user_not_activated($v), $cr;
+            &RecordInvitation($v, $url, $title);
             next;
         }
         if (&CheckOptOutSender($optouts, $v, $email_addr)) {
             push @failures, [('opted out', $v)];
-            # print $tx->opted_out($v), $cr;
+            &RecordInvitation($v, $url, $title);
             next;
         }
 	if (!CheckAddr($v)) {
@@ -592,28 +621,10 @@ sub SendKeys {
 	}
         $load++;
 
-        my $url = "";
-        if ($public eq 'yes') {
-            $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
-            $url .= "&akey=$authorization_key"
-                if (&ElectionUsesAuthorizationKey);
-        } else {
-            my $voter_key = GenerateVoterKey($v, $authorization_key);
-            my $hash_voter_key = civs_hash($voter_key);
-            if ($voter_keys{$hash_voter_key}) {
-                # This email address has already been added to the poll
-                print $tx->Voter_v_already_authorized($v), ' ';
-            } else {
-                $voter_keys{$hash_voter_key} = 1;
-                $num_auth++; $edata{'num_auth'} = $num_auth;
-            }
-            $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
-                        ."&key=$voter_key";
-        }
-
         if ($local_debug) {
             print "voter link: <a href=\"$url\">$url</a>\n";
         } else {
+# XXX This should be factored out into its own subroutine
 	    sub SendURL {
 	      (my $url) = @_;
 	      Send MakeURL($url);
@@ -687,4 +698,17 @@ sub SendKeys {
     CloseMail;
     STDOUT->flush();
     return \@failures;
+}
+
+sub RecordInvitation {
+    (my $addr, my $url) = @_;
+    $addr = CanonicalizeAddr($addr);
+    my $key = &OptOutKey($addr);
+    my $fname = "@CIVSDATADIR@/invites/$key";
+    if (open(INVITES, ">>", $fname)) {
+        print INVITES "$url $title\n";
+    } else {
+        Log("Could not open invite file $fname for writing\n");
+    }
+    close(INVITES) || Log("Error closing invite file $fname");
 }

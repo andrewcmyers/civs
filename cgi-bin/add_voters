@@ -68,8 +68,8 @@ print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>'), $cr;
 if ($#mail_failures >= 0) {
     my @rows = Tr(th('Address'), th('Reason'));
     foreach my $rowref (@mail_failures) {
-        my @row = @{$rowref};
-        push @rows, Tr(td($row[1]), td($tx->mail_failure_reason($row[0], $row[1])));
+        my ($failure_type, my $addr) =  @{$rowref};
+        push @rows, Tr(td($addr), td($tx->mail_failure_reason($failure_type, $addr)));
     }
     print div({-class => "centering"}, div({-id => 'mail_failures'},
         button(-id => 'download_failures', -value => $tx->download_failures,

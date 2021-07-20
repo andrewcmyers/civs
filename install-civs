@@ -30,6 +30,7 @@ TestAndCreateDir $HTMLDIR;
 TestAndCreateDir $CGIBINDIR;
 TestAndCreateDir $CIVSDATADIR;
 TestAndCreateDir $CIVSDATADIR/elections;
+TestAndCreateDir $CIVSDATADIR/invites;
 
 rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
 

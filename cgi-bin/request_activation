@@ -93,7 +93,21 @@ if (!defined($code)) {
         } else {
             my $pats = SetOptOutPatterns($optouts, $address, '+');
             SaveOptOuts($optouts);
-            print 'activated ', $tx->activation_successful($pats);
+            my $key = &OptOutKey(&CanonicalizeAddr($address));
+            my $fname = "@CIVSDATADIR@/invites/$key";
+            my @rows = ();
+            my $invites = "";
+            if (open(INVITES, "<", $fname)) {
+                $invites = <INVITES>;
+                my @lines = split /\n/, $invites;
+                for my $line (@lines) {
+                    chomp $line;
+                    (my $url, my $title) = split / /, $line, 2;
+                    push @rows, [$url, $title];
+                }
+                close(INVITES)
+            }
+            print 'activated ', $tx->activation_successful($pats, \@rows);
         }
     } else {
         print 'failed ', $tx->codes_dont_match;

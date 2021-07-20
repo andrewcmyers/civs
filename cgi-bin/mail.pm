@@ -20,7 +20,7 @@ BEGIN {
     @EXPORT      = qw(&OpenMail &CloseMail &MailFrom &MailTo
                       &StartMailData &EndMailData &Send &SendHeader
                       &GetOptouts &SaveOptOuts &RemoveOptOut &UserActivated
-                      &HasOptOuts &SetOptOutPatterns &CheckOptOutSender
+                      &HasOptOuts &OptOutKey &SetOptOutPatterns &CheckOptOutSender
                       &CheckAddr &TrimAddr &CanonicalizeAddr);
 }
 
@@ -117,7 +117,8 @@ sub SaveOptOuts {
     }
 }
 
-sub optout_key {
+# Returns the key for an canonicalized email address
+sub OptOutKey {
     civs_hash($_[0])
 }
 
@@ -125,14 +126,14 @@ sub optout_key {
 sub UserActivated {
     my ($optouts, $receiver) = @_;
     $receiver = &CanonicalizeAddr($receiver);
-    return defined($optouts->{optout_key($receiver)});
+    return defined($optouts->{&OptOutKey($receiver)});
 }
 
 # Does this receiver have any opt-outs defined?
 sub HasOptOuts {
     my ($optouts, $receiver) = @_;
     $receiver = &CanonicalizeAddr($receiver);
-    my $mapping = $optouts->{optout_key($receiver)};
+    my $mapping = $optouts->{&OptOutKey($receiver)};
     if (!defined($mapping)) { return 0 }
     my @patterns = @{$mapping};
     if ($#patterns == 0 && $patterns[0] eq '+') { return 0 }
@@ -145,7 +146,7 @@ sub CheckOptOutSender {
     my ($optouts, $receiver, $sender) = @_;
     $receiver = &CanonicalizeAddr($receiver);
     $sender = &CanonicalizeAddr($sender);
-    my $mapping = $optouts->{optout_key($receiver)};
+    my $mapping = $optouts->{OptOutKey($receiver)};
     if (!defined($mapping)) {
         return 0;
     }
@@ -192,14 +193,14 @@ sub SetOptOutPatterns {
         @valid_pats = ('*');
     }
     $receiver = &CanonicalizeAddr($receiver);
-    $optouts->{optout_key($receiver)} = \@valid_pats;
+    $optouts->{&OptOutKey($receiver)} = \@valid_pats;
     return "@valid_pats";
 }
 
 sub RemoveOptOut {
     (my $optouts, my $addr) = @_;
     $addr = &CanonicalizeAddr($addr);
-    delete $optouts->{optout_key($addr)};
+    delete $optouts->{&OptOutKey($addr)};
 }
 
 sub Send {
