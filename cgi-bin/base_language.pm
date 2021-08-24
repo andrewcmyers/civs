@@ -1018,8 +1018,8 @@ sub user_activation_instructions {
         receive an email containing an activation code.
         Note that if you have previously opted out from email, you must use
         the <a href=\"$mail_mgmt_url\">mail management page</a> to reactivate email.
-        If you use some mail blocking service, you may need to whitelist the
-        CIVS email address as an authorized sender (@SUPERVISOR@)
+        If you use a mail blocking service, you may need to whitelist the
+        CIVS email address as an authorized sender (".'@SUPERVISOR@'.").
         ")
 }
 sub opt_in_label {
