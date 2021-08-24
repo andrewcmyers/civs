@@ -1017,7 +1017,10 @@ sub user_activation_instructions {
     p("To opt in, please enter your email address and click the button below. You should then
         receive an email containing an activation code.
         Note that if you have previously opted out from email, you must use
-        the <a href=\"$mail_mgmt_url\">mail management page</a> to reactivate email.")
+        the <a href=\"$mail_mgmt_url\">mail management page</a> to reactivate email.
+        If you use some mail blocking service, you may need to whitelist the
+        CIVS email address as an authorized sender (@SUPERVISOR@)
+        ")
 }
 sub opt_in_label {
     'Request activation code'
@@ -1075,13 +1078,19 @@ sub mail_failure_reason {
 }
 sub see_the_failure_table {
     my ($self, $activate_url, $mail_mgmt_url) = @_;
-    "It was not possible to send mail to some voters. They will not be able to vote
-    until they receive their personal key in their email, so you may wish to contact
-    them directly. See the table below for details. Voters may find the following
-    links useful:
+    "<p>It was not possible to send mail to some voters, for reasons listed in the
+    table below. Voters will not be able to vote until they receive their personal key,
+    so you should contact them directly. Voters are likely to find the following
+    links useful:</p>
     <ul>
     <li>Activate an email address with CIVS: <a href='$activate_url'>$activate_url</a></li>
-    <li>Deactivate/reactivate an email address: <a href='$mail_mgmt_url'>$mail_mgmt_url</a></li>"
+    <li>Deactivate/reactivate an email address: <a href='$mail_mgmt_url'>$mail_mgmt_url</a></li>
+    </ul>
+    <p>
+    Note that when voters activate their email addresses, they are notified about any
+    pending invitations to vote in polls.
+    </p>
+    "
 }
 sub download_failures {
     'Download table as CSV'
