@@ -860,7 +860,7 @@ sub No_ballots_were_cast {
     "No ballots were cast in this poll.";
 }
 sub Ballot_reporting_was_not_enabled {
-    "Ballot reporting was not enabled for this poll.";
+    'Ballot reporting was not enabled for this poll.'
 }
 sub Tied {
     "<i>Tied</i>:";
@@ -878,14 +878,14 @@ sub undefeated_explanation {
     '&nbsp;&nbsp;(Not defeated in any contest vs. another choice)';
 }
 sub Choices_shown_in_red_have_tied {
-    "Choices shown in red have tied for being selected.
-	You may wish to select among them randomly.";
+    'Choices shown in red have tied for being selected.
+	You may wish to select among them randomly.'
 }
 sub Condorcet_winner {
-    "Condorcet winner";
+    "Condorcet winner"
 }
 sub Choices_in_individual_pref_order {
-    'Choices (in individual preference order)';
+    'Choices (in individual preference order)'
 }
 
 sub What_is_this { # url
@@ -902,16 +902,16 @@ sub Presence_of_a_green_entry_etc {
     'The presence of a green entry below
 	the diagonal (and a corresponding red one above)
 	means that a preference was ignored because
-	it conflicted with other, stronger preferences.';
+	it conflicted with other, stronger preferences.'
 }
 sub Random_tie_breaking_used {
 'Random tie breaking was used to
 arrive at this ordering, as per the MAM
 algorithm. This may have affected the ordering
-of the choices.';
+of the choices.'
 }
 sub No_random_tie_breaking_used {
-    'No random tie breaking was needed to arrive at this ordering.';
+    'No random tie breaking was needed to arrive at this ordering.'
 }
 
 # beatpath
@@ -992,7 +992,7 @@ Keep this email because you will need this code if you want to use the
 service in the future."
 }
 sub deactivation_code_subject {
-    "Deactivation code for CIVS mail"
+    'Deactivation code for CIVS mail'
 }
 sub mail_mgmt_title {
     'Mail Management'
@@ -1004,7 +1004,7 @@ sub user_activation {
     'Activate user'
 }
 sub activation_code_subject {
-    "Activation code for using CIVS"
+    'Activation code for using CIVS'
 }
 sub user_activation_instructions {
     my ($self, $mail_mgmt_url) = @_;
@@ -1069,11 +1069,11 @@ sub user_not_activated {
 sub mail_failure_reason {
     my ($self, $reason) = @_;
     if ($reason eq 'not activated') {
-        return 'This email address has not been activated by the recipient.'
+        'This email address has not been activated by the recipient.'
     } elsif ($reason eq 'opted out') {
-        return 'This user has opted out from CIVS email.'
+        'This user has opted out from CIVS email.'
     } else {
-        return 'Unknown reason'
+        'Unknown reason'
     }
 }
 sub see_the_failure_table {
