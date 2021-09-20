@@ -119,7 +119,7 @@ if (!IsStarted) {
 		$public));
 	    print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>', $cr;
 	    print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>', $cr;
-	    print '<script src="@CIVSURL@/vote.js"></script>', $cr;
+	    print '<script src="@PROTO@://@THISHOST@@CIVSURL@/vote.js"></script>', $cr;
 	    print '<script>setup()</script>', $cr;
 	    print '</textarea><br>';
     }
