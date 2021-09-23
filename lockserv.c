@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
     TRY("socket", (sock = socket(PF_UNIX, SOCK_STREAM, 0)));
     
     server.sun_family = AF_UNIX;
-    strncpy(server.sun_path, argv[1], UNIX_PATH_MAX);
+    strncpy(server.sun_path, argv[1], sizeof(server.sun_path));
     TRY(argv[1], bind(sock, (struct sockaddr *)&server, sizeof(server)));
     TRY("listen", listen(sock, 5));
 
