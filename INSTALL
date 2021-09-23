@@ -57,6 +57,16 @@ INSTALLATION INSTRUCTIONS
       Net::SSLeay (possibly)
       Also install openssl and libssl-dev
 
+   On a Debian-based distribution, these can be installed with:
+
+      sudo apt install \
+		libhtml-tagfilter-perl \
+		libhtml-parser-perl \
+		libhtml-tagset-perl \
+		libcgi-pm-perl \
+		libauthen-sasl-perl \
+		libnet-ssleay-perl
+
 5. Test the server installation by browsing to $CIVSURL, creating
    an election, adding yourself as a voter, opening the election,
    voting in the election, closing the election, and viewing the
