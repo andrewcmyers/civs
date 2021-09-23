@@ -34,7 +34,7 @@ int lingerval = 1;
  * the connection itself.
  */
  
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
     char *hostname;
     int num;
     int *clients;
@@ -87,7 +87,7 @@ main(int argc, char **argv) {
 		}
 	    }
 	    if (FD_ISSET(sock, &rds)) {
-		char buf[10];
+		char buf[32];
 		TRY("accept", fd = accept(sock, (struct sockaddr *)&client, &client_size));
 		if (num_held >= num) {
 		    // fprintf(stderr, "Rejected acquire attempt\n");
@@ -101,4 +101,5 @@ main(int argc, char **argv) {
 	    }
 	}
     }
+    return 0;
 }
