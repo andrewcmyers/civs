@@ -39,6 +39,34 @@ INSTALLATION INSTRUCTIONS
      subdirectory such as extra/.
    * Add index.html.var to the DirectoryIndex option (may be in dir.conf)
 
+   For example:
+
+        DocumentRoot /srv/webroot/html
+        <Directory /srv/webroot/html>
+                Options Indexes FollowSymLinks
+                AllowOverride None
+                Require all granted
+        </Directory>
+
+        <Directory "/srv/webroot/html/civs">
+            AddHandler type-map .var
+            DirectoryIndex index.html.var
+
+            AllowOverride None
+            Options None +MultiViews
+            Require all granted
+        </Directory>
+
+        ScriptAlias /cgi-bin "/srv/webroot/cgi-bin"
+        <Directory "/srv/webroot/cgi-bin">
+            AddHandler cgi-script .cgi .pl
+            AddHandler type-map .var
+
+            AllowOverride None
+            Options None +MultiViews +ExecCGI
+            Require all granted
+        </Directory>
+
 4. Install necessary Perl modules using apt-get, cpan or cpanm (cpanminus):
 
    For basic operation:
