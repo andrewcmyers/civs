@@ -35,17 +35,14 @@ int lingerval = 1;
  */
  
 int main(int argc, char **argv) {
-    char *hostname;
     int num;
     int *clients;
     int num_held = 0;
     int sock;
-    int input_closed = 0;
     struct sockaddr_in client;
     socklen_t client_size;
     int fd;
     int maxfd;
-    struct hostent *h;
     struct sockaddr_un server;
     if (argc != 3 || 0 >= (num = atoi(argv[2]))) {
 	fprintf(stderr, "Usage: %s <file> <num>\n", argv[0]);
