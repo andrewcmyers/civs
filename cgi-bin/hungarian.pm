@@ -308,7 +308,7 @@ sub instructions1 { # num_winners, end, name, email
         Ha segítségre van szükséged, keresd a szavazás gazdáját.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($self, $no_opinion, my $prop, my $combined, my $civs_url) = @_;
+    my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;
     if (!$prop || !$combined) {
     $ret = "Rendelj a következő lehetőségek mindegyikéhez egy rangot,
