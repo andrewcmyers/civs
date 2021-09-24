@@ -322,7 +322,7 @@ sub instructions1 { # num_winners, end, name, email
 	    N'hésitez pas à le contacter si vous avez besoin d'aide.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($self, $no_opinion, my $prop, my $combined, my $civs_url) = @_;
+    my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;   
     if (!$prop || !$combined) {
 	$ret = "Merci de bien vouloir classer les candidats ou les propositions

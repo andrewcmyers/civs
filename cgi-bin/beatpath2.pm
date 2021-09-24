@@ -180,6 +180,7 @@ sub rank_candidates {
 my $cr = "\n";
 
 sub Print {
+    no warnings 'once';
     print main::RESULTS @_;
 }
 

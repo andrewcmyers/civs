@@ -23,7 +23,6 @@ if (!CheckAddr($address)) {
 
 &AcquireGlobalLock;
 
-my $code = param('code');
 my $optouts = &GetOptouts();
 my $opted_out = &HasOptOuts($optouts, $address);
 
@@ -88,27 +87,29 @@ if (!defined($code)) {
     $code = &CleanCode($code);
     my $expected_code = &ActivationCode($address);
     if ($code eq $expected_code) {
+        my $report;
         if (UserActivated($optouts, $address)) {
-            print 'already ', $tx->already_activated;
+            $report = 'already ' . $tx->already_activated;
         } else {
-            my $pats = SetOptOutPatterns($optouts, $address, '+');
-            SaveOptOuts($optouts);
-            my $key = &OptOutKey(&CanonicalizeAddr($address));
-            my $fname = "@CIVSDATADIR@/invites/$key";
-            my @rows = ();
-            my $invites = "";
-            if (open(INVITES, "<", $fname)) {
-                $invites = <INVITES>;
-                my @lines = split /\n/, $invites;
-                for my $line (@lines) {
-                    chomp $line;
-                    (my $url, my $title) = split / /, $line, 2;
-                    push @rows, [$url, $title];
-                }
-                close(INVITES)
-            }
-            print 'activated ', $tx->activation_successful($pats, \@rows);
+            $report = 'activated ' . $tx->activation_successful;
         }
+        my $pats = SetOptOutPatterns($optouts, $address, '+');
+        SaveOptOuts($optouts);
+        my $key = &OptOutKey(&CanonicalizeAddr($address));
+        my $fname = "@CIVSDATADIR@/invites/$key";
+        my @rows = ();
+        my $invites = "";
+        if (open(INVITES, "<", $fname)) {
+            $invites = <INVITES>;
+            my @lines = split /\n/, $invites;
+            for my $line (@lines) {
+                chomp $line;
+                (my $url, my $title) = split / /, $line, 2;
+                push @rows, [$url, $title];
+            }
+            close(INVITES)
+        }
+        print $report, ' ', $tx->pending_invites($pats, \@rows);
     } else {
         print 'failed ', $tx->codes_dont_match;
         if ("@LOCALDEBUG@") {

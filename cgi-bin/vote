@@ -295,7 +295,9 @@ sub AddWritein {
 	print p(b($tx->name_of_writein_is_empty)), $cr;
 	$ok = 0;
     }
-    $writein .= " (write-in)";
+    if (!($writein =~ m/\(write-in\)\Z/)) {
+        $writein .= " (write-in)";
+    }
     my $p = ProjectName($writein);
     for (my $i = 0; $ok && $i < $num_choices; $i++) {
 	if (ProjectName($choices[$i]) eq $p) {

@@ -311,7 +311,7 @@ sub instructions1 { # winners_text, end, name, email
 	    Contattare il supervisore in caso di problemi.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($self, $no_opinion, my $prop, my $combined, my $civs_url) = @_;
+    my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;
     if (!$prop || !$combined) {
 	$ret = "Classifica tutte le scelte disponibili in base

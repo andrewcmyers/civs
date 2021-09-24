@@ -59,7 +59,7 @@ deactivate.addEventListener("click", () => {
               response_area.innerHTML = "<hr><p>" + msg.join(" ") + "</p>"
               deactivate.value = reactivate_msg
               sendcode.disabled = true
-          } else if (t.match("^activated .*")) {
+          } else if (t.match("^(activated|already) .*")) {
               let msg = t.split(" ");
               msg.shift()
               response_area.innerHTML = "<hr><p>" + msg.join(" ") + "</p>"
