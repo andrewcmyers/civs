@@ -39,6 +39,34 @@ INSTALLATION INSTRUCTIONS
      subdirectory such as extra/.
    * Add index.html.var to the DirectoryIndex option (may be in dir.conf)
 
+   For example:
+
+        DocumentRoot /srv/webroot/html
+        <Directory /srv/webroot/html>
+                Options Indexes FollowSymLinks
+                AllowOverride None
+                Require all granted
+        </Directory>
+
+        <Directory "/srv/webroot/html/civs">
+            AddHandler type-map .var
+            DirectoryIndex index.html.var
+
+            AllowOverride None
+            Options None +MultiViews
+            Require all granted
+        </Directory>
+
+        ScriptAlias /cgi-bin "/srv/webroot/cgi-bin"
+        <Directory "/srv/webroot/cgi-bin">
+            AddHandler cgi-script .cgi .pl
+            AddHandler type-map .var
+
+            AllowOverride None
+            Options None +MultiViews +ExecCGI
+            Require all granted
+        </Directory>
+
 4. Install necessary Perl modules using apt-get, cpan or cpanm (cpanminus):
 
    For basic operation:
@@ -56,6 +84,16 @@ INSTALLATION INSTRUCTIONS
       IO:Socket::SSL
       Net::SSLeay (possibly)
       Also install openssl and libssl-dev
+
+   On a Debian-based distribution, these can be installed with:
+
+      sudo apt install \
+		libhtml-tagfilter-perl \
+		libhtml-parser-perl \
+		libhtml-tagset-perl \
+		libcgi-pm-perl \
+		libauthen-sasl-perl \
+		libnet-ssleay-perl
 
 5. Test the server installation by browsing to $CIVSURL, creating
    an election, adding yourself as a voter, opening the election,
