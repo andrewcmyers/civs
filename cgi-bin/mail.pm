@@ -49,6 +49,7 @@ sub CheckAddr {
     return ($addr =~ m/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2,8})$/i);
 }
 
+# Remove leading and trailing whitespace from a string
 sub TrimAddr {
     (my $addr) = @_;
     $addr =~ s/^(\s)+//;
@@ -57,6 +58,9 @@ sub TrimAddr {
     return $addr;
 }
 
+# Convert an email address into canonical form.  Leading and trailing
+# whitespace are removed, the address is put into lower case, and dots are
+# removed from gmail addresses.  This is idempotent.
 sub CanonicalizeAddr {
     (my $addr) = @_;
     $addr = TrimAddr($addr);

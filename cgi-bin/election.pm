@@ -498,7 +498,8 @@ sub ElectionLog {
 
 # Generate a voter key as the hash of the voter's email,
 # the election's authorization key, and the server's private key.
-# Assumes that the authorization key has been validated.
+# Assumes that the authorization key has been validated and that
+# the email address is in canonical form.
 sub GenerateVoterKey {
     (my $voter_email, my $authorization_key) = @_;
     my $voter_key = civs_hash($voter_email, $authorization_key,
@@ -561,10 +562,11 @@ sub GetEmailLoad {
 
 # Return the proper URL for the voter.  Also update $num_auth and $voter_keys
 # appropriately, and print a message about the user already being authorized if
-# they are.
+# they are. The voter email address does not need to be in canonical form.
 #
 sub VotingUrl {
-    (my $v, my $election_id, my $authorization_key) = @_;
+    (my $email, my $election_id, my $authorization_key) = @_;
+    my $v = &CanonicalizeAddr($email);
     my $url = "";
     if ($public eq 'yes') {
         $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
@@ -577,7 +579,7 @@ sub VotingUrl {
                     ."&key=$voter_key";
         if ($voter_keys{$hash_voter_key}) {
             # This email address has already been added to the poll
-            print $tx->Voter_v_already_authorized($v), ' ';
+            print $tx->Voter_v_already_authorized($email), ' ';
         } else {
             $voter_keys{$hash_voter_key} = 1;
             $num_auth++; $edata{'num_auth'} = $num_auth;
