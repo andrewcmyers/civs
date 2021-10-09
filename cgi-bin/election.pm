@@ -348,6 +348,7 @@ sub IsWriteinName {
 
 sub CheckNotVoted {
     my ($voter_key, $old_voter_key, $voter) = @_;
+    # print pre("Checking for previous vote by ", $voter_key, " hash ", civs_hash($voter_key));
     if ($used_voter_keys{&civs_hash($voter_key)}) {
 	print h1($tx->Already_voted);
 	print p($tx->vote_has_already_been_cast);

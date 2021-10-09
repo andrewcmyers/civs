@@ -33,6 +33,7 @@ use top_polls;
 # 6. To reload a set of rankings
 
 my $top_polls_refresh = 24 * 3600; # daily refresh
+my $allow_debug_votes = 0;         # allow multiple votes from the same voter in debug mode?
 
 my $voter = param('voter'); # nearly obsolete
 my $old_voter_key = param('voter_key'); # nearly obsolete
@@ -67,7 +68,7 @@ if ($public ne 'yes') {
     }
 }
 
-if (!$local_debug) {
+if (!$allow_debug_votes || !$local_debug) {
     CheckNotVoted($voter_key, $old_voter_key, $voter);
 }
 
@@ -176,6 +177,7 @@ sub ProcessVote {
     $vdata{$ballot_key} = $vote;
     $vdata{'num_votes'}++;
     $used_voter_keys{civs_hash($voter_key)} = 1;
+    # print pre("recording vote by  ", $voter_key, " hash ", civs_hash($voter_key)), br();
     &SyncVoterKeys;
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
     if ($recorded_voters) {
