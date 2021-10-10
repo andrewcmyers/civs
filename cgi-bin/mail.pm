@@ -58,13 +58,16 @@ sub TrimAddr {
     return $addr;
 }
 
-# Convert an email address into canonical form.  Leading and trailing
-# whitespace are removed, the address is put into lower case, and dots are
-# removed from gmail addresses.  This is idempotent.
+# Convert an email address into canonical form.  All whitespace is removed, the
+# address is put into lower case, and dots are removed from gmail addresses. If
+# the address contains a part in angle brackets, that part is extracted and
+# canonicalized.  This transformation is idempotent.
 sub CanonicalizeAddr {
     (my $addr) = @_;
-    $addr = TrimAddr($addr);
+    (my $inner_addr) = $addr =~ m/<(.*)>/;
+    if ($inner_addr) { $addr = $inner_addr }
     $addr = lc $addr;
+    $addr =~ s/\s+//g;
     if ($addr =~ m/\@gmail.com$/) { # remove . from gmail addresses
         (my $base) = $addr =~ m/^([^@]*)\@gmail.com/;
         $base =~ s/\.//g;
