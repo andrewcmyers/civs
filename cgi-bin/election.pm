@@ -484,7 +484,7 @@ sub CheckElectionID {
 # Log the string provided
 sub ElectionLog {
     my $log_msg = shift;
-    chomp($log_msg);
+    $log_msg =~ s/(\s)+$//;
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     # print pre("trying to log to $election_log");
     if (!open ELECTION_LOG, ">>$election_log") {

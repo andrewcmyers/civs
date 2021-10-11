@@ -103,7 +103,7 @@ if (!defined($code)) {
             $invites = <INVITES>;
             my @lines = split /\n/, $invites;
             for my $line (@lines) {
-                chomp $line;
+                $line =~ s/(\s)+$//;
                 (my $url, my $title) = split / /, $line, 2;
                 push @rows, [$url, $title];
             }

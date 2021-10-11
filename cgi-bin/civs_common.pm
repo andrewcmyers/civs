@@ -136,8 +136,8 @@ sub GetPrivateHostID {
 	      end_html();
 	exit 0;
     }
-    $private_host_id=<HOSTID>;
-    chomp $private_host_id;
+    $private_host_id = <HOSTID>;
+    $private_host_id =~ s/(\s)+$//;  # remove trailing whitespace
     close(HOSTID);
 }
 
@@ -275,7 +275,7 @@ sub SecureNonce {
     open(NONCEFILE, "<$nonce_seed_file")
 	    or die "Can't open nonce file for read: $!\n";
     my $seed = <NONCEFILE>;
-    chomp $seed;
+    $seed =~ s/(\s)+$//;
     close(NONCEFILE);
     my $ret = substr($seed, 0, 16);
 

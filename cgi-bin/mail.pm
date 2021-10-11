@@ -44,7 +44,7 @@ sub init {
 
 sub CheckAddr {
     (my $addr) = @_;
-    chomp $addr;
+    $addr = &TrimAddr($addr);
 
     return ($addr =~ m/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2,8})$/i);
 }
