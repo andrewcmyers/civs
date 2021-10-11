@@ -82,7 +82,7 @@ our $civs_url = "@CIVSURL@";
 our $civs_home = '@CIVSHOME@';
 our $lockfile = $home.'/global_lock';
 our $cr = "\r\n";
-our $private_host_id = '';
+our $private_host_id;
 
 # Non-exported package globals
 our $generated_header = 0;
@@ -128,6 +128,7 @@ sub SetLanguage {
 
 
 sub GetPrivateHostID {
+    if (defined($private_host_id)) { return; }
     if (!open(HOSTID, $private_host_id_file)) {
 	&HTML_Header("Configuration error");
         print h1($tx->Error),
