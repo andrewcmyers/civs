@@ -99,13 +99,17 @@ if (!defined($code)) {
         my $fname = "@CIVSDATADIR@/invites/$key";
         my @rows = ();
         my $invites = "";
+        my %invitations;
         if (open(INVITES, "<", $fname)) {
             $invites = <INVITES>;
             my @lines = split /\n/, $invites;
             for my $line (@lines) {
                 $line =~ s/(\s)+$//;
                 (my $url, my $title) = split / /, $line, 2;
-                push @rows, [$url, $title];
+                if (!defined($invitations{$url})) {
+                    $invitations{$url} = 1;
+                    push @rows, [$url, $title];
+                }
             }
             close(INVITES)
         }
