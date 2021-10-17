@@ -21,9 +21,9 @@ settings_file="$1"
 
 echo "Read settings file."
 
-if test -z "$ADMIN_KEY"
+if [ -z "$ADMIN_KEY" ]
 then
-    echo 'ERROR: Must define $ADMIN_KEY in' "$settings_file" 'to be something secret.'
+    echo "ERROR: Must define $ADMIN_KEY in $settings_file to be something secret."
     exit 1
 fi
 
@@ -37,150 +37,154 @@ TestAndCreateDir "$CIVSDATADIR/invites";
 
 rm "$CIVSDATADIR/elections/admission_control" "$CIVSDATADIR/lockserv"
 
-    for f in civs_create.html* index.html* public_elections.html*	      \
-        proportional.html* sec_priv.html* acks.html changelog.html*	      \
-        news.html* *.var rp.html* publicized_polls.html* faq.html*	      \
-        style.css results.js vote.js ajax.js ezdom.js civs_hdr.js	      \
-        mail_mgmt.js opt_in.js add_voters.js hebrew.css
-    do
-	case "$f" in
-	  *.var)    dest="${HTMLDIR}/${f}";;
-	  *.html.*) dest="${HTMLDIR}/${f}${UTF8_SUFFIX}";;
-	  *.html)   dest="${HTMLDIR}/${f}${EN_SUFFIX}";;
-	  *)        dest="${HTMLDIR}/${f}";;
-	esac
-	echo "copying $f to $dest"
-	sed  -e 's|@PERL@|'$PERL'|' \
-	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
-	     -e 's|@PROTO@|'$PROTO'|' \
-	     -e 's|@THISHOST@|'$THISHOST'|' \
-	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
-	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
-	     -e 's|@CIVSURL@|'$CIVSURL'|' \
-	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
-	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
-	     -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
-	     -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
-	     -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
-	     -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
-	     -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|' \
-	     -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
-	     -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
-	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
-	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
-	     -e 's|@PERLEXT@|'$PERLEXT'|' \
-	     -e 's|@USING_ISA@|'$USING_ISA'|' \
-	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
-	     -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
-	     -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
-	     -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
-	     -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
-	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
-	     -e 's|@DONATE_URL@|'$DONATE_URL'|' \
-	     -e 's|@UTF8_SUFFIX@|'$UTF8_SUFFIX'|' \
-	< "$f" > "$dest"
-    done
+for f in civs_create.html* index.html* public_elections.html*             \
+    proportional.html* sec_priv.html* acks.html changelog.html*           \
+    news.html* *.var rp.html* publicized_polls.html* faq.html*            \
+    style.css results.js vote.js ajax.js ezdom.js civs_hdr.js             \
+    mail_mgmt.js opt_in.js add_voters.js hebrew.css
+do
+    case "$f" in
+        *.var)    dest="${HTMLDIR}/${f}";;
+        *.html.*) dest="${HTMLDIR}/${f}${UTF8_SUFFIX}";;
+        *.html)   dest="${HTMLDIR}/${f}${EN_SUFFIX}";;
+        *)        dest="${HTMLDIR}/${f}";;
+    esac
+    echo "copying $f to $dest"
+    sed  -e 's|@PERL@|'$PERL'|' \
+            -e 's|@CGIBINDIR@|'"$CGIBINDIR"'|'\
+            -e 's|@PROTO@|'$PROTO'|' \
+            -e 's|@THISHOST@|'$THISHOST'|' \
+            -e 's|@CIVSDATADIR@|'"$CIVSDATADIR"'|' \
+            -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|' \
+            -e 's|@CIVSURL@|'"$CIVSURL"'|' \
+            -e 's|@CIVSHOME@|'"$CIVSHOME"'|' \
+            -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+            -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
+            -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
+            -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
+            -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
+            -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|' \
+            -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
+            -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
+            -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
+            -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
+            -e 's|@PERLEXT@|'$PERLEXT'|' \
+            -e 's|@USING_ISA@|'$USING_ISA'|' \
+            -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
+            -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
+            -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
+            -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
+            -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
+            -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
+            -e 's|@DONATE_URL@|'$DONATE_URL'|' \
+            -e 's|@UTF8_SUFFIX@|'$UTF8_SUFFIX'|' \
+    < "$f" > "$dest"
+done
 
-    echo -n "copying:"
-    for f in add_voters beatpath.pm beatpath2.pm civs_common.pm		      \
-        voting.pm close control create_election download_ballots	      \
-        remove_writein upload_ballots results top_polls.pm		      \
-        get_top_polls languages.pm election.pm mail.pm start_election	      \
-        vote refresh_top_polls mail_mgmt opt_in publicize_election	      \
-        status clear_caches delete_election.pl edit_poll		      \
-        remove_defunct_elections request_deactivation request_activation      \
-        resend_link send_result_key.pm rp.pm runoff.pm minimax.pm	      \
-        admctrl.pm base_language.pm english.pm hungarian.pm italian.pm	      \
-        french.pm german.pm hebrew.pm portuguese.pm chinese.pm		      \
-        spanish.pm thai.pm russian.pm
-    do
-	target="${CGIBINDIR}/${f}"
-	if test -n "$PERLEXT"
-	then
-	    case $target in
-	      *.pm) ;;
-	      *.pl) ;;
-	      *) target="${target}${PERLEXT}";;
-	    esac
-	fi
-	echo " ->$target"
-	sed  -e 's|@PERL@|'$PERL'|' \
-	     -e 's|@CGIBINDIR@|'$CGIBINDIR'|'\
-	     -e 's|@PROTO@|'$PROTO'|' \
-	     -e 's|@THISHOST@|'$THISHOST'|' \
-	     -e 's|@CIVSDATADIR@|'$CIVSDATADIR'|' \
-	     -e 's|@CIVSBINURL@|'$CIVSBINURL'|' \
-	     -e 's|@CIVSURL@|'$CIVSURL'|' \
-	     -e 's|@CIVSHOME@|'$CIVSHOME'|' \
-	     -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
-	     -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
-	     -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
-	     -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
-	     -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|' \
-	     -e 's|@SMTP_STARTTLS@|'$SMTP_STARTTLS'|' \
-	     -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
-	     -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
-	     -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
-	     -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
-	     -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
-	     -e 's|@PERLEXT@|'$PERLEXT'|' \
-	     -e 's|@USING_ISA@|'$USING_ISA'|' \
-	     -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
-	     -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
-	     -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
-	     -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
-	     -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
-	     -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
-	     -e 's|@DONATE_URL@|'$DONATE_URL'|' \
-	 	 < "cgi-bin/$f" > "$target"
-	chmod a+x "$target"
-    done
-    mkdir -p "${HTMLDIR}/images"
-    for f in images/{check123b,sample-ballot,vertstrip,check-civs}.png;
-    do
-	dest="${HTMLDIR}/${f}"
-        cp "$f" "$dest"
-    done
-    echo; echo
+echo -n "copying:"
 
-    if [ ! -s $CIVSDATADIR/private_host_id ]; then
-	echo "*********************************************";
-	echo "                 WARNING                     ";
-	echo "*********************************************";
-	echo "";
-	echo "No private key exists for the server!";
-	echo "";
-	echo "Creating a private key using the openssl pseudo-random number";
-	echo "generator.  If you want more randomness than this, you will";
-	echo "need to create your own key.  See the INSTALL file for more";
-	echo "information."
-	echo "";
-	openssl rand -base64 -out $CIVSDATADIR/private_host_id 32;
-	echo "*********************************************";
+for f in add_voters beatpath.pm beatpath2.pm civs_common.pm               \
+    voting.pm close control create_election download_ballots              \
+    remove_writein upload_ballots results top_polls.pm                    \
+    get_top_polls languages.pm election.pm mail.pm start_election         \
+    vote refresh_top_polls mail_mgmt opt_in publicize_election            \
+    status clear_caches delete_election.pl edit_poll                      \
+    remove_defunct_elections request_deactivation request_activation      \
+    resend_link send_result_key.pm rp.pm runoff.pm minimax.pm             \
+    admctrl.pm base_language.pm english.pm hungarian.pm italian.pm        \
+    french.pm german.pm hebrew.pm portuguese.pm chinese.pm                \
+    spanish.pm thai.pm russian.pm
+do
+    target="${CGIBINDIR}/${f}"
+    if [ -n "$PERLEXT" ]
+    then
+        case $target in
+            *.pm) ;;
+            *.pl) ;;
+            *) target="${target}${PERLEXT}";;
+        esac
     fi
+    echo " ->$target"
+    sed  -e 's|@PERL@|'$PERL'|' \
+            -e 's|@CGIBINDIR@|'"$CGIBINDIR"'|'\
+            -e 's|@PROTO@|'$PROTO'|' \
+            -e 's|@THISHOST@|'$THISHOST'|' \
+            -e 's|@CIVSDATADIR@|'"$CIVSDATADIR"'|' \
+            -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|' \
+            -e 's|@CIVSURL@|'"$CIVSURL"'|' \
+            -e 's|@CIVSHOME@|'"$CIVSHOME"'|' \
+            -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
+            -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
+            -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
+            -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
+            -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|' \
+            -e 's|@SMTP_STARTTLS@|'$SMTP_STARTTLS'|' \
+            -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
+            -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
+            -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
+            -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
+            -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
+            -e 's|@PERLEXT@|'$PERLEXT'|' \
+            -e 's|@USING_ISA@|'$USING_ISA'|' \
+            -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
+            -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
+            -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
+            -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
+            -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
+            -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
+            -e 's|@DONATE_URL@|'$DONATE_URL'|' \
+                < "cgi-bin/$f" > "$target"
+    chmod a+x "$target"
+done
 
-	if [ ! -s $CIVSDATADIR/nonce_seed ]; then
-		echo "Seeding the CIVS nonce generator.";
-		openssl rand -hex -out $CIVSDATADIR/nonce_seed 32;
-	fi
+mkdir -p "${HTMLDIR}/images"
 
-    touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
-    chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
+for f in images/{check123b,sample-ballot,vertstrip,check-civs}.png;
+do
+    dest="${HTMLDIR}/${f}"
+    cp "$f" "$dest"
+done
 
-    if [ -e gettimeofday.exe ]; then
-	cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
-    else
-	cp gettimeofday $CIVSDATADIR/gettimeofday
-    fi
-    if [ -e timeout.exe ]; then
-	cp timeout.exe $CIVSDATADIR/timeout.exe;
-    else
-	cp timeout $CIVSDATADIR/timeout
-    fi
-    if [ -e lockserv.exe ]; then
-	cp lockserv.exe $CIVSDATADIR/lockserv.exe;
-    else
-	cp lockserv $CIVSDATADIR/lockserv
-    fi
+echo; echo
+
+if [ ! -s $CIVSDATADIR/private_host_id ]; then
+    echo "*********************************************";
+    echo "                 WARNING                     ";
+    echo "*********************************************";
+    echo "";
+    echo "No private key exists for the server!";
+    echo "";
+    echo "Creating a private key using the openssl pseudo-random number";
+    echo "generator.  If you want more randomness than this, you will";
+    echo "need to create your own key.  See the INSTALL file for more";
+    echo "information."
+    echo "";
+    openssl rand -base64 -out $CIVSDATADIR/private_host_id 32;
+    echo "*********************************************";
+fi
+
+if [ ! -s $CIVSDATADIR/nonce_seed ]; then
+        echo "Seeding the CIVS nonce generator.";
+        openssl rand -hex -out $CIVSDATADIR/nonce_seed 32;
+fi
+
+touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
+chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
+
+if [ -e gettimeofday.exe ]; then
+    cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
+else
+    cp gettimeofday $CIVSDATADIR/gettimeofday
+fi
+if [ -e timeout.exe ]; then
+    cp timeout.exe $CIVSDATADIR/timeout.exe;
+else
+    cp timeout $CIVSDATADIR/timeout
+fi
+if [ -e lockserv.exe ]; then
+    cp lockserv.exe $CIVSDATADIR/lockserv.exe;
+else
+    cp lockserv $CIVSDATADIR/lockserv
+fi
 
 echo "Install completed.  Check for any errors reported above.";
