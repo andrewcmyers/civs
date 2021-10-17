@@ -5,7 +5,7 @@
 // for convenient manipulation of the ballot.
 
 var rows = new Array;           // the actual DOM nodes for the table rows
-var rank = new Array;           // the ranks of the table rows (1..num_choices)
+var rank = new Array;           // the ranks of the table rows (1..num_choices) or (1..num_choices+1)
 var selected = new Array;
 var preftable;                  // the ballot table
 var prefsection;                // the parent node of the rows (a section)
@@ -442,8 +442,7 @@ function doublecheck_ballot() {
         }
     }
     const message = ge('doublecheck_msg').innerText;
-    const result = window.confirm(message);
-    return result
+    return window.confirm(message);
 }
 
 // initialize the UI

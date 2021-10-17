@@ -1,38 +1,41 @@
 #!/bin/bash
 
 TestAndCreateDir() {
-    if [ ! -d $1 ]; then
-	#echo "Directory $1 does not exist. Creating it.";
-        mkdir $1;
+    if [ ! -d "$1" ]; then
+        #echo "Directory $1 does not exist. Creating it.";
+        mkdir "$1";
     fi
 }
 
 
-if test $# -ne 1
+if [ $# -ne 1 ]
 then
+  echo "ERROR: No settings file specified."
   echo "Usage: install-civs <settings-file>";
   exit 1;
 fi
 
-. $1 || exit 1
+settings_file="$1"
+
+. "$settings_file" || exit 1
 
 echo "Read settings file."
 
 if test -z "$ADMIN_KEY"
 then
-    echo 'ERROR: Must define $ADMIN_KEY in' $1 'to be something secret.'
+    echo 'ERROR: Must define $ADMIN_KEY in' "$settings_file" 'to be something secret.'
     exit 1
 fi
 
 make -s gettimeofday timeout lockserv
 
-TestAndCreateDir $HTMLDIR;
-TestAndCreateDir $CGIBINDIR;
-TestAndCreateDir $CIVSDATADIR;
-TestAndCreateDir $CIVSDATADIR/elections;
-TestAndCreateDir $CIVSDATADIR/invites;
+TestAndCreateDir "$HTMLDIR";
+TestAndCreateDir "$CGIBINDIR";
+TestAndCreateDir "$CIVSDATADIR";
+TestAndCreateDir "$CIVSDATADIR/elections";
+TestAndCreateDir "$CIVSDATADIR/invites";
 
-rm $CIVSDATADIR/elections/admission_control $CIVSDATADIR/lockserv
+rm "$CIVSDATADIR/elections/admission_control" "$CIVSDATADIR/lockserv"
 
     for f in civs_create.html* index.html* public_elections.html*	      \
         proportional.html* sec_priv.html* acks.html changelog.html*	      \
