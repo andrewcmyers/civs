@@ -539,6 +539,9 @@ sub name_of_writein_is_empty {
 sub writein_too_similar {
     "Sorry, the name of the write-in is too similar to an existing choice";
 }
+sub doublecheck_msg {
+    'Your ballot will have no effect because all candidates on which you have an opinion are tied. Do you still want to submit?'
+}
 
 # election
 

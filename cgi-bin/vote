@@ -33,7 +33,7 @@ use top_polls;
 # 6. To reload a set of rankings
 
 my $top_polls_refresh = 24 * 3600; # daily refresh
-my $allow_debug_votes = 0;         # allow multiple votes from the same voter in debug mode?
+my $allow_debug_votes = 1;         # allow multiple votes from the same voter in debug mode?
 
 my $voter = param('voter'); # nearly obsolete
 my $old_voter_key = param('voter_key'); # nearly obsolete

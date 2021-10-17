@@ -432,6 +432,20 @@ function drag_update(e, u) {
     set_row_borders();
 }
 
+function doublecheck_ballot() {
+    let seen_rank = num_choices + 1;
+    for (let i = 0; i < rank.length; i++) {
+        if (seen_rank == num_choices + 1) {
+            seen_rank = rank[i];
+        } else {
+            if (seen_rank != rank[i] && rank[i] != num_choices + 1) return true;
+        }
+    }
+    const message = ge('doublecheck_msg').innerText;
+    const result = window.confirm(message);
+    return result
+}
+
 // initialize the UI
 
 if (window.navigator.appName != "Microsoft Internet Explorer") {
@@ -441,6 +455,9 @@ if (window.navigator.appName != "Microsoft Internet Explorer") {
     }
 }
 
+function ge(id) {
+    return document.getElementById(id)
+}
 function el(t) {
     return document.createElement(t);
 }
@@ -449,14 +466,13 @@ function tx(t) {
 }
 
 function setup() {
-    var button = document.getElementById("sort_button");
+    var button = ge("sort_button");
     if (button != null) {
 	button.parentNode.removeChild(button);
     }
 
-
-    var jsnohelp = document.getElementById("jsnohelp");
-    var jshelp = document.getElementById("jshelp");
+    var jsnohelp = ge("jsnohelp");
+    var jshelp = ge("jshelp");
 
     if (jshelp != null) {
 	var curtext = jshelp.childNodes[0];
@@ -471,17 +487,19 @@ function setup() {
 	document.CastVote.move_bottom.disabled = false;
     }
 
-    preftable = document.getElementById("preftable");
-    prefsection = preftable.rows[0].parentNode;
-    num_choices = preftable.rows.length - 1;
+    preftable = ge("preftable");
+    if (preftable != null) {
+        prefsection = preftable.rows[0].parentNode;
+        num_choices = preftable.rows.length - 1;
 
-    cur_top = 1;
-    cur_bot = num_choices;
+        cur_top = 1;
+        cur_bot = num_choices;
 
-    sort_rows();
+        sort_rows();
 
-    $('#preftable tbody').sortable({'items':'tr:not(.heading)',
-			'axis':'y', 
-			'update':drag_update});
+        $('#preftable tbody').sortable({'items':'tr:not(.heading)',
+                            'axis':'y', 
+                            'update':drag_update});
+    }
 }
 //vim: sw=4 ts=8

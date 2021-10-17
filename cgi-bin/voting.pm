@@ -20,7 +20,8 @@ sub GenerateVoteForm {
     print '<form method="post"
       action="@PROTO@://@THISHOST@'.$civs_bin_path.'/vote@PERLEXT@"
       enctype="multipart/form-data"
-      name="CastVote">', $cr;
+      name="CastVote"
+      onsubmit="return doublecheck_ballot()">', $cr;
 
     if ($askforid) {
 	    print $tx->Identifier_request();
@@ -130,6 +131,7 @@ sub GenerateVoteForm {
 	print '</form>', $cr;
     }
 
+    print span({-style => 'display: none', -id=>'doublecheck_msg'}, $tx->doublecheck_msg);
 }
 
 1;
