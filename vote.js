@@ -433,6 +433,14 @@ function drag_update(e, u) {
 }
 
 function doublecheck_ballot() {
+    if (window.voter_id_required !== undefined) {
+        if (ge("id_request").value.match(/^\s*$/)) {
+            alert(ge("need_id_msg").innerText);
+            return false;
+        }
+    }
+
+// check that ballot will have some effect
     let seen_rank = num_choices + 1;
     for (let i = 0; i < rank.length; i++) {
         if (seen_rank == num_choices + 1) {

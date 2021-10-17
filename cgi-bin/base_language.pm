@@ -443,9 +443,10 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
 }
 
 sub Identifier_request {
-    "<p>Please give your email address or other recognizable identifier:  \r\n".
-    '<input type="text" name="email_address" size="50"></p>'.
-    "\r\n"
+    'Please give your email address or other recognizable identifier:'
+}
+sub Need_identifier {
+    'Sorry, you must identify yourself in order to vote.'
 }
 
 sub Rank { 'Rank' }

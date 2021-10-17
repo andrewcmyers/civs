@@ -24,7 +24,10 @@ sub GenerateVoteForm {
       onsubmit="return doublecheck_ballot()">', $cr;
 
     if ($askforid) {
-	    print $tx->Identifier_request();
+        print "<script>var voter_id_required = 1</script>\r\n";
+        print p($tx->Identifier_request,
+            '<input id="id_request" type="text" name="email_address" size="50"></p>'),
+            "\r\n"
     }
     print hidden('key', $voter_key), $cr;
     print hidden('id', $election_id), $cr;
@@ -132,6 +135,7 @@ sub GenerateVoteForm {
     }
 
     print span({-style => 'display: none', -id=>'doublecheck_msg'}, $tx->doublecheck_msg);
+    print span({-style => 'display: none', -id=>'need_id_msg'}, $tx->Need_identifier);
 }
 
 1;
