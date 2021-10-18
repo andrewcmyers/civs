@@ -51,14 +51,14 @@ if (defined($choices_file)) {
 }
 my $num_choices = 0;
 $choices = "";
-sub trim {
+sub TrimChoice {
     (my $s) = @_;
     $s =~ s/^\s+//;
     $s =~ s/\s+$//;
     return $s;
 }
 foreach my $ch (@c1) {
-    $ch = &trim($ch);
+    $ch = &TrimChoice($ch);
     $ch = &Filter($ch);
     if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
@@ -67,7 +67,7 @@ foreach my $ch (@c1) {
     }
 }
 foreach my $ch (@c2) {
-    $ch = &trim($ch);
+    $ch = &TrimChoice($ch);
     $ch = &Filter($ch);
     if (!($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
@@ -81,6 +81,14 @@ if ($num_choices < 2) {
     CIVS_Header();
     print h1($tx->Error);
     print p($tx->Poll_must_have_two_choices);
+    print end_html();
+    exit 0;
+}
+if ($num_choices > @MAX_CHOICES@) {
+    HTML_Header($tx->CIVS_Poll_Creation);
+    CIVS_Header();
+    print h1($tx->Error);
+    print p($tx->Poll_exceeds_max_choices(@MAX_CHOICES@));
     print end_html();
     exit 0;
 }

@@ -89,6 +89,10 @@ sub Address_unacceptable { #addr
 sub Poll_must_have_two_choices {
     'A poll must have at least two choices.';
 }
+sub Poll_exceeds_max_choices {
+    my ($self, $count) = @_;
+    "A poll can have at most $count choices."
+}
 sub Poll_directory_not_writeable {
     "Configuration error? Unable to create the poll directory <tt>$_[1]</tt>"
 }

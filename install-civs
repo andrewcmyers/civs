@@ -72,6 +72,7 @@ do
             -e 's|@USING_ISA@|'$USING_ISA'|' \
             -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
             -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
+            -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|' \
             -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
             -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
             -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
@@ -128,6 +129,7 @@ do
             -e 's|@USING_ISA@|'$USING_ISA'|' \
             -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
             -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
+            -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|' \
             -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
             -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
             -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \

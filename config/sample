@@ -83,9 +83,12 @@ USING_ISA=''
 # overloading mail servers
 MAX_VOTER_ADD=1000
 
+# Maximum number of choices/candidates. Load on the system increases rapidly
+# for a large number of choices.
+MAX_CHOICES 100
+
 # Maximum number of emails sent per day per poll (low-pass-filtered)
 MAX_EMAIL_LOAD=5000
-
 
 # Maximum size of an image that can be embedded in a poll choice
 MAX_IMAGE_SIZE=1000000

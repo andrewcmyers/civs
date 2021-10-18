@@ -293,6 +293,10 @@ sub AddWritein {
     # and vote, or even a request for the candidate list.
     my $writein = &CanonicalizeName(param('writein'));
     my $ok = 1;
+    if ($num_choices >= @MAX_CHOICES@) {
+	print p($tx->Poll_exceeds_max_choices(@MAX_CHOICES@));
+        $ok = 0;
+    }
     if ($writein eq '') {
 	print p(b($tx->name_of_writein_is_empty)), $cr;
 	$ok = 0;
@@ -309,19 +313,19 @@ sub AddWritein {
 	}
     }
     if ($ok) {
-		$choices = $choices . "\n" . $writein;
-		$choice_index[$num_choices] = $num_choices;
-		$rank[$num_choices] = $num_choices;
-		my $index = $num_choices;
-		$choices[$index] = $writein;
-		$num_choices++;
-		$edata{'choices'} = $choices;
+        $choices = $choices . "\n" . $writein;
+        $choice_index[$num_choices] = $num_choices;
+        $rank[$num_choices] = $num_choices;
+        my $index = $num_choices;
+        $choices[$index] = $writein;
+        $num_choices++;
+        $edata{'choices'} = $choices;
 
-		# Now update the vote matrix so that this write-in is
-		# ranked last by every voter so far.
-		for (my $j = 0; $j < $num_choices - 1; $j++) {
-		    $vdata{"$j.$index"} = $num_votes;
-		}
+        # Now update the vote matrix so that this write-in is
+        # ranked last by every voter so far.
+        for (my $j = 0; $j < $num_choices - 1; $j++) {
+            $vdata{"$j.$index"} = $num_votes;
+        }
     }
 }
 
