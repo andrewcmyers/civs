@@ -91,16 +91,16 @@ h1, h2, h3, span.paragraph {
     color: #bdf
 }
 
-#bannermenu {float: right; padding: 1ex}
+#bannermenu {float: right; padding: 1ex; text-align: left}
 #bannericon {float: left}
 
 .banner { background-color: #0D61A5;
-            overflow: hidden;
-                /* background-image: url('sample-ballot.png');
+          text-align: center;
+          overflow: hidden;
+          /* background-image: url('sample-ballot.png');
              background-position: center left;
              background-repeat: repeat-x */}
 .banner h1 { color: white }
-/* .banner h1 {text-shadow: white 2px 2px 4px } */
 .banner h2 { color: white; text-align: center }
 
 .bannerpart { background-color: transparent; display: inline-block; padding: 0.7ex }
