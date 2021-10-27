@@ -66,13 +66,13 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
         s/^(\s)+//g;
 	s/(\s)*$//g;
 	if (!($multiplier =~ m/^(0|[1-9][0-9]*)$/)) {
-	    push @errors, li("Line $lineno: ballot multiplier $multiplier not a number");
+	    push @errors, li("Line $lineno: ballot multiplier $multiplier not a number.");
 	    next;
 	}
     }
     my @indices = split /\s*,\s*|\s+/;
     if ($#indices != $num_choices - 1) {
-	push @errors, li("Line $lineno: expected $num_choices ranks, found " .  ($#indices+1));
+	push @errors, li("Line $lineno: expected $num_choices ranks, found " .  ($#indices+1). ".");
 	next;
     }
     for (my $cnt = 0; $cnt < $multiplier; $cnt++) {
@@ -92,19 +92,19 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
 		next;
 	    }
 	    if ($cnt == 0) {
-		push @errors, li("Line $lineno: badly formed rank &ldquo;$rank&rdquo;");
+		push @errors, li("Line $lineno: badly formed rank &ldquo;$rank&rdquo;.");
 	    }
 	}
 	$num_ballots++;
 	if ($num_ballots > 1000) {
-	    push @errors, li("Line $lineno: too many ballots for test poll");
+	    push @errors, li("Line $lineno: too many ballots for test poll.");
 	}
     }
   }
 }
 
 if ($num_ballots == 0) {
-    push @errors, li("No valid ballots found");
+    push @errors, li("No valid ballots found.");
 }
 
 if ($#errors >= 0) {
