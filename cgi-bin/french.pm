@@ -3,6 +3,7 @@ package french;
 use lib '@CGIBINDIR@';
 use base_language;
 our @ISA = ('base_language'); # go to AmE module for missing methods
+use CGI qw(:standard);
 
 sub lang { 'fr-FR'; }
 
@@ -801,4 +802,32 @@ sub Random_tie_breaking_used {
 sub No_random_tie_breaking_used {
     'Il n\'a pas été nécessaire d\'utiliser une méthode aléatoire pour départager les ex-æquo et obtenir ce classement.';
 }
+
+# Activation
+
+sub new_user {
+    'Activer l\'utilisateur'
+}
+
+sub user_activation {
+    'Activer l\'utilisateur'
+}
+
+sub mail_address {
+    'Adresse e-mail'
+}
+
+sub opt_in_label {
+    'Demander le code d\'activation'
+}
+
+sub user_activation_instructions {
+    my ($self, $mail_mgmt_url) = @_;
+    p('Pour voter dans les sondages privés CIVS, vous devez accepter la communication par e-mail du service. CIVS ne stocke pas votre adresse e-mail et il n\'y a pas d\'envois automatisés. Vous ne recevez des e-mails du service qu\'à la demande explicite des superviseurs de sondages, contenant les informations d\'identification nécessaires pour voter dans les sondages privés ou pour voir les résultats des sondages.').
+    p("Pour vous inscrire, veuillez saisir votre adresse e-mail et cliquer sur le bouton ci-dessous. Vous devriez alors recevoir un e-mail contenant un code d'activation. Notez que si vous vous êtes déjà désabonné du courrier électronique, vous devez utiliser la page de gestion du courrier pour réactiver le courrier électronique. Si vous utilisez un service de blocage de courrier, vous devrez peut-être ajouter l'adresse e-mail CIVS à la liste blanche en tant qu'expéditeur autorisé (".'@SUPERVISOR@'.").").
+    p("(Désolé pour la mauvaise traduction en français.",
+        a({href=>"https://github.com/andrewcmyers/civs"},
+          "Vous pouvez contribuer à une meilleure traduction"). ".)")
+}
+
 1; # package succeeded!
