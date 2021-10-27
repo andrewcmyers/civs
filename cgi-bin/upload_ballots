@@ -49,17 +49,17 @@ my @ballots;
 my $type;
 
 if (!defined($ballot_fh)) {
-    push @errors, "No file provided. Upload failed";
+    push @errors, $tx->No_upload_file_provided;
 } else {
     $type = uploadInfo($ballot_fh)->{'Content-Type'};
     if ($type ne 'text/plain') {
-        push @errors, "Input must be a plain text file (received <b>$type</b> instead)";
+        push @errors, $tx->Didnt_get_plain_text($type);
     }
     if ($ballot_fh->handle->eof) {
         push @errors, "Empty file";
         my $size = uploadInfo($ballot_fh)->{'Content-Length'};
         if ($size > 0) {
-            push @errors, "Server may be out of disk space for uploads";
+            push @errors, $tx->Out_of_upload_space;
         }
     }
 }

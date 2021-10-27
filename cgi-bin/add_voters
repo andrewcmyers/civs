@@ -22,7 +22,20 @@ my $mail_mgmt_url = "@PROTO@://".$thishost.$civs_bin_path."/mail_mgmt@PERLEXT@";
 
 my $new_addresses = param('new_addresses');
 my $new_addresses_file = upload('new_addresses_file');
+my @errors = ();
+
 if (defined($new_addresses_file)) {
+    my $type = uploadInfo($new_addresses_file)->{'Content-Type'};
+    if ($type ne 'text/plain') {
+        push @errors, li($tx->Didnt_get_plain_text($type));
+    } elsif ($new_addresses_file->handle->eof) {
+        my $size = uploadInfo($new_addresses_file)->{'Content-Length'};
+        if ($size > 0) {
+            push @errors, li($tx->Out_of_upload_space);
+        } else {
+            push @errors, li($tx->Address_file_empty);
+        }
+    }
     while (<$new_addresses_file>) {
     	$new_addresses .= $_;
     }
@@ -44,11 +57,14 @@ if (!IsStarted || IsStopped) {
 }
 
 if ($#new_addresses >= @MAX_VOTER_ADD@) {
-    print h1($tx->Error), p($tx->Too_many_voters_added);
-    exit 0;
+    push @errors, li($tx->Too_many_voters_added);
 }
 if (GetEmailLoad(time()) >= @MAX_EMAIL_LOAD@) {
-    print h1($tx->Error), p($tx->Too_much_email);
+    push @errors, $tx->Too_much_email;
+}
+
+if ($#errors >= 0) {
+    print h1($tx->Error), ul(@errors);
     exit 0;
 }
 
