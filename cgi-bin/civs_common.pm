@@ -23,7 +23,8 @@ BEGIN {
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
                       &unique_elements &civs_hash &system_load &CheckLoad
 		      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
-                      &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock);
+                      &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
+                      &VerifyUpload);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -406,6 +407,28 @@ sub FileTimestamp {
     } else {
 	return $mtime;
     }
+}
+
+my %legal_upload_type = map { $_ => 1 } ('text/csv', 'text/plain');
+
+sub VerifyUpload {
+    my ($fh, $errors, $input_desc) = @_;
+    if (!$fh) {
+        push @{$errors}, li($tx->No_upload_file_provided);
+        return 0;
+    }
+    my $type = uploadInfo($fh)->{'Content-Type'};
+    if (!$legal_upload_type{$type}) {
+        push @{$errors}, li($tx->Didnt_get_plain_text($type));
+    } elsif ($fh->handle->eof) {
+        my $size = uploadInfo($fh)->{'Content-Length'};
+        if ($size > 0) {
+            push @{$errors}, li($tx->Out_of_upload_space);
+        } else {
+            push @{$errors}, li($tx->Uploaded_file_empty($input_desc));
+        }
+    }
+    return ($#{$errors} == -1);
 }
 
 1; # ok!

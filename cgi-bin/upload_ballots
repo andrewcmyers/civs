@@ -48,27 +48,8 @@ my $num_ballots = 0;
 my @ballots;
 my $type;
 
-if (!defined($ballot_fh)) {
-    push @errors, $tx->No_upload_file_provided;
-} else {
-    $type = uploadInfo($ballot_fh)->{'Content-Type'};
-    if ($type ne 'text/plain') {
-        push @errors, $tx->Didnt_get_plain_text($type);
-    }
-    if ($ballot_fh->handle->eof) {
-        push @errors, "Empty file";
-        my $size = uploadInfo($ballot_fh)->{'Content-Length'};
-        if ($size > 0) {
-            push @errors, $tx->Out_of_upload_space;
-        }
-    }
-}
-
-# print pre("File type: ", $type), $cr;
-
-$/ = "\n";
-
-while (defined($ballot_fh) && !$ballot_fh->handle->eof) {
+if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
+  while (!$ballot_fh->handle->eof) {
     if ($#errors >= $max_errors) { next }
     $_ = $ballot_fh->handle->getline;
     $lineno++;
@@ -85,14 +66,13 @@ while (defined($ballot_fh) && !$ballot_fh->handle->eof) {
         s/^(\s)+//g;
 	s/(\s)*$//g;
 	if (!($multiplier =~ m/^(0|[1-9][0-9]*)$/)) {
-	    push @errors, "Line $lineno: ballot multiplier $multiplier not a number";
+	    push @errors, li("Line $lineno: ballot multiplier $multiplier not a number");
 	    next;
 	}
     }
     my @indices = split /\s*,\s*|\s+/;
     if ($#indices != $num_choices - 1) {
-	push @errors, "Line $lineno: expected $num_choices ranks, found " .
-		      ($#indices+1);
+	push @errors, li("Line $lineno: expected $num_choices ranks, found " .  ($#indices+1));
 	next;
     }
     for (my $cnt = 0; $cnt < $multiplier; $cnt++) {
@@ -112,27 +92,24 @@ while (defined($ballot_fh) && !$ballot_fh->handle->eof) {
 		next;
 	    }
 	    if ($cnt == 0) {
-		push @errors, "Line $lineno: badly formed rank &ldquo;$rank&rdquo;";
+		push @errors, li("Line $lineno: badly formed rank &ldquo;$rank&rdquo;");
 	    }
 	}
 	$num_ballots++;
 	if ($num_ballots > 1000) {
-	    push @errors, "Line $lineno: too many ballots for test poll";
+	    push @errors, li("Line $lineno: too many ballots for test poll");
 	}
     }
+  }
 }
 
 if ($num_ballots == 0) {
-    push @errors, "No valid ballots found";
+    push @errors, li("No valid ballots found");
 }
 
 if ($#errors >= 0) {
     print h2("Errors found in ballot file"), $cr;
-    print '<ul>';
-    for my $error (@errors) {
-	print li(), $error, '.', $cr;
-    }
-    print '</ul>';
+    print ul(@errors);
     print p("Ballots not uploaded."), $cr;
     exit 0;
 }

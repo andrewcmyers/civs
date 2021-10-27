@@ -19,11 +19,12 @@ my $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 ### Initial parameter checking
 
+HTML_Header($tx->CIVS_Poll_Creation);
+CIVS_Header();
+
 my $email_addr = param('email_addr');
 $email_addr = mail::TrimAddr($email_addr);
 if (!&CheckAddr($email_addr)) {
-    HTML_Header($tx->Invalid_email_address_hdr);
-    CIVS_Header();
     print h1($tx->Invalid_email_address_hdr);
     print p($tx->Address_unacceptable(escapeHTML($email_addr)));
     print end_html();
@@ -31,24 +32,26 @@ if (!&CheckAddr($email_addr)) {
 }
 my $optouts = GetOptouts();
 if (HasOptOuts($optouts, $email_addr)) {
-    HTML_Header($tx->Invalid_email_address_hdr);
-    CIVS_Header();
     print h1($tx->Invalid_email_address_hdr);
     print p($tx->Address_opted_out(escapeHTML($email_addr)));
     print end_html();
     exit 0;
 }
 
+my @errors = ();
 my $choices = param('choices');
-my @c1 = split /(\r\n)+/, $choices;
-my @c2 = ();
+my @choices_split = split /(\r\n)+/, $choices;
 my $choices_file = upload('choices_file');
-if (defined($choices_file)) {
+
+
+if (defined($choices_file) && VerifyUpload($choices_file, \@errors, "file of choices")) {
+    $/ = "\n";
     while (<$choices_file>) {
 	chomp;
-	push @c2, $_;
+	push @choices_split, $_;
     }
 }
+
 my $num_choices = 0;
 $choices = "";
 sub TrimChoice {
@@ -57,16 +60,7 @@ sub TrimChoice {
     $s =~ s/\s+$//;
     return $s;
 }
-foreach my $ch (@c1) {
-    $ch = &TrimChoice($ch);
-    $ch = &Filter($ch);
-    if (!($ch =~ m/^\s*$/)) {
-	$choices .= $ch;
-	$choices .= "\n";
-	$num_choices++;
-    }
-}
-foreach my $ch (@c2) {
+foreach my $ch (@choices_split) {
     $ch = &TrimChoice($ch);
     $ch = &Filter($ch);
     if (!($ch =~ m/^\s*$/)) {
@@ -77,18 +71,15 @@ foreach my $ch (@c2) {
 }
 
 if ($num_choices < 2) {
-    HTML_Header($tx->CIVS_Poll_Creation);
-    CIVS_Header();
-    print h1($tx->Error);
-    print p($tx->Poll_must_have_two_choices);
-    print end_html();
-    exit 0;
+    push @errors, li($tx->Poll_must_have_two_choices);
 }
 if ($num_choices > @MAX_CHOICES@) {
-    HTML_Header($tx->CIVS_Poll_Creation);
-    CIVS_Header();
+    push @errors, li($tx->Poll_exceeds_max_choices(@MAX_CHOICES@));
+}
+
+if ($#errors >= 0) {
     print h1($tx->Error);
-    print p($tx->Poll_exceeds_max_choices(@MAX_CHOICES@));
+    print ul(@errors);
     print end_html();
     exit 0;
 }
@@ -100,8 +91,6 @@ my $election_dir = $home.'/elections/'.$election_id;
 my $election_data = $election_dir.'/election_data';
 
 if (!mkdir($election_dir)) {
-    HTML_Header($tx->CIVS_Poll_Creation);
-    CIVS_Header();
     print h1($tx->Error);
     print p($tx->Poll_directory_not_writeable($election_dir));
     print end_html();
@@ -179,8 +168,7 @@ if ($publicize eq 'yes') {
     $edata{'restrict_results'} = 'no';
 }
 
-HTML_Header($tx->CIVS_Poll_Creation);
-CIVS_Header($tx->Poll_created($title));
+print h1($tx->Poll_created($title));
 
 print "<pre>";
 

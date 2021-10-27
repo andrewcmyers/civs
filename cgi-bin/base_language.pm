@@ -360,15 +360,17 @@ sub Too_much_email {
 sub Out_of_upload_space {
     'Server may be out of disk space for uploads.'
 }
-sub Address_file_empty {
-    'Uploaded address file is empty.'
+sub Uploaded_file_empty {
+    my ($self, $desc) = @_;
+    "Uploaded $desc is empty."
 }
 sub No_upload_file_provided {
-    'No file provided. Upload failed'
+    my ($self, $desc) = @_;
+    "No $desc provided. Upload failed."
 }
 sub Didnt_get_plain_text {
     my ($self, $type) = @_;
-    "Input must be a plain text file (received <b>$type</b> instead)"
+    "Uploaded input must be a plain text file or CSV file (received <b>$type</b> instead)"
 }
 
 sub Total_of_x_voters_authorized { # x
