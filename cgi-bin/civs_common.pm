@@ -124,6 +124,10 @@ sub SetLanguage {
     if (!defined($languages)) {
 	$languages = 'en-us';
     }
+    if (param('language')) {
+# allow language to be overridden by URL parameter
+        $languages = param('language');
+    }
     &languages::init($languages);
 }
 
