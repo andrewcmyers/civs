@@ -6,6 +6,8 @@ use warnings;
 use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard);
+$CGI::POST_MAX = @MAX_UPLOAD_SIZE@;
+
 use Digest::MD5 qw(md5_hex);
 use DB_File;
 

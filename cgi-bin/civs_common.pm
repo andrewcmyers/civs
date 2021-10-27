@@ -150,7 +150,7 @@ sub HTML_Header {
 	      start_html(-title => $title,
 	                 -lang => $tx->lang,
 			 -head => [ Link({ -rel => "shortcut icon",
-			                    -href => "@PROTO@://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
+			                    -href => "@CIVSURL@/images/check123b.png" }),
 				    meta({-name => 'viewport', -content => 'width=device-width, initial-scale=1'}),
                                     meta({-name => 'referrer', -context => 'no-referrer'})
                                   ],
@@ -161,7 +161,7 @@ sub HTML_Header {
               start_html(-title => $title,
                          -lang => $tx->lang,
 			 -head => [ Link({ -rel => "shortcut icon",
-			                    -href => "@PROTO@://www.cs.cornell.edu/w8/~andru/civs/images/check123b.png" }),
+			                    -href => "@CIVSURL@/images/check123b.png" }),
 				    meta({-name => 'viewport', -content => 'width=device-width, initial-scale=1'}),
                                     meta({-name => 'referrer', -context => 'no-referrer'})
                                   ],

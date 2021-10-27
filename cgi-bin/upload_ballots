@@ -6,19 +6,23 @@ use warnings;
 use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard);
+$CGI::POST_MAX = @MAX_UPLOAD_SIZE@;
+# $CGI::UNLINK_TMP_FILES = 0;
+
 # use Digest::MD5 qw(md5_hex);
 use DB_File;
 use mail;
 use Socket;
 use IO::Handle;
 
-my $thisurl = $civs_bin_path."/load_ballots@PERLEXT@";
+my $thisurl = $civs_bin_path."/upload_ballots@PERLEXT@";
+
+my $control_key = param('key');
+my $authorization_key = param('akey');
 
 HTML_Header('Load Ballots');
-use election 1.02;
 
-my $control_key = param('key');    
-my $authorization_key = param('akey');
+use election 1.02;
 
 CIVS_Header("Load ballots");
 
@@ -31,21 +35,45 @@ if ($external_ballots ne 'yes') {
     exit 0;
 }
 
-my $ballot_file = upload('ballot_data');
-# print pre("Ballot file: $ballot_file");
+my $ballot_fh = upload('ballot_data');
+
+# print p("Ballot file: ", code(param("ballot_data")));
+# my $tmpname = tmpFileName($ballot_fh);
+# print p("Temporary file: ", $tmpname);
+
 my $lineno = 0;
 my @errors = ();
+my $max_errors = 10;
 my $num_ballots = 0;
 my @ballots;
-while (<$ballot_file>) {
-    chomp;
+my $type;
+
+if (!defined($ballot_fh)) {
+    push @errors, "No file provided. Upload failed";
+} else {
+    $type = uploadInfo($ballot_fh)->{'Content-Type'};
+    if ($type ne 'text/plain') {
+        push @errors, "Input must be a plain text file (received <b>$type</b> instead)";
+    }
+    if ($ballot_fh->handle->eof) {
+        push @errors, "Empty file. End of input encountered immediately";
+    }
+}
+
+# print pre("File type: ", $type), $cr;
+
+$/ = "\n";
+
+while (defined($ballot_fh) && !$ballot_fh->handle->eof) {
+    if ($#errors >= $max_errors) { next }
+    $_ = $ballot_fh->handle->getline;
     $lineno++;
-    s/^(\s)*//g;
-    s/(\s)*$//g;
-    if (m/^#/) { next; } # skip comments
-    if (m/^$/) { next; } # skip blank lines
-    my $multiplier = 1;
     # print pre("Line $lineno: $_"), $cr;
+    s/\A(\s)*//;
+    s/(\s)*\Z//;
+    if (m/^#/) { next } # skip comments
+    if ($_ eq '') { next } # skip blank lines
+    my $multiplier = 1;
     if (m/^.*(x|X)/) {
 	($multiplier, my $dummy, $_) = m/^\s*([^ xX]*)\s*(x|X)(.*$)/;
 
@@ -85,10 +113,15 @@ while (<$ballot_file>) {
 	}
 	$num_ballots++;
 	if ($num_ballots > 1000) {
-	    push @errors, "Line $lineno: too many ballots for test poll\n";
+	    push @errors, "Line $lineno: too many ballots for test poll";
 	}
     }
 }
+
+if ($num_ballots == 0) {
+    push @errors, "No valid ballots found";
+}
+
 if ($#errors >= 0) {
     print h2("Errors found in ballot file"), $cr;
     print '<ul>';
@@ -96,7 +129,7 @@ if ($#errors >= 0) {
 	print li(), $error, '.', $cr;
     }
     print '</ul>';
-    print p("Ballots not uploaded"), $cr;
+    print p("Ballots not uploaded."), $cr;
     exit 0;
 }
 print p("Ballot file is well formed and contains $num_ballots ballots."), $cr;

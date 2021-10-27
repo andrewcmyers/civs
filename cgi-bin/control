@@ -287,24 +287,30 @@ if ($external_ballots ne 'yes') {
     print '<input type="submit" value="'.$tx->Add_voters.'" name="add">';
     print '</form>';
 } else {
-    print $cr, h2($tx->Load_ballot_data);
+    print $cr, h2($tx->Load_ballot_data), $cr;
 
     print "<form method=\"POST\"
-               action=\"$civs_bin_path/upload_ballots@PERLEXT@\"
-	       enctype=\"multipart/form-data\"
-	       name=\"LoadBallots\">$cr";
-    print hidden('id', $election_id);
-    print hidden('key', $control_key);
-    print hidden('akey', $authorization_key)
-	    if defined($authorization_key);
+                 action=\"$civs_bin_path/upload_ballots@PERLEXT@\"
+                 enctype=\"multipart/form-data\"
+                 id=\"LoadBallotsForm\"
+                 name=\"LoadBallotsForm\">", $cr;
+    print hidden('id', $election_id), $cr;
+    print hidden('key', $control_key), $cr;
+    print hidden('akey', $authorization_key) if defined($authorization_key);
 
-    print $tx->file_to_upload_from,
-	input({type=>'file', name=>'ballot_data'}), $cr;
-    print input({type=>'submit', value=>$tx->Load_ballots, name=>'load_ballots'});
+    print $cr, $tx->file_to_upload_from, $cr;
+    print input({type => 'file',
+                 id => 'ballot_data',
+                 name => 'ballot_data'}), $cr;
+    print input({type => 'submit',
+                 id => 'load_ballots',
+                 name => 'load_ballots',
+                 value => $tx->Load_ballots}), $cr;
+    print '</form>', $cr;
 
     print p({class=>'explanation'}, small($tx->Upload_instructions)), $cr,
-      p($tx->Examples_of_ballots), $cr,
-      pre($tx->Ballot_examples), $cr;
+          p($tx->Examples_of_ballots), $cr,
+          pre($tx->Ballot_examples), $cr;
 }
 
 print end_html();

@@ -75,6 +75,7 @@ do
             -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|' \
             -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
             -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
+            -e 's|@MAX_UPLOAD_SIZE@|'$MAX_UPLOAD_SIZE'|' \
             -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
             -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
             -e 's|@DONATE_URL@|'$DONATE_URL'|' \
@@ -132,6 +133,7 @@ do
             -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|' \
             -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
             -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
+            -e 's|@MAX_UPLOAD_SIZE@|'$MAX_UPLOAD_SIZE'|' \
             -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
             -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
             -e 's|@DONATE_URL@|'$DONATE_URL'|' \

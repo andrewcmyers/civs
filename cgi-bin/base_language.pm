@@ -315,7 +315,7 @@ sub Examples_of_ballots {
     'Examples of ballots:'
 }
 sub Ballot_examples {
-    '1,4,3,2,5        <i>A simple ballot ranking five choices.</i>
+'    1,4,3,2,5        <i>A simple ballot ranking five choices.</i>
     5 - 2 - 3        <i>Another ranking of five choices. Dashes indicate unranked choices.</i>
     8X1 4 3 2 5      <i>Eight ballots like the first example ballot.</i>'
 }
