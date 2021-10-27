@@ -95,7 +95,7 @@ h1, h2, h3, span.paragraph {
 #bannericon {float: left}
 
 .banner { background-color: #0D61A5;
-          text-align: center;
+          text-align: left;
           overflow: hidden;
           /* background-image: url('sample-ballot.png');
              background-position: center left;

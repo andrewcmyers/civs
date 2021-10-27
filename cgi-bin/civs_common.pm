@@ -198,7 +198,7 @@ print $cr,
       <img src="@CIVSURL@/images/check-civs.png" style="border: none" alt="CIVS logo"/>
   </div>
   <div class=bannerpart>
-    <h1>&nbsp;', $tx->Condorcet_Internet_Voting_Service, '</h1>
+    <h1>', $tx->Condorcet_Internet_Voting_Service, '</h1>
   </div>
   <div class=bannerpart id=bannermenu>',
 	a({-href => $civs_home}, $tx->about_civs), BR,
@@ -209,8 +209,8 @@ print $cr,
 	a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
 	a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
     '</div><br>
-  <div class=bannerpart>
-    <h2 align="center">', $_[0], '</h2>
+  <div class=pagetitle>
+    <h2>', $_[0], '</h2>
   </div>
 </div>
 
