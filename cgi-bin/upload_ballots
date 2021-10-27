@@ -56,7 +56,11 @@ if (!defined($ballot_fh)) {
         push @errors, "Input must be a plain text file (received <b>$type</b> instead)";
     }
     if ($ballot_fh->handle->eof) {
-        push @errors, "Empty file. End of input encountered immediately";
+        push @errors, "Empty file";
+        my $size = uploadInfo($ballot_fh)->{'Content-Length'};
+        if ($size > 0) {
+            push @errors, "Server may be out of disk space for uploads";
+        }
     }
 }
 
