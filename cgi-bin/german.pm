@@ -792,11 +792,7 @@ sub opt_in_label {
 sub user_activation_instructions {
     my ($self, $mail_mgmt_url) = @_;
     p('Um bei privaten CIVS-Umfragen abzustimmen, müssen Sie sich für die E-Mail-Kommunikation des Dienstes anmelden. CIVS speichert Ihre E-Mail-Adresse nicht und es gibt keine automatisierten Mailings. Sie erhalten vom Dienst nur auf ausdrücklichen Wunsch des Umfrageleiters E-Mails, die Anmeldeinformationen enthalten, die Sie benötigen, um bei privaten Umfragen abzustimmen oder die Ergebnisse von Umfragen anzuzeigen.').
-    p("Um sich anzumelden, geben Sie bitte Ihre E-Mail-Adresse ein und klicken Sie auf die Schaltfläche unten. Sie sollten dann eine E-Mail mit einem Aktivierungscode erhalten. Beachten Sie, dass Sie, wenn Sie sich zuvor von E-Mail abgemeldet haben, die E-Mail-Verwaltungsseite verwenden müssen, um E-Mail zu reaktivieren. Wenn Sie einen E-Mail-Blockierungsdienst verwenden, müssen Sie möglicherweise die CIVS-E-Mail-Adresse als Absender autorieseren (".'@SUPERVISOR@'. ").").
-    p('(Sorry für die schlechte Übersetzung ins Deutsche.',
-        a({href=>'https://github.com/andrewcmyers/civs'},
-        "Sie können zu einer besseren Übersetzung beitragen").
-        '.)')
+    p("Um sich anzumelden, geben Sie bitte Ihre E-Mail-Adresse ein und klicken Sie auf die Schaltfläche unten. Sie sollten dann eine E-Mail mit einem Aktivierungscode erhalten. Beachten Sie, dass Sie, wenn Sie sich zuvor von E-Mail abgemeldet haben, die E-Mail-Verwaltungsseite verwenden müssen, um E-Mail zu reaktivieren. Wenn Sie einen E-Mail-Blockierungsdienst verwenden, müssen Sie möglicherweise die CIVS-E-Mail-Adresse als Absender autorieseren (".'@SUPERVISOR@'. ").")
 }
 
 1; # package succeeded!
