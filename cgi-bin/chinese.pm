@@ -3,6 +3,7 @@ package chinese;
 our $VERSION = 1.00;
 
 use lib '@CGIBINDIR@';
+use CGI qw(:standard);
 
 use base_language;
 our @ISA = ('base_language'); # go to AmE module for missing methods
@@ -26,22 +27,28 @@ sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'CIVS在线投票服务（Condorcet Internet Voting Service）';
 }
 sub about_civs {
-    '关于CIVS';
+    '关于CIVS'
+}
+sub new_user {
+    '激活用户'
+}
+sub public_polls {
+    '民意调查'
 }
 sub create_new_poll {
-    '创建新投票';
+    '创建新投票'
 }
 sub about_security_and_privacy {
-    '关于安全和隐私';
+    '关于安全和隐私'
 }
 sub FAQ {
-    '常见问题';
+    '常见问题'
 }
 sub CIVS_suggestion_box {
-    'CIVS建议箱';
+    'CIVS建议箱'
 }
 sub unable_to_process {
-    '因为系统错误，CIVS当前无法处理你的请求。';
+    '因为系统错误，CIVS当前无法处理你的请求。'
 }
 sub CIVS_Error {
     'CIVS错误';
@@ -765,6 +772,90 @@ sub Some_voter_preferences_were_ignored {
 
 sub preference_description {
     "$_[1]&ndash;$_[2] 对 $_[3] 的偏好对比 $_[4]."
+}
+
+## User activation
+
+sub mail_address { '民意调查' }
+sub user_activation { '激活用户' }
+sub activation_code_subject { '使用 CIVS 的激活码' }
+
+sub user_activation_instructions {
+    my ($self, $mail_mgmt_url) = @_;
+    p('要在私人 CIVS 民意调查中投票，您必须选择加入来自该服务的电子邮件通信。 CIVS 不会存储您的电子邮件地址，也不会自动发送邮件。 您只会在投票监督员的明确要求下收到来自该服务的电子邮件，其中包含在私人投票中投票或查看投票结果所需的凭据。').
+    p("要选择加入，请输入您的电子邮件地址，然后单击下面的按钮。 然后您应该会收到一封包含激活码的电子邮件。 请注意，如果您之前选择退出电子邮件，则必须使用邮件管理页面重新激活电子邮件。 如果您使用邮件拦截服务，您可能需要将 CIVS 电子邮件地址作为授权发件人 (".'@SUPERVISOR@'.") 列入白名单。")
+}
+sub opt_in_label {
+    '请求激活码'
+}
+sub activation_code {
+    '激活码：'
+}
+sub someone_has_requested_activation {
+    my ($self, $address, $code, $mail_mgmt_url) = @_;
+"有人要求 CIVS 投票系统激活用于投票的电子邮件地址 <$address>。 要激活此地址，您将需要以下激活码：
+
+    $code
+
+如果您没有发起此请求，则可以忽略此电子邮件。
+
+如果您想控制来自 CIVS 的更多电子邮件，请使用此链接：$mail_mgmt_url。
+"
+}
+sub already_activated {
+    '此电子邮件地址已被激活。'
+}
+sub activation_successful
+{
+    '电子邮件地址已成功激活。'
+}
+sub pending_invites {
+    (my $self, my $pats, my $invites) = @_;
+    my @invites = @{$invites};
+    if ($#invites >= 0) {
+        my @rows = ();
+        foreach $invite (@invites) {
+            (my $url, my $title) = @{$invite};
+            push @rows, a({-href => $url}, $title);
+        }
+        return div(p('待定投票邀请：'),
+                   ul(\@rows));
+    } else {
+        return "";
+    }
+}
+sub submit_activation_code {
+    '完成激活'
+}
+sub user_not_activated {
+    my ($self, $address) = @_;
+    "Sorry, no user has activated address &lt;$address&gt; to receive email.";
+}
+sub mail_failure_reason {
+    my ($self, $reason) = @_;
+    if ($reason eq 'not activated') {
+        'This email address has not been activated by the recipient.'
+    } elsif ($reason eq 'opted out') {
+        'This user has opted out from CIVS email.'
+    } else {
+        'Unknown reason'
+    }
+}
+sub see_the_failure_table {
+    my ($self, $activate_url, $mail_mgmt_url) = @_;
+    "<p>It was not possible to send mail to some voters, for reasons listed in the
+    table below. Voters will not be able to vote until they receive their personal key,
+    so you should contact them directly. Voters are likely to find the following
+    links useful:</p>
+    <ul>
+    <li>Activate an email address with CIVS: <a href='$activate_url'>$activate_url</a></li>
+    <li>Deactivate/reactivate an email address: <a href='$mail_mgmt_url'>$mail_mgmt_url</a></li>
+    </ul>
+    <p>
+    Note that when voters activate their email addresses, they are notified about any
+    pending invitations to vote in polls.
+    </p>
+    "
 }
 
 1; # package succeeded!
