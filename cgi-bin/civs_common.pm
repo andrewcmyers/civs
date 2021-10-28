@@ -150,33 +150,54 @@ sub HTML_Header {
     (my $title, my $js) = @_;
     if (!$generated_header) {
       my $style = $tx->style_file;
-      if (!defined($js) || $js eq '') {
-	print header(-charset => 'utf-8', -content_language => $tx->lang),
-	      start_html(-title => $title,
-	                 -lang => $tx->lang,
-			 -head => [ Link({ -rel => "shortcut icon",
-			                    -href => "@CIVSURL@/images/check123b.png" }),
-				    meta({-name => 'viewport', -content => 'width=device-width, initial-scale=1'}),
-                                    meta({-name => 'referrer', -context => 'no-referrer'})
-                                  ],
-			 -encoding => 'utf-8',
-			 -style => {'src' => "@CIVSURL@/$style"});
-      } else {
+      if (!$js) {
         print header(-charset => 'utf-8', -content_language => $tx->lang),
-              start_html(-title => $title,
-                         -lang => $tx->lang,
-			 -head => [ Link({ -rel => "shortcut icon",
-			                    -href => "@CIVSURL@/images/check123b.png" }),
-				    meta({-name => 'viewport', -content => 'width=device-width, initial-scale=1'}),
-                                    meta({-name => 'referrer', -context => 'no-referrer'})
-                                  ],
-                         -encoding => 'utf-8',
-                         -style => {'src' => "@CIVSURL@/$style"},
-                         -script => [{'src' => "@CIVSURL@/$js"},
-                                     {'src' => "@CIVSURL@/ezdom.js"},
-                                     {'src' => "@PROTO@://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"},
-                                     {'src' => "@PROTO@://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"}],
-                         -onLoad => "setup()");
+              start_html(
+                -title => $title,
+                -lang => $tx->lang,
+                -head => [
+                   Link({
+                     -rel => "shortcut icon",
+                     -href => "@CIVSURL@/images/check123b.png"
+                   }),
+                   meta({-name => 'viewport',
+                         -content => 'width=device-width, initial-scale=1'}),
+                   meta({-name => 'referrer',
+                         -context => 'no-referrer'})
+                ],
+                -encoding => 'utf-8',
+                -style => {'src' => "@CIVSURL@/$style"}
+              );
+      } else {
+        my $ajaxlibs = "@PROTO@://ajax.googleapis.com/ajax/libs";
+        print header(-charset => 'utf-8', -content_language => $tx->lang),
+              start_html(
+                -title => $title,
+                -lang => $tx->lang,
+                -head => [
+                  Link({
+                    -rel => "shortcut icon",
+                    -href => "@CIVSURL@/images/check123b.png"
+                  }),
+                  meta({
+                    -name => 'viewport',
+                    -content => 'width=device-width, initial-scale=1'
+                  }),
+                  meta({
+                    -name => 'referrer',
+                    -context => 'no-referrer'
+                  })
+                ],
+                -encoding => 'utf-8',
+                -style => {'src' => "@CIVSURL@/$style"},
+                -script => [
+                  {'src' => "@CIVSURL@/$js"},
+                  {'src' => "@CIVSURL@/ezdom.js"},
+                  {'src' => "$ajaxlibs/jquery/1.4.1/jquery.min.js"},
+                  {'src' => "$ajaxlibs/jqueryui/1.7.2/jquery-ui.min.js"}
+                ],
+                -onLoad => "setup()"
+              );
       }
     }
     $html_header_printed = 1;
