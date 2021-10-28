@@ -776,13 +776,13 @@ sub preference_description {
 
 ## User activation
 
-sub mail_address { '民意调查' }
+sub mail_address { '调查' }
 sub user_activation { '激活用户' }
 sub activation_code_subject { '使用 CIVS 的激活码' }
 
 sub user_activation_instructions {
     my ($self, $mail_mgmt_url) = @_;
-    p('要在私人 CIVS 民意调查中投票，您必须选择加入来自该服务的电子邮件通信。 CIVS 不会存储您的电子邮件地址，也不会自动发送邮件。 您只会在投票监督员的明确要求下收到来自该服务的电子邮件，其中包含在私人投票中投票或查看投票结果所需的凭据。').
+    p('要在私人 CIVS 调查中投票，您必须选择加入来自该服务的电子邮件通信。 CIVS 不会存储您的电子邮件地址，也不会自动发送邮件。 您只会在投票监督员的明确要求下收到来自该服务的电子邮件，其中包含在私人投票中投票或查看投票结果所需的凭据。').
     p("要选择加入，请输入您的电子邮件地址，然后单击下面的按钮。 然后您应该会收到一封包含激活码的电子邮件。 请注意，如果您之前选择退出电子邮件，则必须使用邮件管理页面重新激活电子邮件。 如果您使用邮件拦截服务，您可能需要将 CIVS 电子邮件地址作为授权发件人 (".'@SUPERVISOR@'.") 列入白名单。")
 }
 sub opt_in_label {
