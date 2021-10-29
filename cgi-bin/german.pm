@@ -33,7 +33,7 @@ sub about_civs {
     'Über CIVS';
 }
 sub public_polls {
-    'Öffentliche Umfragen'
+    'Öffentliche Abstimmungen'
 }
 sub create_new_poll {
     'Neue Abstimmung anlegen';
@@ -794,7 +794,7 @@ sub opt_in_label {
 
 sub user_activation_instructions {
     my ($self, $mail_mgmt_url) = @_;
-    p('Um bei privaten CIVS-Umfragen abzustimmen, müssen Sie dem Dienst den Versand von E-Mails an Ihre E-Mail-Adresse erlauben („opt-in“). CIVS speichert Ihre E-Mail-Adresse nicht und versendet keine automatisierten E-Mails. Sie erhalten vom Dienst nur auf ausdrücklichen Wunsch des Umfrageleiters E-Mails mit Anmeldeinformationen, die Sie benötigen, um bei privaten Umfragen abzustimmen oder die Ergebnisse von Umfragen anzuzeigen.').
+    p('Um bei privaten CIVS-Abstimmungen teilzunehmen, müssen Sie dem Dienst den Versand von E-Mails an Ihre E-Mail-Adresse erlauben („opt-in“). CIVS speichert Ihre E-Mail-Adresse nicht und versendet keine automatisierten E-Mails. Sie erhalten vom Dienst nur auf ausdrücklichen Wunsch des Umfrageleiters E-Mails mit Anmeldeinformationen, die Sie benötigen, um bei privaten Abstimmungen teilzunehmen oder die Ergebnisse von Abstimmungen anzuzeigen.').
     p("Um den Opt-In-Prozess durchzuführen, geben Sie bitte Ihre E-Mail-Adresse ein und klicken Sie auf die Schaltfläche unten. Sie sollten dann eine E-Mail mit einem Aktivierungscode erhalten.  Falls Sie Ihre E-Mail-Adresse zu einem früheren Zeitpunkt von E-Mail abgemeldet haben, müssen Sie die E-Mail-Verwaltungsseite verwenden, um E-Mail zu reaktivieren. Wenn Sie einen Spam-Filter benutzen, müssen Sie möglicherweise die CIVS-E-Mail-Adresse (".'@SUPERVISOR@'. ") als Absender autorisieren.")
 }
 
