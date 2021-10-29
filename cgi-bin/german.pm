@@ -32,6 +32,9 @@ sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
 sub about_civs {
     'Über CIVS';
 }
+sub public_polls {
+    'Öffentliche Umfragen'
+}
 sub create_new_poll {
     'Neue Abstimmung anlegen';
 }
