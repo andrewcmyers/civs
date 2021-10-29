@@ -12,13 +12,20 @@ body { margin: 0;
 div.contents {text-align: left }
 div.normal_text { max-width: 80ex; margin: 0 auto }
 
-div.home { text-align: left;
-           padding: 1ex 1ex 0 1ex;
-           border-right: 1px solid #bbb;
-           border-left: 1px solid #bbb;
-           margin: 0 auto 0 1vw;
-           max-width: 80ex }
+div.home {
+    text-align: left;
+    padding: 1ex 1ex 0 1ex;
+    border-right: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    margin: 0 auto 0 0;
+    max-width: 80ex
+}
 
+@media screen and (min-width: 600px) {
+    div.home {
+        margin-left: 1vw;
+    }
+}
 @media screen and (max-width: 600px) {
     div.home {
         font-size: 90%
@@ -239,7 +246,12 @@ div.bubble, div.trysomepolls {
     -moz-box-shadow: 3px 3px 5px #aaa;
     -webkit-box-shadow: 3px 3px 5px #aaa;
     box-shadow: 3px 3px 5px #aaa;
-    margin-left: 1em;
+    margin-left: 0.5ex;
+}
+@media screen and (min-width: 600px) {
+    div.bubble {
+        margin-left: 1em;
+    }
 }
 div.bubble table { padding: 0; margin: 4px; background-color: transparent }
 div.bubble ul { width: 100%; padding: 0ex; margin: 1px 7px 1px 3px; background-color: transparent }
