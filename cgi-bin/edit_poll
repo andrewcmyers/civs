@@ -5,6 +5,7 @@ use warnings;
 use CGI qw(:standard);
 use POSIX qw(strftime);
 use HTML::TagFilter;
+use Encode qw(encode);
 
 use lib '@CGIBINDIR@';
 use civs_common;
@@ -23,7 +24,7 @@ print CGI::header(-charset => 'utf-8');
 
 my $description = &Filter(param('description'));
 
-$edata{'description'} = $description;
+$edata{'description'} = encode('utf-8', $description);
 
 print "OK";
 
