@@ -24,7 +24,8 @@ my $new_addresses = param('new_addresses');
 my $new_addresses_file = upload('new_addresses_file');
 my @errors = ();
 
-if (VerifyUpload($new_addresses_file, \@errors, "file of voter addresses")) {
+if ($new_addresses_file &&
+    VerifyUpload($new_addresses_file, \@errors, "file of voter addresses")) {
     while (<$new_addresses_file>) {
     	$new_addresses .= $_;
     }

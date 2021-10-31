@@ -13,6 +13,7 @@ use Socket;
 use IO::Handle;
 use MIME::Base64;
 use send_result_key;
+use Encode qw(encode);
 
 my $thisurl = $civs_bin_path."/create_election@PERLEXT@";
 my $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
@@ -102,7 +103,7 @@ tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 
 ##### read form data into DB
 $edata{'title'} = my $title = &Filter(param('title'));
-$edata{'description'} = &Filter(param('description'));
+$edata{'description'} = encode('utf-8', &Filter(param('description')));
 $edata{'name'} = my $name = &Filter(param('name'));
 $edata{'email_addr'} = &Filter(param('email_addr'));
 $edata{'num_winners'} = &Filter(param('num_winners'));
