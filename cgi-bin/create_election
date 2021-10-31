@@ -102,12 +102,12 @@ my %edata;
 tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 
 ##### read form data into DB
-$edata{'title'} = my $title = &Filter(param('title'));
+$edata{'title'} = my $title = encode('utf-8', &Filter(param('title')));
 $edata{'description'} = encode('utf-8', &Filter(param('description')));
-$edata{'name'} = my $name = &Filter(param('name'));
+$edata{'name'} = my $name = encode('utf-8', &Filter(param('name')));
 $edata{'email_addr'} = &Filter(param('email_addr'));
 $edata{'num_winners'} = &Filter(param('num_winners'));
-$edata{'election_end'} = &Filter(param('election_end'));
+$edata{'election_end'} = encode('utf-8', &Filter(param('election_end')));
 $edata{'election_begin'} = time();
 
 sub SetBinaryParameter {
@@ -131,7 +131,7 @@ SetBinaryParameter('external_ballots', 'no');
 my $publicize = SetBinaryParameter('publicize', 'no');
 if ($public eq 'no') { $publicize = 'no'; }
 
-$edata{'choices'} = $choices;
+$edata{'choices'} = encode('utf-8', $choices);
 
 my $addresses = param('addresses');
 my $addresses_file = upload('addresses_file');
