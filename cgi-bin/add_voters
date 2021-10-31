@@ -27,7 +27,7 @@ my @errors = ();
 if ($new_addresses_file &&
     VerifyUpload($new_addresses_file, \@errors, "file of voter addresses")) {
     while (<$new_addresses_file>) {
-    	$new_addresses .= $_;
+        $new_addresses .= "\n" . $_;
     }
 }
 my @new_addresses = split /[\r\n]+/, $new_addresses;
@@ -63,7 +63,7 @@ GetPrivateHostID;
 # Send all of the voters their keys
 my @mail_failures = @{SendKeys($authorization_key, \@new_addresses)};
 
-print $tx->Total_of_x_voters_authorized($num_auth), $cr;
+print p($tx->Total_of_x_voters_authorized($num_auth)), $cr;
 
 if ($#mail_failures >= 0) {
     print p($tx->see_the_failure_table($activate_url, $mail_mgmt_url)), $cr;

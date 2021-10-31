@@ -580,7 +580,7 @@ sub VotingUrl {
                     ."&key=$voter_key";
         if ($voter_keys{$hash_voter_key}) {
             # This email address has already been added to the poll
-            print $tx->Voter_v_already_authorized($email), ' ';
+            print p($tx->Voter_v_already_authorized($email)), "\n";
         } else {
             $voter_keys{$hash_voter_key} = 1;
             $num_auth++; $edata{'num_auth'} = $num_auth;
