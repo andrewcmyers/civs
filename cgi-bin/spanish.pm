@@ -3,6 +3,7 @@ package spanish;
 our $VERSION = 1.0;
 
 use lib '@CGIBINDIR@';
+use CGI qw(:standard);
 
 use base_language;
 our @ISA = ('base_language'); # go to AmE module for missing methods
@@ -797,4 +798,43 @@ sub preference_description {
     "Los $_[1]-$_[2] preferencia por $_[3] de más de $_[4]." 
 }
 
+## User activation
+
+sub new_user {
+    'Activar usuario'
+}
+sub public_polls {
+    'Encuestas públicas'
+}
+sub user_activation {
+    'Activar usuario'
+}
+sub activation_code_subject {
+    'Código de activación para usar CIVS'
+}
+sub user_activation_instructions {
+    my ($self, $mail_mgmt_url) = @_;
+    p('Para votar en encuestas privadas de CIVS, debe optar por recibir comunicaciones por correo electrónico del servicio. CIVS no almacena su dirección de correo electrónico y no hay envíos automáticos. Solo recibe correo electrónico del servicio a pedido explícito de los supervisores de la encuesta, que contiene las credenciales necesarias para votar en encuestas privadas o para ver los resultados de las encuestas.').
+    p("Para participar, ingrese su dirección de correo electrónico y haga clic en el botón de abajo. A continuación, debería recibir un correo electrónico con un código de activación. Tenga en cuenta que si previamente ha optado por no recibir correo electrónico, debe usar la página de administración de correo para reactivar el correo electrónico. Si utiliza un servicio de bloqueo de correo, es posible que deba incluir en la lista blanca la dirección de correo electrónico de CIVS como remitente autorizado (".'@SUPERVISOR@'.").")
+}
+sub opt_in_label {
+    'Solicitar código de activación'
+}
+sub activation_code {
+    'Código de activación: '
+}
+sub someone_has_requested_activation {
+    my ($self, $address, $code, $mail_mgmt_url) = @_;
+"Alguien ha solicitado que el sistema de votación CIVS active la dirección de correo electrónico <$ address> para votar en las urnas. Para activar esta dirección, necesitará el siguiente código de activación:
+
+    $code
+
+Si no inició esta solicitud, puede ignorar este correo electrónico.
+
+Para controlar más correos electrónicos de CIVS, use este enlace: $ mail_mgmt_url.
+"
+}
+sub mail_address {
+    'Dirección de correo electrónico:'
+}
 1; # package succeeded!
