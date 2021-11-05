@@ -11,6 +11,7 @@ use lib '@CGIBINDIR@';
 use civs_common;
 
 use CGI qw(:standard);
+use Encode qw(encode decode);
 use URI::Escape;
 use File::stat;
 use DB_File;
@@ -50,9 +51,9 @@ while (defined(my $file = readdir(DIR))) {
     tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
-    my $name = $edata{'name'};
+    my $name = decode('utf-8', $edata{'name'});
     if (!defined($name)) { $name = '(undefined)'; }
-    my $title = $edata{'title'};
+    my $title = decode('utf-8', $edata{'title'});
     my $email_addr = $edata{'email_addr'};
     if (!defined($email_addr)) {
 	$email_addr = "(no addr)";
