@@ -5,6 +5,7 @@ package election;  # should be CIVS::Election, or perhaps merged with CIVS
 
 use strict;
 use warnings;
+use Encode qw(encode decode);
 
 # Export the package interface
 BEGIN {
@@ -91,15 +92,15 @@ sub init {
     &OpenDatabase;
 
     # Extract data from databases
-    $name = $edata{'name'};
-    $title = $edata{'title'};
+    $name = decode('utf-8', $edata{'name'});
+    $title = decode('utf-8', $edata{'title'});
     $email_addr = $edata{'email_addr'};
-    $description = $edata{'description'};
+    $description = decode('utf-8', $edata{'description'});
     $num_winners = $edata{'num_winners'};
     $addresses = $edata{'addresses'} or $addresses = "";
     @addresses = split /[\r\n]+/, $addresses;
     $election_begin = $edata{'election_begin'};
-    $election_end = $edata{'election_end'};
+    $election_end = decode('utf-8', $edata{'election_end'});
     $public = $edata{'public'};
     $publicize = $edata{'publicize'};
     $writeins = $edata{'writeins'};
@@ -107,7 +108,7 @@ sub init {
     $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
     $proportional = $edata{'proportional'} or $proportional = "";
     $use_combined_ratings = $edata{'use_combined_ratings'};
-    $choices = $edata{'choices'} or $choices = "";
+    $choices = decode('utf-8', $edata{'choices'}) or $choices = "";
     @choices = split /[\r\n]+/, $choices;
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
