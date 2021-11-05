@@ -1060,7 +1060,7 @@ for voting in polls. To activate this address, you will need the following activ
 
 If you did not initiate this request, you can ignore this email.
 
-If you want to control further email from CIVS, use this link: $mail_mgmt_url.
+Control email from CIVS using this link: $mail_mgmt_url.
 "
 }
 sub already_activated {
