@@ -825,13 +825,13 @@ sub activation_code {
 }
 sub someone_has_requested_activation {
     my ($self, $address, $code, $mail_mgmt_url) = @_;
-"Alguien ha solicitado que el sistema de votación CIVS active la dirección de correo electrónico <$ address> para votar en las urnas. Para activar esta dirección, necesitará el siguiente código de activación:
+"Alguien ha solicitado que el sistema de votación CIVS active la dirección de correo electrónico <$address> para votar en las urnas. Para activar esta dirección, necesitará el siguiente código de activación:
 
     $code
 
 Si no inició esta solicitud, puede ignorar este correo electrónico.
 
-Para controlar más correos electrónicos de CIVS, use este enlace: $ mail_mgmt_url.
+Para controlar más correos electrónicos de CIVS, use este enlace: $mail_mgmt_url.
 "
 }
 sub mail_address {

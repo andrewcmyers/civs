@@ -85,7 +85,7 @@ sub Poll_created {
 }
 
 sub Address_unacceptable { #addr
-    "Адрес \"$ _ [1] \" не является приемлемым"
+    "Адрес \"$_[1] \" не является приемлемым"
 }
 sub Poll_must_have_two_choices {
     'Опрос должен иметь как минимум два варианта.'

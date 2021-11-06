@@ -1,6 +1,7 @@
 package portuguese;
 
 use lib '@CGIBINDIR@';
+use CGI qw(:standard);
 use base_language;
 our @ISA = ('base_language'); # go to AmE module for missing methods
 
@@ -802,4 +803,44 @@ sub preference_description {
     "A preferência $_[1]&ndash;$_[2] para $_[3] sobre $_[4]."
 }
 
+## activation
+
+sub new_user {
+    'Ativar usuário'
+}
+sub public_polls {
+    'Enquetes públicas'
+}
+sub user_activation {
+    'Ativar usuário'
+}
+sub activation_code_subject {
+    'Código de desativação para correio CIVS'
+}
+sub user_activation_instructions {
+    my ($self, $mail_mgmt_url) = @_;
+    p('Para votar em enquetes CIVS privadas, você deve optar por receber a comunicação por e-mail do serviço. O CIVS não armazena seu endereço de e-mail e não há correspondências automatizadas. Você só recebe e-mail do serviço a pedido explícito dos supervisores das pesquisas, contendo as credenciais necessárias para votar em pesquisas privadas ou para ver os resultados das pesquisas.').
+    p("Para aderir, digite seu endereço de e-mail e clique no botão abaixo. Você deve então receber um e-mail contendo um código de ativação. Observe que, se você optou por não receber e-mail anteriormente, deve usar a página de gerenciamento de e-mail para reativar o e-mail. Se você usar um serviço de bloqueio de e-mail, pode ser necessário colocar o endereço de e-mail CIVS na lista de permissões como remetente autorizado (".'@SUPERVISOR@'.").")
+}
+sub opt_in_label {
+    'Solicitar código de ativação'
+}
+sub activation_code {
+    'Código de ativação:'
+}
+sub someone_has_requested_activation {
+    my ($self, $address, $code, $mail_mgmt_url) = @_;
+"Alguém solicitou que o sistema de votação CIVS ative o endereço de e-mail <$address>
+para votar em enquetes. Para ativar este endereço, você precisará do seguinte código de ativação:
+
+     $code
+
+Se você não iniciou esta solicitação, você pode ignorar este e-mail.
+
+Controle o e-mail do CIVS usando este link: $mail_mgmt_url.
+"
+}
+sub mail_address {
+    'Endereço de e-mail:'
+}
 1; # package succeeded!
