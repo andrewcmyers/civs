@@ -51,18 +51,17 @@ while (defined(my $file = readdir(DIR))) {
     tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
-    my $name = decode('utf-8', $edata{'name'});
-    if (!defined($name)) { $name = '(undefined)'; }
-    my $title = decode('utf-8', $edata{'title'});
-    my $email_addr = $edata{'email_addr'};
-    if (!defined($email_addr)) {
-	$email_addr = "(no addr)";
-    }
+    my $name = decode('utf-8', $edata{'name'} || 'undefined');
+    my $title = decode('utf-8', $edata{'title'} || 'no title');
+
+    # $title = HTML::Entities::encode_entities($title);
+    my $email_addr = $edata{'email_addr'} || '(no addr)';
+
     my $public = (defined($edata{'public'}) && $edata{'public'} eq 'yes') ? "Public" : "Private";
     if (defined($edata{'publicize'}) && $edata{'publicize'} eq 'yes') { $public .= '+' }
-    if (defined($edata{'external_ballots'}) &&
-	  $edata{'external_ballots'} eq 'yes')
-	{ $public = 'Test'; }
+    if ($edata{'external_ballots'} && $edata{'external_ballots'} eq 'yes') {
+        $public = 'Test';
+    }
     my $num_auth = $edata{'num_auth'};
     if (!defined($num_auth)) { $num_auth = '&ndash;'; }
     my $num_votes = $vdata{'num_votes'};
@@ -144,12 +143,15 @@ foreach my $entry (@entries) {
 	small($last_update),
 	a({-href=>'delete_election@PERLEXT@?id='.$file.'&key='.uri_escape('@ADMIN_KEY@'),
 	   -onClick => "return confirm('Are you sure you want to permanently delete this?"},"Delete"),
-	$cr,
 	]));
 }
 
 print p("Number of polls: $num_polls, total votes cast: $total_users, total authorized: $total_auth"), $cr;
 
-print table({-class => 'status'}, @rows);
+print '<table>', $cr;
+foreach my $row (@rows) {
+    print $row, $cr;
+}
+print '</table>', $cr;
             
 print end_html();
