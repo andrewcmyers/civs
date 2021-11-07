@@ -148,7 +148,9 @@ foreach my $entry (@entries) {
 
 print p("Number of polls: $num_polls, total votes cast: $total_users, total authorized: $total_auth"), $cr;
 
-print '<table>', $cr;
+# print out table explicitly to work around apparent bug in CGI::table()
+#
+print '<table class="status">', $cr;
 foreach my $row (@rows) {
     print $row, $cr;
 }
