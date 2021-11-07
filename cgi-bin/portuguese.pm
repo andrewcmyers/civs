@@ -843,4 +843,17 @@ Controle o e-mail do CIVS usando este link: $mail_mgmt_url.
 sub mail_address {
     'Endereço de e-mail:'
 }
+sub already_activated {
+    'Este endereço de e-mail já está ativado.'
+}
+sub activation_successful
+{
+    'Endereço de e-mail ativado com sucesso.'
+}
+sub submit_activation_code {
+    'Conclua a ativação'
+}
+sub pending_invites_hdr {
+  'Convites de sondagem pendentes:'
+}
 1; # package succeeded!

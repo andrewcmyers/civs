@@ -96,9 +96,9 @@ while (defined(my $file = readdir(DIR))) {
 	$last_update = localtime($mtime);
     }
     if (defined($title)) {
-	$title = "\"$title\"";
+	$title = span("\"$title\"");
     } else {
-	$title = '(no title)';
+	$title = span('(no title)');
     }
 
     push @entries,

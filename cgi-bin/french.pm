@@ -826,5 +826,8 @@ sub user_activation_instructions {
     p('Pour voter dans les sondages privés CIVS, vous devez accepter la communication par e-mail du service. CIVS ne stocke pas votre adresse e-mail et il n\'y a pas d\'envois automatisés. Vous ne recevez des e-mails du service qu\'à la demande explicite des superviseurs de sondages, contenant les informations d\'identification nécessaires pour voter dans les sondages privés ou pour voir les résultats des sondages.').
     p("Pour vous inscrire, veuillez saisir votre adresse e-mail et cliquer sur le bouton ci-dessous. Vous devriez alors recevoir un e-mail contenant un code d'activation. Notez que si vous vous êtes déjà désabonné du courrier électronique, vous devez utiliser la page de gestion du courrier pour réactiver le courrier électronique. Si vous utilisez un service de blocage de courrier, vous devrez peut-être ajouter l'adresse e-mail CIVS à la liste blanche en tant qu'expéditeur autorisé (".'@SUPERVISOR@'.").")
 }
+sub pending_invites_hdr {
+  'Invitations au sondage en attente :'
+}
 
 1; # package succeeded!

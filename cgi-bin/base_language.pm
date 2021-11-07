@@ -1070,6 +1070,9 @@ sub activation_successful
 {
     'Email address successfully activated.'
 }
+sub pending_invites_hdr {
+    'Pending poll invitations:'
+}
 sub pending_invites {
     (my $self, my $pats, my $invites) = @_;
     my @invites = @{$invites};
@@ -1079,10 +1082,9 @@ sub pending_invites {
             (my $url, my $title) = @{$invite};
             push @rows, a({-href => $url}, $title);
         }
-        return div(p('Pending poll invitation(s):'),
-                   ul(\@rows));
+        return div(p($self->pending_invites_hdr), ul(\@rows));
     } else {
-        return "";
+        return '';
     }
 }
 sub submit_activation_code {

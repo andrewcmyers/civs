@@ -809,20 +809,8 @@ sub activation_successful
 {
     '电子邮件地址已成功激活。'
 }
-sub pending_invites {
-    (my $self, my $pats, my $invites) = @_;
-    my @invites = @{$invites};
-    if ($#invites >= 0) {
-        my @rows = ();
-        foreach $invite (@invites) {
-            (my $url, my $title) = @{$invite};
-            push @rows, a({-href => $url}, $title);
-        }
-        return div(p('待定投票邀请：'),
-                   ul(\@rows));
-    } else {
-        return "";
-    }
+sub pending_invites_hdr {
+    '待定投票邀请：'
 }
 sub submit_activation_code {
     '完成激活'
