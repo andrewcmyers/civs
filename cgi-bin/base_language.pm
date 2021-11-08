@@ -1073,6 +1073,9 @@ sub activation_successful
 sub pending_invites_hdr {
     'Pending poll invitations:'
 }
+sub submit_activation_code {
+    'Complete activation'
+}
 sub pending_invites {
     (my $self, my $pats, my $invites) = @_;
     my @invites = @{$invites};
@@ -1086,9 +1089,6 @@ sub pending_invites {
     } else {
         return '';
     }
-}
-sub submit_activation_code {
-    'Complete activation'
 }
 sub user_not_activated {
     my ($self, $address) = @_;
