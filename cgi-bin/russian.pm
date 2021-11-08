@@ -935,4 +935,7 @@ sub pending_invites_hdr {
 sub submit_activation_code {
     'Завершите активацию'
 }
+sub mail_address {
+    'Адрес электронной почты: '
+}
 1; # package succeeded!
