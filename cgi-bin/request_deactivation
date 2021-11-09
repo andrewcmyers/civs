@@ -28,7 +28,7 @@ my $filter_pattern = param('filter_pattern');
 
 if (!defined($filter_pattern)) { $filter_pattern = '' }
 
-if (param("check") eq "true") {
+if (defined(param("check")) && param("check") eq "true") {
    if ($opted_out) { print 1 }
    else { print 0 }
    exit 0
