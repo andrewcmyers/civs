@@ -5,6 +5,7 @@ use warnings;
 
 use lib '@CGIBINDIR@';
 # use admctrl;
+use open qw( :std :encoding(UTF-8) );
 use civs_common;
 use CGI qw(:standard);
 use Socket;

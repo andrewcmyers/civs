@@ -3,6 +3,7 @@ package civs_common;  # should be CIVS, or perhaps CIVS::Common
 use strict;
 no strict 'refs';
 use warnings;
+use open qw( :std :encoding(UTF-8) );
 use POSIX ":sys_wait_h";
 use Socket;
 use HTML::TagFilter;

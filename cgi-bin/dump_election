@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 
 use DB_File;
+use Encode qw(encode decode);
+use open qw( :std :encoding(UTF-8) );
 
 undef $/;
 
@@ -22,7 +24,7 @@ for (my $i = 0; $i <= $#ARGV; $i++) {
 
     print "Election data:\n";
     foreach $name (keys %edata) {
-        print $name . ": " .$edata{$name} ."\n";
+        print $name . ": " .decode('utf-8', $edata{$name}) ."\n";
     }
     print "Voting data:\n";
     foreach $name (keys %vdata) {
