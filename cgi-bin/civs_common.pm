@@ -209,7 +209,11 @@ sub BR {
 }
 
 sub CIVS_Header {
-    &HTML_Header($_[0]);
+    my $heading = $_[0];
+    if (!$heading) {
+        $heading = "CIVS";
+    }
+    &HTML_Header($heading);
     if ($civs_header_printed) { return; }
     my $suggestion_box = '@SUGGESTION_BOX@';
 print
@@ -219,7 +223,7 @@ if ($local_debug) {
 	      'LOCAL DEBUG MODE</div>';
 }
 print $cr,
- '<div class=bannerpart id=bannericon>
+ '  <div class=bannerpart id=bannericon>
       <img src="@CIVSURL@/images/check-civs.png" style="border: none" alt="CIVS logo"/>
   </div>
   <div class=bannerpart>
@@ -235,7 +239,7 @@ print $cr,
 	a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
     '</div><br>
   <div class=pagetitle>
-    <h2>', $_[0], '</h2>
+    <h2>', $heading, '</h2>
   </div>
 </div>
 

@@ -21,7 +21,7 @@ my $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 ### Initial parameter checking
 
 HTML_Header($tx->CIVS_Poll_Creation);
-CIVS_Header();
+CIVS_Header($tx->CIVS_Poll_Creation);
 
 my $email_addr = param('email_addr');
 $email_addr = mail::TrimAddr($email_addr);
