@@ -64,7 +64,7 @@ sub TrimChoice {
 foreach my $ch (@choices_split) {
     $ch = &TrimChoice($ch);
     $ch = &Filter($ch);
-    if (!($ch =~ m/^\s*$/)) {
+    if (defined($ch) && !($ch =~ m/^\s*$/)) {
 	$choices .= $ch;
 	$choices .= "\n";
 	$num_choices++;
