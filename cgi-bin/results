@@ -118,11 +118,11 @@ if ($restrict_results eq 'yes') {
 
 if (param('fresh') || param('Compare') ||             # Can force a refresh
 
-     ($last_vote_time > $cache_time &&                # Recompute if out of date
-      time() - $cache_time > 15) ||                    # and cache at least 5 sec
-                                                      # old.
+     (defined($last_vote_time) && $last_vote_time > $cache_time &&     # Recompute if out of date
+      time() - $cache_time > 15) ||                                    # and cache at least 5 sec
+                                                                       # old.
 
-     ($last_vote_time eq '' && $cache_time == 0)) {   # Recompute old if no cache
+     (defined($last_vote_time) && $last_vote_time eq '' && $cache_time == 0)) {   # Recompute old if no cache
     print "<!-- Computing fresh results -->", $cr;
     &StartProgressMeter;
     my $nonce = &SecureNonce;
@@ -613,7 +613,9 @@ sub ProcessBallots {
 sub PrintReport {
     no strict 'refs';
     (my $module) = @_;
-    my @voters = split /\n/, $vdata_copy{'recorded_voters'};
+    my @voters;
+    my $v = $vdata_copy{'recorded_voters'};
+    @voters = split /\n/, $v if ($v);
     my $bref = &ProcessBallots(\@voters);
     my $rank_candidates = $module.'::rank_candidates';
     my $print_details = $module.'::print_details';
