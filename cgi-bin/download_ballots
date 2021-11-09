@@ -25,7 +25,7 @@ if (!IsStarted) {
     error("This poll does not exist or has not been started");
 }
 
-if (param('admin_key') ne '@ADMIN_KEY@') {
+if (!param('admin_key') || param('admin_key') ne '@ADMIN_KEY@') {
     if ($public ne 'yes') {
 	if (!IsStopped) {
 	    error("This poll has not yet been closed");
