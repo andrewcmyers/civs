@@ -113,3 +113,11 @@ LOG_HOME_VISITS=
 
 # Where to donate to support this service
 DONATE_URL='http://www.cs.cornell.edu/andru/donate.html'
+
+# What user the web server runs as
+WEB_USER=nobody
+WEB_GROUP=nobody
+
+# default locations of these executables
+CHOWN=/usr/sbin/chown
+CHGRP=/usr/bin/chgrp

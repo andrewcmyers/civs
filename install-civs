@@ -1,9 +1,17 @@
 #!/bin/bash
 
+id=`id -u`
+CHOWN=/usr/sbin/chown # default
+CHGRP=/usr/bin/chgrp
+
 TestAndCreateDir() {
     if [ ! -d "$1" ]; then
         #echo "Directory $1 does not exist. Creating it.";
         mkdir "$1";
+        if [ "$id" = 0 ]; then
+          $CHOWN "$WEB_USER" "$1"
+          $CHGRP "$WEB_GROUP" "$1"
+        fi
     fi
 }
 
@@ -172,8 +180,20 @@ if [ ! -s $CIVSDATADIR/nonce_seed ]; then
         openssl rand -hex -out $CIVSDATADIR/nonce_seed 32;
 fi
 
-touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
-chmod ugo+w $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock
+touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log	      \
+      $CIVSDATADIR/global_lock $CIVSDATADIR/email-control.txt
+if [ "$id" = 0 ]; then
+    $CHOWN "$WEB_USER" $CIVSDATADIR/nonce_seed $CIVSDATADIR/log		      \
+                      $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock	      \
+                      $CIVSDATADIR/email-control.txt
+    $CHGRP "$WEB_GROUP" $CIVSDATADIR/nonce_seed $CIVSDATADIR/log		      \
+                      $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock	      \
+                      $CIVSDATADIR/email-control.txt
+fi
+chmod 600 $CIVSDATADIR/nonce_seed
+chmod 644 $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock      \
+          $CIVSDATADIR/email-control.txt
+
 
 if [ -e gettimeofday.exe ]; then
     cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
