@@ -2,7 +2,7 @@
 
 use DB_File;
 use Encode qw(encode decode);
-use open qw( :std :encoding(UTF-8) );
+use open OUT => ':encoding(UTF-8)';
 
 undef $/;
 
