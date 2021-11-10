@@ -66,16 +66,32 @@ my ($db_is_open, $election_is_locked);
 
 &init;
 
-sub DB_decode { 
-    (my $key) = @_; 
-    my $d = $edata{$key}; 
+# Try to repair strings that are incorrectly encoded as UTF-8
+sub fixUTF {
+    my ($a) = @_;
+    my $c = 1;
+    while ($c) {
+        ($c) = ($a =~ m/([\300-\377])([\000-\177]|\Z)/);
+        if ($c) {
+            my $d = chr(192 + (ord($c)>>6)) . chr(128 + (ord($c) & 077));
+            $a =~ s[([\300-\377])([\000-\177]|\Z)][$d\2];
+        }
+    }
+    return $a;
+}
+
+# Decode a database field using UTF-8, applying ad hoc fixups as needed
+sub DB_decode {
+    (my $key) = @_;
+    # my $d = fixUTF($edata{$key});
+    my $d = $edata{$key};
     if ($d =~ m/\302\200|\303\203\302|\303\205\302/) {
         print STDERR "Fixing UTF-8 double encoding in $election_id\n";
-        $d = decode('utf-8', $d); 
-        $edata{$key} = $d; 
-    } 
-    return decode('utf-8', $d); 
-} 
+        $d = decode('utf-8', $d);
+        $edata{$key} = $d;
+    }
+    return decode('utf-8', $d);
+}
 
 sub init {
     # Get election ID
