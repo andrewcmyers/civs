@@ -22,3 +22,4 @@ It is important to set the permissions and ownership correctly on files under th
 Strings are mostly represented internally as full Unicode strings, in which
 each character in the string represents exactly one single Unicode character. However,
 data sent to web pages, email, and the back-end databases must be encoded into UTF-8.
+Cached poll results are also stored in files using UTF-8.

@@ -127,6 +127,7 @@ if (param('fresh') || param('Compare') ||             # Can force a refresh
     &StartProgressMeter;
     my $nonce = &SecureNonce;
     open (RESULTS, ">$cache_file.$nonce");
+    binmode RESULTS, ':utf8';
     &ComputeResults;
     close (RESULTS);
     rename("$cache_file.$nonce", "$cache_file");
@@ -136,6 +137,7 @@ if (param('fresh') || param('Compare') ||             # Can force a refresh
 }
 
 open (RESULTS, "<$cache_file");
+binmode RESULTS, ':utf8';
 my $results = do { local $/; <RESULTS> };
 print $results;
 close (RESULTS);

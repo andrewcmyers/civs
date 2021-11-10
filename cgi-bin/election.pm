@@ -66,6 +66,19 @@ my ($db_is_open, $election_is_locked);
 
 &init;
 
+my $fix_double_encoding = 1;
+
+sub DB_decode { 
+    (my $key) = @_; 
+    my $d = $edata{$key}; 
+    if ($fix_double_encoding && $d =~ m/\302\200/) {
+        print STDERR "Fixing UTF-8 double encoding in $election_id\n";
+        $d = decode('utf-8', $d); 
+        $edata{$key} = $d; 
+    } 
+    return decode('utf-8', $d); 
+} 
+
 sub init {
     # Get election ID
     $election_id = param('id') or do {
@@ -92,15 +105,15 @@ sub init {
     &OpenDatabase;
 
     # Extract data from databases
-    $name = decode('utf-8', $edata{'name'});
-    $title = decode('utf-8', $edata{'title'});
+    $name = DB_decode('name');
+    $title = DB_decode('title');
     $email_addr = $edata{'email_addr'};
-    $description = decode('utf-8', $edata{'description'});
+    $description = DB_decode('description');
     $num_winners = $edata{'num_winners'};
     $addresses = $edata{'addresses'} or $addresses = "";
     @addresses = split /[\r\n]+/, $addresses;
     $election_begin = $edata{'election_begin'};
-    $election_end = decode('utf-8', $edata{'election_end'});
+    $election_end = DB_decode('election_end');
     $public = $edata{'public'};
     $publicize = $edata{'publicize'};
     $writeins = $edata{'writeins'};
@@ -108,7 +121,7 @@ sub init {
     $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
     $proportional = $edata{'proportional'} or $proportional = "";
     $use_combined_ratings = $edata{'use_combined_ratings'};
-    $choices = decode('utf-8', $edata{'choices'}) or $choices = "";
+    $choices = DB_decode('choices') or $choices = "";
     @choices = split /[\r\n]+/, $choices;
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
