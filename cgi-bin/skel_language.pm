@@ -5,6 +5,9 @@ our $VERSION = 1.0;
 use lib '@CGIBINDIR@';
 
 use base_language;
+use utf8;
+use CGI qw(:standard -utf8);
+
 our @ISA = ('base_language'); # go to AmE module for missing methods
 
 # The language identifier, eg en-US for American English or es-ES for Spanish ala Spain.

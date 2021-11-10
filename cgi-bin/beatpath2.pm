@@ -2,7 +2,7 @@ package beatpath2;
 
 use strict;
 use warnings;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use languages;
 
 # A package for computing the Schulze method using both winning and losing

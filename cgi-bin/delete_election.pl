@@ -7,7 +7,7 @@ use lib '/cucs/web/w8/andru/public_html/cgi-perl/civs';
 # use admctrl;
 use civs_common;
 
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use File::stat;
 use DB_File;
 undef $/;

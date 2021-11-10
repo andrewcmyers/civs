@@ -5,9 +5,8 @@ use warnings;
 
 use lib '@CGIBINDIR@';
 # use admctrl;
-# use open OUT => ':encoding(UTF-8)';
 use civs_common;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use Socket;
 use IO::Handle;
 use POSIX qw(strftime);

@@ -36,7 +36,7 @@ BEGIN {
 
 # Package imports
 use civs_common;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use POSIX qw(strftime);
 use mail;
 use Fcntl qw(:DEFAULT :flock);

@@ -5,7 +5,7 @@ use warnings;
 
 use lib '@CGIBINDIR@';
 use civs_common;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 
 HTML_Header($tx->mail_mgmt_title);
 CIVS_Header($tx->mail_mgmt_title);

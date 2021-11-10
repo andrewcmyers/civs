@@ -5,7 +5,9 @@ use warnings;
 
 use lib '@CGIBINDIR@';
 use civs_common;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
+use Encode qw(encode decode);
+use utf8;
 
 HTML_Header($tx->user_activation);
 CIVS_Header($tx->user_activation);

@@ -4,7 +4,7 @@ package rp;
 # candidates, by providing an appropriate rank_candidates function.
 # See runoff.pm for a specification of this function.
 
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use civs_common;
 use strict;
 

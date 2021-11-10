@@ -1,6 +1,7 @@
 package base_language;
 
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
+use utf8;
 
 our $VERSION = 1.00;
 

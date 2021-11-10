@@ -14,7 +14,7 @@ use lib '@CGIBINDIR@';
 # use admctrl;
 use civs_common;
 
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use URI::Escape;
 use File::stat;
 use DB_File;

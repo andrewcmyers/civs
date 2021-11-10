@@ -9,9 +9,8 @@ use warnings;
 use lib '@CGIBINDIR@';
 # use admctrl;
 use civs_common;
-use open OUT => ':encoding(UTF-8)';
 
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use Encode qw(encode decode);
 use URI::Escape;
 use File::stat;

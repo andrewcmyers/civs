@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use POSIX qw(strftime);
 
 use lib '@CGIBINDIR@';

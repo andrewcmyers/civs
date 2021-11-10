@@ -52,6 +52,7 @@ sub CheckAddr {
 # Remove leading and trailing whitespace from a string
 sub TrimAddr {
     (my $addr) = @_;
+    if (!$addr) { return '' }
     $addr =~ s/^(\s)+//;
     $addr =~ s/(\s)+$//;
     $addr =~ s/\s+/ /;

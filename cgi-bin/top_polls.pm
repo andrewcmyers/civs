@@ -3,7 +3,7 @@ package top_polls;
 
 use strict;
 use warnings;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use Fcntl qw(:DEFAULT);
 
 use lib '@CGIBINDIR@';

@@ -5,7 +5,7 @@ use warnings;
 
 use lib '@CGIBINDIR@';
 use civs_common;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use Digest::MD5 qw(md5_hex);
 use POSIX qw(strftime);
 use DB_File;

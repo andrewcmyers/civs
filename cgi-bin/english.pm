@@ -1,6 +1,7 @@
 package english;
 
 use base_language;
+use utf8;
 
 our $VERSION = 1.20;
 our @ISA = ('base_language'); # go to base_language module for missing methods

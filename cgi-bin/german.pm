@@ -1,7 +1,8 @@
 package german;
 
 use lib '@CGIBINDIR@';
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
+use utf8;
 
 use base_language;
 our @ISA = ('base_language'); # go to AmE module for missing methods

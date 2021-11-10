@@ -4,6 +4,7 @@ use base_language;
 
 our $VERSION = 1.00;
 our @ISA = ('base_language'); # go to base_language module for missing methods
+use utf8;
 
 sub lang { 'th'; }
 

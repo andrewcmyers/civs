@@ -1,7 +1,7 @@
 package voting;
 
 use civs_common;
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use election;
 use strict;
 

@@ -1,8 +1,9 @@
 package portuguese;
 
 use lib '@CGIBINDIR@';
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use base_language;
+use utf8;
 our @ISA = ('base_language'); # go to AmE module for missing methods
 
 our $VERSION = 1.000;

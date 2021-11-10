@@ -1,6 +1,6 @@
 package runoff;
 
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use civs_common;
 use strict;
 

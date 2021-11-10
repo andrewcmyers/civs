@@ -3,7 +3,8 @@ package french;
 use lib '@CGIBINDIR@';
 use base_language;
 our @ISA = ('base_language'); # go to AmE module for missing methods
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
+use utf8;
 
 sub lang { 'fr-FR'; }
 

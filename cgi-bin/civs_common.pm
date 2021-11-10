@@ -3,13 +3,13 @@ package civs_common;  # should be CIVS, or perhaps CIVS::Common
 use strict;
 no strict 'refs';
 use warnings;
-use open OUT => ':encoding(UTF-8)';
 use POSIX ":sys_wait_h";
 use Socket;
 use HTML::TagFilter;
 use HTML::Entities;
 use HTTP::Tiny;
 use MIME::Base64;
+use open qw(:std :encoding(UTF-8));
 
 # Export the package interface
 BEGIN {
@@ -25,7 +25,7 @@ BEGIN {
                       &unique_elements &civs_hash &system_load &CheckLoad
 		      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
-                      &VerifyUpload);
+                      &VerifyUpload &hexdump);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -67,7 +67,7 @@ END {
 }
 
 # Package imports
-use CGI qw(:standard);
+use CGI qw(:standard -utf8);
 use POSIX qw(strftime);
 use Digest::MD5 qw(md5_hex);
 use Fcntl qw(:flock);
@@ -383,6 +383,19 @@ sub Filter {
                ? $tf->filter($s)
                : $s);
     # Log "Filtering: " . $_[0] . " to " . $result;
+    return $result;
+}
+
+# Turn a string into a hex representation of each of its characters. For debugging.
+sub hexdump {
+    (my $s) = @_;
+    my $result = $s . " = ";
+    for (my $i = 0; $i < length($s); $i++) {
+        $result .= sprintf("%04X ", ord(substr($s, $i, 1)));
+        if ($i % 16 == 0) {
+            $result .= "\r\n";
+        }
+    }
     return $result;
 }
 
