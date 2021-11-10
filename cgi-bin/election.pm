@@ -66,12 +66,10 @@ my ($db_is_open, $election_is_locked);
 
 &init;
 
-my $fix_double_encoding = 1;
-
 sub DB_decode { 
     (my $key) = @_; 
     my $d = $edata{$key}; 
-    if ($fix_double_encoding && $d =~ m/\302\200/) {
+    if ($d =~ m/\302\200|\303\203\302|\303\205\302/) {
         print STDERR "Fixing UTF-8 double encoding in $election_id\n";
         $d = decode('utf-8', $d); 
         $edata{$key} = $d; 

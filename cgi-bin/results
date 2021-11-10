@@ -136,8 +136,7 @@ if (param('fresh') || param('Compare') ||             # Can force a refresh
     print "<!-- Reusing cached results -->", $cr;
 }
 
-open (RESULTS, "<$cache_file");
-binmode RESULTS, ':utf8';
+open (RESULTS, "<$cache_file") && binmode RESULTS, ':utf8';
 my $results = do { local $/; <RESULTS> };
 print $results;
 close (RESULTS);
