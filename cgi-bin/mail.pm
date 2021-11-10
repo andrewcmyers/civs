@@ -8,6 +8,7 @@ use MIME::Base64;
 use Authen::SASL;
 use Net::SMTP;
 use IO::Socket::SSL;
+use Encode qw(encode decode);
 use Fcntl;
 
 # Export the package interface
@@ -339,7 +340,7 @@ sub SendHeader {
 	    $text .= $section;
 	}
     }
-    SendBytes $header . ': ' . $text;
+    SendBytes $header . ': ' . $text. "\r\n";
     # print $header, ': ', $text;
 }
  
