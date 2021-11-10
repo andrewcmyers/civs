@@ -211,14 +211,22 @@ sub RemoveOptOut {
     delete $optouts->{&OptOutKey($addr)};
 }
 
+# Send a sequence of bytes, represented as a string,
+# to the mail server connection.
+sub SendBytes {
+    (my $s) = @_;
+    if ($verbose || $local_debug) {
+        print CGI::escapeHTML($s)."\n"; STDOUT->flush();
+    }
+    if (!($local_debug)) {
+        $smtp->datasend($s);
+    }
+}
+
+# Send a string to the mail server connection
 sub Send {
     foreach my $s (@_) {
-	if ($verbose || $local_debug) {
-	    print CGI::escapeHTML($s)."\n"; STDOUT->flush();
-	}
-	if (!($local_debug)) {
-            $smtp->datasend($s."\r\n");
-	}
+        SendBytes(encode('utf-8', $s."\r\n"))
     }
 }
 
@@ -314,6 +322,7 @@ sub SendHeader {
 	if (!$first) { $text .= "\r\n " }
 	$first = 0;
 	if ($section =~ m/[\200-\377]/) {
+            $section = encode('utf-8', $section);
 	    my $budget = 75 - 12 - length($header) - 2;
 	    $budget -= $budget % 4;
 	    my $enc = MIME::Base64::encode_base64($section,'');
@@ -330,7 +339,7 @@ sub SendHeader {
 	    $text .= $section;
 	}
     }
-    Send $header . ': ' . $text;
+    SendBytes $header . ': ' . $text;
     # print $header, ': ', $text;
 }
  
