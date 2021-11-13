@@ -138,7 +138,6 @@ mkdir -p "${HTMLDIR}/images"
 for f in images/{check123b,sample-ballot,vertstrip,check-civs}.png;
 do
     dest="${HTMLDIR}/${f}"
-    echo "  $dest"
     CopyFile "$f" "$dest"
 done
 
