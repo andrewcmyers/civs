@@ -15,7 +15,6 @@ TestAndCreateDir() {
     fi
 }
 
-
 if [ $# -ne 1 ]
 then
   echo "ERROR: No settings file specified."
@@ -43,7 +42,45 @@ TestAndCreateDir "$CIVSDATADIR";
 TestAndCreateDir "$CIVSDATADIR/elections";
 TestAndCreateDir "$CIVSDATADIR/invites";
 
-rm "$CIVSDATADIR/elections/admission_control" "$CIVSDATADIR/lockserv"
+rm -f "$CIVSDATADIR/elections/admission_control" "$CIVSDATADIR/lockserv"
+
+SubstituteFile() {
+    echo "  $1 -> $2"
+    sed									      \
+         -e 's|@ADDTOPATH@|'$ADDTOPATH'|'				      \
+         -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|'				      \
+         -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|'				      \
+         -e 's|@CGIBINDIR@|'"$CGIBINDIR"'|'				      \
+         -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|'				      \
+         -e 's|@CIVSDATADIR@|'"$CIVSDATADIR"'|'				      \
+         -e 's|@CIVSHOME@|'"$CIVSHOME"'|'				      \
+         -e 's|@CIVSURL@|'"$CIVSURL"'|'					      \
+         -e 's|@DONATE_URL@|'$DONATE_URL'|'				      \
+         -e 's|@EMAIL_SALT@|'$EMAIL_SALT'|'				      \
+         -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|'				      \
+         -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|'				      \
+         -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|'			      \
+         -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|'				      \
+         -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|'			      \
+         -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|'			      \
+         -e 's|@MAX_UPLOAD_SIZE@|'$MAX_UPLOAD_SIZE'|'			      \
+         -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|'			      \
+         -e 's|@PERL@|'$PERL'|'						      \
+         -e 's|@PERLEXT@|'$PERLEXT'|'					      \
+         -e 's|@PROTO@|'$PROTO'|'					      \
+         -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|'			      \
+         -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|'			      \
+         -e 's|@SMTP_HOST@|'$SMTP_HOST'|'				      \
+         -e 's|@SMTP_PORT@|'$SMTP_PORT'|'				      \
+         -e 's|@SMTP_STARTTLS@|'$SMTP_STARTTLS'|'			      \
+         -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|'				      \
+         -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|'			      \
+         -e 's|@SUPERVISOR@|'$SUPERVISOR'|'				      \
+         -e 's|@THISHOST@|'$THISHOST'|'					      \
+         -e 's|@USING_ISA@|'$USING_ISA'|'				      \
+         -e 's|@UTF8_SUFFIX@|'$UTF8_SUFFIX'|'				      \
+    < "$1" > "$2"
+}
 
 for f in civs_create.html* index.html* public_elections.html*             \
     proportional.html* sec_priv.html* acks.html changelog.html*           \
@@ -57,38 +94,7 @@ do
         *.html)   dest="${HTMLDIR}/${f}${EN_SUFFIX}";;
         *)        dest="${HTMLDIR}/${f}";;
     esac
-    echo "copying $f to $dest"
-    sed  -e 's|@PERL@|'$PERL'|' \
-            -e 's|@CGIBINDIR@|'"$CGIBINDIR"'|'\
-            -e 's|@PROTO@|'$PROTO'|' \
-            -e 's|@THISHOST@|'$THISHOST'|' \
-            -e 's|@CIVSDATADIR@|'"$CIVSDATADIR"'|' \
-            -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|' \
-            -e 's|@CIVSURL@|'"$CIVSURL"'|' \
-            -e 's|@CIVSHOME@|'"$CIVSHOME"'|' \
-            -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
-            -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
-            -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
-            -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
-            -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
-            -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|' \
-            -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
-            -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
-            -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
-            -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
-            -e 's|@PERLEXT@|'$PERLEXT'|' \
-            -e 's|@USING_ISA@|'$USING_ISA'|' \
-            -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
-            -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
-            -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|' \
-            -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
-            -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
-            -e 's|@MAX_UPLOAD_SIZE@|'$MAX_UPLOAD_SIZE'|' \
-            -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
-            -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
-            -e 's|@DONATE_URL@|'$DONATE_URL'|' \
-            -e 's|@UTF8_SUFFIX@|'$UTF8_SUFFIX'|' \
-    < "$f" > "$dest"
+    SubstituteFile "$f" "$dest"
 done
 
 echo -n "copying:"
@@ -114,38 +120,7 @@ do
             *) target="${target}${PERLEXT}";;
         esac
     fi
-    echo " ->$target"
-    sed  -e 's|@PERL@|'$PERL'|' \
-            -e 's|@CGIBINDIR@|'"$CGIBINDIR"'|'\
-            -e 's|@PROTO@|'$PROTO'|' \
-            -e 's|@THISHOST@|'$THISHOST'|' \
-            -e 's|@CIVSDATADIR@|'"$CIVSDATADIR"'|' \
-            -e 's|@CIVSBINURL@|'"$CIVSBINURL"'|' \
-            -e 's|@CIVSURL@|'"$CIVSURL"'|' \
-            -e 's|@CIVSHOME@|'"$CIVSHOME"'|' \
-            -e 's|@SUPERVISOR@|'$SUPERVISOR'|' \
-            -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|' \
-            -e 's|@SMTP_HOST@|'$SMTP_HOST'|' \
-            -e 's|@SMTP_PORT@|'$SMTP_PORT'|' \
-            -e 's|@SMTP_USE_SSL@|'$SMTP_USE_SSL'|' \
-            -e 's|@SMTP_STARTTLS@|'$SMTP_STARTTLS'|' \
-            -e 's|@SMTP_AUTH_USER@|'$SMTP_AUTH_USER'|' \
-            -e 's|@SMTP_AUTH_PASSWD@|'$SMTP_AUTH_PASSWD'|' \
-            -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|' \
-            -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|' \
-            -e 's|@ADDTOPATH@|'$ADDTOPATH'|' \
-            -e 's|@PERLEXT@|'$PERLEXT'|' \
-            -e 's|@USING_ISA@|'$USING_ISA'|' \
-            -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|' \
-            -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|' \
-            -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|' \
-            -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|' \
-            -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|' \
-            -e 's|@MAX_UPLOAD_SIZE@|'$MAX_UPLOAD_SIZE'|' \
-            -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|' \
-            -e 's|@SUGGESTION_BOX@|'$SUGGESTION_BOX'|' \
-            -e 's|@DONATE_URL@|'$DONATE_URL'|' \
-                < "cgi-bin/$f" > "$target"
+    SubstituteFile "cgi-bin/$f" "$target"
     chmod a+x "$target"
 done
 

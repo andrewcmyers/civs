@@ -114,10 +114,17 @@ LOG_HOME_VISITS=
 # Where to donate to support this service
 DONATE_URL='http://www.cs.cornell.edu/andru/donate.html'
 
-# What user the web server runs as
-WEB_USER=nobody
-WEB_GROUP=nobody
+# What user the web server runs as. These are typical values for Ubuntu;
+# running apachectl -S is a good way to find out how it's set on your
+# system if you are using the Apache web server.
+WEB_USER=www-data
+WEB_GROUP=www-data
 
 # default locations of these executables
 CHOWN=/usr/sbin/chown
 CHGRP=/usr/bin/chgrp
+
+# Salt for hashing email addresses. Set to the admin key
+# by default but can be changed to anything. Note that changing
+# the salt effectively deletes all recorded opt-in information.
+EMAIL_SALT="$ADMIN_KEY"

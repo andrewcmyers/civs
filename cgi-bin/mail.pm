@@ -128,7 +128,7 @@ sub SaveOptOuts {
 
 # Returns the key for an canonicalized email address
 sub OptOutKey {
-    civs_hash($_[0])
+    civs_hash('@EMAIL_SALT@' . $_[0])
 }
 
 # Is this receiver an activated user?
