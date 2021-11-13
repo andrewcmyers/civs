@@ -34,6 +34,8 @@ then
     exit 1
 fi
 
+echo "Building executables"
+
 make -s gettimeofday timeout lockserv
 
 TestAndCreateDir "$HTMLDIR";
