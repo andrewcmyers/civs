@@ -82,6 +82,13 @@ SubstituteFile() {
     < "$1" > "$2"
 }
 
+CopyFile() {
+    echo "  $1 -> $2"
+    cp "$1" "$2"
+}
+
+echo "Installing web pages"
+
 for f in civs_create.html* index.html* public_elections.html*             \
     proportional.html* sec_priv.html* acks.html changelog.html*           \
     news.html* *.var rp.html* publicized_polls.html* faq.html*            \
@@ -97,7 +104,7 @@ do
     SubstituteFile "$f" "$dest"
 done
 
-echo -n "copying:"
+echo "Installing CGI scripts"
 
 for f in add_voters beatpath.pm beatpath2.pm civs_common.pm               \
     voting.pm close control create_election download_ballots              \
@@ -124,15 +131,18 @@ do
     chmod a+x "$target"
 done
 
+echo "Installing images"
+
 mkdir -p "${HTMLDIR}/images"
 
 for f in images/{check123b,sample-ballot,vertstrip,check-civs}.png;
 do
     dest="${HTMLDIR}/${f}"
-    cp "$f" "$dest"
+    echo "  $dest"
+    CopyFile "$f" "$dest"
 done
 
-echo; echo
+echo
 
 if [ ! -s $CIVSDATADIR/private_host_id ]; then
     echo "*********************************************";
@@ -155,6 +165,8 @@ if [ ! -s $CIVSDATADIR/nonce_seed ]; then
         openssl rand -hex -out $CIVSDATADIR/nonce_seed 32;
 fi
 
+echo "Setting permissions"
+
 touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log	      \
       $CIVSDATADIR/global_lock $CIVSDATADIR/email-control.txt
 if [ "$id" = 0 ]; then
@@ -169,21 +181,22 @@ chmod 600 $CIVSDATADIR/nonce_seed
 chmod 644 $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock      \
           $CIVSDATADIR/email-control.txt
 
+echo "Installing executables"
 
 if [ -e gettimeofday.exe ]; then
-    cp gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
+    CopyFile gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
 else
-    cp gettimeofday $CIVSDATADIR/gettimeofday
+    CopyFile gettimeofday $CIVSDATADIR/gettimeofday
 fi
 if [ -e timeout.exe ]; then
-    cp timeout.exe $CIVSDATADIR/timeout.exe;
+    CopyFile timeout.exe $CIVSDATADIR/timeout.exe;
 else
-    cp timeout $CIVSDATADIR/timeout
+    CopyFile timeout $CIVSDATADIR/timeout
 fi
 if [ -e lockserv.exe ]; then
-    cp lockserv.exe $CIVSDATADIR/lockserv.exe;
+    CopyFile lockserv.exe $CIVSDATADIR/lockserv.exe;
 else
-    cp lockserv $CIVSDATADIR/lockserv
+    CopyFile lockserv $CIVSDATADIR/lockserv
 fi
 
 echo "Install completed.  Check for any errors reported above.";
