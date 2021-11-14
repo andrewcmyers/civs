@@ -309,12 +309,12 @@ sub AddWritein {
 	}
     }
     if ($ok) {
-        $choices = $choices . "\n" . $writein;
         $choice_index[$num_choices] = $num_choices;
         $rank[$num_choices] = $num_choices;
         my $index = $num_choices;
         $choices[$index] = $writein;
         $num_choices++;
+        $choices = join "\n", @choices;
         $edata{'choices'} = $choices;
 
         # Now update the vote matrix so that this write-in is
