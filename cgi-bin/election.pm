@@ -438,6 +438,11 @@ sub CheckReceipt {
             SyncVoterKeys;
 
             my @rank = split /,/, $ballot;
+            for (my $j = 0; $j < $num_choices; $j++) {
+                if (!defined($rank[$j])) {
+                    $rank[$j] = $num_choices;
+                }
+            }
 
             for (my $j = 0; $j < $num_choices; $j++) {
                 for (my $k = 0; $k < $num_choices; $k++) {
