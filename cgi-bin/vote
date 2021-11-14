@@ -33,7 +33,7 @@ use top_polls;
 # 6. To reload a set of rankings
 
 my $top_polls_refresh = 24 * 3600; # daily refresh
-my $allow_debug_votes = 1;         # allow multiple votes from the same voter in debug mode?
+my $allow_debug_votes = 0;         # allow multiple votes from the same voter in debug mode?
 
 my $voter = param('voter'); # nearly obsolete
 my $old_voter_key = param('voter_key'); # nearly obsolete
@@ -192,28 +192,24 @@ sub ProcessVote {
 	}
     }
 
-	# Now, update matrix.
-	# Note: vdata{"2.3"} contains the number of votes where
-	# choice 2 beats choice 3 (i.e., has lower
-	# numbered rank)
+    # Now, update matrix.
+    # Note: vdata{"2.3"} contains the number of votes where
+    # choice 2 beats choice 3 (i.e., has lower
+    # numbered rank)
     for (my $j = 0; $j < $num_choices; $j++) {
-	for (my $k = 0; $k < $num_choices; $k++) {
-	    my $jk = $vdata{"$j.$k"};
-	       $jk = 0 if (!defined($jk));
-	if ($rank[$j] ne 'No opinion' &&
-			$rank[$k] ne 'No opinion' &&
-			$rank[$j] < $rank[$k]) 
-		{
-			$vdata{"$j.$k"} = $jk + 1;
-	    }	
-	}
+        for (my $k = 0; $k < $num_choices; $k++) {
+            my $jk = $vdata{"$j.$k"};
+            $jk = 0 if (!defined($jk));
+            if ($rank[$j] ne 'No opinion' &&
+                $rank[$k] ne 'No opinion' &&
+                $rank[$j] < $rank[$k]) {
+                $vdata{"$j.$k"} = $jk + 1;
+            }   
+        }
     }
 
     print p($tx->thank_you_for_voting($title,
 				$election_id."/".$voter_ballot_release_key));
-
-    # This is code to be enabled later, when we implement ballot checking.
-    #print p("Your password to release your ballot is: " . pre($voter_ballot_release_key));
 
     PointToResults;
     print &TrySomePolls();

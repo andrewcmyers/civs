@@ -193,7 +193,7 @@ sub init {
 }
 
 END {
-    &SyncVoterKeys();
+    &SyncVoterKeys;
     &CloseDatabase;
     &UnlockElection;
 }
@@ -406,13 +406,89 @@ sub IsWriteinName {
     $_[0] =~ m/\(write-in\)$/
 }
 
+# Check whether the voter has provided a correct receipt
+# for a prior vote; if so, remove their old ballot and return 1.
+sub CheckReceipt {
+    (my $voter_key) = @_;
+    my $receipt = param('receipt');
+    if ($receipt) {
+        my ($id, $release_key) = $receipt =~ m|(E_[0-9a-f]+)/([0-9a-f]+)|;
+        my $ballot_key = civs_hash($release_key, $private_host_id);
+        my @used_voters = split /\n/, $vdata{'used_voters'};
+        my @rv = split /\n/, $recorded_voters;
+        if ($id eq $election_id && $vdata{$ballot_key}) {
+            my $ballot = $vdata{$ballot_key};
+            delete $vdata{$ballot_key};
+            $vdata{'num_votes'}--;
+            delete $used_voter_keys{&civs_hash($voter_key)};
+            my $found = 0;
+            for (my $i = 0; $i <= $#rv; $i++) {
+                if ($rv[$i] eq $ballot_key) {
+                    splice @rv, $i, 1;
+                    $vdata{'recorded_voters'} = join "\n", @rv;
+                    $found = 1;
+                    last;
+                }
+            }
+            if (!$found) {
+                Log "Warning: election $election_id revote: could not remove previous recorded voter $release_key (voter key $voter_key, ballot key $ballot_key)"
+            } else {
+                Log "Removed ballot from voter key $voter_key (ballot key $ballot_key, release key $release_key"
+            }
+            SyncVoterKeys;
+
+            my @rank = split /,/, $ballot;
+
+            for (my $j = 0; $j < $num_choices; $j++) {
+                for (my $k = 0; $k < $num_choices; $k++) {
+                    my $jk = $vdata{"$j.$k"};
+                    $jk = 0 if (!defined($jk));
+                    if ($rank[$j] ne 'No opinion' &&
+                        $rank[$k] ne 'No opinion' &&
+                        $rank[$j] < $rank[$k]) {
+                        $vdata{"$j.$k"} = $jk - 1;
+                    }   
+                }
+            }
+
+            return 1;
+        } else {
+            if (!$id || !$ballot_key) {
+                print $tx->invalid_release_key($receipt);
+            }
+            if (!$vdata{$ballot_key}) {
+                print $tx->no_ballot_under_key($receipt);
+            }
+        }
+    }
+    return 0;
+}
+
+# Check if the voter has already voted (and this is not a valid revote).
+# If so, generate an error page and exit.
 sub CheckNotVoted {
     my ($voter_key, $old_voter_key, $voter) = @_;
     # print pre("Checking for previous vote by ", $voter_key, " hash ", civs_hash($voter_key));
     if ($used_voter_keys{&civs_hash($voter_key)}) {
-	print h1($tx->Already_voted);
-	print p($tx->vote_has_already_been_cast);
+        if (CheckReceipt($voter_key)) { return }
+	print h1($tx->Already_voted), $cr;
+	print p($tx->vote_has_already_been_cast), $cr;
 	&PointToResults;
+        print p($tx->if_you_want_to_change), $cr;
+        print start_form(
+            -name => 'receipt_form',
+            -method => 'POST',
+            -enctype => 'multipart/form-data',
+            -accept_charset => 'UTF-8',
+            -action => '@CIVSBINURL@/vote@PERLEXT@'
+        ), $cr;
+        print hidden(-name => 'id', -value => $election_id), $cr;
+        print hidden(-name => 'voter', -value => $voter), $cr;
+        print hidden(-name => 'key', -value => $voter_key), $cr;
+        print hidden(-name => 'akey', -value => $authorization_key), $cr;
+        print textfield(-name => 'receipt'), $cr;
+        print submit(), $cr;
+        print end_form(), $cr;
         &main::TrySomePolls;
         &CIVS_End;
 

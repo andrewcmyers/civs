@@ -549,7 +549,9 @@ sub if_you_have_already_voted { #url
 }
 sub thank_you_for_voting { #title, receipt
     "Thank you. Your vote for <strong>$_[1]</strong> has been
-	successfully cast. Your voter receipt is <code>$_[2]</code>.";
+	successfully cast.<br>
+        Your voter receipt is <code>$_[2]</code>.
+        You will need this receipt if you want to change your ballot.";
 }
 sub try_some_public_polls {
     "Feel like voting on something else? Try one of these public polls:"
@@ -581,11 +583,22 @@ sub following_URL_will_report_results {
 }
 sub future_result_link {
     (my $self, my $url) = @_;
-    "The following URL will report poll results once the poll ends: <tt>$url</tt>"
+    "The following URL will report poll results once the poll ends: <a href='$url'><tt>$url</tt></a>"
 }
 #deprecated
 sub following_URL_reports_results {
     'The following URL reports the current poll results:'
+}
+sub if_you_want_to_change {
+    'You can remove your previous vote and vote again by entering your voter receipt here:'
+}
+sub invalid_release_key {
+    my ($self, $receipt) = @_;
+    'The provided voter receipt ('.$receipt.') is incorrect. It should look similar to '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').'.'
+}
+sub no_ballot_under_key {
+    my ($self, $key) = @_;
+    "No previous ballot was found for the receipt $key"
 }
 sub current_result_link {
     (my $self, my $url) = @_;
