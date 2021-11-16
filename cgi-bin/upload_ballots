@@ -115,7 +115,8 @@ if ($#errors >= 0) {
 }
 print p("Ballot file is well formed and contains $num_ballots ballots."), $cr;
 
-my $num_votes = 0 + $vdata{'num_votes'};
+my $nv_data = $vdata{'num_votes'};
+my $num_votes = $nv_data ? (0 + $nv_data) : 0;
 
 #
 # Insert the ballots into the DB
