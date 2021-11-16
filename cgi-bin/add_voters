@@ -63,6 +63,8 @@ GetPrivateHostID;
 # Send all of the voters their keys
 my @mail_failures = @{SendKeys($authorization_key, \@new_addresses)};
 
+$num_auth = $num_auth || 0;
+
 print p($tx->Total_of_x_voters_authorized($num_auth)), $cr;
 
 if ($#mail_failures >= 0) {
