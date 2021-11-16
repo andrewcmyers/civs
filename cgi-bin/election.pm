@@ -413,10 +413,14 @@ sub CheckReceipt {
     my $receipt = param('receipt');
     if ($receipt) {
         my ($id, $release_key) = $receipt =~ m|(E_[0-9a-f]+)/([0-9a-f]+)|;
-        my $ballot_key = civs_hash($release_key, $private_host_id);
-        my @used_voters = split /\n/, $vdata{'used_voters'};
+        my $ballot_key = $id ? civs_hash($release_key, $private_host_id) : '';
+        my $used_voters_data = $vdata{'used_voters'};
+        my @used_voters;
+        if (defined($used_voters_data)) {
+            @used_voters = split /\n/, $used_voters_data;
+        }
         my @rv = split /\n/, $recorded_voters;
-        if ($id eq $election_id && $vdata{$ballot_key}) {
+        if ($id && $id eq $election_id && $vdata{$ballot_key}) {
             my $ballot = $vdata{$ballot_key};
             delete $vdata{$ballot_key};
             $vdata{'num_votes'}--;
@@ -433,7 +437,7 @@ sub CheckReceipt {
             if (!$found) {
                 Log "Warning: election $election_id revote: could not remove previous recorded voter $release_key (voter key $voter_key, ballot key $ballot_key)"
             } else {
-                Log "Removed ballot from voter key $voter_key (ballot key $ballot_key, release key $release_key"
+                Log "Removed ballot from voter key $voter_key (ballot key $ballot_key, release key $release_key)"
             }
             SyncVoterKeys;
 
@@ -473,8 +477,8 @@ sub CheckReceipt {
 # If so, generate an error page and exit.
 sub CheckNotVoted {
     my ($voter_key, $old_voter_key, $voter) = @_;
-    # print pre("Checking for previous vote by ", $voter_key, " hash ", civs_hash($voter_key));
-    if ($used_voter_keys{&civs_hash($voter_key)}) {
+    # print pre("Checking for previous vote by ", $voter_key, " hash ", &civs_hash($voter_key));
+    if ($voter_key && $used_voter_keys{&civs_hash($voter_key)}) {
         if (CheckReceipt($voter_key)) { return }
 	print h1($tx->Already_voted), $cr;
 	print p($tx->vote_has_already_been_cast), $cr;

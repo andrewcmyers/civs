@@ -259,9 +259,10 @@ sub ProjectName {
 sub OrderChoices {
 	if ($sort_choices || $add_writein) {
 		for (my $i = 0; $i < $num_choices; $i++) {
-			my $rank = param('C'.$i);
-			$iota[$i] = $i;
-			$rank[$i] = param('C'.$i);
+                    my $rank = param('C'.$i);
+                    if (!defined($rank)) { $rank = $num_choices; }
+                    $iota[$i] = $i;
+                    $rank[$i] = $rank;
 		}
 		if ($proportional ne 'yes') {
 			@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
