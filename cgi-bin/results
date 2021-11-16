@@ -431,6 +431,7 @@ sub BallotReport {
 		    my $voter_key =
 			$vdata_copy{"voter key of $ballot_key"};
 		    my $email = $edata_copy{"email_addr $voter_key"};
+                    if (!defined($email)) { $email = $tx->Unknown_email; }
 		    unshift @row, ($email.': ');
 		} else {
 		    unshift @row, "$i. ";

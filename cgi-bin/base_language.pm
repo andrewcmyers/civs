@@ -925,6 +925,10 @@ sub Choices_in_individual_pref_order {
     'Choices (in individual preference order)'
 }
 
+sub Unknown_email {
+    '(unknown)'
+}
+
 sub What_is_this { # url
     '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>';
 }
