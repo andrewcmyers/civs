@@ -117,7 +117,7 @@ sub fixUTF {
 sub DB_decode {
     (my $key) = @_;
     my $d = fixUTF($edata{$key});
-    if (0 && $d =~ m/\302\200|\303\203\302|\303\205\302/) {
+    if (0 && $d =~ m/\303[\202-\203]\302[\200-\277]/) {
         print STDERR "Fixing UTF-8 double encoding in $election_id\n";
         $d = decode('utf-8', $d);
         $edata{$key} = $d;
