@@ -137,11 +137,12 @@ if (param('fresh') || param('Compare') ||             # Can force a refresh
     print "<!-- Reusing cached results -->", $cr;
 }
 
-open (RESULTS, "<$cache_file");
-my $results = do { local $/; <RESULTS> };
-$results = decode('utf-8', fixUTF($results));
-print $results;
-close (RESULTS);
+if (open (RESULTS, "<$cache_file")) {
+    my $results = do { local $/; <RESULTS> };
+    $results = decode('utf-8', fixUTF($results));
+    print $results;
+    close (RESULTS);
+}
 
 CIVS_End;
 
