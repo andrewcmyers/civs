@@ -378,6 +378,15 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     }
     return $ret;
 }
+sub report_authorized {
+    my ($self, $num_auth) = @_;
+    if ($num_auth == 1) {
+        "Il n'y a qu'un seul électeur autorisé."
+    } else {
+        "Au total, $num_auth électeurs ont été autorisés à voter."
+    }
+}
+
 sub Rank {
     'Rang';
 }

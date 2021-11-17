@@ -462,6 +462,15 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     return $ret;
 }
 
+sub report_authorized {
+    my ($self, $num_auth) = @_;
+    if ($num_auth == 1) {
+        'You are the only authorized voter.'
+    } else {
+        "A total of $num_auth voters have been authorized to vote."
+    }
+}
+
 sub Identifier_request {
     'Please give your email address or other recognizable identifier:'
 }

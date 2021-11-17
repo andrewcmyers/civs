@@ -378,6 +378,9 @@ sub IntroduceVoting {
 
     print p($tx->instructions1($num_winners, $election_end,
 			       $name, $email_addr)), $cr;
+    if ($num_auth) {
+        print p($tx->report_authorized($num_auth));
+    }
     print p($tx->instructions2(($no_opinion eq 'yes'),
                                ($proportional eq 'yes'),
 			       $use_combined_ratings,

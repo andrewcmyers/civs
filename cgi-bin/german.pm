@@ -363,6 +363,15 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     }
     return $ret;
 }
+
+sub report_authorized {
+    my ($self, $num_auth) = @_;
+    if ($num_auth == 1) {
+        'Sie sind der einzige berechtigte Wähler.'
+    } else {
+        "Insgesamt sind $num_auth Wähler wahlberechtigt."
+    }
+}
 sub Rank {
     'Rang';
 }
