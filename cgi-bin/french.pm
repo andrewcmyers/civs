@@ -457,6 +457,9 @@ sub thank_you_for_voting { #title, receipt
     "Merci. Votre vote pour la consultation <strong>$_[1]</strong> a été
 	enregistré. Votre certificat de vote est   <code>$_[2]</code>.";
 }
+sub try_some_public_polls {
+    "Si vous avez envie de voter sur autre chose, essayez l'un de ces sondages publics :"
+}
 sub name_of_writein_is_empty {
     "Vous n\'avez pas saisi de nouveau candidat ou de nouvelle proposition";
 }
