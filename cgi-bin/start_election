@@ -43,7 +43,7 @@ if ($#addresses >= 0) {
     }
 
 
-    SendKeys($authorization_key, \@addresses);
+    SendKeys($authorization_key, \@addresses, 1);
 
     print $tx->Done, '</pre>', $cr;
 }

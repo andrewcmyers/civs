@@ -221,7 +221,12 @@ sub poll_supervisor { # name, email
     "Poll supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>"
 }
 sub no_authorized_yet { #waiting
-    "0 ($_[1] voters will be authorized when the poll is started)"
+    my ($self, $auth) = @_;
+    if ($auth > 0) {
+        "0 ($_[1] voters will be authorized when the poll is started)"
+    } else {
+        '0'
+    }
 }
 sub total_authorized_voters { # num_auth_string
     "Total authorized voters: $_[1]"
@@ -291,6 +296,9 @@ sub add_voter_instructions {
     It will only resend the voter an invitation to vote.
     In a public poll, only a token attempt is made to prevent
     multiple voting.";
+}
+sub resend_question {
+    'Invite even voters who have already voted?'
 }
 sub Upload_file {
     'Upload file: '
@@ -688,8 +696,10 @@ sub Unable_to_append_to_poll_log {
     "Unable to append to the poll log.";
 }
 sub Voter_v_already_authorized {
-    "Voter \"$_[1]\" is already authorized.
-     The voter's key will be resent to the voter.";
+    "Voter &lt;$_[1]&gt; is already authorized. The voter's key will be resent to the voter.";
+}
+sub Skipping_already_voted {
+    "Skipping voter &lt;$_[1]&gt;: already voted."
 }
 sub Invalid_email_address_hdr { # addr
     "Invalid email address";

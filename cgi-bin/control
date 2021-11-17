@@ -276,6 +276,7 @@ for (my $j = 0; $j < $num_choices; $j++) {
 print "</ul></form>$cr";
 
 if ($external_ballots ne 'yes') {
+  if (IsStarted) {
     print $cr, h2($tx->Add_voters);
 
     print p($tx->add_voter_instructions);
@@ -290,8 +291,10 @@ if ($external_ballots ne 'yes') {
 	    if defined($authorization_key);
     print p('<textarea title="Voter addresses" rows="2" name="new_addresses" cols="50"></textarea>');
     print p($tx->Upload_file, '<input title="Voter address file upload" id=new_addresses_file type=file name="new_addresses_file">');
-    print '<input type="submit" value="'.$tx->Add_voters.'" name="add">';
+    print input({type => 'submit', value => $tx->Add_voters, name => 'add'}), '&nbsp;',
+            input({type => 'checkbox', name => 'resend', value => 'yes'}, $tx->resend_question);
     print '</form>';
+  }
 } else {
     print $cr, h2($tx->Load_ballot_data), $cr;
 

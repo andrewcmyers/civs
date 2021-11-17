@@ -711,7 +711,7 @@ sub GetEmailLoad {
 # they are. The voter email address does not need to be in canonical form.
 #
 sub VotingUrl {
-    (my $email, my $election_id, my $authorization_key) = @_;
+    my ($email, $election_id, $authorization_key, $resend) = @_;
     my $v = &CanonicalizeAddr($email);
     my $url = "";
     if ($public eq 'yes') {
@@ -725,7 +725,12 @@ sub VotingUrl {
                     ."&key=$voter_key";
         if ($voter_keys{$hash_voter_key}) {
             # This email address has already been added to the poll
-            print p($tx->Voter_v_already_authorized($email)), "\n";
+            if ($resend || !$used_voter_keys{$hash_voter_key}) {
+                print $tx->Voter_v_already_authorized($email), $cr;
+            } else {
+                print $tx->Skipping_already_voted($email), $cr;
+                return '';
+            }
         } else {
             $voter_keys{$hash_voter_key} = 1;
             $num_auth++; $edata{'num_auth'} = $num_auth;
@@ -739,8 +744,7 @@ sub VotingUrl {
 # Record the keys in the database, and update the number of
 # authorized voters accordingly.
 sub SendKeys {
-    my $authorization_key = shift;
-    my $addresses_ref = shift;
+    my ($authorization_key, $addresses_ref, $resend) = @_;
     my @addresses =  &unique_elements( @{$addresses_ref} );
     my $now = time();
     my $load = GetEmailLoad($now);
@@ -750,7 +754,8 @@ sub SendKeys {
     foreach my $v (@addresses) {
 	$v = TrimAddr($v);
 	if ($v eq '') { next }
-        my $url = &VotingUrl($v, $election_id, $authorization_key);
+        my $url = &VotingUrl($v, $election_id, $authorization_key, $resend);
+        if (!$url) { next }
 
         # print "Checking whether $email_addr can send to $v\n";
         if (!&UserActivated($optouts, $v)) {
