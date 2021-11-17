@@ -425,6 +425,9 @@ sub thank_you_for_voting { #title, receipt
     "Obrigado. O seu voto para <strong>$_[1]</strong> foi registrado com sucesso.
 	Seu recibo é <code>$_[2]</code>.";
 }
+sub try_some_public_polls {
+    "Quer votar em outra coisa? Experimente uma destas pesquisas públicas:"
+}
 sub name_of_writein_is_empty {
     "Nome da opção a adicionar está vazio";
 }
