@@ -29,6 +29,8 @@ if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
     CheckAuthorizationKeyForAddingVoter($authorization_key);
 }
 
+$control_key = $control_key || 'omitted';
+
 print h1("$title");
   
 print $tx->poll_supervisor($name,$email_addr), br(), $cr;

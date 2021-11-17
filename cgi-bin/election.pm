@@ -113,7 +113,7 @@ sub fixUTF {
     return $result;
 }
 
-# Decode a database field using UTF-8, applying ad hoc fixups as needed
+# Decode a database field using UTF-8, with ad hoc fixup of embedded Latin-1 characters and doubly encoded UTF-8
 sub DB_decode {
     (my $key) = @_;
     my $d = fixUTF($edata{$key});
