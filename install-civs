@@ -137,13 +137,11 @@ echo "Installing images"
 
 mkdir -p "${HTMLDIR}/images"
 
-for f in images/{check123b,sample-ballot,vertstrip,check-civs}.png;
+for f in images/{check123b,sample-ballot,vertstrip,check-civs}.png
 do
     dest="${HTMLDIR}/${f}"
     CopyFile "$f" "$dest"
 done
-
-echo
 
 if [ ! -s $CIVSDATADIR/private_host_id ]; then
     echo "*********************************************";
