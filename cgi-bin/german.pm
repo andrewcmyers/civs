@@ -439,6 +439,9 @@ sub thank_you_for_voting { #title, receipt
     "Danke. Sie haben Ihre Stimme zu <strong>$_[1]</strong> erfolgreich
 	abgegeben. Ihre Abstimmungsquittung ist <code>$_[2]</code>.";
 }
+sub try_some_public_polls {
+    "Lust auf etwas anderes abzustimmen? Versuchen Sie es mit einer dieser öffentlichen Umfragen:"
+}
 sub name_of_writein_is_empty {
     "Sie haben keine Kandidatenbezeichnung eingegeben.";
 }
