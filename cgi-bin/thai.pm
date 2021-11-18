@@ -887,6 +887,9 @@ sub preference_description {
 
 ## User activation
 
+sub mail_address {
+    'ที่อยู่อีเมล:'
+}
 sub new_user {
     'เปิดใช้งานผู้ใช้'
 }
