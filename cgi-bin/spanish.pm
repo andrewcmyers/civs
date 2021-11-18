@@ -428,6 +428,9 @@ sub thank_you_for_voting {# título, el recibo
     "Gracias. Su voto por <strong>$_[1]</strong> ha sido hecho correctamente. 
     Su recibo como votante es <code> $_[2] </code>. " 
 }
+sub try_some_public_polls {
+    "¿Tienes ganas de votar sobre otra cosa? Prueba una de estas encuestas públicas:"
+}
 sub name_of_writein_is_empty { 
     "El nombre de la opción está vacío"; 
 }
