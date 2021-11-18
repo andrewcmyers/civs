@@ -51,8 +51,8 @@ while (defined(my $file = readdir(DIR))) {
     tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
-    my $name = decode('utf-8', $edata{'name'} || 'undefined');
-    my $title = decode('utf-8', $edata{'title'} || 'no title');
+    my $name = decode('utf-8', fixUTF($edata{'name'} || 'undefined'));
+    my $title = decode('utf-8', fixUTF($edata{'title'} || 'no title'));
 
     # $title = HTML::Entities::encode_entities($title);
     my $email_addr = $edata{'email_addr'} || '(no addr)';

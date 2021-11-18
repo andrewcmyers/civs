@@ -21,7 +21,7 @@ BEGIN {
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
-    &IsWriteinName &GetEmailLoad &fixUTF
+    &IsWriteinName &GetEmailLoad
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
@@ -65,53 +65,6 @@ our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 my ($db_is_open, $election_is_locked);
 
 &init;
-
-# Convert a broken UTF-8 encoding by treating wrong bytes as Latin-1 and
-# reencoding as UTF-8.
-sub fixUTF {
-    my ($a) = @_;
-    return $a if (!$a =~ m/[\200-\377]/);
-    my $result = '';
-    my $n = length($a);
-    for (my $i = 0; $i < $n; $i++) {
-        my $c = ord(substr($a, $i, 1));
-        # printf "%02x ", $c;
-        my $extra = $n - $i - 1;
-        if ($c < 0x80 || $c > 0xFF) {
-            $result .= chr($c);
-            # print "$i: copy\n";
-        } else {
-            my $needed = 0;
-            my $ok = 1;
-            if ($c > 0xF0) {
-                $needed = 3;
-            } elsif ($c > 0xE0) {
-                $needed = 2;
-            } elsif ($c > 0xC0) {
-                $needed = 1;
-            } else {
-                $ok = 0;
-            }
-            $ok = 0 if ($extra < $needed);
-            if ($ok) {
-                for (my $j = $i + 1; $ok && $j < $n && $j - $i <= $needed; $j++) {
-                    my $e = ord(substr($a, $j, 1));
-                    # printf "Checking %02x ", $e;
-                    $ok = 0 if (($e & 0xC0) != 0x80);
-                }
-            }
-            if ($ok) {
-                # print "$i: copying utf-8 char\n";
-                $result .= substr($a, $i, $needed + 1);
-                $i += $needed;
-            } else {
-                # print "$i: reencode $c\n";
-                $result .= chr(0xC0 | ($c>>6)) . chr(0x80 | ($c & 077));
-            }
-        }
-    }
-    return $result;
-}
 
 # Decode a database field using UTF-8, with ad hoc fixup of embedded Latin-1 characters and doubly encoded UTF-8
 sub DB_decode {
