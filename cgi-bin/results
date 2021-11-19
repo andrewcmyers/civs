@@ -71,25 +71,22 @@ print br();
 
 my $nwin_param = param('num_winners');
 my $real_nwin = $num_winners;
-if (defined($nwin_param) && $nwin_param > 0 &&
-    $nwin_param < $num_choices) {
-	$num_winners = 0+$nwin_param;
+$nwin_param = defined($nwin_param) ? 0 + $nwin_param : 0;
+if ($nwin_param > 0 && $nwin_param < $num_choices) {
+    $num_winners = $nwin_param;
 }
 
-my $algorithm = param('algorithm');
-if (!defined($algorithm) || $algorithm eq '') {
-    $algorithm = $default_algorithm;
-}
+my $algorithm = param('algorithm') || $default_algorithm;
 
 my $real_prop = $proportional;
 my $show_prop = param('proportional');
-if (defined($show_prop) && $show_prop ne '') {
+if ($show_prop) {
     $proportional = $show_prop;
 }
 
 my $real_combined = $use_combined_ratings;
 my $show_combined = param('use_combined_ratings');
-if (defined($show_combined) && $show_combined ne '') {
+if ($show_combined) {
     $use_combined_ratings = $show_combined;
 }
 
@@ -433,7 +430,7 @@ sub BallotReport {
 		if ($reveal_voters eq 'yes') {
 		    my $voter_key =
 			$vdata_copy{"voter key of $ballot_key"};
-		    my $email = $edata_copy{"email_addr $voter_key"};
+		    my $email = decode('utf-8', $edata_copy{"email_addr $voter_key"});
                     if (!defined($email)) { $email = $tx->Unknown_email; }
 		    unshift @row, ($email.': ');
 		} else {

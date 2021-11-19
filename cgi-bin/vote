@@ -7,6 +7,7 @@ use lib '@CGIBINDIR@';
 # use admctrl;
 
 use civs_common;
+use Encode qw(encode decode);
 
 use CGI qw(:standard -utf8);
 
@@ -188,7 +189,7 @@ sub ProcessVote {
     if ($reveal_voters eq 'yes') {
 	$vdata{"voter key of $ballot_key"} = $voter_key;
 	if ($public eq 'yes') {
-	    $edata{"email_addr $voter_key"} = param('email_address');
+	    $edata{"email_addr $voter_key"} = encode('utf-8', param('email_address'));
 	}
     }
 
