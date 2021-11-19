@@ -72,8 +72,10 @@ sub CanonicalizeAddr {
     $addr =~ s/\s+//g;
     if ($addr =~ m/\@gmail.com$/) { # remove . from gmail addresses
         (my $base) = $addr =~ m/^([^@]*)\@gmail.com/;
-        $base =~ s/\.//g;
-        $addr = $base.'@gmail.com';
+        if ($base) {
+            $base =~ s/\.//g;
+            $addr = $base.'@gmail.com';
+        }
     }
     return $addr;
 }
