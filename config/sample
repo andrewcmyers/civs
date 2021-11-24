@@ -3,10 +3,10 @@
 # Where the "About CIVS" links point.
 # Currently a pointer to the Cornell CIVS installation, can be
 # changed to point to another installation.
-CIVSHOME='http://civs.cs.cornell.edu'
+CIVSHOME='http://civs1.civs.us'
 
 # The protocol for accessing CIVS (http or https)
-PROTO=http
+PROTO=https
 
 # The address of the web server that is hosting CIVS (may include port number)
 THISHOST='MyServer.MyUniversity.edu'
@@ -49,7 +49,7 @@ CGIBINDIR='/usr/lib/cgi-bin/civs'
 # the CIVS data for each election.  This directory contains the server's
 # private key, all the ballots cast in elections, etc.  So it would be
 # advisable for this *not* to be publicly accessible.
-CIVSDATADIR='/home/username/civs-data'
+CIVSDATADIR='/home/username/civs/data'
 
 # The URL path to the CIVS CGI scripts.  This is relative to $THISHOST.
 # I.e., the scripts will be found at ${PROTO}://$THISHOST$CIVSBINURL.
