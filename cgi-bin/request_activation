@@ -66,7 +66,7 @@ if (!defined($code)) {
             my $uniqueid = &SecureNonce;
             my $message_id = "CIVS-activation.$uniqueid\@$thishost";
 
-            SendHeader('From', "<$civs_supervisor>");
+            SendHeader('From', $tx->From_CIVS($civs_supervisor));
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $civs_supervisor);
             SendHeader('Message-ID', "<$message_id>");

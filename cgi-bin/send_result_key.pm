@@ -53,8 +53,7 @@ sub SendResultKey {
             MailFrom('@AUTH_SENDER@');
             MailTo($addr);
             StartMailData;
-            SendHeader 'From', "$civs_supervisor (".
-                $tx->Condorcet_Internet_Voting_Service_email_hdr.')';
+            SendHeader 'From', $tx->From_CIVS($civs_supervisor);
             SendHeader 'To', $addr;
             SendHeader 'Subject', $tx->Results_of_CIVS_poll($title);
             SendHeader 'Content-Type', 'text/plain; charset="utf-8"';
