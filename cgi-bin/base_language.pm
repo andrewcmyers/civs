@@ -236,7 +236,7 @@ sub total_authorized_voters { # num_auth_string
     "Total authorized voters: $_[1]"
 }
 sub actual_votes_so_far { # num
-    "Actual votes cast thus far: $_[1]"
+    "Votes actually cast so far: $_[1]"
 }
 sub poll_ends { # end
     "Announced end of poll: $_[1]"
