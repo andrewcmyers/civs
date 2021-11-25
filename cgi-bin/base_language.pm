@@ -720,6 +720,10 @@ sub Sending_mail_to_voter_v {
 sub CIVS_poll_supervisor { # name
     "\"$_[1] (CIVS poll supervisor)\""
 }
+sub From_poll_supervisor {
+    my ($self, $name, $address) = @_;
+    $self->CIVS_poll_supervisor($name)." <$address>"
+}
 sub voter_mail_intro { #title, name, email_addr
 "A Condorcet Internet Voting Service poll named <b>$_[1]</b> has been created.
 You have been designated as a voter by the poll supervisor,
