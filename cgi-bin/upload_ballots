@@ -37,10 +37,6 @@ if ($external_ballots ne 'yes') {
 
 my $ballot_fh = upload('ballot_data');
 
-# print p("Ballot file: ", code(param("ballot_data")));
-# my $tmpname = tmpFileName($ballot_fh);
-# print p("Temporary file: ", $tmpname);
-
 my $lineno = 0;
 my @errors = ();
 my $max_errors = 10;

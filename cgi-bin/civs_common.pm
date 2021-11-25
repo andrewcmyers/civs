@@ -383,7 +383,7 @@ sub Filter {
                ? $tf->filter($s)
                : $s);
     # Log "Filtering: " . $_[0] . " to " . $result;
-    return $result;
+    return $result || "";
 }
 
 # Turn a string into a hex representation of each of its characters. For debugging.

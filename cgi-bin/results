@@ -63,7 +63,7 @@ if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
     }
 
     if ($restrict_results eq 'yes') {
-	&CheckResultKey(param('rkey'));
+	&CheckResultKey(scalar param('rkey'));
     }
 }
 
@@ -232,7 +232,7 @@ sub ComputeResults {
 	    value="', $num_winners, '" />';
     print RESULTS hidden('id', $election_id);
     if (defined(param('rkey'))) {
-	print RESULTS hidden('rkey', escapeHTML(param('rkey')));
+	print RESULTS hidden('rkey', escapeHTML(scalar param('rkey')));
     }
     if ($real_nwin != $num_winners) {
 	print RESULTS $tx->Poll_actually_has($real_nwin);
@@ -1203,7 +1203,7 @@ sub PrintProportionalResults {
     print RESULTS hidden('num_winners', $num_winners);
     print RESULTS hidden('algorithm', $algorithm);
     if (defined(param('rkey'))) {
-	print RESULTS hidden('rkey', escapeHTML(param('rkey')));
+	print RESULTS hidden('rkey', escapeHTML(scalar param('rkey')));
     }
     print RESULTS '<input type="submit" value="Compare sets" name="Compare">';
     print RESULTS '</form>';

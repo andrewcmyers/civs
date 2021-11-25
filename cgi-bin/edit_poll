@@ -22,7 +22,7 @@ undef $/;
 
 print CGI::header(-charset => 'utf-8');
 
-my $description = &Filter(param('description'));
+my $description = &Filter(scalar param('description'));
 
 $edata{'description'} = encode('utf-8', $description);
 
