@@ -132,7 +132,7 @@ sub init {
     $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';
     $external_ballots = $edata{'external_ballots'} or $external_ballots = 'no';
     $reveal_voters = $edata{'reveal_voters'} or $reveal_voters = '';
-    $restrict_results = $edata{'restrict_results'};
+    $restrict_results = $edata{'restrict_results'} || "no";
     $result_addrs = $edata{'result_addrs'};
     $hash_result_key = 0;
     $last_vote_time = $vdata{'last_vote_time'};
