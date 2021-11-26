@@ -239,9 +239,9 @@ sub disallow_further_writeins {
 # 	    who were earlier sent an email containing a URL for
 # 	     viewing results:'
 # }
-# sub results_available_to_the_following_users {
-#     'The results of this poll have been released only to a limited set of users:'
-# }
+sub results_available_to_the_following_users {
+     'Результаты этого опроса были опубликованы только для ограниченного круга пользователей:'
+}
 
 # sub Poll_results_are_available { #url
 #     "<a href=\"$_[1]\">See poll results</a>"
@@ -771,12 +771,12 @@ sub Poll_not_yet_ended {
 #     }
 #     "&nbsp;(Poll actually has $winmsg)"
 # }
-# sub poll_description_hdr {
-#     'Poll description'
-# }
-# sub Ranking_result {
-#     'Result'
-# }
+sub poll_description_hdr {
+    'Описание опроса'
+}
+sub Ranking_result {
+     'Результат'
+}
 # sub x_beats_y { # x y w l 
 #     "$_[1] beats $_[2] $_[3]&ndash;$_[4]"
 # }
@@ -786,12 +786,12 @@ sub Poll_not_yet_ended {
 # sub x_loses_to_y { # x y w l 
 #     "$_[1] loses to $_[2] $_[3]&ndash;$_[4]"
 # }
-# sub some_result_details_not_shown {
-#     'For simplicity, some details of the poll result are not shown. &nbsp;'
-# }
-# sub Show_details {
-#     'Show details'
-# }
+sub some_result_details_not_shown {
+    'Для простоты некоторые детали результатов опроса не показаны.'
+}
+sub Show_details {
+     'Показать детали'
+}
 # sub Hide_details {
 #     'Hide details'
 # }
