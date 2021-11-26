@@ -506,7 +506,10 @@ sub if_you_have_already_voted { #url
     результаты опроса</a>."
 }
 sub thank_you_for_voting { #title, receipt
- "Спасибо. Ваш голос за <strong>$_[1]</strong> был успешно брошен. Квитанция избиратель <code>$_[2]</code>."
+    "Спасибо. Ваш голос за <strong>$_[1]</strong> был успешно брошен. Квитанция избиратель <code>$_[2]</code>."
+}
+sub try_some_public_polls {
+    'Хотите проголосовать по другому поводу? Попробуйте один из этих общественных опросов:'
 }
 sub name_of_writein_is_empty {
     'Название приказная в выборе пуст.'
@@ -515,7 +518,7 @@ sub writein_too_similar {
     'К сожалению, название вписанный слишком похож на существующий выбор'
 }
 
-# # election
+# election
 
 sub No_poll_ID {
     'Нет идентификатора опроса. Возможно, ошибка копирования-вставки?'
@@ -728,9 +731,9 @@ sub Condorcet_completion_rule {
 # sub computing_results {
 #     'Computing results...'
 # }
-# sub Supervisor { #name, email
-#     "Supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>"
-# }
+sub Supervisor { #name, email
+     "Супервизор: $_[1] <tt>&lt;$_[2]&gt;</tt>"
+}
 sub Announced_end_of_poll {
   "Объявлено об окончании опроса: $_[1]"
 }
@@ -808,9 +811,9 @@ sub Result_details {
 # sub No_ballots_were_cast {
 #     "No ballots were cast in this poll."
 # }
-# sub Ballot_reporting_was_not_enabled {
-#     "Ballot reporting was not enabled for this poll."
-# }
+sub Ballot_reporting_was_not_enabled {
+     'Отчетность по бюллетеням не была включена для этого опроса'
+}
 sub Tied {
      '<i>ничейный результат</i>:'
 }
