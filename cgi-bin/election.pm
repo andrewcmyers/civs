@@ -591,6 +591,7 @@ sub ElectionLog {
           end_html();
 	exit 0;
     }
+    binmode ELECTION_LOG, ':utf8';
     print ELECTION_LOG $now." ".$remote_ip_address." ".$log_msg."\n";
     close ELECTION_LOG;
 }

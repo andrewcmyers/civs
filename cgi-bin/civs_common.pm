@@ -282,6 +282,7 @@ sub TrySomePolls {
 sub Log {
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open(CIVS_LOG, ">>$civs_log");
+    binmode CIVS_LOG, ':utf8';
     print CIVS_LOG $now.' '.$remote_ip_address.' '.$_[0].$cr;
     close(CIVS_LOG);
 }

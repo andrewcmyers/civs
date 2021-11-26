@@ -432,8 +432,7 @@ sub Choice { 'Выбор' }
 sub Weight { 'Вес' }
 
 sub ordinal_of {
-    my $ending = '-го';
-    return "$_[1]".$ending;
+    "$_[1]"
 }
 
 # sub address_will_be_visible {
