@@ -157,7 +157,7 @@ URL will permit them to see the poll results.
 # start
 
 sub poll_started {
-    'The poll <strong>'.$_[1].'</strong> has been started.';
+    "The poll <strong>$_[1]</strong> has been started."
 }
 
 sub sending_keys_now {
