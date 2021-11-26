@@ -324,7 +324,7 @@ sub SendHeader {
 	# print 'Section: ', $section;
 	if (!$first) { $text .= "\r\n " }
 	$first = 0;
-	if ($section =~ m/[\200-\377]/) {
+	if ($section =~ m/[\x80-\x{10FFFF}]/) {
             $section = encode('utf-8', $section);
 	    my $budget = 75 - 12 - length($header) - 2;
 	    $budget -= $budget % 4;
