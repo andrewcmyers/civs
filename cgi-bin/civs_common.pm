@@ -399,8 +399,10 @@ sub hexdump {
     return $result;
 }
 
-# Convert a broken UTF-8 encoding by treating wrong bytes as Latin-1 and
-# reencoding as UTF-8.
+# Convert a broken UTF-8 encoding.  The argument and result are both strings of
+# bytes representing a UTF-8 encoded string, but the argument may have embedded
+# bytes not following the encoding; these are treated as Latin-1 characters and
+# encoded into UTF-8 in the result.
 sub fixUTF {
     my ($a) = @_;
     return $a if (!($a =~ m/[\200-\377]/));
@@ -408,11 +410,9 @@ sub fixUTF {
     my $n = length($a);
     for (my $i = 0; $i < $n; $i++) {
         my $c = ord(substr($a, $i, 1));
-        # printf "%02x ", $c;
         my $extra = $n - $i - 1;
         if ($c < 0x80 || $c > 0xFF) {
             $result .= chr($c);
-            # print "$i: copy\n";
         } else {
             my $needed = 0;
             my $ok = 1;
@@ -429,16 +429,13 @@ sub fixUTF {
             if ($ok) {
                 for (my $j = $i + 1; $ok && $j < $n && $j - $i <= $needed; $j++) {
                     my $e = ord(substr($a, $j, 1));
-                    # printf "Checking %02x ", $e;
                     $ok = 0 if (($e & 0xC0) != 0x80);
                 }
             }
             if ($ok) {
-                # print "$i: copying utf-8 char\n";
                 $result .= substr($a, $i, $needed + 1);
                 $i += $needed;
             } else {
-                # print "$i: reencode $c\n";
                 $result .= chr(0xC0 | ($c>>6)) . chr(0x80 | ($c & 077));
             }
         }
