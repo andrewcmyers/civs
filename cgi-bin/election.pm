@@ -118,9 +118,9 @@ sub init {
     $writeins = $edata{'writeins'};
     $allow_voting = $edata{'allow_voting'};
     $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
-    $proportional = $edata{'proportional'} or $proportional = "";
-    $use_combined_ratings = $edata{'use_combined_ratings'};
-    $choices = DB_decode('choices') or $choices = "";
+    $proportional = $edata{'proportional'} || '';
+    $use_combined_ratings = $edata{'use_combined_ratings'} || 0;
+    $choices = DB_decode('choices') || '';
     @choices = split /[\r\n]+/, $choices;
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
@@ -129,9 +129,9 @@ sub init {
     $num_votes = $vdata{'num_votes'} or $num_votes = 0;
     $close_time = $vdata{'close_time'};
     $recorded_voters = $vdata{'recorded_voters'};
-    $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';
-    $external_ballots = $edata{'external_ballots'} or $external_ballots = 'no';
-    $reveal_voters = $edata{'reveal_voters'} or $reveal_voters = '';
+    $ballot_reporting = $edata{'ballot_reporting'} || '';
+    $external_ballots = $edata{'external_ballots'} || 'no';
+    $reveal_voters = $edata{'reveal_voters'} || '';
     $restrict_results = $edata{'restrict_results'} || "no";
     $result_addrs = $edata{'result_addrs'};
     $hash_result_key = 0;

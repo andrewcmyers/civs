@@ -102,8 +102,8 @@ my %edata;
 tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 
 ##### read form data into DB
-my $title = &Filter(scalar param('title')); $edata{'title'} = encode('utf-8', $title);
-$edata{'description'} = encode('utf-8', &Filter(scalar param('description')));
+my $title = &Filter(scalar param('title') || ''); $edata{'title'} = encode('utf-8', $title);
+$edata{'description'} = encode('utf-8', &Filter(scalar param('description') || ''));
 my $name = &Filter(scalar param('name')) || "unspecified"; $edata{'name'} = encode('utf-8', $name);
 $edata{'email_addr'} = &Filter(scalar param('email_addr'));
 $edata{'num_winners'} = &Filter(scalar param('num_winners'));
