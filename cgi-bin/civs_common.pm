@@ -417,11 +417,11 @@ sub fixUTF {
         } else {
             my $needed = 0;
             my $ok = 1;
-            if ($c > 0xF0) {
+            if ($c >= 0xF0) {
                 $needed = 3;
-            } elsif ($c > 0xE0) {
+            } elsif ($c >= 0xE0) {
                 $needed = 2;
-            } elsif ($c > 0xC0) {
+            } elsif ($c >= 0xC0) {
                 $needed = 1;
             } else {
                 $ok = 0;
