@@ -16,8 +16,8 @@ CIVS_Header('Start poll');
 use election;
 
 my $max_voters = 1000;
-my $control_key = param('key');   
-my $authorization_key = param('akey');
+my $control_key = param('key') || '';
+my $authorization_key = param('akey') || '';
 
 CheckElectionID;
 CheckControlKey($control_key);
@@ -42,13 +42,15 @@ if ($#addresses >= 0) {
         exit 1;
     }
 
-
     SendKeys($authorization_key, \@addresses, 1);
 
     print $tx->Done, '</pre>', $cr;
 }
 
-print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key&akey=$authorization_key\">".$tx->Go_back_to_poll_control.'</a>');
+my $control_key = "&key=$control_key";
+my $auth_key = $authorization_key ? "&akey=$authorization_key" : '';
+
+print p("<a href=\"$civs_bin_path/control@PERLEXT@?id=$election_id$control_key$auth_key\">", $tx->Go_back_to_poll_control, '</a>');
 
 # Destroy record of voter addresses so we can't
 # figure out who voted for what.
