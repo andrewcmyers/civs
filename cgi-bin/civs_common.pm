@@ -487,9 +487,9 @@ sub CheckLoad {
 
 sub FileTimestamp {
     my $fname = $_[0];
-    (my $dev, my $ino, my $mode, my $nlink, my $uid, my $gid, my $rdev, my $size,
-	my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
-	    = stat($fname);
+    (my $dev, my $ino, my $mode, my $nlink, my $uid, my $gid, my $rdev,
+     my $size, my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
+        = stat($fname);
     if (!defined($mtime) || $mtime eq '') {
 	return 0; # no cache file
     } else {
