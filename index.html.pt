@@ -30,7 +30,7 @@
 <td rowspan="3" valign="top">
 <div class="home">
 <p>CIVS é um serviço gratuito que permite facilmente realizar votações pela Internet.
-Cada eleitor classifica um conjunto de opções possíveis. Classificações individuais 
+Cada eleitor classifica um conjunto de opções possíveis. Classificações individuais
 dos eleitores são combinadas em uma classificação geral anônima. CIVS já tem mais
 de 80.000 usuários, em muitas votações que decidiram, por exemplo:
 </p>
@@ -76,7 +76,7 @@ os e-mails dos eleitores; neste caso, é permitido somente um voto por endereço
 <strong>Por que votação por preferência?</strong>
 Neste tipo de votação, os eleitores classificam as opções conforme suas preferências, em vez de apenas indicar sua opção favorita. Assim, a votação coleta mais opiniões dos eleitores, levando a resultados mais precisos. Isso também ajuda a evitar empates e dispersão de votos.
 </p><p>
-Votações por preferência são realizadas em eleições reais. Por exemplo, a Austrália usa o método de Voto Único Transferível (do inglês, Single Transferable Vote - STV, também conhecido como Instant Runnof Voting - IRV). Entretanto, os métodos de Condorcet suportados pelo CIVS são melhores do que o método STV na identificação de candidatos de consenso. O método STV pode eleger um candidato mesmo que a maioria dos eleitores prefira outro, e isso 
+Votações por preferência são realizadas em eleições reais. Por exemplo, a Austrália usa o método de Voto Único Transferível (do inglês, Single Transferable Vote - STV, também conhecido como Instant Runnof Voting - IRV). Entretanto, os métodos de Condorcet suportados pelo CIVS são melhores do que o método STV na identificação de candidatos de consenso. O método STV pode eleger um candidato mesmo que a maioria dos eleitores prefira outro, e isso
 <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
 de fato já aconteceu em eleições reais</a>. Diferentemente de outros sistemas baseados em métodos de Condorcet, o CIVS possui um modo de representação proporcional.
 </p>

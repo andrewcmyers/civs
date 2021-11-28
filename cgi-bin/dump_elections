@@ -156,7 +156,7 @@ sub ProcessBallots {
     my $election_id = $_[1];
     my @ballots = ();
     foreach my $voter_key (@voters) {
-	my $ballot = $vdata{$voter_key}; 
+	my $ballot = $vdata{$voter_key};
 	if (!defined($ballot)) {
 	    &Log("Election $election_id: Missing ballot for voter key $voter_key");
 	} else {

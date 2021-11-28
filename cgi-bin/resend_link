@@ -11,7 +11,7 @@ use civs_common;
 use election;
 use send_result_key;
 
-my $control_key = param('key');    
+my $control_key = param('key');
 
 CheckElectionID;
 CheckControlKey($control_key);

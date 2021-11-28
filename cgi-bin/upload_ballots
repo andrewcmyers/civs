@@ -155,7 +155,7 @@ for (my $i = 0; $i < $num_ballots; $i++) {
 	       $jk = 0 if (!defined($jk));
 	if ($rank[$j] ne 'No opinion' &&
 			$rank[$k] ne 'No opinion' &&
-			$rank[$j] < $rank[$k]) 
+			$rank[$j] < $rank[$k])
 		{
 			$vdata{"$j.$k"} = $jk + 1;
 	    }	

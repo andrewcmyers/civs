@@ -19,7 +19,7 @@ sub Condorcet_Internet_Voting_Service {
     return 'Condorcet Internet Szavazási Szolgáltatás<br>(CIVS)';
 }
 
-sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
+sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'Condorcet Internet Szavazási Szolgáltatás';
 }
 sub about_civs {
@@ -456,7 +456,7 @@ sub Authorization_failure {
     'Jogosultsági hiba';
 }
 
-sub already_ended { # title 
+sub already_ended { # title
     "Ez a szvazás (<strong>$_[1]</strong>) már lezárult.";
 }
 sub Poll_not_yet_ended {
@@ -548,7 +548,7 @@ sub Your_privacy_will_not_be_violated {
 'A magánéletedet a szavazás nem sérti. A szavazási szolgáltatás már letörölte az e-mail címedet tartalmazó bejegyzést, és nem szolgáltat semmilyen információt arról, hogy szavaztál-e, és hogyan.';
 }
 sub This_is_a_nonanonymous_poll {
-'A szavazás gazdája úgy döntött, hogy ez egy <strong>név szerinti szavazás</strong>. 
+'A szavazás gazdája úgy döntött, hogy ez egy <strong>név szerinti szavazás</strong>.
 Ha szavazol, a szavazatod nyilvánosan látható lesz az e-mail címeddel együtt. Ha nem szavazol,
 a szavazás gazdája azt is ki tudja deríteni.';
 }
@@ -646,7 +646,7 @@ sub Actual_time_poll_closed { # close time
 	"A szavazás lezárásának valós ideje: $_[1]"
     } else {
 	'A szavazás lezárásának valós ideje: <script>document.write(new Date(' .
-	    $_[1] * 1000 . 
+	    $_[1] * 1000 .
 	    ').toLocaleString())</script>';
     }
 }
@@ -679,13 +679,13 @@ sub poll_description_hdr {
 sub Ranking_result {
     'Rangsorolás eredménye';
 }
-sub x_beats_y { # x y w l 
+sub x_beats_y { # x y w l
     "$_[1] jobb mint $_[2] ($_[3]&ndash;$_[4])";
 }
-sub x_ties_y { # x y w l 
+sub x_ties_y { # x y w l
     "$_[1] és $_[2] holtversenyben van ($_[3]&ndash;$_[4])";
 }
-sub x_loses_to_y { # x y w l 
+sub x_loses_to_y { # x y w l
     "$_[1] rosszabb mint $_[2] ($_[3]&ndash;$_[4])";
 }
 sub some_result_details_not_shown {

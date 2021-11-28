@@ -505,7 +505,7 @@ function setup() {
         sort_rows();
 
         $('#preftable tbody').sortable({'items':'tr:not(.heading)',
-                            'axis':'y', 
+                            'axis':'y',
                             'update':drag_update});
     }
 }

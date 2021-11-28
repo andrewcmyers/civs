@@ -68,7 +68,7 @@ function node(tag) {
     return n
 }
 
-/* Install a tag as a top-level function. 
+/* Install a tag as a top-level function.
  */
 function install_tag(tag) {
     window[tag] = function(args) {

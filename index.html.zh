@@ -66,7 +66,7 @@
 （又称偏好）投票可以避免投票分散（vote split）和投票破坏者（spoilers）
 现象的发生。与其他的Condorcet系统不同，CIVS还支持权重的正比表示。
 </p><p>
-排序选项现在正被用于现实的投票中。例如，澳大利亚使用Single Transferable 
+排序选项现在正被用于现实的投票中。例如，澳大利亚使用Single Transferable
 Vote (STV, 又称IRV)。但是，Condorcet方法可以更好的发现投票者共同喜爱的选
 项。即便大部分人都更偏爱一个候选者，STV还是有可能选举出另一个候选者, 这里是
 <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
@@ -75,7 +75,7 @@ Vote (STV, 又称IRV)。但是，Condorcet方法可以更好的发现投票者�
 <p>
 更加安全的CIVS版本<a
 href="http://www.cs.cornell.edu/projects/civitas">Civitas</a>正在开发中。
-Civitas使用了更为复杂的密码协议来提供更强的匿名性，普遍可验证性和coercion 
+Civitas使用了更为复杂的密码协议来提供更强的匿名性，普遍可验证性和coercion
 resistance。
 </p>
 </div>

@@ -18,7 +18,7 @@ HTML_Header($tx->CIVS_Poll_Control, 'results.js');
 use election 1.02;
 use voting;
 
-my $control_key = param('key');    
+my $control_key = param('key');
 my $authorization_key = param('akey');
 
 CIVS_Header($tx->Poll_control);
@@ -32,7 +32,7 @@ if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
 $control_key = $control_key || 'omitted';
 
 print h1("$title");
-  
+
 print $tx->poll_supervisor($name,$email_addr), br(), $cr;
 if (!IsStarted) {
     print "<form method=\"POST\"
@@ -94,10 +94,10 @@ if (!IsStarted) {
 	print p($tx->this_is_a_test_poll), $cr;
     } elsif (defined($public) && $public eq 'yes') {
 	    my $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
-	    $url .= "&akey=$authorization_key" 
+	    $url .= "&akey=$authorization_key"
 		    if defined($authorization_key) && $authorization_key ne '';
 	    print p($tx->This_is_a_public_poll_plus_link($url, $publicize eq 'yes')), $cr;
-	    
+	
 	    print p($tx->Or_paste_this_code);
 	    print '<textarea class="paste" rows=8 cols=90>';
 	    my @choice_index, my @rank;
@@ -116,7 +116,7 @@ if (!IsStarted) {
 		fisher_yates_shuffle(\@choice_index);
 	    }
 	    &voting::GenerateVoteForm('', $authorization_key, [@choice_index], [@rank], $js_ui, 1,
-		($ballot_reporting eq 'yes' && 
+		($ballot_reporting eq 'yes' &&
 		$reveal_voters eq 'yes' &&
 		$public));
 	    print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>', $cr;
@@ -126,7 +126,7 @@ if (!IsStarted) {
 	    print '</textarea><br>';
     }
 
-} else {    
+} else {
     &CloseDatabase;
     my $results_link;
     if ($restrict_results eq 'yes') {
@@ -224,7 +224,7 @@ if ($ballot_reporting eq 'yes') {
 } else {
     print $tx->Detailed_ballot_reporting_disabled;
 }
- 
+
 print $cr, "<script src=\"@CIVSURL@/ajax.js\"></script>";
 print $cr, "<script>var election_id = '$election_id'";
 print $cr, "var control_key = '$control_key'</script>";

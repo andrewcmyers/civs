@@ -3,9 +3,6 @@ extern int getpid();
 extern int getdtablesize();
 extern int getopt(int argc, char **argv, char *opts);
 extern int optind;
-#if 0 
-extern int open(char *, int, ...);
-#endif
 extern int dup2(int, int);
 
 #include <stdio.h>

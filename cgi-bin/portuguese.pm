@@ -20,7 +20,7 @@ sub init {
 sub Condorcet_Internet_Voting_Service {
     'Serviço de Votação Condorcet pela Internet (CIVS)';
 }
-sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
+sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'Servico de Votacao Condorcet pela Internet (CIVS)';
 }
 sub about_civs {
@@ -132,7 +132,7 @@ acesso a esse endereço, poderão ver os resultados da votação.
 
 ";
 }
-  
+
 # start
 
 sub poll_started {
@@ -322,7 +322,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
             Por exemplo, a sua opção preferida terá o valor 1.
             Dê o mesmo valor a opções quando a escolha de uma ou
             outra for indiferente para você. Você não precisa usar
-            todos os valores possíveis. Inicialmente todas as 
+            todos os valores possíveis. Inicialmente todas as
             opções estão com o valor mínimo. ". $cr;
 	if ($no_opinion) {
 	    $ret .= '<b>Nota:</b> &ldquo;Sem opinião&rdquo;
@@ -343,9 +343,9 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
         em Condorcet para prover uma representação proporcional. Por favor
         atribua a cada opção um <b>peso</b> que expressa o quanto você quer
         essa opção faça parte do conjunto de opções vencedoras. O algoritmo
-        pressupõe que você quer que a soma dos pesos das opções ganhadoras 
-        seja a mais alta possível. Todas as opções estão inicialemente com 
-        o peso zerado, o que significa que você não tem interesse em que 
+        pressupõe que você quer que a soma dos pesos das opções ganhadoras
+        seja a mais alta possível. Todas as opções estão inicialemente com
+        o peso zerado, o que significa que você não tem interesse em que
         elas ganhem. Pesos não podem ser negativos nem maiores que 999.
         Os pesos atribuídos por você só são comparados com os demais pesos
         atribuídos por você, não há comparação direta com os pesos atribuídos
@@ -461,7 +461,7 @@ sub Authorization_failure {
     'Não autorizado';
 }
 
-sub already_ended { # title 
+sub already_ended { # title
     "Esta votação (<strong>$_[1]</strong>) já foi encerrada.";
 }
 sub Poll_not_yet_ended {
@@ -659,7 +659,7 @@ sub Actual_time_poll_closed { # close time
 	"Hora de encerramento da votação: $_[1]"
     } else {
 	'Hora de encerramento da votação: <script>document.write(new Date(' .
-	    $_[1] * 1000 . 
+	    $_[1] * 1000 .
 	    ').toLocaleString())</script>';
     }
 }
@@ -696,13 +696,13 @@ sub poll_description_hdr {
 sub Ranking_result {
     'Resultado';
 }
-sub x_beats_y { # x y w l 
+sub x_beats_y { # x y w l
     "$_[1] ganha de $_[2] por $_[3]&ndash;$_[4]";
 }
-sub x_ties_y { # x y w l 
+sub x_ties_y { # x y w l
     "$_[1] empata com $_[2] por $_[3]&ndash;$_[4]";
 }
-sub x_loses_to_y { # x y w l 
+sub x_loses_to_y { # x y w l
     "$_[1] perde para $_[2] por $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {
@@ -788,7 +788,7 @@ sub No_random_tie_breaking_used {
 sub beatpath_matrix_explanation {
     'A matriz abaixo mostra a força do caminho mais forte conectando
     cada par de opções. A opção 1 é escolhida sobre a opção 2 se houver
-    pelo menos um caminho de 1 para 2 que é mais forte do que todos 
+    pelo menos um caminho de 1 para 2 que é mais forte do que todos
     os caminhos de 2 para 1.';
 }
 

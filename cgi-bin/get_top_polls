@@ -42,8 +42,8 @@ if ('@LOG_HOME_VISITS@') {
         }
     } else {
         $remote_ip_address = remote_addr();
-    }  
-    
+    }
+
     my $civs_log = $home . '/log';
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open (LOG, ">>$civs_log");

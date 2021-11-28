@@ -18,7 +18,7 @@ sub init {
 sub Condorcet_Internet_Voting_Service {
     'Service de Vote Internet Condorcet (CIVS)';
 }
-sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
+sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'Service de Vote Internet Condorcet (CIVS)';
 }
 sub about_civs {
@@ -136,7 +136,7 @@ ce lien lui donnera accès aux résultats de la consultation.
 
 ";
 }
-  
+
 # start
 
 sub poll_started {
@@ -244,7 +244,7 @@ sub add_voter_instructions {
     "Saisir l'adresse du courrier électronique des participants, une adresse par
      ligne. Ces participants peuvent être de nouveaux participants ou des participants déjà
      enregistrés qui n'ont pas encore voté. Dans le cas d'une élection à
-     bulletin secret, la saisie d'un participant déjà enregistré <strong>ne 
+     bulletin secret, la saisie d'un participant déjà enregistré <strong>ne
      permettra pas</strong> à ce participant de pouvoir voter une deuxième fois.
      Cette saisie ne provoquera que l'envoi d'un courrier électronique
      d'invitation à la consultation. Dans le cas d'une élection public,
@@ -325,7 +325,7 @@ sub instructions1 { # num_winners, end, name, email
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
-    my $ret;   
+    my $ret;
     if (!$prop || !$combined) {
 	$ret = "Merci de bien vouloir classer les candidats ou les propositions
         suivants. Plus un candidat ou une proposition vous convient plus vous
@@ -334,11 +334,11 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
         Si vous n'avez pas de préférence entre plusieurs candidats ou propositions,
         vous pouvez leur donner le même rang. Il vous est
         possible de ne pas utiliser toutes les rangs disponibles.
-        Initialement toutes les candidats ou les propositions 
+        Initialement toutes les candidats ou les propositions
         possèdent le rang les plus faible. ". $cr;
 	if ($no_opinion) {
 	    $ret .= '<b>Note : </b> &ldquo;S\'abstenir&rdquo;
-		    <i>n\'est pas</i> équivalent à attribuer le rang le 
+		    <i>n\'est pas</i> équivalent à attribuer le rang le
                     plus faible à une proposition ou à un candidat.
                     S\'abstenir signifie que vous ne désirez pas classer
                     une proposition ou un candidat par rapport aux autres
@@ -363,7 +363,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
         que ces candidats ou ces propositions soient inclus dans le groupe
         des candidats ou des propositions retenus pour la suite de la
         consultation.
-        L\'algorithme utilisé suppose que désirez que la somme des 
+        L\'algorithme utilisé suppose que désirez que la somme des
         pondérations des propositions ou des candidats retenus doit être
         la plus élevée possible.
         Touts les candidats ou les propositions possèdent une pondération
@@ -450,7 +450,7 @@ sub write_in_a_choice {
     'Saisissez une nouvelle proposition ou un nouveau candidat : ';
 }
 sub if_you_have_already_voted { #url
-    "Si vous avez déjà voté, vous pouvez consulter 
+    "Si vous avez déjà voté, vous pouvez consulter
 	<a href=\"$_[1]\">les résultats de la consultation en cours</a>.";
 }
 sub thank_you_for_voting { #title, receipt
@@ -493,7 +493,7 @@ sub Authorization_failure {
     'Échec lors de l\'autorisation';
 }
 
-sub already_ended { # title 
+sub already_ended { # title
     "Cette consultation (<strong>$_[1]</strong>) est déjà terminée.";
 }
 sub Poll_not_yet_ended {
@@ -698,7 +698,7 @@ sub Actual_time_poll_closed { # close time
 	"Date de clôture de consultation : $_[1]"
     } else {
 	'Date de clôture de consultation : <script>document.write(new Date(' .
-	    $_[1] * 1000 . 
+	    $_[1] * 1000 .
 	    ').toLocaleString())</script>';
     }
 }
@@ -734,13 +734,13 @@ sub poll_description_hdr {
 sub Ranking_result {
     'Résultat du classement';
 }
-sub x_beats_y { # x y w l 
+sub x_beats_y { # x y w l
     "$_[1] bat $_[2] $_[3]&ndash;$_[4]";
 }
-sub x_ties_y { # x y w l 
+sub x_ties_y { # x y w l
     "$_[1] ex-æquo avec $_[2] $_[3]&ndash;$_[4]";
 }
-sub x_loses_to_y { # x y w l 
+sub x_loses_to_y { # x y w l
     "$_[1] perd contre $_[2] $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {

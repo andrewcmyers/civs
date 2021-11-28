@@ -58,7 +58,7 @@ my @variants =
   );
 
 # Result: &init() determines the current language preference using the
-#         available languages and the HTTP Accept-Language header. 
+#         available languages and the HTTP Accept-Language header.
 sub init {
     ($accept_language) = @_;
     chomp $accept_language;

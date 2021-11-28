@@ -14,7 +14,7 @@ use strict;
 #   $rankings is a reference to a list of references to lists. An element
 #     in the outer list is a rank (from highest/most preferred to
 #     lowest/least preferred) and each inner list contains the
-#     indices of choices. 
+#     indices of choices.
 #   $log is an HTML log (string) giving details of how the algorithm worked.
 #
 # Requires:
@@ -100,7 +100,7 @@ sub rank_candidates {
         }
         $defeats->[$i] = [ sort compare_defeats_sort @def ];
     }
-    
+
     my @ranked; # which choices are already ranked
 
     while ($num_ranked < $n) {
@@ -129,7 +129,7 @@ sub rank_candidates {
             } elsif ($cmp == 0) {
                 push @best, $i;
                 #$log .= "  tied best: $i<br>";
-            } 
+            }
             # else { $log .= "  not the current best<br>"; }
         }
         my $r = $num_ranked+1;
@@ -152,5 +152,5 @@ sub print_details {
     my ($log) = @_;
     print main::RESULTS $log;
 }
- 
+
 1; # ok!

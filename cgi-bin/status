@@ -39,7 +39,7 @@ while (defined(my $file = readdir(DIR))) {
     next if $file =~/^\.\.?$/;    # skip . and ..
     next unless -d "$elections_dir/$file";   # skip non-directories
     next unless $file =~ m/^E_[0123456789abcdef]+/;   # skip non-elections
-    
+
     $num_polls++;
     my $election_dir = "$elections_dir/$file";
     my $election_data = $election_dir."/election_data";
@@ -155,5 +155,5 @@ foreach my $row (@rows) {
     print $row, $cr;
 }
 print '</table>', $cr;
-            
+
 print end_html();

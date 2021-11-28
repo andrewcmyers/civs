@@ -345,5 +345,5 @@ sub SendHeader {
     SendBytes $header . ': ' . $text. "\r\n";
     # print $header, ': ', $text;
 }
- 
+
 1; #ok

@@ -86,17 +86,17 @@ Cada votação é armazenada em uma base de dados separada, então se <strong>ho
 <b>Uma classificação completa de todas as opções poderia constranger alguns candidatos. Posso evitar isso?</b>
 Por padrão, todos os resultados da votação ficam disponíveis a todos os eleitores. Entretanto, você pode restringir a visualização dos resultados a um grupo de pessoas. Estas poderiam informar os vencedores aos eleitores, usando algum mecanismo externo ao CIVS.
 <li>
-<b>Sou paranóico. Posso garantir que a pessoa ou as pessoas que mantêm o site CIVS não fiquem sabendo sobre o que é a votação?</b> 
+<b>Sou paranóico. Posso garantir que a pessoa ou as pessoas que mantêm o site CIVS não fiquem sabendo sobre o que é a votação?</b>
 Sim, basta usar nomes de opções fictícios tais como A, B, C, .... Depois, envie aos eleitores uma explicação sobre o que significam esses nomes. É uma solução menos conveniente para os eleitores, mas completamente privada.
 
-<li><b>As opções da votação podem conter imagens?</b> 
+<li><b>As opções da votação podem conter imagens?</b>
 Claro. Basta usar a marcação HTML <tt>&lt;img&gt;</tt>. Muitas tags HTML são suportadas, embora seja feita alguma filtragem para bloquear ataques XSS.
 
 
 <li><b>Por que o CIVS não suporta meu método de eleição favorito (STV, ...)?</b>
 O foco do sistema é no suporte a métodos Condorcet, que garantem (quando possível) que nenhum candidato é mais preferido que o vencedor. Entretanto, a interface para inclusão de novos métodos de eleição é relativamente simples, por isso você pode adicionar seus métodos de eleição se quiser. Podemos inclusive adicioná-los ao CIVS se você fornecer o código.
 
-<li><b>Posso incluir mais de uma pergunta em uma mesma votação?</b> 
+<li><b>Posso incluir mais de uma pergunta em uma mesma votação?</b>
 Sim. Embora o CIVS permita somente uma classificação por votação, é possível criar votações nas quais itens incomparáveis são classificados ao mesmo tempo. Por exemplo, se você quiser escolher um lugar e um horário para uma reunião, você pode ter várias opções que são lugares e várias que são horários, e instruir seus eleitores a classificar todos os lugares acima dos horários. Supondo que seus eleitores sigam as instruções, o resultado da votação terá todos os lugares classificados acima dos horários, e suas classificações relativas irão refletir o que você conseguiria se tivesse realizado duas votações separadas.
 
 

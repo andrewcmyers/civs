@@ -160,11 +160,11 @@
   </table>
 
 <div class="emphasized">
-  Seu nome e endereço de e-mail são usados para envio de e-mail aos 
+  Seu nome e endereço de e-mail são usados para envio de e-mail aos
   eleitores. Seu nome deve ser conhecido pelos eleitores e seu
   e-mail deve ser válido, pois o CIVS enviará a você toda a
   informação necessária para controlar a votação. Certifique-se de
-  que seu filtro de spam não bloqueie e-mails de <kbd>@SUPERVISOR@</kbd> 
+  que seu filtro de spam não bloqueie e-mails de <kbd>@SUPERVISOR@</kbd>
   (ou verifique sua caixa de spam se não receber a mensagem do CIVS!).
   </div>
 
@@ -234,7 +234,7 @@
   <input type="checkbox" name="ballot_reporting" value="yes"
          onClick="make_visible('reveal_voters')"
      title="Esta opção permite que qualquer participante da votação veja os detalhes de cada voto. Entretanto, a identificação dos eleitores não é revelada a não ser que esta opção seja habilitada.">
-  Habilitar relatório detalhado de votos. 
+  Habilitar relatório detalhado de votos.
   <div class="suboption" id="reveal_voters">
     <input type="checkbox" name="reveal_voters" value="yes">
     No relatório detalhado de votos, revele também a identidade do eleitor.<br>

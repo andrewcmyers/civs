@@ -296,14 +296,14 @@ The following per-election information is stored on the server.
 		<li>The hash of the election control key.
 		<li>The hash of the election authorization key.
 		<li>The set of hashed authorized voter keys.  Each element of the
-		set is the hash of the voter's email (or IP address, in a public 
-		election), the election's authorization key, and the server's 
+		set is the hash of the voter's email (or IP address, in a public
+		election), the election's authorization key, and the server's
 		private key.
 		<li>The list of used hashed voter keys.  This list is a subset
 		of the previous list.  The presence of an element in it indicates
 		that the key has been used to submit a ballot.
 		<li>The list of ballot keys.  A ballot key is the hash of a voter
-		key and corresponding receipt.  
+		key and corresponding receipt.
 		<li>The map from ballot keys to ballots.
 </ul>
 
@@ -340,7 +340,7 @@ If a voter in a private election
 claims that they did not receive their voter key,
 the same key can be reissued without giving them the ability
 to vote more than once.
-<li><strong>Malicious election supervisor.</strong>  A malicious 
+<li><strong>Malicious election supervisor.</strong>  A malicious
 supervisor is capable of violating confidentiality and integrity
 in limited ways.  The supervisor cannot learn how or whether
 a voter voted through normal use of CIVS.  However, a supervisor
@@ -353,10 +353,10 @@ voter from being tricked into voting in the election; in the latter,
 the number of extra votes cast by the supervisor may be detected.
 <li><strong>Intruder with read-only access.</strong>
 Very little information is stored in cleartext on the server.
-An intruder could learn email addresses, if he manages to 
+An intruder could learn email addresses, if he manages to
 read the election data before the election is started.  He could
 also learn elections results while an election is in progress,
-which is normally not allowed for private elections.  In a public 
+which is normally not allowed for private elections.  In a public
 election for which the intruder knows the authorization key
 (perhaps because he is a voter in it), the intruder could guess
 IP addresses and query whether that IP address has voted.
@@ -365,9 +365,9 @@ voter provides the intruder with his ballot receipt.
 <li><strong>Intruder with read-write access.</strong> Clearly, such
 an intruder can arbitrarily corrupt the integrity of ballots
 that have been cast.  He can also hijack control of an election,
-becoming supervisor, by installing new control and authorization 
-keys.  However, he cannot learn how previous or future voters 
-have voted, because these ballots are protected by a nonce 
+becoming supervisor, by installing new control and authorization
+keys.  However, he cannot learn how previous or future voters
+have voted, because these ballots are protected by a nonce
 (the receipt).
 <!-- <li><strong>Election supervisor who is also an intruder
 	    with read-write access.</strong>

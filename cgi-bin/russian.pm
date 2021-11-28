@@ -13,9 +13,9 @@ our @ISA = ('base_language'); # go to AmE module for missing methods
 sub lang { 'ru-RU' }
 
 sub init {
-    my $self = {}; 
-    bless $self; 
-    return $self; 
+    my $self = {};
+    bless $self;
+    return $self;
 }
 
 sub style_file {
@@ -26,7 +26,7 @@ sub Condorcet_Internet_Voting_Service {
     'Кондорсе Интернет Голосование Сервис (CIVS)'
 }
 
-sub Condorcet_Internet_Voting_Service_email_hdr { # Note: charset may be limited 
+sub Condorcet_Internet_Voting_Service_email_hdr { # Note: charset may be limited
     'Кондорсе Интернет Голосование Сервис (CIVS)'
 }
 
@@ -269,7 +269,7 @@ sub results_available_to_the_following_users {
 # sub add_voter_instructions {
 #     "Enter e-mail addresses of voters, one per line. These
 #     may be new voters or existing voters who have not voted yet.
-#     In a private poll, giving the e-mail address of an already 
+#     In a private poll, giving the e-mail address of an already
 #     existing voter <strong>will not</strong> let that voter vote twice.
 #     It will only resend the voter an invitation to vote.
 #     In a public poll, only a token attempt is made to prevent
@@ -551,7 +551,7 @@ sub Error {
 #     'Authorization failure'
 # }
 
-# sub already_ended { # title 
+# sub already_ended { # title
 #     "This poll (<strong>$_[1]</strong>) has already been ended."
 # }
 sub Poll_not_yet_ended {
@@ -742,7 +742,7 @@ sub Actual_time_poll_closed { # close time
        "Фактическое время окончания опроса: $_[1]"
     } else {
        'Фактическое время окончания опроса: <script>document.write(new Date(' .
- 	    $_[1] * 1000 . 
+ 	    $_[1] * 1000 .
  	    ').toLocaleString())</script>'
     }
 }
@@ -778,13 +778,13 @@ sub poll_description_hdr {
 sub Ranking_result {
      'Результат'
 }
-# sub x_beats_y { # x y w l 
+# sub x_beats_y { # x y w l
 #     "$_[1] beats $_[2] $_[3]&ndash;$_[4]"
 # }
-# sub x_ties_y { # x y w l 
+# sub x_ties_y { # x y w l
 #     "$_[1] ties $_[2] $_[3]&ndash;$_[4]"
 # }
-# sub x_loses_to_y { # x y w l 
+# sub x_loses_to_y { # x y w l
 #     "$_[1] loses to $_[2] $_[3]&ndash;$_[4]"
 # }
 sub some_result_details_not_shown {

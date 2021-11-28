@@ -27,7 +27,7 @@ sub Condorcet_Internet_Voting_Service {
 sub Condorcet_Internet_Voting_Service {
     'Condorcet Internet Voting Service';
 }
-sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
+sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'Condorcet Internet Voting Service';
 }
 sub about_civs {
@@ -142,7 +142,7 @@ ermöglicht diesen die Einsicht des Abstimmungsergebnisses.
 
 ";
 }
-  
+
 # start
 
 sub poll_started {
@@ -478,7 +478,7 @@ sub Authorization_failure {
     'Autorisierung fehlgeschlagen';
 }
 
-sub already_ended { # title 
+sub already_ended { # title
     "Diese Abstimmumg (<strong>$_[1]</strong>) ist bereits beendet.";
 }
 sub Poll_not_yet_ended {
@@ -674,7 +674,7 @@ sub Actual_time_poll_closed { # close time
 	"Tatsächlicher Abstimmungsschluss: $_[1]"
     } else {
 	'Tatsächlicher Abstimmungsschluss: <script>document.write(new Date(' .
-	    $_[1] * 1000 . 
+	    $_[1] * 1000 .
 	    ').toLocaleString())</script>';
     }
 }
@@ -706,13 +706,13 @@ sub poll_description_hdr {
 sub Ranking_result {
     'Kandidatenreihung';
 }
-sub x_beats_y { # x y w l 
+sub x_beats_y { # x y w l
     "$_[1] schlägt $_[2] $_[3]&ndash;$_[4]";
 }
-sub x_ties_y { # x y w l 
+sub x_ties_y { # x y w l
     "$_[1] unentschieden zu $_[2] $_[3]&ndash;$_[4]";
 }
-sub x_loses_to_y { # x y w l 
+sub x_loses_to_y { # x y w l
     "$_[1] verliert gegen $_[2] $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {

@@ -1,6 +1,6 @@
 package election;  # should be CIVS::Election, or perhaps merged with CIVS
  # Also, this should really be an object-oriented package, where
- # the constructor is parameterized on election id. 
+ # the constructor is parameterized on election id.
  # Then we wouldn't have to have an init() function.
 
 use strict;
@@ -14,7 +14,7 @@ BEGIN {
 
     $VERSION     = 1.02;
     @ISA         = qw(Exporter);
-    @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys 
+    @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys
     &CheckAuthorizationKeyForAddingVoter &CheckAuthorizationKeyForVoting
     &LockElection &UnlockElection &StartElection &IsStarted
     &CheckStarted &PointToResults &IsStopped &CheckNotStopped &CheckPostRequest
@@ -90,7 +90,7 @@ sub init {
         print p($tx->Ill_formed_poll_ID(escapeHTML($election_id))), end_html();
         exit 0;
     };
-    
+
     # Set up filename paths
     $election_dir = $home."/elections/".$election_id;
     $started_file = $election_dir."/started";
@@ -335,7 +335,7 @@ sub CheckStopped {
 
 sub CheckVoterKey {
     my ($voter_key, $old_voter_key, $voter) = @_;
- 
+
     if ($old_voter_key and !$voter_key) {
         my $voter_key_check = civs_hash("voter".$private_host_id.$election_id.$voter);
         if ($voter_key_check ne $old_voter_key) {
@@ -349,7 +349,7 @@ sub CheckVoterKey {
     } else {
         if (!$voter_keys{civs_hash($voter_key)}) {
             print h1($tx->Error), p($tx->Your_voter_key_is_invalid__check_mail('')),
-                end_html(); 
+                end_html();
             exit 0;
         }
     }
@@ -409,7 +409,7 @@ sub CheckReceipt {
                         $rank[$k] ne 'No opinion' &&
                         $rank[$j] < $rank[$k]) {
                         $vdata{"$j.$k"} = $jk - 1;
-                    }   
+                    }
                 }
             }
 
@@ -482,8 +482,8 @@ sub ControlKeyError {
 }
 
 sub CheckControlKey {
-    my $control_key = shift; 
-    
+    my $control_key = shift;
+
     if (defined($edata{'hash_control_key'})) {
         my $hash_control_key = civs_hash($control_key);
         my $hash_control_key_check = $edata{'hash_control_key'};
@@ -543,9 +543,9 @@ sub CheckResultKey {
 
 sub CheckAuthorizationKeyForAddingVoter {
     my $authorization_key = shift;
-    if (!CheckAuthorizationKey($authorization_key)) {   
+    if (!CheckAuthorizationKey($authorization_key)) {
         print h1($tx->Error),
-	p($tx->Invalid_control_key($authorization_key)); 
+	p($tx->Invalid_control_key($authorization_key));
         print end_html();
         ElectionLog("Election: $title ($election_id) : invalid attempt to add voter (wrong key)");
         exit 0;
@@ -554,7 +554,7 @@ sub CheckAuthorizationKeyForAddingVoter {
 
 sub CheckAuthorizationKeyForVoting {
     my $authorization_key = shift;
-    if (!CheckAuthorizationKey($authorization_key)) {   
+    if (!CheckAuthorizationKey($authorization_key)) {
         print h1($tx->Error), p($tx->Invalid_key);
         print end_html();
         ElectionLog("Election: $title ($election_id) : invalid attempt to add voter (wrong key)");
@@ -619,7 +619,7 @@ sub SendBody {
     $plain =~ s/\n\n/\n/g;
     $plain =~ s/^\r*//g;
     $plain =~ s/^\n*//g;
-    
+
     Send 'Mime-Version: 1.0';
     Send "Content-Type: multipart/alternative; boundary=$boundary";
     Send '';

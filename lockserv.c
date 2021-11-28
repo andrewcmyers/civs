@@ -21,7 +21,7 @@ char buf[4096];
 
 int lingerval = 1;
 
-/* 
+/*
  * lockserv <file> <num> creates a process that acts like a lock that
  * can be held by up to <num> processes, but where acquires immediately
  * fail if <num> processes currently hold the lock.
@@ -33,7 +33,7 @@ int lingerval = 1;
  * the client has now acquired the lock. It releases the lock by closing
  * the connection itself.
  */
- 
+
 int main(int argc, char **argv) {
     int num;
     int *clients;
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 	exit(-1);
     }
     TRY("socket", (sock = socket(PF_UNIX, SOCK_STREAM, 0)));
-    
+
     server.sun_family = AF_UNIX;
     strncpy(server.sun_path, argv[1], sizeof(server.sun_path));
     TRY(argv[1], bind(sock, (struct sockaddr *)&server, sizeof(server)));

@@ -8,8 +8,8 @@ function export_table(f, t) {
   if (window.navigator.msSaveOrOpenBlob) {
       window.navigator.msSaveBlob(blob, filename);
   } else {
-      const elem = document.createElement('a') 
-      elem.href = window.URL.createObjectURL(blob)
+      const elem = document.createElement('a');
+      elem.href = window.URL.createObjectURL(blob);
       elem.download = filename
       document.body.appendChild(elem);
       elem.click();
@@ -36,6 +36,6 @@ function table_to_string(t) {
 }
 
 function export_failure_table() {
-    const t = document.getElementById('failure_table')
-    export_table("mail_failure_table.csv", t)
+    const t = document.getElementById('failure_table');
+    export_table("mail_failure_table.csv", t);
 }

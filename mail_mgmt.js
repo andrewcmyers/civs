@@ -75,7 +75,7 @@ deactivate.addEventListener("click", () => {
       }
     )
 })
-   
+
 deactivation_code.addEventListener("input", (e) => {
   var v = deactivation_code.value.trim()
   if (v.length != 16 || !/^[0-9a-f]+$/.test(v))  {

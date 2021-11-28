@@ -60,12 +60,12 @@ if ($public ne 'yes') {
     CheckVoterKey($voter_key, $old_voter_key, $voter);
 } else {
     if (!&ElectionUsesAuthorizationKey) {
-	# for backwards compatibility
-	$voter_key = $remote_ip_address;
-	$voter = "voter";           
+        # for backwards compatibility
+        $voter_key = $remote_ip_address;
+        $voter = "voter";
     } else {
-	CheckAuthorizationKeyForVoting($authorization_key);
-	$voter_key = &civs_hash($remote_ip_address,$authorization_key);
+        CheckAuthorizationKeyForVoting($authorization_key);
+        $voter_key = &civs_hash($remote_ip_address,$authorization_key);
     }
 }
 
@@ -81,7 +81,7 @@ my $load = param('Load');
 if ($vote && $voting_enabled) {
     &ProcessVote;     # prints out confirmation; call does not return
     exit 0;           # should not happen.
-} 
+}
 
 my (@rank, @choice_index, @iota);
 &OrderChoices;
@@ -105,25 +105,25 @@ if ($voting_enabled) {
 if ($ballot_reporting eq 'yes') {
     my $msg = strong($tx->ballot_reporting_is_enabled);
     if ($reveal_voters eq 'yes') {
-	$msg .= '<br>'.$tx->address_will_be_visible();
-	if ($restrict_results eq 'yes') {
-	    my @result_addrs = split /(\r\n)+/, $result_addrs;
-	    $msg .= $tx->however_results_restricted([@result_addrs]);
-	}
+        $msg .= '<br>'.$tx->address_will_be_visible();
+        if ($restrict_results eq 'yes') {
+            my @result_addrs = split /(\r\n)+/, $result_addrs;
+            $msg .= $tx->however_results_restricted([@result_addrs]);
+        }
     } else {
-	$msg .= $tx->ballot_will_be_anonymous();
+        $msg .= $tx->ballot_will_be_anonymous();
     }
     if ($reveal_voters eq 'yes') {
-	print '<div class=emphasized>'.$msg.'</div>';
+        print '<div class=emphasized>'.$msg.'</div>';
     } else {
-	print p($msg);
+        print p($msg);
     }
 }
 
 print '</div>', $cr;
 
 &voting::GenerateVoteForm($voter_key, $authorization_key, [@choice_index], [@rank], $js_ui, 0,
-    ($ballot_reporting eq 'yes' && 
+    ($ballot_reporting eq 'yes' &&
      $reveal_voters eq 'yes' &&
      $public eq 'yes'));
 
@@ -138,8 +138,8 @@ print '</div>', $cr;
 
 
 if ($voting_enabled && $public eq 'yes') {
-    print div({class => 'normal_text'}, 
-	p($tx->if_you_have_already_voted("@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id")));
+    print div({class => 'normal_text'},
+        p($tx->if_you_have_already_voted("@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id")));
 }
 
 &CIVS_End;
@@ -149,32 +149,32 @@ sub ProcessVote {
     my $vote = '';
     $vdata{'last_vote_time'} = $last_vote_time = time();
 
-	# Record the vote (note that vdata is
-	# indexed by voter key, preserving anonymity.)
-	# print "num_choices = $num_choices", $cr;
+        # Record the vote (note that vdata is
+        # indexed by voter key, preserving anonymity.)
+        # print "num_choices = $num_choices", $cr;
     for (my $i = 0; $i < $num_choices; $i++) {
-	my $rank = param('C'.$i);
-	if ($proportional eq 'yes' && !$use_combined_ratings) {
-	    $rank = $num_choices - $rank; # invert
-	}
-	if ($rank ne 'No opinion' && $rank < 0) { $rank = 0; } # must be proportional
-	if ($rank ne 'No opinion' && $rank > 999) { $rank = 999; } # must be proportional
-	if ($vote eq '') {
-	$vote = $rank;
-	} else {
-	    $vote = $vote.",".$rank
-	}
-	$rank[$i] = $rank;
+        my $rank = param('C'.$i);
+        if ($proportional eq 'yes' && !$use_combined_ratings) {
+            $rank = $num_choices - $rank; # invert
+        }
+        if ($rank ne 'No opinion' && $rank < 0) { $rank = 0; } # must be proportional
+        if ($rank ne 'No opinion' && $rank > 999) { $rank = 999; } # must be proportional
+        if ($vote eq '') {
+        $vote = $rank;
+        } else {
+            $vote = $vote.",".$rank
+        }
+        $rank[$i] = $rank;
     }
     if ($publicize eq 'yes') {
-	&LogPublicVote;
+        &LogPublicVote;
     }
-    
+
     # Record vote, but not voter
     my $voter_ballot_release_key = SecureNonce();
     &GetPrivateHostID;
     my $ballot_key = civs_hash($voter_ballot_release_key,
-			       $private_host_id);
+                               $private_host_id);
     $vdata{$ballot_key} = $vote;
     $vdata{'num_votes'}++;
     $used_voter_keys{civs_hash($voter_key)} = 1;
@@ -182,15 +182,15 @@ sub ProcessVote {
     &SyncVoterKeys;
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
     if ($recorded_voters) {
-	$vdata{'recorded_voters'} = $recorded_voters . "\n".  $ballot_key;
+        $vdata{'recorded_voters'} = $recorded_voters . "\n".  $ballot_key;
     } else {
-	$vdata{'recorded_voters'} = $ballot_key;
+        $vdata{'recorded_voters'} = $ballot_key;
     }
     if ($reveal_voters eq 'yes') {
-	$vdata{"voter key of $ballot_key"} = $voter_key;
-	if ($public eq 'yes') {
-	    $edata{"email_addr $voter_key"} = encode('utf-8', param('email_address'));
-	}
+        $vdata{"voter key of $ballot_key"} = $voter_key;
+        if ($public eq 'yes') {
+            $edata{"email_addr $voter_key"} = encode('utf-8', param('email_address'));
+        }
     }
 
     # Now, update matrix.
@@ -205,12 +205,12 @@ sub ProcessVote {
                 $rank[$k] ne 'No opinion' &&
                 $rank[$j] < $rank[$k]) {
                 $vdata{"$j.$k"} = $jk + 1;
-            }   
+            }
         }
     }
 
     print p($tx->thank_you_for_voting($title,
-				$election_id."/".$voter_ballot_release_key));
+                                $election_id."/".$voter_ballot_release_key));
 
     PointToResults;
     print &TrySomePolls();
@@ -220,8 +220,8 @@ sub ProcessVote {
 sub LogPublicVote {
     my $public_vote_log = $home. "/elections/public_vote.log";
     if (!sysopen OUT, $public_vote_log, O_WRONLY|O_CREAT|O_APPEND) {
-	&Log("Could not open publicized log file $public_vote_log");
-	return;
+        &Log("Could not open publicized log file $public_vote_log");
+        return;
     }
     my $msg = time().' '.$election_id.' '.$title.$cr;
     print OUT $msg;
@@ -258,57 +258,57 @@ sub ProjectName {
 }
 
 sub OrderChoices {
-	if ($sort_choices || $add_writein) {
-		for (my $i = 0; $i < $num_choices; $i++) {
-                    my $rank = param('C'.$i);
-                    if (!defined($rank)) { $rank = $num_choices; }
-                    $iota[$i] = $i;
-                    $rank[$i] = $rank;
-		}
-		if ($proportional ne 'yes') {
-			@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
-		} else {
-			@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
-		}
-	} else { # randomize
-	    for (my $i = 0; $i < $num_choices; $i++) {
-		    $choice_index[$i] = $i;
-		    if ($proportional eq 'yes' && $use_combined_ratings) {
-			    $rank[$i] = 0;
-		    } else {
-			    $rank[$i] = $num_choices;
-		    }
-	    }
-	    if (!defined($shuffle) || $shuffle ne 'no') {
-		fisher_yates_shuffle(\@choice_index);
-	    }
-	}
+    if ($sort_choices || $add_writein) {
+        for (my $i = 0; $i < $num_choices; $i++) {
+            my $rank = param('C'.$i);
+            if (!defined($rank)) { $rank = $num_choices; }
+            $iota[$i] = $i;
+            $rank[$i] = $rank;
+        }
+        if ($proportional ne 'yes') {
+            @choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
+        } else {
+            @choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
+        }
+    } else { # randomize
+        for (my $i = 0; $i < $num_choices; $i++) {
+            $choice_index[$i] = $i;
+            if ($proportional eq 'yes' && $use_combined_ratings) {
+                $rank[$i] = 0;
+            } else {
+                $rank[$i] = $num_choices;
+            }
+        }
+        if (!defined($shuffle) || $shuffle ne 'no') {
+        fisher_yates_shuffle(\@choice_index);
+        }
+    }
 }
 
 sub AddWritein {
-    # This function has a race condition.  The effect of two concurrent 
+    # This function has a race condition.  The effect of two concurrent
     # writeins is not clear.  Nor is the effect of a concurrent writein
     # and vote, or even a request for the candidate list.
     my $writein = &CanonicalizeName(scalar param('writein'));
     my $ok = 1;
     if ($num_choices >= @MAX_CHOICES@) {
-	print p($tx->Poll_exceeds_max_choices(@MAX_CHOICES@));
+        print p($tx->Poll_exceeds_max_choices(@MAX_CHOICES@));
         $ok = 0;
     }
     if ($writein eq '') {
-	print p(b($tx->name_of_writein_is_empty)), $cr;
-	$ok = 0;
+        print p(b($tx->name_of_writein_is_empty)), $cr;
+        $ok = 0;
     }
     if (!($writein =~ m/\(write-in\)\Z/)) {
         $writein .= " (write-in)";
     }
     my $p = ProjectName($writein);
     for (my $i = 0; $ok && $i < $num_choices; $i++) {
-	if (ProjectName($choices[$i]) eq $p) {
-	    print p(b($tx->writein_too_similar)), $cr;
-	    $ok = 0;
-	    last;
-	}
+        if (ProjectName($choices[$i]) eq $p) {
+            print p(b($tx->writein_too_similar)), $cr;
+            $ok = 0;
+            last;
+        }
     }
     if ($ok) {
         $choice_index[$num_choices] = $num_choices;
@@ -328,49 +328,48 @@ sub AddWritein {
 }
 
 sub Load {
-	# load rankings from saved file
+    # load rankings from saved file
     my $rankings_file = upload('rankings_file');
-	if (!defined($rankings_file)) {
-		# should probably print an error: the file failed to upload correctly
-		return;
-	}
-    for (my $i = 0; $i < $num_choices; $i++) { 
-		$rank[$i] = $num_choices; 
-	}
-    while (<$rankings_file>) { 
-		last if (m/^<!-- Current rankings/);
-	}
-    while (<$rankings_file>) {
-		last if (m/^-->/);
-		my ($index, $name, $rank) = m/([0-9]+) "([^"]*)" ([0-9]+)/;
-		$rank = 1 if ($rank < 1);
-		$rank = $num_choices if ($rank > $num_choices);
-		for (my $i = 0; $i < $num_choices; $i++) {
-	    	my $cname = $choices[$i];
-		    $cname =~ s/"/ /;
-		    if ($cname eq $name) {
-				# print "Setting choice $i to rank $rank", $cr;
-				$rank[$i] = $rank;
-	    	}
-		}
+    if (!defined($rankings_file)) {
+        # should probably print an error: the file failed to upload correctly
+        return;
     }
-    for (my $i = 0; $i < $num_choices; $i++) { 
-		$iota[$i] = $i; 
-	}
+    for (my $i = 0; $i < $num_choices; $i++) {
+        $rank[$i] = $num_choices;
+    }
+    while (<$rankings_file>) {
+        last if (m/^<!-- Current rankings/);
+    }
+    while (<$rankings_file>) {
+        last if (m/^-->/);
+        my ($index, $name, $rank) = m/([0-9]+) "([^"]*)" ([0-9]+)/;
+        $rank = 1 if ($rank < 1);
+        $rank = $num_choices if ($rank > $num_choices);
+        for (my $i = 0; $i < $num_choices; $i++) {
+            my $cname = $choices[$i];
+            $cname =~ s/"/ /;
+            if ($cname eq $name) {
+                # print "Setting choice $i to rank $rank", $cr;
+                $rank[$i] = $rank;
+            }
+        }
+    }
+    for (my $i = 0; $i < $num_choices; $i++) {
+        $iota[$i] = $i;
+    }
     if ($proportional ne 'yes') {
-		@choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
+        @choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
     } else {
-		@choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
+        @choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
     }
     my $loaded_choices = 'yes';
 }
-
 
 sub IntroduceWriteins {
     print div({class => 'description'}, p($description)), $cr;
 
     print p($tx->instructions1($num_winners, $election_end,
-			       $name, $email_addr)), $cr;
+                               $name, $email_addr)), $cr;
     print p($tx->only_writeins_are_permitted), $cr;
 }
 
@@ -378,12 +377,12 @@ sub IntroduceVoting {
     print div({class => 'description'}, p($description)), $cr;
 
     print p($tx->instructions1($num_winners, $election_end,
-			       $name, $email_addr)), $cr;
+                               $name, $email_addr)), $cr;
     if ($num_auth) {
         print p($tx->report_authorized($num_auth));
     }
     print p($tx->instructions2(($no_opinion eq 'yes'),
                                ($proportional eq 'yes'),
-			       $use_combined_ratings,
-			       $civs_url)), $cr;
+                               $use_combined_ratings,
+                               $civs_url)), $cr;
 }

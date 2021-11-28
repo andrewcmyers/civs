@@ -152,7 +152,7 @@ sub Email {
 # These variables are global to the results computations.
 my ($condorcet_winner);
 my (@result, @matrix, @closure_matrix, @choice_index, @choice_rank);
-my (%visited); 
+my (%visited);
 
 # Start the progress meter (sends to STDOUT)
 sub StartProgressMeter {
@@ -317,7 +317,7 @@ sub ComputeResults {
     if ($proportional eq 'yes') {
         &ComputeNonproportionalResults;
 	&PrintProportionalResults;
-    } else { 
+    } else {
 
 	print RESULTS h2($tx->Ranking_result), $cr;
 
@@ -386,9 +386,9 @@ sub PrintMatrix {
 sub DetailsHeader {
     # print RESULTS hr(),$cr;
     print RESULTS '<p id="show_details">',
-	$tx->some_result_details_not_shown, 
+	$tx->some_result_details_not_shown,
 	'<button onclick="show_details();">',
-	    $tx->Show_details, 
+	    $tx->Show_details,
 	'</button></p>', $cr;
 
     print RESULTS '<div id="details">';
@@ -421,7 +421,7 @@ sub BallotReport {
 		# ranks that the voter assigned to candidates.
 		# Element i of the list corresponds to candidate
 		# i.
-		my $recorded_vote = $vdata_copy{$ballot_key}; 
+		my $recorded_vote = $vdata_copy{$ballot_key};
 		if (!defined($recorded_vote)) {
 		    Log "Election $election_id ($title): Lost ballot for voter key $ballot_key?";
 		    next;
@@ -488,7 +488,7 @@ sub ComputeNonproportionalResults {
     # print pre('computing nonproportional results');
     if ($proportional eq 'yes') { NewProgressPhase(0.1); }
 
-    (my $rref, my $log) = 
+    (my $rref, my $log) =
 	&minimax::rank_candidates($num_choices, \@matrix, 0, \@choices);
 
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
@@ -601,7 +601,7 @@ sub ProcessBallots {
     my @voters = @{$_[0]};
     my @ballots = ();
     foreach my $voter_key (@voters) {
-	my $ballot = $vdata_copy{$voter_key}; 
+	my $ballot = $vdata_copy{$voter_key};
 	if (!defined($ballot)) {
 	    Log "Election $election_id ($title): Lost ballot for voter key $voter_key?";
 	} else {
@@ -628,11 +628,11 @@ sub PrintReport {
 	return;
     }
 
-    (my $rref, my $log) = 
+    (my $rref, my $log) =
 	&$rank_candidates($num_choices, \@matrix, $bref, \@choices);
 
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
-    
+
     &PrintRanking($rref, \@matrix);
     &DetailsHeader;
       &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
@@ -940,7 +940,7 @@ sub PrintProportionalResults {
 # effects: sets $tally1{c1}{c2} to the strong preference for c1 over c2
 #          sets $tally2{c1}{c2} to the strong preference for c2 over c1
 #          sets $weaktally1{c1}{c2}, $weaktally2{c1}{c2} correspondingly
-# requires: $beaten[0..$num_beaten-1] is a set of 
+# requires: $beaten[0..$num_beaten-1] is a set of
 #   committees known to be beaten (or matched) transitively by c
 	    $iters++;
 	    ReportProgress(sqrt(sqrt($iters/500.0)));
@@ -1113,7 +1113,7 @@ sub PrintProportionalResults {
     $num_unbeaten = $#cwinner + 1;
     if ($num_unbeaten == 1) {
 	print RESULTS h2("Winning set of choices".$cr);
-	print RESULTS p('The <a href="@CIVSURL@/proportional.html">apparent</a> winner of this poll was the set of choices (', 
+	print RESULTS p('The <a href="@CIVSURL@/proportional.html">apparent</a> winner of this poll was the set of choices (',
 	    flatten(renumber($committee[$cwinner[0]])), '):');
     } else {
 	print RESULTS h2("Winning sets of choices$cr");
@@ -1147,7 +1147,7 @@ sub PrintProportionalResults {
 
     print RESULTS p("There are $combinations possible sets of $num_winners choices
     that can be formed by selecting from the $num_choices choices. Of these,
-      $num_visited sets were considered thoroughly, comparing against 
+      $num_visited sets were considered thoroughly, comparing against
       the $num_seen nearby (similar) sets that differ
       in just one choice.$cr");
 
@@ -1157,7 +1157,7 @@ sub PrintProportionalResults {
 	     Fractional digits indicate nonproportional preferences, which
 	     help break ties in proportional preference.');
     STDOUT->flush();
-    
+
     for (my $j = 0; $j <= $#committee; $j++) {
 	$comm_choices[$j] = '('.flatten(renumber($committee[$j])).')';
     }
