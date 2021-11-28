@@ -23,7 +23,7 @@ BEGIN {
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
                       &unique_elements &civs_hash &system_load &CheckLoad
-		      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
+                      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
                       &VerifyUpload &hexdump &fixUTF);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
@@ -45,25 +45,25 @@ our $languages;
 
 # Package constructor
 BEGIN {
-	# This code is in a BEGIN block so that even compiler errors, as long
-	# as they occur after this block, are caught.  They are recorded
-	# in the CGILOG file.  Compile-time errors aren't timestamped,
-	# unfortunately, but run-time ones are.  These are the errors
-	# that used to be put in the global Apache error log.
-	# It makes sense for every CGI script in CIVS to
-	# "use civs_common;" as its first action.
-	use IO::Handle;
-	use CGI::Carp qw(carpout set_message fatalsToBrowser);
-	open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or
-		die "Unable to open @CIVSDATADIR@/cgi-log: $!\n".(`id`);
-	autoflush CGILOG;
-	carpout(\*CGILOG);
-	# set_message(\&Fatal_CIVS_Error);
-	$local_debug = "@LOCALDEBUG@";
+        # This code is in a BEGIN block so that even compiler errors, as long
+        # as they occur after this block, are caught.  They are recorded
+        # in the CGILOG file.  Compile-time errors aren't timestamped,
+        # unfortunately, but run-time ones are.  These are the errors
+        # that used to be put in the global Apache error log.
+        # It makes sense for every CGI script in CIVS to
+        # "use civs_common;" as its first action.
+        use IO::Handle;
+        use CGI::Carp qw(carpout set_message fatalsToBrowser);
+        open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or
+                die "Unable to open @CIVSDATADIR@/cgi-log: $!\n".(`id`);
+        autoflush CGILOG;
+        carpout(\*CGILOG);
+        # set_message(\&Fatal_CIVS_Error);
+        $local_debug = "@LOCALDEBUG@";
 }
 
 END {
-	close CGILOG;
+        close CGILOG;
 }
 
 # Package imports
@@ -123,7 +123,7 @@ sub SetIPAddress {
 sub SetLanguage {
     $languages = http('Accept-Language');
     if (!defined($languages)) {
-	$languages = 'en-us';
+        $languages = 'en-us';
     }
     if (param('language')) {
 # allow language to be overridden by URL parameter
@@ -136,11 +136,11 @@ sub SetLanguage {
 sub GetPrivateHostID {
     if (defined($private_host_id)) { return; }
     if (!open(HOSTID, $private_host_id_file)) {
-	&HTML_Header("Configuration error");
+        &HTML_Header("Configuration error");
         print h1($tx->Error),
-	      p("Unable to access the server's private key"),
-	      end_html();
-	exit 0;
+              p("Unable to access the server's private key"),
+              end_html();
+        exit 0;
     }
     $private_host_id = <HOSTID>;
     $private_host_id =~ s/(\s)+$//;  # remove trailing whitespace
@@ -220,8 +220,8 @@ sub CIVS_Header {
 print
  '<div class="banner">';
 if ($local_debug) {
-	print '<div style="text-align: center; background-color: yellow; width: 100%">',
-	      'LOCAL DEBUG MODE</div>';
+    print '<div style="text-align: center; background-color: yellow; width: 100%">',
+          'LOCAL DEBUG MODE</div>';
 }
 print $cr,
  '  <div class=bannerpart id=bannericon>
@@ -231,13 +231,13 @@ print $cr,
     <h1>', $tx->Condorcet_Internet_Voting_Service, '</h1>
   </div>
   <div class=bannerpart id=bannermenu>',
-	a({-href => $civs_home}, $tx->about_civs), BR,
-	a({-href => "$civs_url/publicized_polls.html"}, $tx->public_polls), BR,
-	a({-href => "@CIVSBINURL@/opt_in@PERLEXT@"}, $tx->new_user), BR,
-	a({-href => "$civs_url/civs_create.html"}, $tx->create_new_poll), BR,
-	a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
-	a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
-	a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
+        a({-href => $civs_home}, $tx->about_civs), BR,
+        a({-href => "$civs_url/publicized_polls.html"}, $tx->public_polls), BR,
+        a({-href => "@CIVSBINURL@/opt_in@PERLEXT@"}, $tx->new_user), BR,
+        a({-href => "$civs_url/civs_create.html"}, $tx->create_new_poll), BR,
+        a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
+        a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
+        a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
     '</div><br>
   <div class=pagetitle>
     <h2>', $heading, '</h2>
@@ -246,27 +246,27 @@ print $cr,
 
 <div class="contents">
 ';
-	$civs_header_printed = 1;
+    $civs_header_printed = 1;
 }
 
 sub CIVS_End {
     if ($civs_header_printed) {
-	print '</div>', $cr; # contents
+        print '</div>', $cr; # contents
     }
     print end_html();
     exit 0;
 }
 
 sub Fatal_CIVS_Error {
-	&HTML_Header($tx->CIVS_Error) unless $html_header_printed;
-	&CIVS_Header($tx->Error) unless $civs_header_printed;
+    &HTML_Header($tx->CIVS_Error) unless $html_header_printed;
+    &CIVS_Header($tx->Error) unless $civs_header_printed;
 
-	print h2($tx->Error),
-	      p($tx->unable_to_process);
-	    print pre(@_);
-	print pre(@_) if $local_debug;
-	print end_html();
-	exit 0;
+    print h2($tx->Error),
+          p($tx->unable_to_process);
+    print pre(@_);
+    print pre(@_) if $local_debug;
+    print end_html();
+    exit 0;
 }
 
 sub TrySomePolls {
@@ -305,7 +305,7 @@ sub SecureNonce {
     &AcquireGlobalLock;
 
     open(NONCEFILE, "<$nonce_seed_file")
-	    or die "Can't open nonce file for read: $!\n";
+        or die "Can't open nonce file for read: $!\n";
     my $seed = <NONCEFILE>;
     $seed =~ s/(\s)+$//;
     close(NONCEFILE);
@@ -315,7 +315,7 @@ sub SecureNonce {
     $seed = md5_hex($private_host_id,$timeofday,$seed);
 
     open(NONCEFILE, ">$nonce_seed_file")
-	or die "Can't open nonce file for write: $!\n";
+        or die "Can't open nonce file for write: $!\n";
     print NONCEFILE $seed.$cr;
     close(NONCEFILE);
     &ReleaseGlobalLock;
@@ -330,6 +330,29 @@ sub civs_hash {
 my $filter_tags = '@FILTER_TAGS@';
 
 my $tf;
+
+my $ok = {all => []};
+my %allowed_tags = {
+    table => $ok,
+    td => {colspan => [], rowspan => []},
+    tr => $ok,
+    s => $ok,
+    strike => $ok,
+    kbd => $ok,
+    code => $ok,
+    strong => $ok,
+    dl => $ok, dt => $ok, dd => $ok,
+    br => $ok,
+    var => $ok,
+    dfn => $ok,
+    cite => $ok,
+    samp => $ok,
+    span => $ok, div => $ok,
+    small => $ok,
+    p => {align => ['left' | 'right' | 'center']},
+    ol => {type => ['a', '1', 'A']}
+};
+
 if ($filter_tags ne 'no') {
     $tf = new HTML::TagFilter(
       on_open_tag => sub {
@@ -354,30 +377,11 @@ if ($filter_tags ne 'no') {
       }
     );
     $tf->xss_risky_attributes(qw(href background cite lowsrc));
-    my $ok = {all => []};
-    $tf->allow_tags({
-	table => $ok,
-	td => {colspan => [], rowspan => []},
-	tr => $ok,
-        s => $ok,
-        strike => $ok,
-        kbd => $ok,
-	strong => $ok,
-	b => $ok,
-	dl => $ok, dt => $ok, dd => $ok,
-        br => $ok,
-        var => $ok,
-        dfn => $ok,
-        cite => $ok,
-        samp => $ok,
-	span => $ok, div => $ok,
-	small => $ok,
-	p => {align => ['left' | 'right' | 'center']},
-	ol => {type => ['a', '1', 'A']}
-    });
+    $tf->allow_tags(\%allowed_tags);
 }
 
-# Filter tags from a string, if $filter_tags is not 'no' (which is probably dangerous)
+# Filter tags from a string, if $filter_tags is not 'no' (which is probably
+# dangerous)
 sub Filter {
     my $s = decode_entities($_[0]);
     my $result = ($filter_tags ne 'no'
@@ -387,7 +391,8 @@ sub Filter {
     return $result || "";
 }
 
-# Turn a string into a hex representation of each of its characters. For debugging.
+# Turn a string into a hex representation of each of its characters. For
+# debugging.
 sub hexdump {
     (my $s) = @_;
     my $result = $s . " = ";
@@ -450,21 +455,21 @@ sub fisher_yates_shuffle {
     my $array = shift;
     my $i;
     for ($i = @$array; --$i; ) {
-	my $j = int rand ($i+1);
-	next if $i == $j;
-	@$array[$i,$j] = @$array[$j,$i];
+        my $j = int rand ($i+1);
+        next if $i == $j;
+        @$array[$i,$j] = @$array[$j,$i];
     }
 }
 
 # From the Perl Cookbook, p. 102
 # Return the unique elements from a list.
 sub unique_elements {
-	my %seen = ();
-	my @uniq = ();
-	foreach my $item (@_) {
-		push(@uniq, $item) unless $seen{$item}++;
-	}
-	return @uniq;
+    my %seen = ();
+    my @uniq = ();
+    foreach my $item (@_) {
+        push(@uniq, $item) unless $seen{$item}++;
+    }
+    return @uniq;
 }
 
 sub system_load {
@@ -478,10 +483,10 @@ sub system_load {
 sub CheckLoad {
     my $load = system_load + 0;
     if ($load >= 10.0) {
-	HTML_Header($tx->CIVS_server_busy);
-	CIVS_Header($tx->CIVS_server_busy);
-	print p($tx->Sorry_the_server_is_busy);
-	exit 0;
+        HTML_Header($tx->CIVS_server_busy);
+        CIVS_Header($tx->CIVS_server_busy);
+        print p($tx->Sorry_the_server_is_busy);
+        exit 0;
     }
 }
 
@@ -491,9 +496,9 @@ sub FileTimestamp {
      my $size, my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
         = stat($fname);
     if (!defined($mtime) || $mtime eq '') {
-	return 0; # no cache file
+        return 0; # no cache file
     } else {
-	return $mtime;
+        return $mtime;
     }
 }
 

@@ -78,12 +78,12 @@ while (defined(my $file = readdir(DIR))) {
     }
     my $stopped = (-e $stopped_file) ? "Yes" : "No";
     my $auth_key = (defined($edata{'hash_authorization_key'})) ? "Yes" : "No";
-    my $st = stat($election_dir."/vote_log");
+    my $st = stat($election_dir."/vote_data");
     if (!defined($st)) {
-	$st = stat($election_dir."/stopped");
+	$st = stat($election_dir."/vote_log");
     }
     if (!defined($st)) {
-	$st = stat($election_dir."/vote_data");
+	$st = stat($election_dir."/stopped");
     }
     if (!defined($st)) {
 	$st = stat($election_dir);
