@@ -60,6 +60,7 @@ SubstituteFile() {
          -e 's|@DONATE_URL@|'$DONATE_URL'|'				      \
          -e 's|@EMAIL_SALT@|'$EMAIL_SALT'|'				      \
          -e 's|@FILTER_TAGS@|'$FILTER_TAGS'|'				      \
+         -e 's|@FIXUTF8@|'$FIXUTF8'|'				              \
          -e 's|@LOCALDEBUG@|'$LOCALDEBUG'|'				      \
          -e 's|@LOG_HOME_VISITS@|'$LOG_HOME_VISITS'|'			      \
          -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|'				      \

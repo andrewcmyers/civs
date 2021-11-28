@@ -400,13 +400,13 @@ sub hexdump {
     return $result;
 }
 
-# Convert a broken UTF-8 encoding.  The argument and result are both strings of
-# bytes representing a UTF-8 encoded string, but the argument may have embedded
-# bytes not following the encoding; these are treated as Latin-1 characters and
-# encoded into UTF-8 in the result.
+# Convert a broken UTF-8 encoding (if FIXUTF8 option turned on). The argument
+# and result are both strings of bytes representing a UTF-8 encoded string, but
+# the argument may have embedded bytes not following the encoding; these are
+# treated as Latin-1 characters and encoded into UTF-8 in the result.
 sub fixUTF {
     my ($a) = @_;
-    return $a if (!($a =~ m/[\200-\377]/));
+    return $a unless @FIXUTF8@ && ($a =~ m/[\200-\377]/);
     my $result = '';
     my $n = length($a);
     for (my $i = 0; $i < $n; $i++) {
