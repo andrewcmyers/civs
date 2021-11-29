@@ -416,6 +416,9 @@ sub thank_you_for_voting { #title, receipt
     "感谢您的投票。您对<strong>$_[1]</strong>的投票已经生效。
     您的 投票确认是<code>$_[2]</code>.";
 }
+sub try_some_public_polls {
+    '想对其他事情投票吗？ 尝试以下公共民意调查之一：'
+}
 sub name_of_writein_is_empty {
     "投票选项没有名字";
 }
