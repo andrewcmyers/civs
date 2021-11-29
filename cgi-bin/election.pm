@@ -114,7 +114,7 @@ sub init {
     $election_begin = $edata{'election_begin'};
     $election_end = DB_decode('election_end');
     $public = $edata{'public'};
-    $publicize = $edata{'publicize'};
+    $publicize = $edata{'publicize'} || 'no';
     $writeins = $edata{'writeins'};
     $allow_voting = $edata{'allow_voting'};
     $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
