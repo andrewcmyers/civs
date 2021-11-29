@@ -332,7 +332,7 @@ my $filter_tags = '@FILTER_TAGS@';
 my $tf;
 
 my $ok = {all => []};
-my %allowed_tags = {
+my $allowed_tags = {
     table => $ok,
     td => {colspan => [], rowspan => []},
     tr => $ok,
@@ -377,7 +377,7 @@ if ($filter_tags ne 'no') {
       }
     );
     $tf->xss_risky_attributes(qw(href background cite lowsrc));
-    $tf->allow_tags(\%allowed_tags);
+    $tf->allow_tags($allowed_tags);
 }
 
 # Filter tags from a string, if $filter_tags is not 'no' (which is probably
