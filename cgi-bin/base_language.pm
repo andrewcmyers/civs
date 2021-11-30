@@ -403,6 +403,23 @@ sub Done {
     'Done.';
 }
 
+sub Email_voters_who_have_not_activated {
+    'Email voters who have not activated'
+}
+
+sub Activate_mail_subject {
+    'Please activate your email address on CIVS'
+}
+
+sub Activate_mail_body {
+    my ($self, $supervisor, $name, $title, $url) = @_;
+
+    "You have been invited by $name <$supervisor> to vote in a poll titled “$title”.
+
+    To vote, please activate your email address with the CIVS voting system at: <$url>"
+}
+
+
 # vote
 
 sub page_header_CIVS_Vote { # election_title
@@ -1151,7 +1168,7 @@ sub mail_failure_reason {
 }
 sub see_the_failure_table {
     my ($self, $activate_url, $mail_mgmt_url) = @_;
-    "<p>It was not possible to send mail to some voters, for reasons listed in the
+    "<p>It was not possible for CIVS to send mail to some voters, for reasons listed in the
     table below. Voters will not be able to vote until they receive their personal key,
     so you should contact them directly. Voters are likely to find the following
     links useful:</p>
