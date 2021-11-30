@@ -410,6 +410,12 @@ sub Email_voters_who_have_not_activated {
 sub Activate_mail_subject {
     'Please activate your email address on CIVS'
 }
+sub Address {
+    'Address'
+}
+sub Reason {
+    'Reason'
+}
 
 sub Activate_mail_body {
     my ($self, $supervisor, $name, $title, $url) = @_;
