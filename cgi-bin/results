@@ -256,7 +256,11 @@ sub ComputeResults {
     my $mam_checked = '';
     my $minimax_checked = '';
     my $runoff_checked = '';
-    if ($algorithm eq 'civs_ranked_pairs') {
+    my $proportional_checked = '';
+    if ($proportional eq 'yes') {
+        $proportional_checked = $checked;
+        print p("proportional_checked: $proportional_checked")
+    } elsif ($algorithm eq 'civs_ranked_pairs') {
 	$rp_checked = $checked;
     } elsif ($algorithm eq 'mam') {
 	$mam_checked = $checked;
@@ -302,7 +306,14 @@ sub ComputeResults {
 	    onclick="newSettings()"
 	    value="runoff"',
 	    $runoff_checked,
-	' /> Condorcet-IRV', BR;
+	' /> Condorcet-IRV', BR,
+        '<input type="checkbox"
+            onclick="newSettings()"
+            name="proportional",
+            value="yes"',
+            $proportional_checked,
+        ' /> Proportional', BR;
+
 	print RESULTS '<input type="submit" id="recomplete" value="Update" />';
 
     print RESULTS '</blockquote></form></div>',$cr;
