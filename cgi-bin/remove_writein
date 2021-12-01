@@ -61,7 +61,7 @@ for (my $i = 0; $i < $num_choices; $i++) {
 }
 print '</ul>';
 
-$edata{'choices'} = $choices = $new_choices;
+$edata{'choices'} = encode('utf-8', $choices = $new_choices);
 
 GoBackLink;
 

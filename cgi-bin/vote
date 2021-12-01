@@ -317,7 +317,7 @@ sub AddWritein {
         $choices[$index] = $writein;
         $num_choices++;
         $choices = join "\n", @choices;
-        $edata{'choices'} = $choices;
+        $edata{'choices'} = encode('utf-8', $choices);
 
         # Now update the vote matrix so that this write-in is
         # ranked last by every voter so far.
