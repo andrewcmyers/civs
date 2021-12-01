@@ -66,7 +66,8 @@ my ($db_is_open, $election_is_locked);
 
 &init;
 
-# Decode a database field using UTF-8, with ad hoc fixup of embedded Latin-1 characters and doubly encoded UTF-8
+# Decode a database field using UTF-8. If FIXUTF8 option is enabled, Ad-hoc
+# fixup is done of embedded Latin-1 characters and doubly encoded UTF-8.
 sub DB_decode {
     (my $key) = @_;
     my $d = fixUTF($edata{$key});
@@ -605,7 +606,7 @@ sub GenerateVoterKey {
     my $voter_key = civs_hash($voter_email, $authorization_key,
         $private_host_id);
     if ($reveal_voters eq 'yes') {
-	$edata{"email_addr $voter_key"} = $voter_email;
+	$edata{"email_addr $voter_key"} = encode('utf-8', $voter_email);
     }
     return $voter_key;
 }
