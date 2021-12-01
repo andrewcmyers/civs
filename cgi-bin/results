@@ -259,7 +259,6 @@ sub ComputeResults {
     my $proportional_checked = '';
     if ($proportional eq 'yes') {
         $proportional_checked = $checked;
-        print p("proportional_checked: $proportional_checked")
     } elsif ($algorithm eq 'civs_ranked_pairs') {
 	$rp_checked = $checked;
     } elsif ($algorithm eq 'mam') {
