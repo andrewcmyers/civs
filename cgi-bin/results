@@ -416,7 +416,7 @@ sub BallotReport {
     if ($ballot_reporting eq 'yes') {
 	print RESULTS h3($tx->Ballot_report), $cr;
 
-	my @voters = split /\n/, $vdata_copy{'recorded_voters'};
+	my @voters = split /\n/, ($vdata_copy{'recorded_voters'} || '');
 	if ($#voters >= 0) {
 	    my @headings = @choices;
 	    my @rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
@@ -626,8 +626,7 @@ sub PrintReport {
     no strict 'refs';
     (my $module) = @_;
     my @voters;
-    my $v = $vdata_copy{'recorded_voters'};
-    @voters = split /\n/, $v if ($v);
+    @voters = split /\n/, ($vdata_copy{'recorded_voters'} || '');
     my $bref = &ProcessBallots(\@voters);
     my $rank_candidates = $module.'::rank_candidates';
     my $print_details = $module.'::print_details';

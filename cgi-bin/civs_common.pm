@@ -454,6 +454,7 @@ sub fixUTF {
 sub fisher_yates_shuffle {
     my $array = shift;
     my $i;
+    return if $#{$array} < 1;
     for ($i = @$array; --$i; ) {
         my $j = int rand ($i+1);
         next if $i == $j;
