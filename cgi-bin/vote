@@ -69,11 +69,12 @@ if ($public ne 'yes') {
     }
 }
 
+my $old_ballot;
+
 if (!$allow_debug_votes || !$local_debug) {
-    CheckNotVoted($voter_key, $old_voter_key, $voter);
+    $old_ballot = CheckNotVoted($voter_key, $old_voter_key, $voter);
 }
 
-my $sort_choices = param('SortChoices');
 my $add_writein = param('AddWritein');
 my $vote = param('Vote');
 my $load = param('Load');
@@ -84,7 +85,7 @@ if ($vote && $voting_enabled) {
 }
 
 my (@rank, @choice_index, @iota);
-&OrderChoices;
+&OrderChoices($old_ballot);
 
 if ($add_writein and $writeins eq 'yes') {
     &AddWritein;
@@ -258,10 +259,11 @@ sub ProjectName {
 }
 
 sub OrderChoices {
-    if ($sort_choices || $add_writein) {
+    my ($old_ballot) = @_;
+    if ($add_writein || $old_ballot) {
+        my @old_ranks = split /,/, ($old_ballot || '');
         for (my $i = 0; $i < $num_choices; $i++) {
-            my $rank = param('C'.$i);
-            if (!defined($rank)) { $rank = $num_choices; }
+            my $rank = param('C'.$i) || $old_ranks[$i] || $num_choices;
             $iota[$i] = $i;
             $rank[$i] = $rank;
         }

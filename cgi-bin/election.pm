@@ -360,8 +360,9 @@ sub IsWriteinName {
     $_[0] =~ m/\(write-in\)$/
 }
 
-# Check whether the voter has provided a correct receipt
-# for a prior vote; if so, remove their old ballot and return 1.
+# Check whether the voter has provided a correct receipt for a prior
+# vote; if so, remove their old ballot and return their old ballot as a
+# string.
 sub CheckReceipt {
     (my $voter_key) = @_;
     my $receipt = param('receipt');
@@ -414,7 +415,7 @@ sub CheckReceipt {
                 }
             }
 
-            return 1;
+            return $ballot;
         } else {
             if (!$id || !$ballot_key) {
                 print $tx->invalid_release_key($receipt);
@@ -433,7 +434,7 @@ sub CheckNotVoted {
     my ($voter_key, $old_voter_key, $voter) = @_;
     # print pre("Checking for previous vote by ", $voter_key, " hash ", &civs_hash($voter_key));
     if ($voter_key && $used_voter_keys{&civs_hash($voter_key)}) {
-        if (CheckReceipt($voter_key)) { return }
+        if (my $ballot = CheckReceipt($voter_key)) { return $ballot }
 	print h1($tx->Already_voted), $cr;
 	print p($tx->vote_has_already_been_cast), $cr;
 	&PointToResults;
