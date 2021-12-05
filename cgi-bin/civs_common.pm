@@ -10,7 +10,9 @@ use HTML::Entities;
 use HTTP::Tiny;
 use MIME::Base64;
 use CGI qw(:standard -utf8);
-use open qw(:std :encoding(UTF-8));
+
+binmode STDOUT, ':encoding(UTF-8)';
+binmode STDERR, ':encoding(UTF-8)';
 
 # Export the package interface
 BEGIN {

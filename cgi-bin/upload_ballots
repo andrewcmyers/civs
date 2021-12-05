@@ -6,6 +6,7 @@ use warnings;
 use lib '@CGIBINDIR@';
 use CGI qw(:standard -utf8);
 use civs_common;
+use Encode qw(encode decode);
 $CGI::POST_MAX = @MAX_UPLOAD_SIZE@;
 # $CGI::UNLINK_TMP_FILES = 0;
 
@@ -47,7 +48,7 @@ my $type;
 if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
   while (!$ballot_fh->handle->eof) {
     if ($#errors >= $max_errors) { next }
-    $_ = $ballot_fh->handle->getline;
+    $_ = decode('utf-8', fixUTF($ballot_fh->handle->getline));
     $lineno++;
     # print pre("Line $lineno: $_"), $cr;
     s/\A(\s)*//;
