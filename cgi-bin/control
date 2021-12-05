@@ -143,11 +143,7 @@ if (!IsStarted) {
 
 my $num_auth_string;
 if (IsStarted) {
-    if ($num_auth) {
-        $num_auth_string = "$num_auth";
-    } else {
-        $num_auth_string = '0';
-    }
+    $num_auth_string = $num_auth || '0';
 } else {
     my $waiting = $#addresses + 1;
     $num_auth_string = $tx->no_authorized_yet($waiting);
