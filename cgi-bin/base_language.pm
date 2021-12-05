@@ -756,7 +756,7 @@ sub From_poll_supervisor {
 sub voter_mail_intro { #title, name, email_addr
 "A Condorcet Internet Voting Service poll named <b>$_[1]</b> has been created.
 You have been designated as a voter by the poll supervisor,
-$_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
+$_[2] (<a href=\"mailto:$_[3] ($_[2])\"><code>$_[3]</code></a>).</p>";
 }
 sub Description_of_poll {
     'Description of poll:';

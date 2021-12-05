@@ -625,15 +625,21 @@ sub GenerateVoterKey {
     return $voter_key;
 }
 
+# Send the body of an email message formatted as HTML.
+# The body is sent in both HTML and plain text. HTML
+# tags are removed in the plain text version. <code>
+# tags are replaced with angle brackets.
 sub SendBody {
     my $html = shift;
     my $boundary = 'CIVS-'.&SecureNonce;
     my $plain = $html;
+    $plain =~ s|<code>(.*)</code>|[[$1]]|g;
     $plain =~ s/<[^>]+>//g;
     $plain =~ s/\r\n\r\n/\r\n/g;
     $plain =~ s/\n\n/\n/g;
     $plain =~ s/^\r*//g;
     $plain =~ s/^\n*//g;
+    $plain =~ s|[[.*]]|<$1>|g;
 
     Send 'Mime-Version: 1.0';
     Send "Content-Type: multipart/alternative; boundary=$boundary";
@@ -678,7 +684,6 @@ sub GetEmailLoad {
 # Return the proper URL for the voter.  Also update $num_auth and $voter_keys
 # appropriately, and print a message about the user already being authorized if
 # they are. The voter email address does not need to be in canonical form.
-#
 sub VotingUrl {
     my ($email, $election_id, $authorization_key, $resend) = @_;
     my $v = &CanonicalizeAddr($email);
@@ -753,7 +758,7 @@ sub SendKeys {
 	    }
 	    sub MakeURL {
 	      (my $url) = @_;
-	      return "<pre>\r\n    <a href=\"$url\">$url</a>\r\n</pre>";
+	      return "<pre>\r\n    <a href=\"$url\"><code>$url</code></a>\r\n</pre>";
 	    }
 
             ElectionLog("Sending mail to a voter for poll $election_id\n");
@@ -820,6 +825,8 @@ sub SendKeys {
     return \@failures;
 }
 
+# Record that a voter has been invited to vote, so that they
+# can be given a link to vote later.
 sub RecordInvitation {
     (my $addr, my $url) = @_;
     $addr = CanonicalizeAddr($addr);

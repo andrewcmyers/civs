@@ -43,6 +43,7 @@ sub init {
 
 # Package functions
 
+# Check whether the given address is an email address
 sub CheckAddr {
     (my $addr) = @_;
     $addr = &TrimAddr($addr);
@@ -81,7 +82,6 @@ sub CanonicalizeAddr {
 }
 
 my $optout_file = "@CIVSDATADIR@/email-control.txt";
-
 
 # Return a reference to a hash table that maps the hashes of
 # all the email addresses that have opted out to a
@@ -208,6 +208,7 @@ sub SetOptOutPatterns {
     return "@valid_pats";
 }
 
+# Remove opt-out information for an address.
 sub RemoveOptOut {
     (my $optouts, my $addr) = @_;
     $addr = &CanonicalizeAddr($addr);
