@@ -16,15 +16,15 @@ sub init {
 sub ordinal_of {
     my $n = $_[1];
     if ($n >= 4 && $n < 20) {
-	return $n.'th'
+        return $n.'th'
     } elsif ($n % 10 == 1) {
-	return $n.'st'
+        return $n.'st'
     } elsif ($n % 10 == 2) {
-	return $n.'nd'
+        return $n.'nd'
     } elsif ($n % 10 == 3) {
-	return $n.'rd'
+        return $n.'rd'
     } else {
-	return $n.'th'
+        return $n.'th'
     }
 }
 
