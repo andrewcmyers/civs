@@ -74,17 +74,16 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
     }
     for (my $cnt = 0; $cnt < $multiplier; $cnt++) {
 	for (my $i = 0; $i < $num_choices; $i++) {
-	    my $rank = $indices[$i];
+	    my $rank = $indices[$i] || $num_choices;
 	    if ($proportional eq 'yes' && $use_combined_ratings) {
 		$ballots[$num_ballots][$i] = 0 + $rank;
 		# print pre("rank $rank seen"), $cr;
 		next;
 	    }
 	    if ($rank eq '-') { $rank = 'No opinion'; }
-	    if ($rank =~ m/^[0-9]*$/ &&
-		$rank >= 1 &&
+	    if ($rank =~ m/^[0-9]*$/ && $rank >= 1 &&
 		$rank <= $num_choices ||
-		$rank eq 'No opinion') {
+		($rank eq 'No opinion')) {
 		$ballots[$num_ballots][$i] = $rank;
 		next;
 	    }
@@ -95,6 +94,7 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
 	$num_ballots++;
 	if ($num_ballots > 1000) {
 	    push @errors, li("Line $lineno: too many ballots for test poll.");
+            last;
 	}
     }
   }
