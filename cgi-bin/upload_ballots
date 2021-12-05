@@ -74,7 +74,11 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
     }
     for (my $cnt = 0; $cnt < $multiplier; $cnt++) {
 	for (my $i = 0; $i < $num_choices; $i++) {
-	    my $rank = $indices[$i] || $num_choices;
+	    my $rank = $indices[$i];
+            if (!$rank) {
+                push @errors, li("Line $lineno: missing rank for choice ", $i + 1);
+                next;
+            }
 	    if ($proportional eq 'yes' && $use_combined_ratings) {
 		$ballots[$num_ballots][$i] = 0 + $rank;
 		# print pre("rank $rank seen"), $cr;
@@ -88,7 +92,7 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
 		next;
 	    }
 	    if ($cnt == 0) {
-		push @errors, li("Line $lineno: badly formed rank &ldquo;$rank&rdquo;.");
+		push @errors, li("Line $lineno: choice ", $i+1, " has badly formed rank &ldquo;$rank&rdquo;.");
 	    }
 	}
 	$num_ballots++;
