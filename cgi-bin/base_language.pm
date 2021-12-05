@@ -109,7 +109,7 @@ sub creation_email_info1 { # title, url
 $_[1]. You have been designated as the supervisor of this
 poll. To start and stop the poll, please use the following URL:
 
-  $_[2]
+  <code>$_[2]</code>
 
 Save this email and keep it private. If you lose it you will not be able
 to control the poll.
@@ -119,7 +119,7 @@ to control the poll.
 sub creation_email_public_link { # url
 "Because this is a public poll, you may direct voters to the following URL:
 
-  $_[1]
+  <code>$_[1]</code>
 
 "
 }
@@ -146,7 +146,7 @@ Save this email. If you lose it you will not have access to
 the results. Once the poll has been closed, results will be
 available at the following URL:
 
-  $_[2]
+  <code>$_[2]</code>
 
 This URL is private. Allowing unauthorized users access to this
 URL will permit them to see the poll results.
@@ -633,7 +633,7 @@ sub following_URL_will_report_results {
 }
 sub future_result_link {
     (my $self, my $url) = @_;
-    "The following URL will report poll results once the poll ends: <a href='$url'><tt>$url</tt></a>"
+    "The following URL will report poll results once the poll ends: <a href='$url'><code>$url</code></a>"
 }
 #deprecated
 sub following_URL_reports_results {
