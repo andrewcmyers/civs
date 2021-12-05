@@ -639,7 +639,7 @@ sub SendBody {
     $plain =~ s/\n\n/\n/g;
     $plain =~ s/^\r*//g;
     $plain =~ s/^\n*//g;
-    $plain =~ s|\[\[.*\]\]|<$1>|g;
+    $plain =~ s|\[\[(.*)\]\]|<$1>|g;
 
     Send 'Mime-Version: 1.0';
     Send "Content-Type: multipart/alternative; boundary=$boundary";
