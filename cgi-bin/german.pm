@@ -769,6 +769,10 @@ sub Condorcet_winner {
 sub Choices_in_individual_pref_order {
     'Kandidaten (in Reihenfolge gemäß Einzelpräferenzen)';
 }
+sub What_is_this { # url
+    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(Was ist das?)</small></a>'
+}
+
 
 # rp
 
