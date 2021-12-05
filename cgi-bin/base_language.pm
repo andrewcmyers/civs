@@ -109,7 +109,7 @@ sub creation_email_info1 { # title, url
 $_[1]. You have been designated as the supervisor of this
 poll. To start and stop the poll, please use the following URL:
 
-  $_[2]
+  <$_[2]>
 
 Save this email and keep it private. If you lose it you will not be able
 to control the poll.
@@ -119,7 +119,7 @@ to control the poll.
 sub creation_email_public_link { # url
 "Because this is a public poll, you may direct voters to the following URL:
 
-  $_[1]
+  <$_[1]>
 
 "
 }
