@@ -595,10 +595,16 @@ sub thank_you_for_voting { #title, receipt
     "Thank you. Your vote for <strong>$_[1]</strong> has been
 	successfully cast.<br>
         Your voter receipt is <code>$_[2]</code>.
-        You will need this receipt if you want to change your ballot.";
+        You will need this receipt if you want to change your ballot later.";
 }
 sub try_some_public_polls {
     "Feel like voting on something else? Try one of these public polls:"
+}
+sub you_can_change_ballot_now {
+    'From this page, you may erase the ballot you cast and vote again.'
+}
+sub change_ballot {
+    'Revote'
 }
 sub name_of_writein_is_empty {
     "Name of write-in choice is empty";

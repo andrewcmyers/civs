@@ -210,10 +210,13 @@ sub ProcessVote {
         }
     }
 
-    print p($tx->thank_you_for_voting($title,
-                                $election_id."/".$voter_ballot_release_key));
+    my $receipt = "$election_id/$voter_ballot_release_key";
+    print p($tx->thank_you_for_voting($title, $receipt));
 
     PointToResults;
+    print $tx->you_can_change_ballot_now;
+    RevoteButton($voter_key, $voter, $tx->change_ballot, $receipt);
+
     print &TrySomePolls();
     CIVS_End;
 }

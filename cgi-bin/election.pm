@@ -21,7 +21,7 @@ BEGIN {
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
-    &IsWriteinName &GetEmailLoad
+    &IsWriteinName &GetEmailLoad &RevoteButton
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
@@ -428,8 +428,34 @@ sub CheckReceipt {
     return 0;
 }
 
+# Generate a form that lets voters try to vote again.
+# If a fourth argument is provided containing a receipt,
+# a simple button is generated. Otherwise a text field
+# is also provided for the user to enter the receipt.
+sub RevoteButton {
+    my ($voter_key, $voter, $button_label, $receipt) = @_;
+    print start_form(
+        -name => 'receipt_form',
+        -method => 'POST',
+        -enctype => 'multipart/form-data',
+        -accept_charset => 'UTF-8',
+        -action => '@CIVSBINURL@/vote@PERLEXT@'
+    ), $cr;
+    print hidden(-name => 'id', -value => $election_id), $cr;
+    print hidden(-name => 'voter', -value => $voter), $cr;
+    print hidden(-name => 'key', -value => $voter_key), $cr;
+    print hidden(-name => 'akey', -value => $authorization_key), $cr;
+    if ($receipt) {
+        print hidden(-name => 'receipt', -value => $receipt), $cr;
+    } else {
+        print textfield(-name => 'receipt'), $cr;
+    }
+    print submit($button_label), $cr;
+    print end_form(), $cr;
+}
+
 # Check if the voter has already voted (and this is not a valid revote).
-# If so, generate an error page and exit.
+# If so, generate a page that lets them revote by providing a receipt, and exit.
 sub CheckNotVoted {
     my ($voter_key, $old_voter_key, $voter) = @_;
     # print pre("Checking for previous vote by ", $voter_key, " hash ", &civs_hash($voter_key));
@@ -439,20 +465,7 @@ sub CheckNotVoted {
 	print p($tx->vote_has_already_been_cast), $cr;
 	&PointToResults;
         print p($tx->if_you_want_to_change), $cr;
-        print start_form(
-            -name => 'receipt_form',
-            -method => 'POST',
-            -enctype => 'multipart/form-data',
-            -accept_charset => 'UTF-8',
-            -action => '@CIVSBINURL@/vote@PERLEXT@'
-        ), $cr;
-        print hidden(-name => 'id', -value => $election_id), $cr;
-        print hidden(-name => 'voter', -value => $voter), $cr;
-        print hidden(-name => 'key', -value => $voter_key), $cr;
-        print hidden(-name => 'akey', -value => $authorization_key), $cr;
-        print textfield(-name => 'receipt'), $cr;
-        print submit(), $cr;
-        print end_form(), $cr;
+        &RevoteButton($voter_key, $voter, $tx->change_ballot); # no receipt provided
         &main::TrySomePolls;
         &CIVS_End;
 
