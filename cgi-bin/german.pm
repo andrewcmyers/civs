@@ -439,6 +439,12 @@ sub thank_you_for_voting { #title, receipt
     "Danke. Sie haben Ihre Stimme zu <strong>$_[1]</strong> erfolgreich
 	abgegeben. Ihre Abstimmungsquittung ist <code>$_[2]</code>.";
 }
+sub you_can_change_ballot_now {
+    'Auf dieser Seite können Sie Ihre abgegebenen Stimmzettel löschen und erneut abstimmen.'
+}
+sub change_ballot {
+    'Stimme ändern'
+}
 sub try_some_public_polls {
     "Lust auf etwas anderes abzustimmen? Versuchen Sie es mit einer dieser öffentlichen Umfragen:"
 }
