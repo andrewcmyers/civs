@@ -744,7 +744,7 @@ sub x_loses_to_y { # x y w l
     "$_[1] perd contre $_[2] $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {
-    'Pour des raison de simplicité certains détails ne figurent pas dans les résultats de la consultations.';
+    'Pour des raison de simplicité certains détails ne figurent pas dans les résultats de la consultations.'
 }
 sub Show_details {
     'Montrer les détails';

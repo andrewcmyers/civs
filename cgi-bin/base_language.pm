@@ -929,7 +929,7 @@ sub x_loses_to_y { # x y w l
     "$_[1] loses to $_[2] $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {
-    'For simplicity, some details of the poll result are not shown. &nbsp;';
+    'For simplicity, some details of the poll result are not shown.'
 }
 sub Show_details {
     'Show details';

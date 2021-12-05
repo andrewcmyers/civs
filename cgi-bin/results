@@ -396,7 +396,7 @@ sub PrintMatrix {
 sub DetailsHeader {
     # print RESULTS hr(),$cr;
     print RESULTS '<p id="show_details">',
-	$tx->some_result_details_not_shown,
+	$tx->some_result_details_not_shown, '&nbsp;',
 	'<button onclick="show_details();">',
 	    $tx->Show_details,
 	'</button></p>', $cr;
