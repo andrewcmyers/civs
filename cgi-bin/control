@@ -36,21 +36,21 @@ print h1("$title");
 print $tx->poll_supervisor($name,$email_addr), br(), $cr;
 if (!IsStarted) {
     print "<form method=\"POST\"
-		action=\"$civs_bin_path/start_election@PERLEXT@\"
-		enctype=\"multipart/form-data\"
-		name=\"Start\">", $cr;
+        action=\"$civs_bin_path/start_election@PERLEXT@\"
+        enctype=\"multipart/form-data\"
+        name=\"Start\">", $cr;
     print '<p>'. $tx->poll_has_not_yet_started;
     print hidden('id', $election_id);
     print hidden('key', $control_key);
     print hidden('akey', $authorization_key)
-		if defined($authorization_key);
+        if defined($authorization_key);
     print '<input type="submit" value="'.$tx->Start_poll.'" name="start">';
     print '</p></form>';
 } elsif (!IsStopped) {
     print "<form method=\"POST\"
-		action=\"$civs_bin_path/close@PERLEXT@\"
-		enctype=\"multipart/form-data\"
-		name=\"Close\">", $cr;
+        action=\"$civs_bin_path/close@PERLEXT@\"
+        enctype=\"multipart/form-data\"
+        name=\"Close\">", $cr;
     print '<p>'.$tx->the_poll_is_in_progress;
     print hidden('id', $election_id);
     print hidden('key', $control_key);
@@ -59,81 +59,81 @@ if (!IsStarted) {
     print '</p></form>', $cr;
 
     if ($writeins eq 'yes') {
-		if (param('allow_voting')) {
-		    $edata{'allow_voting'} = $allow_voting = 'yes';
-		    $voting_enabled = 1;
-		}
-		if (param('nowriteins')) {
-		    $edata{'writeins'} = $writeins = 'no';
-		    print p($tx->writeins_have_been_disabled);
-		} else {
-		    print "<form method=\"POST\"
-				action=\"$civs_bin_path/control@PERLEXT@\"
-				enctype=\"multipart/form-data\"
-				name=\"Nowriteins\">", $cr;
-		    print p($tx->Writeins_currently_allowed,
-			    hidden('id', $election_id),
-			    hidden('key', $control_key),
-			    '<input type="submit" value="',
-			        $tx->disallow_further_writeins,
-				'" name="nowriteins">');
-		    if ($allow_voting ne 'yes') {
-			print p($tx->voting_disabled_during_writeins,
-			    hidden('id', $election_id),
-			    hidden('key', $control_key),
-			'<input type="submit" value="',
-			  $tx->allow_voting_during_writeins,
-			  '" name="allow_voting">');
-		    }
-		    print hidden('akey', $authorization_key)
-			    if defined($authorization_key);
-		    print "</form>", $cr;
-		}
+        if (param('allow_voting')) {
+            $edata{'allow_voting'} = $allow_voting = 'yes';
+            $voting_enabled = 1;
+        }
+        if (param('nowriteins')) {
+            $edata{'writeins'} = $writeins = 'no';
+            print p($tx->writeins_have_been_disabled);
+        } else {
+            print "<form method=\"POST\"
+                action=\"$civs_bin_path/control@PERLEXT@\"
+                enctype=\"multipart/form-data\"
+                name=\"Nowriteins\">", $cr;
+            print p($tx->Writeins_currently_allowed,
+                hidden('id', $election_id),
+                hidden('key', $control_key),
+                '<input type="submit" value="',
+                    $tx->disallow_further_writeins,
+                '" name="nowriteins">');
+            if ($allow_voting ne 'yes') {
+            print p($tx->voting_disabled_during_writeins,
+                hidden('id', $election_id),
+                hidden('key', $control_key),
+            '<input type="submit" value="',
+              $tx->allow_voting_during_writeins,
+              '" name="allow_voting">');
+            }
+            print hidden('akey', $authorization_key)
+                if defined($authorization_key);
+            print "</form>", $cr;
+        }
     }
     if ($external_ballots eq 'yes') {
-	print p($tx->this_is_a_test_poll), $cr;
+    print p($tx->this_is_a_test_poll), $cr;
     } elsif (defined($public) && $public eq 'yes') {
-	    my $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
-	    $url .= "&akey=$authorization_key"
-		    if defined($authorization_key) && $authorization_key ne '';
-	    print p($tx->This_is_a_public_poll_plus_link($url, $publicize eq 'yes')), $cr;
-	
-	    print p($tx->Or_paste_this_code);
-	    print '<textarea class="paste" rows=8 cols=90>';
-	    my @choice_index, my @rank;
-	    my $js_ui = 1;
-	    if (defined($proportional) && defined($use_combined_ratings) &&
-		$proportional eq 'yes' && $use_combined_ratings) { $js_ui = 0; }
-	    for (my $i = 0; $i < $num_choices; $i++) {
-		    $choice_index[$i] = $i;
-		    if ($proportional eq 'yes' && $use_combined_ratings) {
-			    $rank[$i] = 0;
-		    } else {
-			    $rank[$i] = $num_choices;
-		    }
-	    }
-	    if (!defined($shuffle) || $shuffle ne 'no') {
-		fisher_yates_shuffle(\@choice_index);
-	    }
-	    &voting::GenerateVoteForm('', $authorization_key, [@choice_index], [@rank], $js_ui, 1,
-		($ballot_reporting eq 'yes' &&
-		$reveal_voters eq 'yes' &&
-		$public));
-	    print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>', $cr;
-	    print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>', $cr;
-	    print '<script src="@PROTO@://@THISHOST@@CIVSURL@/vote.js"></script>', $cr;
-	    print '<script>setup()</script>', $cr;
-	    print '</textarea><br>';
+        my $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
+        $url .= "&akey=$authorization_key"
+            if defined($authorization_key) && $authorization_key ne '';
+        print p($tx->This_is_a_public_poll_plus_link($url, $publicize eq 'yes')), $cr;
+    
+        print p($tx->Or_paste_this_code);
+        print '<textarea class="paste" rows=8 cols=90>';
+        my @choice_index, my @rank;
+        my $js_ui = 1;
+        if (defined($proportional) && defined($use_combined_ratings) &&
+        $proportional eq 'yes' && $use_combined_ratings) { $js_ui = 0; }
+        for (my $i = 0; $i < $num_choices; $i++) {
+            $choice_index[$i] = $i;
+            if ($proportional eq 'yes' && $use_combined_ratings) {
+                $rank[$i] = 0;
+            } else {
+                $rank[$i] = $num_choices;
+            }
+        }
+        if (!defined($shuffle) || $shuffle ne 'no') {
+        fisher_yates_shuffle(\@choice_index);
+        }
+        &voting::GenerateVoteForm('', $authorization_key, [@choice_index], [@rank], $js_ui, 1,
+        ($ballot_reporting eq 'yes' &&
+        $reveal_voters eq 'yes' &&
+        $public));
+        print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>', $cr;
+        print '<script src="@PROTO@://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>', $cr;
+        print '<script src="@PROTO@://@THISHOST@@CIVSURL@/vote.js"></script>', $cr;
+        print '<script>setup()</script>', $cr;
+        print '</textarea><br>';
     }
 
 } else {
     &CloseDatabase;
     my $results_link;
     if ($restrict_results eq 'yes') {
-	$results_link = "";
+        $results_link = "";
     } else {
-	$results_link =
-	    $tx->Poll_results_are_available("$civs_bin_path/results@PERLEXT@?id=$election_id");
+        $results_link =
+            $tx->Poll_results_are_available("$civs_bin_path/results@PERLEXT@?id=$election_id");
     }
     print p($tx->The_poll_has_ended, $results_link), $cr;
     if (defined($close_time)) {
@@ -143,7 +143,7 @@ if (!IsStarted) {
 
 my $num_auth_string;
 if (IsStarted) {
-    if (defined($num_auth) && $num_auth) {
+    if ($num_auth) {
         $num_auth_string = "$num_auth";
     } else {
         $num_auth_string = '0';
@@ -158,28 +158,28 @@ print $tx->total_authorized_voters($num_auth_string), br(), $cr
 $num_votes += 0;
 if ($restrict_results eq 'yes') {
     if (IsStopped) {
-	print $tx->Poll_results_are_now_available_to_the_following_users, br, $cr;
+        print $tx->Poll_results_are_now_available_to_the_following_users, br, $cr;
     } else {
         my $ack = $tx->ResendLinkAck;
-	print $tx->Poll_results_will_be_available_to_the_following_users, '&nbsp;',
+        print $tx->Poll_results_will_be_available_to_the_following_users, '&nbsp;',
                 button(-name => 'resend_results_link',
                        -id => 'resend_results_link_button',
                        -value => $tx->ResendLink_button,
-		       -onclick => "resendResultsLink('$ack')"),
+                       -onclick => "resendResultsLink('$ack')"),
                 div({-id => "resend_popup", -class => "popup"}, "sent?"), br;
     }
     my @result_addrs = split /(\r\n)+/, $result_addrs;
     print '<ul>';
     foreach my $addr (@result_addrs) {
-	$addr = TrimAddr($addr);
-	if (CheckAddr($addr)) {
-	    print '<li>', $addr, $cr;
-	}
+        $addr = TrimAddr($addr);
+        if (CheckAddr($addr)) {
+            print '<li>', $addr, $cr;
+        }
     }
     print '</ul>';
 } else {
     if (!IsStopped) {
-	print p($tx->Poll_results_available_to_all_voters_when_poll_completes);
+        print p($tx->Poll_results_available_to_all_voters_when_poll_completes);
     }
 }
 print $tx->actual_votes_so_far($num_votes), br(), $cr;
@@ -189,7 +189,7 @@ print $tx->email_load(GetEmailLoad(time())), br(), $cr;
 if ($writeins eq 'yes') {
     print $tx->Writeins_allowed, br(), $cr;
     if (!$voting_enabled) {
-	print $tx->Voting_is_disabled_during_writeins, br(), $cr;
+        print $tx->Voting_is_disabled_during_writeins, br(), $cr;
     }
 } else {
     print $tx->Writeins_not_allowed, br(), $cr;
@@ -201,25 +201,25 @@ if ($no_opinion eq 'yes') {
 
 if ($proportional eq 'yes') {
     if ($use_combined_ratings) {
-	print 'This poll uses the proportional representation
-	    algorithm with the combined-ratings voter criterion.',br(), $cr;
+        print 'This poll uses the proportional representation
+            algorithm with the combined-ratings voter criterion.',br(), $cr;
     } else {
-	print 'This poll uses the proportional representation
-	    algorithm with the best-candidate voter criterion.',br(), $cr;
+        print 'This poll uses the proportional representation
+            algorithm with the best-candidate voter criterion.',br(), $cr;
     }
     if ($num_choices == 1) {
-	print p('Proportional representation is enabled
-	    but there is only a single winner. Therefore, proportional
-	    representation mode will have no effect.'), $cr;
+        print p('Proportional representation is enabled
+            but there is only a single winner. Therefore, proportional
+            representation mode will have no effect.'), $cr;
     }
 }
 
 if ($ballot_reporting eq 'yes') {
     print $tx->Detailed_ballot_reporting_enabled, br(), $cr;
     if ($reveal_voters eq 'yes') {
-	print $tx->Voter_identities_will_be_public;
+        print $tx->Voter_identities_will_be_public;
     } else {
-	print $tx->Voter_identities_will_be_kept_anonymous;
+        print $tx->Voter_identities_will_be_kept_anonymous;
     }
 } else {
     print $tx->Detailed_ballot_reporting_disabled;
@@ -234,43 +234,43 @@ print $cr, div({-id=>'description'}, $description);
 print $cr, div({-id => "save_popup", -class => "popup"}, "saved?");
 print $cr, "</div>";
 print $cr, button(-name => 'edit_description',
-	          -id => 'edit_description_button',
-	          -value => $tx->Edit_button,
-		  -onclick => "edit_description()");
+                  -id => 'edit_description_button',
+                  -value => $tx->Edit_button,
+                  -onclick => "edit_description()");
 print $cr, textarea(-id => "description_edit",
-	            -name => "description_edit",
-	            -default => $description,
+                    -name => "description_edit",
+                    -default => $description,
                     -title => "Description",
-		    -rows => 10,
-		    -columns => 60);
+                    -rows => 10,
+                    -columns => 60);
 print $cr, button(-name => 'save_description',
-	          -id => 'save_description_button',
-	          -value => $tx->Save_button,
-		  -onclick => "save_description()");
+                  -id => 'save_description_button',
+                  -value => $tx->Save_button,
+                  -onclick => "save_description()");
 
 print $cr, h2($tx->Candidates);
 print p($tx->the_top_n_will_win($num_winners));
 print "<ul id='candidates'>$cr";
 
 print "<form method=\"POST\"
-	    action=\"$civs_bin_path/remove_writein@PERLEXT@\"
-	    enctype=\"multipart/form-data\"
-	    name=\"RemoveWritein\">", $cr;
+            action=\"$civs_bin_path/remove_writein@PERLEXT@\"
+            enctype=\"multipart/form-data\"
+            name=\"RemoveWritein\">", $cr;
 print hidden('id', $election_id);
 print hidden('key', $control_key);
 print hidden('akey', $authorization_key)
-	if defined($authorization_key);
+        if defined($authorization_key);
 print hidden('writein', 'num');
 print hidden('writein_name', 'foo');
 for (my $j = 0; $j < $num_choices; $j++) {
     if (IsWriteinName($choices[$j]) && $num_votes < 1) {
-	print li($choices[$j], $cr,
-	    button(-name => "remove",
-	           -value => $tx->Remove_button,
-	           -onclick => "document.RemoveWritein.elements.writein.value = '$j'; document.RemoveWritein.submit()",
-		   -class => 'small_button')), $cr;
+        print li($choices[$j], $cr,
+            button(-name => "remove",
+                   -value => $tx->Remove_button,
+                   -onclick => "document.RemoveWritein.elements.writein.value = '$j'; document.RemoveWritein.submit()",
+                   -class => 'small_button')), $cr;
     } else {
-	print li($choices[$j], $cr);
+        print li($choices[$j], $cr);
     }
 }
 print "</ul></form>$cr";
@@ -282,13 +282,13 @@ if ($external_ballots ne 'yes') {
     print p($tx->add_voter_instructions);
 
     print "<form method=\"POST\"
-		action=\"$civs_bin_path/add_voters@PERLEXT@\"
-		enctype=\"multipart/form-data\"
-		name=\"AddVoters\">", $cr;
+                 action=\"$civs_bin_path/add_voters@PERLEXT@\"
+                 enctype=\"multipart/form-data\"
+                 name=\"AddVoters\">", $cr;
     print hidden('id', $election_id);
     print hidden('key', $control_key);
     print hidden('akey', $authorization_key)
-	    if defined($authorization_key);
+        if defined($authorization_key);
     print p('<textarea title="Voter addresses" rows="2" name="new_addresses" cols="50"></textarea>');
     print p($tx->Upload_file, '<input title="Voter address file upload" id=new_addresses_file type=file name="new_addresses_file">');
     print input({type => 'submit', value => $tx->Add_voters, name => 'add'}), '&nbsp;',
