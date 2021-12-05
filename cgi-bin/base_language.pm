@@ -986,7 +986,7 @@ sub Unknown_email {
 }
 
 sub What_is_this { # url
-    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>';
+    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>'
 }
 
 # rp

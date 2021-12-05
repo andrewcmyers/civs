@@ -796,6 +796,10 @@ sub Choices_in_individual_pref_order {
     'Propositions (dans l\'ordre de préférence individuel)';
 }
 
+sub What_is_this { # url
+    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(Qu\'est-ce que c\'est?)</small></a>'
+}
+
 # rp
 
 sub All_prefs_were_affirmed {
