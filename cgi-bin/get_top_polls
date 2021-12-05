@@ -22,6 +22,7 @@ undef $/;
 print CGI::header(-charset => 'utf-8');
 
 open (IN, $top_polls);
+binmode IN, ':utf8';
 
 print <IN>;
 
