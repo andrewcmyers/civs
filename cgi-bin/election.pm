@@ -117,7 +117,7 @@ sub init {
     $public = $edata{'public'};
     $publicize = $edata{'publicize'} || 'no';
     $writeins = $edata{'writeins'};
-    $allow_voting = $edata{'allow_voting'};
+    $allow_voting = $edata{'allow_voting'} || 'no';
     $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
     $proportional = $edata{'proportional'} // '';
     $use_combined_ratings = $edata{'use_combined_ratings'} || 0;

@@ -113,10 +113,7 @@ $edata{'election_begin'} = time();
 sub SetBinaryParameter {
     my ($param_name, $default) = @_;
 
-    my $value = param($param_name);
-    if (!defined($value) or $value eq '') {
-	$value = $default;
-    }
+    my $value = param($param_name) || $default;
     $edata{$param_name} = $value;
     return $value;
 }
