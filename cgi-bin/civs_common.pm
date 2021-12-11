@@ -104,23 +104,12 @@ sub init {
  &SetLanguage;
 }
 
-
 sub SetIPAddress {
-  my $x_forwarded_for = http('HTTP_X_FORWARDED_FOR');
-  if (defined($x_forwarded_for)) {
-    $remote_ip_address = $x_forwarded_for;
-  }
-  elsif ($using_ISA) {
-    $remote_ip_address = http('HTTP_IPREMOTEADDR');
-    if (!defined($remote_ip_address)) {
-      $remote_ip_address = http('HTTP_REMOTE_ADDRESS');
-    }
-    if (!defined($remote_ip_address)) {
-      $remote_ip_address = remote_addr();
-    }
-  } else {
-    $remote_ip_address = remote_addr();
-  }
+    $remote_ip_address = http('HTTP_X_REAL_IP')
+                      || http('HTTP_X_FORWARDED_FOR')
+                      || http('HTTP_IPREMOTEADDR')
+                      || http('HTTP_REMOTE_ADDRESS')
+                      || remote_addr();
 }
 
 sub SetLanguage {
