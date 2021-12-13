@@ -270,10 +270,14 @@ sub OrderChoices {
             $iota[$i] = $i;
             $rank[$i] = $rank;
         }
+        sub nrank {
+            my $r = $rank[shift];
+            ($r ne 'No opinion') ? $r : $num_choices + 1;
+        }
         if ($proportional ne 'yes') {
-            @choice_index = sort { $rank[$a] <=> $rank[$b] } @iota;
+            @choice_index = sort { &nrank($a) <=> &nrank($b) } @iota;
         } else {
-            @choice_index = sort { $rank[$b] <=> $rank[$a] } @iota;
+            @choice_index = sort { &nrank($b) <=> &nrank($a) } @iota;
         }
     } else { # randomize
         for (my $i = 0; $i < $num_choices; $i++) {
