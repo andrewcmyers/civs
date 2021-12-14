@@ -350,9 +350,9 @@ if ($filter_tags ne 'no') {
       on_open_tag => sub {
           my ($self, $tag, $attributes, $sequence) = @_;
           if ($$tag eq 'img') {
-            my $src = $attributes->{'src'};
-            $attributes->{'src'} = '@CIVSURL@/images/check123b.png';
-            my $http = HTTP::Tiny->new({verify_SSL => 1});
+            my $src = $attributes->{src};
+            $attributes->{src} = '@CIVSURL@/images/check123b.png';
+            my $http = HTTP::Tiny->new(verify_SSL => 0);
             my $response = $http->get($src);
 
             if ($response->{status} eq 200) {
@@ -361,8 +361,12 @@ if ($filter_tags ne 'no') {
                 if (length $content < @MAX_IMAGE_SIZE@) {
                     my $enc = MIME::Base64::encode_base64($content,'');
                     my $newsrc = "data:$contenttype;base64,$enc";
-                    $attributes->{'src'} = $newsrc;
+                    $attributes->{src} = $newsrc;
+                } else {
+                    print STDERR "Image too large: ", length $content;
                 }
+            } else {
+                print STDERR "Failed to fetch image: ", $src;
             }
           }
           return;
