@@ -327,15 +327,13 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;
     if (!$prop || !$combined) {
-	$ret = "Merci de bien vouloir classer les candidats ou les propositions
-        suivants. Plus un candidat ou une proposition vous convient plus vous
-        lui donnerez un rang élevé. Par conséquent votre candidat ou votre
-        proposition préféré aura donc le rang 1.
-        Si vous n'avez pas de préférence entre plusieurs candidats ou propositions,
-        vous pouvez leur donner le même rang. Il vous est
-        possible de ne pas utiliser toutes les rangs disponibles.
-        Initialement toutes les candidats ou les propositions
-        possèdent le rang les plus faible. ". $cr;
+	$ret = "
+        Indiquez pour chacune des options suivantes son rang de préférence. Par
+        exemple, utilisez le rang 1 pour vos choix préférés, le rang 2 pour vos
+        seconds choix, etc. Vous pouvez donner le même rang à plusieurs choix
+        si vous n'avez aucune préférence entre eux. Vous n'êtes pas obligé
+        d'utiliser tous les rangs possibles. Tous les choix ont initialement le
+        rang le plus bas possible." . $cr;
 	if ($no_opinion) {
 	    $ret .= '<b>Note : </b> &ldquo;S\'abstenir&rdquo;
 		    <i>n\'est pas</i> équivalent à attribuer le rang le
