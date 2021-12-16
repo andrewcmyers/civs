@@ -227,8 +227,8 @@ sub LogPublicVote {
         &Log("Could not open publicized log file $public_vote_log");
         return;
     }
-    my $msg = time().' '.$election_id.' '.$title.$cr;
-    print OUT $msg;
+    binmode OUT, ':encoding(UTF-8)';
+    print OUT time(), ' ', $election_id, ' ', $title, $cr;
     close(OUT);
 
     my $top_polls = $home . "/elections/top_polls.html";
