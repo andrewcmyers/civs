@@ -478,7 +478,7 @@ function show_qr_code(elem, url) {
     if (elem.value != 'on') return
     const d = document.getElementById('qr_code_div')
     while (d.firstChild) d.removeChild(d.firstChild);
-    d.appendChild(img({src: 'https://qr.kaywa.com/img.php?s=8&d=' + url_quoted,
+    d.appendChild(img({src: 'https://qr.kaywa.com/img.php?s=4&d=' + url_quoted,
                        alt: 'QR code'}))
     d.style.float = "right"
     d.parentNode.insertBefore(d, d.parentNode.firstChild)
