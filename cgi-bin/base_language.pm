@@ -587,6 +587,9 @@ sub ranking_instructions {
 sub write_in_a_choice {
     'Write in a new choice: ';
 }
+sub show_qr_code {
+    'Show QR code for this poll.'
+}
 sub if_you_have_already_voted { #url
     "If you have already voted, you may see
 	<a href=\"$_[1]\">the current poll results</a>.";

@@ -137,6 +137,13 @@ print '</div>', $cr;
 #    your rankings and then just save this web page in your browser)</p>';
 # print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
 
+if ($public eq 'yes') {
+    my $url = "@PROTO@://@THISHOST@$thisurl?id=$election_id&akey=$authorization_key";
+    print div({class => 'normal_text', id => 'qr_code_div'},
+        p(input({type => 'checkbox',
+                 onclick => "show_qr_code(this, '$url')"}),
+          $tx->show_qr_code))
+}
 
 if ($voting_enabled && $public eq 'yes') {
     print div({class => 'normal_text'},
