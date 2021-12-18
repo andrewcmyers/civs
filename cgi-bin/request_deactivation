@@ -15,6 +15,7 @@ my $address = param("address");
 print CGI::header(-charset => 'utf-8');
 
 if (!CheckAddr($address)) {
+    $address = $address || "";
     print start_html(), p("Illegal mail address <$address>"), end_html();
     exit 0;
 }
