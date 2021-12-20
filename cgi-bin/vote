@@ -19,7 +19,7 @@ use IO::Handle;
 
 my $thisurl = $civs_bin_path."/vote@PERLEXT@";
 
-my NO_OPINION = 'No opinion';
+my $NO_OPINION = 'No opinion';
 
 use election;
 use voting;
@@ -165,14 +165,14 @@ sub ProcessVote {
         # print "num_choices = $num_choices", $cr;
     for (my $i = 0; $i < $num_choices; $i++) {
         my $rank = param('C'.$i) || $num_choices;
-        if ($rank ne NO_OPINION && !($rank =~ m/\A[0-9]+\Z/)) {
+        if ($rank ne $NO_OPINION && !($rank =~ m/\A[0-9]+\Z/)) {
             $rank = $num_choices;
         }
         if ($proportional eq 'yes' && !$use_combined_ratings) {
             $rank = $num_choices - $rank; # invert
         }
-        if ($rank ne NO_OPINION && $rank < 0) { $rank = 0; } # must be proportional
-        if ($rank ne NO_OPINION && $rank > 999) { $rank = 999; } # must be proportional
+        if ($rank ne $NO_OPINION && $rank < 0) { $rank = 0; } # must be proportional
+        if ($rank ne $NO_OPINION && $rank > 999) { $rank = 999; } # must be proportional
         if ($vote eq '') {
             $vote = $rank;
         } else {
@@ -215,8 +215,8 @@ sub ProcessVote {
         for (my $k = 0; $k < $num_choices; $k++) {
             my $jk = $vdata{"$j.$k"};
             $jk = 0 if (!defined($jk));
-            if ($rank[$j] ne NO_OPINION &&
-                $rank[$k] ne NO_OPINION &&
+            if ($rank[$j] ne $NO_OPINION &&
+                $rank[$k] ne $NO_OPINION &&
                 $rank[$j] < $rank[$k]) {
                 $vdata{"$j.$k"} = $jk + 1;
             }
@@ -285,7 +285,7 @@ sub OrderChoices {
         }
         sub nrank {
             my $r = $rank[shift];
-            ($r ne NO_OPINION) ? $r : $num_choices + 1;
+            ($r ne $NO_OPINION) ? $r : $num_choices + 1;
         }
         if ($proportional ne 'yes') {
             @choice_index = sort { &nrank($a) <=> &nrank($b) } @iota;

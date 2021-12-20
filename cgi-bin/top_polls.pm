@@ -26,6 +26,7 @@ sub find_top_polls {
     my $reduced_log = $home. "/elections/public_vote.log.temp";
 
     open(IN, $public_vote_log);
+    binmode IN, ':encoding(UTF-8)';
     if (!sysopen NEWLOG, $reduced_log, O_WRONLY|O_CREAT|O_TRUNC) {
 	&Log("Could not open public vote log temp output file $reduced_log");
 	return;
