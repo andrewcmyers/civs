@@ -126,8 +126,8 @@ sub init {
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
     $shuffle = $edata{'shuffle'};
-    $no_opinion = $edata{'no_opinion'} or $no_opinion = 'yes';
-    $num_votes = $vdata{'num_votes'} or $num_votes = 0;
+    $no_opinion = $edata{'no_opinion'} || 'yes';
+    $num_votes = $vdata{'num_votes'} || 0;
     $close_time = $vdata{'close_time'};
     $recorded_voters = $vdata{'recorded_voters'};
     $ballot_reporting = $edata{'ballot_reporting'} // '';

@@ -130,15 +130,6 @@ print '</div>', $cr;
      $reveal_voters eq 'yes' &&
      $public eq 'yes'));
 
-# if ($voting_enabled) {
-#   print '<p>Read rankings from a saved voting page: ';
-#   print '<input type="file" id=rankings_file type=file name="rankings_file">';
-#   print '&nbsp; <input type="submit" id=load_rankings_file value="Load" name="Load">';
-# }
-#print '<br>(To save a voting page, click "Sort" to collect
-#    your rankings and then just save this web page in your browser)</p>';
-# print p('Reset rankings: <input type="reset" value="Reset" name="Vote">');
-
 if ($public eq 'yes') {
     my $url = "@PROTO@://@THISHOST@$thisurl?id=$election_id";
     $url .= "&akey=$authorization_key" if ($authorization_key);
@@ -149,20 +140,26 @@ if ($public eq 'yes') {
 }
 
 if ($voting_enabled && $public eq 'yes') {
+    my $url = "@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id";
     print div({class => 'normal_text'},
-        p($tx->if_you_have_already_voted("@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id")));
+        p($tx->if_you_have_already_voted($url)));
 }
 
 &CIVS_End;
 ###############################
 
+# Record a vote.
+# A vote, or ballot, is represented as a comma-separated string of ranks, which
+# are numbers between 1 and the maximum rank, or else the string $NO_OPINION if
+# the poll permits that choice.
+#
+# Votes are recorded in vdata, which is indexed by voter key to preserve
+# anonymity.
+#
 sub ProcessVote {
     my $vote = '';
     $vdata{'last_vote_time'} = $last_vote_time = time();
 
-        # Record the vote (note that vdata is
-        # indexed by voter key, preserving anonymity.)
-        # print "num_choices = $num_choices", $cr;
     for (my $i = 0; $i < $num_choices; $i++) {
         my $rank = param('C'.$i) || $num_choices;
         if ($rank ne $NO_OPINION && !($rank =~ m/\A[0-9]+\Z/)) {
@@ -192,7 +189,6 @@ sub ProcessVote {
     $vdata{$ballot_key} = $vote;
     $vdata{'num_votes'}++;
     $used_voter_keys{civs_hash($voter_key)} = 1;
-    # print pre("recording vote by  ", $voter_key, " hash ", civs_hash($voter_key)), br();
     &SyncVoterKeys;
     ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
     if ($recorded_voters) {
@@ -203,7 +199,8 @@ sub ProcessVote {
     if ($reveal_voters eq 'yes') {
         $vdata{"voter key of $ballot_key"} = $voter_key;
         if ($public eq 'yes') {
-            $edata{"email_addr $voter_key"} = encode('utf-8', param('email_address'));
+            $edata{"email_addr $voter_key"} = encode('utf-8',
+                                                     param('email_address'));
         }
     }
 
