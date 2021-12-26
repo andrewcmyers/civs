@@ -6,8 +6,8 @@ CHGRP=/usr/bin/chgrp
 
 TestAndCreateDir() {
     if [ ! -d "$1" ]; then
-        #echo "Directory $1 does not exist. Creating it.";
-        mkdir "$1";
+        #echo "Directory $1 does not exist. Creating it."
+        mkdir "$1"
         if [ "$id" = 0 ]; then
           $CHOWN "$WEB_USER" "$1"
           $CHGRP "$WEB_GROUP" "$1"
@@ -18,8 +18,8 @@ TestAndCreateDir() {
 if [ $# -ne 1 ]
 then
   echo "ERROR: No settings file specified."
-  echo "Usage: install-civs <settings-file>";
-  exit 1;
+  echo "Usage: install-civs <settings-file>"
+  exit 1
 fi
 
 settings_file="$1"
@@ -38,11 +38,11 @@ echo "Building executables"
 
 make -s gettimeofday timeout lockserv
 
-TestAndCreateDir "$HTMLDIR";
-TestAndCreateDir "$CGIBINDIR";
-TestAndCreateDir "$CIVSDATADIR";
-TestAndCreateDir "$CIVSDATADIR/elections";
-TestAndCreateDir "$CIVSDATADIR/invites";
+TestAndCreateDir "$HTMLDIR"
+TestAndCreateDir "$CGIBINDIR"
+TestAndCreateDir "$CIVSDATADIR"
+TestAndCreateDir "$CIVSDATADIR/elections"
+TestAndCreateDir "$CIVSDATADIR/invites"
 
 rm -f "$CIVSDATADIR/elections/admission_control" "$CIVSDATADIR/lockserv"
 
@@ -145,24 +145,24 @@ do
 done
 
 if [ ! -s $CIVSDATADIR/private_host_id ]; then
-    echo "*********************************************";
-    echo "                 WARNING                     ";
-    echo "*********************************************";
-    echo "";
-    echo "No private key exists for the server!";
-    echo "";
-    echo "Creating a private key using the openssl pseudo-random number";
-    echo "generator.  If you want more randomness than this, you will";
-    echo "need to create your own key.  See the INSTALL file for more";
+    echo "*********************************************"
+    echo "                 WARNING                     "
+    echo "*********************************************"
+    echo ""
+    echo "No private key exists for the server!"
+    echo ""
+    echo "Creating a private key using the openssl pseudo-random number"
+    echo "generator.  If you want more randomness than this, you will"
+    echo "need to create your own key.  See the INSTALL file for more"
     echo "information."
-    echo "";
-    openssl rand -base64 -out $CIVSDATADIR/private_host_id 32;
-    echo "*********************************************";
+    echo ""
+    openssl rand -base64 -out $CIVSDATADIR/private_host_id 32
+    echo "*********************************************"
 fi
 
 if [ ! -s $CIVSDATADIR/nonce_seed ]; then
-        echo "Seeding the CIVS nonce generator.";
-        openssl rand -hex -out $CIVSDATADIR/nonce_seed 32;
+    echo "Seeding the CIVS nonce generator."
+    openssl rand -hex -out $CIVSDATADIR/nonce_seed 32
 fi
 
 echo "Setting permissions"
@@ -184,19 +184,19 @@ chmod 644 $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock      \
 echo "Installing executables"
 
 if [ -e gettimeofday.exe ]; then
-    CopyFile gettimeofday.exe $CIVSDATADIR/gettimeofday.exe;
+    CopyFile gettimeofday.exe $CIVSDATADIR/gettimeofday.exe
 else
     CopyFile gettimeofday $CIVSDATADIR/gettimeofday
 fi
 if [ -e timeout.exe ]; then
-    CopyFile timeout.exe $CIVSDATADIR/timeout.exe;
+    CopyFile timeout.exe $CIVSDATADIR/timeout.exe
 else
     CopyFile timeout $CIVSDATADIR/timeout
 fi
 if [ -e lockserv.exe ]; then
-    CopyFile lockserv.exe $CIVSDATADIR/lockserv.exe;
+    CopyFile lockserv.exe $CIVSDATADIR/lockserv.exe
 else
     CopyFile lockserv $CIVSDATADIR/lockserv
 fi
 
-echo "Install completed.  Check for any errors reported above.";
+echo "Install completed.  Check for any errors reported above."
