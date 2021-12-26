@@ -10,7 +10,7 @@ use CGI qw(:standard -utf8);
 use Socket;
 use IO::Handle;
 use POSIX qw(strftime);
-use Encode qw(encode decode);
+use Encode qw(decode);
 
 
 use Digest::MD5 qw(md5_hex);
