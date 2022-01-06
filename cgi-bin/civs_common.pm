@@ -186,8 +186,8 @@ sub HTML_Header {
                 -script => [
                   {'src' => "@CIVSURL@/$js"},
                   {'src' => "@CIVSURL@/ezdom.js"},
-                  {'src' => "$ajaxlibs/jquery/1.4.1/jquery.min.js"},
-                  {'src' => "$ajaxlibs/jqueryui/1.7.2/jquery-ui.min.js"}
+                  {'src' => "$ajaxlibs/jquery/3.6.0/jquery.min.js"},
+                  {'src' => "$ajaxlibs/jqueryui/1.12.1/jquery-ui.min.js"}
                 ],
                 -onLoad => "setup()"
               );
