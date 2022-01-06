@@ -92,11 +92,12 @@ CopyFile() {
 
 echo "Installing web pages"
 
-for f in civs_create.html* index.html* public_elections.html*             \
-    proportional.html* sec_priv.html* acks.html changelog.html*           \
-    news.html* *.var rp.html* publicized_polls.html* faq.html*            \
-    style.css results.js vote.js ajax.js ezdom.js civs_hdr.js             \
-    mail_mgmt.js opt_in.js add_voters.js hebrew.css
+for f in civs_create.html* index.html* public_elections.html*                 \
+    proportional.html* sec_priv.html* acks.html changelog.html*               \
+    news.html* *.var rp.html* publicized_polls.html* faq.html*                \
+    style.css results.js vote.js ajax.js ezdom.js civs_hdr.js                 \
+    mail_mgmt.js opt_in.js add_voters.js jquery.ui.touch-punch.js             \
+    hebrew.css
 do
     case "$f" in
         *.var)    dest="${HTMLDIR}/${f}";;

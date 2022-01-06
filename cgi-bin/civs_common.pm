@@ -187,7 +187,8 @@ sub HTML_Header {
                   {'src' => "@CIVSURL@/$js"},
                   {'src' => "@CIVSURL@/ezdom.js"},
                   {'src' => "$ajaxlibs/jquery/3.6.0/jquery.min.js"},
-                  {'src' => "$ajaxlibs/jqueryui/1.12.1/jquery-ui.min.js"}
+                  {'src' => "$ajaxlibs/jqueryui/1.12.1/jquery-ui.min.js"},
+                  {'src' => "@CIVSURL@/jquery.ui.touch-punch.js"}
                 ],
                 -onLoad => "setup()"
               );
