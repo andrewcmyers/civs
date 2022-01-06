@@ -64,7 +64,7 @@
   </div>
 </div> <!-- bubbles -->
 
-<div class="home">
+<div class="home" id="home">
 <p>CIVS is a free Internet voting service that makes it easy to conduct polls
 that are secure and anonymous. Each voter ranks a set of possible choices.
 Individual voter rankings are combined into an anonymous overall ranking of the
@@ -72,34 +72,38 @@ choices.  CIVS has been used for tens of thousands of polls and elections, to
 decide, for example:</p>
 
 <span id=civs_uses>
-<div>
-  <ul>
+  <ul id=civs_uses_list>
     <li>Officers of organizations</li>
     <li>Meeting times</li>
     <li>Members of committees</li>
     <li>Project and domain names</li>
     <li>Award recipients</li>
-  </ul>
-</div>
-<div>
-  <ul>
     <li>Restaurants to eat at</li>
     <li>Movies to watch</li>
     <li>Party menus</li>
     <li>Book club selections</li>
     <li>Favorite music</li>
-  </ul>
-</div>
-<div>
-  <ul>
     <li>Gifts</li>
     <li>Logos</li>
     <li>Project directions</li>
     <li>Invited speakers</li>
     <li>Organization bylaws</li>
   </ul>
-</div>
 </span>
+
+<script>
+    function setColumns() {
+        var home = document.getElementById("home")
+        var uses = document.getElementById("civs_uses_list")
+        var w = uses.getBoundingClientRect().width
+        console.log("w = " + w)
+        w = Math.floor(w/220) || 1
+        uses.style.columnCount = w
+        console.log("column count " + w)
+    }
+    window.addEventListener('resize', setColumns)
+    window.addEventListener('load', setColumns)
+</script>
 
 <p><strong>How it works:</strong>
 Anyone may create a new CIVS poll, but only

@@ -314,9 +314,7 @@ dd { font-size: 90%; margin-left: 3em }
 table#completion_meter { border-style: solid; border-width: 1px; border-color: black; width: 250px; padding: 0; margin: 0}
 td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
 td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
-#civs_uses { display: inline }
-#civs_uses ul {font-size: 90%; padding: 0 2ex; margin: 0 }
-#civs_uses > div { display: inline-block }
+#civs_uses ul {font-size: 90%; padding: 0 2ex; margin: 0; column-count: 3 }
 table.ballots {font-size: 80%; border: solid 1px #aac}
 table.ballots th {background-color: transparent; color: black; font-size: 70%}
 
