@@ -93,13 +93,10 @@ decide, for example:</p>
 
 <script>
     function setColumns() {
-        var home = document.getElementById("home")
-        var uses = document.getElementById("civs_uses_list")
+        var home = document.getElementById("home"),
+            uses = document.getElementById("civs_uses_list")
         var w = uses.getBoundingClientRect().width
-        console.log("w = " + w)
-        w = Math.floor(w/220) || 1
-        uses.style.columnCount = w
-        console.log("column count " + w)
+        uses.style.columnCount = Math.floor(w/220) || 1
     }
     window.addEventListener('resize', setColumns)
     window.addEventListener('load', setColumns)
