@@ -71,7 +71,7 @@ print br();
 
 my $nwin_param = param('num_winners');
 my $real_nwin = $num_winners;
-$nwin_param = defined($nwin_param) ? 0 + $nwin_param : 0;
+$nwin_param = 0 unless defined($nwin_param) && $nwin_param =~ /\A(0|[1-9][0-9]*)\Z/;
 if ($nwin_param > 0 && $nwin_param < $num_choices) {
     $num_winners = $nwin_param;
 }
