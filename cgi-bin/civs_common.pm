@@ -486,7 +486,7 @@ sub system_load {
 }
 
 sub CheckLoad {
-    my $load = system_load + 0;
+    my $load = &toNatural(system_load);
     if ($load >= 10.0) {
         HTML_Header($tx->CIVS_server_busy);
         CIVS_Header($tx->CIVS_server_busy);

@@ -29,7 +29,7 @@ sub GoBackLink {
 	print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>');
 }
 
-my $to_remove = param('writein') + 0;
+my $to_remove = toNatural(param('writein'));
 
 if ($to_remove < 0 || $to_remove >= $num_choices) {
     print p("Sorry, not a valid candidate index.");
