@@ -28,7 +28,7 @@ BEGIN {
                       &unique_elements &civs_hash &system_load &CheckLoad
                       $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
-                      &VerifyUpload &hexdump &toNatural &fixUTF);
+                      &VerifyUpload &hexdump &toNatural &natParam &fixUTF);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -475,6 +475,12 @@ sub toNatural {
     my $n = shift;
     return 0 unless defined($n) && $n =~ /\A(0|[1-9][0-9]*)\Z/;
     return $n;
+}
+
+# A natural number value for the named parameter, which is
+# 0 if the value of the parameter is absent or non-numeric.
+sub natParam {
+    toNatural(param($_[0]))
 }
 
 sub system_load {

@@ -69,7 +69,7 @@ if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
 
 print br();
 
-my $nwin_param = toNatural(param('num_winners'));
+my $nwin_param = natParam('num_winners');
 my $real_nwin = $num_winners;
 if ($nwin_param > 0 && $nwin_param < $num_choices) {
     $num_winners = $nwin_param;
@@ -1197,8 +1197,8 @@ sub PrintProportionalResults {
 	my $besti = $curr_comm[$i-1];
 	my $li, $ri;
 	if ($comparison_request) {
-	    $li = toNatural(param("L$i"));
-	    $ri = toNatural(param("R$i"));
+	    $li = natParam("L$i");
+	    $ri = natParam("R$i");
 	} else {
 	    $li = $choice_rank[$curr_comm[$i-1]];
 	    $ri = '?';
