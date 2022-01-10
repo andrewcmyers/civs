@@ -79,8 +79,13 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
                 push @errors, li("Line $lineno: missing rank for choice ", $i + 1);
                 next;
             }
+            if (!($rank =~ /\A(0|[1-9][0-9]*)\Z/)) {
+                push @errors, li("Line $lineno: illegal rank $rank for choice ",
+                    $i + 1);
+                next;
+            }
 	    if ($proportional eq 'yes' && $use_combined_ratings) {
-		$ballots[$num_ballots][$i] = 0 + $rank;
+		$ballots[$num_ballots][$i] = $rank;
 		# print pre("rank $rank seen"), $cr;
 		next;
 	    }
@@ -116,8 +121,7 @@ if ($#errors >= 0) {
 }
 print p("Ballot file is well formed and contains $num_ballots ballots."), $cr;
 
-my $nv_data = $vdata{'num_votes'};
-my $num_votes = $nv_data ? (0 + $nv_data) : 0;
+my $num_votes = $vdata{'num_votes'} || 0;
 
 #
 # Insert the ballots into the DB

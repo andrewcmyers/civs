@@ -69,9 +69,8 @@ if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
 
 print br();
 
-my $nwin_param = param('num_winners');
+my $nwin_param = toNatural(param('num_winners'));
 my $real_nwin = $num_winners;
-$nwin_param = 0 unless defined($nwin_param) && $nwin_param =~ /\A(0|[1-9][0-9]*)\Z/;
 if ($nwin_param > 0 && $nwin_param < $num_choices) {
     $num_winners = $nwin_param;
 }
@@ -1198,11 +1197,11 @@ sub PrintProportionalResults {
 	my $besti = $curr_comm[$i-1];
 	my $li, $ri;
 	if ($comparison_request) {
-	    $li = 0+param("L$i");
-	    $ri = 0+param("R$i");
+	    $li = toNatural(param("L$i"));
+	    $ri = toNatural(param("R$i"));
 	} else {
 	    $li = $choice_rank[$curr_comm[$i-1]];
-	    $ri = "?";
+	    $ri = '?';
 	}
 	print RESULTS "<tr><td><input type=\"text\" name=\"L$i\" size=\"3\" value=\"$li\"></td>\n";
 	print RESULTS "<td><input type=\"text\" name=\"R$i\" size=\"3\" value=\"$ri\"></tr>";

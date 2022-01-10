@@ -28,7 +28,7 @@ BEGIN {
                       &unique_elements &civs_hash &system_load &CheckLoad
                       $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
-                      &VerifyUpload &hexdump &fixUTF);
+                      &VerifyUpload &hexdump &toNatural &fixUTF);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -123,7 +123,6 @@ sub SetLanguage {
     }
     &languages::init($languages);
 }
-
 
 sub GetPrivateHostID {
     if (defined($private_host_id)) { return; }
@@ -468,6 +467,14 @@ sub unique_elements {
         push(@uniq, $item) unless $seen{$item}++;
     }
     return @uniq;
+}
+
+# Return a numeric value for the argument. Return
+# 0 if the argument is undefined or not a natural number.
+sub toNatural {
+    my $n = shift;
+    return 0 unless defined($n) && $n =~ /\A(0|[1-9][0-9]*)\Z/;
+    return $n;
 }
 
 sub system_load {
