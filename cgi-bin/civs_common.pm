@@ -480,7 +480,7 @@ sub toNatural {
 # A natural number value for the named parameter, which is
 # 0 if the value of the parameter is absent or non-numeric.
 sub natParam {
-    toNatural(param($_[0]))
+    toNatural(scalar param($_[0]))
 }
 
 sub system_load {
