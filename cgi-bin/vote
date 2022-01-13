@@ -61,13 +61,16 @@ CheckNotStopped;
 if ($public ne 'yes') {
     CheckVoterKey($voter_key, $old_voter_key, $voter);
 } else {
+    my $voter_id = ($reveal_voters eq 'yes')
+        ? param('email_address') || $remote_ip_address
+        : $remote_ip_address;
     if (!&ElectionUsesAuthorizationKey) {
         # for backwards compatibility
-        $voter_key = $remote_ip_address;
-        $voter = "voter";
+        $voter_key = $voter_id;
+        $voter = 'voter';
     } else {
         CheckAuthorizationKeyForVoting($authorization_key);
-        $voter_key = &civs_hash($remote_ip_address,$authorization_key);
+        $voter_key = &civs_hash($voter_id, $authorization_key);
     }
 }
 
