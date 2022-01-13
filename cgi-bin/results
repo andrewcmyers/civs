@@ -1217,8 +1217,8 @@ sub PrintProportionalResults {
     print RESULTS '</form>';
     if ($comparison_request) {
 	for (my $i = 1; $i <= $num_winners; $i++) {
-	    $curr_comm[$i-1] = $choice_index[param("L$i") - 1];
-	    $new_comm[$i-1] = $choice_index[param("R$i") - 1];
+	    $curr_comm[$i-1] = $choice_index[natParam("L$i") - 1];
+	    $new_comm[$i-1] = $choice_index[natParam("R$i") - 1];
 	}
 	@curr_comm = sort {$a <=> $b} @curr_comm;
 	@new_comm = sort {$a <=> $b} @new_comm;
