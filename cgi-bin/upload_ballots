@@ -58,7 +58,10 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
     my $multiplier = 1;
     if (m/^.*(x|X)/) {
 	($multiplier, my $dummy, $_) = m/^\s*([^ xX]*)\s*(x|X)(.*$)/;
-
+	if (!$_) {
+	    push @errors, li("Line $lineno: bad syntax");
+	    next;
+	}
 
         s/^(\s)+//g;
 	s/(\s)*$//g;
