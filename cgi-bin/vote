@@ -38,10 +38,9 @@ use top_polls;
 my $top_polls_refresh = 24 * 3600; # daily refresh
 my $allow_debug_votes = 0;         # allow multiple votes from the same voter in debug mode?
 
-my $voter = param('voter'); # nearly obsolete
-my $old_voter_key = param('voter_key'); # nearly obsolete
-my $voter_key = param('key');
-my $authorization_key = param('akey');
+my $voter_key = encode('utf-8', param('key'));
+my $authorization_key = encode('utf-8', param('akey'));
+# encode keys to make sure they are just byte strings
 
 my $js_ui = 1;
 if (defined($proportional) && defined($use_combined_ratings) &&
@@ -59,15 +58,15 @@ CheckElectionID;
 CheckStarted;
 CheckNotStopped;
 if ($public ne 'yes') {
-    CheckVoterKey($voter_key, $old_voter_key, $voter);
+    CheckVoterKey($voter_key);
 } else {
     my $voter_id = ($reveal_voters eq 'yes')
         ? param('email_address') || $remote_ip_address
         : $remote_ip_address;
+    $voter_id = encode('utf-8', $voter_id); # ensure it's a byte string
     if (!&ElectionUsesAuthorizationKey) {
         # for backwards compatibility
         $voter_key = $voter_id;
-        $voter = 'voter';
     } else {
         CheckAuthorizationKeyForVoting($authorization_key);
         $voter_key = &civs_hash($voter_id, $authorization_key);
@@ -77,7 +76,7 @@ if ($public ne 'yes') {
 my $old_ballot;
 
 if (!$allow_debug_votes || !$local_debug) {
-    $old_ballot = CheckNotVoted($voter_key, $old_voter_key, $voter);
+    $old_ballot = CheckNotVoted($voter_key);
 }
 
 my $add_writein = param('AddWritein');
@@ -228,7 +227,7 @@ sub ProcessVote {
 
     PointToResults;
     print $tx->you_can_change_ballot_now;
-    RevoteButton($voter_key, $voter, $tx->change_ballot, $receipt);
+    RevoteButton($voter_key, $tx->change_ballot, $receipt);
 
     print &TrySomePolls();
     CIVS_End;

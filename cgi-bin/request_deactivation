@@ -36,7 +36,7 @@ if (defined(param("check")) && param("check") eq "true") {
 
 sub DeactivationCode {
     my ($address) = @_;
-    $address = &CanonicalizeAddr($address);
+    $address = encode('utf-8', &CanonicalizeAddr($address));
     if (!defined($private_host_id)) {
         &GetPrivateHostID;
     }

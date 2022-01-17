@@ -137,7 +137,7 @@ if (defined($addresses_file)) {
     	$addresses .= $_;
     }
 }
-$edata{'addresses'} = $addresses;
+$edata{'addresses'} = encode('utf-8', $addresses);
 
 my $rating_interpretation = param('rating_interpretation');
 my $use_combined_ratings;

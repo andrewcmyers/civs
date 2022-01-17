@@ -314,9 +314,10 @@ sub SecureNonce {
     return $ret;
 }
 
-# Generate a cryptographic hash of the arguments.
+# Generate a cryptographic hash of the argument(s), which
+# must be strings of bytes.
 sub civs_hash {
-    return substr(md5_hex(@_),0,16);
+    substr(md5_hex(@_), 0, 16)
 }
 
 my $filter_tags = '@FILTER_TAGS@';

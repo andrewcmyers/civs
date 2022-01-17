@@ -10,8 +10,7 @@ use CGI qw(:standard -utf8);
 use Socket;
 use IO::Handle;
 use POSIX qw(strftime);
-use Encode qw(decode);
-
+use Encode qw(encode decode);
 
 use Digest::MD5 qw(md5_hex);
 use DB_File;
@@ -57,13 +56,15 @@ our %edata_copy = %edata;
 &CloseDatabase;
 &UnlockElection; # try to avoid blocking out other people
 
+my $result_key = encode('utf-8', param('rkey'));
+
 if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
     if ($public ne 'yes') {
 	&CheckStopped;
     }
 
     if ($restrict_results eq 'yes') {
-	&CheckResultKey(scalar param('rkey'));
+	&CheckResultKey($result_key);
     }
 }
 
@@ -230,8 +231,8 @@ sub ComputeResults {
 	    onchange="newSettings()"
 	    value="', $num_winners, '" />';
     print RESULTS hidden('id', $election_id);
-    if (defined(param('rkey'))) {
-	print RESULTS hidden('rkey', escapeHTML(scalar param('rkey')));
+    if (defined($result_key)) {
+	print RESULTS hidden('rkey', escapeHTML($result_key));
     }
     if ($real_nwin != $num_winners) {
 	print RESULTS $tx->Poll_actually_has($real_nwin);
@@ -1210,8 +1211,8 @@ sub PrintProportionalResults {
     print RESULTS hidden('id', $election_id);
     print RESULTS hidden('num_winners', $num_winners);
     print RESULTS hidden('algorithm', $algorithm);
-    if (defined(param('rkey'))) {
-	print RESULTS hidden('rkey', escapeHTML(scalar param('rkey')));
+    if (defined($result_key)) {
+	print RESULTS hidden('rkey', escapeHTML($result_key));
     }
     print RESULTS '<input type="submit" value="Compare sets" name="Compare">';
     print RESULTS '</form>';

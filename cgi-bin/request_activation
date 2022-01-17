@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use CGI qw(:standard -utf8);
+use Encode qw(encode);
 
 use lib '@CGIBINDIR@';
 use civs_common;
@@ -29,7 +30,7 @@ my $opted_out = &HasOptOuts($optouts, $address);
 # The activation code for this address
 sub ActivationCode {
     my ($address) = @_;
-    $address = &CanonicalizeAddr($address);
+    $address = encode('utf-8', &CanonicalizeAddr($address));
     if (!defined($private_host_id)) {
         &GetPrivateHostID;
     }
