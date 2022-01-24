@@ -139,10 +139,11 @@ sub GetPrivateHostID {
 }
 
 sub HTML_Header {
-    (my $title, my $js) = @_;
+    my $title = shift;
+    my @js = @_;
     if (!$generated_header) {
       my $style = $tx->style_file;
-      if (!$js) {
+      if ($#js < 0) {
         print header(-charset => 'utf-8', -content_language => $tx->lang),
               start_html(
                 -title => $title,
@@ -162,6 +163,15 @@ sub HTML_Header {
               );
       } else {
         my $ajaxlibs = "@PROTO@://ajax.googleapis.com/ajax/libs";
+        my @scripts = (
+            {'src' => "@CIVSURL@/ezdom.js"},
+            {'src' => "$ajaxlibs/jquery/3.6.0/jquery.min.js"},
+            {'src' => "$ajaxlibs/jqueryui/1.12.1/jquery-ui.min.js"},
+            {'src' => "@CIVSURL@/jquery.ui.touch-punch.js"}
+        );
+        foreach my $script (@js) {
+            push @scripts, { 'src' => ('@CIVSURL@/' . $script) };
+        }
         print header(-charset => 'utf-8', -content_language => $tx->lang),
               start_html(
                 -title => $title,
@@ -182,13 +192,7 @@ sub HTML_Header {
                 ],
                 -encoding => 'utf-8',
                 -style => {'src' => "@CIVSURL@/$style"},
-                -script => [
-                  {'src' => "@CIVSURL@/$js"},
-                  {'src' => "@CIVSURL@/ezdom.js"},
-                  {'src' => "$ajaxlibs/jquery/3.6.0/jquery.min.js"},
-                  {'src' => "$ajaxlibs/jqueryui/1.12.1/jquery-ui.min.js"},
-                  {'src' => "@CIVSURL@/jquery.ui.touch-punch.js"}
-                ],
+                -script => \@scripts,
                 -onLoad => "setup()"
               );
       }

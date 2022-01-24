@@ -477,10 +477,10 @@ function show_qr_code(elem, url) {
     const url_quoted = encodeURIComponent(url)
     if (elem.value != 'on') return
     const d = document.getElementById('qr_code_div')
-    while (d.firstChild) d.removeChild(d.firstChild);
-    d.appendChild(img({src: 'https://qr.kaywa.com/img.php?s=4&d=' + url_quoted,
-                       alt: 'QR code'}))
+    while (d.firstChild) d.removeChild(d.firstChild)
+    new QRCode(d, {text: url, correctLevel: QRCode.CorrectLevel.M })
     d.style.float = "right"
+    d.style.paddingTop = "10px"
     d.parentNode.insertBefore(d, d.parentNode.firstChild)
 }
 
