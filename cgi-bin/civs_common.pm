@@ -9,7 +9,10 @@ use HTML::TagFilter;
 use HTML::Entities;
 use HTTP::Tiny;
 use MIME::Base64;
-use open qw(:std :encoding(UTF-8));
+use CGI qw(:standard -utf8);
+
+binmode STDOUT, ':encoding(UTF-8)';
+binmode STDERR, ':encoding(UTF-8)';
 
 # Export the package interface
 BEGIN {
@@ -23,9 +26,9 @@ BEGIN {
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
                       &unique_elements &civs_hash &system_load &CheckLoad
-		      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
+                      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
-                      &VerifyUpload &hexdump &fixUTF);
+                      &VerifyUpload &hexdump &toNatural &natParam &fixUTF);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -45,25 +48,25 @@ our $languages;
 
 # Package constructor
 BEGIN {
-	# This code is in a BEGIN block so that even compiler errors, as long
-	# as they occur after this block, are caught.  They are recorded
-	# in the CGILOG file.  Compile-time errors aren't timestamped,
-	# unfortunately, but run-time ones are.  These are the errors
-	# that used to be put in the global Apache error log.
-	# It makes sense for every CGI script in CIVS to
-	# "use civs_common;" as its first action.
-	use IO::Handle;
-	use CGI::Carp qw(carpout set_message fatalsToBrowser);
-	open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or
-		die "Unable to open @CIVSDATADIR@/cgi-log: $!\n".(`id`);
-	autoflush CGILOG;
-	carpout(\*CGILOG);
-	# set_message(\&Fatal_CIVS_Error);
-	$local_debug = "@LOCALDEBUG@";
+        # This code is in a BEGIN block so that even compiler errors, as long
+        # as they occur after this block, are caught.  They are recorded
+        # in the CGILOG file.  Compile-time errors aren't timestamped,
+        # unfortunately, but run-time ones are.  These are the errors
+        # that used to be put in the global Apache error log.
+        # It makes sense for every CGI script in CIVS to
+        # "use civs_common;" as its first action.
+        use IO::Handle;
+        use CGI::Carp qw(carpout set_message fatalsToBrowser);
+        open(CGILOG, ">>@CIVSDATADIR@/cgi-log") or
+                die "Unable to open @CIVSDATADIR@/cgi-log: $!\n".(`id`);
+        autoflush CGILOG;
+        carpout(\*CGILOG);
+        # set_message(\&Fatal_CIVS_Error);
+        $local_debug = "@LOCALDEBUG@";
 }
 
 END {
-	close CGILOG;
+        close CGILOG;
 }
 
 # Package imports
@@ -101,29 +104,18 @@ sub init {
  &SetLanguage;
 }
 
-
 sub SetIPAddress {
-  my $x_forwarded_for = http('HTTP_X_FORWARDED_FOR');
-  if (defined($x_forwarded_for)) {
-    $remote_ip_address = $x_forwarded_for;
-  }
-  elsif ($using_ISA) {
-    $remote_ip_address = http('HTTP_IPREMOTEADDR');
-    if (!defined($remote_ip_address)) {
-      $remote_ip_address = http('HTTP_REMOTE_ADDRESS');
-    }
-    if (!defined($remote_ip_address)) {
-      $remote_ip_address = remote_addr();
-    }
-  } else {
-    $remote_ip_address = remote_addr();
-  }
+    $remote_ip_address = http('HTTP_X_REAL_IP')
+                      || http('HTTP_X_FORWARDED_FOR')
+                      || http('HTTP_IPREMOTEADDR')
+                      || http('HTTP_REMOTE_ADDRESS')
+                      || remote_addr();
 }
 
 sub SetLanguage {
     $languages = http('Accept-Language');
     if (!defined($languages)) {
-	$languages = 'en-us';
+        $languages = 'en-us';
     }
     if (param('language')) {
 # allow language to be overridden by URL parameter
@@ -132,15 +124,14 @@ sub SetLanguage {
     &languages::init($languages);
 }
 
-
 sub GetPrivateHostID {
     if (defined($private_host_id)) { return; }
     if (!open(HOSTID, $private_host_id_file)) {
-	&HTML_Header("Configuration error");
+        &HTML_Header("Configuration error");
         print h1($tx->Error),
-	      p("Unable to access the server's private key"),
-	      end_html();
-	exit 0;
+              p("Unable to access the server's private key"),
+              end_html();
+        exit 0;
     }
     $private_host_id = <HOSTID>;
     $private_host_id =~ s/(\s)+$//;  # remove trailing whitespace
@@ -148,10 +139,11 @@ sub GetPrivateHostID {
 }
 
 sub HTML_Header {
-    (my $title, my $js) = @_;
+    my $title = shift;
+    my @js = @_;
     if (!$generated_header) {
       my $style = $tx->style_file;
-      if (!$js) {
+      if ($#js < 0) {
         print header(-charset => 'utf-8', -content_language => $tx->lang),
               start_html(
                 -title => $title,
@@ -171,6 +163,15 @@ sub HTML_Header {
               );
       } else {
         my $ajaxlibs = "@PROTO@://ajax.googleapis.com/ajax/libs";
+        my @scripts = (
+            {'src' => "@CIVSURL@/ezdom.js"},
+            {'src' => "$ajaxlibs/jquery/3.6.0/jquery.min.js"},
+            {'src' => "$ajaxlibs/jqueryui/1.12.1/jquery-ui.min.js"},
+            {'src' => "@CIVSURL@/jquery.ui.touch-punch.js"}
+        );
+        foreach my $script (@js) {
+            push @scripts, { 'src' => ('@CIVSURL@/' . $script) };
+        }
         print header(-charset => 'utf-8', -content_language => $tx->lang),
               start_html(
                 -title => $title,
@@ -191,12 +192,7 @@ sub HTML_Header {
                 ],
                 -encoding => 'utf-8',
                 -style => {'src' => "@CIVSURL@/$style"},
-                -script => [
-                  {'src' => "@CIVSURL@/$js"},
-                  {'src' => "@CIVSURL@/ezdom.js"},
-                  {'src' => "$ajaxlibs/jquery/1.4.1/jquery.min.js"},
-                  {'src' => "$ajaxlibs/jqueryui/1.7.2/jquery-ui.min.js"}
-                ],
+                -script => \@scripts,
                 -onLoad => "setup()"
               );
       }
@@ -220,8 +216,8 @@ sub CIVS_Header {
 print
  '<div class="banner">';
 if ($local_debug) {
-	print '<div style="text-align: center; background-color: yellow; width: 100%">',
-	      'LOCAL DEBUG MODE</div>';
+    print '<div style="text-align: center; background-color: yellow; width: 100%">',
+          'LOCAL DEBUG MODE</div>';
 }
 print $cr,
  '  <div class=bannerpart id=bannericon>
@@ -231,13 +227,13 @@ print $cr,
     <h1>', $tx->Condorcet_Internet_Voting_Service, '</h1>
   </div>
   <div class=bannerpart id=bannermenu>',
-	a({-href => $civs_home}, $tx->about_civs), BR,
-	a({-href => "$civs_url/publicized_polls.html"}, $tx->public_polls), BR,
-	a({-href => "@CIVSBINURL@/opt_in@PERLEXT@"}, $tx->new_user), BR,
-	a({-href => "$civs_url/civs_create.html"}, $tx->create_new_poll), BR,
-	a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
-	a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
-	a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
+        a({-href => $civs_home}, $tx->about_civs), BR,
+        a({-href => "$civs_url/publicized_polls.html"}, $tx->public_polls), BR,
+        a({-href => "@CIVSBINURL@/opt_in@PERLEXT@"}, $tx->new_user), BR,
+        a({-href => "$civs_url/civs_create.html"}, $tx->create_new_poll), BR,
+        a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
+        a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
+        a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
     '</div><br>
   <div class=pagetitle>
     <h2>', $heading, '</h2>
@@ -246,27 +242,27 @@ print $cr,
 
 <div class="contents">
 ';
-	$civs_header_printed = 1;
+    $civs_header_printed = 1;
 }
 
 sub CIVS_End {
     if ($civs_header_printed) {
-	print '</div>', $cr; # contents
+        print '</div>', $cr; # contents
     }
     print end_html();
     exit 0;
 }
 
 sub Fatal_CIVS_Error {
-	&HTML_Header($tx->CIVS_Error) unless $html_header_printed;
-	&CIVS_Header($tx->Error) unless $civs_header_printed;
+    &HTML_Header($tx->CIVS_Error) unless $html_header_printed;
+    &CIVS_Header($tx->Error) unless $civs_header_printed;
 
-	print h2($tx->Error),
-	      p($tx->unable_to_process);
-	    print pre(@_);
-	print pre(@_) if $local_debug;
-	print end_html();
-	exit 0;
+    print h2($tx->Error),
+          p($tx->unable_to_process);
+    print pre(@_);
+    print pre(@_) if $local_debug;
+    print end_html();
+    exit 0;
 }
 
 sub TrySomePolls {
@@ -282,6 +278,7 @@ sub TrySomePolls {
 sub Log {
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open(CIVS_LOG, ">>$civs_log");
+    binmode CIVS_LOG, ':utf8';
     print CIVS_LOG $now.' '.$remote_ip_address.' '.$_[0].$cr;
     close(CIVS_LOG);
 }
@@ -304,7 +301,7 @@ sub SecureNonce {
     &AcquireGlobalLock;
 
     open(NONCEFILE, "<$nonce_seed_file")
-	    or die "Can't open nonce file for read: $!\n";
+        or die "Can't open nonce file for read: $!\n";
     my $seed = <NONCEFILE>;
     $seed =~ s/(\s)+$//;
     close(NONCEFILE);
@@ -314,29 +311,54 @@ sub SecureNonce {
     $seed = md5_hex($private_host_id,$timeofday,$seed);
 
     open(NONCEFILE, ">$nonce_seed_file")
-	or die "Can't open nonce file for write: $!\n";
+        or die "Can't open nonce file for write: $!\n";
     print NONCEFILE $seed.$cr;
     close(NONCEFILE);
     &ReleaseGlobalLock;
     return $ret;
 }
 
-# Generate a cryptographic hash of the arguments.
+# Generate a cryptographic hash of the argument(s), which
+# must be strings of bytes.
 sub civs_hash {
-    return substr(md5_hex(@_),0,16);
+    substr(md5_hex(@_), 0, 16)
 }
 
 my $filter_tags = '@FILTER_TAGS@';
 
 my $tf;
+
+my $ok = {all => []};
+my $allowed_tags = {
+    table => $ok,
+    td => {colspan => [], rowspan => []},
+    tr => $ok,
+    s => $ok,
+    strike => $ok,
+    kbd => $ok,
+    code => $ok,
+    strong => $ok,
+    dl => $ok, dt => $ok, dd => $ok,
+    br => $ok,
+    var => $ok,
+    dfn => $ok,
+    cite => $ok,
+    samp => $ok,
+    span => $ok, div => $ok,
+    small => $ok,
+    time => {datetime => []},
+    p => {align => ['left' | 'right' | 'center']},
+    ol => {type => ['a', '1', 'A']}
+};
+
 if ($filter_tags ne 'no') {
     $tf = new HTML::TagFilter(
       on_open_tag => sub {
           my ($self, $tag, $attributes, $sequence) = @_;
           if ($$tag eq 'img') {
-            my $src = $attributes->{'src'};
-            $attributes->{'src'} = '@CIVSURL@/images/check123b.png';
-            my $http = HTTP::Tiny->new({verify_SSL => 1});
+            my $src = $attributes->{src};
+            $attributes->{src} = '@CIVSURL@/images/check123b.png';
+            my $http = HTTP::Tiny->new(verify_SSL => 0);
             my $response = $http->get($src);
 
             if ($response->{status} eq 200) {
@@ -345,48 +367,34 @@ if ($filter_tags ne 'no') {
                 if (length $content < @MAX_IMAGE_SIZE@) {
                     my $enc = MIME::Base64::encode_base64($content,'');
                     my $newsrc = "data:$contenttype;base64,$enc";
-                    $attributes->{'src'} = $newsrc;
+                    $attributes->{src} = $newsrc;
+                } else {
+                    print STDERR "Image too large: ", length $content;
                 }
+            } else {
+                print STDERR "Failed to fetch image: ", $src;
             }
           }
           return;
       }
     );
     $tf->xss_risky_attributes(qw(href background cite lowsrc));
-    my $ok = {all => []};
-    $tf->allow_tags({
-	table => $ok,
-	td => {colspan => [], rowspan => []},
-	tr => $ok,
-        s => $ok,
-        strike => $ok,
-        kbd => $ok,
-	strong => $ok,
-	b => $ok,
-	dl => $ok, dt => $ok, dd => $ok,
-        br => $ok,
-        var => $ok,
-        dfn => $ok,
-        cite => $ok,
-        samp => $ok,
-	span => $ok, div => $ok,
-	small => $ok,
-	p => {align => ['left' | 'right' | 'center']},
-	ol => {type => ['a', '1', 'A']}
-    });
+    $tf->allow_tags($allowed_tags);
 }
 
-# Filter tags from a string, if $filter_tags is not 'no' (which is probably dangerous)
+# Filter tags from a string, if $filter_tags is not 'no' (which is probably
+# dangerous)
 sub Filter {
     my $s = decode_entities($_[0]);
     my $result = ($filter_tags ne 'no'
                ? $tf->filter($s)
                : $s);
     # Log "Filtering: " . $_[0] . " to " . $result;
-    return $result;
+    return $result || "";
 }
 
-# Turn a string into a hex representation of each of its characters. For debugging.
+# Turn a string into a hex representation of each of its characters. For
+# debugging.
 sub hexdump {
     (my $s) = @_;
     my $result = $s . " = ";
@@ -399,28 +407,28 @@ sub hexdump {
     return $result;
 }
 
-# Convert a broken UTF-8 encoding by treating wrong bytes as Latin-1 and
-# reencoding as UTF-8.
+# Convert a broken UTF-8 encoding (if FIXUTF8 option turned on). The argument
+# and result are both strings of bytes representing a UTF-8 encoded string, but
+# the argument may have embedded bytes not following the encoding; these are
+# treated as Latin-1 characters and encoded into UTF-8 in the result.
 sub fixUTF {
     my ($a) = @_;
-    return $a if (!($a =~ m/[\200-\377]/));
+    return $a unless @FIXUTF8@ && ($a =~ m/[\200-\377]/);
     my $result = '';
     my $n = length($a);
     for (my $i = 0; $i < $n; $i++) {
         my $c = ord(substr($a, $i, 1));
-        # printf "%02x ", $c;
         my $extra = $n - $i - 1;
         if ($c < 0x80 || $c > 0xFF) {
             $result .= chr($c);
-            # print "$i: copy\n";
         } else {
             my $needed = 0;
             my $ok = 1;
-            if ($c > 0xF0) {
+            if ($c >= 0xF0) {
                 $needed = 3;
-            } elsif ($c > 0xE0) {
+            } elsif ($c >= 0xE0) {
                 $needed = 2;
-            } elsif ($c > 0xC0) {
+            } elsif ($c >= 0xC0) {
                 $needed = 1;
             } else {
                 $ok = 0;
@@ -429,16 +437,13 @@ sub fixUTF {
             if ($ok) {
                 for (my $j = $i + 1; $ok && $j < $n && $j - $i <= $needed; $j++) {
                     my $e = ord(substr($a, $j, 1));
-                    # printf "Checking %02x ", $e;
                     $ok = 0 if (($e & 0xC0) != 0x80);
                 }
             }
             if ($ok) {
-                # print "$i: copying utf-8 char\n";
                 $result .= substr($a, $i, $needed + 1);
                 $i += $needed;
             } else {
-                # print "$i: reencode $c\n";
                 $result .= chr(0xC0 | ($c>>6)) . chr(0x80 | ($c & 077));
             }
         }
@@ -451,22 +456,37 @@ sub fixUTF {
 sub fisher_yates_shuffle {
     my $array = shift;
     my $i;
+    return if $#{$array} < 1;
     for ($i = @$array; --$i; ) {
-	my $j = int rand ($i+1);
-	next if $i == $j;
-	@$array[$i,$j] = @$array[$j,$i];
+        my $j = int rand ($i+1);
+        next if $i == $j;
+        @$array[$i,$j] = @$array[$j,$i];
     }
 }
 
 # From the Perl Cookbook, p. 102
 # Return the unique elements from a list.
 sub unique_elements {
-	my %seen = ();
-	my @uniq = ();
-	foreach my $item (@_) {
-		push(@uniq, $item) unless $seen{$item}++;
-	}
-	return @uniq;
+    my %seen = ();
+    my @uniq = ();
+    foreach my $item (@_) {
+        push(@uniq, $item) unless $seen{$item}++;
+    }
+    return @uniq;
+}
+
+# Return a numeric value for the argument. Return
+# 0 if the argument is undefined or not a natural number.
+sub toNatural {
+    my $n = shift;
+    return 0 unless defined($n) && $n =~ /\A(0|[1-9][0-9]*)\Z/;
+    return $n;
+}
+
+# A natural number value for the named parameter, which is
+# 0 if the value of the parameter is absent or non-numeric.
+sub natParam {
+    toNatural(scalar param($_[0]))
 }
 
 sub system_load {
@@ -478,24 +498,24 @@ sub system_load {
 }
 
 sub CheckLoad {
-    my $load = system_load + 0;
+    my $load = &toNatural(system_load);
     if ($load >= 10.0) {
-	HTML_Header($tx->CIVS_server_busy);
-	CIVS_Header($tx->CIVS_server_busy);
-	print p($tx->Sorry_the_server_is_busy);
-	exit 0;
+        HTML_Header($tx->CIVS_server_busy);
+        CIVS_Header($tx->CIVS_server_busy);
+        print p($tx->Sorry_the_server_is_busy);
+        exit 0;
     }
 }
 
 sub FileTimestamp {
     my $fname = $_[0];
-    (my $dev, my $ino, my $mode, my $nlink, my $uid, my $gid, my $rdev, my $size,
-	my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
-	    = stat($fname);
+    (my $dev, my $ino, my $mode, my $nlink, my $uid, my $gid, my $rdev,
+     my $size, my $atime, my $mtime, my $ctime, my $blksize, my $blocks)
+        = stat($fname);
     if (!defined($mtime) || $mtime eq '') {
-	return 0; # no cache file
+        return 0; # no cache file
     } else {
-	return $mtime;
+        return $mtime;
     }
 }
 

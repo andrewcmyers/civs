@@ -9,103 +9,102 @@
 <link rel="canonical" href="@CIVSURL@/civs_create.html">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
 <script>
-    function trim(str)
-    {
+    function trim(str) {
         return str.replace(/^\s+|\s+$/g, '')
     }
     function validateEmail(str)   // element to be validated
     {
-	var str = trim(str);  // value of field with whitespace trimmed off
-	var email = /^[^@]+@[^@.]+\.[^@]*\w\w$/
-	return email.test(str);
+        var str = trim(str);  // value of field with whitespace trimmed off
+        var email = /^[^@]+@[^@.]+\.[^@]*\w\w$/
+        return email.test(str);
     }
 
     function validate() {
-	var numerrs = 0;
-	var errs = new Array;
-	if (!validateEmail(document.forms.CreateElection.email_addr.value)) {
-	    errs[numerrs++] = 'Supervisor email address is invalid.';
-	}
-	if (!(document.forms.CreateElection.num_winners.value >= 1)) {
-	    errs[numerrs++] = 'Must have at least one winner.';
-	}
-	if (document.forms.CreateElection.proportional.checked &&
-	    !(document.forms.CreateElection.num_winners.value > 1)) {
-	    errs[numerrs++] =
-		'Proportional representation requires more than one winner.';
-	}
-	if (document.forms.CreateElection.choices.value == '' &&
-	    document.forms.CreateElection.choices_file.value == '') {
-	    errs[numerrs++] = 'Must have at least two choices to vote on.';
-	}
-	if (document.forms.CreateElection.restrict_results.checked) {
-	    var rs = document.forms.CreateElection.result_addrs.value;
-	    var ra = rs.split(/[\r\n]+/g);
-	    var nr = 0;
-	    for (i = 0; i < ra.length; i++) {
-		if (ra[i] == '') continue;
-		if (!validateEmail(ra[i])) {
-		    errs[numerrs++] =
-			'Results recipient email address is invalid: ' + ra[i];
-		} else {
-		    nr++;
-		}
-	    }
-	    if (nr == 0) {
-		errs[numerrs++] =
-		    'You have specified no users who can see the poll results.';
-	    }
-	}
-	if (numerrs == 0) return true;
-	if (numerrs == 1) {
-	    alert(errs[0]);
-	} else {
-	    var msg = 'Errors:\n';
-	    for (i = 0; i < numerrs; i++) {
-		msg += (i+1);
-		msg += '. ';
-		msg += errs[i];
-		msg += "\n";
-	    }
-	    alert(msg);
-	}
-	return false;
+        var numerrs = 0;
+        var errs = new Array;
+        if (!validateEmail(document.forms.CreateElection.email_addr.value)) {
+            errs[numerrs++] = 'Supervisor email address is invalid.';
+        }
+        if (!(document.forms.CreateElection.num_winners.value >= 1)) {
+            errs[numerrs++] = 'Must have at least one winner.';
+        }
+        if (document.forms.CreateElection.proportional.checked &&
+            !(document.forms.CreateElection.num_winners.value > 1)) {
+            errs[numerrs++] =
+                'Proportional representation requires more than one winner.';
+        }
+        if (document.forms.CreateElection.choices.value == '' &&
+            document.forms.CreateElection.choices_file.value == '') {
+            errs[numerrs++] = 'Must have at least two choices to vote on.';
+        }
+        if (document.forms.CreateElection.restrict_results.checked) {
+            var rs = document.forms.CreateElection.result_addrs.value;
+            var ra = rs.split(/[\r\n]+/g);
+            var nr = 0;
+            for (i = 0; i < ra.length; i++) {
+                if (ra[i] == '') continue;
+                if (!validateEmail(ra[i])) {
+                    errs[numerrs++] =
+                        'Results recipient email address is invalid: ' + ra[i];
+                } else {
+                    nr++;
+                }
+            }
+            if (nr == 0) {
+                errs[numerrs++] =
+                    'You have specified no users who can see the poll results.';
+            }
+        }
+        if (numerrs == 0) return true;
+        if (numerrs == 1) {
+            alert(errs[0]);
+        } else {
+            var msg = 'Errors:\n';
+            for (i = 0; i < numerrs; i++) {
+                msg += (i+1);
+                msg += '. ';
+                msg += errs[i];
+                msg += "\n";
+            }
+            alert(msg);
+        }
+        return false;
     }
 
     function render_text(prefix, ta_id, span_id, clss) {
-	var span = document.getElementById(span_id);
-	var ta = document.getElementById(ta_id);
-	span.innerHTML = prefix + '<div class="' + clss + '">' + ta.value + "</div>";
-	return 1;
+        var span = document.getElementById(span_id);
+        var ta = document.getElementById(ta_id);
+        span.innerHTML = prefix + '<div class="' + clss + '">' + ta.value + "</div>";
+        return 1;
     }
 
     function render_list(ta_id, span_id) {
-	var span = document.getElementById(span_id);
-	var ta = document.getElementById(ta_id);
-	var names = ta.value.split(/[\r\n]+/g);
-	var html = "";
-	for (i = 0; i < names.length; i++) {
-	    if (names[i] != "")
-		html = html + "<li>" + names[i] + "</li>";
-	}
-	span.innerHTML = "<ul>" + html + "</ul>";
-	return 1;
+        var span = document.getElementById(span_id);
+        var ta = document.getElementById(ta_id);
+        var names = ta.value.split(/[\r\n]+/g);
+        var html = "";
+        for (i = 0; i < names.length; i++) {
+            if (names[i] != "")
+                html = html + "<li>" + names[i] + "</li>";
+        }
+        span.innerHTML = "<ul>" + html + "</ul>";
+        return 1;
     }
 
     function make_invisible(id) {
-	document.getElementById(id).style.display = 'none'
+        document.getElementById(id).style.display = 'none'
     }
     function make_visible(id) {
-	document.getElementById(id).style.display = 'block'
+        document.getElementById(id).style.display = 'block'
     }
     function preview_description() {
-	render_text('<h2>Poll description</h2>',
-		    'description',
-		    'rendered_description',
-		    'description')
+        render_text('<h2>Poll description</h2>',
+                    'description',
+                    'rendered_description',
+                    'description')
     }
     function preview_choices() {
-	render_list('choices', 'rendered_choices')
+        render_list('choices', 'rendered_choices')
     }
 </script>
 <script src="ezdom.js"></script>
@@ -144,12 +143,12 @@ body.appendChild(create_header("Create a Poll"))
   </tr>
   <tr>
     <td class="label"><label id="election_end_label">Day and time you plan to stop the poll:</label><br>
-	<small>(<b>Note:</b> polls must be stopped manually)</small>
+        <small>(<b>Note:</b> polls must be stopped manually)</small>
     </td>
     <td><input type="text" name="election_end" id="election_end" size="30"
                aria-labelledby="election_end_label"
           onchange="render_text('<br><i>Preview</i>: Poll ends ', 'election_end', 'rendered_end', 'poll_end', 'poll_end_preview')">
-	 <span class="rendering" id="rendered_end"></span>
+         <span class="rendering" id="rendered_end"></span>
 </td>
   </tr>
   </table>
@@ -168,10 +167,10 @@ body.appendChild(create_header("Create a Poll"))
     <tr>
       <td><textarea id="description" rows="5" name="description" cols="60"
                     aria-labelledby="description_label"
-		    onchange="preview_description()"></textarea>
+                    onchange="preview_description()"></textarea>
       </td>
       <td><input type="button" value="Preview &#9656;"
-	    onClick="preview_description()">
+            onClick="preview_description()">
       <td><span class="rendering" id="rendered_description"></span></td>
     </tr>
   </table>
@@ -185,7 +184,7 @@ body.appendChild(create_header("Create a Poll"))
         onchange="preview_choices()"></textarea></td>
     <td>
       <td><input type="button" value="Preview &#9656;"
-	    onClick="preview_choices()"></td>
+            onClick="preview_choices()"></td>
       <td><span class="rendering" id="rendered_choices"></span></td>
     </tr>
   </table>
@@ -259,15 +258,17 @@ Voters can also be added later.</p>
 <div id='reveal_voters_div'>
   <input type="checkbox" name="ballot_reporting" value="yes"
          onClick="make_visible('reveal_voters')"
-	 title="This option allows any poll participant to view the rankings on each ballot. However, identifying information about the voters who cast these ballots is not revealed unless the next option is checked.">
-  Enable detailed ballot reporting. 
+         title="This option allows any poll participant to view the rankings on each ballot. However, identifying information about the voters who cast these ballots is not revealed unless the next option is checked.">
+  Enable detailed ballot reporting.
   <div class="suboption" id="reveal_voters">
     <input type="checkbox" name="reveal_voters" value="yes" aria-labelledby="reveal_voters_label"/>
     <label id="reveal_voters_label">
     In detailed ballot report, also reveal the identity of the voter with each
     ballot.</label><p class=emphasized>Voters are <i class="warning">not</i> anonymous if this is
     checked, nor does the server discard voter email addresses as it normally
-    does.  Voters are warned about this lack of anonymity.</p>
+    does.  Voters are warned about this lack of anonymity. Multiple votes from a
+    single IP address are allowed if this is a public poll.
+    </p>
   </div>
 </div>
 <div>
@@ -286,7 +287,7 @@ Voters can also be added later.</p>
   Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
   <input type="checkbox" name="proportional" value="yes"
          onClick="make_visible('prcontrol')"
-	 title="The proportional mode is useful only for multiwinner elections, where you want to make sure that the voters' desires are expressed proportionally. Otherwise a majority of voters can decide all of the winners. Proportional mode is much slower than the regular nonproportional mode, and should not be used in cases where there are a lot of choices and a lot of winners. In most cases, but not all, the results from the proportional and nonproportional mode agree.  Click the 'more information' link to find out more about how this mode works.">
+         title="The proportional mode is useful only for multiwinner elections, where you want to make sure that the voters' desires are expressed proportionally. Otherwise a majority of voters can decide all of the winners. Proportional mode is much slower than the regular nonproportional mode, and should not be used in cases where there are a lot of choices and a lot of winners. In most cases, but not all, the results from the proportional and nonproportional mode agree.  Click the 'more information' link to find out more about how this mode works.">
   Enforce proportional representation [<a href="proportional.html">more information</a>]
    <div class="suboption" id="prcontrol">
    <label id="prcontrol_label">

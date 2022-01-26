@@ -17,7 +17,7 @@ sub init {
 sub Condorcet_Internet_Voting_Service {
     'Servizio di voto Condorcet on-line (CIVS)';
 }
-sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
+sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'Servizio di voto Condorcet on-line (CIVS)';
 }
 sub about_civs {
@@ -87,7 +87,7 @@ sub CIVS_poll_created {
  "Votazione CIVS creata: $_[1]";
 }
 sub creation_email_info1 { # title, url
-"È stata creata una nuova votazione, $_[1]. Sei stato designato 
+"È stata creata una nuova votazione, $_[1]. Sei stato designato
 come supervisore di questa votazione.
 Per aprire o chiudere la votazione, utilizzare il seguente link:
 
@@ -128,7 +128,7 @@ vengano a conoscenza dell'indirizzo della pagina dei risultati.
 
 ";
 }
-  
+
 # start
 
 sub poll_started {
@@ -230,11 +230,11 @@ sub the_top_n_will_win { # num_winners
 
 sub add_voter_instructions {
     "Inserire gli indirizzi e-mail degli elettori, uno per riga. È
-    possibile inserire nuovi votanti o inviare un sollecito a elettori 
+    possibile inserire nuovi votanti o inviare un sollecito a elettori
     registrati che non hanno ancora votato.
-    Per un'elezione privata, inviare un sollecito <strong>non</strong> 
+    Per un'elezione privata, inviare un sollecito <strong>non</strong>
     permetterà all'elettore di votare più volte.
-    Nelle elezioni pubbliche non è tecnicamente possibile proibire 
+    Nelle elezioni pubbliche non è tecnicamente possibile proibire
     il voto multiplo.";
 }
 sub Upload_file {
@@ -323,7 +323,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
         Inizialmente tutti i candidati sono alla pari in ultima posizione. ". $cr;
 	if ($no_opinion) {
 	    $ret .= '<b>Nota: votare </b> "Nessuna opinione"
-		    <i>non</i> non è la stessa cosa di assegnare l\'ultima 
+		    <i>non</i> non è la stessa cosa di assegnare l\'ultima
 		    posizione in classifica. Significa non si vuole favorire
 		    o sfavorire in alcun modo il candidato rispetto agli altri.</p>';
 	}
@@ -341,12 +341,12 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     } else {
 	$ret = '<p>L\'esito di questa votazione sarà deciso tramite un metodo
 	sperimentale che cerca di fornire una rappresentazione proporzionale.
-	Per ogni candidato inserire un <b>peso</b> (un indice di gradimento) che 
-	esprima quanto fortemente si vuole che il candidato faccia parte 
+	Per ogni candidato inserire un <b>peso</b> (un indice di gradimento) che
+	esprima quanto fortemente si vuole che il candidato faccia parte
 	dell\'insieme dei vincitori.
 	Si assume che tu voglia che la somma dei pesi dei vincitori sia la più
 	grande possibile.
-	Inizialmente tutte le scelte hanno peso pari a zero. Un peso nullo 
+	Inizialmente tutte le scelte hanno peso pari a zero. Un peso nullo
 	significa che non si ha interesse a veder vincere il candidato.
 	I pesi devono essere compresi tra 0 e 999.
 	Non importa che i propri pesi siano più alti di quelli degli altri
@@ -456,7 +456,7 @@ sub Authorization_failure {
     'Autorizzazione fallita';
 }
 
-sub already_ended { # title 
+sub already_ended { # title
     "Questa votazione (<strong>$_[1]</strong>) è già terminata.";
 }
 sub Poll_not_yet_ended {
@@ -492,15 +492,15 @@ sub Your_voter_key_is_invalid__check_mail { # voter
    }
 }
 sub Invalid_result_key { # key
-    "Chiave risultati non valida: \"$_[1]\". L'indirizzo corretto per la visualizzazione dei risultati dovrebbe 
+    "Chiave risultati non valida: \"$_[1]\". L'indirizzo corretto per la visualizzazione dei risultati dovrebbe
     essere stato inviato via e-mail. Questo errore è stato registrato.";
 }
 sub Invalid_control_key { # key
-    "Chiave di gestione non valida: \"$_[1]\". L'indirizzo corretto per la gestione della votazione dovrebbe 
+    "Chiave di gestione non valida: \"$_[1]\". L'indirizzo corretto per la gestione della votazione dovrebbe
     essere stato inviato via e-mail. Questo errore è stato registrato.";
 }
 sub Invalid_voting_key {
-    "Chiave di voto non valida: \"$_[1]\". L'indirizzo corretto per la pagina di voto dovrebbe 
+    "Chiave di voto non valida: \"$_[1]\". L'indirizzo corretto per la pagina di voto dovrebbe
     essere stato inviato via e-mail. Questo errore è stato registrato.";
 }
 sub Invalid_poll_id {
@@ -540,7 +540,7 @@ sub if_you_would_like_to_vote_please_visit {
     'Per votare, visitare la pagina al seguente indirizzo:';
 }
 sub This_is_your_private_URL {
-'Questo indirizzo contiene le tue credenziali personali per il voto. 
+'Questo indirizzo contiene le tue credenziali personali per il voto.
 Mantienilo privato, altrimenti altri potrebbero votare al tuo posto';
 }
 sub Your_privacy_will_not_be_violated {
@@ -650,7 +650,7 @@ sub Actual_time_poll_closed { # close time
 	"Effettiva chiusura della votazione: $_[1]"
     } else {
 	'Effettiva chiusura della votazione: <script>document.write(new Date(' .
-	    $_[1] * 1000 . 
+	    $_[1] * 1000 .
 	    ').toLocaleString())</script>';
     }
 }
@@ -686,13 +686,13 @@ sub poll_description_hdr {
 sub Ranking_result {
     'Classifica risultante';
 }
-sub x_beats_y { # x y w l 
+sub x_beats_y { # x y w l
     "$_[1] batte $_[2] $_[3]&ndash;$_[4]";
 }
-sub x_ties_y { # x y w l 
+sub x_ties_y { # x y w l
     "$_[1] pareggia con $_[2] $_[3]&ndash;$_[4]";
 }
-sub x_loses_to_y { # x y w l 
+sub x_loses_to_y { # x y w l
     "$_[1] perde contro $_[2] $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {

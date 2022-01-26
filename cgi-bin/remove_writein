@@ -7,6 +7,7 @@ use lib '@CGIBINDIR@';
 use civs_common;
 use CGI qw(:standard -utf8);
 use Digest::MD5 qw(md5_hex);
+use Encode qw(encode);
 use DB_File;
 
 my $thisurl = $civs_bin_path."/remove_writein@PERLEXT@";
@@ -16,19 +17,19 @@ use election 1.02;
 
 CIVS_Header($tx->Poll_control);
 
-my $control_key = param('key');    
+my $control_key = param('key');
 my $authorization_key = param('akey');
 
 CheckElectionID;
 CheckControlKey($control_key);
 
 sub GoBackLink {
-	my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
-	$url .= "&akey=$authorization_key" if defined($authorization_key);
-	print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>');
+    my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
+    $url .= "&akey=$authorization_key" if defined($authorization_key);
+    print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>');
 }
 
-my $to_remove = param('writein') + 0;
+my $to_remove = natParam('writein');
 
 if ($to_remove < 0 || $to_remove >= $num_choices) {
     print p("Sorry, not a valid candidate index.");
@@ -61,7 +62,7 @@ for (my $i = 0; $i < $num_choices; $i++) {
 }
 print '</ul>';
 
-$edata{'choices'} = $choices = $new_choices;
+$edata{'choices'} = encode('utf-8', $choices = $new_choices);
 
 GoBackLink;
 

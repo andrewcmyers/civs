@@ -1,6 +1,6 @@
 package election;  # should be CIVS::Election, or perhaps merged with CIVS
  # Also, this should really be an object-oriented package, where
- # the constructor is parameterized on election id. 
+ # the constructor is parameterized on election id.
  # Then we wouldn't have to have an init() function.
 
 use strict;
@@ -14,14 +14,14 @@ BEGIN {
 
     $VERSION     = 1.02;
     @ISA         = qw(Exporter);
-    @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys 
+    @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys
     &CheckAuthorizationKeyForAddingVoter &CheckAuthorizationKeyForVoting
     &LockElection &UnlockElection &StartElection &IsStarted
     &CheckStarted &PointToResults &IsStopped &CheckNotStopped &CheckPostRequest
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
-    &IsWriteinName &GetEmailLoad
+    &IsWriteinName &GetEmailLoad &RevoteButton
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
@@ -66,11 +66,15 @@ my ($db_is_open, $election_is_locked);
 
 &init;
 
-# Decode a database field using UTF-8, with ad hoc fixup of embedded Latin-1 characters and doubly encoded UTF-8
+# Decode a database field using UTF-8. If FIXUTF8 option is enabled, Ad-hoc
+# fixup is done of embedded Latin-1 characters and doubly encoded UTF-8.
+# Returns undefined if the field is undefined.
 sub DB_decode {
     (my $key) = @_;
-    my $d = fixUTF($edata{$key});
-    if (0 && $d =~ m/\303[\202-\203]\302[\200-\277]/) {
+    my $e = $edata{$key};
+    return $e unless $e;
+    my $d = fixUTF($e);
+    if (@FIXUTF8@ && $d =~ m/\303[\202-\203]\302[\200-\277]/) {
         print STDERR "Fixing UTF-8 double encoding in $election_id\n";
         $d = decode('utf-8', $d);
         $edata{$key} = $d;
@@ -90,7 +94,7 @@ sub init {
         print p($tx->Ill_formed_poll_ID(escapeHTML($election_id))), end_html();
         exit 0;
     };
-    
+
     # Set up filename paths
     $election_dir = $home."/elections/".$election_id;
     $started_file = $election_dir."/started";
@@ -109,30 +113,30 @@ sub init {
     $email_addr = $edata{'email_addr'};
     $description = DB_decode('description');
     $num_winners = $edata{'num_winners'};
-    $addresses = $edata{'addresses'} or $addresses = "";
+    $addresses = DB_decode('addresses') || '';
     @addresses = split /[\r\n]+/, $addresses;
     $election_begin = $edata{'election_begin'};
     $election_end = DB_decode('election_end');
     $public = $edata{'public'};
-    $publicize = $edata{'publicize'};
+    $publicize = $edata{'publicize'} || 'no';
     $writeins = $edata{'writeins'};
-    $allow_voting = $edata{'allow_voting'};
+    $allow_voting = $edata{'allow_voting'} || 'no';
     $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
-    $proportional = $edata{'proportional'} or $proportional = "";
-    $use_combined_ratings = $edata{'use_combined_ratings'};
-    $choices = DB_decode('choices') or $choices = "";
+    $proportional = $edata{'proportional'} // '';
+    $use_combined_ratings = $edata{'use_combined_ratings'} || 0;
+    $choices = DB_decode('choices') // '';
     @choices = split /[\r\n]+/, $choices;
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
     $shuffle = $edata{'shuffle'};
-    $no_opinion = $edata{'no_opinion'} or $no_opinion = 'yes';
-    $num_votes = $vdata{'num_votes'} or $num_votes = 0;
+    $no_opinion = $edata{'no_opinion'} || 'yes';
+    $num_votes = $vdata{'num_votes'} || 0;
     $close_time = $vdata{'close_time'};
     $recorded_voters = $vdata{'recorded_voters'};
-    $ballot_reporting = $edata{'ballot_reporting'} or $ballot_reporting = '';
-    $external_ballots = $edata{'external_ballots'} or $external_ballots = 'no';
-    $reveal_voters = $edata{'reveal_voters'} or $reveal_voters = '';
-    $restrict_results = $edata{'restrict_results'};
+    $ballot_reporting = $edata{'ballot_reporting'} // '';
+    $external_ballots = $edata{'external_ballots'} // 'no';
+    $reveal_voters = $edata{'reveal_voters'} // '';
+    $restrict_results = $edata{'restrict_results'} // 'no';
     $result_addrs = $edata{'result_addrs'};
     $hash_result_key = 0;
     $last_vote_time = $vdata{'last_vote_time'};
@@ -334,24 +338,11 @@ sub CheckStopped {
 }
 
 sub CheckVoterKey {
-    my ($voter_key, $old_voter_key, $voter) = @_;
- 
-    if ($old_voter_key and !$voter_key) {
-        my $voter_key_check = civs_hash("voter".$private_host_id.$election_id.$voter);
-        if ($voter_key_check ne $old_voter_key) {
-            Log("Invalid voter key $old_voter_key presented by $voter " .
-                "for election $election_id, expected $voter_key_check");
-            print h1($tx->Error),
-		  p($tx->Your_voter_key_is_invalid__check_mail($voter));
-	    end_html();
-            exit 0;
-        }
-    } else {
-        if (!$voter_keys{civs_hash($voter_key || '')}) {
-            print h1($tx->Error), p($tx->Your_voter_key_is_invalid__check_mail('')),
-                end_html(); 
-            exit 0;
-        }
+    my ($voter_key) = @_;
+    if (!$voter_keys{civs_hash($voter_key || '')}) {
+        print h1($tx->Error), p($tx->Your_voter_key_is_invalid__check_mail('')),
+            end_html();
+        exit 0;
     }
 }
 
@@ -359,8 +350,9 @@ sub IsWriteinName {
     $_[0] =~ m/\(write-in\)$/
 }
 
-# Check whether the voter has provided a correct receipt
-# for a prior vote; if so, remove their old ballot and return 1.
+# Check whether the voter has provided a correct receipt for a prior
+# vote; if so, remove their old ballot and return their old ballot as a
+# string.
 sub CheckReceipt {
     (my $voter_key) = @_;
     my $receipt = param('receipt');
@@ -409,11 +401,11 @@ sub CheckReceipt {
                         $rank[$k] ne 'No opinion' &&
                         $rank[$j] < $rank[$k]) {
                         $vdata{"$j.$k"} = $jk - 1;
-                    }   
+                    }
                 }
             }
 
-            return 1;
+            return $ballot;
         } else {
             if (!$id || !$ballot_key) {
                 print $tx->invalid_release_key($receipt);
@@ -426,41 +418,47 @@ sub CheckReceipt {
     return 0;
 }
 
+# Generate a form that lets voters try to vote again.
+# If a fourth argument is provided containing a receipt,
+# a simple button is generated. Otherwise a text field
+# is also provided for the user to enter the receipt.
+sub RevoteButton {
+    my ($voter_key, $button_label, $receipt) = @_;
+    print start_form(
+        -name => 'receipt_form',
+        -method => 'POST',
+        -enctype => 'multipart/form-data',
+        -accept_charset => 'UTF-8',
+        -action => '@CIVSBINURL@/vote@PERLEXT@'
+    ), $cr;
+    print hidden(-name => 'id', -value => $election_id), $cr;
+    print hidden(-name => 'key', -value => $voter_key), $cr;
+    print hidden(-name => 'akey', -value => $authorization_key), $cr;
+    if ($receipt) {
+        print hidden(-name => 'receipt', -value => $receipt), $cr;
+    } else {
+        print textfield(-name => 'receipt'), $cr;
+    }
+    print submit($button_label), $cr;
+    print end_form(), $cr;
+}
+
 # Check if the voter has already voted (and this is not a valid revote).
-# If so, generate an error page and exit.
+# If so, generate a page that lets them revote by providing a receipt, and exit.
 sub CheckNotVoted {
-    my ($voter_key, $old_voter_key, $voter) = @_;
-    # print pre("Checking for previous vote by ", $voter_key, " hash ", &civs_hash($voter_key));
+    my ($voter_key) = @_;
     if ($voter_key && $used_voter_keys{&civs_hash($voter_key)}) {
-        if (CheckReceipt($voter_key)) { return }
+        if (my $ballot = CheckReceipt($voter_key)) { return $ballot }
 	print h1($tx->Already_voted), $cr;
 	print p($tx->vote_has_already_been_cast), $cr;
 	&PointToResults;
         print p($tx->if_you_want_to_change), $cr;
-        print start_form(
-            -name => 'receipt_form',
-            -method => 'POST',
-            -enctype => 'multipart/form-data',
-            -accept_charset => 'UTF-8',
-            -action => '@CIVSBINURL@/vote@PERLEXT@'
-        ), $cr;
-        print hidden(-name => 'id', -value => $election_id), $cr;
-        print hidden(-name => 'voter', -value => $voter), $cr;
-        print hidden(-name => 'key', -value => $voter_key), $cr;
-        print hidden(-name => 'akey', -value => $authorization_key), $cr;
-        print textfield(-name => 'receipt'), $cr;
-        print submit(), $cr;
-        print end_form(), $cr;
+        &RevoteButton($voter_key, $tx->change_ballot); # no receipt provided
         &main::TrySomePolls;
         &CIVS_End;
 
-	if ($voter_key) {
-	    ElectionLog("Election: $title ($election_id) : Saw second vote "
-		    . "from voter key $voter_key");
-	} else {
-	    ElectionLog("Election: $title ($election_id) : Saw second vote "
-		    . "from (voter,key) = ($voter, $old_voter_key)");
-	}
+        ElectionLog("Election: $title ($election_id) : Saw second vote "
+                . "from voter key $voter_key");
 	exit 0;
     }
 }
@@ -482,8 +480,8 @@ sub ControlKeyError {
 }
 
 sub CheckControlKey {
-    my $control_key = shift; 
-    
+    my $control_key = shift;
+
     if (defined($edata{'hash_control_key'})) {
         my $hash_control_key = civs_hash($control_key);
         my $hash_control_key_check = $edata{'hash_control_key'};
@@ -543,9 +541,9 @@ sub CheckResultKey {
 
 sub CheckAuthorizationKeyForAddingVoter {
     my $authorization_key = shift;
-    if (!CheckAuthorizationKey($authorization_key)) {   
+    if (!CheckAuthorizationKey($authorization_key)) {
         print h1($tx->Error),
-	p($tx->Invalid_control_key($authorization_key)); 
+	p($tx->Invalid_control_key($authorization_key));
         print end_html();
         ElectionLog("Election: $title ($election_id) : invalid attempt to add voter (wrong key)");
         exit 0;
@@ -554,7 +552,7 @@ sub CheckAuthorizationKeyForAddingVoter {
 
 sub CheckAuthorizationKeyForVoting {
     my $authorization_key = shift;
-    if (!CheckAuthorizationKey($authorization_key)) {   
+    if (!CheckAuthorizationKey($authorization_key)) {
         print h1($tx->Error), p($tx->Invalid_key);
         print end_html();
         ElectionLog("Election: $title ($election_id) : invalid attempt to add voter (wrong key)");
@@ -591,6 +589,7 @@ sub ElectionLog {
           end_html();
 	exit 0;
     }
+    binmode ELECTION_LOG, ':utf8';
     print ELECTION_LOG $now." ".$remote_ip_address." ".$log_msg."\n";
     close ELECTION_LOG;
 }
@@ -601,24 +600,31 @@ sub ElectionLog {
 # the email address is in canonical form.
 sub GenerateVoterKey {
     (my $voter_email, my $authorization_key) = @_;
-    my $voter_key = civs_hash($voter_email, $authorization_key,
-        $private_host_id);
+    my $voter_email_bytes = encode('utf-8', $voter_email);
+    my $voter_key = civs_hash($voter_email_bytes, $authorization_key,
+                              $private_host_id);
     if ($reveal_voters eq 'yes') {
-	$edata{"email_addr $voter_key"} = $voter_email;
+	$edata{"email_addr $voter_key"} = $voter_email_bytes;
     }
     return $voter_key;
 }
 
+# Send the body of an email message formatted as HTML.
+# The body is sent in both HTML and plain text. HTML
+# tags are removed in the plain text version. <code>
+# tags are replaced with angle brackets.
 sub SendBody {
     my $html = shift;
     my $boundary = 'CIVS-'.&SecureNonce;
     my $plain = $html;
+    $plain =~ s|<code>(.*)</code>|[[$1]]|g;
     $plain =~ s/<[^>]+>//g;
     $plain =~ s/\r\n\r\n/\r\n/g;
     $plain =~ s/\n\n/\n/g;
     $plain =~ s/^\r*//g;
     $plain =~ s/^\n*//g;
-    
+    $plain =~ s|\[\[(.*)\]\]|<$1>|g;
+
     Send 'Mime-Version: 1.0';
     Send "Content-Type: multipart/alternative; boundary=$boundary";
     Send '';
@@ -662,7 +668,6 @@ sub GetEmailLoad {
 # Return the proper URL for the voter.  Also update $num_auth and $voter_keys
 # appropriately, and print a message about the user already being authorized if
 # they are. The voter email address does not need to be in canonical form.
-#
 sub VotingUrl {
     my ($email, $election_id, $authorization_key, $resend) = @_;
     my $v = &CanonicalizeAddr($email);
@@ -737,7 +742,7 @@ sub SendKeys {
 	    }
 	    sub MakeURL {
 	      (my $url) = @_;
-	      return "<pre>\r\n    <a href=\"$url\">$url</a>\r\n</pre>";
+	      return "<pre>\r\n    <a href=\"$url\"><code>$url</code></a>\r\n</pre>";
 	    }
 
             ElectionLog("Sending mail to a voter for poll $election_id\n");
@@ -749,9 +754,7 @@ sub SendKeys {
             MailTo($v) &&
             StartMailData() || next;
 
-	    SendHeader ('From',
-		$tx->CIVS_poll_supervisor($name),
-		"<$civs_supervisor>");
+	    SendHeader('From', $tx->From_poll_supervisor($name, $civs_supervisor));
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $email_addr);
 	    SendHeader('Message-ID', "<$messageid>");
@@ -806,6 +809,8 @@ sub SendKeys {
     return \@failures;
 }
 
+# Record that a voter has been invited to vote, so that they
+# can be given a link to vote later.
 sub RecordInvitation {
     (my $addr, my $url) = @_;
     $addr = CanonicalizeAddr($addr);

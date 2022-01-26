@@ -75,7 +75,7 @@ création de la consultation, les participants reçoivent un courrier
 vote.
 Pour les consultations publiques il est possible de ne pas imposer la
 possession d'une adresse email, dans ce cas un seul vote est accepté
-par adresse Internet (IP) 
+par adresse Internet (IP)
 <p>
 <strong>Vote par préférence : </strong>
 Les participants à la consultation classent par ordre de préférence les candidats ou les

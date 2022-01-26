@@ -180,7 +180,7 @@ sub ProcessBallots {
     my @voters = @{$_[0]};
     my @ballots = ();
     foreach my $voter_key (@voters) {
-	my $ballot = $vdata{$voter_key}; 
+	my $ballot = $vdata{$voter_key};
 	if (!defined($ballot)) {
 	    &Log("Lost ballot for voter key $voter_key?");
 	} else {
@@ -205,11 +205,11 @@ sub PrintReport {
 #     return;
 #   }
 
-    (my $rref, my $log) = 
+    (my $rref, my $log) =
 	&$rank_candidates($num_choices, \@matrix, $bref, \@choices);
 
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
-    
+
     &PrintRanking($rref, \@matrix);
     # &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
     # &$print_details($log, $num_choices, \@choices, $ciref);

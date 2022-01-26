@@ -26,10 +26,12 @@ sub find_top_polls {
     my $reduced_log = $home. "/elections/public_vote.log.temp";
 
     open(IN, $public_vote_log);
+    binmode IN, ':encoding(UTF-8)';
     if (!sysopen NEWLOG, $reduced_log, O_WRONLY|O_CREAT|O_TRUNC) {
 	&Log("Could not open public vote log temp output file $reduced_log");
 	return;
     }
+    binmode NEWLOG, ':encoding(UTF-8)';
 
     while (<IN>) {
       if ($_ =~ m/^= /) {
@@ -91,6 +93,8 @@ sub find_top_polls {
 	&Log("Could not open top polls temp output file $top_polls_full_temp");
 	return;
     }
+    binmode OUT, ':encoding(UTF-8)';
+    binmode FULL, ':encoding(UTF-8)';
     print OUT '<ul>';
     print FULL '<ul>';
     my $count = 0;

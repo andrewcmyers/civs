@@ -4,8 +4,9 @@ use strict;
 use warnings;
 
 use lib '@CGIBINDIR@';
-use civs_common;
 use CGI qw(:standard -utf8);
+use civs_common;
+use Encode qw(encode decode);
 $CGI::POST_MAX = @MAX_UPLOAD_SIZE@;
 # $CGI::UNLINK_TMP_FILES = 0;
 
@@ -37,10 +38,6 @@ if ($external_ballots ne 'yes') {
 
 my $ballot_fh = upload('ballot_data');
 
-# print p("Ballot file: ", code(param("ballot_data")));
-# my $tmpname = tmpFileName($ballot_fh);
-# print p("Temporary file: ", $tmpname);
-
 my $lineno = 0;
 my @errors = ();
 my $max_errors = 10;
@@ -51,7 +48,7 @@ my $type;
 if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
   while (!$ballot_fh->handle->eof) {
     if ($#errors >= $max_errors) { next }
-    $_ = $ballot_fh->handle->getline;
+    $_ = decode('utf-8', fixUTF($ballot_fh->handle->getline));
     $lineno++;
     # print pre("Line $lineno: $_"), $cr;
     s/\A(\s)*//;
@@ -61,7 +58,10 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
     my $multiplier = 1;
     if (m/^.*(x|X)/) {
 	($multiplier, my $dummy, $_) = m/^\s*([^ xX]*)\s*(x|X)(.*$)/;
-
+	if (!$_) {
+	    push @errors, li("Line $lineno: bad syntax");
+	    next;
+	}
 
         s/^(\s)+//g;
 	s/(\s)*$//g;
@@ -78,26 +78,35 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
     for (my $cnt = 0; $cnt < $multiplier; $cnt++) {
 	for (my $i = 0; $i < $num_choices; $i++) {
 	    my $rank = $indices[$i];
+            if (!$rank) {
+                push @errors, li("Line $lineno: missing rank for choice ", $i + 1);
+                next;
+            }
+            if (!($rank =~ /\A(0|[1-9][0-9]*)\Z/)) {
+                push @errors, li("Line $lineno: illegal rank $rank for choice ",
+                    $i + 1);
+                next;
+            }
 	    if ($proportional eq 'yes' && $use_combined_ratings) {
-		$ballots[$num_ballots][$i] = 0 + $rank;
+		$ballots[$num_ballots][$i] = $rank;
 		# print pre("rank $rank seen"), $cr;
 		next;
 	    }
 	    if ($rank eq '-') { $rank = 'No opinion'; }
-	    if ($rank =~ m/^[0-9]*$/ &&
-		$rank >= 1 &&
+	    if ($rank =~ m/^[0-9]*$/ && $rank >= 1 &&
 		$rank <= $num_choices ||
-		$rank eq 'No opinion') {
+		($rank eq 'No opinion')) {
 		$ballots[$num_ballots][$i] = $rank;
 		next;
 	    }
 	    if ($cnt == 0) {
-		push @errors, li("Line $lineno: badly formed rank &ldquo;$rank&rdquo;.");
+		push @errors, li("Line $lineno: choice ", $i+1, " has badly formed rank &ldquo;$rank&rdquo;.");
 	    }
 	}
 	$num_ballots++;
 	if ($num_ballots > 1000) {
 	    push @errors, li("Line $lineno: too many ballots for test poll.");
+            last;
 	}
     }
   }
@@ -115,8 +124,7 @@ if ($#errors >= 0) {
 }
 print p("Ballot file is well formed and contains $num_ballots ballots."), $cr;
 
-my $nv_data = $vdata{'num_votes'};
-my $num_votes = $nv_data ? (0 + $nv_data) : 0;
+my $num_votes = $vdata{'num_votes'} || 0;
 
 #
 # Insert the ballots into the DB
@@ -159,7 +167,7 @@ for (my $i = 0; $i < $num_ballots; $i++) {
 	       $jk = 0 if (!defined($jk));
 	if ($rank[$j] ne 'No opinion' &&
 			$rank[$k] ne 'No opinion' &&
-			$rank[$j] < $rank[$k]) 
+			$rank[$j] < $rank[$k])
 		{
 			$vdata{"$j.$k"} = $jk + 1;
 	    }	

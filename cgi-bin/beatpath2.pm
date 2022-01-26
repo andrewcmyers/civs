@@ -153,7 +153,7 @@ sub winners {
 # list containing a reference to @result -- where $result[0] is an array
 # containing the highest ranked choices and so on, and a log
 # of work done.
-# 
+#
 # See runoff.pm for a more detailed spec.
 #
 # Note: $ballots is not used by this ranking algorithm.

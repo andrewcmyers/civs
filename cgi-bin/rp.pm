@@ -38,7 +38,7 @@ sub order_pairs {
 	$tiebreak = 1;
 	# print pre("Using MAM ordering extension\n");
 	# print pre("$x-$y vs $z-$w\n");
-	# print pre("matrix elements: ". $rvh[$w][$y]. " ". $rvh[$y][$w] . " ". 
+	# print pre("matrix elements: ". $rvh[$w][$y]. " ". $rvh[$y][$w] . " ".
 		  # $rvh[$x][$z]. " ". $rvh[$z][$x]);
 	if ($w != $y && $rvh[$w][$y] != $rvh[$y][$w]) {
 	    return ($rvh[$w][$y] - $rvh[$y][$w]);
@@ -78,7 +78,7 @@ sub Floyd_Warshall {
   }
   return $update;
 }
- 
+
 # TransitiveClosure(m, winner, loser, n) adds the preference
 # for winner over loser to the nxn matrix m and computes the
 # transitive closure (in m). If this creates any new cycles,
@@ -112,7 +112,7 @@ sub TransitiveClosure {
 sub rank_candidates {
     my ($num_choices, $mref, $bref, $choices) = @_;
     my @ballots = @{$bref};
-    civs_common::fisher_yates_shuffle [@ballots]; 
+    civs_common::fisher_yates_shuffle [@ballots];
 
     if ($main::algorithm eq 'mam') {
 	$mam = 1;
@@ -123,8 +123,8 @@ sub rank_candidates {
 	}
 
     (my $rref, my $ciref, my $denied_any,
-	my $allowed_cycle, my $denied_report) = 
-	&rank_candidates_internal($mref, $num_choices, $choices);
+	my $allowed_cycle, my $denied_report) =
+            &rank_candidates_internal($mref, $num_choices, $choices);
 
     my $log = '';
     if (!$allowed_cycle && !$denied_any) {
@@ -302,14 +302,14 @@ sub rank_candidates_internal {
 			$b = [($j, $i, $matrix[$j][$i], $matrix[$i][$j])];
 			if (!defined($strongest_defeat[$i])) {
 			    $strongest_defeat[$i] = $b;
-			    my $ub =&unparse($b); 
+			    my $ub = &unparse($b);
 			    #print pre("  Initializing SD of $i to $ub");
 			} else {
 			    $a = $strongest_defeat[$i];
 			    if (&order_pairs > 0) {
 				$strongest_defeat[$i] = $b;
-				my $ub =&unparse($b); 
-				my $ua =&unparse($a); 
+				my $ub = &unparse($b);
+				my $ua = &unparse($a);
 				# print pre("  Updating SD of $i to $ub (was $ua)");
 			    }
 			}
@@ -323,8 +323,8 @@ sub rank_candidates_internal {
 	    foreach my $j (@group) {
 		$a = $strongest_defeat[$i];
 		$b = $strongest_defeat[$j];
-		my $ub =&unparse($b); 
-		my $ua =&unparse($a); 
+		my $ub = &unparse($b);
+		my $ua = &unparse($a);
 		if ($j == $i || !defined($a)) { next; }
 		# print pre("comparing defeats of $i and $j : $ua and $ub");
 		if (!defined($b) || &order_pairs < 0) {

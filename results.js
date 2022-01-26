@@ -43,7 +43,7 @@ function save_description() {
 
 function resendResultsLink() {
     post_to_url("resend_link@PERLEXT@",
-	{ id: election_id, key: control_key }, 
+	{ id: election_id, key: control_key },
 	function(response) {
 	    popup("resend_popup", "sent");
 	},
@@ -67,7 +67,7 @@ function popup(id, msg) {
 
 function post_new_description(desc) {
     post_to_url("edit_poll@PERLEXT@",
-	{ id: election_id, key: control_key, description: desc }, 
+	{ id: election_id, key: control_key, description: desc },
 	function(response) {
 	    popup("save_popup", "saved");
 	},

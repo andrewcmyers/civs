@@ -10,6 +10,8 @@ $CGI::POST_MAX = @MAX_UPLOAD_SIZE@;
 
 use Digest::MD5 qw(md5_hex);
 use DB_File;
+use URI::Escape;
+use Encode qw(encode);
 
 use Socket;
 use IO::Handle;
@@ -36,7 +38,7 @@ my @new_addresses = split /[\r\n]+/, $new_addresses;
 HTML_Header($tx->CIVS_Adding_Voters, 'add_voters.js');
 CIVS_Header($tx->Adding_voters);
 
-my $control_key = param('key');    
+my $control_key = encode('utf-8', scalar param('key'));
 CheckControlKey($control_key);
 my $authorization_key = param('akey');
 CheckAuthorizationKeyForAddingVoter($authorization_key);
@@ -76,16 +78,37 @@ my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
 $url .= "&akey=$authorization_key" if defined($authorization_key);
 print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>'), $cr;
 
+my (@not_activated, @opted_out);
+
 if ($#mail_failures >= 0) {
-    my @rows = Tr(th('Address'), th('Reason'));
+    my @rows = Tr(th($tx->Address), th($tx->Reason));
     foreach my $rowref (@mail_failures) {
         my ($failure_type, $addr) =  @{$rowref};
         push @rows, Tr(td($addr), td($tx->mail_failure_reason($failure_type, $addr)));
+        if ($failure_type eq 'not activated') {
+            push @not_activated, $addr;
+        } elsif ($failure_type eq 'opted_out') {
+            push @opted_out, $addr;
+        }
     }
     print div({-class => "centering"}, div({-id => 'mail_failures'},
         button(-id => 'download_failures', -value => $tx->download_failures,
-                -onclick => 'export_failure_table()'),
+               -onclick => 'export_failure_table()'), $cr,
+        button({
+            -value => $tx->Email_voters_who_have_not_activated,
+            -onclick => 'document.forms.email_not_activated.submit()'
+        }), $cr,
         table({-id => 'failure_table'}, @rows)));
+    print start_form(
+        {
+            -name => 'email_not_activated',
+            -method => 'POST',
+            -action => 'mailto:' . uri_escape_utf8(join(',', @not_activated))
+                                    . '?subject=' . uri_escape_utf8($tx->Activate_mail_subject)
+                                    . '&body=' . uri_escape_utf8($tx->Activate_mail_body($email_addr, $name, $title, $activate_url)),
+            -accept_charset => 'UTF-8'
+        }), $cr,
+    end_form(), $cr,
 }
 
 print end_html();

@@ -104,6 +104,9 @@ SUGGESTION_BOX='http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_5
 EN_SUFFIX='.en'
 UTF8_SUFFIX='.utf8'
 
+# Patch up bad UTF-8 encodings? (0 = no, 1 = yes)
+FIXUTF8=0
+
 # Password/key for site administrator. Must be defined to
 # something secret. Current definition is a placeholder.
 ADMIN_KEY='CHANGE ME NOW'

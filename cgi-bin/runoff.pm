@@ -17,7 +17,7 @@ use strict;
 #   $rankings is a reference to a list of references to lists. An element
 #     in the outer list is a rank (from highest/most preferred to
 #     lowest/least preferred) and each inner list contains the
-#     indices of choices. 
+#     indices of choices.
 #   $log is an HTML log (string) giving details of how the algorithm worked.
 #
 # Requires:
@@ -176,5 +176,5 @@ sub print_details {
     (my $log) = @_;
     print main::RESULTS $log;
 }
- 
+
 1; # ok!

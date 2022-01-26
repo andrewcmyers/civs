@@ -196,7 +196,7 @@ td.count { text-align: center; font-family: 'Courier Prime', Courier, monospace;
 th.choice { text-align: left }
 table#preftable tr { border-style: none none groove none; border-bottom-color: #e8e8f0; border-bottom-width: 2px; border-collapse: collapse }
 table#preftable tr.tied { border-color: #ccc; border-style: none none dashed none; border-bottom-width: 1px; border-collapse: collapse; padding-bottom: 2px }
-table#preftable td { border-style: none; } 
+table#preftable td { border-style: none; }
 table#preftable td.choice { cursor: move; padding-right: 1em }
 table#preftable tr:hover td.choice,
     table#preftable tr:hover td.choice + td { background-color: #f0f0ff }
@@ -314,8 +314,7 @@ dd { font-size: 90%; margin-left: 3em }
 table#completion_meter { border-style: solid; border-width: 1px; border-color: black; width: 250px; padding: 0; margin: 0}
 td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
 td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
-#civs_uses ul {font-size: 90%; padding: 0 2ex; margin: 0}
-#civs_uses > div { display: inline-block; text-align: left }
+#civs_uses ul {font-size: 90%; padding: 0 2ex; margin: 0; column-count: 3 }
 table.ballots {font-size: 80%; border: solid 1px #aac}
 table.ballots th {background-color: transparent; color: black; font-size: 70%}
 

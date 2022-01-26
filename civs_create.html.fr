@@ -231,7 +231,7 @@ souris
 sur la case à cocher pour avoir des informations complémentaires)</small></h3>
   <p><input name="public" value="yes"
  title="Si vous organisez une consultations publique vous recevrez un lien Internet unique que chaque
- participant pourra utiliser pour s'exprimer. Ce lien pourra, par exemple, être communiqué aux 
+ participant pourra utiliser pour s'exprimer. Ce lien pourra, par exemple, être communiqué aux
  participants par l'intermédiaire d'une liste de distribution de courrier électronique. La méthode
  utilisée pour éviter qu'un participant puisse s'exprimer plusieurs fois est basée uniquement sur
  l'enregistrement de son adresse Internet (IP). Si vous voulez être absolument assuré que les participants
@@ -293,7 +293,7 @@ bulletin de vote dans l'ordre exact où ils ont été saisis.<br>
   <input name="proportional" value="yes"
  onclick="prparent.appendChild(prcontrol)"
  title="La représentation proportionnelle n'est utile que pour les consultations où
- plusieurs candidats ou propositions devront être retenues et si vous voulez être sur que 
+ plusieurs candidats ou propositions devront être retenues et si vous voulez être sur que
  les volontés des participants soient exprimées proportionnellement. Sinon c'est la majorité
  des participants qui décident des candidats élus ou des propositions retenues.
  La représentation proportionnelle est plus lente à dépouiller et ne doit pas être utilisée

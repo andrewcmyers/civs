@@ -48,7 +48,7 @@ while (defined(my $file = readdir(DIR))) {
     next if $file =~/^\.\.?$/;    # skip . and ..
     next unless -d "$elections_dir/$file";   # skip non-directories
     next unless $file =~ m/^E_[0123456789abcdef]+/;   # skip non-elections
-    
+
     $num_polls++;
     my $election_dir = "$elections_dir/$file";
     my $election_data = $election_dir."/election_data";
@@ -169,5 +169,5 @@ foreach my $entry (@entries) {
 print p("Number of polls: $num_polls, total votes cast: $total_users, total authorized: $total_auth"), $cr;
 
 print table({-class => 'status'}, @rows);
-            
+
 print end_html();

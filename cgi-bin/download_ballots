@@ -49,7 +49,7 @@ foreach my $voter_key (@voters) {
     # recorded_vote is a comma separated list of the ranks
     # that the voter assigned to candidates.  Element i of the list
     # corresponds to candidate i.
-    my $recorded_vote = $vdata{$voter_key}; 
+    my $recorded_vote = $vdata{$voter_key};
     print "$recorded_vote\n";
 }
 

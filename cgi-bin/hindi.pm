@@ -5,7 +5,7 @@ use utf8;
 
 our $VERSION = 1.00;
 
-sub lang { 'en-US' }
+sub lang { 'hi-IN' }
 
 sub init {
     my $self = {};
@@ -24,39 +24,42 @@ sub Condorcet_Internet_Voting_Service {
 sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'Condorcet Internet Voting Service'
 }
-sub From_CIVS {
-    my ($self, $civs_supervisor) = @_;
-    $self->Condorcet_Internet_Voting_Service_email_hdr." <$civs_supervisor>"
-}
 sub about_civs {
-    'About CIVS'
+    'CIVS के बारे में'
 }
 sub new_user {
-    'Activate user'
+    'उपयोगकर्ता को सक्रिय करें'
+    # Activate user
 }
 sub public_polls {
-    'Public polls'
+    'सार्वजनिक चुनाव'
+    # 'Public polls'
 }
 sub create_new_poll {
-    'Create new poll'
+    #'Create new poll'
+    'नया पोल बनाएं'
 }
 sub about_security_and_privacy {
-    'Security and privacy'
+    # 'Security and privacy'
+    'सुरक्षा और गोपनीयता'
 }
 sub FAQ {
-    'FAQ'
+    # 'FAQ'
+    'सामान्य प्रश्न'
 }
 sub CIVS_suggestion_box {
-    'CIVS suggestion box'
+    'CIVS सुझाव बॉक्स'
 }
 sub unable_to_process {
-    'CIVS is unable to process your request because of an internal error.'
+    # 'CIVS is unable to process your request because of an internal error.'
+    'CIVS एक आंतरिक त्रुटि के कारण आपके अनुरोध को संसाधित करने में असमर्थ है।'
 }
 sub CIVS_Error {
-    'CIVS Error'
+    # 'CIVS Error'
+    'CIVS त्रुटि'
 }
 sub CIVS_server_busy {
-    'CIVS server busy'
+    'CIVS सर्वर व्यस्त'
 }
 sub Sorry_the_server_is_busy {
     'Sorry, the CIVS web server is very busy right now and
@@ -66,7 +69,7 @@ sub Sorry_the_server_is_busy {
 # civs_create
 
 sub mail_has_been_sent {
-    "Mail has been sent to the address you provided (<tt>$_[1]</tt>).";
+    ""मेल आपके द्वारा दिए गए पते पर भेज दिया गया है (<tt>$_[1]</tt>)।"
 }
 
 sub click_on_the_URL_to_start {
@@ -78,133 +81,136 @@ sub here_is_the_control_URL {
              this would be sent to the supervisor via email.';
 }
 sub the_poll_is_in_progress {
-    'The poll is in progress. Press this button to end it: ';
+    'मतदान जारी है। इसे समाप्त करने के लिए इस बटन को दबाएं: '
 }
 
 sub CIVS_Poll_Creation {
-    "CIVS Poll Creation";
+    'CIVS पोल निर्माण'
 }
 sub Poll_created {
-    "Poll created: $_[1]"
+    "मतदान बनाया गया: $_[1]"
 }
 
 sub Address_unacceptable { #addr
-    "The address \"$_[1]\" is not acceptable";
+    "पता \"$_[1]\" स्वीकार्य नहीं है"
 }
 sub Poll_must_have_two_choices {
-    'A poll must have at least two choices.';
+    'एक मतदान में कम से कम दो विकल्प होने चाहिए।'
 }
 sub Poll_exceeds_max_choices {
     my ($self, $count) = @_;
-    "A poll can have at most $count choices."
+    "एक पोल में ज़्यादा से ज़्यादा $count विकल्प हो सकते हैं।"
 }
 sub Poll_directory_not_writeable {
     "Configuration error? Unable to create the poll directory <tt>$_[1]</tt>"
 }
 sub CIVS_poll_created {
- "CIVS poll created: $_[1]";
+ "CIVS पोल बनाया गया: $_[1]"
 }
 sub creation_email_info1 { # title, url
-"This email acknowledges the creation of a new poll,
-$_[1]. You have been designated as the supervisor of this
-poll. To start and stop the poll, please use the following URL:
+"यह ईमेल एक नए मतदान के निर्माण को स्वीकार करता है,
+$_[1]. आपको इसके पर्यवेक्षक के रूप में नामित किया गया है
+जनमत। मतदान शुरू करने और रोकने के लिए, कृपया निम्नलिखित यूआरएल का प्रयोग करें:
 
-  <$_[2]>
+   $_[2]
 
-Save this email and keep it private. If you lose it you will not be able
-to control the poll.
+इस ईमेल को सेव करें और इसे निजी रखें। यदि आप इसे खो देते हैं तो आप नहीं कर पाएंगे
+मतदान को नियंत्रित करने के लिए।
 
 "
 }
 sub creation_email_public_link { # url
-"Because this is a public poll, you may direct voters to the following URL:
+"चूंकि यह एक सार्वजनिक मतदान है, आप मतदाताओं को निम्न URL पर निर्देशित कर सकते हैं:
 
-  <$_[1]>
+   $_[1]
 
 "
 }
 
 sub opted_out { # addr
-  "Sorry, you cannot send any email to &lt;$_[1]&gt; via CIVS."
+  "क्षमा करें, आप CIVS के माध्यम से &lt;$_[1]&gt; पर कोई ईमेल नहीं भेज सकते।"
 }
 
 sub Sending_result_key { # addr
-    "<p>Sending result key to <tt>$_[1]</tt>. Please allow this to complete...<br>"
+    "<p>परिणाम कुंजी <tt>$_[1]</tt> को भेजी जा रही है। कृपया इसे पूरा करने दें...<br>"
 }
 sub Done_sending_result_key { # addr
-    '...done sending result key.</p>'
+    '...परिणाम कुंजी भेजने का काम किया।</p>'
 }
 sub Results_of_CIVS_poll { # title
-    "Results of CIVS poll: $_[1]";
+    "CIVS पोल के परिणाम: $_[1]"
 }
 sub Results_key_email_body { # title, url, civs_home
-"A new CIVS poll has been created named \"$_[1]\".
-You have been designated as a user who is permitted to see the
-result of this poll.
+"\"$_[1]\" नाम से एक नया CIVS पोल बनाया गया है।
+आपको एक ऐसे उपयोगकर्ता के रूप में नामित किया गया है जिसे देखने की अनुमति है
+इस सर्वेक्षण का परिणाम।
 
-Save this email. If you lose it you will not have access to
-the results. Once the poll has been closed, results will be
-available at the following URL:
+इस ईमेल को सेव करें। यदि आप इसे खो देते हैं तो आपके पास इस तक पहुंच नहीं होगी
+परिणाम। एक बार मतदान बंद हो जाने के बाद, परिणाम होंगे
+निम्नलिखित यूआरएल पर उपलब्ध है:
 
-  <code>$_[2]</code>
+   $_[2]
 
-This URL is private. Allowing unauthorized users access to this
-URL will permit them to see the poll results.
+यह यूआरएल निजी है। अनधिकृत उपयोगकर्ताओं को इस तक पहुंच की अनुमति देना
+URL उन्हें चुनाव परिणाम देखने की अनुमति देगा।
 
-";
+"
 }
 
 # start
 
 sub poll_started {
-    "The poll <strong>$_[1]</strong> has been started."
+    "मतदान <strong>$_[1]</strong> शुरू हो गया है।"
 }
 
 sub sending_keys_now {
-    'Sending voter invitations now. Do not navigate away from this page
-     until all invitations are sent.'
+    'मतदाता आमंत्रण अभी भेज रहे हैं। इस पृष्ठ से दूर नेविगेट न करें जब तक सभी आमंत्रण नहीं भेजे जाते।'
 }
 
 # control
 
 sub CIVS_Poll_Control {
-    "CIVS Poll Control";
+    'CIVS पोल कंट्रोल'
 }
 sub Poll_control {
-    "Poll Control";
+    "मतदान नियंत्रण"
 }
 sub poll_has_not_yet_started {
-    'The poll has not yet started. Press this button to start it: ';
+    'मतदान अभी शुरू नहीं हुआ है। इसे शुरू करने के लिए इस बटन को दबाएं: '
 }
 sub Start_poll {
-    'Start poll'
+    'मतदान शुरू करें'
 }
 sub End_poll {
-    'End poll'
+    'अंत मतदान'
 }
 sub Edit_button {
-    'edit'
+    'संपादित करें'
 }
 sub ResendLink_button {
-    'resend link'
+    ''लिंक फिर से भेजें''
 }
 sub ResendLinkAck {
-    'sent'
+    'भेजे गए'
+    # 'sent'
 }
 sub Save_button {
-    'save'
+    'बचा ले'
+    # 'save'
 }
 sub Remove_button {
-    'remove'
+    # 'remove'
+    'हटाना'
 }
 sub ending_poll_cannot_be_undone {
-    'Ending a poll is an operation that cannot be undone. Continue?';
+    # 'Ending a poll is an operation that cannot be undone. Continue?';
+    'मतदान समाप्त करना एक ऐसा ऑपरेशन है जिसे पूर्ववत नहीं किया जा सकता है। जारी रखना?'
 }
 sub writeins_have_been_disabled {
-    'Write-in choices have been disabled';
+    'लिखने के विकल्प अक्षम कर दिए गए हैं'
 }
 sub disallow_further_writeins {
-    'Disallow further write-ins';
+    'आगे लिखने की अनुमति न दें'
 }
 sub voting_disabled_during_writeins {
     'Voting is currently disabled during the write-in phase.';
@@ -236,7 +242,7 @@ sub total_authorized_voters { # num_auth_string
     "Total authorized voters: $_[1]"
 }
 sub actual_votes_so_far { # num
-    "Votes actually cast so far: $_[1]"
+    "Actual votes cast thus far: $_[1]"
 }
 sub poll_ends { # end
     "Announced end of poll: $_[1]"
@@ -266,7 +272,7 @@ sub Poll_results_are_now_available_to_the_following_users {
 	     viewing results:'
 }
 sub results_available_to_the_following_users {
-    'The results of this poll have been released only to a limited set of users:';
+    'इस सर्वेक्षण के परिणाम केवल सीमित उपयोगकर्ताओं के लिए जारी किए गए हैं:'
 }
 
 sub Poll_results_are_available { #url
@@ -403,39 +409,15 @@ sub Done {
     'Done.';
 }
 
-sub Email_voters_who_have_not_activated {
-    'Email voters who have not activated'
-}
-
-sub Activate_mail_subject {
-    'Please activate your email address on CIVS'
-}
-sub Address {
-    'Address'
-}
-sub Reason {
-    'Reason'
-}
-
-sub Activate_mail_body {
-    my ($self, $supervisor, $name, $title, $url) = @_;
-
-    "You have been invited by $name <$supervisor> to vote in a poll titled “$title”.
-
-    To vote, please activate your email address with the CIVS voting system at: <$url>"
-}
-
-
 # vote
 
 sub page_header_CIVS_Vote { # election_title
-    'CIVS Vote: '.$_[1]
+    # 'CIVS Vote: '.$_[1]
+    'CIVS वोट:'.$_[1]
 }
 
 sub ballot_reporting_is_enabled {
-    'Ballot reporting is enabled for this poll.
-     Your ballot (the rankings you assign to choices)
-     will be visible in the poll results when the poll ends.'
+     'इस मतदान के लिए मतपत्र रिपोर्टिंग सक्षम है। आपका मतपत्र (आपके द्वारा विकल्पों को निर्दिष्ट रैंकिंग) मतदान समाप्त होने पर मतदान परिणामों में दिखाई देगा।'
 }
 sub instructions1 { # num_winners, end, name, email
     my $wintxt;
@@ -523,7 +505,8 @@ sub ordinal_of {
 }
 
 sub address_will_be_visible {
-    '<strong>Your email address will be visible</strong> along with your ballot.';
+    # '<strong>Your email address will be visible</strong> along with your ballot.';
+    'आपका ईमेल पता आपके मतपत्र के साथ दिखाई देगा।'
 }
 
 sub however_results_restricted {
@@ -558,10 +541,12 @@ sub Add_writein {
 }
 
 sub to_top {
-    'to top';
+    # 'to top';
+    'शीर्ष पर'
 }
 sub to_bottom {
-    'to bottom';
+    # 'to bottom'
+    'नीचे ले जाएँ'
 }
 sub move_up {
     'move up';
@@ -587,9 +572,6 @@ sub ranking_instructions {
 sub write_in_a_choice {
     'Write in a new choice: ';
 }
-sub show_qr_code {
-    'Show QR code for this poll.'
-}
 sub if_you_have_already_voted { #url
     "If you have already voted, you may see
 	<a href=\"$_[1]\">the current poll results</a>.";
@@ -598,16 +580,10 @@ sub thank_you_for_voting { #title, receipt
     "Thank you. Your vote for <strong>$_[1]</strong> has been
 	successfully cast.<br>
         Your voter receipt is <code>$_[2]</code>.
-        You will need this receipt if you want to change your ballot later.";
+        You will need this receipt if you want to change your ballot.";
 }
 sub try_some_public_polls {
     "Feel like voting on something else? Try one of these public polls:"
-}
-sub you_can_change_ballot_now {
-    'From this page, you may erase the ballot you cast and vote again.'
-}
-sub change_ballot {
-    'Revote'
 }
 sub name_of_writein_is_empty {
     "Name of write-in choice is empty";
@@ -636,7 +612,7 @@ sub following_URL_will_report_results {
 }
 sub future_result_link {
     (my $self, my $url) = @_;
-    "The following URL will report poll results once the poll ends: <a href='$url'><code>$url</code></a>"
+    "The following URL will report poll results once the poll ends: <a href='$url'><tt>$url</tt></a>"
 }
 #deprecated
 sub following_URL_reports_results {
@@ -752,14 +728,10 @@ sub Sending_mail_to_voter_v {
 sub CIVS_poll_supervisor { # name
     "\"$_[1] (CIVS poll supervisor)\""
 }
-sub From_poll_supervisor {
-    my ($self, $name, $address) = @_;
-    $self->CIVS_poll_supervisor($name)." <$address>"
-}
 sub voter_mail_intro { #title, name, email_addr
 "A Condorcet Internet Voting Service poll named <b>$_[1]</b> has been created.
 You have been designated as a voter by the poll supervisor,
-$_[2] (<a href=\"mailto:$_[3] ($_[2])\"><code>$_[3]</code></a>).</p>";
+$_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
 }
 sub Description_of_poll {
     'Description of poll:';
@@ -932,7 +904,7 @@ sub x_loses_to_y { # x y w l
     "$_[1] loses to $_[2] $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {
-    'For simplicity, some details of the poll result are not shown.'
+    'For simplicity, some details of the poll result are not shown. &nbsp;';
 }
 sub Show_details {
     'Show details';
@@ -989,7 +961,7 @@ sub Unknown_email {
 }
 
 sub What_is_this { # url
-    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>'
+    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>';
 }
 
 # rp
@@ -1183,7 +1155,7 @@ sub mail_failure_reason {
 }
 sub see_the_failure_table {
     my ($self, $activate_url, $mail_mgmt_url) = @_;
-    "<p>It was not possible for CIVS to send mail to some voters, for reasons listed in the
+    "<p>It was not possible to send mail to some voters, for reasons listed in the
     table below. Voters will not be able to vote until they receive their personal key,
     so you should contact them directly. Voters are likely to find the following
     links useful:</p>

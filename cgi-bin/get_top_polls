@@ -9,7 +9,6 @@ use lib '@CGIBINDIR@';
 use languages;
 
 my $home = '@CIVSDATADIR@';
-
 my $file = 'top_polls.html';
 
 if (defined(param('full')) && param('full') eq 'yes') {
@@ -23,31 +22,22 @@ undef $/;
 print CGI::header(-charset => 'utf-8');
 
 open (IN, $top_polls);
+binmode IN, ':utf8';
 
 print <IN>;
 
-
 if ('@LOG_HOME_VISITS@') {
-    my $languages = http('Accept-Language');
-    if (!defined($languages)) { $languages = 'unspecified-lang' }
+    my $languages = http('Accept-Language') || 'unspecified-lang';
 
-    my $remote_ip_address;
-    if ('@USING_ISA@') {
-        $remote_ip_address = http('HTTP_IPREMOTEADDR');
-        if (!defined($remote_ip_address)) {
-            $remote_ip_address = http('HTTP_REMOTE_ADDRESS');
-        }
-        if (!defined($remote_ip_address)) {
-            $remote_ip_address = remote_addr();
-        }
-    } else {
-        $remote_ip_address = remote_addr();
-    }  
-    
+    my $remote_ip_address = http('HTTP_X_REAL_IP')
+                      || http('HTTP_X_FORWARDED_FOR')
+                      || http('HTTP_IPREMOTEADDR')
+                      || http('HTTP_REMOTE_ADDRESS')
+                      || remote_addr();
+
     my $civs_log = $home . '/log';
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
-    open (LOG, ">>$civs_log");
-    # print LOG "$now $remote_ip_address home-page-visit\r\n";
+    open(LOG, ">>$civs_log");
     print LOG "$now $remote_ip_address home-page-visit $languages\r\n";
     close(LOG);
 }

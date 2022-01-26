@@ -102,21 +102,18 @@ my %edata;
 tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 
 ##### read form data into DB
-my $title = &Filter(param('title')); $edata{'title'} = encode('utf-8', $title);
-$edata{'description'} = encode('utf-8', &Filter(param('description')));
-my $name = &Filter(param('name')); $edata{'name'} = encode('utf-8', $name);
-$edata{'email_addr'} = &Filter(param('email_addr'));
-$edata{'num_winners'} = &Filter(param('num_winners'));
-$edata{'election_end'} = encode('utf-8', &Filter(param('election_end')));
+my $title = &Filter(scalar param('title') || ''); $edata{'title'} = encode('utf-8', $title);
+$edata{'description'} = encode('utf-8', &Filter(scalar param('description') || ''));
+my $name = &Filter(scalar param('name')) || "unspecified"; $edata{'name'} = encode('utf-8', $name);
+$edata{'email_addr'} = &Filter(scalar param('email_addr'));
+$edata{'num_winners'} = &Filter(scalar param('num_winners'));
+$edata{'election_end'} = encode('utf-8', &Filter(scalar param('election_end')));
 $edata{'election_begin'} = time();
 
 sub SetBinaryParameter {
     my ($param_name, $default) = @_;
 
-    my $value = param($param_name);
-    if (!defined($value) or $value eq '') {
-	$value = $default;
-    }
+    my $value = param($param_name) || $default;
     $edata{$param_name} = $value;
     return $value;
 }
@@ -140,7 +137,7 @@ if (defined($addresses_file)) {
     	$addresses .= $_;
     }
 }
-$edata{'addresses'} = $addresses;
+$edata{'addresses'} = encode('utf-8', $addresses);
 
 my $rating_interpretation = param('rating_interpretation');
 my $use_combined_ratings;
@@ -199,7 +196,7 @@ if (!($local_debug)) {
             CloseMail;
             exit 0;
         };
-        SendHeader 'From', "$civs_supervisor (Condorcet Internet Voting Service)";
+        SendHeader 'From', $tx->From_CIVS($civs_supervisor);
         SendHeader 'To',  "$email_addr ($name)";
         SendHeader 'Subject', $tx->CIVS_poll_created($title);
         Send 'Content-Type: text/plain; charset="utf-8"';
@@ -244,7 +241,7 @@ if ($restrict_results eq 'yes') {
     SendResultKey($election_id, $email_addr, $title, $result_addrs, $result_key);
 }
 
-Log("Election $title ($election_id) created by $email_addr");
+Log("Poll $title ($election_id) created by $email_addr");
 untie %edata;
 print end_html();
 

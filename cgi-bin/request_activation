@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use CGI qw(:standard -utf8);
+use Encode qw(encode);
 
 use lib '@CGIBINDIR@';
 use civs_common;
@@ -11,7 +12,7 @@ use mail;
 my $civs_supervisor = '@SUPERVISOR@';
 my $mail_mgmt_url = '@PROTO@://@THISHOST@@CIVSBINURL@/mail_mgmt@PERLEXT@';
 
-my $address = param('address');
+my $address = param('address') || "";
 my $code = param('code');
 
 print CGI::header(-charset => 'utf-8');
@@ -29,7 +30,7 @@ my $opted_out = &HasOptOuts($optouts, $address);
 # The activation code for this address
 sub ActivationCode {
     my ($address) = @_;
-    $address = &CanonicalizeAddr($address);
+    $address = encode('utf-8', &CanonicalizeAddr($address));
     if (!defined($private_host_id)) {
         &GetPrivateHostID;
     }
@@ -66,7 +67,7 @@ if (!defined($code)) {
             my $uniqueid = &SecureNonce;
             my $message_id = "CIVS-activation.$uniqueid\@$thishost";
 
-            SendHeader('From', "<$civs_supervisor>");
+            SendHeader('From', $tx->From_CIVS($civs_supervisor));
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $civs_supervisor);
             SendHeader('Message-ID', "<$message_id>");

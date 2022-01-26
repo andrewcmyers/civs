@@ -24,7 +24,7 @@ sub style_file {
 sub Condorcet_Internet_Voting_Service {
     'CIVS在线投票服务（Condorcet Internet Voting Service）';
 }
-sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited 
+sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'CIVS在线投票服务（Condorcet Internet Voting Service）';
 }
 sub about_civs {
@@ -137,7 +137,7 @@ sub Results_key_email_body { # title, url, civs_home
 
 ";
 }
-  
+
 # start
 
 sub poll_started {
@@ -416,6 +416,9 @@ sub thank_you_for_voting { #title, receipt
     "感谢您的投票。您对<strong>$_[1]</strong>的投票已经生效。
     您的 投票确认是<code>$_[2]</code>.";
 }
+sub try_some_public_polls {
+    '想对其他事情投票吗？ 尝试以下公共民意调查之一：'
+}
 sub name_of_writein_is_empty {
     "投票选项没有名字";
 }
@@ -447,14 +450,14 @@ sub Authorization_failure {
     '验证错误';
 }
 
-sub already_ended { # title 
+sub already_ended { # title
     "这个投票 (<strong>$_[1]</strong>) 已经结束。";
 }
 sub Poll_not_yet_ended {
     "投票尚未结束";
 }
 sub The_poll_has_not_yet_been_ended { #title, name, email
-    "投票 ($_[1]) 还尚未结束，投票创建者 
+    "投票 ($_[1]) 还尚未结束，投票创建者
     $_[2] ($_[3]).";
 }
 sub The_results_of_this_completed_poll_are_here {
@@ -636,7 +639,7 @@ sub Actual_time_poll_closed { # close time
 	"投票实际结束于: $_[1]"
     } else {
 	'A投票实际结束于: <script>document.write(new Date(' .
-	    $_[1] * 1000 . 
+	    $_[1] * 1000 .
 	    ').toLocaleString())</script>';
     }
 }
@@ -672,13 +675,13 @@ sub poll_description_hdr {
 sub Ranking_result {
     '结果';
 }
-sub x_beats_y { # x y w l 
+sub x_beats_y { # x y w l
     "$_[1] 胜出 $_[2] $_[3]&ndash;$_[4]";
 }
-sub x_ties_y { # x y w l 
+sub x_ties_y { # x y w l
     "$_[1] 平局 $_[2] $_[3]&ndash;$_[4]";
 }
-sub x_loses_to_y { # x y w l 
+sub x_loses_to_y { # x y w l
     "$_[1] 负于 $_[2] $_[3]&ndash;$_[4]";
 }
 sub some_result_details_not_shown {

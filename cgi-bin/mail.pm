@@ -43,6 +43,7 @@ sub init {
 
 # Package functions
 
+# Check whether the given address is an email address
 sub CheckAddr {
     (my $addr) = @_;
     $addr = &TrimAddr($addr);
@@ -81,7 +82,6 @@ sub CanonicalizeAddr {
 }
 
 my $optout_file = "@CIVSDATADIR@/email-control.txt";
-
 
 # Return a reference to a hash table that maps the hashes of
 # all the email addresses that have opted out to a
@@ -128,9 +128,11 @@ sub SaveOptOuts {
     }
 }
 
-# Returns the key for an canonicalized email address
+# Returns the key for a canonicalized email address
 sub OptOutKey {
-    civs_hash('@EMAIL_SALT@' . $_[0])
+    my $bytes = encode('utf-8', $_[0]);
+    my $result = civs_hash('@EMAIL_SALT@' . $bytes);
+    return $result;
 }
 
 # Is this receiver an activated user?
@@ -208,6 +210,7 @@ sub SetOptOutPatterns {
     return "@valid_pats";
 }
 
+# Remove opt-out information for an address.
 sub RemoveOptOut {
     (my $optouts, my $addr) = @_;
     $addr = &CanonicalizeAddr($addr);
@@ -324,7 +327,7 @@ sub SendHeader {
 	# print 'Section: ', $section;
 	if (!$first) { $text .= "\r\n " }
 	$first = 0;
-	if ($section =~ m/[\200-\377]/) {
+	if ($section =~ m/[\x80-\x{10FFFF}]/) {
             $section = encode('utf-8', $section);
 	    my $budget = 75 - 12 - length($header) - 2;
 	    $budget -= $budget % 4;
@@ -345,5 +348,5 @@ sub SendHeader {
     SendBytes $header . ': ' . $text. "\r\n";
     # print $header, ': ', $text;
 }
- 
+
 1; #ok

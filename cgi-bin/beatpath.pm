@@ -71,7 +71,7 @@ sub transitive_closure {
   }
   return $cycle;
 }
- 
+
 # Return the winner or winners in @winner, according to
 # the transitive beatpath closure in @matrix. These
 # are the candidates that are unbeaten. Candidates whose

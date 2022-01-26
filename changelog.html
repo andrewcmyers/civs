@@ -27,7 +27,7 @@ available for installation elsewhere, subject to certain restrictions
 described in the included README file.
 </p>
 <p>
-THe latest release of CIVS can be found in the  <a href="https://github.com/andrewcmyers/civs">CIVS GitHub repo</a>, which is
+The latest release of CIVS can be found in the  <a href="https://github.com/andrewcmyers/civs">CIVS GitHub repo</a>, which is
 generally a bit ahead of the latest release. Contributions via pull requests
 are welcome.
 </p>
@@ -55,9 +55,9 @@ connection with the use or performance of this software.
 	<b>Note:</b> Another voting system, known as
 	<a href="http://www.cs.cornell.edu/projects/civitas">
 	Civitas</a>, has also been developed at Cornell.
-	This new system, described in a 
+	This new system, described in a
 	<a href="http://www.cs.cornell.edu/people/clarkson/papers/clarkson_civs_tr.pdf">technical report</a>,
-	uses much more complex cryptographic protocols to provide universal verifability 
+	uses much more complex cryptographic protocols to provide universal verifability
 	and coercion resistance.  The new system is available for download,
 	but it does not yet have a user interface.
 	</small></div>
@@ -72,22 +72,35 @@ connection with the use or performance of this software.
   information about how you can help.
 </p>
 
-<h2>
-Recent updates
-</h2>
+<h2>Recent updates</h2>
+
 <ul>
-<li>2.23 (current version)
+<li>2.24 (Current version)
+<ul>
+    <li>Using voter receipt now restores old ballot.</li>
+    <li>Ballots can be immediately revoted on.</li>
+    <li>Touch support for mobile voting.</li>
+    <li>Support for QR codes for public polls.</li>
+    <li>More UTF-8 fixes, for uploads.</li>
+    <li>Protect URLs against line splitting in emails.</li>
+</ul>
+</li>
+<li>2.23 (Dec 2021)
 <ul>
 <li>Can now remove an already cast ballot using the voter receipt, allowing
     voters to change their votes.</li>
 <li>Total number of voters reported in private polls, to protect against
     ballot stuffing.</li>
+<li>Support mailing non-activated users.</li>
+<li>Allow exploring proportional results.</li>
+<li>Fixes to UTF-8 handling.</li>
+<li>Improvements to various language versions.</li>
 </ul>
 <li>2.22 (Nov 2021)
 <ul>
-    <li>Better handling of disk overfull condition</li>
-    <li>More robust handling of uploads</li>
-    <li>Added translations for opt-in page</li>
+    <li>Better handling of disk overfull condition.</li>
+    <li>More robust handling of uploads.</li>
+    <li>Added translations for opt-in page.</li>
     <li>Better layout on home page</li>
     <li>Fixed handling of Unicode input and output</li>
     <li>Warning about submitting empty ballots</li>

@@ -472,6 +472,18 @@ function tx(t) {
     return document.createTextNode(t);
 }
 
+function show_qr_code(elem, url) {
+    console.log(elem.value, url)
+    const url_quoted = encodeURIComponent(url)
+    if (elem.value != 'on') return
+    const d = document.getElementById('qr_code_div')
+    while (d.firstChild) d.removeChild(d.firstChild)
+    new QRCode(d, {text: url, correctLevel: QRCode.CorrectLevel.M })
+    d.style.float = "right"
+    d.style.paddingTop = "10px"
+    d.parentNode.insertBefore(d, d.parentNode.firstChild)
+}
+
 function setup() {
     var button = ge("sort_button");
     if (button != null) {
@@ -505,7 +517,7 @@ function setup() {
         sort_rows();
 
         $('#preftable tbody').sortable({'items':'tr:not(.heading)',
-                            'axis':'y', 
+                            'axis':'y',
                             'update':drag_update});
     }
 }

@@ -13,9 +13,9 @@ our @ISA = ('base_language'); # go to AmE module for missing methods
 sub lang { 'ru-RU' }
 
 sub init {
-    my $self = {}; 
-    bless $self; 
-    return $self; 
+    my $self = {};
+    bless $self;
+    return $self;
 }
 
 sub style_file {
@@ -26,7 +26,7 @@ sub Condorcet_Internet_Voting_Service {
     'Кондорсе Интернет Голосование Сервис (CIVS)'
 }
 
-sub Condorcet_Internet_Voting_Service_email_hdr { # Note: charset may be limited 
+sub Condorcet_Internet_Voting_Service_email_hdr { # Note: charset may be limited
     'Кондорсе Интернет Голосование Сервис (CIVS)'
 }
 
@@ -239,9 +239,9 @@ sub disallow_further_writeins {
 # 	    who were earlier sent an email containing a URL for
 # 	     viewing results:'
 # }
-# sub results_available_to_the_following_users {
-#     'The results of this poll have been released only to a limited set of users:'
-# }
+sub results_available_to_the_following_users {
+     'Результаты этого опроса были опубликованы только для ограниченного круга пользователей:'
+}
 
 # sub Poll_results_are_available { #url
 #     "<a href=\"$_[1]\">See poll results</a>"
@@ -269,7 +269,7 @@ sub disallow_further_writeins {
 # sub add_voter_instructions {
 #     "Enter e-mail addresses of voters, one per line. These
 #     may be new voters or existing voters who have not voted yet.
-#     In a private poll, giving the e-mail address of an already 
+#     In a private poll, giving the e-mail address of an already
 #     existing voter <strong>will not</strong> let that voter vote twice.
 #     It will only resend the voter an invitation to vote.
 #     In a public poll, only a token attempt is made to prevent
@@ -355,15 +355,14 @@ sub The_poll_has_ended {
 
 # # vote
 
-# sub page_header_CIVS_Vote { # election_title
-#     'CIVS Vote: '.$_[1]
-# }
-
-# sub ballot_reporting_is_enabled {
-#     'Ballot reporting is enabled for this poll.
-#      Your ballot (the rankings you assign to choices)
-#      will be made public when the poll ends.'
-# }
+sub page_header_CIVS_Vote { # election_title
+     'Голосование CIVS: '.$_[1]
+}
+sub ballot_reporting_is_enabled {
+    'Отчетность по бюллетеням включена для этого опроса. Ваш бюллетень
+    (рейтинг, который вы присваиваете вариантам) будет обнародован по окончании
+    голосования.'
+}
  sub instructions1 { # num_winners, end, name, email
      my $wintxt;
      if ($_[1] == 1) {
@@ -392,13 +391,15 @@ sub The_poll_has_ended {
             ранжировать этот выбор относительно других вариантов выбора. </p>';
  	}
  	if ($prop) {
- 	    $ret .= '<p>This poll is decided using an experimental Condorcet-based
- 	    method designed to provide proportional representation. It is assumed
- 	    by the voting algorithm that you want the ranking of your most
- 	    preferred <i>winning</i> choice to be as high as possible, and if two
- 	    sets of winning choices agree on the choice you prefer most, then you
- 	    would decide between them using the second most preferred choice, and
- 	    so on. ';
+            $ret .= '<p>Этот опрос проводится с использованием
+            экспериментального метода Кондорсе, разработанного для обеспечения
+            пропорционального представительства. Алгоритм голосования
+            предполагает, что вы хотите, чтобы рейтинг вашего наиболее
+            предпочтительного <i>выигрышного</i> варианта был как можно более
+            высоким, и если два набора выигрышных вариантов совпадают с
+            выбором, который вы предпочитаете больше всего, то вы бы выбрать
+            между ними, используя второй наиболее предпочтительный вариант, и
+            так далее.';
  	}
      } else {
  	$ret = '<p>This poll is decided using an experimental
@@ -421,36 +422,35 @@ sub The_poll_has_ended {
      return $ret;
  }
 
-# sub Identifier_request {
-#     "<p>Please give your email address or other recognizable identifier:  \r\n".
-#     '<input type="text" name="email_address" size="50"></p>'.
-#     "\r\n"
-# }
+sub Identifier_request {
+     "<p>Укажите свой адрес электронной почты или другой узнаваемый идентификатор:\r\n".
+     '<input type="text" name="email_address" size="50"></p>'.
+     "\r\n"
+}
 
 sub Rank { 'Ранг' }
 sub Choice { 'Выбор' }
 sub Weight { 'Вес' }
 
 sub ordinal_of {
-    my $ending = '-го';
-    return "$_[1]".$ending;
+    "$_[1]"
 }
 
-# sub address_will_be_visible {
-#     '<strong>Your email address will be visible</strong> along with your ballot.'
-# }
+sub address_will_be_visible {
+  '<strong>Ваш адрес электронной почты будет виден</strong> вместе с бюллетенем'
+}
 
-# sub however_results_restricted {
-#     my @users = @{$_[1]};
-#     my $r = ' However, results will be made available only to a limited set of users: ';
-#     my $first=1;
-#     foreach my $u (@users) {
-# 	if (!$first) { $r .= ', '; $first=0; }
-# 	$r .= "<tt>$u</tt>";
-#     }
-#     $r .= '.';
-#     return $r;
-# }
+sub however_results_restricted {
+   my @users = @{$_[1]};
+   my $r = 'Однако результаты будут доступны только ограниченному кругу пользователей:';
+   my $first=1;
+   foreach my $u (@users) {
+      if (!$first) { $r .= ', '; $first=0; }
+      $r .= "<tt>$u</tt>";
+   }
+   $r .= '.';
+   return $r;
+}
 
 sub ballot_will_be_anonymous {
     'Однако ваш бюллетень по-прежнему будет анонимным: персональная идентификационная информация не появится.'
@@ -460,14 +460,14 @@ sub submit_ranking {
     'Добавить рейтинг'
 }
 
- sub only_writeins_are_permitted {
+sub only_writeins_are_permitted {
     'Голосование еще не разрешено в этом опросе. Тем не менее, вы можете
     просмотреть список доступных вариантов и писать новые выборы. Используйте
     текстовое поле ниже, чтобы писать новые выборы.'
- }
+}
 
 sub Add_writein {
-   'Добавить запись в выбор.'
+    'Добавить запись в выбор.'
 }
 
 sub to_top {
@@ -506,7 +506,10 @@ sub if_you_have_already_voted { #url
     результаты опроса</a>."
 }
 sub thank_you_for_voting { #title, receipt
- "Спасибо. Ваш голос за <strong>$_[1]</strong> был успешно брошен. Квитанция избиратель <code>$_[2]</code>."
+    "Спасибо. Ваш голос за <strong>$_[1]</strong> был успешно брошен. Квитанция избиратель <code>$_[2]</code>."
+}
+sub try_some_public_polls {
+    'Хотите проголосовать по другому поводу? Попробуйте один из этих общественных опросов:'
 }
 sub name_of_writein_is_empty {
     'Название приказная в выборе пуст.'
@@ -515,7 +518,7 @@ sub writein_too_similar {
     'К сожалению, название вписанный слишком похож на существующий выбор'
 }
 
-# # election
+# election
 
 sub No_poll_ID {
     'Нет идентификатора опроса. Возможно, ошибка копирования-вставки?'
@@ -525,15 +528,15 @@ sub Ill_formed_poll_ID {
     'Был предоставлен неверно сформированный идентификатор опроса. Возможно, ошибка копирования-вставки?'
 }
 
-# sub vote_has_already_been_cast {
-#     "A vote has already been cast using your voter key."
-# }
-# sub following_URL_will_report_results {
-#     'The following URL will report poll results once the poll ends:'
-# }
-# sub following_URL_reports_results {
-#     'The following URL reports the current poll results:'
-# }
+sub vote_has_already_been_cast {
+  "Голосование уже подано с использованием вашего ключа избирателя."
+}
+sub following_URL_will_report_results {
+  'Следующий URL сообщит о результатах опроса после его завершения:'
+}
+sub following_URL_reports_results {
+  'Следующий URL сообщает о текущих результатах опроса:'
+}
 sub Already_voted {
     'Уже проголосовали.'
 }
@@ -548,7 +551,7 @@ sub Error {
 #     'Authorization failure'
 # }
 
-# sub already_ended { # title 
+# sub already_ended { # title
 #     "This poll (<strong>$_[1]</strong>) has already been ended."
 # }
 sub Poll_not_yet_ended {
@@ -645,21 +648,21 @@ sub Poll_not_yet_ended {
 # to determine this.'
 # }
 
-# sub poll_has_been_announced_to_end { #election_end
-#     "The poll has been announced to end $_[1]."
-# }
+sub poll_has_been_announced_to_end { #election_end
+    "Объявлено, что голосование закончится $_[1]."
+}
 
-# sub To_view_the_results_at_the_end {
-#     "To view the results of the poll once it has ended, visit:</p> $_[1]"
-# }
+sub To_view_the_results_at_the_end {
+  "Чтобы просмотреть результаты опроса после его завершения, посетите:</p> $_[1]"
+}
 
-# sub For_more_information {
-#     "For more information about the Condorcet Internet Voting Service, see:\r\n$_[1]"
-# }
+sub For_more_information {
+  "Для получения дополнительной информации о CIVS см.: \r\n$_[1]"
+}
 
-# sub poll_email_subject { # title
-#     "Poll: $_[1]"
-# }
+sub poll_email_subject { # title
+  "Опрос: $_[1]"
+}
 
 # # close
 
@@ -670,45 +673,42 @@ sub Poll_not_yet_ended {
 # sub Ending_poll {
 #     'Ending a poll'
 # }
-# sub View_poll_results {
-#     'View poll results'
-# }
-# sub Poll_ended { #title
-#     "Poll ended: $_[1]"
-# }
+sub View_poll_results {
+  'Просмотреть результаты опроса'
+}
+sub Poll_ended { #title
+  "Опрос закончился: $_[1]"
+}
 
-# sub The_poll_has_been_ended { #election_end
-#     "The poll has been ended. It was announced to end $_[1]."
-# }
+sub The_poll_has_been_ended { #election_end
+  "Голосование завершено. Объявлено о завершении $_[1]."
+}
 
-# sub poll_results_available_to_authorized_users {
-#     'The poll results are now available to authorized users.'
-# }
+sub poll_results_available_to_authorized_users {
+  'Результаты опроса теперь доступны авторизованным пользователям.'
+}
 
-# sub was_not_able_stop_the_poll {
-#     'Was not able to stop the poll'
-# }
+sub was_not_able_stop_the_poll {
+    'Не удалось остановить опрос'
+}
 
+# results
 
-# # results
-
-# sub CIVS_poll_result {
-#     "CIVS poll result"
-# }
-# sub Poll_results { # title
-#     "Poll Results: $_[1]"
-# }
-
-# sub Writeins_currently_allowed {
-#     'Write-in choices are currently allowed.'
-# }
-
-# sub Writeins_allowed {
-#     'Write-in choices are allowed.'
-# }
-# sub Writeins_not_allowed {
-#     'Write-in choices are not allowed.'
-# }
+sub CIVS_poll_result {
+ 'Результат опроса CIVS'
+}
+sub Poll_results { # title
+  "Результаты опроса: $_[1]"
+}
+sub Writeins_currently_allowed {
+  'Варианты записи в настоящее время разрешены.'
+}
+sub Writeins_allowed {
+  'Варианты записи разрешены.'
+}
+sub Writeins_not_allowed {
+  'Варианты записи не разрешены.'
+}
 # sub Detailed_ballot_reporting_enabled {
 #     'Detailed ballot reporting is enabled.'
 # }
@@ -721,49 +721,50 @@ sub Poll_not_yet_ended {
 # sub Voter_identities_will_be_public {
 #     'Voter identities (email) will be publicly associated with their ballots.'
 # }
-# sub Condorcet_completion_rule {
-#     'Condorcet completion rule:'
-# }
+sub Condorcet_completion_rule {
+  #'Condorcet completion rule:'
+  'Правило завершения Кондорсе:'
+}
 # sub undefined_algorithm {
 #     'Error: undefined algorithm.'
 # }
 # sub computing_results {
 #     'Computing results...'
 # }
-# sub Supervisor { #name, email
-#     "Supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>"
-# }
-# sub Announced_end_of_poll {
-#     "Announced end of poll: $_[1]"
-# }
-# sub Actual_time_poll_closed { # close time
-#     if ($_[1] == 0) {
-# 	"Actual time poll closed: $_[1]"
-#     } else {
-# 	'Actual time poll closed: <script>document.write(new Date(' .
-# 	    $_[1] * 1000 . 
-# 	    ').toLocaleString())</script>'
-#     }
-# }
-# sub Poll_not_ended {
-#     'Poll has not yet ended.'
-# }
-# sub This_is_a_test_poll {
-#     'This is a test poll.'
-# }
-# sub This_is_a_private_poll { #num_auth
-#     "Private poll ($_[1] authorized voters)"
-# }
-# sub This_is_a_public_poll {
-#     'This is a public poll.'
-# }
+sub Supervisor { #name, email
+     "Супервизор: $_[1] <tt>&lt;$_[2]&gt;</tt>"
+}
+sub Announced_end_of_poll {
+  "Объявлено об окончании опроса: $_[1]"
+}
+sub Actual_time_poll_closed { # close time
+    if ($_[1] == 0) {
+       "Фактическое время окончания опроса: $_[1]"
+    } else {
+       'Фактическое время окончания опроса: <script>document.write(new Date(' .
+ 	    $_[1] * 1000 .
+ 	    ').toLocaleString())</script>'
+    }
+}
+sub Poll_not_ended {
+  'Опрос еще не закончился.'
+}
+sub This_is_a_test_poll {
+  'Это тестовый опрос.'
+}
+sub This_is_a_private_poll { #num_auth
+  "Частный опрос ($_[1] авторизованных избирателей)"
+}
+sub This_is_a_public_poll {
+  'Это открытый опрос.'
+}
 
-# sub Actual_votes_cast { #num_votes
-#     "Actual votes cast: $_[1]"
-# }
-# sub Number_of_winning_candidates {
-#     'Number of winning choices: '
-# }
+sub Actual_votes_cast { #num_votes
+  "Фактическое количество голосов: $_[1]"
+}
+sub Number_of_winning_candidates {
+  'Количество выигрышных вариантов:'
+}
 # sub Poll_actually_has { #winmsg
 #     my $winmsg = '1 winner'
 #     if ($_[1] != 1) {
@@ -771,33 +772,33 @@ sub Poll_not_yet_ended {
 #     }
 #     "&nbsp;(Poll actually has $winmsg)"
 # }
-# sub poll_description_hdr {
-#     'Poll description'
-# }
-# sub Ranking_result {
-#     'Result'
-# }
-# sub x_beats_y { # x y w l 
+sub poll_description_hdr {
+    'Описание опроса'
+}
+sub Ranking_result {
+     'Результат'
+}
+# sub x_beats_y { # x y w l
 #     "$_[1] beats $_[2] $_[3]&ndash;$_[4]"
 # }
-# sub x_ties_y { # x y w l 
+# sub x_ties_y { # x y w l
 #     "$_[1] ties $_[2] $_[3]&ndash;$_[4]"
 # }
-# sub x_loses_to_y { # x y w l 
+# sub x_loses_to_y { # x y w l
 #     "$_[1] loses to $_[2] $_[3]&ndash;$_[4]"
 # }
-# sub some_result_details_not_shown {
-#     'For simplicity, some details of the poll result are not shown. &nbsp;'
-# }
-# sub Show_details {
-#     'Show details'
-# }
-# sub Hide_details {
-#     'Hide details'
-# }
-# sub Result_details {
-#     'Result details'
-# }
+sub some_result_details_not_shown {
+  'Для простоты некоторые детали результатов опроса не показаны.'
+}
+sub Show_details {
+  'Показать детали'
+}
+sub Hide_details {
+  'Скрыть детали'
+}
+sub Result_details {
+  'Детали результата'
+}
 # sub Ballot_report {
 #     'Ballot report'
 # }
@@ -810,40 +811,40 @@ sub Poll_not_yet_ended {
 # sub No_ballots_were_cast {
 #     "No ballots were cast in this poll."
 # }
-# sub Ballot_reporting_was_not_enabled {
-#     "Ballot reporting was not enabled for this poll."
-# }
-# sub Tied {
-#     "<i>Tied</i>:"
-# }
+sub Ballot_reporting_was_not_enabled {
+     'Отчетность по бюллетеням не была включена для этого опроса'
+}
+sub Tied {
+     '<i>ничейный результат</i>:'
+}
 # sub loss_explanation { # loss_to, for, against
 #     ', loses to '. $_[1].' by '. $_[2] .'&ndash;'. $_[3]
 # }
 # sub loss_explanation2 {
 #     '&nbsp;&nbsp;loses to '.$_[1].' by '.$_[2].'&ndash;'.$_[3]
 # }
-# sub Condorcet_winner_explanation {
-#     '&nbsp;&nbsp;(Condorcet winner: wins contests with all other choices)'
-# }
-# sub undefeated_explanation {
-#     '&nbsp;&nbsp;(Not defeated in any contest vs. another choice)'
-# }
-# sub Choices_shown_in_red_have_tied {
-#     "Choices shown in red have tied for being selected.
-# 	You may wish to select among them randomly."
-# }
-# sub Condorcet_winner {
-#     "Condorcet winner"
-# }
-# sub Choices_in_individual_pref_order {
-#     'Choices (in individual preference order)'
-# }
+sub Condorcet_winner_explanation {
+    '  (Не побежден ни в одном состязании против другого выбора)'
+}
+sub undefeated_explanation {
+     '  (Не побежден ни в одном состязании против другого выбора)'
+}
+sub Choices_shown_in_red_have_tied {
+  'Варианты, показанные красным, связаны с их выбором.
+   Вы можете выбрать среди них случайным образом.'
+}
+sub Condorcet_winner {
+  "Победитель Кондорсе"
+}
+sub Choices_in_individual_pref_order {
+  'Выбор (в индивидуальном порядке предпочтений)'
+}
 
-# sub What_is_this { # url
-#     '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>'
-# }
+sub What_is_this { # url
+     '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(что это?)</small></a>'
+}
 
-# # rp
+# rp
 
 # sub All_prefs_were_affirmed {
 #     'All preferences were affirmed. All

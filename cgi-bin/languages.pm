@@ -27,8 +27,11 @@ our $log;
 my @variants =
   (['english', 'en-us', 1.0],
    ['english', 'en', 1.0],
+   ['english', 'en-ca', 0.95],
    ['english', 'en-gb', 0.90],
    ['english', 'en-au', 0.90],
+   ['english', 'en-nz', 0.90],
+   ['english', 'en-ng', 0.90],
    ['hungarian', 'hu-hu', 0.95],
    ['hungarian', 'hu', 0.95],
    ['italian', 'it', 0.95],
@@ -39,10 +42,14 @@ my @variants =
    ['german', 'de-de', 0.95],
    ['hebrew', 'he', 0.95],
    ['hebrew', 'he-il', 0.95],
+   ['hindi', 'hi', 0.00],
+   ['hindi', 'hi-in', 0.00],
    ['portuguese', 'pt', 0.90],
+   ['portuguese', 'pt-pt', 0.90],
    ['portuguese', 'pt-br', 0.95],
    ['chinese', 'zh-cn', 0.95],
    ['chinese', 'zh', 0.90],
+   ['chinese', 'zh-tw', 0.70],
    ['russian', 'ru', 0.60],
    ['russian', 'ru-ru', 0.60],
    ['spanish', 'es', 0.90],
@@ -51,7 +58,7 @@ my @variants =
   );
 
 # Result: &init() determines the current language preference using the
-#         available languages and the HTTP Accept-Language header. 
+#         available languages and the HTTP Accept-Language header.
 sub init {
     ($accept_language) = @_;
     chomp $accept_language;
