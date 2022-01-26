@@ -347,7 +347,7 @@ sub CheckVoterKey {
             exit 0;
         }
     } else {
-        if (!$voter_keys{civs_hash($voter_key)}) {
+        if (!$voter_keys{civs_hash($voter_key || '')}) {
             print h1($tx->Error), p($tx->Your_voter_key_is_invalid__check_mail('')),
                 end_html(); 
             exit 0;
