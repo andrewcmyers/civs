@@ -346,6 +346,7 @@ my $allowed_tags = {
     samp => $ok,
     span => $ok, div => $ok,
     small => $ok,
+    time => {datetime => []},
     p => {align => ['left' | 'right' | 'center']},
     ol => {type => ['a', '1', 'A']}
 };
