@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use CGI qw(:standard -utf8);
+use Encode qw(encode);
 
 use lib '@CGIBINDIR@';
 use civs_common;
