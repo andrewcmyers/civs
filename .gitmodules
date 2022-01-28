@@ -1,0 +1,6 @@
+[submodule "jquery-ui-touch-punch"]
+	path = jquery-ui-touch-punch
+	url = https://github.com/RWAP/jquery-ui-touch-punch.git
+[submodule "qrcodejs"]
+	path = qrcodejs
+	url = https://github.com/davidshimjs/qrcodejs.git
