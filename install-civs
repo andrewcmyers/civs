@@ -92,18 +92,20 @@ CopyFile() {
 
 echo "Installing web pages"
 
-for f in civs_create.html* index.html* public_elections.html*                 \
-    proportional.html* sec_priv.html* acks.html changelog.html*               \
-    news.html* *.var rp.html* publicized_polls.html* faq.html*                \
-    style.css results.js vote.js ajax.js ezdom.js civs_hdr.js                 \
-    mail_mgmt.js opt_in.js add_voters.js jquery.ui.touch-punch.js             \
-    qrcode.min.js hebrew.css
+for f in civs_create.html* index.html* public_elections.html*		      \
+    proportional.html* sec_priv.html* acks.html changelog.html*		      \
+    news.html* *.var rp.html* publicized_polls.html* faq.html*		      \
+    style.css results.js vote.js ajax.js ezdom.js civs_hdr.js		      \
+    mail_mgmt.js opt_in.js add_voters.js hebrew.css			      \
+    jquery-ui-touch-punch/jquery.ui.touch-punch.js			      \
+    qrcodejs/qrcode.min.js 
 do
+    b=`basename "$f"`
     case "$f" in
-        *.var)    dest="${HTMLDIR}/${f}";;
-        *.html.*) dest="${HTMLDIR}/${f}${UTF8_SUFFIX}";;
-        *.html)   dest="${HTMLDIR}/${f}${EN_SUFFIX}";;
-        *)        dest="${HTMLDIR}/${f}";;
+        *.var)    dest="${HTMLDIR}/${b}";;
+        *.html.*) dest="${HTMLDIR}/${b}${UTF8_SUFFIX}";;
+        *.html)   dest="${HTMLDIR}/${b}${EN_SUFFIX}";;
+        *)        dest="${HTMLDIR}/${b}";;
     esac
     SubstituteFile "$f" "$dest"
 done
