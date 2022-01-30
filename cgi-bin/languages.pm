@@ -61,26 +61,13 @@ my @variants =
 #         available languages and the HTTP Accept-Language header.
 sub init {
     ($accept_language) = @_;
-    chomp $accept_language;
-    $accept_language = lc $accept_language;
-    my @reqs = split /\s*,\s*/, $accept_language;
-    my @choices, my @qualities;
-    my $i;
-    for ($i = 0; $i <= $#reqs; $i++) {
-	my $lang, my $quality = 1.0;
-	if ($reqs[$i] =~ /;/) {
-	    ($lang, $quality) = ($reqs[$i] =~ m/^(\S+)\s*;\s*q\s*=\s*(.*)$/s);
-	    $quality += 0.0;
-	} else {
-	    $lang = $reqs[$i];
-	}
-	push @choices, $lang;
-	push @qualities, $quality;
-    }
+    my ($choices, $qualities) = parseAcceptLanguage($accept_language);
+    my @choices = @{$choices};
+    my @qualities = @{$qualities};
     my $language = 'english'; #default
     my $best = 0.0;
 
-    for ($i = 0; $i <= $#variants; $i++) {
+    for (my $i = 0; $i <= $#variants; $i++) {
 	my @row = @{$variants[$i]};
 	for (my $j = 0; $j <= $#choices; $j++) {
 	    if ($row[1] eq $choices[$j] &&
@@ -95,6 +82,43 @@ sub init {
     my $init = $language . "::init";
     $tx = &$init();
     return;
+}
+
+sub parseAcceptLanguage {
+    my ($accept_language) = @_;
+    chomp $accept_language;
+    $accept_language =~ s/^\s+//;
+    $accept_language =~ s/\s+$//;
+    $accept_language = lc $accept_language;
+    my @reqs = split /\s*,\s*/, $accept_language;
+    my @choices, my @qualities;
+    my $i;
+    my $first = 0;
+    my $backfill;
+    for ($i = 0; $i <= $#reqs; $i++) {
+	my $lang, my $quality = 1.0;
+	if ($reqs[$i] =~ /;/) {
+	    ($lang, $quality) = ($reqs[$i] =~ m/^(\S+)\s*;\s*q\s*=\s*([0-9.]*)$/s);
+	    $quality += 0.0;
+            $backfill = 1;
+	} else {
+	    $lang = $reqs[$i];
+	}
+        if ($lang eq '*') { $lang = 'en' }
+	push @choices, $lang;
+	push @qualities, $quality;
+        if ($backfill) {
+            for (my $j = $first; $j < $i; $j++) {
+                $qualities[$j] = $quality;
+            }
+            $backfill = 0;
+            $first = $i+1;
+        }
+    }
+    for ($i = 0; $i <= $#choices; $i++) {
+        print "language $choices[$i] : quality $qualities[$i]\n";
+    }
+    (\@choices, \@qualities)
 }
 
 1;
