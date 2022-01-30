@@ -115,9 +115,9 @@ sub parseAcceptLanguage {
             $first = $i+1;
         }
     }
-    for ($i = 0; $i <= $#choices; $i++) {
-        print "language $choices[$i] : quality $qualities[$i]\n";
-    }
+    # for ($i = 0; $i <= $#choices; $i++) {
+    #   print "language $choices[$i] : quality $qualities[$i]\n";
+    # }
     (\@choices, \@qualities)
 }
 
