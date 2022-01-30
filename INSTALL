@@ -1,7 +1,12 @@
 Condorcet Internet Voting System
-Copyright © 2016, Andrew C. Myers
+Copyright © 2016-2022, Andrew C. Myers
 
 INSTALLATION INSTRUCTIONS
+
+0. Check out the submodules used by the package: qrcodejs and
+   jquery-ui-touch-punch. If you have cloned the repo, this is easy:
+
+     git submodule update --init
 
 1. Create a configuration file.  You will find it helpful to use
    config/sample as a template.  The configuration file specifies
