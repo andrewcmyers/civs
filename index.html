@@ -16,7 +16,7 @@
 <body>
 <script>
     var loc = location.hostname + (location.port ? ":" + location.port : "")
-    if (loc != "@THISHOST@") {
+    if (loc != "@THISHOST@" || location.protocol != "@PROTO@:") {
         setTimeout(() => {
             location = "@PROTO@://@THISHOST@/@CIVSURL@"
         }, 1000)
