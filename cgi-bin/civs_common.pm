@@ -369,10 +369,10 @@ if ($filter_tags ne 'no') {
                     my $newsrc = "data:$contenttype;base64,$enc";
                     $attributes->{src} = $newsrc;
                 } else {
-                    print STDERR "Image too large: ", length $content;
+                    print STDERR "Image too large: ", length $content, "\n";
                 }
             } else {
-                print STDERR "Failed to fetch image: ", $src;
+                print STDERR "Failed to fetch image: ", $src, "\n";
             }
           }
           return;
