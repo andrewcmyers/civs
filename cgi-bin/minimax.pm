@@ -35,7 +35,7 @@ sub compare_defeats_sort { compare_defeats($a, $b) }
 
 sub defeat_to_string {
     my ($d) = @_;
-    "vs. $d->[0] : ($d->[1] - $d->[2]) "
+    "vs. $d->[0] : ($d->[2] - $d->[1]) "
 }
 
 sub defeats_to_string {
