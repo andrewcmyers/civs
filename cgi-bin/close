@@ -17,7 +17,7 @@ my $thisurl = $civs_bin_path."/close@PERLEXT@";
 HTML_Header($tx->CIVS_Ending_Poll);
 use election;
 
-my $control_key = param('key');
+my $control_key = bytesParam('key');
 
 CIVS_Header($tx->Ending_poll);
 

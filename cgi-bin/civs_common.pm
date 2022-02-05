@@ -10,6 +10,7 @@ use HTML::Entities;
 use HTTP::Tiny;
 use MIME::Base64;
 use CGI qw(:standard -utf8);
+use Encode qw(encode);
 
 binmode STDOUT, ':encoding(UTF-8)';
 binmode STDERR, ':encoding(UTF-8)';
@@ -28,7 +29,7 @@ BEGIN {
                       &unique_elements &civs_hash &system_load &CheckLoad
                       $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
-                      &VerifyUpload &hexdump &toNatural &natParam &fixUTF);
+                      &VerifyUpload &hexdump &toNatural &natParam &bytesParam &fixUTF);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -487,6 +488,11 @@ sub toNatural {
 # 0 if the value of the parameter is absent or non-numeric.
 sub natParam {
     toNatural(scalar param($_[0]))
+}
+
+# Convert param to a string of bytes
+sub bytesParam {
+    encode('utf-8', scalar param($_[0])) || ''
 }
 
 sub system_load {

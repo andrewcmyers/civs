@@ -17,8 +17,8 @@ use election 1.02;
 
 CIVS_Header($tx->Poll_control);
 
-my $control_key = param('key');
-my $authorization_key = param('akey');
+my $control_key = bytesParan('key');
+my $authorization_key = bytesParan('akey');
 
 CheckElectionID;
 CheckControlKey($control_key);

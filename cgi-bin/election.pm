@@ -355,7 +355,7 @@ sub IsWriteinName {
 # string.
 sub CheckReceipt {
     (my $voter_key) = @_;
-    my $receipt = param('receipt');
+    my $receipt = bytesParam('receipt');
     if ($receipt) {
         my ($id, $release_key) = $receipt =~ m|(E_[0-9a-f]+)/([0-9a-f]+)|;
         my $ballot_key = $id ? civs_hash($release_key, $private_host_id) : '';

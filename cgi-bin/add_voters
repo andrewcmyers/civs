@@ -38,9 +38,9 @@ my @new_addresses = split /[\r\n]+/, $new_addresses;
 HTML_Header($tx->CIVS_Adding_Voters, 'add_voters.js');
 CIVS_Header($tx->Adding_voters);
 
-my $control_key = encode('utf-8', scalar param('key'));
+my $control_key = bytesParam('key');
 CheckControlKey($control_key);
-my $authorization_key = param('akey');
+my $authorization_key = bytesParam('akey');
 CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 if (!IsStarted || IsStopped) {

@@ -56,7 +56,7 @@ our %edata_copy = %edata;
 &CloseDatabase;
 &UnlockElection; # try to avoid blocking out other people
 
-my $result_key = encode('utf-8', param('rkey'));
+my $result_key = bytesParam('rkey');
 
 if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
     if ($public ne 'yes') {

@@ -18,8 +18,8 @@ use IO::Handle;
 
 my $thisurl = $civs_bin_path."/upload_ballots@PERLEXT@";
 
-my $control_key = param('key');
-my $authorization_key = param('akey');
+my $control_key = bytesParam('key');
+my $authorization_key = bytesParam('akey');
 
 HTML_Header('Load Ballots');
 

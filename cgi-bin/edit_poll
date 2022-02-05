@@ -11,7 +11,7 @@ use lib '@CGIBINDIR@';
 use civs_common;
 use election;
 
-my $control_key = param('key');
+my $control_key = bytesParam('key');
 
 CheckElectionID;
 CheckControlKey($control_key);

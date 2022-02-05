@@ -38,8 +38,8 @@ use top_polls;
 my $top_polls_refresh = 24 * 3600; # daily refresh
 my $allow_debug_votes = 0;         # allow multiple votes from the same voter in debug mode?
 
-my $voter_key = encode('utf-8', param('key'));
-my $authorization_key = encode('utf-8', param('akey')) || '';
+my $voter_key = bytesParam('key');
+my $authorization_key = bytesParam('akey');
 # encode keys to make sure they are just byte strings
 
 my $js_ui = 1;

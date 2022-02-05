@@ -16,8 +16,8 @@ CIVS_Header('Start poll');
 use election;
 
 my $max_voters = 1000;
-my $control_key = param('key') || '';
-my $authorization_key = param('akey') || '';
+my $control_key = bytesParam('key');
+my $authorization_key = bytesParam('akey');
 
 CheckElectionID;
 CheckControlKey($control_key);
