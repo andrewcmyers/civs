@@ -15,3 +15,7 @@ Content-language: hu
 URI: civs_create.html.pt@UTF8_SUFFIX@
 Content-type: text/html
 Content-language: pt
+
+URI: civs_create.html.de@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: de

@@ -320,7 +320,7 @@ sub SecureNonce {
 }
 
 # Generate a cryptographic hash of the argument(s), which
-# must be strings of bytes.
+# must be strings of bytes (0-255).
 sub civs_hash {
     substr(md5_hex(@_), 0, 16)
 }
@@ -490,7 +490,8 @@ sub natParam {
     toNatural(scalar param($_[0]))
 }
 
-# Convert param to a string of bytes
+# Convert the named param to a string of bytes. An undefined param becomes
+# an empty string.
 sub bytesParam {
     encode('utf-8', scalar param($_[0])) || ''
 }
