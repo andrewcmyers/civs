@@ -1,65 +1,81 @@
 CIVS_name {
     en: Condorcet Internet Voting Service
+    fr: Service de Vote Internet Condorcet (CIVS)
 }
 Create_a_poll {
     en: Create a poll
     de: Erstellen Sie eine Umfrage
+    fr: Créer une consultation
 }
 Activate_user {
     en: Activate user
     de: Benutzer aktivieren
+    fr: Activer l'utilisateur
 }
 Frequently_asked_questions {
     en: Frequently Asked Questions
     de: Häufig gestellte Fragen
+    fr: Questions fréquemment posées (FAQ)
 }
 Join_the_CIVS_mailing_list {
     en: Join the CIVS mailing list
     de: Treten Sie der CIVS-Mailingliste bei
+    fr: Join the CIVS mailing list
 }
 Security_and_privacy {
     en: Security and privacy
     de: Sicherheit und Privatsphäre
+    fr: Sécurité et Confidentialité
 }
 Condorcet_voting {
     en: Condorcet voting
     de: Condorcet-Abstimmung
+    fr: Paradoxe de Condorcet
 }
 Proportional_representation {
     en: Proportional representation
     de: Proportionale Darstellung
+    fr: Représentation proportionnelle
 }
 CIVS_software {
     en: CIVS software
     de: CIVS-software
+    fr: Logiciel CIVS
 }
 Acknowledgments {
     en: Acknowledgments
     de: Danksagungen
+    fr: Remerciements
 }
 Suggestion_box {
     en: Suggestion box
     de: Vorschlagsbox
+    fr: Boîte à suggestion
 }
 CIVS_news {
     en: CIVS news
     de: Nachrichten
+    fr: Actualités CIVS
 }
 No_current_news {
     en: No current news.
     de: Keine aktuellen Nachrichten.
+    fr: Aucune nouvelle actuelle.
 }
 Top_public_polls {
     en: Top public polls:
     de: Top öffentliche Umfragen: 
+    fr: Les meilleurs sondages publics 
 }
 see_more {
     en: [see more]
     de: [Mehr sehen]
+    fr: [voir plus]
 }
 Loading {
     en: Loading...
     de: Wird geladen...
+    fr: Chargement...
 }
 intro_para {
     en {
@@ -78,50 +94,70 @@ intro_para {
         kombiniert. CIVS wurde für Zehntausende von Umfragen und Wahlen
         verwendet, um beispielsweise zu entscheiden:
     }
+    fr {
+        CIVS est un service gratuit permettant d'organiser facilement
+        des consultations électorales et des sondages d'opinion en
+        utilisant Internet. Chaque participant à la consultation ou au
+        sondage peut classer une série de propositions. La combinaison
+        de ces choix permet de construire un classement global qui
+        synthétise l'opinion des participants. CIVS a été utilisé
+        pour un grand nombre de consultations électorales et sondages
+        d'opinion permettant de choisir :
+    }
 }
 Officers_of_organizations {
     en: Officers of organizations
     de: Beauftragte von Organisationen
+    fr: Des responsables d'organisation
 }
 Meeting_times {
     en: Meeting times
     de: Besprechungszeiten
+    fr: Des horaires de réunion
 }
 Members_of_committees {
     en: Members of committees
     de: Mitglieder von Ausschüssen
+    fr: Des membres de comités
 }
 Project_and_domain_names {
     en: Project and domain names
     de: Projekt- und Domänennamen
+    fr: Des nom de projets, logos, nom de domaines
 }
 Award_recipients {
     en: Award recipients
     de: Preisträger
+    fr: Des lauréats de diplômes
 }
 Restaurants_to_eat_at {
-    en: Restaurants to eat at
+    en: Restaurants
     de: Restaurants
 }
 Movies_to_watch {
-    en: Movies to watch
+    en: Movies
     de: Filme
+    fr: Des restaurants
 }
 Party_menus {
     en: Party menus
     de: Partymenüs
+    fr: Le menu des fêtes
 }
 Book_club_selections {
     en: Book club selections
     de: Clubauswahl buchen
+    fr: Des sélections de club littéraire
 }
 Favorite_music {
     en: Favorite music
     de: Lieblingsmusik
+    fr: Des musiques favorites
 }
 Gifts {
     en: Gifts
     de: Geschenke
+    fr: Cadeaux 
 }
 Logos {
     en: Logos
@@ -129,18 +165,22 @@ Logos {
 Project_directions {
     en: Project directions
     de: Projektrichtungen
+    fr: Orientations du projet
 }
 Invited_speakers {
     en: Invited speakers
     de: Eingeladene Referenten<
+    fr: Intervenants invités
 }
 Organization_bylaws {
     en: Organization bylaws
     de: Organisationsstatuten
+    fr: Règlements d'organisation
 }
 How_it_works {
     en: How it works:
     de: Wie es funktioniert:
+    fr: Comment ça fonctionne :
 }
 How_it_works_para {
   en {
@@ -160,11 +200,23 @@ How_it_works_para {
     werden, bei denen die Wähler keine E-Mail-Adressen benötigen; in
     diesem Fall ist pro IP-Adresse eine Stimme zulässig.
   }
+  fr {
+    N'importe qui peut créer une consultation, mais seulement les
+    participants autorisés en seront informés. Les participants et
+    le responsable de la consultation doivent posséder une adresse
+    électronique, un accès internet et un navigateur Web. Lors de
+    la création de la consultation, les participants reçoivent un
+    courrier électronique contenant un lien Internet qui leur permet
+    d'exprimer leur vote.  Pour les consultations publiques il est
+    possible de ne pas imposer la possession d'une adresse email, dans
+    ce cas un seul vote est accepté par adresse Internet (IP).
+  }
 }
 
 Why_rank_choices {
     en: Why rank choices?
     de: Warum Rangentscheidungen?
+    fr: Vote par préférence :
 }
 Why_rank_paras {
     en  {
@@ -203,6 +255,27 @@ Why_rank_paras {
         verfügt CIVS auch über einen proportionalen Darstellungsmodus.
        </p>
     }
+    fr {
+        <p>Les participants à la consultation classent par ordre de
+        préférence les candidats ou les propositions qui leur sont soumis. Les
+        participants ne sont pas limités à un seul choix. Comparée à
+        d'autres méthode de consultation électorale, cette méthode permet de
+        prendre en compte plus d'informations provenant des participants. Cette
+        méthode de vote aide à éviter les ex-æquo et la dispersion des
+        votes.  A la différence d'autres votes Condorcet, CIVS gère la
+        représentation proportionnelle.
+        </p><p>
+        Aujourd'hui des élections importantes utilisent le vote par
+        préférence. Par exemple l'Australie utilise le scrutin à
+        vote unique transférable (STV).  Néanmoins, la méthode de
+        Condorcet identifie mieux les candidats ou les propositions
+        de consensus. Les modes de scrutin STV (et IRV) peuvent
+        provoquer l'élection d'un certain candidat alors que la
+        majorité des participants à la consultation auraient
+        préféré en désigner un autre, comme cela c'est produit <a
+        href="http://bolson.org/%7Ebolson/2009/20090303_burlington_vt_ma
+        yor.html">lors de certaines élections</a>.</p>
+    }
 }
 Footnote_1 {
     en {
@@ -219,7 +292,7 @@ Footnote_1 {
         <p>Der Condorcet Internet Voting Service läuft seit 2003. Dieser Service wird von <a
         href="http://www.cs.cornell.edu/andru">Andrew Myers<a/> unterstützt, ist aber kein
         Service der <a href="http://www.cornell.edu/">Cornell
-        University</a>. Dies ist die CIVS-Version
+        University</a>. Dies ist Version
         2.24. Feedback, Hilfe und <a href="@DONATE_URL@">Spenden</a> zur Unterstützung dieses
         kostenlosen (und werbefreien) Dienstes sind willkommen.</p>
     }
