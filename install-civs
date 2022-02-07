@@ -90,6 +90,18 @@ CopyFile() {
     cp "$1" "$2"
 }
 
+echo "Creating language-specific web pages"
+
+for file in index.html civs_create.html
+do 
+    for lang in en de
+    do
+        echo "  $file.$lang"
+        echo perl subst_text.pl static-translations.txt $lang ${file}.base ${file}.$lang
+        perl subst_text.pl static-translations.txt $lang ${file}.base ${file}.$lang
+    done
+done
+
 echo "Installing web pages"
 
 for f in civs_create.html* index.html* public_elections.html*		      \
@@ -105,6 +117,7 @@ do
         *.var)    dest="${HTMLDIR}/${b}";;
         *.html.*) dest="${HTMLDIR}/${b}${UTF8_SUFFIX}";;
         *.html)   dest="${HTMLDIR}/${b}${EN_SUFFIX}";;
+        *.base)   dest=/dev/null;;
         *)        dest="${HTMLDIR}/${b}";;
     esac
     SubstituteFile "$f" "$dest"

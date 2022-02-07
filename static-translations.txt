@@ -1,0 +1,558 @@
+CIVS_name {
+    en: Condorcet Internet Voting Service
+}
+Create_a_poll {
+    en: Create a poll
+    de: Erstellen Sie eine Umfrage
+}
+Activate_user {
+    en: Activate user
+    de: Benutzer aktivieren
+}
+Frequently_asked_questions {
+    en: Frequently Asked Questions
+    de: Häufig gestellte Fragen
+}
+Join_the_CIVS_mailing_list {
+    en: Join the CIVS mailing list
+    de: Treten Sie der CIVS-Mailingliste bei
+}
+Security_and_privacy {
+    en: Security and privacy
+    de: Sicherheit und Privatsphäre
+}
+Condorcet_voting {
+    en: Condorcet voting
+    de: Condorcet-Abstimmung
+}
+Proportional_representation {
+    en: Proportional representation
+    de: Proportionale Darstellung
+}
+CIVS_software {
+    en: CIVS software
+    de: CIVS-software
+}
+Acknowledgments {
+    en: Acknowledgments
+    de: Danksagungen
+}
+Suggestion_box {
+    en: Suggestion box
+    de: Vorschlagsbox
+}
+CIVS_news {
+    en: CIVS news
+    de: Nachrichten
+}
+No_current_news {
+    en: No current news.
+    de: Keine aktuellen Nachrichten.
+}
+Top_public_polls {
+    en: Top public polls:
+    de: Top öffentliche Umfragen: 
+}
+see_more {
+    en: [see more]
+    de: [Mehr sehen]
+}
+Loading {
+    en: Loading...
+    de: Wird geladen...
+}
+intro_para {
+    en {
+        CIVS is a free Internet voting service that makes it easy to
+        conduct polls that are secure and anonymous. Each voter ranks a
+        set of possible choices.  Individual voter rankings are combined
+        into an anonymous overall ranking of the choices.  CIVS has been
+        used for tens of thousands of polls and elections, to decide,
+        for example:
+    }
+    de {
+        CIVS ist ein kostenloser Internet-Wahldienst, der es einfach macht,
+        sichere und anonyme Umfragen durchzuführen. Jeder Wähler bewertet
+        eine Reihe möglicher Entscheidungen. Einzelne Wählerrankings
+        werden zu einem anonymen Gesamtranking der Wahlmöglichkeiten
+        kombiniert. CIVS wurde für Zehntausende von Umfragen und Wahlen
+        verwendet, um beispielsweise zu entscheiden:
+    }
+}
+Officers_of_organizations {
+    en: Officers of organizations
+    de: Beauftragte von Organisationen
+}
+Meeting_times {
+    en: Meeting times
+    de: Besprechungszeiten
+}
+Members_of_committees {
+    en: Members of committees
+    de: Mitglieder von Ausschüssen
+}
+Project_and_domain_names {
+    en: Project and domain names
+    de: Projekt- und Domänennamen
+}
+Award_recipients {
+    en: Award recipients
+    de: Preisträger
+}
+Restaurants_to_eat_at {
+    en: Restaurants to eat at
+    de: Restaurants
+}
+Movies_to_watch {
+    en: Movies to watch
+    de: Filme
+}
+Party_menus {
+    en: Party menus
+    de: Partymenüs
+}
+Book_club_selections {
+    en: Book club selections
+    de: Clubauswahl buchen
+}
+Favorite_music {
+    en: Favorite music
+    de: Lieblingsmusik
+}
+Gifts {
+    en: Gifts
+    de: Geschenke
+}
+Logos {
+    en: Logos
+}
+Project_directions {
+    en: Project directions
+    de: Projektrichtungen
+}
+Invited_speakers {
+    en: Invited speakers
+    de: Eingeladene Referenten<
+}
+Organization_bylaws {
+    en: Organization bylaws
+    de: Organisationsstatuten
+}
+How_it_works {
+    en: How it works:
+    de: Wie es funktioniert:
+}
+How_it_works_para {
+  en {
+    Anyone may create a new CIVS poll, but only authorized voters will
+    know about it. Voters and the poll supervisor must have e-mail and
+    web access. When a poll is created, voters are e-mailed with a
+    URL where they can vote.  Public polls may be created that do not
+    require voters to have e-mail addresses; in this case, one vote is
+    allowed per IP address.
+  }
+  de {
+    Jeder kann eine neue CIVS-Umfrage erstellen, aber nur autorisierte
+    Wähler werden davon erfahren. Die Wähler und der Wahlleiter müssen
+    über E-Mail- und Internetzugriff verfügen. Wenn eine Umfrage
+    erstellt wird, erhalten die Wähler eine E-Mail mit einer URL, unter
+    der sie abstimmen können. Es können öffentliche Umfragen erstellt
+    werden, bei denen die Wähler keine E-Mail-Adressen benötigen; in
+    diesem Fall ist pro IP-Adresse eine Stimme zulässig.
+  }
+}
+
+Why_rank_choices {
+    en: Why rank choices?
+    de: Warum Rangentscheidungen?
+}
+Why_rank_paras {
+    en  {
+      <p>With CIVS, voters rank their choices rather than
+        just picking their one favorite choice.
+        This process gives accurate results because it
+        collects more information from voters. It also
+        helps avoid vote splitting and spoilers.
+      </p><p>
+        Ranked-choice voting is used in real elections. For example,
+        Australia uses Single Transferable Vote (STV, also known as IRV).
+        However, the Condorcet methods supported by CIVS are better than IRV
+        at identifying consensus candidates.
+        IRV can elect a candidate even though a majority of
+        voters would prefer someone else, and
+        <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
+        it has in real elections</a>.
+        Unlike most other Condorcet systems,
+        CIVS also has a proportional representation mode.
+      </p>
+    }
+    de {
+       <p>Mit CIVS ordnen die Wähler ihre Entscheidungen, anstatt nur ihre
+        eine Lieblingswahl auszuwählen. Dieser Prozess liefert genaue
+        Ergebnisse, da mehr Informationen von den Wählern gesammelt
+        werden. Es hilft auch, Stimmenteilung und Spoiler zu vermeiden.
+       </p><p>
+        Die Ranglistenwahl wird bei echten Wahlen verwendet. Beispielsweise
+        verwendet Australien Single Transferable Vote (STV, auch bekannt als
+        IRV). Die von CIVS unterstützten Condorcet-Methoden sind jedoch
+        besser als IRV bei der Identifizierung von Konsenskandidaten. IRV
+        kann einen Kandidaten wählen, obwohl eine Mehrheit der Wähler
+        jemand anderen bevorzugen würde, und
+       <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">das ist bei echten Wahlen
+        der Fall</a>. Im Gegensatz zu den meisten anderen Condorcet-Systemen
+        verfügt CIVS auch über einen proportionalen Darstellungsmodus.
+       </p>
+    }
+}
+Footnote_1 {
+    en {
+        <p>The Condorcet Internet Voting Service has been running
+        since 2003. This service is supported by
+        <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> but is
+        not a service offered by
+        <a href="http://www.cornell.edu/">Cornell University.</a> This is
+        CIVS version 2.24. Feedback, help, and
+        <a href="@DONATE_URL@">donations to support this free (and
+        ad-free) service</a> are welcome.</p>
+    }
+    de {
+        <p>Der Condorcet Internet Voting Service läuft seit 2003. Dieser Service wird von <a
+        href="http://www.cs.cornell.edu/andru">Andrew Myers<a/> unterstützt, ist aber kein
+        Service der <a href="http://www.cornell.edu/">Cornell
+        University</a>. Dies ist die CIVS-Version
+        2.24. Feedback, Hilfe und <a href="@DONATE_URL@">Spenden</a> zur Unterstützung dieses
+        kostenlosen (und werbefreien) Dienstes sind willkommen.</p>
+    }
+}
+Fine_print {
+  en {
+    <p>
+    <b>Fine print:</b>
+    This voting service is available for free, public use. All poll
+    content is the responsibility of poll creators. No guarantees can
+    be made that this service will be correct or available and under
+    no conditions will the authors or service providers, including
+    Cornell University, be liable for any damages whatsoever resulting
+    from loss of use, data or profits, whether in an action of
+    contract, negligence or other tortious action, arising out of or
+    in connection with the use of this service.</p>
+  }
+  de {
+    <p><b>Kleingedrucktes:</b> Dieser Abstimmungsdienst steht der
+    Öffentlichkeit kostenlos zur Verfügung. Alle Umfrageinhalte liegen
+    in der Verantwortung der Umfrageersteller. Es kann keine Garantie
+    gegeben werden, dass dieser Dienst korrekt oder verfügbar ist,
+    und die Autoren oder Dienstanbieter, einschließlich der Cornell
+    University, haften unter keinen Umständen für Schäden, gleich
+    welcher Art, die sich aus Nutzungs-, Daten- oder Gewinnverlusten
+    ergeben, sei es im Rahmen einer Vertragshandlung , Fahrlässigkeit
+    oder andere unerlaubte Handlungen, die sich aus oder im Zusammenhang
+    mit der Nutzung dieses Dienstes ergeben.</p>
+  }
+}
+Name_of_the_poll {
+  en: Name of the poll (e.g., <b>The Democratic Primary</b>): 
+  de: Name der Umfrage (z. B. <b>The Democratic Primary</b>):
+}
+Name_of_supervisor {
+  en: Name of supervisor (you):
+  de: Name des Betreuers (Sie):
+}
+Email_address_of_supervisor {
+  en: E-mail address of supervisor: 
+  de: E-Mail-Adresse des Betreuers: 
+}
+Day_and_time_you_plan_to_stop {
+  en: Day and time you plan to stop the poll:
+  de: Tag und Uhrzeit, zu der Sie die Umfrage beenden möchten:
+}
+Invalid_email_address {
+   en: Invalid email address
+   de: Ungültige E-Mail-Adresse
+}
+polls_must_be_stopped_manually {
+  en: (<b>Note:</b> polls must be stopped manually)
+  de: (<b>Hinweis:</b> Umfragen müssen manuell gestoppt werden)
+}
+address_warning_para {
+  en {
+    Your name and e-mail address are used when sending e-mail to
+    voters. Your name should be recognizable to voters, and the e-mail
+    address must work, because CIVS emails you the information needed to
+    control the poll. Make sure your spam filter does not
+    block mail from <kbd>@SUPERVISOR@</kbd> (or check your spam folder if
+    the mail does not arrive!).
+  }
+  de {
+    Ihr Name und Ihre E-Mail-Adresse werden verwendet, wenn Sie E-Mails
+    an Wähler senden. Ihr Name sollte für die Wähler erkennbar
+    sein, und die E-Mail-Adresse muss funktionieren, da CIVS Ihnen die
+    Informationen per E-Mail zusendet, die zur Steuerung der Umfrage
+    erforderlich sind. Stellen Sie sicher, dass Ihr Spam-Filter keine
+    E-Mails von <kbd>@SUPERVISOR@</kbd> blockiert (oder überprüfen Sie
+    Ihren Spam-Ordner, wenn die E-Mail nicht ankommt!).
+  }
+}
+Description_of_the_poll {
+  en: Description of the poll and available choices (many HTML tags ok):
+  de: Beschreibung der Umfrage und verfügbare Auswahlmöglichkeiten (viele HTML-Tags ok):
+}
+Enter_the_names_of_all_the_choices {
+  en {
+    Enter the names of all the choices (candidates), one per line, or
+    upload a file containing all the choices:
+  }
+  de {
+    Geben Sie die Namen aller Auswahlmöglichkeiten (Kandidaten) ein,
+    einen pro Zeile, oder laden Sie eine Datei hoch, die alle
+    Auswahlmöglichkeiten enthält:
+  }
+}
+Preview_arrow {
+  en: Preview &#9656;
+}
+How_many_choices_will_win {
+  en: How many choices will win:
+  de: Wie viele Entscheidungen gewinnen:
+}
+public_or_private {
+  en: Do you want the poll to be <em>private</em> or <em>public</em>?
+  de: Soll die Umfrage <em>privat</em> oder <em>öffentlich</em> sein?
+}
+private_explanation {
+  en {
+    <strong>Private</strong>
+    <p>
+      Each voter receives their own unique URL for voting, and can only
+      vote once.  The voters' email addresses must be provided to the
+      system so it can tell them their voting URL, but the system forgets
+      their addresses immediately after the email is sent. You can add
+      voters after the poll has been created.
+    </p>
+  }
+  de {
+    <strong>Privat</strong>
+    <p>
+      Jeder Wähler erhält seine eigene eindeutige URL zum Abstimmen und
+      kann nur einmal abstimmen. Die E-Mail-Adressen der Wähler müssen dem
+      System zur Verfügung gestellt werden, damit es ihnen ihre
+      Abstimmungs-URL mitteilen kann, aber das System vergisst ihre
+      Adressen sofort, nachdem die E-Mail gesendet wurde. Sie können
+      Wähler hinzufügen, nachdem die Umfrage erstellt wurde.
+    </p>
+  }
+}
+public_explanation {
+  en {
+    There is a single URL that any voter can use to cast their vote,
+    and it is your job to distribute it.  However, there is only a
+    token attempt to prevent multiple voting, based on voters' IP
+    addresses. If you want to make sure that voters only vote once,
+    use a private poll instead.
+  }
+  de {
+    <strong>Public</strong>
+    <p>
+    Es gibt eine einzige URL, die jeder Wähler verwenden kann, um
+    seine Stimme abzugeben, und es ist Ihre Aufgabe, sie zu verteilen.
+    Es gibt jedoch nur einen Token-Versuch, um Mehrfachwahlen zu
+    verhindern, basierend auf den IP-Adressen der Wähler. Wenn Sie
+    sicherstellen möchten, dass die Wähler nur einmal abstimmen,
+    verwenden Sie stattdessen eine private Umfrage.
+    </p>
+  }
+}
+more_poll_options {
+  en: More options <small>(mouse over each check box for more information)</small> 
+  de {
+    Weitere Optionen <small>(bewegen Sie die Maus über jedes
+    Kontrollkästchen, um weitere Informationen zu erhalten)</small>
+  }
+}
+CIVS_will_announce_this_poll {
+  en: CIVS will announce this poll on its list of public polls and possibly elsewhere.  Anyone who views the list will be able to vote.
+}
+Have_CIVS_publicize_this_poll {
+  en: Have CIVS publicize this poll on its home page.
+  de: Lassen Sie CIVS diese Umfrage auf seiner Homepage veröffentlichen.
+}
+If_you_want_to_upload {
+    en {
+        If you want to upload all the voting ballots yourself, check this box. Voters cannot vote in such a poll. This is useful if you are trying to understand how the various voting methods work, or if you have obtained ballots from some source outside CIVS.
+    }
+    de {
+        Wenn Sie alle Stimmzettel selbst hochladen möchten, aktivieren Sie dieses Kontrollkästchen. Die Wähler können bei einer solchen Umfrage nicht abstimmen. Dies ist nützlich, wenn Sie versuchen zu verstehen, wie die verschiedenen Abstimmungsmethoden funktionieren, oder wenn Sie Stimmzettel von einer Quelle außerhalb von CIVS erhalten haben.
+    }
+}
+Make_this_a_test_poll {
+  en: Make this a test poll: read all votes from a file.
+  de: Machen Sie dies zu einer Testumfrage: Lesen Sie alle Stimmen aus einer Datei.
+}
+CIVS_will_announce_this_poll {
+    en {
+        CIVS will announce this poll on its list of public polls and possibly elsewhere.  Anyone who views the list will be able to vote.
+    }
+    de {
+        CIVS wird diese Umfrage auf seiner Liste der öffentlichen Umfragen und möglicherweise auch anderswo ankündigen. Jeder, der sich die Liste ansieht, kann abstimmen.
+    }
+}
+Do_not_release_results_to_all_voters {
+    en: Do not release results to all voters.
+    de: Geben Sie die Ergebnisse nicht an alle Wähler weiter.
+}
+restriction_explanation {
+  en {
+    By default, the results of a poll are visible to all voters.
+    Select this option to restrict the visibility to some smaller set
+    of people.
+  }
+  de {
+    Standardmäßig sind die Ergebnisse einer Umfrage für alle Wähler
+    sichtbar. Wählen Sie diese Option, um die Sichtbarkeit auf eine
+    kleinere Gruppe von Personen zu beschränken.
+  }
+}
+Enter_email_addresses_results {
+  en {
+    Enter e-mail addresses of users permitted to view poll results:
+    (All voters can see these email addresses)
+  }
+  de {
+    Geben Sie die E-Mail-Adressen der Benutzer ein, die die
+    Umfrageergebnisse anzeigen dürfen: (Alle Wähler können diese
+    E-Mail-Adressen sehen)
+  }
+}
+Enable_detailed_ballot_reporting {
+  en: Enable detailed ballot reporting.
+  de: Aktivieren Sie detaillierte Abstimmungsberichte.
+}
+Allows_any_to_view {
+  en {
+    This option allows any poll participant to view the rankings on each ballot. However, identifying information about the voters who cast these ballots is not revealed unless the next option is checked.
+  }
+  de {
+    Diese Option ermöglicht es jedem Umfrageteilnehmer, die Rangliste für jeden Stimmzettel anzuzeigen. Identifizierende Informationen über die Wähler, die diese Stimmzettel abgegeben haben, werden jedoch nicht offengelegt, es sei denn, die nächste Option wird aktiviert.
+  }
+}
+
+Also_reveal_identity {
+  en {
+    In detailed ballot report, also reveal the identity of the voter with each
+    ballot.
+  }
+  de {
+    Geben Sie im ausführlichen Wahlbericht bei jedem Wahlgang auch die
+    Identität des Wählers an.
+  }
+}
+Reveal_warning {
+  en {
+    Voters are <i class="warning">not</i> anonymous if this is
+    checked, nor does the server discard voter email addresses as it normally
+    does.  Voters are warned about this lack of anonymity. Multiple votes from a
+    single IP address are allowed if this is a public poll.
+  }
+  de {
+    Die Wähler sind nicht anonym, wenn dies aktiviert ist, und der
+    Server verwirft auch nicht die E-Mail-Adressen der Wähler, wie
+    dies normalerweise der Fall ist. Die Wähler werden vor dieser
+    fehlenden Anonymität gewarnt. Wenn es sich um eine öffentliche
+    Umfrage handelt, sind mehrere Stimmen von einer einzigen
+    IP-Adresse zulässig.
+  }
+}
+Allow_voters_to_write_in_new_choices {
+  en {
+    Allow voters to write in new choices.
+  }
+  de {
+    Ermöglichen Sie den Wählern, neue Wahlmöglichkeiten einzutragen.
+  }
+}
+
+you_can_allow_writeins {
+  en {
+    You can allow write-ins with this option. however, write-ins are at a big disadvantage if they occur after some votes have been cast. therefore, when this option is selected, there is a write-in phase in which ballots cannot be cast. the supervisor must explicitly enable voting.
+  }
+  de {
+    Mit dieser Option können Sie Einschreibungen zulassen. Einschreibungen sind jedoch stark im Nachteil, wenn sie nach der Stimmabgabe erfolgen. Daher gibt es bei Auswahl dieser Option eine Einschreibphase, in der keine Stimmzettel abgegeben werden können. der Vorgesetzte muss die Stimmabgabe ausdrücklich ermöglichen.
+  }
+}
+
+Present_choices_in_order {
+  en {
+    Present choices on voting page in exactly the given order.
+  }
+  de {
+    Präsentieren Sie die Auswahlmöglichkeiten auf der Abstimmungsseite in genau der angegebenen Reihenfolge.
+  }
+}
+Present_choices_in_order_expl {
+  en {
+    By default, poll choices are presented in a randomly shuffled order on each ballot. For some polls, such as choosing a meeting time, it will be more convenient for voters to see the choices in exactly the order given above.
+  }
+  de {
+    Standardmäßig werden Wahlmöglichkeiten auf jedem Stimmzettel in einer zufällig gemischten Reihenfolge angezeigt. Bei einigen Umfragen, wie z. B. der Wahl einer Besprechungszeit, ist es für die Wähler bequemer, die Auswahlmöglichkeiten in genau der oben angegebenen Reihenfolge zu sehen.
+  }
+}
+
+Allow_no_opinion {
+  en {
+    Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
+  }
+  de {
+    Ermöglichen Sie den Wählern, für einige Entscheidungen “keine Meinung” auszuwählen.
+  }
+}
+No_opinion_expl {
+    en {
+        The “no opinion” option can have unexpected effects. Be sure to read in the FAQ about how to use it, and inform voters accordingly.The "no opinion" option can have unexpected effects. Be sure to read in the FAQ about how to use it, and inform voters accordingly.
+    }
+    de {
+        Die Option „Keine Meinung“ kann unerwartete Auswirkungen haben. Lesen Sie unbedingt die FAQ zur Verwendung und informieren Sie die Wähler entsprechend.
+    }
+}
+
+Enforce_proportional_representation {
+  en: Enforce proportional representation [<a href="proportional.html">more information</a>]
+  de: Verhältniswahl durchsetzen [<a href="proportional.html">mehr Informationen</a>]
+}
+
+Proportional_rep_expl {
+  en {
+The proportional mode is useful only for multiwinner elections, where you want to make sure that the voters' desires are expressed proportionally. Otherwise a majority of voters can decide all of the winners. Proportional mode is much slower than the regular nonproportional mode, and should not be used in cases where there are a lot of choices and a lot of winners. In most cases, but not all, the results from the proportional and nonproportional mode agree.  Click the 'more information' link to find out more about how this mode works.
+  }
+  de {
+    Der proportionale Modus ist nur für Multiwinner-Wahlen sinnvoll, bei denen Sie sicherstellen möchten, dass die Wünsche der Wähler proportional ausgedrückt werden. Andernfalls kann eine Mehrheit der Wähler alle Gewinner bestimmen. Der proportionale Modus ist viel langsamer als der normale nicht-proportionale Modus und sollte nicht in Fällen verwendet werden, in denen es viele Auswahlmöglichkeiten und viele Gewinner gibt. In den meisten Fällen, aber nicht in allen Fällen, stimmen die Ergebnisse aus dem proportionalen und dem nicht-proportionalen Modus überein. Klicken Sie auf den Link „Weitere Informationen“, um mehr über die Funktionsweise dieses Modus zu erfahren.
+  }
+}
+
+voters_maximizing {
+  en: For proportional representation, voters are assumed to be maximizing:
+  de: Bei der Verhältniswahl wird angenommen, dass die Wähler maximieren:
+}
+
+rank_of_their_favorite_choice {
+    en: rank of their favorite choice
+    de: Der Rang ihrer bevorzugten Wahl
+}
+
+combined_weights_of_selected_choices {
+  en: combined weights of selected choices
+  de: kombinierte Gewichte der ausgewählten Optionen
+}
+
+Make_sure_your_address_is_correct {
+  en {
+    Make sure your e-mail address is correct, because poll information will
+    be emailed to you. Voters will not be informed of the poll's
+    existence until you respond to this e-mail message.
+  }
+  de {
+    Stellen Sie sicher, dass Ihre E-Mail-Adresse korrekt ist, da Ihnen
+    die Umfrageinformationen per E-Mail zugesandt werden. Die Wähler
+    werden erst dann über die Existenz der Umfrage informiert, wenn Sie
+    auf diese E-Mail-Nachricht antworten.
+  }
+}

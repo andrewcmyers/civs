@@ -4,4 +4,8 @@ shipit
 timeout
 lockserv
 gettimeofday
+index.html.en
+index.html.de
+civs_create.html.en
+civs_create.html.de
 

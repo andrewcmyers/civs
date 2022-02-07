@@ -116,7 +116,7 @@
 
 <script>
 var body = document.getElementsByTagName('body')[0]
-body.appendChild(create_header("Create a Poll"))
+body.appendChild(create_header("@Create_a_poll@"))
 </script>
 
 <div class="contents">
@@ -129,21 +129,22 @@ body.appendChild(create_header("Create a Poll"))
     onsubmit="return validate()">
   <table class="form">
   <tr>
-    <td class="label"><label id="name_of_poll">Name of the poll (e.g., <b>The Democratic Primary</b>):</label></td>
+    <td class="label"><label id="name_of_poll">@Name_of_the_poll@</label></td>
     <td><input type="text" title="Poll name" name="title" size="50" aria-labelledby="name_of_poll"></td>
   <tr>
-    <td class="label"><label id="supervisor_name">Name of supervisor (you):</label></td>
+    <td class="label"><label id="supervisor_name">@Name_of_supervisor@</label></td>
     <td><input type="text" name="name" size="20" aria-labelledby="supervisor_name">
   </td>
   <tr>
     <td class="label"><label id="supervisor_email">E-mail address of supervisor:</label></td>
     <td><input type="text" name="email_addr" size="20" aria-labelledby="supervisor_email"
-      onchange="if (!validateEmail(this.value)) { alert('Invalid email address') }" >
+      onchange="if (!validateEmail(this.value)) { alert('@Invalid_email_address@') }" >
     </td>
   </tr>
   <tr>
-    <td class="label"><label id="election_end_label">Day and time you plan to stop the poll:</label><br>
-        <small>(<b>Note:</b> polls must be stopped manually)</small>
+    <td class="label"><label
+    id="election_end_label">@Day_and_time_you_plan_to_stop@</label><br>
+        <small>@polls_must_be_stopped_manually@</small>
     </td>
     <td><input type="text" name="election_end" id="election_end" size="30"
                aria-labelledby="election_end_label"
@@ -154,101 +155,74 @@ body.appendChild(create_header("Create a Poll"))
   </table>
 
 <div class="emphasized">
-  Your name and e-mail address are used when sending e-mail to
-  voters. Your name should be recognizable to voters, and the e-mail
-  address must work, because CIVS emails you the information needed to
-  control the poll. Make sure your spam filter does not
-  block mail from <kbd>@SUPERVISOR@</kbd> (or check your spam folder if
-  the mail does not arrive!).
-  </div>
+@address_warning_para@
+</div>
 
-  <p><label id="description_label">Description of the poll and available choices (many HTML tags ok):</label><br>
+  <p><label id="description_label">@Description_of_the_poll@</label><br>
   <table class="form">
     <tr>
       <td><textarea id="description" rows="5" name="description" cols="60"
                     aria-labelledby="description_label"
                     onchange="preview_description()"></textarea>
       </td>
-      <td><input type="button" value="Preview &#9656;"
+      <td><input type="button" value="@Preview_arrow@"
             onClick="preview_description()">
       <td><span class="rendering" id="rendered_description"></span></td>
     </tr>
   </table>
 
-  <p><label id="choices_label">Enter the names of all the choices (candidates),
-     one per line, or upload a file containing all the choices:</label></p>
+  <p><label id="choices_label">@Enter_the_names_of_all_the_choices@</label></p>
   <table class="form">
   <tr><td>
     <textarea rows="5" name="choices" cols="60" id="choices"
         aria-labelledby="choices_label"
         onchange="preview_choices()"></textarea></td>
     <td>
-      <td><input type="button" value="Preview &#9656;"
+      <td><input type="button" value="@Preview_arrow@"
             onClick="preview_choices()"></td>
       <td><span class="rendering" id="rendered_choices"></span></td>
     </tr>
   </table>
   <p><input type=file aria-labelledby="choices_label" name="choices_file" id="choices_file"></p>
 
-  <p><label id="num_winners_label">How many choices will win:</label>
+  <p><label id="num_winners_label">@How_many_choices_will_win@</label>
      <input type="text" name="num_winners" size="5" value="1" aria-labelledby="num_winners_label"></p>
-<!--
-<p>The e-mail addresses of up to 1000 voters, one per line.
-Voters can also be added later.</p>
-<p><textarea rows="2" name="addresses" cols="50"></textarea></p>
-<p><input type=file name="addresses_file"></p>
--->
-  <p><label id="public_or_private">Do you want the poll to be <em>private</em> or <em>public</em>?</label></p>
+
+  <p><label id="public_or_private">@public_or_private@</label></p>
   <div id="pubpriv_choice">
   <fieldset>
   <div class="pubpriv">
   <input type="radio" name="public" value="no" checked="checked" aria-labelledby="public_or_private">
-  <strong>Private</strong>
-  <p>Each voter receives their own unique URL for voting, and can only vote once.
-     The voters' email addresses must be provided to the system so it can
-     tell them their voting URL, but the system forgets their addresses
-     immediately after the email is sent. You can add voters after the poll has
-     been created.
-  </p>
+    @private_explanation@
   </div>
   <div class="pubpriv">
   <input type="radio" name="public" value="yes" aria-labelledby="public_or_private"
       onClick="make_visible('publicize')">
-
-  <strong>Public</strong>
-  <p>
-    There is a single URL that any voter can use to cast their vote, and it is
-    your job to distribute it.  However, there is only a token attempt to
-    prevent multiple voting, based on voters' IP addresses. If you want to make
-    sure that voters only vote once, use a private poll instead.
-  </p>
+    @public_explanation@
   </div>
   </fieldset>
   </div>
 
-  <h3>More options <small>(mouse over each check box for more information)</small></h3>
+  <h3>@more_poll_options@</h3>
     <div class="option" id="publicize">
-    <input type="checkbox" name="publicize" value="yes"
-      title="CIVS will announce this poll on its list of public polls and possibly elsewhere.  Anyone who views the list will be able to vote."
+    <input type="checkbox" name="publicize" value="yes" title="@CIVS_will_announce_this_poll@"
       onclick="make_invisible('restrict_results_div'); make_invisible('reveal_voters_div')">
-    Have CIVS publicize this election on its home page.
+      @Have_CIVS_publicize_this_poll@
     </div>
     <div>
-  <input type="checkbox" name="external_ballots" value="yes"
-      title="If you want to upload all the voting ballots yourself, check this box. Voters cannot vote in such a poll. This is useful if you are trying to understand how the various voting methods work, or if you have obtained ballots from some source outside CIVS.">
-  Make this a test poll: read all votes from a file.
+  <input type="checkbox" name="external_ballots" value="yes" title="@If_you_want_to_upload@">
+      @Make_this_a_test_poll@
 </div>
 <div id='restrict_results_div'>
   <input type="checkbox" id="restrict_results" name="restrict_results" value="yes"
          title="Restrict results" onClick="make_visible('rrcontrol')">
-    Do not release results to all voters.
-    <div class="emphasized">By default, the results of a poll are visible to
-    all voters.  Select this option to restrict the visibility to some smaller
-    set of people.
+    @Do_not_release_results_to_all_voters@
+    <div class="emphasized">
+      @restriction_explanation@
     </div>
     <div class="suboption" id="rrcontrol">
     <label id="result_addrs_label">
-    Enter email addresses of users permitted to view poll results:
+    Enter e-mail addresses of users permitted to view poll results:
     (All voters can see these email addresses)
     </label>
     <br>
@@ -258,53 +232,43 @@ Voters can also be added later.</p>
 <div id='reveal_voters_div'>
   <input type="checkbox" name="ballot_reporting" value="yes"
          onClick="make_visible('reveal_voters')"
-         title="This option allows any poll participant to view the rankings on each ballot. However, identifying information about the voters who cast these ballots is not revealed unless the next option is checked.">
-  Enable detailed ballot reporting.
+         title="@Allows_any_to_view@">
+  @Enable_detailed_ballot_reporting@
   <div class="suboption" id="reveal_voters">
     <input type="checkbox" name="reveal_voters" value="yes" aria-labelledby="reveal_voters_label"/>
-    <label id="reveal_voters_label">
-    In detailed ballot report, also reveal the identity of the voter with each
-    ballot.</label><p class=emphasized>Voters are <i class="warning">not</i> anonymous if this is
-    checked, nor does the server discard voter email addresses as it normally
-    does.  Voters are warned about this lack of anonymity. Multiple votes from a
-    single IP address are allowed if this is a public poll.
-    </p>
+    <label id="reveal_voters_label">@Also_reveal_identity@</label>
+    <p class=emphasized>@Reveal_warning@</p>
   </div>
 </div>
 <div>
   <input type="checkbox" name="writeins" value="yes"
-   title="You can allow write-ins with this option. However, write-ins are at a big disadvantage if they occur after some votes have been cast. Therefore, when this option is selected, there is a write-in phase in which ballots cannot be cast. The supervisor must explicitly enable voting.">
-  Allow voters to write in new choices.
+   title="@you_can_allow_writeins@">
+  @Allow_voters_to_write_in_new_choices@
 </div>
 <div>
   <input type="checkbox" name="shuffle" value="no"
-  title="By default, poll choices are presented in a randomly shuffled order on each ballot. For some polls, such as choosing a meeting time, it will be more convenient for voters to see the choices in exactly the order given above.">
-  Present choices on voting page in exactly the given order.
+  title="@Present_choices_in_order_expl@">
+  @Present_choices_in_order@
 </div>
 <div>
   <input type="checkbox" name="no_opinion" value="yes"
-    title="The &#x22;no opinion&#x22; option can have unexpected effects. Be sure to read in the FAQ about how to use it, and inform voters accordingly.">
-  Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
+    title="@No_opinion_expl@">
+  @Allow_no_opinion@
   <input type="checkbox" name="proportional" value="yes"
          onClick="make_visible('prcontrol')"
-         title="The proportional mode is useful only for multiwinner elections, where you want to make sure that the voters' desires are expressed proportionally. Otherwise a majority of voters can decide all of the winners. Proportional mode is much slower than the regular nonproportional mode, and should not be used in cases where there are a lot of choices and a lot of winners. In most cases, but not all, the results from the proportional and nonproportional mode agree.  Click the 'more information' link to find out more about how this mode works.">
-  Enforce proportional representation [<a href="proportional.html">more information</a>]
+         title="@Proportional_rep_expl@">
+  @Enforce_proportional_representation@
    <div class="suboption" id="prcontrol">
-   <label id="prcontrol_label">
-    For proportional representation, voters are assumed to be maximizing:</label><br>
+   <label id="prcontrol_label">@voters_maximizing@</label><br>
     <input type="radio" name="rating_interpretation"
        value="best_choice" aria-labelledby="prcontrol_label"
-       checked> rank of their favorite choice<br>
+       checked>@rank_of_their_favorite_choice@<br>
     <input type="radio" name="rating_interpretation" aria-labelledby="prcontrol_label"
-       value="combined_ratings"> combined weights of selected choices<br>
+       value="combined_ratings">@combined_weights_of_selected_choices@<br>
    </div>
 </div>
 
-<br><div class="emphasized">
-  Make sure your e-mail address is correct, because poll information will
-  be emailed to you. Voters will not be informed of the poll's
-  existence until you respond to this e-mail message.
-  </div>
+<br><div class="emphasized">@Make_sure_your_address_is_correct@</div>
   <p style="margin-left: 5ex">
     <input type="submit" value="Create poll" name="submit">
   </p>

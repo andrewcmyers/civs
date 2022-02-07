@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@CIVS_name@</title>
+    <base href="@CIVSURL@/" />
+    <link rel="canonical" href="@CIVSURL@/" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="shortcut icon" href="@CIVSURL@/images/check123b.ico"/>
+    <link rel="apple-touch-icon" href="@CIVSURL@/images/check123b.png"/>
+    <script src="@CIVSURL@/ajax.js"></script>
+</head>
+
+<body>
+<script>
+    var loc = location.hostname + (location.port ? ":" + location.port : "")
+    if (loc != "@THISHOST@" || location.protocol != "@PROTO@:") {
+        setTimeout(() => {
+            location = "@PROTO@://@THISHOST@/@CIVSURL@"
+        }, 1000)
+    }
+</script>
+
+<div class=banner>
+  <div class=bannerpart id=bannericon>
+      <img width="113" src="@CIVSURL@/images/check-civs.png" style="border: none" alt="CIVS"/>
+  </div>
+  <div class=bannerpart>
+      <h1>@CIVS_name@</h1>
+  </div>
+</div>
+
+<div class="contents">
+
+<div id="main" class="form">
+<div class="bubbles">
+  <div class="bubble" id="topmenu">
+    <ul>
+	<li><a href="civs_create.html">@Create_a_poll@</a></li>
+	<li><a href="@CIVSBINURL@/opt_in@PERLEXT@">@Activate_user@</a></li>
+	<li><a href="faq.html">Frequently Asked Questions</a></li>
+	<li><a href="mailto:civs-users-l-request@cornell.edu?Body=Set%20the%20subject%20to%20%22join%22%20and%20erase%20these%20instructions%20%28leave%20body%20blank%29">
+	    Join the CIVS mailing list</a></li>
+	<li><a href="sec_priv.html">@Security_and_privacy@</a></li>
+	<li><a href="rp.html">@Condorcet_voting@</a></li>
+	<li><a href="proportional.html">@Proportional_representation@</a></li>
+	<li><a href="changelog.html">@CIVS_software@</a></li>
+	<li><a href="acks.html">@Acknowledgments@</a></li>
+	<li><a href="@SUGGESTION_BOX@">@Suggestion_box@</a>
+    </ul>
+</div>
+<div class="bubble">
+    <h3>&nbsp;@CIVS_news@</h3>
+    <div id="newsfeed">
+    @No_current_news@
+    </div>
+</div>
+<div class="bubble">
+    <h3>@Top_public_polls@ <a class="small" href="publicized_polls.html">@see_more@</a></h3>
+    <div id="top_polls" class="small_list">
+    @Loading@
+    </div>
+  </div>
+</div> <!-- bubbles -->
+
+<div class="home" id="home">
+<p>@intro_para@</p>
+
+<span id=civs_uses>
+  <ul id=civs_uses_list>
+    <li>@Officers_of_organizations@</li>
+    <li>@Meeting_times@</li>
+    <li>@Members_of_committees@</li>
+    <li>@Project_and_domain_names@</li>
+    <li>@Award_recipients@</li>
+    <li>@Restaurants_to_eat_at@</li>
+    <li>@Movies_to_watch@</li>
+    <li>@Party_menus@</li>
+    <li>@Book_club_selections@</li>
+    <li>@Favorite_music@</li>
+    <li>@Gifts@</li>
+    <li>@Logos@</li>
+    <li>@Project_directions@</li>
+    <li>@Invited_speakers@</li>
+    <li>@Organization_bylaws@</li>
+  </ul>
+</span>
+
+<script>
+    function setColumns() {
+        var uses = document.getElementById("civs_uses_list"),
+            w = uses.getBoundingClientRect().width
+        uses.style.columnCount = Math.floor(w/220) || 1
+    }
+    window.addEventListener('resize', setColumns)
+    window.addEventListener('load', setColumns)
+</script>
+
+<p><strong>@How_it_works@</strong>
+@How_it_works_para@
+</p>
+
+<p><strong>@Why_rank_choices@</strong>
+@Why_rank_paras@
+</div>
+</div>
+
+<footer>
+<div id="footnote" style="margin: 2ex">
+@Footnote_1@
+@Fine_print@
+</div>
+</footer>
+</div>
+<script>
+    fetch_content('newsfeed', '@CIVSURL@/news.html',
+	function() {
+	    fetch_content('top_polls', '@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@');
+	});
+</script>
+</body>
+</html>

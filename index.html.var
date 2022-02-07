@@ -1,12 +1,8 @@
 URI: index.html
 
-URI: index.html.en
+URI: index.html.en.utf8
 Content-type: text/html
 Content-language: en
-
-URI: index.html.en
-Content-type: text/html
-Content-language: en-us
 
 URI: index.html.fr.utf8
 Content-type: text/html
