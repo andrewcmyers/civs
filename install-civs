@@ -97,7 +97,6 @@ do
     for lang in en de
     do
         echo "  $file.$lang"
-        echo perl subst_text.pl static-translations.txt $lang ${file}.base ${file}.$lang
         perl subst_text.pl static-translations.txt $lang ${file}.base ${file}.$lang
     done
 done
