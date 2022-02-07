@@ -817,6 +817,7 @@ sub RecordInvitation {
     my $key = &OptOutKey($addr);
     my $fname = "@CIVSDATADIR@/invites/$key";
     if (open(INVITES, ">>", $fname)) {
+        binmode INVITES, ':utf8';
         print INVITES "$url $title\n";
     } else {
         Log("Could not open invite file $fname for writing\n");
