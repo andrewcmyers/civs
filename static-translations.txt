@@ -368,7 +368,7 @@ You_have_specified_no_users_who_can_see_the_poll_results {
 
 Name_of_the_poll {
   en: Name of the poll (e.g., <b>The Democratic Primary</b>): 
-  de: Name der Umfrage (z. B. <b>The Democratic Primary</b>):
+  de: Name der Umfrage (z. B. <b>Lieblingsfilm</b>):
   fr: Nom de la consultation (par exemple, <b>Palme d'or du Festival de Cannes</b>) : 
 }
 Name_of_supervisor {
@@ -729,7 +729,7 @@ Present_choices_in_order_expl {
 
 Allow_no_opinion {
   en {
-    Allow voters to select &ldquo;no opinion&rdquo; for some choices.<br>
+    Allow voters to select &ldquo;no opinion&rdquo; for some choices.
   }
   de {
     Ermöglichen Sie den Wählern, für einige Entscheidungen “keine Meinung” auszuwählen.

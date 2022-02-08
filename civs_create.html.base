@@ -253,7 +253,7 @@ body.appendChild(create_header("@Create_a_poll@"))
 <div>
   <input type="checkbox" name="no_opinion" value="yes"
     title="@No_opinion_expl@">
-  @Allow_no_opinion@
+  @Allow_no_opinion@<br>
   <input type="checkbox" name="proportional" value="yes"
          onClick="make_visible('prcontrol')"
          title="@Proportional_rep_expl@">
