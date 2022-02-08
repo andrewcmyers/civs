@@ -1,3 +1,9 @@
+LANGUAGE {
+    en: en-US
+    de: de-DE
+    fr: fr-FR
+}
+
 # index
 
 CIVS_name {
