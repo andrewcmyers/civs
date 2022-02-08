@@ -70,9 +70,21 @@ sub ParseField {
     }
 }
 
+sub SkipComments {
+    my ($input, $pos) = @_;
+    while (1) {
+        my ($skip) = substr($input, $pos) =~ /\A(\s*#.*\n)/;
+        my $n = length $skip || 0;
+        return $pos unless $n;
+        $pos += $n
+    }
+    return $pos;
+}
+
 sub ParseEntry {
     my ($input, $pos) = @_;
     # print STDERR "looking for entry at $pos : ", substr($input, $pos, 10), "...\n";
+    $pos = &SkipComments($input, $pos);
     (my $key, $sep, $pos) = &ParseKey($input, $pos);
     # print "Entry name: $key\n";
     return unless $key;
@@ -99,10 +111,14 @@ sub ParseTranslations {
     my @result;
     my %translations;
     while (1) {
-        (my $key, my $fields, $pos) = &ParseEntry($input, $pos);
+        (my $key, my $fields, my $npos) = &ParseEntry($input, $pos);
         last unless $key;
+        $pos = $npos;
         my $translation = $fields->{$language_code} || $fields->{'en'} || 'unknown';
         $translations{$key} = $translation;
+    }
+    if ($pos < length $input) {
+        print STDERR "Unexpected input at $pos: ", substr($input, pos, 15), "...\n";
     }
     return \%translations;
 }

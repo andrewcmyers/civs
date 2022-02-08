@@ -1,3 +1,5 @@
+# index
+
 CIVS_name {
     en: Condorcet Internet Voting Service
     fr: Service de Vote Internet Condorcet (CIVS)
@@ -284,7 +286,7 @@ Footnote_1 {
         <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> but is
         not a service offered by
         <a href="http://www.cornell.edu/">Cornell University.</a> This is
-        CIVS version 2.24. Feedback, help, and
+        CIVS version @VERSION@. Feedback, help, and
         <a href="@DONATE_URL@">donations to support this free (and
         ad-free) service</a> are welcome.</p>
     }
@@ -293,13 +295,13 @@ Footnote_1 {
         href="http://www.cs.cornell.edu/andru">Andrew Myers<a/> unterstützt, ist aber kein
         Service der <a href="http://www.cornell.edu/">Cornell
         University</a>. Dies ist Version
-        2.24. Feedback, Hilfe und <a href="@DONATE_URL@">Spenden</a> zur Unterstützung dieses
+        @VERSION@. Feedback, Hilfe und <a href="@DONATE_URL@">Spenden</a> zur Unterstützung dieses
         kostenlosen (und werbefreien) Dienstes sind willkommen.</p>
     }
     fr {
         Le service de vote par Internet Condorcet fonctionne depuis 2003.
         Ce service est soutenu par Andrew Myers mais n'est pas un service
-        offert par l'Université Cornell. Il s'agit de la version 2.24 de
+        offert par l'Université Cornell. Il s'agit de la version @VERSION@ de
         CIVS. Les commentaires, l'aide et les dons pour soutenir ce
         service gratuit (et sans publicité) sont les bienvenus.
     }
@@ -341,6 +343,9 @@ Fine_print {
     pour quelque dommage qu'il soit en relation avec l'usage de ce service.</small></p>
   }
 }
+
+# civs_create
+
 Invalid_supervisor_email {
   en: Supervisor email address is invalid.
   fr: L\'adresse de courrier électronique du responsable de la consultation est invalide.
