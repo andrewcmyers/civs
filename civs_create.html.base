@@ -23,15 +23,15 @@
         var numerrs = 0;
         var errs = new Array;
         if (!validateEmail(document.forms.CreateElection.email_addr.value)) {
-            errs[numerrs++] = 'Supervisor email address is invalid.';
+            errs[numerrs++] = '@Invalid_supervisor_email@';
         }
         if (!(document.forms.CreateElection.num_winners.value >= 1)) {
-            errs[numerrs++] = 'Must have at least one winner.';
+            errs[numerrs++] = '@Must_have_at_least_one_winner@';
         }
         if (document.forms.CreateElection.proportional.checked &&
             !(document.forms.CreateElection.num_winners.value > 1)) {
             errs[numerrs++] =
-                'Proportional representation requires more than one winner.';
+                '@Proportional_representation_requires_more_than_one_winner@';
         }
         if (document.forms.CreateElection.choices.value == '' &&
             document.forms.CreateElection.choices_file.value == '') {
@@ -45,14 +45,14 @@
                 if (ra[i] == '') continue;
                 if (!validateEmail(ra[i])) {
                     errs[numerrs++] =
-                        'Results recipient email address is invalid: ' + ra[i];
+                        '@Results_recipient_email_address_is_invalid@ ' + ra[i];
                 } else {
                     nr++;
                 }
             }
             if (nr == 0) {
                 errs[numerrs++] =
-                    'You have specified no users who can see the poll results.';
+                    '@You_have_specified_no_users_who_can_see_the_poll_results@';
             }
         }
         if (numerrs == 0) return true;
@@ -148,7 +148,7 @@ body.appendChild(create_header("@Create_a_poll@"))
     </td>
     <td><input type="text" name="election_end" id="election_end" size="30"
                aria-labelledby="election_end_label"
-          onchange="render_text('<br><i>Preview</i>: Poll ends ', 'election_end', 'rendered_end', 'poll_end', 'poll_end_preview')">
+          onchange="render_text('<br>@Preview_polls_ends@ ', 'election_end', 'rendered_end', 'poll_end', 'poll_end_preview')">
          <span class="rendering" id="rendered_end"></span>
 </td>
   </tr>
@@ -215,7 +215,7 @@ body.appendChild(create_header("@Create_a_poll@"))
 </div>
 <div id='restrict_results_div'>
   <input type="checkbox" id="restrict_results" name="restrict_results" value="yes"
-         title="Restrict results" onClick="make_visible('rrcontrol')">
+         title="@Restrict_results@" onClick="make_visible('rrcontrol')">
     @Do_not_release_results_to_all_voters@
     <div class="emphasized">
       @restriction_explanation@
