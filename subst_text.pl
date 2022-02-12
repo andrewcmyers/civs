@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 sub Usage {
     print STDERR "Usage: subst_lang <translation_file> <language_code> <source_file> <dest_file>\n";
@@ -64,6 +64,8 @@ sub ParseField {
             $pos2++;
         }
         my $value = substr($input, $pos, $pos2 - $pos);
+        $value =~ s/\\\r?\n *//g;
+        $value =~ s/\\ / /g;
         $pos2 += length $terminator;
         # print STDERR "long field: $key -> $value\n";
         return ($key, $value, $pos2);
