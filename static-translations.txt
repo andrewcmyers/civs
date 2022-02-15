@@ -295,7 +295,10 @@ Why_rank_choices {
 }
 Why_rank_paras {
     en  {
-	With CIVS, voters rank their choices rather than just picking their one favorite choice.  This process gives accurate results because it collects more information from voters. It also helps avoid vote splitting and spoilers.
+        With CIVS, voters rank their choices rather than just picking
+        their one favorite choice.  This process gives accurate
+        results because it collects more information from voters. It
+        also helps avoid vote splitting and spoilers.
       </p><p>
         Ranked-choice voting is used in real elections. For example,
         Australia uses Single Transferable Vote (STV, also known as IRV).
@@ -671,7 +674,8 @@ more_poll_options {
   }
 }
 CIVS_will_announce_this_poll {
-  en: CIVS will announce this poll on its list of public polls and possibly elsewhere.  Anyone who views the list will be able to vote.
+  en: CIVS will announce this poll on its list of public polls and \
+      possibly elsewhere.  Anyone who views the list will be able to vote.
 }
 Have_CIVS_publicize_this_poll {
   en: Have CIVS publicize this poll on its home page.
