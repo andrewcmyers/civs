@@ -64,7 +64,7 @@ sub ParseField {
             $pos2++;
         }
         my $value = substr($input, $pos, $pos2 - $pos);
-        $value =~ s/\\\r?\n *//g;
+        $value =~ s/\\\r?\n\s*//g;
         $value =~ s/\\ / /g;
         $pos2 += length $terminator;
         # print STDERR "long field: $key -> $value\n";
