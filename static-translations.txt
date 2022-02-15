@@ -1,7 +1,24 @@
+#
+# Text translations for static web pages. Translations for particular
+# languages can be given either as a single line like
+#
+#   en: Hello there
+#
+# or as an entirely equivalent multiline translation:
+#
+#   en {
+#     Hello there
+#   }
+#
+# In a multiline translation, a line may end with a backslash to
+# suppress the newline. Whitespace characters immediately following the newline
+# are also ignored.
+#
 LANGUAGE {
     en: en-US
     de: de-DE
     fr: fr-FR
+    es: es-ES
 }
 
 # index
@@ -9,81 +26,97 @@ LANGUAGE {
 CIVS_name {
     en: Condorcet Internet Voting Service
     fr: Service de Vote Internet Condorcet (CIVS)
+    es: Internet Condorcet Servicio de Votación (CIVS)
 }
 Create_a_poll {
     en: Create a poll
     de: Erstellen Sie eine Umfrage
     fr: Créer une consultation
+    es: Crea una encuesta
 }
 Activate_user {
     en: Activate user
     de: Benutzer aktivieren
     fr: Activer l'utilisateur
+    es: Activar usuario
 }
 Frequently_asked_questions {
     en: Frequently Asked Questions
     de: Häufig gestellte Fragen
     fr: Questions fréquemment posées (FAQ)
+    es: Preguntas más frecuentes
 }
 Join_the_CIVS_mailing_list {
     en: Join the CIVS mailing list
     de: Treten Sie der CIVS-Mailingliste bei
     fr: Join the CIVS mailing list
+    es: Únase a la lista de correo de CIVS
 }
 Security_and_privacy {
     en: Security and privacy
     de: Sicherheit und Privatsphäre
     fr: Sécurité et Confidentialité
+    es: Seguridad y privacidad
 }
 Condorcet_voting {
     en: Condorcet voting
     de: Condorcet-Abstimmung
     fr: Paradoxe de Condorcet
+    es: Votación de Condorcet
 }
 Proportional_representation {
     en: Proportional representation
     de: Proportionale Darstellung
     fr: Représentation proportionnelle
+    es: Representación proporcional
 }
 CIVS_software {
     en: CIVS software
     de: CIVS-software
     fr: Logiciel CIVS
+    es: Software CIVS
 }
 Acknowledgments {
     en: Acknowledgments
     de: Danksagungen
     fr: Remerciements
+    es: Expresiones de gratitud
 }
 Suggestion_box {
     en: Suggestion box
     de: Vorschlagsbox
     fr: Boîte à suggestion
+    es: Caja de sugerencias
 }
 CIVS_news {
-    en: CIVS news
+    en: News
     de: Nachrichten
-    fr: Actualités CIVS
+    fr: Des nouvelles
+    es: Noticias
 }
 No_current_news {
     en: No current news.
     de: Keine aktuellen Nachrichten.
     fr: Aucune nouvelle actuelle.
+    es: Sin noticias actuales.
 }
 Top_public_polls {
     en: Top public polls:
     de: Top öffentliche Umfragen: 
     fr: Les meilleurs sondages publics 
+    es: Principales encuestas públicas
 }
 see_more {
     en: [see more]
     de: [Mehr sehen]
     fr: [voir plus]
+    es: [ver más]
 }
 Loading {
     en: Loading...
     de: Wird geladen...
     fr: Chargement...
+    es: Cargando...
 }
 intro_para {
     en {
@@ -112,83 +145,107 @@ intro_para {
         pour un grand nombre de consultations électorales et sondages
         d'opinion permettant de choisir :
     }
+    es {
+        CIVS es un servicio gratuito de votación por Internet que facilita
+        la realización de encuestas seguras y anónimas. Cada votante
+        clasifica un conjunto de opciones posibles. Las clasificaciones de
+        votantes individuales se combinan en una clasificación general
+        anónima de las opciones. CIVS se ha utilizado para decenas de
+        miles de encuestas y elecciones, para decidir, por ejemplo:
+    }
 }
 Officers_of_organizations {
     en: Officers of organizations
     de: Beauftragte von Organisationen
     fr: Des responsables d'organisation
+    es: Funcionarios de organizaciones
 }
 Meeting_times {
     en: Meeting times
     de: Besprechungszeiten
     fr: Des horaires de réunion
+    es: Horarios de reunión
 }
 Members_of_committees {
     en: Members of committees
     de: Mitglieder von Ausschüssen
     fr: Des membres de comités
+    es: Miembros de comités
 }
 Project_and_domain_names {
     en: Project and domain names
     de: Projekt- und Domänennamen
-    fr: Des nom de projets, logos, nom de domaines
+    fr: Noms de projets et domaines
+    es: Nombres de proyectos y dominios
 }
 Award_recipients {
     en: Award recipients
     de: Preisträger
     fr: Des lauréats de diplômes
+    es: Destinatarios
 }
 Restaurants_to_eat_at {
     en: Restaurants
     de: Restaurants
+    es: Restaurantes
 }
 Movies_to_watch {
     en: Movies
     de: Filme
-    fr: Des restaurants
+    fr: Films
+    es: Películas
 }
 Party_menus {
     en: Party menus
     de: Partymenüs
     fr: Le menu des fêtes
+    es: Menús de fiesta
 }
 Book_club_selections {
     en: Book club selections
     de: Clubauswahl buchen
     fr: Des sélections de club littéraire
+    es: Selecciones del club de lectura
 }
 Favorite_music {
     en: Favorite music
     de: Lieblingsmusik
     fr: Des musiques favorites
+    es: Música favorita
 }
 Gifts {
     en: Gifts
     de: Geschenke
     fr: Cadeaux 
+    es: Regalos
 }
 Logos {
     en: Logos
+    es: Logotipos
 }
 Project_directions {
     en: Project directions
     de: Projektrichtungen
     fr: Orientations du projet
+    es: Direcciones del proyecto
 }
 Invited_speakers {
     en: Invited speakers
     de: Eingeladene Referenten<
     fr: Intervenants invités
+    es: Oradores invitados
 }
 Organization_bylaws {
     en: Organization bylaws
     de: Organisationsstatuten
     fr: Règlements d'organisation
+    es: Estatutos de la organización
 }
 How_it_works {
     en: How it works:
     de: Wie es funktioniert:
     fr: Comment ça fonctionne :
+    es: Cómo funciona:
 }
 How_it_works_para {
   en {
@@ -219,20 +276,26 @@ How_it_works_para {
     possible de ne pas imposer la possession d'une adresse email, dans
     ce cas un seul vote est accepté par adresse Internet (IP).
   }
+  es {
+    Cualquiera puede crear una nueva encuesta CIVS, pero solo los
+    votantes autorizados la conocerán. Los votantes y el supervisor
+    electoral deben tener correo electrónico y acceso a la web. Cuando
+    se crea una encuesta, los votantes reciben un correo electrónico con
+    una URL donde pueden votar. Se pueden crear encuestas públicas que
+    no requieran que los votantes tengan direcciones de correo
+    electrónico; en este caso, se permite un voto por dirección IP.
+  }
 }
 
 Why_rank_choices {
     en: Why rank choices?
     de: Warum Rangentscheidungen?
     fr: Vote par préférence :
+    es: ¿Por qué clasificar las opciones?
 }
 Why_rank_paras {
     en  {
-        With CIVS, voters rank their choices rather than
-        just picking their one favorite choice.
-        This process gives accurate results because it
-        collects more information from voters. It also
-        helps avoid vote splitting and spoilers.
+	With CIVS, voters rank their choices rather than just picking their one favorite choice.  This process gives accurate results because it collects more information from voters. It also helps avoid vote splitting and spoilers.
       </p><p>
         Ranked-choice voting is used in real elections. For example,
         Australia uses Single Transferable Vote (STV, also known as IRV).
@@ -284,6 +347,26 @@ Why_rank_paras {
         href="http://bolson.org/%7Ebolson/2009/20090303_burlington_vt_ma
         yor.html">lors de certaines élections</a>.</p>
     }
+    es {
+        Con CIVS, los votantes clasifican sus opciones en lugar de
+        simplemente elegir su opción favorita. Este proceso brinda
+        resultados precisos porque recopila más información de los
+        votantes. También ayuda a evitar la división de votos y los
+        spoilers.
+      </p><p>
+        La votación por orden de preferencia se utiliza en elecciones
+        reales. Por ejemplo, Australia utiliza el voto único
+        transferible (STV, también conocido como IRV). Sin embargo, los
+        métodos Condorcet respaldados por CIVS son mejores que IRV para
+        identificar candidatos de consenso. IRV puede elegir a un
+        candidato aunque la mayoría de los votantes preferiría a otra
+        persona, y <a
+        href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
+        lo ha hecho en elecciones reales</a>. A diferencia de la mayoría
+        de los otros sistemas Condorcet, CIVS también tiene un modo de
+        representación proporcional.
+      </p>
+    }
 }
 Footnote_1 {
     en {
@@ -305,11 +388,24 @@ Footnote_1 {
         kostenlosen (und werbefreien) Dienstes sind willkommen.</p>
     }
     fr {
-        Le service de vote par Internet Condorcet fonctionne depuis 2003.
-        Ce service est soutenu par Andrew Myers mais n'est pas un service
-        offert par l'Université Cornell. Il s'agit de la version @VERSION@ de
-        CIVS. Les commentaires, l'aide et les dons pour soutenir ce
-        service gratuit (et sans publicité) sont les bienvenus.
+        Le service de vote par Internet Condorcet fonctionne depuis
+        2003.  Ce service est soutenu par <a \
+        href="http://www.cs.cornell.edu/andru">Andrew Myers</a> mais
+        n'est pas un service offert par <a \
+        href="http://www.cornell.edu/">l'Université Cornell</a>. Il
+        s'agit de la version @VERSION@ de CIVS. Les commentaires,
+        l'aide et les dons pour soutenir ce service gratuit (et sans
+        publicité) sont les bienvenus.
+    }
+    es {
+        El servicio de votación por Internet de Condorcet funciona
+        desde 2003. Este servicio cuenta con el apoyo de <a \
+        href="http://www.cs.cornell.edu/andru">Andrew Myers</a>, pero
+        no es un servicio ofrecido por <a \
+        href="http://www.cornell.edu/">la Universidad de Cornell</a>. Esta
+        es la versión @VERSION@ de CIVS. Se agradecen los comentarios,
+        la ayuda y las donaciones para respaldar este servicio
+        gratuito (y sin publicidad).
     }
 }
 Fine_print {
@@ -323,7 +419,8 @@ Fine_print {
     Cornell University, be liable for any damages whatsoever resulting
     from loss of use, data or profits, whether in an action of
     contract, negligence or other tortious action, arising out of or
-    in connection with the use of this service.</p>
+    in connection with the use of this service.
+    </p>
   }
   de {
     <p><b>Kleingedrucktes:</b> Dieser Abstimmungsdienst steht der
@@ -339,14 +436,26 @@ Fine_print {
   }
   fr {
     <p><b>Précisions utiles :</b> Ce service de consultation électorale et de
-    sondage d'opinion est
-    disponible gratuitement pour un usage public. L'auteur, le fournisseur
+    sondage d'opinion est disponible gratuitement pour un usage public. L'auteur, le fournisseur
     du service et l'Université de Cornell ne garantissent pas que ce
     service pourra être disponible, ni que les résultats des consultations
     électorales et sondages d'opinion organisées avec ce services seront
     exacts. En aucun cas l'auteur, le fournisseur de service et
     l'Université de Cornell ne pourront être considérés comme responsable
-    pour quelque dommage qu'il soit en relation avec l'usage de ce service.</small></p>
+    pour quelque dommage qu'il soit en relation avec l'usage de ce service.</p>
+  }
+  es {
+    <p><b>Letra pequeña:</b>
+    Este servicio de votación está disponible para uso público y
+    gratuito. Todo el contenido de la encuesta es responsabilidad de los
+    creadores de la encuesta. No se puede garantizar que este servicio
+    sea correcto o esté disponible y, bajo ninguna condición, los
+    autores o los proveedores de servicios, incluida la Universidad de
+    Cornell, serán responsables de ningún daño que resulte de la pérdida
+    de uso, datos o ganancias, ya sea en una acción de contrato,
+    negligencia u otra acción ilícita, que surja de o en relación con el
+    uso de este servicio.
+    </p>
   }
 }
 
