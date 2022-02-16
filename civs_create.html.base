@@ -116,7 +116,7 @@
 
 <script>
 var body = document.getElementsByTagName('body')[0]
-body.appendChild(create_header("@Create_a_poll@"))
+body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
 </script>
 
 <div class="contents">
@@ -270,7 +270,7 @@ body.appendChild(create_header("@Create_a_poll@"))
 
 <br><div class="emphasized">@Make_sure_your_address_is_correct@</div>
   <p style="margin-left: 5ex">
-    <input type="submit" value="Create poll" name="submit">
+    <input type="submit" value="@Create_poll@" name="submit">
   </p>
 </form>
 </div>

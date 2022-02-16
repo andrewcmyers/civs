@@ -21,6 +21,13 @@ LANGUAGE {
     es: es-ES
 }
 
+lang2 {
+    en: en
+    de: de
+    fr: fr
+    es: es
+}
+
 # index
 
 CIVS_name {
@@ -466,53 +473,70 @@ Fine_print {
 
 Invalid_supervisor_email {
   en: Supervisor email address is invalid.
+  de: Die E-Mail-Adresse des Vorgesetzten ist ungültig.
   fr: L\'adresse de courrier électronique du responsable de la consultation est invalide.
+  es: La dirección de correo electrónico del supervisor no es válida.
 }
 Must_have_at_least_one_winner {
-    en: Must have at least one winner.
+    en: Poll must have at least one winner.
+    de: Die Umfrage muss mindestens einen Gewinner haben.
     fr: Il doit y avoir au moins un élu ou une proposition retenue.
+    es: La encuesta debe tener al menos un ganador.
 }
 Proportional_representation_requires_more_than_one_winner {
     en: Proportional representation requires more than one winner.
+    de: Verhältnismäßige Vertretung erfordert mehr als einen Gewinner.
     fr: La représentation proportionelle implique qu\'il y ait plus d\'un élu ou plus d\'une proposition retenue.
+    es: La representación proporcional requiere más de un ganador.
 }
 Must_have_at_least_two_choices_to_vote_on {
     en: Must have at least two choices to vote on
+    de: Muss mindestens zwei Wahlmöglichkeiten haben, über die abgestimmt werden kann.
     fr: Il doit y avoir au minimum deux candidats ou deux propositions pour pouvoir organiser une consultation.
+    es: Debe tener al menos dos opciones para votar.
 }
 Results_recipient_email_address_is_invalid {
-    en: Results recipient email address is invalid:
+    en: Results recipient e-mail address is invalid:
+    de: Die E-Mail-Adresse des Ergebnisempfängers ist ungültig:
     fr: L\'adresse de courrier électronique de ce destinataire des résultats est invalide :
+    es: La dirección de correo electrónico del destinatario de los resultados no es válida:
 }
 You_have_specified_no_users_who_can_see_the_poll_results {
     en: You have specified no users who can see the poll results.
+    de: Sie haben keine Benutzer angegeben, die die Umfrageergebnisse sehen können.
     fr: Vous n\'avez pas précisé qui pourra consulter les résultats de la consultation.
+    es: No ha especificado ningún usuario que pueda ver los resultados de la encuesta.
 }
 
 Name_of_the_poll {
   en: Name of the poll (e.g., <b>The Democratic Primary</b>): 
   de: Name der Umfrage (z. B. <b>Lieblingsfilm</b>):
   fr: Nom de la consultation (par exemple, <b>Palme d'or du Festival de Cannes</b>) : 
+  es: Nombre de la encuesta (por ejemplo, <b>Comida Favorita</b>):
 }
 Name_of_supervisor {
   en: Name of supervisor (you):
   de: Name des Betreuers (Sie):
   fr: Nom du responsable (vous) : 
+  es: Nombre del supervisor (usted):
 }
 Email_address_of_supervisor {
   en: E-mail address of supervisor: 
   de: E-Mail-Adresse des Betreuers: 
   fr: Adresse de courrier électronique du responsable :
+  es: Dirección de correo electrónico del supervisor:
 }
 Day_and_time_you_plan_to_stop {
   en: Day and time you plan to stop the poll:
   de: Tag und Uhrzeit, zu der Sie die Umfrage beenden möchten:
   fr: Date et heure de fin de la consultation : 
+  es: Día y hora en que planea detener la encuesta:
 }
 Invalid_email_address {
-   en: Invalid email address
+   en: Invalid e-mail address
    de: Ungültige E-Mail-Adresse
    fr: Adresse de courrier Internet invalide
+   es: Dirección de correo electrónico no válida
 }
 polls_must_be_stopped_manually {
   en: (<b>Note:</b> polls must be stopped manually)
@@ -521,10 +545,13 @@ polls_must_be_stopped_manually {
     (<b>Note:</b> La consultation ne se clôturera pas automatiquement.
     C'est au responsable de clôturer manuellement la consultation.)
   }
+  es: (<b>Nota:</b> las encuestas deben detenerse manualmente)
 }
 Preview_polls_ends {
     en: <i>Preview</i>: Poll ends 
+    de: <i>Vorschau:</i> Die Umfrage endet
     fr: <i>Prévisualiser </i>: La consultation sera clôse le 
+    es: <i>Vista previa:</i> la encuesta termina
 }
 address_warning_para {
   en {
@@ -557,11 +584,22 @@ address_warning_para {
     être pas inutile de contrôler le dossier où sont dirigés les spams
     si vous ne recevez pas de courrier électronique provenant de CIVS).
   }
+  es {
+    Su nombre y dirección de correo electrónico se utilizan al
+    enviar correos electrónicos a los votantes. Su nombre debe ser
+    reconocible para los votantes y la dirección de correo electrónico
+    debe funcionar, porque CIVS le envía por correo electrónico la
+    información necesaria para controlar la votación. Asegúrese
+    de que su filtro de correo no deseado no bloquee el correo de
+    <kbd>@SUPERVISOR@</kbd> (¡o revise su carpeta de correo no deseado
+    si el correo no llega!).
+  }
 }
 Description_of_the_poll {
   en: Description of the poll and available choices (many HTML tags ok):
   de: Beschreibung der Umfrage und verfügbare Auswahlmöglichkeiten (viele HTML-Tags ok):
-  fr: Description de la consultation
+  fr: Description de la consultation :
+  es: Descripción de la encuesta y opciones disponibles (muchas etiquetas HTML están bien):
 }
 Enter_the_names_of_all_the_choices {
   en {
@@ -578,30 +616,37 @@ Enter_the_names_of_all_the_choices {
     candidat ou une proposition par ligne. Vous pouvez aussi charger un
     fichier contenant ces informations :
   }
+  es {
+    Ingrese los nombres de todas las opciones (candidatos), uno por
+    línea, o cargue un archivo que contenga todas las opciones:
+  }
 }
 Preview_arrow {
   en: Preview &#9656;
   fr: Prévisualiser &#9656;
+  es: Avance &#9656;
 }
 How_many_choices_will_win {
   en: How many choices will win:
   de: Wie viele Entscheidungen gewinnen:
   fr: Combien y aura-t-il de candidats élus ou de propositions retenus
+  es: Cuántas opciones ganará:
 }
 public_or_private {
   en: Do you want the poll to be <em>private</em> or <em>public</em>?
   de: Soll die Umfrage <em>privat</em> oder <em>öffentlich</em> sein?
   fr: Voulez-vous que le sondage soit privé ou public ?
+  es: ¿Quieres que la encuesta sea <em>privada</em> o <em>pública</em>?
 }
 private_explanation {
   en {
     <strong>Private</strong>
     <p>
-      Each voter receives their own unique URL for voting, and can only
-      vote once.  The voters' email addresses must be provided to the
-      system so it can tell them their voting URL, but the system forgets
-      their addresses immediately after the email is sent. You can add
-      voters after the poll has been created.
+      Each voter receives their own unique URL for voting, and can
+      only vote once.  The voters' email addresses must be provided to
+      the system so it can tell them their voting URL, but the system
+      forgets their addresses immediately after the email is sent. You
+      can add voters after the poll has been created.
     </p>
   }
   de {
@@ -616,15 +661,26 @@ private_explanation {
     </p>
   }
   fr {
-  <strong>Privé</strong>
-  <p>
+   <strong>Privé</strong>
+   <p>
     Chaque électeur reçoit sa propre URL unique pour voter et ne peut
     voter qu'une seule fois. Les adresses e-mail des électeurs doivent
     être fournies au système afin qu'il puisse leur indiquer leur
     URL de vote, mais le système oublie leurs adresses immédiatement
     après l'envoi de l'e-mail. Vous pouvez ajouter des électeurs
     après la création du sondage.
-  </p>
+   </p>
+  }
+  es {
+   <strong>Privada</strong>
+   <p>
+    Cada votante recibe su propia URL única para votar y solo puede
+    votar una vez. Las direcciones de correo electrónico de los
+    votantes deben proporcionarse al sistema para que pueda decirles
+    su URL de votación, pero el sistema olvida sus direcciones
+    inmediatamente después de enviar el correo electrónico. Puede
+    agregar votantes después de que se haya creado la encuesta.
+   </p>
   }
 }
 public_explanation {
@@ -660,6 +716,16 @@ public_explanation {
     privé.
   </p>
   }
+  es {
+   <strong>Pública</strong>
+   <p>
+    Hay una sola URL que cualquier votante puede usar para emitir su
+    voto, y es su trabajo distribuirla. Sin embargo, solo hay un
+    intento simbólico de evitar la votación múltiple, según las
+    direcciones IP de los votantes. Si desea asegurarse de que los
+    votantes solo voten una vez, use una encuesta privada en su lugar.
+   </p>
+  }
 }
 more_poll_options {
   en: More options <small>(mouse over each check box for more information)</small> 
@@ -672,14 +738,37 @@ more_poll_options {
     souris sur la case à cocher pour avoir des informations
     complémentaires)</small>
   }
+  es {
+    Más opciones <small>(pase el mouse sobre cada casilla de
+    verificación para obtener más información)</small>
+  }
 }
 CIVS_will_announce_this_poll {
-  en: CIVS will announce this poll on its list of public polls and \
-      possibly elsewhere.  Anyone who views the list will be able to vote.
+  en {
+    CIVS will announce this poll on its list of public polls and \
+    possibly elsewhere.  Anyone who views the list will be able to vote.
+  }
+  de {
+    CIVS wird diese Umfrage auf seiner Liste der öffentlichen \
+      Umfragen und möglicherweise auch anderswo ankündigen. Jeder, \
+      der sich die Liste ansieht, kann abstimmen.
+  }
+  fr {
+      La CIVS annoncera ce scrutin sur sa liste des scrutins publics \
+      et éventuellement ailleurs. Toute personne qui consultera la \
+      liste pourra voter.
+  }
+  es {
+      CIVS anunciará esta encuesta en su lista de encuestas públicas \
+      y posiblemente en otros lugares. Cualquiera que vea la lista \
+      podrá votar.
+  }
 }
 Have_CIVS_publicize_this_poll {
   en: Have CIVS publicize this poll on its home page.
   de: Lassen Sie CIVS diese Umfrage auf seiner Homepage veröffentlichen.
+  fr: Faire publier ce sondage par la CIVS sur sa page d'accueil.
+  es: Haga que CIVS publique esta encuesta en su página de inicio.
 }
 If_you_want_to_upload {
     en {
@@ -706,15 +795,25 @@ If_you_want_to_upload {
         vous devez dépouiller des bulletins de vote qui n'ont pas été \
         enregistrés par CIVS.
     }
+    es {
+        Si desea cargar usted mismo todas las papeletas de votación, marque \
+        esta casilla. Los votantes no pueden votar en tal encuesta.  Esto es \
+        útil si está tratando de comprender cómo funcionan los diversos \
+        métodos de votación o si ha obtenido boletas de alguna fuente \
+        fuera de CIVS.
+    }
 }
 Make_this_a_test_poll {
   en: Make this a test poll: read all votes from a file.
   de: Machen Sie dies zu einer Testumfrage: Lesen Sie alle Stimmen aus einer Datei.
   fr: Cette consultation est une consultation de test. Tous les votes proviendront d'un fichier. 
+  es: Haga de esta una encuesta de prueba: lea todos los votos de un archivo.
 }
 Restrict_results {
   en: Restrict results
+  de: Ergebnisse einschränken 
   fr: Restreindre les résultats
+  es: Restringir resultados
 }
 CIVS_will_announce_this_poll {
     en {
@@ -732,6 +831,11 @@ CIVS_will_announce_this_poll {
       éventuellement ailleurs. Toute personne qui consultera la liste \
       pourra voter.
     }
+    es {
+      CIVS anunciará esta encuesta en su lista de encuestas \
+      públicas y posiblemente en otros lugares. Cualquiera \
+      que vea la lista podrá votar.
+    }
 }
 Do_not_release_results_to_all_voters {
     en: Do not release results to all voters.
@@ -740,6 +844,7 @@ Do_not_release_results_to_all_voters {
         Les résultats de cette consultation ne seront communiqués qu'à \
         un nombre restreint de personnes. 
     }
+    es: No divulgue los resultados a todos los votantes.
 }
 restriction_explanation {
   en {
@@ -758,6 +863,12 @@ restriction_explanation {
     voulez restreindre le nombre de personnes pouvant consulter les
     résultats de cette consultation.
   }
+  es {
+    De forma predeterminada, los resultados de una encuesta
+    son visibles para todos los votantes. Seleccione esta
+    opción para restringir la visibilidad a un grupo más
+    pequeño de personas.
+  }
 }
 Enter_email_addresses_results {
   en {
@@ -774,11 +885,17 @@ Enter_email_addresses_results {
     auront accès aux résultats de cette consultations. Ces adresses
     seront communiquées à tous les participants à cette consultation.
   }
+  es {
+    Ingrese las direcciones de correo electrónico de los usuarios
+    autorizados para ver los resultados de la encuesta: (Todos los
+    votantes pueden ver estas direcciones de correo electrónico)
+  }
 }
 Enable_detailed_ballot_reporting {
   en: Enable detailed ballot reporting.
   de: Aktivieren Sie detaillierte Abstimmungsberichte.
   fr: Les résultats de la consultation seront détaillés.
+  es: Habilite el informe detallado de boletas.
 }
 Allows_any_to_view {
   en {
@@ -794,6 +911,20 @@ Allows_any_to_view {
     jedoch nicht offengelegt, es sei denn, die nächste Option wird \
     aktiviert.
   }
+  fr {
+    Cette option permet à tout participant au sondage de voir \
+    le classement sur chaque bulletin de vote. Cependant, \
+    les informations d'identification sur les électeurs qui \
+    ont voté ne sont pas révélées à moins que l'option \
+    suivante ne soit cochée.
+  }
+  es {
+    Esta opción permite que cualquier participante de la \
+    encuesta vea las clasificaciones en cada boleta. Sin \
+    embargo, la información de identificación de los \
+    votantes que emitieron estos votos no se revela a menos \
+    que se marque la siguiente opción.
+  }
 }
 
 Also_reveal_identity {
@@ -808,6 +939,10 @@ Also_reveal_identity {
   fr {
     Les résultats détaillés de la consultation contiendront aussi
     l'identité des participants et leur vote.
+  }
+  es {
+    En el informe detallado de la boleta, también revele la identidad
+    del votante con cada boleta.
   }
 }
 Reveal_warning {
@@ -832,6 +967,14 @@ Reveal_warning {
      participants.  Les participants seront avertis de l'absence
      d'anonymat de cette consultation. 
   }
+  es {
+    Los votantes <i class=warning>no</i> son anónimos si esto está
+    marcado, ni el servidor descarta las direcciones de correo
+    electrónico de los votantes como lo hace normalmente. Se advierte
+    a los votantes sobre esta falta de anonimato. Se permiten
+    múltiples votos desde una sola dirección IP si se trata de una
+    encuesta pública.
+  }
 }
 Allow_voters_to_write_in_new_choices {
   en {
@@ -842,6 +985,9 @@ Allow_voters_to_write_in_new_choices {
   }
   fr {
     Permettre aux participants d'ajouter des candidats ou des propositions.
+  }
+  es {
+    Permita que los votantes escriban nuevas opciones.
   }
 }
 
@@ -870,6 +1016,14 @@ you_can_allow_writeins {
     candidats ou des propositions.  Le responsable de la consultation \
     gère le déroulement des deux sessions.
  }
+ es {
+    Puede permitir escrituras con esta opción. sin embargo, las \
+    cancelaciones tienen una gran desventaja si ocurren después de que \
+    se hayan emitido algunos votos. por lo tanto, cuando se selecciona \
+    esta opción, hay una fase de escritura en la que no se pueden \
+    emitir votos. el supervisor debe habilitar explícitamente la \
+    votación.
+ }
 }
 
 Present_choices_in_order {
@@ -883,6 +1037,10 @@ Present_choices_in_order {
   fr {
     Présenter les candidats ou les propositions sur le bulletin de
     vote dans l'ordre exact où ils ont été saisis.
+  }
+  es {
+    Presente las opciones en la página de votación exactamente en el
+    orden dado.
   }
 }
 Present_choices_in_order_expl {
@@ -910,6 +1068,13 @@ Present_choices_in_order_expl {
     consultation concernant les horaires possibles pour une \
     réunion.
  }
+ es {
+    De manera predeterminada, las opciones de encuesta se \
+    presentan en un orden aleatorio en cada boleta. Para \
+    algunas encuestas, como elegir una hora de reunión, \
+    será más conveniente para los votantes ver las \
+    opciones exactamente en el orden indicado anteriormente.
+ }
 }
 
 Allow_no_opinion {
@@ -921,6 +1086,9 @@ Allow_no_opinion {
   }
   fr {
     Permettre aux participant d'utiliser l'abstention.
+  }
+  es {
+    Permitir a los votantes seleccionar "sin opinión" para algunas opciones.
   }
 }
 No_opinion_expl {
@@ -944,12 +1112,22 @@ No_opinion_expl {
         de son usage et n'oubliez pas d'informer les \
         participants de ces implications.
     }
+    es {
+        La opción de “sin opinión” puede tener efectos \
+        inesperados. Asegúrese de leer las preguntas \
+        frecuentes sobre cómo usarlo e informe a los \
+        votantes en consecuencia. La opción "sin opinión" \
+        puede tener efectos inesperados. Asegúrese de \
+        leer las preguntas frecuentes sobre cómo usarlo e \
+        informar a los votantes en consecuencia.
+    }
 }
 
 Enforce_proportional_representation {
   en: Enforce proportional representation [<a href="proportional.html">more information</a>]
   de: Verhältniswahl durchsetzen [<a href="proportional.html">mehr Informationen</a>]
   fr: Imposer la représentation proportionnelle [<a href="proportional.html">Pour en savoir plus</a>].
+  es: Hacer cumplir la representación proporcional [<a href="proportional.html">más información</a>]
 }
 
 Proportional_rep_expl {
@@ -998,6 +1176,20 @@ Proportional_rep_expl {
     en savoir plus' pour connaitre le fonctionnement de la \
     représentation proportionnelle.
   }
+  es {
+    El modo proporcional es útil solo para elecciones de \
+    múltiples ganadores, donde desea asegurarse de que los \
+    deseos de los votantes se expresen proporcionalmente. De \
+    lo contrario, una mayoría de votantes puede decidir \
+    a todos los ganadores. El modo proporcional es mucho \
+    más lento que el modo no proporcional normal y no \
+    debe usarse en casos en los que hay muchas opciones y \
+    muchos ganadores. En la mayoría de los casos, pero no \
+    en todos, los resultados del modo proporcional y no \
+    proporcional concuerdan. Haga clic en el enlace 'más \
+    información' para obtener más información sobre cómo \
+    funciona este modo.
+  }
 }
 
 voters_maximizing {
@@ -1007,37 +1199,56 @@ voters_maximizing {
     Dans le cadre de la représentation proportionnelle, les \
     participants sont supposés vouloir maximiser :
   }
+  es: Para la representación proporcional, se supone que los votantes maximizan:
 }
 
 rank_of_their_favorite_choice {
     en: rank of their favorite choice
     de: Der Rang ihrer bevorzugten Wahl
     fr: Soit le classement de leur candidat ou de leur proposition favori
+    es: rango de su elección favorita
 }
 
 combined_weights_of_selected_choices {
   en: combined weights of selected choices
   de: kombinierte Gewichte der ausgewählten Optionen
   fr: Soit le poids combiné des différents candidats ou des différentes propositions qu'ils ont choisis.
+  es: pesos combinados de opciones seleccionadas
 }
 
 Make_sure_your_address_is_correct {
   en {
-    Make sure your e-mail address is correct, because poll information will
-    be emailed to you. Voters will not be informed of the poll's
-    existence until you respond to this e-mail message.
+    Make sure your e-mail address is correct, because poll
+    information will be emailed to you. Voters will not be
+    informed of the poll's existence until you respond to
+    this e-mail message.
   }
   de {
-    Stellen Sie sicher, dass Ihre E-Mail-Adresse korrekt ist, da Ihnen
-    die Umfrageinformationen per E-Mail zugesandt werden. Die Wähler
-    werden erst dann über die Existenz der Umfrage informiert, wenn Sie
-    auf diese E-Mail-Nachricht antworten.
+    Stellen Sie sicher, dass Ihre E-Mail-Adresse korrekt
+    ist, da Ihnen die Umfrageinformationen per E-Mail
+    zugesandt werden. Die Wähler werden erst dann über
+    die Existenz der Umfrage informiert, wenn Sie auf diese
+    E-Mail-Nachricht antworten.
   }
   fr {
-    Vérifier que l'adresse de votre courrier électronique est correcte
-    car les informations relatives à cette consultation vont être
-    envoyée à cette adresse. Les participants à cette consultation ne
-    seront informés de son existence que lorsque vous aurez répondu au
-    courrier électronique qui va vous parvenir. 
+    Vérifier que l'adresse de votre courrier électronique
+    est correcte car les informations relatives à cette
+    consultation vont être envoyée à cette adresse. Les
+    participants à cette consultation ne seront informés
+    de son existence que lorsque vous aurez répondu au
+    courrier électronique qui va vous parvenir.
   }
+  es {
+    Asegúrese de que su dirección de correo electrónico
+    sea correcta, porque la información de la encuesta se
+    le enviará por correo electrónico. Los votantes no
+    serán informados de la existencia de la encuesta hasta
+    que responda a este mensaje de correo electrónico.
+  }
+}
+Create_poll {
+  en: Create poll
+  de: Umfrage erstellen
+  fr: Créer une consultation
+  es: Crear encuesta
 }
