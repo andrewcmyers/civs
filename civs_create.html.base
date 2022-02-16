@@ -136,7 +136,7 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
     <td><input type="text" name="name" size="20" aria-labelledby="supervisor_name">
   </td>
   <tr>
-    <td class="label"><label id="supervisor_email">E-mail address of supervisor:</label></td>
+    <td class="label"><label id="supervisor_email">@Email_address_of_supervisor@</label></td>
     <td><input type="text" name="email_addr" size="20" aria-labelledby="supervisor_email"
       onchange="if (!validateEmail(this.value)) { alert('@Invalid_email_address@') }" >
     </td>
