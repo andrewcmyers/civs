@@ -23,3 +23,7 @@ Content-language: pt
 URI: index.html.de.utf8
 Content-type: text/html
 Content-language: de
+
+URI: index.html.es.utf8
+Content-type: text/html
+Content-language: es

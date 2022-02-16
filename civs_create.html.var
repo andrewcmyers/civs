@@ -19,3 +19,7 @@ Content-language: pt
 URI: civs_create.html.de@UTF8_SUFFIX@
 Content-type: text/html
 Content-language: de
+
+URI: civs_create.html.es@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: es
