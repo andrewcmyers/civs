@@ -19,6 +19,7 @@ my ($translation_file, $language_code, $source_file, $dest_file) = @ARGV;
 undef $/;
 
 open(TRANSLATIONS, $translation_file) || &Error("Could not open file: $translation_file");
+binmode TRANSLATIONS, ':utf8';
 my $trans_data = <TRANSLATIONS>;
 close(TRANSLATIONS);
 
@@ -126,6 +127,7 @@ sub ParseTranslations {
 my %translations = %{&ParseTranslations($trans_data, $language_code)};
 
 open(SOURCE, $source_file) || &Error("Can't open $source_file $source_file");
+binmode SOURCE, ':utf8';
 
 my $source = <SOURCE>;
 close(SOURCE);
@@ -137,5 +139,6 @@ foreach my $name (keys %translations) {
 }
 
 open(DEST, ">$dest_file") || Error "Could not open $dest_file for writing";
+binmode DEST, ':utf8';
 print DEST $source;
 close(DEST);
