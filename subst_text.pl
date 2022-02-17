@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 sub Usage {
-    print STDERR "Usage: subst_lang <translation_file> <language_code> <source_file> <dest_file>\n";
+    print STDERR "Usage: subst_text <translation_file> <language_code> <source_file> <dest_file>\n";
     exit 1;
 }
 
