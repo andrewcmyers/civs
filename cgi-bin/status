@@ -134,7 +134,7 @@ foreach my $entry (@entries) {
 			         '&admin_key='.uri_escape('@ADMIN_KEY@'),
 			  -target=>"_blank"},
 	small($title)),
-	"$name (" . a({-href=>"mailto:$email_addr"},$email_addr) . ")",
+	"$name &lt;" . a({-href=>"mailto:$email_addr"},$email_addr) . "&gt;",
 	$public,
 	$num_auth,
 	$num_votes,
