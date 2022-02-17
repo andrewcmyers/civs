@@ -346,15 +346,16 @@ sub This_is_a_public_poll_plus_link {
     my ($self, $url, $pub) = @_;
     if ($pub) {
 	'This is a public poll. Share the following link
-	    with voters to allow them to vote:</p><p>
+	    with voters to allow them to vote:<br>
 	    &nbsp;&nbsp;'
         . $self->CopyableURL('poll_link', $url)
-        . ' This poll will also be publicized by CIVS.';
+        . '</p><p>This poll will also be publicized by CIVS.';
     } else {
 	'This is a public poll. Share the following link
-	    with voters to allow them to vote:</p><p>
+	    with voters to allow them to vote:<br>
 	    &nbsp;&nbsp;'
-        . $self->CopyableURL('poll_link', $url);
+        . $self->CopyableURL('poll_link', $url)
+        . '</p>';
     }
 }
 sub The_poll_has_ended {
