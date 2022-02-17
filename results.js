@@ -73,3 +73,7 @@ function post_new_description(desc) {
 	},
 	function(err) { alert(err); });
 }
+
+function copy_url(id, url) {
+    navigator.clipboard.writeText(url).then(msg => popup(id, "URL copied"))
+}

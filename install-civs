@@ -114,7 +114,7 @@ for f in civs_create.html* index.html* public_elections.html*		      \
     style.css results.js vote.js ajax.js ezdom.js civs_hdr.js		      \
     mail_mgmt.js opt_in.js add_voters.js hebrew.css			      \
     jquery-ui-touch-punch/jquery.ui.touch-punch.js			      \
-    qrcodejs/qrcode.min.js 
+    qrcodejs/qrcode.min.js
 do
     b=`basename "$f"`
     case "$f" in
@@ -158,7 +158,7 @@ echo "Installing images"
 
 mkdir -p "${HTMLDIR}/images"
 
-for f in images/{check123b,sample-ballot,vertstrip,check-civs}.png images/check123b.ico
+for f in images/{check123b,sample-ballot,vertstrip,check-civs,copy-icon}.png images/check123b.ico
 do
     dest="${HTMLDIR}/${f}"
     CopyFile "$f" "$dest"

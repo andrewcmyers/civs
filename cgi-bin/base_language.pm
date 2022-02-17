@@ -7,6 +7,13 @@ our $VERSION = 1.00;
 
 sub lang { 'en-US' }
 
+sub CopyableURL {
+    my ($self, $id, $url) = @_;
+    "<tt><a href=\"$url\">$url</a></tt>
+    <img width=\"20\" src=\"@CIVSURL@/images/copy-icon.png\" onclick=\"copy_url('$id', '$url')\"/>
+    <span class=popup id=$id></span>"
+}
+
 sub init {
     my $self = {};
     bless $self;
@@ -338,14 +345,16 @@ sub Or_paste_this_code {
 sub This_is_a_public_poll_plus_link {
     my ($self, $url, $pub) = @_;
     if ($pub) {
-	return "This is a public poll. Share the following link
+	'This is a public poll. Share the following link
 	    with voters to allow them to vote:</p><p>
-	    &nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>. This
-	    poll will also be publicized by CIVS.";
+	    &nbsp;&nbsp;'
+        . $self->CopyableURL('poll_link', $url)
+        . ' This poll will also be publicized by CIVS.';
     } else {
-	return "This is a public poll. Share the following link
+	'This is a public poll. Share the following link
 	    with voters to allow them to vote:</p><p>
-	    &nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
+	    &nbsp;&nbsp;'
+        . $self->CopyableURL('poll_link', $url);
     }
 }
 sub The_poll_has_ended {
