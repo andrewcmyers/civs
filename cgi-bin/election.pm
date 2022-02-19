@@ -108,15 +108,21 @@ sub init {
     &OpenDatabase;
 
     # Extract data from databases
-    $name = DB_decode('name');
-    $title = DB_decode('title');
-    $email_addr = $edata{'email_addr'};
-    $description = DB_decode('description');
+    #
+    # There are roughly three kinds of data in database fields:
+    #   byte strings (for numbers and ASCII data) - stored verbatim; must be escaped in HTML output using escapeHTML
+    #   UTF-8 encoded strings                     - must be escaped in HTML output
+    #   UTF-8 encoded HTML strings (which have been filtered) - should not be escaped in HTML output
+    #
+    $name = DB_decode('name');                 # name of supervisor: UTF-8
+    $title = DB_decode('title');               # title of poll: HTML
+    $email_addr = DB_decode('email_addr');     # email of supervisor: UTF-8
+    $description = DB_decode('description');   # poll description: HTML
     $num_winners = $edata{'num_winners'};
     $addresses = DB_decode('addresses') || '';
     @addresses = split /[\r\n]+/, $addresses;
     $election_begin = $edata{'election_begin'};
-    $election_end = DB_decode('election_end');
+    $election_end = DB_decode('election_end');  # HTML
     $public = $edata{'public'};
     $publicize = $edata{'publicize'} || 'no';
     $writeins = $edata{'writeins'};
@@ -124,7 +130,7 @@ sub init {
     $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
     $proportional = $edata{'proportional'} // '';
     $use_combined_ratings = $edata{'use_combined_ratings'} || 0;
-    $choices = DB_decode('choices') // '';
+    $choices = DB_decode('choices') // '';    # list of newline-separated choices/candidates: HTML
     @choices = split /[\r\n]+/, $choices;
     $num_choices = $#choices + 1;
     $num_auth = $edata{'num_auth'};
@@ -137,7 +143,7 @@ sub init {
     $external_ballots = $edata{'external_ballots'} // 'no';
     $reveal_voters = $edata{'reveal_voters'} // '';
     $restrict_results = $edata{'restrict_results'} // 'no';
-    $result_addrs = $edata{'result_addrs'};
+    $result_addrs = DB_decode('result_addrs');
     $hash_result_key = 0;
     $last_vote_time = $vdata{'last_vote_time'};
     $email_load = $edata{'email_load'}; # timestamp num_mails
