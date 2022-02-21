@@ -104,9 +104,9 @@ tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 ##### read form data into DB
 my $title = &Filter(scalar param('title') || ''); $edata{'title'} = encode('utf-8', $title);
 $edata{'description'} = encode('utf-8', &Filter(scalar param('description') || ''));
-my $name = &Filter(scalar param('name')) || "unspecified"; $edata{'name'} = encode('utf-8', $name);
-$edata{'email_addr'} = &Filter(scalar param('email_addr'));
-$edata{'num_winners'} = &Filter(scalar param('num_winners'));
+my $name = param('name') || "unspecified"; $edata{'name'} = encode('utf-8', $name);
+$edata{'email_addr'} = encode('utf-8', scalar param('email_addr'));
+$edata{'num_winners'} = natParam('num_winners');
 $edata{'election_end'} = encode('utf-8', &Filter(scalar param('election_end')));
 $edata{'election_begin'} = time();
 
@@ -154,7 +154,8 @@ SetBinaryParameter('reveal_voters', 'no');
 my $restrict_results = SetBinaryParameter('restrict_results', 'no');
 my $result_addrs;
 if ($restrict_results eq 'yes') {
-    $edata{'result_addrs'} = $result_addrs = param('result_addrs');
+    $result_addrs = param('result_addrs');
+    $edata{'result_addrs'} = encode('utf-8', $result_addrs);
     if ($result_addrs eq '') {
         Fatal_CIVS_Error('No email addresses were given to send election results to. This should have been caught by JavaScript input validation.');
     }

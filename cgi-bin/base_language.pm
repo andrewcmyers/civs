@@ -135,7 +135,7 @@ sub opted_out { # addr
   "Sorry, you cannot send any email to &lt;$_[1]&gt; via CIVS."
 }
 
-sub Sending_result_key { # addr
+sub Sending_result_key { # addr (escaped)
     "<p>Sending result key to <tt>$_[1]</tt>. Please allow this to complete...<br>"
 }
 sub Done_sending_result_key { # addr
@@ -542,7 +542,7 @@ sub however_results_restricted {
     my $first=1;
     foreach my $u (@users) {
 	if (!$first) { $r .= ', '; $first=0; }
-	$r .= "<tt>$u</tt>";
+	$r .= tt(escapeHTML($u));
     }
     $r .= '.';
     return $r;
