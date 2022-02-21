@@ -110,8 +110,8 @@ No_current_news {
 Top_public_polls {
     en: Top public polls:
     de: Top öffentliche Umfragen: 
-    fr: Les meilleurs sondages publics 
-    es: Principales encuestas públicas
+    fr: Sondages populaires
+    es: Encuestas públicas populares
 }
 see_more {
     en: [see more]
