@@ -36,7 +36,7 @@ my %algorithm_modules = ('beatpath2', 1,
 			 'runoff', 1,
                          'minimax', 1);
 
-my $default_algorithm = 'minimax';
+my $default_algorithm = 'beatpath';
 
 # CheckLoad;
 # timeout(30);
@@ -279,15 +279,15 @@ sub ComputeResults {
 	'<input type="radio"
 	    name="algorithm"
 	    onclick="newSettings()"
-	    value="minimax"',
-	    $minimax_checked,
-	' /> Minimax', BR,
+	    value="beatpath" ',
+	    $bw_checked,
+	' /> Schulze/Beatpath', BR,
 	'<input type="radio"
 	    name="algorithm"
 	    onclick="newSettings()"
-	    value="beatpath" ',
-	    $bw_checked,
-	' /> Schulze/Beatpath/CSSD', BR,
+	    value="minimax"',
+	    $minimax_checked,
+	' /> Minimax', BR,
 	'<input type="radio"
 	    name="algorithm"
 	    onclick="newSettings()"
