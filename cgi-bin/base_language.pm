@@ -469,13 +469,14 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
 	    For example, give your top choice the rank 1.
 	    Give choices the same rank if you have no
 	    preference between them. You do not have to use all the
-	    possible ranks. All choices initially have the
-	    lowest possible rank. ". $cr;
-	if ($no_opinion) {
-	    $ret .= '<b>Note:</b> &ldquo;No opinion&rdquo;
-		    is <i>not</i> the same as the lowest possible rank; it means
+	    possible ranks.";
+        if (!$no_opinion) {
+            $ret .= ' All choices initially have the lowest possible rank.</p>'. $cr;
+        } else {
+	    $ret .= '</p><p><b>Note:</b> All choices initially have the rank “No opinion”. This
+                    rank is <i>not</i> the same as the lowest possible rank; it means
 		    that you choose not to rank this choice with respect to the
-		    other choices.</p>';
+		    other choices.</p>' . $cr;
 	}
 	if ($prop) {
 	    $ret .= '<p>This poll is decided using an experimental Condorcet-based

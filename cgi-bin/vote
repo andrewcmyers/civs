@@ -275,12 +275,14 @@ sub ProjectName {
     return $name;
 }
 
+sub default_rank { $no_opinion eq 'yes' ? $NO_OPINION : $num_choices }
+
 sub OrderChoices {
     my ($old_ballot) = @_;
     if ($add_writein || $old_ballot) {
         my @old_ranks = split /,/, ($old_ballot || '');
         for (my $i = 0; $i < $num_choices; $i++) {
-            my $rank = param('C'.$i) || $old_ranks[$i] || $num_choices;
+            my $rank = param('C'.$i) || $old_ranks[$i] || &default_rank($i);
             $iota[$i] = $i;
             $rank[$i] = $rank;
         }
@@ -299,11 +301,11 @@ sub OrderChoices {
             if ($proportional eq 'yes' && $use_combined_ratings) {
                 $rank[$i] = 0;
             } else {
-                $rank[$i] = $num_choices;
+                $rank[$i] = &default_rank($i);
             }
         }
         if (!defined($shuffle) || $shuffle ne 'no') {
-        fisher_yates_shuffle(\@choice_index);
+            fisher_yates_shuffle(\@choice_index);
         }
     }
 }
