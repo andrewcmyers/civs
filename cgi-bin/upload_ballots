@@ -20,6 +20,7 @@ my $thisurl = $civs_bin_path."/upload_ballots@PERLEXT@";
 
 my $control_key = bytesParam('key');
 my $authorization_key = bytesParam('akey');
+my $MAX_TEST_BALLOTS = 100000;
 
 HTML_Header('Load Ballots');
 
@@ -50,7 +51,6 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
     if ($#errors >= $max_errors) { next }
     $_ = decode('utf-8', fixUTF($ballot_fh->handle->getline));
     $lineno++;
-    # print pre("Line $lineno: $_"), $cr;
     s/\A(\s)*//;
     s/(\s)*\Z//;
     if (m/^#/) { next } # skip comments
@@ -72,7 +72,7 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
     }
     my @indices = split /\s*,\s*|\s+/;
     if ($#indices != $num_choices - 1) {
-	push @errors, li("Line $lineno: expected $num_choices ranks, found " .  ($#indices+1). ".");
+	push @errors, li("Line $lineno: expected $num_choices ranks, found ", ($#indices+1), '.');
 	next;
     }
     for (my $cnt = 0; $cnt < $multiplier; $cnt++) {
@@ -100,14 +100,15 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
 		next;
 	    }
 	    if ($cnt == 0) {
-		push @errors, li("Line $lineno: choice ", $i+1, " has badly formed rank &ldquo;$rank&rdquo;.");
+		push @errors, li("Line $lineno: choice ", $i+1,
+                                 " has badly formed rank &ldquo;$rank&rdquo;.");
 	    }
 	}
 	$num_ballots++;
-	if ($num_ballots > 1000) {
-	    push @errors, li("Line $lineno: too many ballots for test poll.");
-            last;
-	}
+    }
+    if ($num_ballots > $MAX_TEST_BALLOTS) {
+        push @errors, li("Line $lineno: too many ballots for test poll.");
+        last;
     }
   }
 }
@@ -124,10 +125,12 @@ if ($#errors >= 0) {
 }
 print p("Ballot file is well formed and contains $num_ballots ballots."), $cr;
 
-my $num_votes = $vdata{'num_votes'} || 0;
+my $num_votes = $vdata{'num_votes'} // 0;
+my @recorded_voters;
+my @matrix;
 
 #
-# Insert the ballots into the DB
+# compute DB updates
 #
 for (my $i = 0; $i < $num_ballots; $i++) {
     my $vote = '';
@@ -149,12 +152,7 @@ for (my $i = 0; $i < $num_ballots; $i++) {
 #
 # Record the "voter"
 #
-    if ($recorded_voters) {
-	$recorded_voters = $vdata{'recorded_voters'} =
-	    $recorded_voters . "\n".  $ballot_key;
-    } else {
-	$recorded_voters = $vdata{'recorded_voters'} = $ballot_key;
-    }
+    push @recorded_voters, $ballot_key;
     if ($reveal_voters eq 'yes') {
 	$vdata{"voter key of $ballot_key"} = $ballot_key;
     }
@@ -163,19 +161,22 @@ for (my $i = 0; $i < $num_ballots; $i++) {
 #
     for (my $j = 0; $j < $num_choices; $j++) {
 	for (my $k = 0; $k < $num_choices; $k++) {
-	    my $jk = $vdata{"$j.$k"};
-	       $jk = 0 if (!defined($jk));
-	if ($rank[$j] ne 'No opinion' &&
-			$rank[$k] ne 'No opinion' &&
-			$rank[$j] < $rank[$k])
-		{
-			$vdata{"$j.$k"} = $jk + 1;
-	    }	
+            if ($rank[$j] ne 'No opinion' &&
+                $rank[$k] ne 'No opinion' &&
+                $rank[$j] < $rank[$k]) {
+                $matrix[$j][$k]++;
+            }	
 	}
     }
 }
 
+for (my $j = 0; $j < $num_choices; $j++) {
+    for (my $k = 0; $k < $num_choices; $k++) {
+        $vdata{"$j.$k"} = $matrix[$j][$k];
+    }
+}
 
+$vdata{'recorded_voters'} = join "\n", @recorded_voters;
 $vdata{'last_vote_time'} = $last_vote_time = time();
 $vdata{'num_votes'} += $num_ballots;
 

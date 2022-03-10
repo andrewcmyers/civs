@@ -36,7 +36,7 @@ my %algorithm_modules = ('beatpath2', 1,
 			 'runoff', 1,
                          'minimax', 1);
 
-my $default_algorithm = 'beatpath';
+my $default_algorithm = 'minimax';
 
 # CheckLoad;
 # timeout(30);
@@ -279,12 +279,6 @@ sub ComputeResults {
 	'<input type="radio"
 	    name="algorithm"
 	    onclick="newSettings()"
-	    value="beatpath" ',
-	    $bw_checked,
-	' /> Schulze/Beatpath', BR,
-	'<input type="radio"
-	    name="algorithm"
-	    onclick="newSettings()"
 	    value="minimax"',
 	    $minimax_checked,
 	' /> Minimax', BR,
@@ -294,6 +288,12 @@ sub ComputeResults {
 	    value="civs_ranked_pairs"',
 	    $rp_checked,
 	' /> CIVS Ranked Pairs', BR,
+	'<input type="radio"
+	    name="algorithm"
+	    onclick="newSettings()"
+	    value="beatpath" ',
+	    $bw_checked,
+	' /> Schulze/Beatpath', BR,
 	'<input type="radio"
 	    name="algorithm"
 	    onclick="newSettings()"
