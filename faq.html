@@ -188,7 +188,9 @@ for voters, but completely private.
 
 <li><b>Can poll choices include images?</b> Sure. Just use an
 HTML <code>&lt;img&gt;</code> tag. Many standard HTML tags are supported,
-though there is filtering to block XSS attacks.
+though there is filtering to block XSS attacks. Also, there is a
+maximum size for images: they cannot be larger than @MAX_IMAGE_SIZE@ bytes
+in size.
 
 <li><b>Can poll choices include Unicode characters including emojis?</b>
 No problem, assuming users' browsers know how to render them.
