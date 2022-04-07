@@ -78,19 +78,28 @@ directly by email.</p>
 </li>
 <li><b>I don't like a poll invitation I received from CIVS. Can I prevent this from happening?</b>
 <br/>
-<p>
 You can block email from poll supervisors based on their email address (or address
 pattern) using the <a href="@CIVSBINURL@/mail_mgmt@PERLEXT@">mail management
 page</a>.
 </p>
 <p>
 If that is not good enough, you can also opt out of all email from CIVS using
-the same page.  <b>Warning:</b> if you deactivate e-mail from CIVS, the service
+the same page.  <b>Warning:</b> if you deactivate email from CIVS, the service
 will not be usable for you, and it is difficult to reactivate because CIVS uses
-e-mail for user authentication.  Be sure to save the e-mail containing your
-deactivation code so you can reactivate e-mail later.
+email for user authentication.  Be sure to save the email containing your
+deactivation code so you can reactivate email later.
 </p>
 </li>
+<li><b>When I opted in to get email from CIVS, it showed me all the polls I had
+been invited to. But if I opt in again, it doesn't show more recent polls. What's
+going on?</b><br>
+CIVS records voting credentials (keys) for voters who haven't opted in, so that they can vote
+once they opt in. However, once voters have opted in, they are expected to receive
+credentials over email. CIVS doesn't record their credentials in order to reduce the
+security risk if the server were compromised. Poll supervisors can always
+resend voters their credentials, so voters should contact the supervisor if they have
+lost the URL they were sent.
+</p>
 </ol>
 
 <h2 id="setting_up">Setting up a poll</h2>
