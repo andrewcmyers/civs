@@ -764,8 +764,8 @@ sub CIVS_poll_supervisor { # name
     "\"$_[1] (CIVS poll supervisor)\""
 }
 sub From_poll_supervisor {
-    my ($self, $name, $address) = @_;
-    $self->CIVS_poll_supervisor($name)." <$address>"
+    my ($self, $name) = @_;
+    $self->CIVS_poll_supervisor($name)
 }
 sub voter_mail_intro { #title, name, email_addr
 "A Condorcet Internet Voting Service poll named <b>$_[1]</b> has been created.
