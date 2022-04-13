@@ -319,15 +319,17 @@ sub CloseMail {
     }
 }
 
-sub SendHeader {
-    my $header = shift @_;
-    my $first = 1;
+sub EncodeHeaderValue {
     my $text = '';
+    my $first = 1;
+    my $header = shift @_;
+    my $ascii_only = 1;
     foreach my $section (@_) {
-	# print 'Section: ', $section;
 	if (!$first) { $text .= "\r\n " }
 	$first = 0;
 	if ($section =~ m/[\x80-\x{10FFFF}]/) {
+          $ascii_only = 0;
+          if ($section =~ m/[\x{100}-\x{10FFFF}]/) {
             $section = encode('utf-8', $section);
 	    my $budget = 75 - 12 - length($header) - 2;
 	    $budget -= $budget % 4;
@@ -341,11 +343,38 @@ sub SendHeader {
 		$i += $budget;
 		$budget = 60;
 	    }
+          } else {
+            my $intro = '=?ISO-8859-1?Q?';
+            my $budget = 75 - length($intro) - length($header) - 2;
+            my $lines = 0;
+            my $i = 0;
+            for (; $i < length($section); $lines++) {
+                my $enc = '';
+                for (; $i < length($section) && $budget > 0; $i++) {
+                    my $c = substr($section, $i, 1);
+                    if ($c =~ m/^[\x20-\x7E]$/ && !($c =~ /[=\?_ ]/)) {
+                        $enc .= $c;
+                        $budget -= 1;
+                    } else {
+                        $enc .= '=' . (sprintf "%2x", ord($c));
+                        $budget -= 3;
+                    }
+                }
+                if ($lines != 0) { $text .= "\r\n " }
+                $text .= $intro . $enc . '?=';
+                $budget = 75 - length($intro) - 3;
+            }
+          }
 	} else {
 	    $text .= $section;
 	}
     }
-    SendBytes $header . ': ' . $text. "\r\n";
+    return $text;
+}
+
+sub SendHeader {
+    my $header = shift @_;
+    SendBytes $header . ': ' . EncodeHeaderValue($header, @_). "\r\n";
     # print $header, ': ', $text;
 }
 
