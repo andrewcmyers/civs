@@ -153,7 +153,7 @@ Save this email. If you lose it you will not have access to
 the results. Once the poll has been closed, results will be
 available at the following URL:
 
-  <code>$_[2]</code>
+  <$_[2]>
 
 This URL is private. Allowing unauthorized users access to this
 URL will permit them to see the poll results.
