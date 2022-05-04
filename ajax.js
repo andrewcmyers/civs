@@ -3,6 +3,7 @@
 function read_from_url(url, cont, err, mimetype) {
 
     var undefined;
+    let req;
     if (mimetype == undefined) mimetype = 'text/xml';
     if (window.XMLHttpRequest) { // Mozilla, Safari, ...
         req = new XMLHttpRequest();
@@ -30,6 +31,7 @@ function read_from_url(url, cont, err, mimetype) {
 
 function post_to_url(url, params, cont, err, mimetype) {
     var undefined;
+    let req;
     if (mimetype == undefined) mimetype = 'text/xml';
     if (window.XMLHttpRequest) { // Mozilla, Safari, ...
         req = new XMLHttpRequest();
@@ -64,7 +66,7 @@ function post_to_url(url, params, cont, err, mimetype) {
 // fetch the contents from the URL "url" into the DOM node with id attribute
 // "id".  Once successful, apply the optionally provided function "cont()".
 function fetch_content(id, url, cont) {
-    var node = document.getElementById(id);
+    const node = document.getElementById(id);
     read_from_url(url,
         function(responseText) {
             node.innerHTML = responseText;
