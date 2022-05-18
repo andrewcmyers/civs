@@ -761,7 +761,7 @@ sub Sending_mail_to_voter_v {
     "Sending mail to voter \"$_[1]\"...";
 }
 sub CIVS_poll_supervisor { # name
-    "\"$_[1] (CIVS poll supervisor)\""
+    "\"Condorcet Internet Voting Service (on behalf of $_[1])\""
 }
 sub From_poll_supervisor {
     my ($self, $name) = @_;
