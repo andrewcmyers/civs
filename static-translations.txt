@@ -387,7 +387,7 @@ Footnote_1 {
         <a href="http://www.cornell.edu/">Cornell University.</a> This is
         CIVS version @VERSION@. Feedback, help, and
         <a href="@DONATE_URL@">donations to support this free (and
-        ad-free) service</a> are welcome.</p>
+        ad-free and tracker-free) service</a> are welcome.</p>
     }
     de {
         <p>Der Condorcet Internet Voting Service läuft seit 2003. Dieser Service wird von <a
