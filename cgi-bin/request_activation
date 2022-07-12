@@ -12,7 +12,7 @@ use mail;
 my $civs_supervisor = '@SUPERVISOR@';
 my $mail_mgmt_url = '@PROTO@://@THISHOST@@CIVSBINURL@/mail_mgmt@PERLEXT@';
 
-my $address = param('address') || "";
+my $address = &TrimAddr(param('address') || "");
 my $code = param('code');
 
 print CGI::header(-charset => 'utf-8');
