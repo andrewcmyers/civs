@@ -356,7 +356,7 @@ sub EncodeHeaderValue {
                         $enc .= $c;
                         $budget -= 1;
                     } else {
-                        $enc .= '=' . (sprintf "%2x", ord($c));
+                        $enc .= '=' . (sprintf "%2X", ord($c));
                         $budget -= 3;
                     }
                 }
