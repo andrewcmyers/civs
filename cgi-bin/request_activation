@@ -74,6 +74,7 @@ if (!defined($code)) {
             SendHeader('To', "<$address>");
             SendHeader('Subject', $tx->activation_code_subject);
             SendHeader('Content-Transfer-Encoding', '8bit');
+            SendHeader('Content-Type: text/plain; charset=UTF-8');
             SendHeader('Return-Path', $civs_supervisor);
             SendHeader('X-Mailer', 'CIVS');
             Send('');
