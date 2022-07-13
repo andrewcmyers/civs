@@ -197,7 +197,7 @@ if (!($local_debug)) {
             CloseMail;
             exit 0;
         };
-        SendHeader 'From', $tx->From_CIVS($civs_supervisor);
+        SendHeader('From', $tx->CIVS_sender, "<$civs_supervisor>");
         SendHeader 'To',  "$email_addr ($name)";
         SendHeader 'Subject', $tx->CIVS_poll_created($title);
         Send 'Content-Type: text/plain; charset="utf-8"';

@@ -67,7 +67,7 @@ if (!defined($code)) {
             my $uniqueid = &SecureNonce;
             my $message_id = "CIVS-deactivation.$uniqueid\@$thishost";
 
-            SendHeader('From', $tx->From_CIVS($civs_supervisor));
+            SendHeader('From', $tx->CIVS_sender, "<$civs_supervisor>");
             SendHeader('Sender', $civs_supervisor);
             SendHeader('Reply-To', $civs_supervisor);
             SendHeader('Message-ID', "<$message_id>");

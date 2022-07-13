@@ -31,9 +31,9 @@ sub Condorcet_Internet_Voting_Service {
 sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
     'Condorcet Internet Voting Service'
 }
-sub From_CIVS {
-    my ($self, $civs_supervisor) = @_;
-    $self->Condorcet_Internet_Voting_Service_email_hdr." <$civs_supervisor>"
+sub CIVS_sender {
+    my ($self) = @_;
+    $self->Condorcet_Internet_Voting_Service_email_hdr
 }
 sub about_civs {
     'About CIVS'
