@@ -18,6 +18,16 @@ print $cr, "<script src=\"@CIVSURL@/ezdom.js\"></script>";
 
 my $mail_mgmt_url = '@CIVSBINURL@/mail_mgmt@PERLEXT@';
 
+print $cr, script(
+  'var UNEXPECTED_ERROR = "', $tx->unexpected_error, '";', $cr,
+  '   CODE_REQUESTED = "', $tx->code_requested, '";', $cr,
+  '   CODE_REQUESTED_BUT_SOMETHING_WRONG = "', $tx->code_requested_but_something_wrong, '";', $cr,
+  '   ERROR_HANDLING_CODE_REQUEST = "', $tx->error_handling_code_request, '";', $cr,
+  '   INVALID_EMAIL_ADDRESS = "', $tx->invalid_email_address, '";', $cr,
+  '   UNEXPECTED_ERROR = "', $tx->unexpected_error, '";', $cr,
+  '   OPT_IN_ERROR = "', $tx->optin_error, '";', $cr,
+  '   SUBMITTED = "', $tx->submitted, '";'), $cr;
+
 print div({-class => 'normal_text'},
       $tx->user_activation_instructions($mail_mgmt_url),
       br(),

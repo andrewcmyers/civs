@@ -1212,4 +1212,30 @@ sub download_failures {
     'Download table as CSV'
 }
 
+sub code_requested {
+    'Code requested. Check your email.'
+}
+
+sub code_requested_but_something_wrong {
+    'Code requested but something went wrong.'
+}
+
+sub error_handling_code_request {
+    "Error handling code request"
+}
+sub invalid_email_address {
+    'Invalid email address'
+}
+sub unexpected_error {
+    my ($self, $t) = @_;
+    '<b>Unexpected error:</b> '
+}
+sub optin_error {
+    my ($self, $t) = @_;
+    'Error: '
+}
+sub submitted {
+    'submitted'
+}
+
 1; # package succeeded!

@@ -31,28 +31,28 @@ request_code.addEventListener("click", () => {
     post_to_url("request_activation@PERLEXT@", { address: mail_address },
       (msg) => {
         if (msg.slice(0, 2) == "OK") {
-            popup("addr_popup", "Code requested. Check your email.")
+            popup("addr_popup", CODE_REQUESTED)
             if (msg.slice(3)) response_area.innerHTML = "<hr>" + msg.slice(3)
             display_code_area()
             check_code_validity()
         } else {
-            popup("addr_popup", "Code requested but something went wrong.")
+            popup("addr_popup", CODE_REQUESTED_BUT_SOMETHING_WRONG)
             response_area.innerHTML = "<hr>" + msg
         }
       },
       (e) => {
-        popup("addr_popup", "Error handling code request")
+        popup("addr_popup", ERROR_HANDLING_CODE_REQUEST)
         response_area.innerHTML += "<code>" + e + '</code><br>'
       }
     )
   } else {
-    popup("addr_popup", "bad e-mail address")
+    popup("addr_popup", INVALID_EMAIL_ADDRESS)
   }
 });
 
 submit_code.addEventListener("click", () => {
     var mail_address = mail_address_input.value
-    popup("submit_popup", "submitted")
+    popup("submit_popup", SUBMITTED)
     post_to_url("request_activation@PERLEXT@",
         {
             address: mail_address,
@@ -68,15 +68,14 @@ submit_code.addEventListener("click", () => {
               msg.shift()
               response_area.innerHTML = "<hr><p>" + msg.join(" ") + "</p>"
           } else {
-              response_area.innerHTML = "<hr><p><b>Unexpected error:</b> " + t + "</p>"
+              response_area.innerHTML = "<hr><p>" + UNEXPECTED_ERROR + t + "</p>"
           }
       },
       t => {
-          popup("submit_popup", "Error:" + t)
+          popup("submit_popup", OPT_IN_ERROR + t)
           response_area.innerHTML = "<hr>" + t
       }
     )
 })
 
 activation_code.addEventListener("input", (e) => check_code_validity())
-
