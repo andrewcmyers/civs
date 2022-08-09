@@ -18,8 +18,8 @@ use DB_File;
 use POSIX qw(strftime);
 undef $/;
 
-&HTML_Header("CIVS Server Status");
-&CIVS_Header("Server Status");
+&HTML_Header('CIVS Server Status');
+&CIVS_Header('Server Status (' . `date` . ')');
 
 if (param('key') ne '@ADMIN_KEY@') {
     print p("Password missing or wrong");
