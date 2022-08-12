@@ -22,7 +22,7 @@ BEGIN {
 
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
-    @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log
+    @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log &TrimAddr
                       &SecureNonce &fisher_yates_shuffle $home $thishost
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
@@ -103,6 +103,17 @@ sub init {
  &GetPrivateHostID;
  &SetIPAddress;
  &SetLanguage;
+}
+
+# Remove leading and trailing whitespace from a string;
+# convert an undefined value to an empty string.
+sub TrimAddr {
+    (my $addr) = @_;
+    if (!$addr) { return '' }
+    $addr =~ s/^(\s)+//;
+    $addr =~ s/(\s)+$//;
+    $addr =~ s/\s+/ /;
+    return $addr;
 }
 
 sub SetIPAddress {
@@ -357,7 +368,7 @@ if ($filter_tags ne 'no') {
       on_open_tag => sub {
           my ($self, $tag, $attributes, $sequence) = @_;
           if ($$tag eq 'img') {
-            my $src = $attributes->{src};
+            my $src = &TrimAddr($attributes->{src});
             $attributes->{src} = '@CIVSURL@/images/check123b.png';
             my $http = HTTP::Tiny->new(verify_SSL => 0);
             my $response = $http->get($src);

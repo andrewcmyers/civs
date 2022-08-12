@@ -22,7 +22,7 @@ BEGIN {
                       &StartMailData &EndMailData &Send &SendHeader
                       &GetOptouts &SaveOptOuts &RemoveOptOut &UserActivated
                       &HasOptOuts &OptOutKey &SetOptOutPatterns &CheckOptOutSender
-                      &CheckAddr &TrimAddr &CanonicalizeAddr);
+                      &CheckAddr &CanonicalizeAddr);
 }
 
 # Package imports
@@ -49,16 +49,6 @@ sub CheckAddr {
     $addr = &TrimAddr($addr);
 
     return ($addr =~ m/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2,8})$/i);
-}
-
-# Remove leading and trailing whitespace from a string
-sub TrimAddr {
-    (my $addr) = @_;
-    if (!$addr) { return '' }
-    $addr =~ s/^(\s)+//;
-    $addr =~ s/(\s)+$//;
-    $addr =~ s/\s+/ /;
-    return $addr;
 }
 
 # Convert an email address into canonical form.  All whitespace is removed, the
