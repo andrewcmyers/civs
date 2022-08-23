@@ -74,7 +74,6 @@ function fetch_content(id, url, cont) {
             if (cont != undefined) cont();
         },
         function(errmsg) {
-            node.innerHTML = 'Could not read from ' + url +
-                             ': Error ' + req.status;
+            node.innerHTML = 'Could not read from ' + url + ': ' + errmsg
         });
 }

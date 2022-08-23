@@ -17,6 +17,7 @@
 <script>
     var loc = location.hostname + (location.port ? ":" + location.port : "")
     if (loc != "@THISHOST@" || location.protocol != "@PROTO@:") {
+        console.log("Redirecting from " + loc + " to @PROTO@://@THISHOST@/@CIVSURL@")
         setTimeout(() => {
             location = "@PROTO@://@THISHOST@/@CIVSURL@"
         }, 1000)
