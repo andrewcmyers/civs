@@ -91,11 +91,15 @@
         return 1;
     }
 
-    function make_invisible(id) {
-        document.getElementById(id).style.display = 'none'
+    function make_invisible(...ids) {
+        for (const id of ids) {
+            document.getElementById(id).style.display = 'none'
+        }
     }
-    function make_visible(id) {
-        document.getElementById(id).style.display = 'block'
+    function make_visible(...ids) {
+        for (const id of ids) {
+            document.getElementById(id).style.display = 'block'
+        }
     }
     function preview_description() {
         render_text('<h2>Poll description</h2>',
@@ -197,7 +201,7 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
   </div>
   <div class="pubpriv">
   <input type="radio" name="public" value="yes" aria-labelledby="public_or_private"
-      onClick="make_visible('publicize')">
+      onClick="make_visible('publicize', 'no_IP_check_div')">
     @public_explanation@
   </div>
   </fieldset>
@@ -267,6 +271,11 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
        value="combined_ratings">@combined_weights_of_selected_choices@<br>
    </div>
 </div>
+<div id='no_IP_check_div'>
+  <input type="checkbox" name="no_IP_check" value="yes"
+         title="@No_IP_address_check_expl@">
+  @No_IP_address_check@
+</div>
 
 <br><div class="emphasized">@Make_sure_your_address_is_correct@</div>
   <p style="margin-left: 5ex">
@@ -276,10 +285,7 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
 </div>
 
 <script>
-    make_invisible('publicize');
-    make_invisible('prcontrol');
-    make_invisible('reveal_voters');
-    make_invisible('rrcontrol');
+    make_invisible('publicize', 'prcontrol', 'reveal_voters', 'rrcontrol', 'no_IP_check_div');
 </script>
 </body>
 

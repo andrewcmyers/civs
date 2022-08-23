@@ -26,7 +26,7 @@ BEGIN {
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
     $election_end $public $publicize $writeins $allow_voting $voting_enabled
-    $shuffle $proportional $external_ballots
+    $shuffle $proportional $external_ballots $no_IP_check
     $use_combined_ratings $choices @choices $num_choices $num_auth $num_votes
     $recorded_voters $ballot_reporting $reveal_voters $authorization_key
     %used_voter_keys $restrict_results $result_addrs $hash_result_key $no_opinion
@@ -52,7 +52,7 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      @addresses, $election_begin, $election_end, $public, $publicize, $writeins, $allow_voting, $voting_enabled,
      $proportional, $use_combined_ratings, $external_ballots,
      $choices, @choices, $num_choices, $num_auth,
-     $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters,
+     $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters, $no_IP_check,
      $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
      $restrict_results, $result_addrs, $hash_result_key, $last_vote_time,
      $close_time, $email_load);
@@ -147,6 +147,7 @@ sub init {
     $hash_result_key = 0;
     $last_vote_time = $vdata{'last_vote_time'};
     $email_load = $edata{'email_load'}; # timestamp num_mails
+    $no_IP_check = $edata{'no_IP_check'} // 'no';
     if ($restrict_results eq 'yes') {
 	$hash_result_key = $edata{'hash_result_key'};
     }

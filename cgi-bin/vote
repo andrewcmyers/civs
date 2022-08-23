@@ -67,7 +67,7 @@ if ($public ne 'yes') {
         : $remote_ip_address;
     $voter_id = encode('utf-8', $voter_id); # ensure it's a byte string
     if (!&ElectionUsesAuthorizationKey) {
-        # for backwards compatibility
+        # for backward compatibility and publicized polls
         $voter_key = $voter_id;
     } else {
         CheckAuthorizationKeyForVoting($authorization_key);
@@ -78,7 +78,9 @@ if ($public ne 'yes') {
 my $old_ballot;
 
 if (!$allow_debug_votes || !$local_debug) {
-    $old_ballot = CheckNotVoted($voter_key);
+    if ($public eq 'no' || $no_IP_check eq 'no' || $reveal_voters eq 'yes') {
+        $old_ballot = CheckNotVoted($voter_key);
+    }
 }
 
 my $add_writein = param('AddWritein');
