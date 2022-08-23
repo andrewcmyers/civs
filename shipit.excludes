@@ -1,0 +1,4 @@
+.git*
+*.sw?
+data
+data/*
