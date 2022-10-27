@@ -48,6 +48,17 @@ or that they don't have any information about it. In these situations, it is oft
 opinion&rdquo;. A good reason for a voter to give a choice the rank
 &ldquo;no opinion&rdquo; is because the voter isn't <em>supposed</em> to
 express an opinion about that choice.
+
+<li><b>What does it mean to activate me as a user?</b>
+Because of its strong privacy protections, CIVS does user management very
+differently from most web services. CIVS does not store any information about
+its users, and it does not have a login process. At the same time, for private
+polls, CIVS is a fully opt-in service.  By activating yourself as a user, you
+permit CIVS to send you email, by checking its database of cryptographic hashes
+of email addresses. In the activation process, you prove to CIVS that you
+control the email address you activate, which is important for your protection.
+</li>
+
 <li><b>Why doesn't the voting interface use my favorite language?</b><br>
 CIVS supports several different languages, including Chinese, French, German,
 Italian, Hebrew, Hungarian, Portuguese, Russian, Spanish, and Thai. Note that CIVS decides
@@ -55,6 +66,8 @@ what language to show you based on your browser preference settings, so make sur
 have told your browser your preferred language.
 If your favorite language is not supported,
 your help in localizing CIVS to it would be much appreciated!
+</li>
+
 <li><b>If I change my mind, can I recast my vote?</b>
 Yes, but you need to save your voting receipt in order to do that. Otherwise CIVS can't find your
 old ballot; it only knows whether you have voted but not what your vote was.
@@ -72,11 +85,11 @@ The CIVS administrator cannot make value judgments about poll content. Responsib
 the content of polls lies with the poll supervisors; CIVS is a medium for
 user communication rather than a publisher of content.
 </p>
-<p>Pragmatically, attempts to censor polls are pointless.
+<p>Pragmatically, attempts to censor polls are mostly pointless.
 Any message that poll creators could send through CIVS can be more easily sent
 directly by email.</p>
 </li>
-<li><b>I don't like a poll invitation I received from CIVS. Can I prevent this from happening?</b>
+<li><b>I don't like a poll invitation I received frommostly  CIVS. Can I prevent this from happening?</b>
 <br/>
 You can block email from poll supervisors based on their email address (or address
 pattern) using the <a href="@CIVSBINURL@/mail_mgmt@PERLEXT@">mail management
@@ -95,7 +108,7 @@ been invited to. But if I opt in again, it doesn't show more recent polls. What'
 going on?</b><br>
 CIVS records voting credentials (keys) for voters who haven't opted in, so that they can vote
 once they opt in. However, once voters have opted in, they are expected to receive
-credentials over email. CIVS doesn't record their credentials in order to reduce the
+credentials over email. CIVS does not record their credentials, to reduce the
 security risk if the server were compromised. Poll supervisors can always
 resend voters their credentials, so voters should contact the supervisor if they have
 lost the URL they were sent.
@@ -198,8 +211,13 @@ for voters, but completely private.
 <li><b>Can poll choices include images?</b> Sure. Just use an
 HTML <code>&lt;img&gt;</code> tag. There is a
 maximum size for images: they cannot be larger than @MAX_IMAGE_SIZE@ bytes
-in size.  Many other standard HTML tags are supported,
-though there is filtering to block XSS attacks.
+in size.
+
+<li><b>Can poll choices and descriptions include HTML formatting?</b> Yes, many
+standard HTML tags are supported, though there is filtering to block XSS
+attacks. For example, you can include paragraphs, ordered and unordered lists,
+standard text style directives like bold, italic, and code-font text.
+</li>
 
 <li><b>Can poll choices include Unicode characters including emojis?</b>
 No problem, assuming users' browsers know how to render them.
