@@ -9,7 +9,7 @@ use election_utils;
 use Scalar::Util qw(&looks_like_number);
 
 if ($#ARGV < 0) {
-    print STDERR "Usage: dump_elections [-p] <election_dir> ...\n";
+    print STDERR "Usage: dump_elections [-p] [-A] <election_dir> ...\n";
     exit 1;
 }
 
@@ -17,9 +17,17 @@ if ($#ARGV < 0) {
 
 my %edata, my %vdata;
 my $reveal_private_info = 1;
-if ($ARGV[0] eq '-p') {
-    $reveal_private_info = 0;
-    shift @ARGV;
+my $dump_all = 0;
+
+while ($ARGV[0] =~ m/^-/) {
+    if ($ARGV[0] eq '-p') {
+        $reveal_private_info = 0;
+        shift @ARGV;
+    }
+    if ($ARGV[0] eq '-A') {
+        $dump_all = 1;
+        shift @ARGV;
+    }
 }
 
 my $indent = 0;
@@ -58,10 +66,32 @@ sub item {
 begin '{';
 begin qw("elections"), ' : [';
 
+my @elections;
+my $elections_dir = '';
+
+if (!$dump_all) {
+    @elections = @ARGV;
+} else {
+    my $dir = $ARGV[0];
+    $elections_dir = "$dir/";
+    if (!opendir(ELECTIONS, $dir)) {
+        print STDERR "Cannot open directory $dir: $!\n";
+        exit 1;
+    }
+    while (readdir ELECTIONS) {
+        if ($_ =~ m/^E_/) {
+            push @elections, $_;
+        }
+    }
+    closedir ELECTIONS;
+    # print "Scanning: ", join ", ", @elections, "\n";
+}
+
 my $election_count = 0;
-foreach my $election_dir (@ARGV) {
-    my $election_data = $election_dir."/election_data";
-    my $vote_data = $election_dir."/vote_data";
+foreach my $election_dir (@elections) {
+    my $election_data = $elections_dir . $election_dir . "/election_data";
+    my $vote_data = $elections_dir . $election_dir . "/vote_data";
+    print "Looking at election data in $election_data\n";
     my $tie = "=";
     my $cr = "\n";
     if (! -r $election_data) {
@@ -79,8 +109,8 @@ foreach my $election_dir (@ARGV) {
     my $election_id = $election_dir;
     $election_id =~ s|/*$||;
     $election_id =~ s|^.*/||;
-    tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
-    tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
+    tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH || print STDERR "Failed to open election DB\n";
+    tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH || print STDERR "Failed to open election DB\n";
 
     &GetElectionData(\%edata, \%vdata);
 
