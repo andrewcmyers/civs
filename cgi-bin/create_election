@@ -125,6 +125,7 @@ SetBinaryParameter('no_opinion', 'no');
 SetBinaryParameter('shuffle', 'yes');
 SetBinaryParameter('proportional', 'no');
 SetBinaryParameter('external_ballots', 'no');
+SetBinaryParameter('no_IP_check', 'no');
 my $publicize = SetBinaryParameter('publicize', 'no');
 if ($public eq 'no') { $publicize = 'no'; }
 

@@ -1252,3 +1252,11 @@ Create_poll {
   fr: Créer une consultation
   es: Crear encuesta
 }
+No_IP_address_check {
+  en: Turn off IP address checking so multiple voters can vote from the same network address.
+}
+No_IP_address_check_expl {
+  en {
+    By default, CIVS only allows one vote per IP address in public polls, which discourages people from voting multiple times but by no means stops them from doing that if they are determined.  When voters are behind a VPN, this rule unfortunately prevents people from voting at all. This option turns off the IP address check so that people can vote from behind a VPN.
+  }
+}

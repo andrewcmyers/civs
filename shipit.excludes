@@ -1,0 +1,7 @@
+.git*
+*.sw?
+data
+data/*
+config
+config/*
+shipit.excludes
