@@ -54,8 +54,12 @@ if (!IsStarted) {
     print '<p>'.$tx->the_poll_is_in_progress;
     print hidden('id', $election_id);
     print hidden('key', $control_key);
-    print '<input type="submit" value="'.$tx->End_poll.'" name="close"
-            onclick="return confirm(\'', $tx->ending_poll_cannot_be_undone, '\')">', $cr;
+    print hidden('confirmation', "incorrect");
+    print '<input type="submit" value="'
+        . $tx->End_poll
+        . '" name="close" onclick="return confirm_close(\''
+        . $tx->confirm_ending_poll_cannot_be_undone
+        . '\')">', $cr;
     print '</p></form>', $cr;
 
     if ($writeins eq 'yes') {

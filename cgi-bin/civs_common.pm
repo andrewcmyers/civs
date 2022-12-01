@@ -27,6 +27,7 @@ BEGIN {
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
                       &unique_elements &civs_hash &system_load &CheckLoad
+                      &CheckPostRequest &CheckConfirmation
                       $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
                       &VerifyUpload &hexdump &toNatural &natParam &bytesParam &fixUTF);
@@ -505,6 +506,23 @@ sub natParam {
 # an empty string.
 sub bytesParam {
     encode('utf-8', scalar param($_[0])) || ''
+}
+
+sub CheckPostRequest {
+    if ((lc request_method()) ne 'post') {
+	print h1("Invalid request type: ", request_method());
+        print end_html();
+        exit 0;
+    }
+}
+
+sub CheckConfirmation {
+    my $code = param('confirmation');
+    my $req = shift;
+    if ($code ne $req) {
+        print end_html();
+        exit 0;
+    }
 }
 
 sub system_load {

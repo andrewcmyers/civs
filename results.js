@@ -77,3 +77,9 @@ function post_new_description(desc) {
 function copy_url(id, url) {
     navigator.clipboard.writeText(url).then(msg => popup(id, "URL copied"))
 }
+function confirm_close(msg) {
+    var code = prompt(msg)
+    document.getElementsByName('confirmation')[0].value = code
+    console.log("saw confirmation string: " + code)
+    return code == 'close'
+}

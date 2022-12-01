@@ -17,7 +17,7 @@ BEGIN {
     @EXPORT = qw(&init &ExtractVoterKeys &SaveVoterKeys
     &CheckAuthorizationKeyForAddingVoter &CheckAuthorizationKeyForVoting
     &LockElection &UnlockElection &StartElection &IsStarted
-    &CheckStarted &PointToResults &IsStopped &CheckNotStopped &CheckPostRequest
+    &CheckStarted &PointToResults &IsStopped &CheckNotStopped
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
@@ -322,13 +322,6 @@ sub CheckNotStopped {
 	PointToResultsComplete;
 	print end_html();
 	exit 0;
-    }
-}
-sub CheckPostRequest {
-    if ((lc request_method()) ne 'post') {
-	print h1("Invalid request type: ", request_method());
-        print end_html();
-        exit 0;
     }
 }
 

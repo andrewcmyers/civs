@@ -88,6 +88,7 @@ my $vote = param('Vote');
 my $load = param('Load');
 
 if ($vote && $voting_enabled) {
+    &CheckPostRequest;
     &ProcessVote;     # prints out confirmation; call does not return
     exit 0;           # should not happen.
 }

@@ -204,20 +204,20 @@ sub Save_button {
 sub Remove_button {
     'remove'
 }
-sub ending_poll_cannot_be_undone {
-    'Ending a poll is an operation that cannot be undone. Continue?';
+sub confirm_ending_poll_cannot_be_undone {
+    'Ending a poll is an operation that cannot be undone. To confirm that you want to close the poll, enter &#34;close&#34; and press OK'
 }
 sub writeins_have_been_disabled {
-    'Write-in choices have been disabled';
+    'Write-in choices have been disabled'
 }
 sub disallow_further_writeins {
-    'Disallow further write-ins';
+    'Disallow further write-ins'
 }
 sub voting_disabled_during_writeins {
-    'Voting is currently disabled during the write-in phase.';
+    'Voting is currently disabled during the write-in phase.'
 }
 sub allow_voting_during_writeins {
-    "Allow voting during write-in phase";
+    'Allow voting during write-in phase'
 }
 sub this_is_a_test_poll {
     'This is a test poll.'
