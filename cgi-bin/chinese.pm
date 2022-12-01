@@ -821,7 +821,7 @@ sub submit_activation_code {
 }
 sub user_not_activated {
     my ($self, $address) = @_;
-    "Sorry, no user has activated address &lt;$address&gt; to receive email.";
+    "抱歉，没有用户激活地址 &lt;$address&gt; 来接收电子邮件。"
 }
 sub mail_failure_reason {
     my ($self, $reason) = @_;
@@ -835,10 +835,7 @@ sub mail_failure_reason {
 }
 sub see_the_failure_table {
     my ($self, $activate_url, $mail_mgmt_url) = @_;
-    "<p>It was not possible to send mail to some voters, for reasons listed in the
-    table below. Voters will not be able to vote until they receive their personal key,
-    so you should contact them directly. Voters are likely to find the following
-    links useful:</p>
+    "<p>由于下表列出的原因，无法向某些选民发送邮件。 选民在收到个人密钥之前无法投票，因此您应该直接与他们联系。 选民可能会发现以下链接有用：</p>
     <ul>
     <li>Activate an email address with CIVS: <a href='$activate_url'>$activate_url</a></li>
     <li>Deactivate/reactivate an email address: <a href='$mail_mgmt_url'>$mail_mgmt_url</a></li>
