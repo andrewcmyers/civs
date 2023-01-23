@@ -46,6 +46,8 @@ my @variants =
    ['hebrew', 'he-il', 0.95],
    ['hindi', 'hi', 0.90],
    ['hindi', 'hi-in', 0.90],
+   ['japanese', 'ja', 0.90],
+   ['japanese', 'ja-jp', 0.90],
    ['korean', 'ko', 0.90],
    ['korean', 'ko-kr', 0.90],
    ['korean', 'ko-kp', 0.80],
