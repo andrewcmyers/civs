@@ -40,7 +40,7 @@ var create_header = function(title, language) {
         Activate_user: "Activar usuario",
         Create_new_poll: "Crear encuesta",
         Security_and_privacy: "Seguridad y privacidad",
-        FAQ: "FAQ"
+        FAQ: "Preguntas más frecuentes"
     },
     uk: {
         CIVS_logo: "Логотип CIVS",
@@ -81,6 +81,16 @@ var create_header = function(title, language) {
         Create_new_poll: "설문조사 만들기",
         Security_and_privacy: "보안 및 개인정보 보호",
         FAQ: "자주하는 질문"
+    },
+    it: {
+        CIVS_logo: "Il logo CIV",
+        Condorcet_Internet_Voting_Service: "Servizio di votazione Internet Condorcet",
+        About_CIVS: "A proposito di CIVS",
+        Public_polls: "Sondaggi pubblici",
+        Activate_user: "Attiva utente",
+        Create_new_poll: "Crea un sondaggio",
+        Security_and_privacy: "Sicurezza e privacy",
+        FAQ: "FAQ"
     },
   }
   let lang = translations[language || 'en']

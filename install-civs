@@ -97,7 +97,7 @@ CopyFile() {
 
 echo "Creating language-specific web pages"
 
-webpage_langs=( en de fr es uk ta hi ko )
+webpage_langs=( en de fr es uk ta hi ko it )
 
 for file in index.html civs_create.html civs_hdr.js.2
 do 
