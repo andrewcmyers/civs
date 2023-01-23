@@ -25,7 +25,7 @@ sub init {
 # civs_common
 
 sub style_file {
-    'style.css'
+    return 'style.css'
 }
 sub Condorcet_Internet_Voting_Service {
     'Condorcet Internet Voting Service'
