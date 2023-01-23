@@ -837,12 +837,11 @@ sub see_the_failure_table {
     my ($self, $activate_url, $mail_mgmt_url) = @_;
     "<p>由于下表列出的原因，无法向某些选民发送邮件。 选民在收到个人密钥之前无法投票，因此您应该直接与他们联系。 选民可能会发现以下链接有用：</p>
     <ul>
-    <li>Activate an email address with CIVS: <a href='$activate_url'>$activate_url</a></li>
-    <li>Deactivate/reactivate an email address: <a href='$mail_mgmt_url'>$mail_mgmt_url</a></li>
+    <li>使用 CIVS 激活电子邮件地址：<a href='$activate_url'>$activate_url</a></li>
+    <li>停用/重新激活电子邮件地址：<a href='$mail_mgmt_url'>$mail_mgmt_url</a></li>
     </ul>
     <p>
-    Note that when voters activate their email addresses, they are notified about any
-    pending invitations to vote in polls.
+    激活电子邮件地址的选民会收到任何待处理的投票邀请通知。
     </p>
     "
 }
