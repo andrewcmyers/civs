@@ -97,7 +97,7 @@ CopyFile() {
 
 echo "Creating language-specific web pages"
 
-webpage_langs=( en de fr es uk ta hi ko it )
+webpage_langs=( en de fr es uk ta hi ko it nl )
 
 for file in index.html civs_create.html civs_hdr.js.2
 do 
@@ -149,7 +149,7 @@ for f in add_voters beatpath.pm beatpath2.pm civs_common.pm               \
     admctrl.pm base_language.pm english.pm hungarian.pm italian.pm        \
     french.pm german.pm hebrew.pm portuguese.pm chinese.pm                \
     spanish.pm thai.pm russian.pm hindi.pm ukrainian.pm tamil.pm          \
-    korean.pm
+    korean.pm dutch.pm
 do
     target="${CGIBINDIR}/${f}"
     if [ -n "$PERLEXT" ]

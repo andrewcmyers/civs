@@ -102,7 +102,7 @@ if ($pmfile ne "") {
     while ($cur) {
         if ($cur =~ m/^sub [A-Za-z][A-Za-z0-9_]* {/) {
             my $header = $cur;
-            print STDERR "$header...\n";
+            print STDERR "$header";
             my $decl = "";
             $cur = <LANG>;
             if ($cur =~ m/^ +my \(.*\) = \@_;/) {
