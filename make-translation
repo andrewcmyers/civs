@@ -1,6 +1,21 @@
 #!/usr/bin/env perl
 
+# This script generates internationalization for specified languages.
+# Translations are generated using Google Translate. It can generate
+# both a Perl script file (e.g., italian.pm) and update the static
+# translation configuration (static-translations.txt) with new entries
+# for a language (e.g., add 'it' entries). New static translations are
+# generated into a file new-translations.txt which should be copied back
+# to static-translation.txt once the updates are confirmed (and perhaps
+# modified by hand).
+
 my $home=$ENV{"HOME"};
+
+# This needs to be updated to a file containg a valid authorization key
+my $credfile="$home/civs/axiomatic-set-373716-3a0f9821df99.json";
+
+# Location of the gcloud script
+my $gcloud="$home/google-cloud-sdk/bin/gcloud";
 
 use lib ".";
 use lib "$home/civs/cgi-bin";
@@ -19,13 +34,12 @@ my $pmfile = $ARGV[1];
 
 if (!defined($language) || !defined($pmfile)) {
     print STDERR "Usage: make-translation <language-code> <pm file>\n";
+    print STDERR "  Passing a empty string for the .pm file skips that step\n";
     exit 1
 }
 
 my $uri = URI::Encode->new( { encode_reserved => 0 } );
 
-my $credfile="$home/civs/axiomatic-set-373716-3a0f9821df99.json";
-my $gcloud="$home/google-cloud-sdk/bin/gcloud";
 
 my $token=`GOOGLE_APPLICATION_CREDENTIALS=$credfile $gcloud auth application-default print-access-token`;
 

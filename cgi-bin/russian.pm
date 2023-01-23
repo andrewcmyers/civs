@@ -19,7 +19,7 @@ sub init {
 }
 
 sub style_file {
-    'style.css'; # probably what is wanted except for right-to-left languages
+    'style.css'
 }
 
 sub Condorcet_Internet_Voting_Service {
