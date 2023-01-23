@@ -54,6 +54,8 @@ my @variants =
    ['russian', 'ru-ru', 0.60],
    ['spanish', 'es', 0.90],
    ['spanish', 'es-es', 0.95],
+   ['tamil', 'ta', 0.9],
+   ['tamil', 'ta-IN', 0.9],
    ['thai', 'th', 0.95],
    ['ukrainian', 'uk', 0.9],
    ['ukrainian', 'uk-ua', 0.9],

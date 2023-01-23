@@ -72,6 +72,8 @@ sub translate {
 
 if ($pmfile ne "") {
 
+    print STDERR "Generating $pmfile...\n";
+
     open(LANG, "<$home/civs/cgi-bin/base_language.pm");
     sysopen (my $pmh, "$pmfile", O_WRONLY | O_CREAT | O_EXCL)
         or die "Can't create new file $pmfile";
@@ -86,6 +88,7 @@ if ($pmfile ne "") {
     while ($cur) {
         if ($cur =~ m/^sub [A-Za-z][A-Za-z0-9_]* {/) {
             my $header = $cur;
+            print STDERR "$header...\n";
             my $decl = "";
             $cur = <LANG>;
             if ($cur =~ m/^ +my \(.*\) = \@_;/) {

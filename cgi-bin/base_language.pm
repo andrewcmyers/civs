@@ -981,10 +981,10 @@ sub Tied {
     "<i>Tied</i>:";
 }
 sub loss_explanation { # loss_to, for, against
-    ', loses to '. $_[1].' by '. $_[2] .'&ndash;'. $_[3];
+    ', loses to '. $_[1].' by '. $_[2] .'&ndash;'. $_[3]
 }
 sub loss_explanation2 {
-    '&nbsp;&nbsp;loses to '.$_[1].' by '.$_[2].'&ndash;'.$_[3];
+    '&nbsp;&nbsp;loses to '.$_[1].' by '.$_[2].'&ndash;'.$_[3]
 }
 sub Condorcet_winner_explanation {
     '&nbsp;&nbsp;(Condorcet winner: wins contests with all other choices)';
