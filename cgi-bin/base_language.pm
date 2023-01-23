@@ -1125,21 +1125,34 @@ sub user_activation {
 sub activation_code_subject {
     'Activation code for using CIVS'
 }
+sub user_activation_instructions1 {
+   'To vote in private CIVS polls, you must opt in to email
+    communication from the service. CIVS does not store your email
+    address, and there are no automated mailings.
+    You only receive email from the service at the explicit request
+    of poll supervisors, containing credentials needed to vote in private
+    polls or to see the results of polls.'
+}
+sub user_activation_instructions2 {
+   'To vote in private CIVS polls, you must opt in to email
+    communication from the service. CIVS does not store your email
+    address, and there are no automated mailings.
+    You only receive email from the service at the explicit request
+    of poll supervisors, containing credentials needed to vote in private
+    polls or to see the results of polls.'
+}
+sub user_activation_instructions2 {
+    "To opt in, please enter your email address and click the button below.
+    You should then receive an email containing an activation code.
+    Note that if you have previously opted out from email, you must use
+    the <a href=\"$_[1]\">mail management page</a> to reactivate email.
+    If you use a mail blocking service, you may need to whitelist the
+    CIVS email address as an authorized sender (".'@SUPERVISOR@'.")."
+}
 sub user_activation_instructions {
     my ($self, $mail_mgmt_url) = @_;
-    p('To vote in private CIVS polls, you must opt in to email
-	communication from the service. CIVS does not store your email
-        address, and there are no automated mailings.
-	You only receive email from the service at the explicit request
-	of poll supervisors, containing credentials needed to vote in private
-	polls or to see the results of polls.').
-    p("To opt in, please enter your email address and click the button below. You should then
-        receive an email containing an activation code.
-        Note that if you have previously opted out from email, you must use
-        the <a href=\"$mail_mgmt_url\">mail management page</a> to reactivate email.
-        If you use a mail blocking service, you may need to whitelist the
-        CIVS email address as an authorized sender (".'@SUPERVISOR@'.").
-        ")
+    p($self->user_activation_instructions1).
+    p($self->user_activation_instructions2($mail_mgmt_url))
 }
 sub opt_in_label {
     'Request activation code'
