@@ -226,8 +226,7 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
     </div>
     <div class="suboption" id="rrcontrol">
     <label id="result_addrs_label">
-    Enter e-mail addresses of users permitted to view poll results:
-    (All voters can see these email addresses)
+    @result_addrs_label@
     </label>
     <br>
     <textarea rows="2" aria-labelledby="result_addrs_label" name="result_addrs" cols="50"></textarea>

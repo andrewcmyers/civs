@@ -52,18 +52,30 @@ CIVS_logo {
     de: CIVS logo
     fr: Logo CIVS
     es: logotipo de CIVS
+    ko: CIVS 로고
+    hi: सीआईवीएस लोगो
+    ta: CIVS லோகோ
+    uk: Логотип CIVS
 }
 About_CIVS {
     en: About CIVS
     de: Über CIVS
     fr: CIVS
     es: CIVS
+    ko: CIVS 소개
+    hi: सीआईवीएस के बारे में
+    ta: CIVS பற்றி
+    uk: Про CIVS
 }
 Public_polls {
     en: Public polls
     de: Öffentliche Umfragen
     fr: Les sondages publics
     es: Encuestas públicas
+    ko: 공개 여론 조사
+    hi: सार्वजनिक मतदान
+    ta: பொது வாக்கெடுப்பு
+    uk: Громадські опитування
 }
 Create_a_poll {
     en: Create a poll
@@ -87,6 +99,10 @@ Activate_user {
 }
 FAQ {
     en: FAQ
+    ko: 자주하는 질문
+    hi: सामान्य प्रश्न
+    ta: அடிக்கடி கேட்கப்படும் கேள்விகள்
+    uk: FAQ
 }
 Frequently_asked_questions {
     en: Frequently Asked Questions
@@ -2043,4 +2059,11 @@ No_IP_address_check_expl {
   }
   ta:  இயல்பாக, CIVS பொது வாக்கெடுப்புகளில் ஒரு IP முகவரிக்கு ஒரு வாக்கை மட்டுமே அனுமதிக்கிறது, இது பலமுறை வாக்களிப்பதை ஊக்கப்படுத்துகிறது, ஆனால் அவர்கள் உறுதியாக இருந்தால் அதைச் செய்வதிலிருந்து அவர்களை எந்த வகையிலும் தடுக்காது. வாக்காளர்கள் VPNக்குப் பின்னால் இருக்கும்போது, இந்த விதி துரதிருஷ்டவசமாக மக்கள் வாக்களிப்பதைத் தடுக்கிறது. இந்த விருப்பம் ஐபி முகவரி சரிபார்ப்பை முடக்குகிறது, இதனால் மக்கள் VPNக்குப் பின்னால் இருந்து வாக்களிக்க முடியும்.
   ko:  기본적으로 CIVS는 공개 투표에서 IP 주소당 하나의 투표만 허용하므로 사람들이 여러 번 투표하는 것을 권장하지 않지만 결정된 경우 투표를 중단하지는 않습니다. 유권자가 VPN 뒤에 있을 때 이 규칙은 불행하게도 사람들이 전혀 투표하지 못하게 합니다. 이 옵션은 사람들이 VPN 뒤에서 투표할 수 있도록 IP 주소 확인을 끕니다.
+}
+result_addrs_label {
+  en {
+    Enter e-mail addresses of users permitted to view poll results:
+    (All voters can see these email addresses)
+  }
+  hi:  मतदान के परिणाम देखने के लिए अनुमत उपयोगकर्ताओं के ई-मेल पते दर्ज करें: (सभी मतदाता इन ईमेल पतों को देख सकते हैं)
 }
