@@ -1008,7 +1008,7 @@ sub Unknown_email {
 }
 
 sub What_is_this { # url
-    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>'
+    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>(What is this?)</small></a>'
 }
 
 # rp
@@ -1126,14 +1126,6 @@ sub activation_code_subject {
     'Activation code for using CIVS'
 }
 sub user_activation_instructions1 {
-   'To vote in private CIVS polls, you must opt in to email
-    communication from the service. CIVS does not store your email
-    address, and there are no automated mailings.
-    You only receive email from the service at the explicit request
-    of poll supervisors, containing credentials needed to vote in private
-    polls or to see the results of polls.'
-}
-sub user_activation_instructions2 {
    'To vote in private CIVS polls, you must opt in to email
     communication from the service. CIVS does not store your email
     address, and there are no automated mailings.

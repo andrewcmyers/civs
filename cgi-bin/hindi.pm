@@ -1,9 +1,13 @@
-package base_language;
+package hindi;
 
+use lib '@CGIBINDIR@';
 use CGI qw(:standard -utf8);
 use utf8;
 
-our $VERSION = 1.00;
+use base_language;
+our @ISA = ('base_language'); # go to AmE module for missing methods
+
+our $VERSION = 1.000;
 
 sub lang { 'hi-IN' }
 
@@ -13,222 +17,199 @@ sub init {
     return $self;
 }
 
+### BEGIN TRANSLATIONS ###
+
 # civs_common
 
 sub style_file {
-    'style.css'
+  'style.css'
 }
 sub Condorcet_Internet_Voting_Service {
-    'Condorcet Internet Voting Service'
+  'कोंडोरसेट इंटरनेट मतदान सेवा'
 }
 sub Condorcet_Internet_Voting_Service_email_hdr { # charset may be limited
-    'Condorcet Internet Voting Service'
+  'कोंडोरसेट इंटरनेट मतदान सेवा'
+}
+sub CIVS_sender {
+    my ($self) = @_;
+    $self->Condorcet_Internet_Voting_Service_email_hdr
+# UNTRANSLATED
 }
 sub about_civs {
-    'CIVS के बारे में'
+  'सीआईवीएस के बारे में'
 }
 sub new_user {
-    'उपयोगकर्ता को सक्रिय करें'
-    # Activate user
+  'उपयोगकर्ता को सक्रिय करें'
 }
 sub public_polls {
-    'सार्वजनिक चुनाव'
-    # 'Public polls'
+  'सार्वजनिक मतदान'
 }
 sub create_new_poll {
-    #'Create new poll'
-    'नया पोल बनाएं'
+  'नया जनमत बनाएँ'
 }
 sub about_security_and_privacy {
-    # 'Security and privacy'
-    'सुरक्षा और गोपनीयता'
+  'सुरक्षा और गोपनीयता'
 }
 sub FAQ {
-    # 'FAQ'
-    'सामान्य प्रश्न'
+  'सामान्य प्रश्न'
 }
 sub CIVS_suggestion_box {
-    'CIVS सुझाव बॉक्स'
+  'सीआईवीएस सुझाव बॉक्स'
 }
 sub unable_to_process {
-    # 'CIVS is unable to process your request because of an internal error.'
-    'CIVS एक आंतरिक त्रुटि के कारण आपके अनुरोध को संसाधित करने में असमर्थ है।'
+  'एक आंतरिक त्रुटि के कारण CIVS आपके अनुरोध को संसाधित करने में असमर्थ है।'
 }
 sub CIVS_Error {
-    # 'CIVS Error'
-    'CIVS त्रुटि'
+  'सीआईवीएस त्रुटि'
 }
 sub CIVS_server_busy {
-    'CIVS सर्वर व्यस्त'
+  'सीआईवीएस सर्वर व्यस्त'
 }
 sub Sorry_the_server_is_busy {
-    'Sorry, the CIVS web server is very busy right now and
-     cannot handle more requests. Please try again a little later.';
+  'क्षमा करें, CIVS वेब सर्वर अभी बहुत व्यस्त है और अधिक अनुरोधों को हैंडल नहीं कर सकता। कृपया थोड़ी देर बाद पुन: प्रयास करें।'
 }
 
 # civs_create
 
 sub mail_has_been_sent {
-    ""मेल आपके द्वारा दिए गए पते पर भेज दिया गया है (<tt>$_[1]</tt>)।"
+  "मेल आपके दिए गए पते पर भेज दी गई है (<tt>$_[1]</tt>)।"
 }
 
 sub click_on_the_URL_to_start {
-    "Click on the URL in that email to start the poll “$_[1]”.";
+  "पोल â$_[1]â शुरू करने के लिए उस ईमेल के URL पर क्लिक करें।"
 }
 
 sub here_is_the_control_URL {
-    'Here is the URL to control the new poll. In ordinary operation
-             this would be sent to the supervisor via email.';
+  'नए पोल को नियंत्रित करने के लिए यहां URL है। सामान्य संचालन में यह पर्यवेक्षक को ईमेल के माध्यम से भेजा जाएगा।'
 }
 sub the_poll_is_in_progress {
-    'मतदान जारी है। इसे समाप्त करने के लिए इस बटन को दबाएं: '
+  'मतदान चल रहा है। इसे समाप्त करने के लिए इस बटन को दबाएँ:'
 }
 
 sub CIVS_Poll_Creation {
-    'CIVS पोल निर्माण'
+  "सीआईवीएस पोल निर्माण"
 }
 sub Poll_created {
-    "मतदान बनाया गया: $_[1]"
+  "जनमत बनाया गया: $_[1]"
 }
 
 sub Address_unacceptable { #addr
-    "पता \"$_[1]\" स्वीकार्य नहीं है"
+  "पता \"$_[1]\" स्वीकार्य नहीं है"
 }
 sub Poll_must_have_two_choices {
-    'एक मतदान में कम से कम दो विकल्प होने चाहिए।'
+  'एक पोल में कम से कम दो विकल्प होने चाहिए।'
 }
 sub Poll_exceeds_max_choices {
     my ($self, $count) = @_;
-    "एक पोल में ज़्यादा से ज़्यादा $count विकल्प हो सकते हैं।"
+  "एक पोल में ज़्यादा से ज़्यादा $count विकल्प हो सकते हैं।"
 }
 sub Poll_directory_not_writeable {
-    "Configuration error? Unable to create the poll directory <tt>$_[1]</tt>"
+  "विन्यास त्रुटि? पोल निर्देशिका <tt>$_[1]</tt> बनाने में असमर्थ"
 }
 sub CIVS_poll_created {
- "CIVS पोल बनाया गया: $_[1]"
+  "सीआईवीएस पोल बनाया गया: $_[1]"
 }
 sub creation_email_info1 { # title, url
-"यह ईमेल एक नए मतदान के निर्माण को स्वीकार करता है,
-$_[1]. आपको इसके पर्यवेक्षक के रूप में नामित किया गया है
-जनमत। मतदान शुरू करने और रोकने के लिए, कृपया निम्नलिखित यूआरएल का प्रयोग करें:
-
-   $_[2]
-
-इस ईमेल को सेव करें और इसे निजी रखें। यदि आप इसे खो देते हैं तो आप नहीं कर पाएंगे
-मतदान को नियंत्रित करने के लिए।
-
+  "यह ईमेल एक नए पोल, $_[1] के निर्माण की स्वीकृति देता है। आपको इस पोल के पर्यवेक्षक के रूप में नामित किया गया है। मतदान शुरू करने और बंद करने के लिए, कृपया निम्न URL का उपयोग करें:
+ <$_[2]>
+इस ईमेल को सहेजें और इसे निजी रखें। यदि आप इसे खो देते हैं तो आप मतदान को नियंत्रित नहीं कर पाएंगे।
 "
 }
 sub creation_email_public_link { # url
-"चूंकि यह एक सार्वजनिक मतदान है, आप मतदाताओं को निम्न URL पर निर्देशित कर सकते हैं:
-
-   $_[1]
-
+  "क्योंकि यह एक सार्वजनिक मतदान है, आप मतदाताओं को निम्न URL पर निर्देशित कर सकते हैं:
+ <$_[1]>
 "
 }
 
 sub opted_out { # addr
-  "क्षमा करें, आप CIVS के माध्यम से &lt;$_[1]&gt; पर कोई ईमेल नहीं भेज सकते।"
+  "क्षमा करें, आप &lt;$_[1]&gt; सीआईवीएस के माध्यम से।"
 }
 
-sub Sending_result_key { # addr
-    "<p>परिणाम कुंजी <tt>$_[1]</tt> को भेजी जा रही है। कृपया इसे पूरा करने दें...<br>"
+sub Sending_result_key { # addr (escaped)
+  "<p>परिणाम कुंजी <tt>$_[1]</tt> पर भेजी जा रही है। कृपया इसे पूरा होने दें...<br>"
 }
 sub Done_sending_result_key { # addr
-    '...परिणाम कुंजी भेजने का काम किया।</p>'
+  '...परिणाम कुंजी भेजना पूर्ण।</p>'
 }
 sub Results_of_CIVS_poll { # title
-    "CIVS पोल के परिणाम: $_[1]"
+  "सीआईवीएस पोल के परिणाम: $_[1]"
 }
 sub Results_key_email_body { # title, url, civs_home
-"\"$_[1]\" नाम से एक नया CIVS पोल बनाया गया है।
-आपको एक ऐसे उपयोगकर्ता के रूप में नामित किया गया है जिसे देखने की अनुमति है
-इस सर्वेक्षण का परिणाम।
-
-इस ईमेल को सेव करें। यदि आप इसे खो देते हैं तो आपके पास इस तक पहुंच नहीं होगी
-परिणाम। एक बार मतदान बंद हो जाने के बाद, परिणाम होंगे
-निम्नलिखित यूआरएल पर उपलब्ध है:
-
-   $_[2]
-
-यह यूआरएल निजी है। अनधिकृत उपयोगकर्ताओं को इस तक पहुंच की अनुमति देना
-URL उन्हें चुनाव परिणाम देखने की अनुमति देगा।
-
+  "\"$_[1]\" नाम से एक नया सीआईवीएस पोल बनाया गया है। आपको एक ऐसे उपयोगकर्ता के रूप में नामित किया गया है जिसे इस पोल का परिणाम देखने की अनुमति है।
+इस ईमेल को सेव करें। यदि आप इसे खो देते हैं तो आपके पास परिणामों तक पहुंच नहीं होगी। पोल बंद हो जाने के बाद, परिणाम निम्न URL पर उपलब्ध होंगे:
+ <$_[2]>
+यह यूआरएल निजी है। अनधिकृत उपयोगकर्ताओं को इस URL तक पहुंच की अनुमति देने से वे मतदान के परिणाम देख सकेंगे।
 "
 }
 
 # start
 
 sub poll_started {
-    "मतदान <strong>$_[1]</strong> शुरू हो गया है।"
+  "मतदान <strong>$_[1]</strong> शुरू हो गया है।"
 }
 
 sub sending_keys_now {
-    'मतदाता आमंत्रण अभी भेज रहे हैं। इस पृष्ठ से दूर नेविगेट न करें जब तक सभी आमंत्रण नहीं भेजे जाते।'
+  'मतदाता निमंत्रण अभी भेज रहे हैं। जब तक सभी निमंत्रण नहीं भेजे जाते, तब तक इस पृष्ठ से दूर न जाएं।'
 }
 
 # control
 
 sub CIVS_Poll_Control {
-    'CIVS पोल कंट्रोल'
+  "सीआईवीएस मतदान नियंत्रण"
 }
 sub Poll_control {
-    "मतदान नियंत्रण"
+  "मतदान नियंत्रण"
 }
 sub poll_has_not_yet_started {
-    'मतदान अभी शुरू नहीं हुआ है। इसे शुरू करने के लिए इस बटन को दबाएं: '
+  'मतदान अभी शुरू नहीं हुआ है। इसे शुरू करने के लिए इस बटन को दबाएं:'
 }
 sub Start_poll {
-    'मतदान शुरू करें'
+  'मतदान शुरू करें'
 }
 sub End_poll {
-    'अंत मतदान'
+  'मतदान समाप्त करें'
 }
 sub Edit_button {
-    'संपादित करें'
+  'संपादन करना'
 }
 sub ResendLink_button {
-    ''लिंक फिर से भेजें''
+  'लिंक पुनः भेजें'
 }
 sub ResendLinkAck {
-    'भेजे गए'
-    # 'sent'
+  'भेजा'
 }
 sub Save_button {
-    'बचा ले'
-    # 'save'
+  'बचाना'
 }
 sub Remove_button {
-    # 'remove'
-    'हटाना'
+  'निकालना'
 }
-sub ending_poll_cannot_be_undone {
-    # 'Ending a poll is an operation that cannot be undone. Continue?';
-    'मतदान समाप्त करना एक ऐसा ऑपरेशन है जिसे पूर्ववत नहीं किया जा सकता है। जारी रखना?'
+sub confirm_ending_poll_cannot_be_undone {
+  'मतदान समाप्त करना एक ऐसा ऑपरेशन है जिसे पूर्ववत नहीं किया जा सकता है। यह पुष्टि करने के लिए कि आप मतदान बंद करना चाहते हैं, &#34;बंद करें&#34; और ओके दबाएं'
 }
 sub writeins_have_been_disabled {
-    'लिखने के विकल्प अक्षम कर दिए गए हैं'
+  'राइट-इन विकल्प अक्षम कर दिए गए हैं'
 }
 sub disallow_further_writeins {
-    'आगे लिखने की अनुमति न दें'
+  'आगे लिखने की अनुमति न दें'
 }
 sub voting_disabled_during_writeins {
-    'Voting is currently disabled during the write-in phase.';
+  'राइट-इन चरण के दौरान वोटिंग वर्तमान में अक्षम है।'
 }
 sub allow_voting_during_writeins {
-    "Allow voting during write-in phase";
+  'राइट-इन चरण के दौरान मतदान की अनुमति दें'
 }
 sub this_is_a_test_poll {
-    'This is a test poll.'
+  'यह एक परीक्षण सर्वेक्षण है।'
 }
 sub file_to_upload_from {
-    'File to upload ballots from:'
+  'मतपत्र अपलोड करने के लिए फ़ाइल:'
 }
 sub Load_ballots {
-    'Load ballots'
+  'मतपत्र लोड करें'
 }
 sub poll_supervisor { # name, email
-    "Poll supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>"
+  "मतदान पर्यवेक्षक: $_[1] <tt>&lt;$_[2]&gt;</tt>"
 }
 sub no_authorized_yet { #waiting
     my ($self, $auth) = @_;
@@ -237,15 +218,16 @@ sub no_authorized_yet { #waiting
     } else {
         '0'
     }
+# UNTRANSLATED
 }
 sub total_authorized_voters { # num_auth_string
-    "Total authorized voters: $_[1]"
+  "कुल अधिकृत मतदाता: $_[1]"
 }
 sub actual_votes_so_far { # num
-    "Actual votes cast thus far: $_[1]"
+  "वास्तव में अब तक डाले गए वोट: $_[1]"
 }
 sub poll_ends { # end
-    "Announced end of poll: $_[1]"
+  "मतदान के अंत की घोषणा: $_[1]"
 }
 sub email_load {
     my $msg = "Email load: ".sprintf("%4.2f", $_[1]);
@@ -253,39 +235,38 @@ sub email_load {
         $msg .= " (Must be less than @MAX_EMAIL_LOAD@ to send email)";
     }
     return $msg;
+# UNTRANSLATED
 }
 sub Poll_results_available_to_all_voters_when_poll_completes {
-    'Poll results available to all voters when poll completes.'
+  'मतदान पूरा होने पर सभी मतदाताओं के लिए मतदान के परिणाम उपलब्ध होते हैं।'
 }
 sub Voters_can_choose_No_opinion {
-    'Voters can choose &ldquo;No opinion&rdquo;.';
+  'मतदाता &ldquo;कोई राय नहीं&rdquo; चुन सकते हैं।'
 }
 sub Voting_is_disabled_during_writeins {
-    'Voting is disabled during the write-in period.'
+  'राइट-इन अवधि के दौरान मतदान अक्षम है।'
 }
 sub Poll_results_will_be_available_to_the_following_users {
-    'Poll results will be available only to the following users:'
+  'मतदान के परिणाम केवल निम्नलिखित उपयोगकर्ताओं के लिए उपलब्ध होंगे:'
 }
 sub Poll_results_are_now_available_to_the_following_users {
-    'Poll results are now available only to the following users,
-	    who were earlier sent an email containing a URL for
-	     viewing results:'
+  'मतदान के परिणाम अब केवल निम्नलिखित उपयोगकर्ताओं के लिए उपलब्ध हैं, जिन्हें पहले परिणाम देखने के लिए एक URL युक्त ईमेल भेजा गया था:'
 }
 sub results_available_to_the_following_users {
-    'इस सर्वेक्षण के परिणाम केवल सीमित उपयोगकर्ताओं के लिए जारी किए गए हैं:'
+  'इस पोल के परिणाम केवल कुछ सीमित उपयोगकर्ताओं के लिए जारी किए गए हैं:'
 }
 
 sub Poll_results_are_available { #url
-    "<a href=\"$_[1]\">[&nbsp;See poll results&nbsp;]</a>";
+  "<a href=\"$_[1]\">[&nbsp;मतदान परिणाम देखें&nbsp;]</a>"
 }
 sub Description {
-    'Description:';
+  'विवरण:'
 }
 sub Candidates {
-    'Candidates:';
+  'उम्मीदवार:'
 }
 sub Add_voters {
-    'Add voters';
+  'मतदाताओं को जोड़ें'
 }
 
 sub the_top_n_will_win { # num_winners
@@ -296,128 +277,138 @@ sub the_top_n_will_win { # num_winners
 	$wintxt = "$_[1] choices";
     }
     return "The top $wintxt will win.";
+# UNTRANSLATED
 }
 
 sub add_voter_instructions {
-    "Enter email addresses of voters, one per line. These
-    may be new voters or existing voters who have not voted yet.
-    In a private poll, giving the email address of an already
-    existing voter <strong>will not</strong> let that voter vote twice.
-    It will only resend the voter an invitation to vote.
-    In a public poll, only a token attempt is made to prevent
-    multiple voting.";
+  'मतदाताओं के ईमेल पते दर्ज करें, प्रति पंक्ति एक। ये नए मतदाता या मौजूदा मतदाता हो सकते हैं जिन्होंने अभी तक मतदान नहीं किया है। एक निजी मतदान में, पहले से मौजूद मतदाता का ईमेल पता देने से उस मतदाता को दो बार मतदान <strong>नहीं</strong> करने दिया जाएगा। यह केवल मतदाता को मतदान करने का निमंत्रण दोबारा भेजेगा। एक सार्वजनिक मतदान में, एकाधिक मतदान को रोकने के लिए केवल एक सांकेतिक प्रयास किया जाता है।'
 }
 sub resend_question {
-    'Invite even voters who have already voted?'
+  'उन मतदाताओं को भी आमंत्रित करें जो पहले ही मतदान कर चुके हैं?'
 }
 sub Upload_file {
-    'Upload file: '
+  'दस्तावेज अपलोड करें:'
 }
 sub Load_ballot_data {
-    'Load ballot data'
+  'मतपत्र डेटा लोड करें'
 }
 sub File_to_upload_ballots_from {
-    'File to upload ballots from:'
+  'मतपत्र अपलोड करने के लिए फ़ाइल:'
 }
 sub Upload_instructions {
-    'Upload a text file formatted with one ballot per line. Each
-      line contains the ranks of the N choices, which are numbers from 1
-      to N, or a dash (<kbd>-</kbd>) to represent no opinion. Ranks should be
-      separated by whitespace or a comma. Lines may be terminated
-      with LF or CR/LF. Whitespace is ignored; lines whose first
-      non-whitespace character is # are also ignored. A line may begin
-      with <i>m</i><kbd>X</kbd> where <i>m</i> is a number, which
-      signifies <i>m</i> identical ballots described by the rest of
-      the line.'
+  'प्रति पंक्ति एक मतपत्र के साथ स्वरूपित टेक्स्ट फ़ाइल अपलोड करें। प्रत्येक पंक्ति में N विकल्पों की श्रेणी होती है, जो 1 से N तक की संख्याएँ होती हैं, या बिना किसी राय का प्रतिनिधित्व करने के लिए एक डैश (<kbd>-</kbd>) होता है। रैंकों को व्हाइटस्पेस या अल्पविराम से अलग किया जाना चाहिए। लाइन को एलएफ या सीआर/एलएफ के साथ समाप्त किया जा सकता है। व्हॉट्सएप को नजरअंदाज किया जाता है; जिन पंक्तियों का पहला गैर-सफ़ेद वर्ण # है, उन्हें भी नज़रअंदाज़ कर दिया जाता है। एक पंक्ति <i>m</i><kbd>X</kbd> से शुरू हो सकती है, जहां <i>m</i> एक संख्या है, जो <i>m</i> समान मतपत्रों को दर्शाता है, जिन्हें बाकी मतपत्रों द्वारा वर्णित किया गया है। रेखा का।'
 }
 sub Examples_of_ballots {
-    'Examples of ballots:'
+  'मतपत्रों के उदाहरण:'
 }
 sub Ballot_examples {
-'    1,4,3,2,5        <i>A simple ballot ranking five choices.</i>
-    5 - 2 - 3        <i>Another ranking of five choices. Dashes indicate unranked choices.</i>
-    8X1 4 3 2 5      <i>Eight ballots like the first example ballot.</i>'
+  ' 1,4,3,2,5 <i>एक साधारण बैलट रैंकिंग पांच विकल्प।</i> 5 - 2 - 3 <i>पांच विकल्पों की एक और रैंकिंग। डैश अनरैंक किए गए विकल्पों को इंगित करते हैं।</i> 8X1 4 3 2 5 <i>आठ मतपत्र पहले उदाहरण के मतपत्र की तरह।</i>'
 }
 sub Or_paste_this_code {
-    'Or paste this HTML code into your own web page:'
+  'या इस HTML कोड को अपने वेब पेज में पेस्ट करें:'
 }
 sub This_is_a_public_poll_plus_link {
     my ($self, $url, $pub) = @_;
     if ($pub) {
-	return "This is a public poll. Share the following link
-	    with voters to allow them to vote:</p><p>
-	    &nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>. This
-	    poll will also be publicized by CIVS.";
+	'This is a public poll. Share the following link
+	    with voters to allow them to vote:<br>
+	    &nbsp;&nbsp;'
+        . $self->CopyableURL('poll_link', $url)
+        . '</p><p>This poll will also be publicized by CIVS.';
     } else {
-	return "This is a public poll. Share the following link
-	    with voters to allow them to vote:</p><p>
-	    &nbsp;&nbsp;<tt><a href=\"$url\">$url</a></tt>";
+	'This is a public poll. Share the following link
+	    with voters to allow them to vote:<br>
+	    &nbsp;&nbsp;'
+        . $self->CopyableURL('poll_link', $url)
+        . '</p>';
     }
+# UNTRANSLATED
 }
 sub The_poll_has_ended {
-    'The poll has ended.';
+  'मतदान समाप्त हो गया है।'
 }
 
 # add voters
 
 sub CIVS_Adding_Voters {
-    'CIVS: Adding Voters'
+  'सीआईवीएस: मतदाताओं को जोड़ना'
 }
 sub Adding_voters {
-    'Adding voters'
+  'मतदाताओं को जोड़ना'
 }
 
 sub Sorry_voters_can_only_be_added_to_poll_in_progress {
-    'Sorry, voters can only be added to an poll in progress.'
+  'क्षमा करें, मतदाताओं को केवल चल रहे मतदान में जोड़ा जा सकता है।'
 }
 sub Too_many_voters_added {
-    'Sorry, you can only add @MAX_VOTER_ADD@ voters at a time.'
+  'क्षमा करें, आप एक बार में केवल @MAX_VOTER_ADD@ मतदाता ही जोड़ सकते हैं।'
 }
 sub Too_much_email {
-    'Sorry, CIVS places limits on how much email is generated. Please add more voters later.'
+  'क्षमा करें, सीआईवीएस ने ईमेल उत्पन्न करने की संख्या को सीमित कर दिया है। कृपया बाद में और मतदाता जोड़ें।'
 }
 sub Out_of_upload_space {
-    'Server may be out of disk space for uploads.'
+  'सर्वर अपलोड के लिए डिस्क स्थान से बाहर हो सकता है।'
 }
 sub Uploaded_file_empty {
     my ($self, $desc) = @_;
-    "Uploaded $desc is empty."
+  "अपलोड किया गया $desc खाली है।"
 }
 sub No_upload_file_provided {
     my ($self, $desc) = @_;
-    "No $desc provided. Upload failed."
+  "कोई $desc प्रदान नहीं किया गया। अपलोड विफल।"
 }
 sub Didnt_get_plain_text {
     my ($self, $type) = @_;
-    "Uploaded input must be a plain text file or CSV file (received <b>$type</b> instead)"
+  "अपलोड किया गया इनपुट एक सादा पाठ फ़ाइल या CSV फ़ाइल (इसके बजाय <b>$type</b> प्राप्त) होना चाहिए"
 }
 
 sub Total_of_x_voters_authorized { # x
     if ($_[1] == 0) {
-	'No voters authorized to vote yet.';
+	'No voters authorized to vote yet.'
     } elsif ($_[1] == 1) {
-	'Only 1 voter authorized to vote so far.';
+	'Only 1 voter authorized to vote so far.'
     } else {
-	"A total of $_[1] voters are authorized to vote.";
+	"A total of $_[1] voters are authorized to vote."
     }
+# UNTRANSLATED
 }
 
 sub Go_back_to_poll_control {
-    'Go back to poll control';
+  'मतदान नियंत्रण पर वापस जाएं'
 }
 sub Done {
-    'Done.';
+  'किया हुआ।'
 }
+
+sub Email_voters_who_have_not_activated {
+  'ईमेल मतदाता जिन्होंने सक्रिय नहीं किया है'
+}
+
+sub Activate_mail_subject {
+  'कृपया सीआईवीएस पर अपना ईमेल पता सक्रिय करें'
+}
+sub Address {
+  'पता'
+}
+sub Reason {
+  'कारण'
+}
+
+sub Activate_mail_body {
+    my ($self, $supervisor, $name, $title, $url) = @_;
+  "$name <$supervisor> द्वारा आपको â$titleâ शीर्षक वाले पोल में वोट करने के लिए आमंत्रित किया गया है।
+ मतदान करने के लिए, कृपया सीआईवीएस मतदान प्रणाली के साथ अपना ईमेल पता सक्रिय करें: <$url>"
+}
+
 
 # vote
 
 sub page_header_CIVS_Vote { # election_title
-    # 'CIVS Vote: '.$_[1]
-    'CIVS वोट:'.$_[1]
+  'सीआईवीएस वोट: '.$_[1]
 }
 
 sub ballot_reporting_is_enabled {
-     'इस मतदान के लिए मतपत्र रिपोर्टिंग सक्षम है। आपका मतपत्र (आपके द्वारा विकल्पों को निर्दिष्ट रैंकिंग) मतदान समाप्त होने पर मतदान परिणामों में दिखाई देगा।'
+  'इस मतदान के लिए मतपत्र रिपोर्टिंग सक्षम है। मतदान समाप्त होने पर आपका मतपत्र (चुनावों के लिए आपके द्वारा निर्दिष्ट रैंकिंग) मतदान परिणामों में दिखाई देगा।'
 }
 sub instructions1 { # num_winners, end, name, email
     my $wintxt;
@@ -430,6 +421,7 @@ sub instructions1 { # num_winners, end, name, email
 	    The poll ends <b>$_[2]</b>.
 	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
 	    Contact the poll supervisor if you need help.";
+# UNTRANSLATED
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
@@ -441,13 +433,14 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
 	    For example, give your top choice the rank 1.
 	    Give choices the same rank if you have no
 	    preference between them. You do not have to use all the
-	    possible ranks. All choices initially have the
-	    lowest possible rank. ". $cr;
-	if ($no_opinion) {
-	    $ret .= '<b>Note:</b> &ldquo;No opinion&rdquo;
-		    is <i>not</i> the same as the lowest possible rank; it means
+	    possible ranks.";
+        if (!$no_opinion) {
+            $ret .= ' All choices initially have the lowest possible rank.</p>'. $cr;
+        } else {
+	    $ret .= '</p><p><b>Note:</b> All choices initially have the rank “No opinion”. This
+                    rank is <i>not</i> the same as the lowest possible rank; it means
 		    that you choose not to rank this choice with respect to the
-		    other choices.</p>';
+		    other choices.</p>' . $cr;
 	}
 	if ($prop) {
 	    $ret .= '<p>This poll is decided using an experimental Condorcet-based
@@ -477,6 +470,7 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
 	"<a href=\"$civs_url/proportional.html\">[See more information]</a>.</p>";
     }
     return $ret;
+# UNTRANSLATED
 }
 
 sub report_authorized {
@@ -486,27 +480,33 @@ sub report_authorized {
     } else {
         "A total of $num_auth voters have been authorized to vote."
     }
+# UNTRANSLATED
 }
 
 sub Identifier_request {
-    'Please give your email address or other recognizable identifier:'
+  'कृपया अपना ईमेल पता या अन्य पहचानने योग्य पहचानकर्ता दें:'
 }
 sub Need_identifier {
-    'Sorry, you must identify yourself in order to vote.'
+  'क्षमा करें, मतदान करने के लिए आपको अपनी पहचान बतानी होगी।'
 }
 
-sub Rank { 'Rank' }
-sub Choice { 'Choice' }
-sub Weight { 'Weight' }
+sub Rank {
+  'पद'
+}
+sub Choice {
+  'पसंद'
+}
+sub Weight {
+  'वज़न'
+}
 
 # overridden in english.pm
 sub ordinal_of {
-    "$_[1]"
+  "$_[1]"
 }
 
 sub address_will_be_visible {
-    # '<strong>Your email address will be visible</strong> along with your ballot.';
-    'आपका ईमेल पता आपके मतपत्र के साथ दिखाई देगा।'
+  'आपके मतपत्र के साथ <strong>आपका ईमेल पता दिखाई देगा</strong>।'
 }
 
 sub however_results_restricted {
@@ -515,169 +515,162 @@ sub however_results_restricted {
     my $first=1;
     foreach my $u (@users) {
 	if (!$first) { $r .= ', '; $first=0; }
-	$r .= "<tt>$u</tt>";
+	$r .= tt(escapeHTML($u));
     }
     $r .= '.';
     return $r;
+# UNTRANSLATED
 }
 
 sub ballot_will_be_anonymous {
-    ' However, your ballot will still be anonymous:
-      no personally identifying information will appear.'
+  ' हालांकि, आपका मतपत्र अभी भी गुमनाम रहेगा: कोई व्यक्तिगत पहचान वाली जानकारी दिखाई नहीं देगी।'
 }
 
 sub submit_ranking {
-    'Submit ranking';
+  'रैंकिंग सबमिट करें'
 }
 
 sub only_writeins_are_permitted {
-    'Voting is not yet permitted in this poll. However,
-             you may view the available choices and write in new
-	     choices. Use the text field below to write in new choices.';
+  'इस पोल में अभी तक वोटिंग की अनुमति नहीं है। हालाँकि, आप उपलब्ध विकल्पों को देख सकते हैं और नए विकल्पों में लिख सकते हैं। नए विकल्पों में लिखने के लिए नीचे टेक्स्ट फ़ील्ड का उपयोग करें।'
 }
 
 sub Add_writein {
-    'Add write-in';
+  'राइट-इन जोड़ें'
 }
 
 sub to_top {
-    # 'to top';
-    'शीर्ष पर'
+  'ऊपर के लिए'
 }
 sub to_bottom {
-    # 'to bottom'
-    'नीचे ले जाएँ'
+  'नीचे करने के लिए'
 }
 sub move_up {
-    'move up';
+  'बढ़ाना'
 }
 sub move_down {
-    'move down';
+  'नीचे की ओर'
 }
 sub make_tie {
-    'make tie';
+  'टाई बनाओ'
 }
 sub buttons_are_deactivated {
-    'These buttons are deactivated because
-	your browser does not support Javascript.';
+  'ये बटन निष्क्रिय हैं क्योंकि आपका ब्राउज़र जावास्क्रिप्ट का समर्थन नहीं करता है।'
 }
 sub ranking_instructions {
-       '<p>Rank the choices in one of three ways:</p>
-	<ol>
-	    <li>drag the rows</li>
-	    <li>use pulldowns in Rank column</li>
-	    <li>select rows and use buttons above</li>
-	</ol>';
+  '<p>चुनावों को तीन तरीकों में से एक में रैंक करें:</p> <ol> <li>पंक्तियों को खींचें</li> <li>रैंक कॉलम में पुलडाउन का उपयोग करें</li> <li>पंक्तियों का चयन करें और ऊपर बटन का उपयोग करें </ली> </ओल>'
 }
 sub write_in_a_choice {
-    'Write in a new choice: ';
+  'एक नई पसंद में लिखें:'
+}
+sub show_qr_code {
+  'इस पोल के लिए क्यूआर कोड दिखाएं।'
 }
 sub if_you_have_already_voted { #url
-    "If you have already voted, you may see
-	<a href=\"$_[1]\">the current poll results</a>.";
+  "यदि आप पहले ही मतदान कर चुके हैं, तो आप <a href=\"$_[1]\">वर्तमान मतदान परिणाम</a> देख सकते हैं।"
 }
 sub thank_you_for_voting { #title, receipt
-    "Thank you. Your vote for <strong>$_[1]</strong> has been
-	successfully cast.<br>
-        Your voter receipt is <code>$_[2]</code>.
-        You will need this receipt if you want to change your ballot.";
+  "धन्यवाद। <strong>$_[1]</strong> के लिए आपका वोट सफलतापूर्वक डाल दिया गया है।<br> आपकी मतदाता रसीद <code>$_[2]</code> है। यदि आप बाद में अपना मतपत्र बदलना चाहते हैं तो आपको इस रसीद की आवश्यकता होगी।"
 }
 sub try_some_public_polls {
-    "Feel like voting on something else? Try one of these public polls:"
+  "किसी और चीज़ पर मतदान करने का मन करता है? इनमें से किसी एक सार्वजनिक चुनाव का प्रयास करें:"
+}
+sub you_can_change_ballot_now {
+  'इस पृष्ठ से, आप अपने द्वारा डाले गए मतपत्र को मिटा सकते हैं और फिर से मतदान कर सकते हैं।'
+}
+sub change_ballot {
+  'रिवोट करें'
 }
 sub name_of_writein_is_empty {
-    "Name of write-in choice is empty";
+  "राइट-इन पसंद का नाम खाली है"
 }
 sub writein_too_similar {
-    "Sorry, the name of the write-in is too similar to an existing choice";
+  "क्षमा करें, राइट-इन का नाम मौजूदा पसंद के समान है"
 }
 sub doublecheck_msg {
-    'Your ballot will have no effect because all candidates on which you have an opinion are tied. Do you still want to submit?'
+  'आपके मतपत्र का कोई प्रभाव नहीं पड़ेगा क्योंकि जिन उम्मीदवारों पर आपकी राय है वे सभी बंधे हुए हैं। क्या आप अभी भी सबमिट करना चाहते हैं?'
 }
 
 # election
 
 sub No_poll_ID {
-    "No poll ID was provided. Perhaps a copy-paste error?"
+  "कोई मतदान पहचान पत्र प्रदान नहीं किया गया था। शायद कॉपी-पेस्ट त्रुटि?"
 }
 sub Ill_formed_poll_ID {
-    "An ill-formed poll identifier was provided. Perhaps a copy-paste error? (" . $_[1] . ")"
+  "एक गलत तरीके से बनाया गया मतदान पहचानकर्ता प्रदान किया गया था। शायद कॉपी-पेस्ट त्रुटि? (" . $_[1] .")"
 }
 sub vote_has_already_been_cast {
-    "A vote has already been cast using your voter key.";
+  "आपकी मतदाता कुंजी का उपयोग करके एक वोट पहले ही डाला जा चुका है।"
 }
 #deprecated, use future_result_link
 sub following_URL_will_report_results {
-    'The following URL will report poll results once the poll ends:';
+  'मतदान समाप्त होने के बाद निम्न URL मतदान परिणामों की रिपोर्ट करेगा:'
 }
 sub future_result_link {
-    (my $self, my $url) = @_;
-    "The following URL will report poll results once the poll ends: <a href='$url'><tt>$url</tt></a>"
+    my ($self, $url) = @_;
+  "मतदान समाप्त होने के बाद निम्न URL मतदान परिणामों की रिपोर्ट करेगा: <a href='$url'><code>$url</code></a>"
 }
 #deprecated
 sub following_URL_reports_results {
-    'The following URL reports the current poll results:'
+  'निम्न URL वर्तमान मतदान परिणामों की रिपोर्ट करता है:'
 }
 sub if_you_want_to_change {
-    'You can remove your previous vote and vote again by entering your voter receipt here:'
+  'आप यहां अपनी मतदाता रसीद दर्ज करके अपना पिछला वोट हटा सकते हैं और फिर से वोट कर सकते हैं:'
 }
 sub invalid_release_key {
     my ($self, $receipt) = @_;
-    'The provided voter receipt ('.$receipt.') is incorrect. It should look similar to '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').'.'
+  'प्रदान की गई मतदाता रसीद ('.$receipt.') गलत है। यह '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').' जैसा दिखना चाहिए।'
 }
 sub no_ballot_under_key {
     my ($self, $key) = @_;
-    "No previous ballot was found for the receipt $key"
+  "रसीद $ key के लिए कोई पिछला मतपत्र नहीं मिला"
 }
 sub current_result_link {
-    (my $self, my $url) = @_;
-    "<a href=\"$url\" class=result_link>Go to current poll results</a>"
+    my ($self, $url) = @_;
+  "<a href=\"$url\" class=result_link>वर्तमान मतदान परिणामों पर जाएं</a>"
 }
 sub Already_voted {
-    'Already voted';
+  'पहले ही वोट कर दिया है'
 }
 sub Error {
-    'Error';
+  'गलती'
 }
 sub Invalid_key {
-    'Invalid key. You should have received a correct URL for
-        controlling the poll by email. This error has been logged.';
+  'अमान्य चाबी। आपको ईमेल द्वारा मतदान को नियंत्रित करने के लिए एक सही URL प्राप्त होना चाहिए था। यह त्रुटि दर्ज की गई है।'
 }
 sub Authorization_failure {
-    'Authorization failure';
+  'प्राधिकरण विफलता'
 }
 
 sub already_ended { # title
-    "This poll (<strong>$_[1]</strong>) has already been ended.";
+  "यह मतदान (<strong>$_[1]</strong>) पहले ही समाप्त हो चुका है।"
 }
 sub Poll_not_yet_ended {
-    "Poll not yet ended";
+  "मतदान अभी समाप्त नहीं हुआ है"
 }
 sub The_poll_has_not_yet_been_ended { #title, name, email
-    "This poll ($_[1]) has not yet been ended by its supervisor,
-    $_[2] ($_[3]).";
+  "यह मतदान ($_[1]) अभी तक इसके पर्यवेक्षक, $_[2] ($_[3]) द्वारा समाप्त नहीं किया गया है।"
 }
 
 # deprecated
 sub The_results_of_this_completed_poll_are_here {
-    'The results of this completed poll are here:';
+  'इस पूर्ण मतदान के परिणाम यहां हैं:'
 }
 sub completed_results_link {
-    (my $self, my $url) = @_;
-    "<a href=\"$url\" class=result_link>Go to completed poll results</a>"
+    my ($self, $url) = @_;
+  "<a href=\"$url\" class=result_link>पूर्ण मतदान परिणामों पर जाएं</a>"
 }
 
 sub No_write_access_to_lock_poll {
-    "Did not have the write access needed to lock the poll.";
+  "मतदान को लॉक करने के लिए लिखने की आवश्यकता नहीं थी।"
 }
 sub This_poll_has_already_been_started { # title
-    "This poll ($_[1]) has already been started.";
+  "यह मतदान ($_[1]) पहले ही शुरू हो चुका है।"
 }
 sub No_write_access_to_start_poll {
-    'Did not have write access to start a poll.';
+  'मतदान शुरू करने के लिए लिखने का अधिकार नहीं था।'
 }
 sub Poll_does_not_exist_or_not_started {
-    'This poll does not exist or has not been started.';
+  'यह मतदान मौजूद नहीं है या शुरू नहीं किया गया है।'
 }
 sub Your_voter_key_is_invalid__check_mail { # voter
    my $voter = $_[1];
@@ -687,171 +680,169 @@ sub Your_voter_key_is_invalid__check_mail { # voter
    } else {
     "Your voter key is invalid. You should have received a correct URL by email.";
    }
+# UNTRANSLATED
 }
 sub Invalid_result_key { # key
-    "Invalid result key: \"$_[1]\". You should have received a correct URL for
-        viewing poll results by email. This error has been logged.";
+  "अमान्य परिणाम कुंजी: \"$_[1]\"। ईमेल द्वारा मतदान के परिणाम देखने के लिए आपको एक सही URL प्राप्त होना चाहिए। यह त्रुटि दर्ज की गई है।"
 }
 sub Invalid_control_key { # key
-    "Invalid control key. You should have received a correct URL for controlling the poll by email. This error has been logged.";
+  "अमान्य नियंत्रण कुंजी। आपको ईमेल द्वारा मतदान को नियंत्रित करने के लिए एक सही URL प्राप्त होना चाहिए था। यह त्रुटि दर्ज की गई है।"
 }
 sub Invalid_voting_key {
-    "Invalid voting key. You should have received a correct URL for voting by email. This error has been logged.";
+  "अमान्य मतदान कुंजी। आपको ईमेल द्वारा मतदान करने के लिए एक सही URL प्राप्त होना चाहिए। यह त्रुटि दर्ज की गई है।"
 }
 sub Invalid_poll_id {
-    "Invalid poll identifier";
+  "अमान्य मतदान पहचानकर्ता"
 }
 sub Poll_id_not_valid { #id
-    "The poll identifier \"$_[1]\" is not valid.";
+  "मतदान पहचानकर्ता \"$_[1]\" मान्य नहीं है।"
 }
 sub Unable_to_append_to_poll_log {
-    "Unable to append to the poll log.";
+  "मतदान लॉग में संलग्न करने में असमर्थ।"
 }
 sub Voter_v_already_authorized {
-    "Voter &lt;$_[1]&gt; is already authorized. The voter's key will be resent to the voter.";
+  "मतदाता &lt;$_[1]&gt; पहले से ही अधिकृत है। मतदाता कुंजी मतदाता को फिर से भेजी जाएगी।"
 }
 sub Skipping_already_voted {
-    "Skipping voter &lt;$_[1]&gt;: already voted."
+  "छोड़ने वाला मतदाता &lt;$_[1]&gt;: पहले ही मतदान कर चुका है।"
 }
 sub Invalid_email_address_hdr { # addr
-    "Invalid email address";
+  "अमान्य ईमेल पता"
 }
 sub Invalid_email_address { # addr
-    "Invalid email address: $_[1]";
+  "अमान्य ईमेल पता: $_[1]"
 }
 sub Address_opted_out { # addr
-    "This address has opted out from CIVS email: $_[1]"
+  "यह पता सीआईवीएस ईमेल से बाहर हो गया है: $_[1]"
 }
 sub Sending_mail_to_voter_v {
-    "Sending mail to voter \"$_[1]\"...";
+  "मतदाता को मेल भेजना \"$_[1]\"..."
 }
 sub CIVS_poll_supervisor { # name
-    "\"$_[1] (CIVS poll supervisor)\""
+  "\"कोंडोरसेट इंटरनेट वोटिंग सेवा ($_[1] की ओर से)\""
+}
+sub From_poll_supervisor {
+    my ($self, $name) = @_;
+    $self->CIVS_poll_supervisor($name)
+# UNTRANSLATED
 }
 sub voter_mail_intro { #title, name, email_addr
-"A Condorcet Internet Voting Service poll named <b>$_[1]</b> has been created.
-You have been designated as a voter by the poll supervisor,
-$_[2] (<a href=\"mailto:$_[3] ($_[2])\">$_[3]</a>).</p>";
+  "<b>$_[1]</b> नाम का एक कॉन्डोरसेट इंटरनेट वोटिंग सर्विस पोल बनाया गया है। आपको मतदान पर्यवेक्षक, $_[2] (<a href=\"mailto:$_[3] ($_[2])\"><code>$_[3]< द्वारा एक मतदाता के रूप में नामित किया गया है /code></a>).</p>"
 }
 sub Description_of_poll {
-    'Description of poll:';
+  'मतदान का विवरण:'
 }
 sub if_you_would_like_to_vote_please_visit {
-    'If you would like to vote, please visit the following URL:';
+  'यदि आप मतदान करना चाहते हैं, तो कृपया निम्नलिखित URL पर जाएँ:'
 }
 sub This_is_your_private_URL {
-'This is your private URL. Do not give it to anyone else, because they could use
-it to vote for you.';
+  'यह आपका निजी यूआरएल है। इसे किसी और को न दें, क्योंकि वे इसका इस्तेमाल आपको वोट देने के लिए कर सकते हैं।'
 }
 sub Your_privacy_will_not_be_violated {
-'Your privacy will not be violated by voting.  The voting service has already
-destroyed the record of your email address and will not release any information
-about whether or how you have voted.';
+  'वोट देने से आपकी निजता का हनन नहीं होगा। मतदान सेवा ने आपके ईमेल पते के रिकॉर्ड को पहले ही नष्ट कर दिया है और आपने मतदान किया है या नहीं, इस बारे में कोई जानकारी जारी नहीं करेगी।'
 }
 sub This_is_a_nonanonymous_poll {
-    'The poll supervisor has decided to make this a <strong>non-anonymous poll</strong>.
-If you vote, your email address and how you voted will be visible to anyone
-who has been given access to the poll results.'
+  'मतदान पर्यवेक्षक ने इसे <strong>गैर-गुमनाम मतदान</strong> बनाने का निर्णय लिया है. यदि आप मतदान करते हैं, तो आपका ईमेल पता और आपने कैसे मतदान किया, वह किसी को भी दिखाई देगा, जिसे मतदान परिणामों तक पहुंच प्रदान की गई है।'
 }
 
 
 sub poll_has_been_announced_to_end { #election_end
-    "The poll has been announced to end $_[1]."
+  "मतदान $_[1] समाप्त होने की घोषणा की गई है।"
 }
 
 sub To_view_the_results_at_the_end {
-    "To view the results of the poll once it has ended, visit:</p> $_[1]"
+  "मतदान समाप्त होने के बाद उसके परिणाम देखने के लिए, यहां जाएं:</p> $_[1]"
 }
 
 sub for_more_information_about_CIVS { # url
-  "For more information about the Condorcet Internet Voting Service, see $_[1]"
+  "कोंडोरसेट इंटरनेट वोटिंग सेवा के बारे में अधिक जानकारी के लिए, देखें $_[1]"
 }
 
 sub For_more_information { # url, mail mgmt url
   ($self, $home, $mail_mgmt) = @_;
   "For more information about the Condorcet Internet Voting Service, see
    $home. To control future email sent from CIVS, see $mail_mgmt"
+# UNTRANSLATED
 }
 
 sub poll_email_subject { # title
-    "Poll: $_[1]"
+  "मतदान: $_[1]"
 }
 
 # close
 
 sub CIVS_Ending_Poll {
-    'CIVS: Ending Poll'
+  'सीआईवीएस: एंडिंग पोल'
 }
 
 sub Ending_poll {
-    'Ending a poll'
+  'मतदान समाप्त करना'
 }
 sub View_poll_results {
-    'View poll results'
+  'मतदान के परिणाम देखें'
 }
 sub Poll_ended { #title
-    "Poll ended: $_[1]"
+  "मतदान समाप्त: $_[1]"
 }
 
 sub The_poll_has_been_ended { #election_end
-    "The poll has been ended. It was announced to end $_[1]."
+  "मतदान समाप्त कर दिया गया है। $_[1] को समाप्त करने की घोषणा की गई थी।"
 }
 
 sub poll_results_available_to_authorized_users {
-    'The poll results are now available to authorized users.'
+  'मतदान के परिणाम अब अधिकृत उपयोगकर्ताओं के लिए उपलब्ध हैं।'
 }
 
 sub was_not_able_stop_the_poll {
-    'Was not able to stop the poll'
+  'मतदान को रोक नहीं पाए'
 }
 
 
 # results
 
 sub CIVS_poll_result {
-    "CIVS poll result"
+  "सीआईवीएस चुनाव परिणाम"
 }
 sub Poll_results { # title
-    "Poll Results: $_[1]"
+  "मतदान परिणाम: $_[1]"
 }
 
 sub Writeins_currently_allowed {
-    'Write-in choices are currently allowed.'
+  'राइट-इन विकल्पों की वर्तमान में अनुमति है।'
 }
 
 sub Writeins_allowed {
-    'Write-in choices are allowed.';
+  'राइट-इन विकल्पों की अनुमति है।'
 }
 sub Writeins_not_allowed {
-    'Write-in choices are not allowed.';
+  'राइट-इन विकल्पों की अनुमति नहीं है।'
 }
 sub Detailed_ballot_reporting_enabled {
-    'Detailed ballot reporting is enabled.';
+  'विस्तृत मतपत्र रिपोर्टिंग सक्षम है।'
 }
 sub Detailed_ballot_reporting_disabled {
-    'Detailed ballot reporting is disabled.';
+  'विस्तृत मतपत्र रिपोर्टिंग अक्षम है।'
 }
 sub Voter_identities_will_be_kept_anonymous {
-    'Voter identities will be kept anonymous';
+  'मतदाता पहचान गुमनाम रखी जाएगी'
 }
 sub Voter_identities_will_be_public {
-'Voter identities (email) along with their ballots will be
-visible to those authorized to see poll results.'
+  'मतदान के परिणाम देखने के लिए अधिकृत लोगों को उनके मतपत्रों के साथ मतदाता पहचान (ईमेल) दिखाई देगी।'
 }
 sub Condorcet_completion_rule {
-    'Condorcet completion rule:';
+  'कॉन्डोर्सेट समापन नियम:'
 }
 sub undefined_algorithm {
-    'Error: undefined algorithm.';
+  'त्रुटि: अपरिभाषित एल्गोरिथ्म।'
 }
 sub computing_results {
-    'Computing results...';
+  'गणना परिणाम...'
 }
 sub Supervisor { #name, email
-    "Supervisor: $_[1] <tt>&lt;$_[2]&gt;</tt>";
+  "पर्यवेक्षक: $_[1] <tt>&lt;$_[2]&gt;</tt>"
 }
 sub Announced_end_of_poll {
-    "Announced end of poll: $_[1]";
+  "मतदान के अंत की घोषणा: $_[1]"
 }
 sub Actual_time_poll_closed { # close time
     if ($_[1] == 0) {
@@ -861,25 +852,26 @@ sub Actual_time_poll_closed { # close time
 	    $_[1] * 1000 .
 	    ').toLocaleString())</script>';
     }
+# UNTRANSLATED
 }
 sub Poll_not_ended {
-    'Poll has not yet ended.';
+  'मतदान अभी समाप्त नहीं हुआ है।'
 }
 sub This_is_a_test_poll {
-    'This is a test poll.';
+  'यह एक परीक्षण सर्वेक्षण है।'
 }
 sub This_is_a_private_poll { #num_auth
-    "Private poll ($_[1] authorized voters)";
+  "निजी मतदान ($_[1] अधिकृत मतदाता)"
 }
 sub This_is_a_public_poll {
-    'This is a public poll.';
+  'यह एक सार्वजनिक मतदान है।'
 }
 
 sub Actual_votes_cast { #num_votes
-    "Actual votes cast: $_[1]";
+  "डाले गए वास्तविक मत: $_[1]"
 }
 sub Number_of_winning_candidates {
-    'Number of winning choices: ';
+  'जीतने के विकल्पों की संख्या:'
 }
 sub Poll_actually_has { #winmsg
     my $winmsg = '1 winner';
@@ -887,127 +879,117 @@ sub Poll_actually_has { #winmsg
 	$winmsg = $_[1].' winners';
     }
     "&nbsp;(Poll actually has $winmsg)";
+# UNTRANSLATED
 }
 sub poll_description_hdr {
-    'Poll description';
+  'जनमत विवरण'
 }
 sub Ranking_result {
-    'Result';
+  'परिणाम'
 }
 sub x_beats_y { # x y w l
-    "$_[1] beats $_[2] $_[3]&ndash;$_[4]";
+  "$_[1] ने $_[2] $_[3]&ndash;$_[4] को मात दी"
 }
 sub x_ties_y { # x y w l
-    "$_[1] ties $_[2] $_[3]&ndash;$_[4]";
+  "$_[1] संबंध $_[2] $_[3]&ndash;$_[4]"
 }
 sub x_loses_to_y { # x y w l
-    "$_[1] loses to $_[2] $_[3]&ndash;$_[4]";
+  "$_[1] $_[2] $_[3]&ndash;$_[4] से हार गया"
 }
 sub some_result_details_not_shown {
-    'For simplicity, some details of the poll result are not shown. &nbsp;';
+  'सरलता के लिए, चुनाव परिणाम के कुछ विवरण नहीं दिखाए जाते हैं।'
 }
 sub Show_details {
-    'Show details';
+  'प्रदर्शन का विवरण'
 }
 sub Hide_details {
-    'Hide details';
+  'जानकारी छिपाएँ'
 }
 sub Result_details {
-    'Result details';
+  'परिणाम विवरण'
 }
 sub Ballot_report {
-    'Ballot report'
+  'बैलेट रिपोर्ट'
 }
 sub Ballots_are_shown_in_random_order {
-    "Ballots are shown in a randomly generated order.";
+  "मतपत्र बेतरतीब ढंग से उत्पन्न क्रम में दिखाए जाते हैं।"
 }
 sub Download_ballots_as_a_CSV { # url
-    "[<a href=\"$_[1]\">Download ballots in CSV format</a>]";
+  "[<a href=\"$_[1]\">CSV प्रारूप में मतपत्र डाउनलोड करें</a>]"
 }
 sub No_ballots_were_cast {
-    "No ballots were cast in this poll.";
+  "इस पोल में कोई मतपत्र नहीं डाला गया था।"
 }
 sub Ballot_reporting_was_not_enabled {
-    'Ballot reporting was not enabled for this poll.'
+  'इस मतदान के लिए मतपत्र रिपोर्टिंग सक्षम नहीं की गई थी।'
 }
 sub Tied {
-    "<i>Tied</i>:";
+  '<i>बंधे</i>:'
 }
 sub loss_explanation { # loss_to, for, against
-    ', loses to '. $_[1].' by '. $_[2] .'&ndash;'. $_[3];
+  ', हार जाता है। '.$_[1].' द्वारा ।'.$_[2].'&ndash;। '.$_[3]
 }
 sub loss_explanation2 {
-    '&nbsp;&nbsp;loses to '.$_[1].' by '.$_[2].'&ndash;'.$_[3];
+  '&nbsp;&nbsp;'.$_[1].' से हारे। '.$_[2].'&ndash;'.$_[3].' द्वारा'
 }
 sub Condorcet_winner_explanation {
-    '&nbsp;&nbsp;(Condorcet winner: wins contests with all other choices)';
+  '&nbsp;&nbsp;(कोंडोरसेट विजेता: अन्य सभी विकल्पों के साथ प्रतियोगिता जीतता है)'
 }
 sub undefeated_explanation {
-    '&nbsp;&nbsp;(Not defeated in any contest vs. another choice)';
+  '&nbsp;&nbsp;(किसी भी प्रतियोगिता बनाम किसी अन्य विकल्प में पराजित नहीं)'
 }
 sub Choices_shown_in_red_have_tied {
-    'Choices shown in red have tied for being selected.
-	You may wish to select among them randomly.'
+  'लाल रंग में दिखाए गए विकल्प चुने जाने के लिए टाई हो गए हैं। आप उनमें से यादृच्छिक रूप से चयन करना चाह सकते हैं।'
 }
 sub Condorcet_winner {
-    "Condorcet winner"
+  "कोंडोरसेट विजेता"
 }
 sub Choices_in_individual_pref_order {
-    'Choices (in individual preference order)'
+  'विकल्प (व्यक्तिगत वरीयता क्रम में)'
 }
 
 sub Unknown_email {
-    '(unknown)'
+  '(अनजान)'
 }
 
 sub What_is_this { # url
-    '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>'. '(What is this?)</small></a>';
+  '&nbsp;&nbsp;&nbsp; <a href="' . $_[1]. '"><small>(यह क्या है?)</small></a>'
 }
 
 # rp
 
 sub All_prefs_were_affirmed {
-    'All preferences were affirmed.'
+  'सभी प्राथमिकताओं की पुष्टि की गई।'
 }
 
 sub Presence_of_a_green_entry_etc {
-    'The presence of a green entry below
-	the diagonal (and a corresponding red one above)
-	means that a preference was ignored because
-	it conflicted with other, stronger preferences.'
+  'विकर्ण के नीचे एक हरे रंग की प्रविष्टि (और ऊपर एक संबंधित लाल) की उपस्थिति का अर्थ है कि वरीयता को अनदेखा कर दिया गया क्योंकि यह अन्य, मजबूत प्राथमिकताओं के साथ विरोधाभासी थी।'
 }
 sub Random_tie_breaking_used {
-'Random tie breaking was used to
-arrive at this ordering, as per the MAM
-algorithm. This may have affected the ordering
-of the choices.'
+  'एमएएम एल्गोरिथम के अनुसार, इस क्रम पर पहुंचने के लिए रैंडम टाई ब्रेकिंग का उपयोग किया गया था। इससे विकल्पों के क्रम पर असर पड़ सकता है।'
 }
 sub No_random_tie_breaking_used {
-    'No random tie breaking was needed to arrive at this ordering.'
+  'इस ऑर्डर पर पहुंचने के लिए किसी रैंडम टाई ब्रेकिंग की जरूरत नहीं थी।'
 }
 
 # beatpath
 
 sub beatpath_matrix_explanation {
-    'The following matrix shows the strength of the strongest
-    beatpath connecting each pair of choices. Choice 1 is ranked above
-    choice 2 if there is a stronger beatpath leading from 1 to 2
-    than any leading from 2 to 1.';
+  'निम्नलिखित मैट्रिक्स प्रत्येक जोड़ी विकल्पों को जोड़ने वाले सबसे मजबूत बीटपाथ की ताकत दिखाता है। पसंद 1 को पसंद 2 से ऊपर स्थान दिया गया है यदि 2 से 1 तक किसी भी अग्रणी की तुलना में 1 से 2 तक एक मजबूत बीटपाथ है।'
 }
 
 sub no_pref {
-    'none'
+  'कोई भी नहीं'
 }
 
 #rp
 
 sub Some_voter_preferences_were_ignored {
-    'Some voter preferences were ignored because they
-     conflict with other, stronger preferences:'
+  'कुछ मतदाता प्राथमिकताओं पर ध्यान नहीं दिया गया क्योंकि वे अन्य मजबूत प्राथमिकताओं के साथ संघर्ष करती हैं:'
 }
 
 sub preference_description {
-    "The $_[1]&ndash;$_[2] preference for $_[3] over $_[4]."
+  "$_[1]&ndash;$_[2] $_[3] के लिए $_[4] से अधिक वरीयता।"
 }
 
 sub mail_management_instructions {
@@ -1019,129 +1001,116 @@ sub mail_management_instructions {
     p(b("Warning:"), "If you block mail from CIVS, it will be difficult to re-enable it, because CIVS
       does user authentication using email addresses. You will not be able to vote in any CIVS polls
       and you will not be able to create CIVS polls.")
+# UNTRANSLATED
 }
 
 sub mail_address {
-    'Email address: '
+  'मेल पता:'
 }
 sub deactivation_code {
-    'Deactivation code: '
+  'निष्क्रियता कोड:'
 }
 sub filter_question {
-    'Filter pattern <small>(can be left blank; hover for help)</small>'
+  'फ़िल्टर पैटर्न <छोटा>(खाली छोड़ा जा सकता है; मदद के लिए होवर करें)</छोटा>'
 }
 sub filter_explanation {
-    'You can enter one or more patterns here to specify which poll supervisors to prevent email from. The pattern can be the email address of a supervisor or a pattern describing email addresses.  The pattern may use * to represent any sequence of characters. For example, the pattern *@inmano.com would prevent supervisors with an @inmano.com address from sending you poll invitations. If you leave this field blank, deactivation/reactivation will apply to all email addresses.'
+  'यह निर्दिष्ट करने के लिए कि कौन से मतदान पर्यवेक्षकों को ईमेल से बचना है, आप यहां एक या अधिक पैटर्न दर्ज कर सकते हैं। पैटर्न पर्यवेक्षक का ईमेल पता या ईमेल पतों का वर्णन करने वाला पैटर्न हो सकता है। वर्णों के किसी भी अनुक्रम का प्रतिनिधित्व करने के लिए पैटर्न * का उपयोग कर सकता है। उदाहरण के लिए, पैटर्न *@inmano.com @inmano.com पते वाले पर्यवेक्षकों को आपको मतदान आमंत्रण भेजने से रोकेगा। यदि आप इस फ़ील्ड को खाली छोड़ देते हैं, तो सभी ईमेल पतों पर निष्क्रियता/पुनः सक्रियण लागू होगा।'
 }
 sub send_deactivation_code {
-    'Send deactivation code by email'
+  'ईमेल द्वारा निष्क्रियता कोड भेजें'
 }
 sub cant_send_email {
-    'You cannot send email to this user using CIVS. Email to this user must first be reactivated using a previously sent deactivation code.'
+  'आप सीआईवीएस का उपयोग कर इस उपयोगकर्ता को ईमेल नहीं भेज सकते। इस उपयोगकर्ता को भेजे गए ईमेल को पहले भेजे गए निष्क्रियकरण कोड का उपयोग करके पहले पुनः सक्रिय किया जाना चाहिए।'
 }
 sub submit_deact_react {
-    'Submit deactivation/reactivation'
+  'निष्क्रियता / पुनर्सक्रियन जमा करें'
 }
 sub codes_dont_match {
-    "Sorry, the provided code and email address do not match. You can request another code if you have not previously blocked email from CIVS."
+  "क्षमा करें, दिया गया कोड और ईमेल पता मेल नहीं खाते। यदि आपने पहले सीआईवीएस से ईमेल अवरुद्ध नहीं किया है तो आप दूसरे कोड का अनुरोध कर सकते हैं।"
 }
 sub deactivation_successful {
     my ($self, $pattern) = @_;
-    "CIVS will not send any more mail to this address if its sender
-     matches this pattern: \"$pattern\". You can reactivate mail from CIVS
-     only by using this web page with the same code you just used."
+  "यदि सीआईवीएस इस पते पर कोई और मेल नहीं भेजेगा यदि इसका प्रेषक इस पैटर्न से मेल खाता है: \"$पैटर्न\"। आप केवल इस वेब पेज का उपयोग करके उसी कोड के साथ CIVS से मेल को पुनः सक्रिय कर सकते हैं जिसका आपने अभी उपयोग किया है।"
 }
 sub reactivation_successful {
-    'You have successfully reactivated mail to this address.'
+  'आपने इस पते पर मेल को सफलतापूर्वक पुनः सक्रिय कर दिया है।'
 }
 sub someone_has_requested {
-"Someone has requested a code for preventing CIVS from sending email
-to you. If it was you, you will know what to do with it. The code is:
-
-    $_[1]
-
-Keep this email because you will need this code if you want to use the
-service in the future."
+  "किसी ने सीआईवीएस को आपको ईमेल भेजने से रोकने के लिए एक कोड का अनुरोध किया है। यदि यह आप थे, तो आपको पता चल जाएगा कि इसके साथ क्या करना है। कोड है:
+ $_[1]
+यह ईमेल अपने पास रखें क्योंकि यदि आप भविष्य में सेवा का उपयोग करना चाहते हैं तो आपको इस कोड की आवश्यकता होगी।"
 }
 sub deactivation_code_subject {
-    'Deactivation code for CIVS mail'
+  'CIVS मेल के लिए निष्क्रियता कोड'
 }
 sub mail_mgmt_title {
-    'Mail Management'
+  'मेल प्रबंधन'
 }
 
 ## User activation
 
 sub user_activation {
-    'Activate user'
+  'उपयोगकर्ता को सक्रिय करें'
 }
 sub activation_code_subject {
-    'Activation code for using CIVS'
+  'सीआईवीएस का उपयोग करने के लिए सक्रियण कोड'
+}
+sub user_activation_instructions1 {
+  'निजी सीआईवीएस चुनावों में मतदान करने के लिए, आपको सेवा से ईमेल संचार का विकल्प चुनना होगा। सीआईवीएस आपका ईमेल पता संग्रहीत नहीं करता है, और कोई स्वचालित मेलिंग नहीं है। आप केवल चुनाव पर्यवेक्षकों के स्पष्ट अनुरोध पर सेवा से ईमेल प्राप्त करते हैं, जिसमें निजी चुनावों में मतदान करने या मतदान के परिणाम देखने के लिए आवश्यक क्रेडेंशियल्स होते हैं।'
+}
+sub user_activation_instructions2 {
+  "ऑप्ट इन करने के लिए, कृपया अपना ईमेल पता दर्ज करें और नीचे दिए गए बटन पर क्लिक करें। फिर आपको एक सक्रियण कोड वाला एक ईमेल प्राप्त होना चाहिए। ध्यान दें कि यदि आपने पहले ईमेल से ऑप्ट आउट किया है, तो आपको ईमेल को पुनः सक्रिय करने के लिए <a href=\"$_[1]\">मेल प्रबंधन पृष्ठ</a> का उपयोग करना होगा। यदि आप मेल ब्लॉकिंग सेवा का उपयोग करते हैं, तो आपको CIVS ईमेल पते को अधिकृत प्रेषक (".'@SUPERVISOR@'.") के रूप में श्वेतसूची में डालने की आवश्यकता हो सकती है।"
 }
 sub user_activation_instructions {
     my ($self, $mail_mgmt_url) = @_;
-    p('To vote in private CIVS polls, you must opt in to email
-	communication from the service. CIVS does not store your email
-        address, and there are no automated mailings.
-	You only receive email from the service at the explicit request
-	of poll supervisors, containing credentials needed to vote in private
-	polls or to see the results of polls.').
-    p("To opt in, please enter your email address and click the button below. You should then
-        receive an email containing an activation code.
-        Note that if you have previously opted out from email, you must use
-        the <a href=\"$mail_mgmt_url\">mail management page</a> to reactivate email.
-        If you use a mail blocking service, you may need to whitelist the
-        CIVS email address as an authorized sender (".'@SUPERVISOR@'.").
-        ")
+    p($self->user_activation_instructions1).
+    p($self->user_activation_instructions2($mail_mgmt_url))
+# UNTRANSLATED
 }
 sub opt_in_label {
-    'Request activation code'
+  'सक्रियण कोड का अनुरोध करें'
 }
 sub activation_code {
-    'Activation code: '
+  'एक्टिवेशन कोड:'
 }
 sub someone_has_requested_activation {
     my ($self, $address, $code, $mail_mgmt_url) = @_;
-"Someone has requested that the CIVS voting system activate the email address <$address>
-for voting in polls. To activate this address, you will need the following activation code:
-
-    $code
-
-If you did not initiate this request, you can ignore this email.
-
-Control email from CIVS using this link: $mail_mgmt_url.
-"
+  "किसी ने अनुरोध किया है कि सीआईवीएस वोटिंग सिस्टम मतदान में मतदान के लिए ईमेल पता <$address> सक्रिय करें। इस पते को सक्रिय करने के लिए, आपको निम्नलिखित सक्रियण कोड की आवश्यकता होगी:
+ $ कोड
+यदि आपने यह अनुरोध नहीं किया है, तो आप इस ईमेल को अनदेखा कर सकते हैं।
+इस लिंक का उपयोग करके CIVS से ईमेल नियंत्रित करें: $mail_mgmt_url."
 }
 sub already_activated {
-    'This email address is already activated.'
+  'यह ईमेल पता पहले से सक्रिय है।'
 }
 sub activation_successful
 {
     'Email address successfully activated.'
 }
 sub pending_invites_hdr {
-    'Pending poll invitations:'
+  'लंबित मतदान आमंत्रण:'
 }
 sub submit_activation_code {
-    'Complete activation'
+  'पूर्ण सक्रियता'
 }
 sub pending_invites {
-    (my $self, my $pats, my $invites) = @_;
+    my ($self, $pats, $invites) = @_;
     my @invites = @{$invites};
     if ($#invites >= 0) {
         my @rows = ();
         foreach $invite (@invites) {
-            (my $url, my $title) = @{$invite};
+            my ($url, $title) = @{$invite};
             push @rows, a({-href => $url}, $title);
         }
         return div(p($self->pending_invites_hdr), ul(\@rows));
     } else {
         return '';
     }
+# UNTRANSLATED
 }
 sub user_not_activated {
     my ($self, $address) = @_;
-    "Sorry, no user has activated address &lt;$address&gt; to receive email.";
+  "क्षमा करें, किसी भी उपयोगकर्ता ने पता &lt;$पता&gt; ईमेल प्राप्त करने के लिए।"
 }
 sub mail_failure_reason {
     my ($self, $reason) = @_;
@@ -1152,25 +1121,38 @@ sub mail_failure_reason {
     } else {
         'Unknown reason'
     }
+# UNTRANSLATED
 }
 sub see_the_failure_table {
     my ($self, $activate_url, $mail_mgmt_url) = @_;
-    "<p>It was not possible to send mail to some voters, for reasons listed in the
-    table below. Voters will not be able to vote until they receive their personal key,
-    so you should contact them directly. Voters are likely to find the following
-    links useful:</p>
-    <ul>
-    <li>Activate an email address with CIVS: <a href='$activate_url'>$activate_url</a></li>
-    <li>Deactivate/reactivate an email address: <a href='$mail_mgmt_url'>$mail_mgmt_url</a></li>
-    </ul>
-    <p>
-    Note that when voters activate their email addresses, they are notified about any
-    pending invitations to vote in polls.
-    </p>
-    "
+  "<p>नीचे दी गई तालिका में सूचीबद्ध कारणों से CIVS के लिए कुछ मतदाताओं को मेल भेजना संभव नहीं था। मतदाता अपनी व्यक्तिगत कुंजी प्राप्त होने तक मतदान नहीं कर सकेंगे, इसलिए आपको उनसे सीधे संपर्क करना चाहिए। मतदाताओं को निम्नलिखित लिंक उपयोगी लगने की संभावना है:</p> <ul> <li>CIVS के साथ एक ईमेल पता सक्रिय करें: <a href='$active_url'>$active_url</a></li> <li>निष्क्रिय करें /एक ईमेल पता पुनः सक्रिय करें: <a href='$mail_mgmt_url'>$mail_mgmt_url</a></li> </ul> <p> ध्यान दें कि जब मतदाता अपने ईमेल पते को सक्रिय करते हैं, तो उन्हें मतदान के लिए किसी भी लंबित आमंत्रण के बारे में सूचित किया जाता है चुनावों में। </p>"
 }
 sub download_failures {
-    'Download table as CSV'
+  'तालिका को CSV के रूप में डाउनलोड करें'
+}
+
+sub code_requested {
+  'कोड का अनुरोध किया। अपने ईमेल की जाँच करें।'
+}
+
+sub code_requested_but_something_wrong {
+  'कोड का अनुरोध किया गया लेकिन कुछ गलत हो गया।'
+}
+
+sub error_handling_code_request {
+  "कोड अनुरोध को हैंडल करने में त्रुटि"
+}
+sub invalid_email_address {
+  'अमान्य ईमेल पता'
+}
+sub unexpected_error {
+  '<b>अप्रत्याशित त्रुटि:</b>'
+}
+sub optin_error {
+  'गलती:'
+}
+sub submitted {
+  'प्रस्तुत'
 }
 
 1; # package succeeded!

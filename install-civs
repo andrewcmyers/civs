@@ -99,7 +99,7 @@ echo "Creating language-specific web pages"
 
 for file in index.html civs_create.html
 do 
-    for lang in en de fr es uk ta
+    for lang in en de fr es uk ta hi
     do
         echo "  $file.$lang"
         perl subst_text.pl static-translations.txt $lang ${file}.base ${file}.$lang || exit 1
