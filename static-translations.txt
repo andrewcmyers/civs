@@ -46,6 +46,7 @@ CIVS_name {
     hi: कोंडोरसेट इंटरनेट मतदान सेवा
     ta: Condorcet இணைய வாக்களிப்பு சேவை
     ko: 콩도르세 인터넷 투표 서비스
+    de: Condorcet Internet Voting Service
 }
 CIVS_logo {
     en: CIVS logo
@@ -103,6 +104,9 @@ FAQ {
     hi: सामान्य प्रश्न
     ta: அடிக்கடி கேட்கப்படும் கேள்விகள்
     uk: FAQ
+    de: FAQ
+    fr: FAQ
+    es: Preguntas más frecuentes
 }
 Frequently_asked_questions {
     en: Frequently Asked Questions
@@ -270,32 +274,18 @@ intro_para {
         miles de encuestas y elecciones, para decidir, por ejemplo:
     }
     uk {
-      CIVS — це безкоштовна служба голосування
-      в Інтернеті, яка дозволяє легко
-      проводити безпечні та анонімні
-      опитування. Кожен виборець ранжує
-      набір можливих варіантів.
-      Індивідуальні рейтинги виборців
-      об’єднуються в анонімний загальний
-      рейтинг виборів. CIVS використовувався
-      для десятків тисяч опитувань і
-      виборів, щоб вирішити, наприклад:
+      CIVS — це безкоштовна служба голосування в Інтернеті, яка
+      дозволяє легко проводити безпечні та анонімні опитування.
+      Кожен виборець ранжує набір можливих варіантів.  Індивідуальні
+      рейтинги виборців об’єднуються в анонімний загальний рейтинг
+      виборів. CIVS використовувався для десятків тисяч опитувань
+      і виборів, щоб вирішити, наприклад:
     }
     hi {
-      सीआईवीएस एक नि:शुल्क
-      इंटरनेट वोटिंग सेवा है जो
-      सुरक्षित और गुमनाम मतदान
-      करना आसान बनाती है।
-      प्रत्येक मतदाता संभावित
-      विकल्पों का एक सेट रैंक
-      करता है। व्यक्तिगत
-      मतदाता रैंकिंग को
-      विकल्पों की एक गुमनाम
-      समग्र रैंकिंग में
-      संयोजित किया जाता है।
-      सीआईवीएस का उपयोग हजारों
-      चुनावों और चुनावों के लिए
-      किया गया है, उदाहरण के लिए:
+      सीआईवीएस एक नि:शुल्क इंटरनेट वोटिंग सेवा है जो सुरक्षित और गुमनाम मतदान
+      करना आसान बनाती है। प्रत्येक मतदाता संभावित विकल्पों का एक सेट रैंक
+      करता है। व्यक्तिगत मतदाता रैंकिंग को विकल्पों की एक गुमनाम समग्र रैंकिंग में
+      संयोजित किया जाता है। सीआईवीएस का उपयोग हजारों चुनावों और चुनावों के लिए किया गया है, उदाहरण के लिए:
     }
     ta:  CIVS என்பது ஒரு இலவச இணைய வாக்களிக்கும் சேவையாகும், இது பாதுகாப்பான மற்றும் அநாமதேயமான வாக்கெடுப்பை நடத்துவதை எளிதாக்குகிறது. ஒவ்வொரு வாக்காளரும் சாத்தியமான தேர்வுகளின் தொகுப்பை வரிசைப்படுத்துகிறார்கள். தனிப்பட்ட வாக்காளர் தரவரிசைகள் தேர்வுகளின் அநாமதேய ஒட்டுமொத்த தரவரிசையில் இணைக்கப்பட்டுள்ளன. பல்லாயிரக்கணக்கான கருத்துக் கணிப்புகள் மற்றும் தேர்தல்களுக்கு CIVS பயன்படுத்தப்பட்டது, எடுத்துக்காட்டாக:
     ko:  CIVS는 안전한 익명 투표를 쉽게 수행할 수 있는 무료 인터넷 투표 서비스입니다. 각 유권자는 가능한 선택 항목의 순위를 매깁니다. 개별 유권자 순위는 익명의 전체 선택 순위로 결합됩니다. CIVS는 다음을 결정하기 위해 수만 건의 투표 및 선거에 사용되었습니다.
@@ -358,6 +348,7 @@ Restaurants_to_eat_at {
     hi: रेस्टोरेंट
     ta: உணவகங்கள்
     ko: 레스토랑
+    fr: Restaurants
 }
 Movies_to_watch {
     en: Movies
@@ -416,6 +407,8 @@ Logos {
     hi: लोगो
     ta: சின்னங்கள்
     ko: 로고
+    de: Logos
+    fr: Logos
 }
 Project_directions {
     en: Project directions
@@ -1133,6 +1126,7 @@ Preview_arrow {
   hi: पूर्वावलोकन &#9656;
   ta: முன்னோட்டம் &#9656;
   ko: 미리보기 &#9656;
+  de: Vorschau &#9656;
 }
 How_many_choices_will_win {
   en: How many choices will win:
@@ -2022,6 +2016,9 @@ No_IP_address_check {
   }
   ta: ஒரே நெட்வொர்க் முகவரியிலிருந்து பல வாக்காளர்கள் வாக்களிக்க IP முகவரியைச் சரிபார்ப்பதை முடக்கவும்.
   ko: 여러 유권자가 동일한 네트워크 주소에서 투표할 수 있도록 IP 주소 확인을 끕니다.
+  de: Deaktivieren Sie die Überprüfung der IP-Adresse, damit mehrere Wähler von derselben Netzwerkadresse aus abstimmen können.
+  fr: Désactivez la vérification de l'adresse IP afin que plusieurs électeurs puissent voter à partir de la même adresse réseau.
+  es: Desactive la verificación de la dirección IP para que varios votantes puedan votar desde la misma dirección de red.
 }
 No_IP_address_check_expl {
   en {
@@ -2059,6 +2056,9 @@ No_IP_address_check_expl {
   }
   ta:  இயல்பாக, CIVS பொது வாக்கெடுப்புகளில் ஒரு IP முகவரிக்கு ஒரு வாக்கை மட்டுமே அனுமதிக்கிறது, இது பலமுறை வாக்களிப்பதை ஊக்கப்படுத்துகிறது, ஆனால் அவர்கள் உறுதியாக இருந்தால் அதைச் செய்வதிலிருந்து அவர்களை எந்த வகையிலும் தடுக்காது. வாக்காளர்கள் VPNக்குப் பின்னால் இருக்கும்போது, இந்த விதி துரதிருஷ்டவசமாக மக்கள் வாக்களிப்பதைத் தடுக்கிறது. இந்த விருப்பம் ஐபி முகவரி சரிபார்ப்பை முடக்குகிறது, இதனால் மக்கள் VPNக்குப் பின்னால் இருந்து வாக்களிக்க முடியும்.
   ko:  기본적으로 CIVS는 공개 투표에서 IP 주소당 하나의 투표만 허용하므로 사람들이 여러 번 투표하는 것을 권장하지 않지만 결정된 경우 투표를 중단하지는 않습니다. 유권자가 VPN 뒤에 있을 때 이 규칙은 불행하게도 사람들이 전혀 투표하지 못하게 합니다. 이 옵션은 사람들이 VPN 뒤에서 투표할 수 있도록 IP 주소 확인을 끕니다.
+  de:  Standardmäßig erlaubt CIVS nur eine Stimme pro IP-Adresse in öffentlichen Umfragen, was Menschen davon abhält, mehrmals abzustimmen, sie aber keineswegs davon abhält, dies zu tun, wenn sie entschlossen sind. Wenn sich Wähler hinter einem VPN befinden, verhindert diese Regel leider, dass Menschen überhaupt wählen können. Diese Option deaktiviert die Überprüfung der IP-Adresse, sodass Benutzer hinter einem VPN abstimmen können.
+  fr:  Par défaut, la CIVS n'autorise qu'un seul vote par adresse IP dans les sondages publics, ce qui décourage les gens de voter plusieurs fois mais ne les empêche en aucun cas de le faire s'ils sont déterminés. Lorsque les électeurs sont derrière un VPN, cette règle empêche malheureusement les gens de voter du tout. Cette option désactive la vérification de l'adresse IP afin que les gens puissent voter derrière un VPN.
+  es:  De forma predeterminada, CIVS solo permite un voto por dirección IP en las encuestas públicas, lo que desalienta a las personas a votar varias veces, pero de ninguna manera les impide hacerlo si están determinados. Cuando los votantes están detrás de una VPN, esta regla desafortunadamente evita que las personas voten. Esta opción desactiva la verificación de la dirección IP para que las personas puedan votar detrás de una VPN.
 }
 result_addrs_label {
   en {
@@ -2066,4 +2066,8 @@ result_addrs_label {
     (All voters can see these email addresses)
   }
   hi:  मतदान के परिणाम देखने के लिए अनुमत उपयोगकर्ताओं के ई-मेल पते दर्ज करें: (सभी मतदाता इन ईमेल पतों को देख सकते हैं)
+  ta:  வாக்கெடுப்பு முடிவுகளைப் பார்க்க அனுமதிக்கப்பட்ட பயனர்களின் மின்னஞ்சல் முகவரியை உள்ளிடவும்: (அனைத்து வாக்காளர்களும் இந்த மின்னஞ்சல் முகவரிகளைப் பார்க்கலாம்)
+  de:  Geben Sie die E-Mail-Adressen der Benutzer ein, die die Umfrageergebnisse anzeigen dürfen: (Alle Wähler können diese E-Mail-Adressen sehen)
+  fr:  Entrez les adresses e-mail des utilisateurs autorisés à afficher les résultats du sondage : (Tous les votants peuvent voir ces adresses e-mail)
+  es:  Ingrese las direcciones de correo electrónico de los usuarios autorizados para ver los resultados de la encuesta: (Todos los votantes pueden ver estas direcciones de correo electrónico)
 }
