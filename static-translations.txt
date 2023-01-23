@@ -29,6 +29,7 @@ LANGUAGE {
     it: it-IT
     nl: nl-NH
     ja: en-US
+    zh: 英文
 }
 
 lang2 {
@@ -43,6 +44,7 @@ lang2 {
     it: it
     nl: nl
     ja: ja
+    zh: 恩
 }
 
 # index
@@ -59,6 +61,7 @@ CIVS_name {
     it: Servizio di votazione Internet Condorcet
     nl: Condorcet Internet Stemdienst
     ja: コンドルセ インターネット投票サービス
+    zh: 孔多塞互联网投票服务
 }
 CIVS_logo {
     en: CIVS logo
@@ -72,6 +75,7 @@ CIVS_logo {
     it: Il logo CIV
     nl: CIVS-logo
     ja: CIVS ロゴ
+    zh: CIVS 徽标
 }
 About_CIVS {
     en: About CIVS
@@ -85,6 +89,7 @@ About_CIVS {
     it: A proposito di CIVS
     nl: Over CIVS
     ja: CIVSについて
+    zh: 关于 CIVS
 }
 Public_polls {
     en: Public polls
@@ -98,6 +103,7 @@ Public_polls {
     it: Sondaggi pubblici
     nl: Openbare peilingen
     ja: 世論調査
+    zh: 民意调查
 }
 Create_a_poll {
     en: Create a poll
@@ -111,6 +117,7 @@ Create_a_poll {
     it: Crea un sondaggio
     nl: Maak een peiling
     ja: アンケートを作成する
+    zh: 创建投票
 }
 Activate_user {
     en: Activate user
@@ -124,6 +131,7 @@ Activate_user {
     it: Attiva utente
     nl: Activeer gebruiker
     ja: ユーザーをアクティブ化
+    zh: 激活用户
 }
 FAQ {
     en: FAQ
@@ -137,6 +145,7 @@ FAQ {
     it: FAQ
     nl: FAQ
     ja: よくある質問
+    zh: 常问问题
 }
 Frequently_asked_questions {
     en: Frequently Asked Questions
@@ -150,6 +159,7 @@ Frequently_asked_questions {
     it: Domande frequenti
     nl: Veel Gestelde Vragen
     ja: よくある質問
+    zh: 经常问的问题
 }
 Join_the_CIVS_mailing_list {
     en: Join the CIVS mailing list
@@ -163,6 +173,7 @@ Join_the_CIVS_mailing_list {
     it: Iscriviti alla mailing list del CIVS
     nl: Word lid van de CIVS-mailinglijst
     ja: CIVS メーリング リストに参加する
+    zh: 加入 CIVS 邮件列表
 }
 Security_and_privacy {
     en: Security and privacy
@@ -176,6 +187,7 @@ Security_and_privacy {
     it: Sicurezza e privacy
     nl: Veiligheid en privacy
     ja: セキュリティとプライバシー
+    zh: 安全和隐私
 }
 Condorcet_voting {
     en: Condorcet voting
@@ -189,6 +201,7 @@ Condorcet_voting {
     it: Voto Condorcet
     nl: Condorcet stemmen
     ja: コンドルセ投票
+    zh: 孔多塞投票
 }
 Proportional_representation {
     en: Proportional representation
@@ -202,6 +215,7 @@ Proportional_representation {
     it: Rappresentanza proporzionale
     nl: Evenredige vertegenwoordiging
     ja: 比例代表制
+    zh: 比例代表制
 }
 CIVS_software {
     en: CIVS software
@@ -215,6 +229,7 @@ CIVS_software {
     it: Software CIVS
     nl: CIVS-software
     ja: CIVS ソフトウェア
+    zh: CIVS软件
 }
 Acknowledgments {
     en: Acknowledgments
@@ -228,6 +243,7 @@ Acknowledgments {
     it: Ringraziamenti
     nl: Dankbetuigingen
     ja: 謝辞
+    zh: 致谢
 }
 Suggestion_box {
     en: Suggestion box
@@ -241,6 +257,7 @@ Suggestion_box {
     it: Scatola dei suggerimenti
     nl: Ideeënbus
     ja: 提案箱
+    zh: 建议箱
 }
 CIVS_news {
     en: News
@@ -254,6 +271,7 @@ CIVS_news {
     it: Notizia
     nl: Nieuws
     ja: ニュース
+    zh: 消息
 }
 No_current_news {
     en: No current news.
@@ -267,6 +285,7 @@ No_current_news {
     it: Nessuna notizia attuale.
     nl: Geen actueel nieuws.
     ja: 現在のニュースはありません。
+    zh: 暂无消息。
 }
 Top_public_polls {
     en: Top public polls:
@@ -280,6 +299,7 @@ Top_public_polls {
     it: Principali sondaggi pubblici:
     nl: Populairste openbare peilingen:
     ja: トップ世論調査:
+    zh: 热门民意调查：
 }
 see_more {
     en: [see more]
@@ -293,6 +313,7 @@ see_more {
     it: [Vedi altro]
     nl: [Bekijk meer]
     ja: [続きを見る]
+    zh: [查看更多]
 }
 Loading {
     en: Loading...
@@ -306,6 +327,7 @@ Loading {
     it: Caricamento in corso...
     nl: Bezig met laden...
     ja: 読み込んでいます...
+    zh: 加载中...
 }
 intro_para {
     en {
@@ -361,6 +383,7 @@ intro_para {
     it:  CIVS è un servizio gratuito di voto su Internet che semplifica lo svolgimento di sondaggi sicuri e anonimi. Ogni elettore classifica una serie di possibili scelte. Le classifiche dei singoli elettori vengono combinate in una classifica generale anonima delle scelte. Il CIVS è stato utilizzato per decine di migliaia di sondaggi ed elezioni, per decidere, ad esempio:
     nl:  CIVS is een gratis internetstemservice die het gemakkelijk maakt om peilingen uit te voeren die veilig en anoniem zijn. Elke kiezer rangschikt een reeks mogelijke keuzes. Individuele kiezersrangschikkingen worden gecombineerd tot een anonieme algemene rangschikking van de keuzes. CIVS is gebruikt voor tienduizenden peilingen en verkiezingen, om bijvoorbeeld te beslissen:
     ja:  CIVS は、安全で匿名の投票を簡単に実施できる無料のインターネット投票サービスです。各有権者は、可能な選択肢のセットをランク付けします。個々の有権者のランキングは、選択肢の匿名の総合ランキングにまとめられます。 CIVS は、次のような決定を行うために、何万もの世論調査や選挙に使用されてきました。
+    zh:  CIVS 是一种免费的 Internet 投票服务，可以轻松进行安全和匿名的投票。每个选民对一组可能的选择进行排序。个人选民排名被合并为一个匿名的整体选择排名。 CIVS 已被用于数以万计的民意调查和选举，以决定，例如：
 }
 Officers_of_organizations {
     en: Officers of organizations
@@ -374,6 +397,7 @@ Officers_of_organizations {
     it: Ufficiali delle organizzazioni
     nl: Bestuurders van organisaties
     ja: 組織の役員
+    zh: 组织官员
 }
 Meeting_times {
     en: Meeting times
@@ -387,6 +411,7 @@ Meeting_times {
     it: Orari di incontro
     nl: Vergadertijden
     ja: 集合時間
+    zh: 会议时间
 }
 Members_of_committees {
     en: Members of committees
@@ -400,6 +425,7 @@ Members_of_committees {
     it: Membri di commissioni
     nl: Leden van commissies
     ja: 委員会のメンバー
+    zh: 委员会成员
 }
 Project_and_domain_names {
     en: Project and domain names
@@ -413,6 +439,7 @@ Project_and_domain_names {
     it: Nomi di progetto e di dominio
     nl: Project- en domeinnamen
     ja: プロジェクト名とドメイン名
+    zh: 项目和域名
 }
 Award_recipients {
     en: Award recipients
@@ -426,6 +453,7 @@ Award_recipients {
     it: Destinatari del premio
     nl: Award ontvangers
     ja: 受賞者
+    zh: 获奖者
 }
 Restaurants_to_eat_at {
     en: Restaurants
@@ -439,6 +467,7 @@ Restaurants_to_eat_at {
     it: Ristoranti
     nl: Restaurants
     ja: レストラン
+    zh: 餐厅
 }
 Movies_to_watch {
     en: Movies
@@ -452,6 +481,7 @@ Movies_to_watch {
     it: Film
     nl: Films
     ja: 映画
+    zh: 电影
 }
 Party_menus {
     en: Party menus
@@ -465,6 +495,7 @@ Party_menus {
     it: Menù delle feste
     nl: Feestmenu's
     ja: パーティーメニュー
+    zh: 派对菜单
 }
 Book_club_selections {
     en: Book club selections
@@ -478,6 +509,7 @@ Book_club_selections {
     it: Selezioni del club del libro
     nl: Boekenclub selecties
     ja: ブッククラブのセレクション
+    zh: 读书俱乐部精选
 }
 Favorite_music {
     en: Favorite music
@@ -491,6 +523,7 @@ Favorite_music {
     it: Musica preferita
     nl: Favoriete muziek
     ja: 好きな音楽
+    zh: 最喜欢的音乐
 }
 Gifts {
     en: Gifts
@@ -504,6 +537,7 @@ Gifts {
     it: I regali
     nl: Geschenken
     ja: ギフト
+    zh: 礼物
 }
 Logos {
     en: Logos
@@ -517,6 +551,7 @@ Logos {
     it: Loghi
     nl: Logo's
     ja: ロゴス
+    zh: 徽标
 }
 Project_directions {
     en: Project directions
@@ -530,6 +565,7 @@ Project_directions {
     it: Indicazioni del progetto
     nl: Projectaanwijzingen
     ja: プロジェクトの方向性
+    zh: 项目方向
 }
 Invited_speakers {
     en: Invited speakers
@@ -543,6 +579,7 @@ Invited_speakers {
     it: Relatori invitati
     nl: Uitgenodigde sprekers
     ja: 招待講演者
+    zh: 特邀报告人
 }
 Organization_bylaws {
     en: Organization bylaws
@@ -556,6 +593,7 @@ Organization_bylaws {
     it: Statuto dell'organizzazione
     nl: Organisatie statuten
     ja: 組織規約
+    zh: 组织章程
 }
 How_it_works {
     en: How it works:
@@ -569,6 +607,7 @@ How_it_works {
     it: Come funziona:
     nl: Hoe het werkt:
     ja: 使い方：
+    zh: 怎么运行的：
 }
 How_it_works_para {
   en {
@@ -646,6 +685,7 @@ How_it_works_para {
   it:  Chiunque può creare un nuovo sondaggio CIVS, ma solo gli elettori autorizzati lo sapranno. Gli elettori e il supervisore del sondaggio devono disporre di e-mail e accesso al web. Quando viene creato un sondaggio, agli elettori viene inviata un'e-mail con un URL dove possono votare. Possono essere creati sondaggi pubblici che non richiedono agli elettori di avere indirizzi e-mail; in questo caso è consentito un voto per indirizzo IP.
   nl:  Iedereen kan een nieuwe CIVS-enquête maken, maar alleen geautoriseerde kiezers zullen hiervan op de hoogte zijn. Kiezers en de opinieleider moeten e-mail- en webtoegang hebben. Wanneer een peiling wordt gemaakt, krijgen kiezers een e-mail met een URL waar ze kunnen stemmen. Er kunnen openbare peilingen worden gemaakt waarvoor kiezers geen e-mailadressen nodig hebben; in dit geval is één stem per IP-adres toegestaan.
   ja:  誰でも新しい CIVS 投票を作成できますが、承認された投票者だけがそれについて知ることができます。有権者と投票監督者は、電子メールと Web アクセスを持っている必要があります。投票が作成されると、有権者には、投票できる URL が電子メールで送信されます。有権者が電子メール アドレスを持っている必要のない公開投票を作成することができます。この場合、IP アドレスごとに 1 票が許可されます。
+  zh:  任何人都可以创建新的 CIVS 民意调查，但只有授权选民才能知道。选民和投票监督员必须有电子邮件和网络访问权限。创建民意调查后，选民会收到一封电子邮件，其中包含他们可以投票的 URL。可以创建不需要选民有电子邮件地址的公共投票；在这种情况下，每个 IP 地址允许投一票。
 }
 
 Why_rank_choices {
@@ -660,6 +700,7 @@ Why_rank_choices {
     it: Perché classificare le scelte?
     nl: Waarom keuzes rangschikken?
     ja: ランク付けの理由
+    zh: 为什么要对选择进行排序？
 }
 Why_rank_paras {
     en  {
@@ -768,6 +809,7 @@ Why_rank_paras {
     it:  Con CIVS, gli elettori classificano le loro scelte piuttosto che scegliere solo la loro scelta preferita. Questo processo fornisce risultati accurati perché raccoglie più informazioni dagli elettori. Aiuta anche a evitare la divisione dei voti e gli spoiler. </p><p> Il voto a scelta classificata viene utilizzato nelle elezioni reali. Ad esempio, l'Australia utilizza il voto singolo trasferibile (STV, noto anche come IRV). Tuttavia, i metodi Condorcet supportati da CIVS sono migliori dell'IRV nell'identificare i candidati al consenso. IRV può eleggere un candidato anche se la maggioranza degli elettori preferirebbe qualcun altro, e <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html"> lo fa nelle elezioni reali</a>. A differenza della maggior parte degli altri sistemi Condorcet, CIVS ha anche una modalità di rappresentazione proporzionale. </p>
     nl:  Met CIVS rangschikken kiezers hun keuzes in plaats van alleen hun favoriete keuze te kiezen. Dit proces geeft nauwkeurige resultaten omdat het meer informatie van kiezers verzamelt. Het helpt ook om het splitsen van stemmen en spoilers te voorkomen. </p><p> Stemmen volgens rangorde wordt gebruikt bij echte verkiezingen. Australië gebruikt bijvoorbeeld Single Transferable Vote (STV, ook wel IRV genoemd). De Condorcet-methoden die door CIVS worden ondersteund, zijn echter beter dan IRV bij het identificeren van consensuskandidaten. IRV kan een kandidaat kiezen, ook al zou een meerderheid van de kiezers de voorkeur geven aan iemand anders, en <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html"> heeft het bij echte verkiezingen</a>. In tegenstelling tot de meeste andere Condorcet-systemen heeft CIVS ook een proportionele weergavemodus. </p>
     ja:  CIVS を使用すると、有権者はお気に入りの選択肢を 1 つだけ選ぶのではなく、自分の選択肢をランク付けします。このプロセスでは、有権者からより多くの情報が収集されるため、正確な結果が得られます。また、投票の分裂やネタバレを避けるのにも役立ちます。 </p><p> ランク選択投票は、実際の選挙で使用されます。たとえば、オーストラリアでは、Single Transferable Vote (STV、IRV とも呼ばれます) を使用しています。ただし、CIVS でサポートされているコンドルセ法は、コンセンサス候補の特定において IRV よりも優れています。 IRV は、過半数の有権者が別の候補者を好む場合でも、候補者を選出することができ、<a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">実際の選挙でも採用しています</a>。他のほとんどのコンドルセ システムとは異なり、CIVS には比例代表モードもあります。 </p>
+    zh:  通过 CIVS，选民可以对他们的选择进行排序，而不仅仅是选择他们最喜欢的一个选项。这个过程给出了准确的结果，因为它从选民那里收集了更多信息。它还有助于避免投票分裂和剧透。 </p><p> 排序选择投票用于真正的选举。例如，澳大利亚使用单一可转让投票权（STV，也称为 IRV）。然而，CIVS 支持的 Condorcet 方法在识别共识候选者方面优于 IRV。 IRV 可以选出一名候选人，即使大多数选民更喜欢其他人，而且<a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">它在真正的选举中</a>。与大多数其他 Condorcet 系统不同，CIVS 还具有比例代表模式。 </p>
 }
 Footnote_1 {
     en {
@@ -839,6 +881,7 @@ Footnote_1 {
     it:  <p>Il servizio di voto Internet Condorcet è attivo dal 2003. Questo servizio è supportato da <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> ma non è un servizio offerto dalla <a href="http://www.cornell.edu/">Cornell University.</a> Questa è la versione CIVS @VERSION@. Feedback, aiuto e <a href="@DONATE_URL@">donazioni per supportare questo servizio gratuito (e senza pubblicità e senza tracker)</a> sono i benvenuti.</p>
     nl:  <p>De Condorcet Internet Voting Service bestaat sinds 2003. Deze service wordt ondersteund door <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> maar is geen service aangeboden door <a href="http://www.cornell.edu/">Cornell University.</a> Dit is CIVS-versie @VERSION@. Feedback, hulp en <a href="@DONATE_URL@">donaties ter ondersteuning van deze gratis (en advertentie- en trackervrije) service</a> zijn welkom.</p>
     ja:  <p>コンドルセ インターネット投票サービスは 2003 年から運営されています。このサービスは <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> によってサポートされていますが、サービスではありません。 <a href="http://www.cornell.edu/">コーネル大学</a>が提供。これは CIVS バージョン @VERSION@ です。フィードバック、ヘルプ、<a href="@DONATE_URL@">この無料 (および広告なし、トラッカーなし) サービスをサポートするための寄付</a>を歓迎します。</p>
+    zh:  <p>Condorcet 互联网投票服务自 2003 年开始运行。此服务由 <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> 提供支持，但不是一项服务由 <a href="http://www.cornell.edu/">Cornell University 提供。</a> 这是 CIVS 版本@VERSION@。欢迎提供反馈、帮助和<a href="@DONATE_URL@">捐款以支持这项免费（无广告和跟踪器）服务</a>。</p>
 }
 Fine_print {
   en {
@@ -936,6 +979,7 @@ Fine_print {
   it:  <p> <b>Stampa fine:</b> questo servizio di votazione è disponibile gratuitamente per uso pubblico. Tutti i contenuti del sondaggio sono di responsabilità dei creatori del sondaggio. Non è possibile garantire che questo servizio sia corretto o disponibile e in nessun caso gli autori o i fornitori di servizi, inclusa la Cornell University, saranno ritenuti responsabili per eventuali danni derivanti dalla perdita di utilizzo, dati o profitti, sia in un'azione di contratto , negligenza o altra azione illecita, derivante da o in connessione con l'uso di questo servizio. </p>
   nl:  <p> <b>Kleine lettertjes:</b> Deze stemservice is gratis beschikbaar voor openbaar gebruik. Alle opiniepeilingen zijn de verantwoordelijkheid van de makers van de opiniepeilingen. Er kunnen geen garanties worden gegeven dat deze service correct of beschikbaar zal zijn en onder geen enkele voorwaarde zullen de auteurs of dienstverleners, inclusief Cornell University, aansprakelijk zijn voor welke schade dan ook als gevolg van verlies van gebruik, gegevens of winst, hetzij in een actie van contract , nalatigheid of andere onrechtmatige handelingen die voortvloeien uit of verband houden met het gebruik van deze service. </p>
   ja:  <p> <b>細字:</b> この投票サービスは、無料で一般利用できます。すべての投票コンテンツは、投票作成者の責任です。このサービスが正しく、または利用可能であることを保証することはできず、いかなる条件の下でも、著者またはコーネル大学を含むサービス プロバイダーは、契約上の行為であるかどうかにかかわらず、使用、データ、または利益の損失に起因するいかなる損害についても責任を負いません。 、過失またはその他の不法行為で、本サービスの使用に起因または関連して生じたもの。 </p>
+  zh:  <p> <b>细则：</b>该投票服务免费供公众使用。所有投票内容均由投票创建者负责。不能保证此服务将是正确的或可用的，并且在任何情况下，作者或服务提供商（包括康奈尔大学）都不对因使用、数据或利润损失而造成的任何损害承担责任，无论是在合同诉讼中、因使用本服务而引起或与之相关的疏忽或其他侵权行为。 </p>
 }
 
 # civs_create
@@ -955,6 +999,7 @@ Invalid_supervisor_email {
   it: L'indirizzo e-mail del supervisore non è valido.
   nl: Het e-mailadres van de supervisor is ongeldig.
   ja: スーパーバイザーのメール アドレスが無効です。
+  zh: 主管电子邮件地址无效。
 }
 Must_have_at_least_one_winner {
     en: Poll must have at least one winner.
@@ -974,6 +1019,7 @@ Must_have_at_least_one_winner {
     it: Il sondaggio deve avere almeno un vincitore.
     nl: Poll moet minstens één winnaar hebben.
     ja: 投票には少なくとも 1 人の勝者が必要です。
+    zh: 投票必须至少有一名获胜者。
 }
 Proportional_representation_requires_more_than_one_winner {
     en: Proportional representation requires more than one winner.
@@ -994,6 +1040,7 @@ Proportional_representation_requires_more_than_one_winner {
     it: La rappresentazione proporzionale richiede più di un vincitore.
     nl: Evenredige vertegenwoordiging vereist meer dan één winnaar.
     ja: 比例代表制では複数の勝者が必要です。
+    zh: 比例代表制需要不止一名获胜者。
 }
 Must_have_at_least_two_choices_to_vote_on {
     en: Must have at least two choices to vote on
@@ -1013,6 +1060,7 @@ Must_have_at_least_two_choices_to_vote_on {
     it: Deve avere almeno due scelte su cui votare
     nl: Moet ten minste twee keuzes hebben om op te stemmen
     ja: 投票するには少なくとも 2 つの選択肢が必要です
+    zh: 必须至少有两个选择才能投票
 }
 Results_recipient_email_address_is_invalid {
     en: Results recipient e-mail address is invalid:
@@ -1032,6 +1080,7 @@ Results_recipient_email_address_is_invalid {
     it: L'indirizzo e-mail del destinatario dei risultati non è valido:
     nl: E-mailadres van de ontvanger van de resultaten is ongeldig:
     ja: 結果受信者の電子メール アドレスが無効です:
+    zh: 结果收件人电子邮件地址无效：
 }
 You_have_specified_no_users_who_can_see_the_poll_results {
     en: You have specified no users who can see the poll results.
@@ -1053,6 +1102,7 @@ You_have_specified_no_users_who_can_see_the_poll_results {
     it: Non hai specificato nessun utente che possa vedere i risultati del sondaggio.
     nl: U heeft geen gebruikers opgegeven die de resultaten van de peiling kunnen zien.
     ja: 投票結果を表示できるユーザーが指定されていません。
+    zh: 您没有指定可以查看投票结果的用户。
 }
 
 Name_of_the_poll {
@@ -1073,6 +1123,7 @@ Name_of_the_poll {
   it: Nome del sondaggio (ad esempio, <b>The Democratic Primary</b>):
   nl: Naam van de peiling (bijv. <b>The Democratic Primary</b>):
   ja: 投票の名前 (例: <b>民主党予備選挙</b>):
+  zh: 投票名称（例如，<b>民主党初选</b>）：
 }
 Name_of_supervisor {
   en: Name of supervisor (you):
@@ -1086,6 +1137,7 @@ Name_of_supervisor {
   it: Nome del supervisore (tu):
   nl: Naam begeleider (u):
   ja: 監督者（あなた）の名前：
+  zh: 主管姓名（您）：
 }
 Email_address_of_supervisor {
   en: E-mail address of supervisor: 
@@ -1099,6 +1151,7 @@ Email_address_of_supervisor {
   it: Indirizzo e-mail del supervisore:
   nl: E-mailadres begeleider:
   ja: 監督者の電子メール アドレス:
+  zh: 主管邮箱：
 }
 Day_and_time_you_plan_to_stop {
   en: Day and time you plan to stop the poll:
@@ -1118,6 +1171,7 @@ Day_and_time_you_plan_to_stop {
   it: Giorno e ora in cui prevedi di interrompere il sondaggio:
   nl: Dag en tijd waarop u van plan bent de peiling te stoppen:
   ja: 投票を停止する予定の日時:
+  zh: 您计划停止投票的日期和时间：
 }
 Invalid_email_address {
    en: Invalid e-mail address
@@ -1131,6 +1185,7 @@ Invalid_email_address {
    it: Indirizzo email non valido
    nl: Ongeldig e-mailadres
    ja: 無効なメールアドレス
+   zh: 无效的邮件地址
 }
 polls_must_be_stopped_manually {
   en: (<b>Note:</b> polls must be stopped manually)
@@ -1150,6 +1205,7 @@ polls_must_be_stopped_manually {
   it: (<b>Nota:</b> i sondaggi devono essere interrotti manualmente)
   nl: (<b>Opmerking:</b> peilingen moeten handmatig worden gestopt)
   ja: (<b>注:</b> 投票は手動で停止する必要があります)
+  zh: （<b>注意：</b>投票必须手动停止）
 }
 Preview_polls_ends {
     en: <i>Preview</i>: Poll ends 
@@ -1166,6 +1222,7 @@ Preview_polls_ends {
     it: <i>Anteprima</i>: il sondaggio termina
     nl: <i>Voorbeeld</i>: peiling eindigt
     ja: <i>プレビュー</i>: 投票終了
+    zh: <i>预览</i>：投票结束
 }
 address_warning_para {
   en {
@@ -1243,6 +1300,7 @@ address_warning_para {
   it:  Il tuo nome e indirizzo e-mail vengono utilizzati per l'invio di e-mail agli elettori. Il tuo nome dovrebbe essere riconoscibile dagli elettori e l'indirizzo e-mail deve funzionare, perché il CIVS ti invia via e-mail le informazioni necessarie per controllare il sondaggio. Assicurati che il tuo filtro antispam non blocchi la posta da <kbd>@SUPERVISOR@</kbd> (o controlla la tua cartella spam se la posta non arriva!).
   nl:  Uw naam en e-mailadres worden gebruikt bij het versturen van e-mail aan kiezers. Uw naam moet herkenbaar zijn voor kiezers en het e-mailadres moet werken, want CIVS e-mailt u de informatie die nodig is om de peiling te controleren. Zorg ervoor dat uw spamfilter geen mail van <kbd>@SUPERVISOR@</kbd> blokkeert (of controleer uw spamfolder als de mail niet aankomt!).
   ja:  あなたの名前と電子メール アドレスは、有権者に電子メールを送信する際に使用されます。 CIVS は投票を管理するために必要な情報を電子メールで送信するため、あなたの名前は有権者が認識できるものである必要があり、電子メール アドレスは機能している必要があります。スパム フィルタが <kbd>@SUPERVISOR@</kbd> からのメールをブロックしていないことを確認してください (メールが届かない場合は、スパム フォルダを確認してください!)。
+  zh:  向选民发送电子邮件时会使用您的姓名和电子邮件地址。你的名字应该被选民认出，并且电子邮件地址必须有效，因为 CIVS 会通过电子邮件向你发送控制投票所需的信息。确保您的垃圾邮件过滤器不会阻止来自 <kbd>@SUPERVISOR@</kbd> 的邮件（如果邮件没有到达，请检查您的垃圾邮件文件夹！）。
 }
 Description_of_the_poll {
   en: Description of the poll and available choices (many HTML tags ok):
@@ -1263,6 +1321,7 @@ Description_of_the_poll {
   it: Descrizione del sondaggio e scelte disponibili (molti tag HTML ok):
   nl: Beschrijving van de peiling en beschikbare keuzes (veel HTML-tags ok):
   ja: 投票と利用可能な選択肢の説明 (多くの HTML タグは問題ありません):
+  zh: 民意调查和可用选项的描述（许多 HTML 标签可以）：
 }
 Enter_the_names_of_all_the_choices {
   en {
@@ -1300,6 +1359,7 @@ Enter_the_names_of_all_the_choices {
   it:  Inserisci i nomi di tutte le scelte (candidati), uno per riga, oppure carica un file contenente tutte le scelte:
   nl:  Voer de namen van alle keuzes (kandidaten) in, één per regel, of upload een bestand met alle keuzes:
   ja:  すべての選択肢 (候補) の名前を 1 行に 1 つずつ入力するか、すべての選択肢を含むファイルをアップロードします。
+  zh:  输入所有选项（候选人）的名称，每行一个，或上传包含所有选项的文件：
 }
 Preview_arrow {
   en: Preview &#9656;
@@ -1313,6 +1373,7 @@ Preview_arrow {
   it: Anteprima &#9656;
   nl: Voorbeeld &#9656;
   ja: プレビュー &#9656;
+  zh: 预览 &#9656;
 }
 How_many_choices_will_win {
   en: How many choices will win:
@@ -1326,6 +1387,7 @@ How_many_choices_will_win {
   it: Quante scelte vinceranno:
   nl: Hoeveel keuzes zullen winnen:
   ja: 勝つ選択肢の数:
+  zh: 有多少选择将获胜：
 }
 public_or_private {
   en: Do you want the poll to be <em>private</em> or <em>public</em>?
@@ -1346,6 +1408,7 @@ public_or_private {
   it: Vuoi che il sondaggio sia <em>privato</em> o <em>pubblico</em>?
   nl: Wil je dat de peiling <em>privé</em> of <em>openbaar</em> is?
   ja: アンケートを<em>非公開</em>にするか、<em>公開</em>しますか?
+  zh: 您希望投票是<em>私有</em> 还是<em>公开</em>？
 }
 private_explanation {
   en {
@@ -1425,6 +1488,7 @@ private_explanation {
   it:  <strong>Privato</strong> <p> Ogni votante riceve il proprio URL univoco per votare e può votare solo una volta. Gli indirizzi e-mail degli elettori devono essere forniti al sistema in modo che possa comunicare loro l'URL di voto, ma il sistema dimentica i loro indirizzi immediatamente dopo l'invio dell'e-mail. Puoi aggiungere gli elettori dopo che il sondaggio è stato creato. </p>
   nl:  <strong>Privé</strong> <p> Elke kiezer ontvangt zijn eigen unieke URL om te stemmen en kan slechts één keer stemmen. De e-mailadressen van de kiezers moeten aan het systeem worden verstrekt zodat het hun hun stem-URL kan vertellen, maar het systeem vergeet hun adressen onmiddellijk nadat de e-mail is verzonden. U kunt kiezers toevoegen nadat de peiling is gemaakt. </p>
   ja:  <strong>非公開</strong> <p> 各有権者は、投票用に独自の URL を受け取り、1 回しか投票できません。有権者の電子メール アドレスをシステムに提供して、投票 URL を知らせる必要がありますが、システムは電子メールが送信された直後にアドレスを忘れてしまいます。投票が作成された後、有権者を追加できます。 </p>
+  zh:  <strong>私人</strong> <p> 每个选民都会收到自己唯一的投票网址，并且只能投票一次。必须向系统提供选民的电子邮件地址，以便它可以告诉他们他们的投票 URL，但系统在电子邮件发送后立即忘记了他们的地址。您可以在投票创建后添加选民。 </p>
 }
 public_explanation {
   en {
@@ -1487,6 +1551,7 @@ public_explanation {
   it:  <strong>Pubblico</strong> <p> C'è un unico URL che ogni elettore può utilizzare per esprimere il proprio voto, ed è compito tuo distribuirlo. Tuttavia, esiste solo un tentativo simbolico di impedire il voto multiplo, basato sugli indirizzi IP degli elettori. Se vuoi assicurarti che gli elettori votino solo una volta, utilizza invece un sondaggio privato. </p>
   nl:  <strong>Openbaar</strong> <p> Er is één enkele URL die elke kiezer kan gebruiken om zijn stem uit te brengen, en het is jouw taak om deze te verspreiden. Er is echter alleen een symbolische poging om meervoudig stemmen te voorkomen, op basis van de IP-adressen van de kiezers. Als je ervoor wilt zorgen dat kiezers maar één keer stemmen, gebruik dan een privépeiling. </p>
   ja:  <strong>公開</strong> <p> 投票者が投票に使用できる単一の URL があり、それを配布するのはあなたの仕事です。ただし、投票者の IP アドレスに基づいて、複数の投票を防ぐためのトークン試行のみが行われます。有権者が 1 回だけ投票するようにしたい場合は、代わりに非公開投票を使用してください。 </p>
+  zh:  <strong>公共</strong> <p> 任何选民都可以使用一个 URL 来投票，而分发它是您的工作。但是，根据选民的 IP 地址，只是象征性地尝试防止多次投票。如果您想确保选民只投票一次，请改用私人投票。 </p>
 }
 more_poll_options {
   en: More options <small>(mouse over each check box for more information)</small> 
@@ -1519,6 +1584,7 @@ more_poll_options {
   it: Altre opzioni <small>(passa il mouse sopra ogni casella di controllo per maggiori informazioni)</small>
   nl: Meer opties <small>(beweeg met de muis over elk selectievakje voor meer informatie)</small>
   ja: その他のオプション <small>(詳細については、各チェック ボックスにマウスを合わせてください)</small>
+  zh: 更多选项<small>（将鼠标悬停在每个复选框上以获得更多信息）</small>
 }
 CIVS_will_announce_this_poll {
   en {
@@ -1545,6 +1611,7 @@ CIVS_will_announce_this_poll {
   it:  Il CIVS annuncerà questo sondaggio nella sua lista di sondaggi pubblici e possibilmente altrove. Potranno votare tutti coloro che visualizzeranno la lista.
   nl:  CIVS zal deze peiling aankondigen op haar lijst van openbare peilingen en mogelijk elders. Iedereen die de lijst bekijkt, kan stemmen.
   ja:  CIVS は、この世論調査を公開世論調査のリストや他の場所で発表する予定です。リストを見た人なら誰でも投票できます。
+  zh:  CIVS 将在其公共民意调查列表中并可能在其他地方公布该民意调查。任何查看列表的人都可以投票。
 }
 Have_CIVS_publicize_this_poll {
   en: Have CIVS publicize this poll on its home page.
@@ -1565,6 +1632,7 @@ Have_CIVS_publicize_this_poll {
   it: Chiedi al CIVS di pubblicizzare questo sondaggio sulla sua home page.
   nl: Laat CIVS deze peiling publiceren op zijn homepage.
   ja: CIVS にこの投票をホームページで公開してもらいます。
+  zh: 让 CIVS 在其主页上公布此民意调查。
 }
 If_you_want_to_upload {
     en {
@@ -1608,6 +1676,7 @@ If_you_want_to_upload {
     it:  Se vuoi caricare tu stesso tutte le schede elettorali, seleziona questa casella. Gli elettori non possono votare in un simile sondaggio. Questo è utile se stai cercando di capire come funzionano i vari metodi di voto, o se hai ottenuto le schede da qualche fonte esterna al CIVS.
     nl:  Vink dit vakje aan als u alle stembiljetten zelf wilt uploaden. Kiezers kunnen niet stemmen in zo'n peiling. Dit is handig als u probeert te begrijpen hoe de verschillende stemmethodes werken, of als u stembiljetten heeft verkregen van een bron buiten CIVS.
     ja:  すべての投票用紙を自分でアップロードする場合は、このボックスをオンにします。有権者は、そのような投票で投票することはできません。これは、さまざまな投票方法がどのように機能するかを理解しようとしている場合、または CIVS 以外のソースから投票を取得した場合に役立ちます。
+    zh:  如果您想自己上传所有投票选票，请选中此框。选民不能在这样的民意调查中投票。如果您试图了解各种投票方法的工作原理，或者如果您从 CIVS 之外的某些来源获得选票，这将很有用。
 }
 Make_this_a_test_poll {
   en: Make this a test poll: read all votes from a file.
@@ -1627,6 +1696,7 @@ Make_this_a_test_poll {
   it: Rendi questo un sondaggio di prova: leggi tutti i voti da un file.
   nl: Maak er een testpeiling van: lees alle stemmen uit een bestand.
   ja: これをテスト投票にします: ファイルからすべての投票を読み取ります。
+  zh: 将其设为测试投票：从文件中读取所有投票。
 }
 Restrict_results {
   en: Restrict results
@@ -1640,6 +1710,7 @@ Restrict_results {
   it: Limita i risultati
   nl: Beperk resultaten
   ja: 結果を制限する
+  zh: 限制结果
 }
 Do_not_release_results_to_all_voters {
     en: Do not release results to all voters.
@@ -1661,6 +1732,7 @@ Do_not_release_results_to_all_voters {
     it: Non rilasciare i risultati a tutti gli elettori.
     nl: Geef de resultaten niet vrij aan alle kiezers.
     ja: 結果をすべての有権者に公開しないでください。
+    zh: 不要向所有选民公布结果。
 }
 restriction_explanation {
   en {
@@ -1704,6 +1776,7 @@ restriction_explanation {
   it:  Per impostazione predefinita, i risultati di un sondaggio sono visibili a tutti i votanti. Seleziona questa opzione per limitare la visibilità a un gruppo ristretto di persone.
   nl:  Standaard zijn de resultaten van een peiling zichtbaar voor alle kiezers. Selecteer deze optie om de zichtbaarheid te beperken tot een kleinere groep mensen.
   ja:  デフォルトでは、投票結果はすべての有権者に表示されます。このオプションを選択して、可視性を少数の人々に制限します。
+  zh:  默认情况下，投票结果对所有选民可见。选择此选项可将可见性限制为一小部分人。
 }
 Enter_email_addresses_results {
   en {
@@ -1744,6 +1817,7 @@ Enter_email_addresses_results {
   it:  Inserisci gli indirizzi e-mail degli utenti autorizzati a visualizzare i risultati del sondaggio: (tutti gli elettori possono vedere questi indirizzi e-mail)
   nl:  Voer e-mailadressen in van gebruikers die pollresultaten mogen bekijken: (Alle kiezers kunnen deze e-mailadressen zien)
   ja:  投票結果の表示を許可するユーザーの電子メール アドレスを入力してください: (すべての投票者がこれらの電子メール アドレスを表示できます)
+  zh:  输入允许查看投票结果的用户的电子邮件地址：（所有选民都可以看到这些电子邮件地址）
 }
 Enable_detailed_ballot_reporting {
   en: Enable detailed ballot reporting.
@@ -1763,6 +1837,7 @@ Enable_detailed_ballot_reporting {
   it: Attiva la segnalazione dettagliata delle schede elettorali.
   nl: Schakel gedetailleerde stembiljetrapportage in.
   ja: 詳細な投票レポートを有効にします。
+  zh: 启用详细的选票报告。
 }
 Allows_any_to_view {
   en {
@@ -1802,6 +1877,7 @@ Allows_any_to_view {
   it:  Questa opzione consente a qualsiasi partecipante al sondaggio di visualizzare la classifica di ogni scheda. Tuttavia, le informazioni identificative sugli elettori che hanno votato non vengono rivelate a meno che non venga selezionata l'opzione successiva.
   nl:  Met deze optie kan elke poll-deelnemer de ranglijst van elk stembiljet bekijken. Identificerende informatie over de kiezers die deze stembiljetten hebben uitgebracht, wordt echter niet onthuld tenzij de volgende optie wordt aangevinkt.
   ja:  このオプションを使用すると、すべての投票参加者が各投票のランキングを表示できます。ただし、これらの投票用紙を投じた有権者に関する識別情報は、次のオプションがチェックされない限り公開されません。
+  zh:  此选项允许任何投票参与者查看每张选票的排名。但是，除非选中下一个选项，否则不会透露有关投票的选民的身份信息。
 }
 
 Also_reveal_identity {
@@ -1837,6 +1913,7 @@ Also_reveal_identity {
   it:  Nel resoconto dettagliato della scheda elettorale, rivelare anche l'identità dell'elettore ad ogni scheda elettorale.
   nl:  Maak in het gedetailleerde stemrapport ook de identiteit van de kiezer bekend bij elke stemronde.
   ja:  詳細な投票レポートでは、投票ごとに有権者の身元も明らかにします。
+  zh:  在详细的选票报告中，还揭示了每张选票的选民身份。
 }
 Reveal_warning {
   en {
@@ -1888,6 +1965,7 @@ Reveal_warning {
   it:  Gli elettori sono <i class="warning">non</i> anonimi se questo è selezionato, né il server scarta gli indirizzi e-mail degli elettori come fa normalmente. Gli elettori sono avvertiti di questa mancanza di anonimato. Se si tratta di un sondaggio pubblico, sono consentiti più voti da un singolo indirizzo IP.
   nl:  Kiezers zijn <i class="warning">niet</i> anoniem als dit is aangevinkt, en de server verwijdert de e-mailadressen van de kiezers niet zoals normaal. Kiezers worden gewaarschuwd voor dit gebrek aan anonimiteit. Meerdere stemmen vanaf één IP-adres zijn toegestaan als dit een openbare peiling is.
   ja:  これがチェックされている場合、投票者は<i class="warning">匿名</i>ではなく、サーバーは通常のように投票者の電子メール アドレスを破棄しません。有権者は、この匿名性の欠如について警告されています。これが公開投票の場合、1 つの IP アドレスから複数の投票が許可されます。
+  zh:  如果选中此项，选民<i class="warning">不是</i>匿名的，服务器也不会像往常一样丢弃选民电子邮件地址。选民被警告这种缺乏匿名性。如果这是公开投票，则允许来自单个 IP 地址的多次投票。
 }
 Allow_voters_to_write_in_new_choices {
   en {
@@ -1915,6 +1993,7 @@ Allow_voters_to_write_in_new_choices {
   it:  Consenti agli elettori di scrivere nuove scelte.
   nl:  Sta kiezers toe nieuwe keuzes in te schrijven.
   ja:  有権者が新しい選択肢を書き込めるようにします。
+  zh:  允许选民写下新的选择。
 }
 
 you_can_allow_writeins {
@@ -1949,6 +2028,7 @@ you_can_allow_writeins {
  it:  Puoi consentire le scritture con questa opzione. tuttavia, le scritture sono in grande svantaggio se si verificano dopo che alcuni voti sono stati espressi. pertanto, quando questa opzione è selezionata, c'è una fase di scrittura in cui non è possibile votare. il supervisore deve abilitare esplicitamente il voto.
  nl:  Met deze optie kunt u write-ins toestaan. echter, write-ins hebben een groot nadeel als ze plaatsvinden nadat enkele stemmen zijn uitgebracht. daarom is er, wanneer deze optie is geselecteerd, een inschrijffase waarin er niet kan worden gestemd. de toezichthouder moet het stemmen expliciet mogelijk maken.
  ja:  このオプションで書き込みを許可できます。ただし、いくつかの投票が行われた後に書き込みが発生すると、書き込みは非常に不利になります。したがって、このオプションを選択すると、投票できない書き込みフェーズが発生します。スーパーバイザは明示的に投票を有効にする必要があります。
+ zh:  您可以使用此选项允许写入。但是，如果在投票后发生补记，则补记处于很大的劣势。 therefore, when this option is selected, there is a write-in phase in which ballots cannot be cast.主管必须明确启用投票。
 }
 
 Present_choices_in_order {
@@ -1977,6 +2057,7 @@ Present_choices_in_order {
   it:  Presentare le scelte sulla pagina di votazione esattamente nell'ordine indicato.
   nl:  Presenteer keuzes op de stempagina in precies de gegeven volgorde.
   ja:  指定された順序で投票ページに選択肢を表示します。
+  zh:  完全按照给定的顺序在投票页面上呈现选项。
 }
 Present_choices_in_order_expl {
   en {
@@ -2016,6 +2097,7 @@ Present_choices_in_order_expl {
  it:  Per impostazione predefinita, le scelte del sondaggio vengono presentate in ordine casuale su ogni scrutinio. Per alcuni sondaggi, come la scelta dell'orario di una riunione, sarà più conveniente per gli elettori vedere le scelte esattamente nell'ordine sopra indicato.
  nl:  Standaard worden poll-keuzes bij elke stemming in een willekeurige, geschudde volgorde gepresenteerd. Voor sommige peilingen, zoals het kiezen van een vergadertijd, is het handiger voor kiezers om de keuzes in exact de hierboven gegeven volgorde te zien.
  ja:  デフォルトでは、投票の選択肢は投票ごとにランダムにシャッフルされた順序で表示されます。会議時間の選択など、一部の投票では、投票者が上記の順序で選択肢を表示する方が便利です。
+ zh:  默认情况下，投票选择在每张选票上以随机打乱的顺序呈现。对于某些民意调查，例如选择会议时间，选民可以更方便地按照上面给出的顺序查看选择。
 }
 
 Allow_no_opinion {
@@ -2045,6 +2127,7 @@ Allow_no_opinion {
   it:  Consenti agli elettori di selezionare &ldquo;nessuna opinione&rdquo; per alcune scelte
   nl:  Sta kiezers toe om &ldquo;geen mening&rdquo; voor sommige keuzes.
   ja:  有権者が「意見なし」を選択できるようにするいくつかの選択肢のために。
+  zh:  允许选民选择“无意见”对于一些选择。
 }
 No_opinion_expl {
     en {
@@ -2078,6 +2161,7 @@ No_opinion_expl {
     it:  L'opzione “nessuna opinione” può avere effetti inaspettati. Assicurati di leggere le FAQ su come usarlo e informa gli elettori di conseguenza. L'opzione "nessuna opinione" può avere effetti inaspettati. Assicurati di leggere le FAQ su come usarlo e informa gli elettori di conseguenza.
     nl:  De optie âgeen meningâ kan onverwachte effecten hebben. Lees zeker in de FAQ hoe je het moet gebruiken en informeer de kiezers hierover. De optie "geen mening" kan onverwachte effecten hebben. Lees in de veelgestelde vragen hoe u het kunt gebruiken en informeer de kiezers hierover.
     ja:  「意見なし」オプションは、予期しない影響を与える可能性があります。使用方法について FAQ を必ず読み、それに応じて有権者に通知してください。「意見なし」オプションは、予期しない結果をもたらす可能性があります。使用方法に関する FAQ を必ず読み、それに応じて有権者に通知してください。
+    zh:  “无意见”选项可能会产生意想不到的效果。请务必阅读有关如何使用它的常见问题解答，并相应地告知选民。“无意见”选项可能会产生意想不到的效果。请务必阅读有关如何使用它的常见问题解答，并相应地告知选民。
 }
 
 Enforce_proportional_representation {
@@ -2099,6 +2183,7 @@ Enforce_proportional_representation {
   it: Applicare la rappresentanza proporzionale [<a href="proportional.html">ulteriori informazioni</a>]
   nl: Proportionele vertegenwoordiging afdwingen [<a href="proportionele.html">meer informatie</a>]
   ja: 比例代表の実施 [<a href="proportional.html">詳細</a>]
+  zh: 强制执行比例代表制 [<a href="proportional.html">更多信息</a>]
 }
 
 Proportional_rep_expl {
@@ -2162,6 +2247,7 @@ Proportional_rep_expl {
   it:  La modalità proporzionale è utile solo per le elezioni multivincitore, dove si vuole essere sicuri che i desideri degli elettori siano espressi proporzionalmente. Altrimenti la maggioranza dei votanti può decidere tutti i vincitori. La modalità proporzionale è molto più lenta della normale modalità non proporzionale e non dovrebbe essere utilizzata nei casi in cui ci sono molte scelte e molti vincitori. Nella maggior parte dei casi, ma non in tutti, i risultati della modalità proporzionale e non proporzionale concordano. Fare clic sul collegamento "ulteriori informazioni" per saperne di più su come funziona questa modalità.
   nl:  De proportionele modus is alleen nuttig voor verkiezingen met meerdere winnaars, waarbij u ervoor wilt zorgen dat de wensen van de kiezers proportioneel worden uitgedrukt. Anders kan een meerderheid van de kiezers alle winnaars bepalen. De proportionele modus is veel langzamer dan de reguliere niet-proportionele modus en mag niet worden gebruikt in gevallen waarin er veel keuzes en veel winnaars zijn. In de meeste gevallen, maar niet alle, komen de resultaten van de proportionele en niet-proportionele modus overeen. Klik op de link 'meer informatie' voor meer informatie over hoe deze modus werkt.
   ja:  プロポーショナル モードは、有権者の希望が比例的に表現されるようにしたい複数勝者の選挙にのみ役立ちます。それ以外の場合、有権者の過半数がすべての勝者を決定できます。プロポーショナル モードは、通常の非プロポーショナル モードよりもはるかに遅く、選択肢が多く勝者が多い場合には使用しないでください。すべてではありませんが、ほとんどの場合、比例モードと非比例モードの結果は一致します。このモードの仕組みの詳細については、[詳細情報] リンクをクリックしてください。
+  zh:  比例模式仅对多赢者选举有用，在这种情况下您要确保选民的愿望按比例表达。否则，大多数选民可以决定所有的获胜者。比例模式比常规的非比例模式慢很多，不应该在有很多选择和很多赢家的情况下使用。在大多数情况下（但不是全部），比例和非比例模式的结果是一致的。单击“更多信息”链接以了解有关此模式如何工作的更多信息。
 }
 
 voters_maximizing {
@@ -2186,6 +2272,7 @@ voters_maximizing {
   it: Per la rappresentanza proporzionale, si presume che gli elettori massimizzino:
   nl: Voor evenredige vertegenwoordiging wordt aangenomen dat kiezers maximaliseren:
   ja: 比例代表の場合、有権者は次を最大化すると想定されます。
+  zh: 对于比例代表制，假定选民最大化：
 }
 
 rank_of_their_favorite_choice {
@@ -2200,6 +2287,7 @@ rank_of_their_favorite_choice {
     it: rango della loro scelta preferita
     nl: rang van hun favoriete keuze
     ja: 彼らの好きな選択のランク
+    zh: 他们最喜欢的选择排名
 }
 
 combined_weights_of_selected_choices {
@@ -2217,6 +2305,7 @@ combined_weights_of_selected_choices {
   it: pesi combinati delle scelte selezionate
   nl: gecombineerde gewichten van geselecteerde keuzes
   ja: 選択した選択肢の重みの組み合わせ
+  zh: 所选选项的组合权重
 }
 
 Make_sure_your_address_is_correct {
@@ -2264,6 +2353,7 @@ Make_sure_your_address_is_correct {
   it:  Assicurati che il tuo indirizzo e-mail sia corretto, perché le informazioni sul sondaggio ti verranno inviate via e-mail. Gli elettori non saranno informati dell'esistenza del sondaggio finché non rispondi a questo messaggio di posta elettronica.
   nl:  Zorg ervoor dat uw e-mailadres correct is, want poll-informatie wordt naar u gemaild. Kiezers worden pas op de hoogte gebracht van het bestaan van de peiling als u reageert op dit e-mailbericht.
   ja:  投票情報は電子メールで送信されるため、電子メール アドレスが正しいことを確認してください。この電子メール メッセージに返信するまで、投票者には投票の存在が通知されません。
+  zh:  请确保您的电子邮件地址正确，因为投票信息将通过电子邮件发送给您。在您回复此电子邮件之前，选民不会被告知投票的存在。
 }
 Create_poll {
   en: Create poll
@@ -2277,6 +2367,7 @@ Create_poll {
   it: Crea sondaggio
   nl: Enquête maken
   ja: アンケートを作成
+  zh: 创建投票
 }
 No_IP_address_check {
   en: Turn off IP address checking so multiple voters can vote from the same network address.
@@ -2298,6 +2389,7 @@ No_IP_address_check {
   it: Disattiva il controllo dell'indirizzo IP in modo che più votanti possano votare dallo stesso indirizzo di rete.
   nl: Schakel IP-adrescontrole uit, zodat meerdere kiezers vanaf hetzelfde netwerkadres kunnen stemmen.
   ja: 複数の投票者が同じネットワーク アドレスから投票できるように、IP アドレス チェックをオフにします。
+  zh: 关闭 IP 地址检查，以便多个选民可以从同一网络地址投票。
 }
 No_IP_address_check_expl {
   en {
@@ -2341,6 +2433,7 @@ No_IP_address_check_expl {
   it:  Per impostazione predefinita, CIVS consente solo un voto per indirizzo IP nei sondaggi pubblici, il che scoraggia le persone dal votare più volte ma non impedisce loro di farlo se sono determinate. Quando gli elettori sono dietro una VPN, questa regola purtroppo impedisce alle persone di votare. Questa opzione disattiva il controllo dell'indirizzo IP in modo che le persone possano votare da dietro una VPN.
   nl:  CIVS staat standaard slechts één stem per IP-adres toe in openbare peilingen, wat mensen ontmoedigt om meerdere keren te stemmen, maar ze er in geen geval van weerhoudt om dat te doen als ze vastbesloten zijn. Wanneer kiezers achter een VPN zitten, verhindert deze regel helaas dat mensen überhaupt kunnen stemmen. Deze optie schakelt de IP-adrescontrole uit, zodat mensen van achter een VPN kunnen stemmen.
   ja:  デフォルトでは、CIVS は公開投票で IP アドレスごとに 1 票のみを許可します。これにより、人々は複数回投票することを思いとどまりますが、決心した場合は決して投票を止めることはありません。有権者が VPN の背後にいる場合、残念ながらこのルールにより、人々はまったく投票できなくなります。このオプションは IP アドレス チェックをオフにして、ユーザーが VPN の背後から投票できるようにします。
+  zh:  默认情况下，CIVS 只允许在公共投票中为每个 IP 地址投一票，这会阻止人们多次投票，但绝不会阻止他们在确定后这样做。 When voters are behind a VPN, this rule unfortunately prevents people from voting at all.此选项关闭 IP 地址检查，以便人们可以从 VPN 后面投票。
 }
 result_addrs_label {
   en {
@@ -2355,4 +2448,5 @@ result_addrs_label {
   it:  Inserisci gli indirizzi e-mail degli utenti autorizzati a visualizzare i risultati del sondaggio: (tutti gli elettori possono vedere questi indirizzi e-mail)
   nl:  Voer e-mailadressen in van gebruikers die pollresultaten mogen bekijken: (Alle kiezers kunnen deze e-mailadressen zien)
   ja:  投票結果の表示を許可するユーザーの電子メール アドレスを入力してください: (すべての投票者がこれらの電子メール アドレスを表示できます)
+  zh:  输入允许查看投票结果的用户的电子邮件地址：（所有选民都可以看到这些电子邮件地址）
 }
