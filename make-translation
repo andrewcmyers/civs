@@ -175,6 +175,11 @@ my %translations = %{&ParseAllTranslations($trans_data)};
 my %new_translation;
 my $translation;
 
+my $filename = "new-translations.txt";
+
+my $outputfile = IO::File->new("$filename", O_WRONLY | O_CREAT | O_EXCL, 0666) or
+    die ("Cannot create $filename: $!");
+
 foreach my $key (keys %translations) {
     print STDERR "$key\n";
     my $fields = $translations{$key};
@@ -189,10 +194,6 @@ foreach my $key (keys %translations) {
     $new_translation{$key} = $translation;
 }
 
-my $filename = "new-translations.txt";
-
-my $outputfile = IO::File->new("$filename", O_WRONLY | O_CREAT | O_EXCL, 0666) or
-    die ("Cannot create $filename: $!");
 
 &EditTranslationFile($outputfile, \%new_translation, $language);
 &ParseAllTranslations($trans_data);
