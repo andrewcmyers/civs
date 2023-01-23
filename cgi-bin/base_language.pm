@@ -20,6 +20,8 @@ sub init {
     return $self;
 }
 
+### BEGIN TRANSLATIONS ###
+
 # civs_common
 
 sub style_file {
@@ -300,13 +302,13 @@ sub the_top_n_will_win { # num_winners
 }
 
 sub add_voter_instructions {
-    "Enter email addresses of voters, one per line. These
+    'Enter email addresses of voters, one per line. These
     may be new voters or existing voters who have not voted yet.
     In a private poll, giving the email address of an already
     existing voter <strong>will not</strong> let that voter vote twice.
     It will only resend the voter an invitation to vote.
     In a public poll, only a token attempt is made to prevent
-    multiple voting.";
+    multiple voting.'
 }
 sub resend_question {
     'Invite even voters who have already voted?'
@@ -398,19 +400,19 @@ sub Didnt_get_plain_text {
 
 sub Total_of_x_voters_authorized { # x
     if ($_[1] == 0) {
-	'No voters authorized to vote yet.';
+	'No voters authorized to vote yet.'
     } elsif ($_[1] == 1) {
-	'Only 1 voter authorized to vote so far.';
+	'Only 1 voter authorized to vote so far.'
     } else {
-	"A total of $_[1] voters are authorized to vote.";
+	"A total of $_[1] voters are authorized to vote."
     }
 }
 
 sub Go_back_to_poll_control {
-    'Go back to poll control';
+    'Go back to poll control'
 }
 sub Done {
-    'Done.';
+    'Done.'
 }
 
 sub Email_voters_who_have_not_activated {
@@ -524,9 +526,15 @@ sub Need_identifier {
     'Sorry, you must identify yourself in order to vote.'
 }
 
-sub Rank { 'Rank' }
-sub Choice { 'Choice' }
-sub Weight { 'Weight' }
+sub Rank {
+    'Rank'
+}
+sub Choice {
+    'Choice'
+}
+sub Weight {
+    'Weight'
+}
 
 # overridden in english.pm
 sub ordinal_of {
@@ -646,7 +654,7 @@ sub following_URL_will_report_results {
     'The following URL will report poll results once the poll ends:';
 }
 sub future_result_link {
-    (my $self, my $url) = @_;
+    my ($self, $url) = @_;
     "The following URL will report poll results once the poll ends: <a href='$url'><code>$url</code></a>"
 }
 #deprecated
@@ -665,7 +673,7 @@ sub no_ballot_under_key {
     "No previous ballot was found for the receipt $key"
 }
 sub current_result_link {
-    (my $self, my $url) = @_;
+    my ($self, $url) = @_;
     "<a href=\"$url\" class=result_link>Go to current poll results</a>"
 }
 sub Already_voted {
@@ -698,7 +706,7 @@ sub The_results_of_this_completed_poll_are_here {
     'The results of this completed poll are here:';
 }
 sub completed_results_link {
-    (my $self, my $url) = @_;
+    my ($self, $url) = @_;
     "<a href=\"$url\" class=result_link>Go to completed poll results</a>"
 }
 
@@ -1165,12 +1173,12 @@ sub submit_activation_code {
     'Complete activation'
 }
 sub pending_invites {
-    (my $self, my $pats, my $invites) = @_;
+    my ($self, $pats, $invites) = @_;
     my @invites = @{$invites};
     if ($#invites >= 0) {
         my @rows = ();
         foreach $invite (@invites) {
-            (my $url, my $title) = @{$invite};
+            my ($url, $title) = @{$invite};
             push @rows, a({-href => $url}, $title);
         }
         return div(p($self->pending_invites_hdr), ul(\@rows));
@@ -1227,11 +1235,9 @@ sub invalid_email_address {
     'Invalid email address'
 }
 sub unexpected_error {
-    my ($self, $t) = @_;
     '<b>Unexpected error:</b> '
 }
 sub optin_error {
-    my ($self, $t) = @_;
     'Error: '
 }
 sub submitted {

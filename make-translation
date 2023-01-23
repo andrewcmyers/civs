@@ -1,0 +1,197 @@
+#!/usr/bin/env perl
+
+my $home=$ENV{"HOME"};
+
+use lib ".";
+use lib "$home/civs/cgi-bin";
+use lib '/Library/WebServer/CGI-Executables/civs';
+use strict;
+
+use URI::Encode;
+use base_language;
+use JSON;
+use translations;
+use IO::Handle;
+use IO::File;
+
+my $language = $ARGV[0];
+my $pmfile = $ARGV[1];
+
+if (!defined($language) || !defined($pmfile)) {
+    print STDERR "Usage: make-translation <language-code> <pm file>\n";
+    exit 1
+}
+
+my $uri = URI::Encode->new( { encode_reserved => 0 } );
+
+my $credfile="$home/civs/axiomatic-set-373716-3a0f9821df99.json";
+my $gcloud="$home/google-cloud-sdk/bin/gcloud";
+
+my $token=`GOOGLE_APPLICATION_CREDENTIALS=$credfile $gcloud auth application-default print-access-token`;
+
+my $enckey = $uri->encode($token);
+my $command='curl -s -X POST
+    -H "Content-Type: application/json" 
+    -H "Authorization: Bearer '.$token.'"
+    --data "{
+        \'q\': <INPUT_TEXT>,
+        \'source\': \'en\',
+        \'target\': \''.$language.'\',
+        \'format\': \'text\'
+    }"
+    https://translation.googleapis.com/language/translate/v2';
+
+$command =~ s/\n/ /g;
+$command =~ s/   */ /g;
+
+my $json = JSON->new->allow_nonref;
+
+sub shell_quote {
+    (my $s) = @_;
+    $s =~ s/\\/\\\\/g;
+    $s =~ s/"/\\"/g;
+    $s =~ s/\$/\\\$/g;
+    $s 
+}
+
+sub translate {
+    (my $text) = @_;
+    my $cmd = $command;
+    $text = $json->encode($text);
+    # print "JSON encoded: ", $text,  "\n";
+    $text = shell_quote($text);
+    # print "shell encoded: ", $text,  "\n";
+    $cmd =~ s/<INPUT_TEXT>/$text/;
+    # print "COMMAND = $cmd\n";
+    my $result = `$cmd`;
+    # print "RESULT = $result\n";
+    my $hash = $json->decode($result);
+    my @translations = @{$hash->{data}->{translations}};
+    return $translations[0]->{translatedText};
+}
+
+if ($pmfile ne "") {
+
+    open(LANG, "<$home/civs/cgi-bin/base_language.pm");
+    sysopen (my $pmh, "$pmfile", O_WRONLY | O_CREAT | O_EXCL)
+        or die "Can't create new file $pmfile";
+
+    my $cur = <LANG>;
+    while ($cur) {
+        if ($cur =~ m/### BEGIN TRANSLATIONS ###/) { last }
+        $cur = <LANG>;
+    }
+    print $pmh $_;
+
+    while ($cur) {
+        if ($cur =~ m/^sub [A-Za-z][A-Za-z0-9_]* {/) {
+            my $header = $cur;
+            my $decl = "";
+            $cur = <LANG>;
+            if ($cur =~ m/^ +my \(.*\) = \@_;/) {
+                $decl = $cur;
+                $cur = <LANG>;
+            }
+            my $body = "";
+            my ($translated, $quote, $unquote);
+            while ($cur) {
+                if ($cur =~ m/^}/) {
+                    if ($body =~ m/^\s*'/) {
+                        $body =~ s/^\s*'//;
+                        $body =~ s/';?\s*\Z//;
+                        $body =~ s/\n\n/<PARAGRAPH>/g;
+                        $body =~ s/\n/ /g;
+                        $body =~ s/   */ /g;
+                        $body =~ s/<PARAGRAPH>/\n/g;
+                        # print "single-quoted: " , $body, "\n";
+                        $quote = "  '";
+                        $unquote = "'";
+                        $translated = translate $body;
+                    } elsif ($body =~ m/^\s*"/) {
+                        $body =~ s/^\s*"//;
+                        $body =~ s/";?\s*\Z//;
+                        $body =~ s/\n\n/<PARAGRAPH>/g;
+                        $body =~ s/\n/ /g;
+                        $body =~ s/   */ /g;
+                        $body =~ s/<PARAGRAPH>/\n/g;
+                        $quote = '  "';
+                        $unquote = '"';
+                        $translated = translate $body;
+                    } else {
+                        $quote = $unquote = '';
+                        $translated = $body . '# UNTRANSLATED';
+                    }
+                    print $pmh $header, $decl, $quote, $translated, $unquote, "\n}\n";
+                    last
+                }
+                $body .= $cur;
+                $cur = <LANG>;
+            }
+        } else {
+            print $pmh $cur;
+        }
+        $cur = <LANG>;
+    }
+
+    close (LANG);
+
+} # end pmfile output
+else {
+    print "Skipping generation of .pm file (empty filename provided)\n";
+}
+
+my $trans_data;
+{
+    local $/;
+    open (TRANSLATIONS, "<static-translations.txt") || die "can't find translations";
+    $trans_data = <TRANSLATIONS>;
+    close (TRANSLATIONS);
+}
+
+sub ParseAllTranslations {
+    my ($input) = @_;
+    my $pos = 0;
+    my @result;
+    my %translations;
+    while (1) {
+        (my $key, my $fields, my $npos) = &ParseEntry($input, $pos);
+        last unless $key;
+
+        $pos = $npos;
+        # my $translation = $fields->{$language_code} || $fields->{'en'} || 'unknown';
+        $translations{$key} = $fields;
+    }
+    if ($pos < length $input) {
+        print STDERR "Unexpected input at $pos: ", substr($input, pos, 15), "...\n";
+    }
+    return \%translations;
+}
+
+my %translations = %{&ParseAllTranslations($trans_data)};
+
+my %new_translation;
+my $translation;
+
+foreach my $key (keys %translations) {
+    print STDERR "$key\n";
+    my $fields = $translations{$key};
+    my $text = $fields->{en};
+    $text =~ s/\n\n/<PARAGRAPH>/g;
+    $text =~ s/\n/ /g;
+    $text =~ s/   */ /g;
+    $text =~ s/<PARAGRAPH>/\n/g;
+    $translation = translate $text;
+    # $translation = $text;
+    # print STDERR $key, ": ", $translation, "\n";
+    $new_translation{$key} = $translation;
+}
+
+my $filename = "new-translations.txt";
+
+my $outputfile = IO::File->new("$filename", O_WRONLY | O_CREAT | O_EXCL, 0666) or
+    die ("Cannot create $filename: $!");
+
+&EditTranslationFile($outputfile, \%new_translation, $language);
+&ParseAllTranslations($trans_data);
+
+undef $outputfile;

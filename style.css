@@ -318,7 +318,7 @@ td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; borde
 table.ballots {font-size: 80%; border: solid 1px #aac}
 table.ballots th {background-color: transparent; color: black; font-size: 70%}
 
-li b, td > b, strong { color: #a52 }
+li b, td > b, strong { color: #f88f00 }
 
 #move_top, #move_up, #make_tie, #move_down, #move_bottom {
     font-size: 90%;

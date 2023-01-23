@@ -99,7 +99,7 @@ echo "Creating language-specific web pages"
 
 for file in index.html civs_create.html
 do 
-    for lang in en de fr es
+    for lang in en de fr es uk
     do
         echo "  $file.$lang"
         perl subst_text.pl static-translations.txt $lang ${file}.base ${file}.$lang || exit 1
@@ -139,7 +139,7 @@ for f in add_voters beatpath.pm beatpath2.pm civs_common.pm               \
     resend_link send_result_key.pm rp.pm runoff.pm minimax.pm             \
     admctrl.pm base_language.pm english.pm hungarian.pm italian.pm        \
     french.pm german.pm hebrew.pm portuguese.pm chinese.pm                \
-    spanish.pm thai.pm russian.pm hindi.pm
+    spanish.pm thai.pm russian.pm hindi.pm ukrainian.pm
 do
     target="${CGIBINDIR}/${f}"
     if [ -n "$PERLEXT" ]
