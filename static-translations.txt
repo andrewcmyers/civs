@@ -32,7 +32,7 @@ lang2 {
     es: es
     uk: uk
     hi: hi
-    ta: en
+    ta: ta
     ko: ko
 }
 
@@ -47,11 +47,29 @@ CIVS_name {
     ta: Condorcet இணைய வாக்களிப்பு சேவை
     ko: 콩도르세 인터넷 투표 서비스
 }
+CIVS_logo {
+    en: CIVS logo
+    de: CIVS logo
+    fr: Logo CIVS
+    es: logotipo de CIVS
+}
+About_CIVS {
+    en: About CIVS
+    de: Über CIVS
+    fr: CIVS
+    es: CIVS
+}
+Public_polls {
+    en: Public polls
+    de: Öffentliche Umfragen
+    fr: Les sondages publics
+    es: Encuestas públicas
+}
 Create_a_poll {
     en: Create a poll
-    de: Erstellen Sie eine Umfrage
-    fr: Créer une consultation
-    es: Crea una encuesta
+    de: Neue Umfrage erstellen
+    fr: Créer un sondage
+    es: Crear encuesta
     uk: Створіть опитування
     hi: एक जनमत बनाएँ
     ta: வாக்கெடுப்பை உருவாக்கவும்
@@ -66,6 +84,9 @@ Activate_user {
     hi: उपयोगकर्ता को सक्रिय करें
     ta: பயனரை இயக்கவும்
     ko: 사용자 활성화
+}
+FAQ {
+    en: FAQ
 }
 Frequently_asked_questions {
     en: Frequently Asked Questions
@@ -90,7 +111,7 @@ Join_the_CIVS_mailing_list {
 Security_and_privacy {
     en: Security and privacy
     de: Sicherheit und Privatsphäre
-    fr: Sécurité et Confidentialité
+    fr: Sécurité et confidentialité
     es: Seguridad y privacidad
     uk: Безпека та конфіденційність
     hi: सुरक्षा और गोपनीयता

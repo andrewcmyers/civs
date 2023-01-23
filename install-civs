@@ -97,14 +97,23 @@ CopyFile() {
 
 echo "Creating language-specific web pages"
 
-for file in index.html civs_create.html
+webpage_langs=( en de fr es uk ta hi ko )
+
+for file in index.html civs_create.html civs_hdr.js.2
 do 
-    for lang in en de fr es uk ta hi ko
+    echo " $file ->"
+    for lang in ${webpage_langs[@]}
     do
         echo "  $file.$lang"
         perl subst_text.pl static-translations.txt $lang ${file}.base ${file}.$lang || exit 1
     done
 done
+cat civs_hdr.js.1.base > civs_hdr.js
+for lang in ${webpage_langs[@]}
+do
+    cat civs_hdr.js.2.$lang >> civs_hdr.js
+done
+cat civs_hdr.js.3.base >> civs_hdr.js
 
 echo "Installing web pages"
 

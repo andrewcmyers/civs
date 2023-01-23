@@ -8,7 +8,7 @@ var create_header = function(title, language) {
         About_CIVS: "About CIVS",
         Public_polls: "Public polls",
         Activate_user: "Activate user",
-        Create_new_poll: "Create new poll",
+        Create_new_poll: "Create a poll",
         Security_and_privacy: "Security and privacy",
         FAQ: "FAQ"
     },
@@ -41,7 +41,47 @@ var create_header = function(title, language) {
         Create_new_poll: "Crear encuesta",
         Security_and_privacy: "Seguridad y privacidad",
         FAQ: "FAQ"
-    }
+    },
+    uk: {
+        CIVS_logo: "CIVS logo",
+        Condorcet_Internet_Voting_Service: "Служба Інтернет-голосування Condorcet",
+        About_CIVS: "About CIVS",
+        Public_polls: "Public polls",
+        Activate_user: "Активувати користувача",
+        Create_new_poll: "Створіть опитування",
+        Security_and_privacy: "Безпека та конфіденційність",
+        FAQ: "FAQ"
+    },
+    ta: {
+        CIVS_logo: "CIVS logo",
+        Condorcet_Internet_Voting_Service: "Condorcet இணைய வாக்களிப்பு சேவை",
+        About_CIVS: "About CIVS",
+        Public_polls: "Public polls",
+        Activate_user: "பயனரை இயக்கவும்",
+        Create_new_poll: "வாக்கெடுப்பை உருவாக்கவும்",
+        Security_and_privacy: "பாதுகாப்பு மற்றும் தனியுரிமை",
+        FAQ: "FAQ"
+    },
+    hi: {
+        CIVS_logo: "CIVS logo",
+        Condorcet_Internet_Voting_Service: "कोंडोरसेट इंटरनेट मतदान सेवा",
+        About_CIVS: "About CIVS",
+        Public_polls: "Public polls",
+        Activate_user: "उपयोगकर्ता को सक्रिय करें",
+        Create_new_poll: "एक जनमत बनाएँ",
+        Security_and_privacy: "सुरक्षा और गोपनीयता",
+        FAQ: "FAQ"
+    },
+    ko: {
+        CIVS_logo: "CIVS logo",
+        Condorcet_Internet_Voting_Service: "콩도르세 인터넷 투표 서비스",
+        About_CIVS: "About CIVS",
+        Public_polls: "Public polls",
+        Activate_user: "사용자 활성화",
+        Create_new_poll: "설문조사 만들기",
+        Security_and_privacy: "보안 및 개인정보 보호",
+        FAQ: "FAQ"
+    },
   }
   let lang = translations[language || 'en']
 
