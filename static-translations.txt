@@ -54,7 +54,7 @@ CIVS_name {
     fr: Service de Vote Internet Condorcet (CIVS)
     es: Internet Condorcet Servicio de Votación (CIVS)
     uk: Служба Інтернет-голосування Condorcet
-    hi: कोंडोरसेट इंटरनेट मतदान सेवा
+    hi: Condorcet इंटरनेट मतदान सेवा
     ta: Condorcet இணைய வாக்களிப்பு சேவை
     ko: 콩도르세 인터넷 투표 서비스
     de: Condorcet Internet Voting Service
@@ -195,7 +195,7 @@ Condorcet_voting {
     fr: Paradoxe de Condorcet
     es: Votación de Condorcet
     uk: Кондорсе голосування
-    hi: कोंडोरसेट मतदान
+    hi: Condorcet मतदान
     ta: Condorcet வாக்களிப்பு
     ko: 콩도르세 투표
     it: Voto Condorcet
@@ -812,7 +812,7 @@ Why_rank_paras {
         में रैंक्ड-च्वाइस वोटिंग का उपयोग किया जाता है। उदाहरण के लिए,
         ऑस्ट्रेलिया सिंगल ट्रांसफरेबल वोट (STV, जिसे IRV भी कहा जाता
         है) का उपयोग करता है। हालांकि, सर्वसम्मति वाले उम्मीदवारों की
-        पहचान करने में सीआईवीएस द्वारा समर्थित कोंडोरसेट विधियां IRV
+        पहचान करने में सीआईवीएस द्वारा समर्थित Condorcet विधियां IRV
         से बेहतर हैं। IRV एक उम्मीदवार का चुनाव कर सकता है, भले ही
         अधिकांश मतदाता किसी और को पसंद करेंगे, और <a
         href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
