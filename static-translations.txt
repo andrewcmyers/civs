@@ -196,7 +196,7 @@ Condorcet_voting {
     es: Votación de Condorcet
     uk: Кондорсе голосування
     hi: कोंडोरसेट मतदान
-    ta: காண்டோர்செட் வாக்களிப்பு
+    ta: Condorcet வாக்களிப்பு
     ko: 콩도르세 투표
     it: Voto Condorcet
     nl: Condorcet stemmen
@@ -224,7 +224,7 @@ CIVS_software {
     es: Software CIVS
     uk: Програмне забезпечення CIVS
     hi: सीआईवीएस सॉफ्टवेयर
-    ta: CIVS மென்பொருள்
+    ta: CIVS software
     ko: CIVS 소프트웨어
     it: Software CIVS
     nl: CIVS-software
@@ -803,7 +803,7 @@ Why_rank_paras {
       систем Condorcet, CIVS також має режим
       пропорційного представлення. </p>
     }
-    ta:  CIVS மூலம், வாக்காளர்கள் தங்களுக்குப் பிடித்த ஒரு தேர்வைத் தேர்ந்தெடுப்பதற்குப் பதிலாக அவர்களின் விருப்பங்களை வரிசைப்படுத்துகிறார்கள். இந்த செயல்முறை துல்லியமான முடிவுகளை அளிக்கிறது, ஏனெனில் இது வாக்காளர்களிடமிருந்து கூடுதல் தகவல்களை சேகரிக்கிறது. இது வாக்குப் பிரிப்பு மற்றும் கெடுதல்களைத் தவிர்க்கவும் உதவுகிறது. </p><p> உண்மையான தேர்தல்களில் தரவரிசை-தேர்வு வாக்களிப்பு பயன்படுத்தப்படுகிறது. எடுத்துக்காட்டாக, ஆஸ்திரேலியா ஒற்றை மாற்றக்கூடிய வாக்குகளைப் பயன்படுத்துகிறது (எஸ்டிவி, ஐஆர்வி என்றும் அழைக்கப்படுகிறது). இருப்பினும், ஒருமித்த வேட்பாளர்களை அடையாளம் காண்பதில் IRV ஐ விட CIVS ஆல் ஆதரிக்கப்படும் Condorcet முறைகள் சிறந்தவை. பெரும்பான்மையான வாக்காளர்கள் வேறொருவரை விரும்பினாலும் IRV ஒரு வேட்பாளரைத் தேர்ந்தெடுக்க முடியும், மேலும் <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html"> உண்மையான தேர்தல்களில்</a> உள்ளது. மற்ற Condorcet அமைப்புகளைப் போலல்லாமல், CIVS ஒரு விகிதாசார பிரதிநிதித்துவ முறையையும் கொண்டுள்ளது. </p>
+    ta:  CIVS மூலம், வாக்காளர்கள் தங்களுக்குப் பிடித்த ஒரு தேர்வைத் தேர்ந்தெடுப்பதற்குப் பதிலாக அவர்களின் விருப்பங்களை வரிசைப்படுத்துகிறார்கள். இந்த செயல்முறை துல்லியமான முடிவுகளை அளிக்கிறது, ஏனெனில் இது வாக்காளர்களிடமிருந்து கூடுதல் தகவல்களை சேகரிக்கிறது. இது வாக்குப் பிரிப்பு மற்றும் கெடுதல்களைத் தவிர்க்கவும் உதவுகிறது. </p><p> உண்மையான தேர்தல்களில் தரவரிசை-தேர்வு வாக்களிப்பு பயன்படுத்தப்படுகிறது. எடுத்துக்காட்டாக, ஆஸ்திரேலியா ஒற்றை மாற்றக்கூடிய வாக்குகளைப் பயன்படுத்துகிறது (STV, IRV என்றும் அழைக்கப்படுகிறது). இருப்பினும், ஒருமித்த வேட்பாளர்களை அடையாளம் காண்பதில் IRV ஐ விட CIVS ஆல் ஆதரிக்கப்படும் Condorcet முறைகள் சிறந்தவை. பெரும்பான்மையான வாக்காளர்கள் வேறொருவரை விரும்பினாலும் IRV ஒரு வேட்பாளரைத் தேர்ந்தெடுக்க முடியும், மேலும் இது <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html"> உண்மையான தேர்தல்களில்</a> உள்ளது. மற்ற Condorcet அமைப்புகளைப் போலல்லாமல், CIVS ஒரு விகிதாசார பிரதிநிதித்துவ முறையையும் கொண்டுள்ளது. </p>
     hi:  सीआईवीएस के साथ, मतदाता केवल अपनी पसंदीदा पसंद चुनने के बजाय अपनी पसंद को रैंक करते हैं। यह प्रक्रिया सटीक परिणाम देती है क्योंकि यह मतदाताओं से अधिक जानकारी एकत्र करती है। यह वोट बंटवारे और बिगाड़ने से बचने में भी मदद करता है। </p><p> वास्तविक चुनावों में रैंक्ड-च्वाइस वोटिंग का उपयोग किया जाता है। उदाहरण के लिए, ऑस्ट्रेलिया सिंगल ट्रांसफरेबल वोट (एसटीवी, जिसे आईआरवी भी कहा जाता है) का उपयोग करता है। हालांकि, सर्वसम्मति वाले उम्मीदवारों की पहचान करने में सीआईवीएस द्वारा समर्थित कोंडोरसेट विधियां आईआरवी से बेहतर हैं। IRV एक उम्मीदवार का चुनाव कर सकता है, भले ही अधिकांश मतदाता किसी और को पसंद करेंगे, और <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html"> इसके पास वास्तविक चुनाव हैं</a>। अधिकांश अन्य कॉन्डोर्सेट प्रणालियों के विपरीत, CIVS में एक आनुपातिक प्रतिनिधित्व मोड भी है। </p>
     ko:  CIVS를 통해 유권자는 자신이 가장 좋아하는 한 가지를 선택하는 것이 아니라 자신의 선택에 순위를 매깁니다. 이 과정은 유권자로부터 더 많은 정보를 수집하기 때문에 정확한 결과를 제공합니다. 또한 투표 분할 및 스포일러를 방지하는 데 도움이 됩니다. </p><p> 순위 선택 투표는 실제 선거에서 사용됩니다. 예를 들어 호주는 STV(Single Transferable Vote, IRV라고도 함)를 사용합니다. 그러나 CIVS에서 지원하는 Condorcet 방법은 컨센서스 후보를 식별하는 데 있어 IRV보다 낫습니다. IRV는 대다수의 유권자가 다른 사람을 선호하더라도 후보를 선출할 수 있으며 <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">실제 선거에서도 마찬가지입니다</a>. 대부분의 다른 Condorcet 시스템과 달리 CIVS에는 비례 표시 모드도 있습니다. </p>
     it:  Con CIVS, gli elettori classificano le loro scelte piuttosto che scegliere solo la loro scelta preferita. Questo processo fornisce risultati accurati perché raccoglie più informazioni dagli elettori. Aiuta anche a evitare la divisione dei voti e gli spoiler. </p><p> Il voto a scelta classificata viene utilizzato nelle elezioni reali. Ad esempio, l'Australia utilizza il voto singolo trasferibile (STV, noto anche come IRV). Tuttavia, i metodi Condorcet supportati da CIVS sono migliori dell'IRV nell'identificare i candidati al consenso. IRV può eleggere un candidato anche se la maggioranza degli elettori preferirebbe qualcun altro, e <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html"> lo fa nelle elezioni reali</a>. A differenza della maggior parte degli altri sistemi Condorcet, CIVS ha anche una modalità di rappresentazione proporzionale. </p>
@@ -876,7 +876,14 @@ Footnote_1 {
       समर्थन करने के लिए दान</a>
       का स्वागत है।</p>
     }
-    ta:  <p>Condorcet இணைய வாக்களிப்பு சேவை 2003 முதல் இயங்கி வருகிறது. இந்தச் சேவையை <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> ஆதரிக்கிறது, ஆனால் இது ஒரு சேவை அல்ல <a href="http://www.cornell.edu/">கார்னெல் பல்கலைக்கழகம்.</a> இது CIVS பதிப்பு @VERSION@. கருத்து, உதவி மற்றும் <a href="@DONATE_URL@">இந்த இலவச (மற்றும் விளம்பரம் இல்லாத மற்றும் டிராக்கர் இல்லாத) சேவையை ஆதரிப்பதற்கான நன்கொடைகள்</a> வரவேற்கப்படுகின்றன.</p>
+    ta {
+        <p>Condorcet இணைய வாக்களிப்பு சேவை 2003 முதல் இயங்கி வருகிறது. இந்தச் சேவையை <a
+        href="http://www.cs.cornell.edu/andru">Andrew Myers</a> ஆதரிக்கிறார்,
+        ஆனால் இது <a href="http://www.cornell.edu/">Cornell University</a>
+        அளிக்கும் சேவை அல்ல. இது CIVS பதிப்பு @VERSION@. கருத்து, உதவி மற்றும் <a
+        href="@DONATE_URL@">இந்த இலவச (மற்றும் விளம்பரம் இல்லாத மற்றும் டிராக்கர் இல்லாத)
+        சேவையை ஆதரிப்பதற்கான நன்கொடைகள்</a> வரவேற்கப்படுகின்றன.</p>
+    }
     ko:  <p>콩도르세 인터넷 투표 서비스는 2003년부터 운영되고 있습니다. 이 서비스는 <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a>가 지원하지만 서비스가 아닙니다. <a href="http://www.cornell.edu/">코넬 대학교</a>에서 제공합니다. CIVS 버전 @VERSION@입니다. 피드백, 도움, <a href="@DONATE_URL@">광고와 추적기가 없는 무료 서비스를 지원하기 위한 기부</a>를 환영합니다.</p>
     it:  <p>Il servizio di voto Internet Condorcet è attivo dal 2003. Questo servizio è supportato da <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> ma non è un servizio offerto dalla <a href="http://www.cornell.edu/">Cornell University.</a> Questa è la versione CIVS @VERSION@. Feedback, aiuto e <a href="@DONATE_URL@">donazioni per supportare questo servizio gratuito (e senza pubblicità e senza tracker)</a> sono i benvenuti.</p>
     nl:  <p>De Condorcet Internet Voting Service bestaat sinds 2003. Deze service wordt ondersteund door <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> maar is geen service aangeboden door <a href="http://www.cornell.edu/">Cornell University.</a> Dit is CIVS-versie @VERSION@. Feedback, hulp en <a href="@DONATE_URL@">donaties ter ondersteuning van deze gratis (en advertentie- en trackervrije) service</a> zijn welkom.</p>
