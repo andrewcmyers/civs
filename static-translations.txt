@@ -56,7 +56,7 @@ CIVS_name {
     uk: Служба Інтернет-голосування Condorcet
     hi: Condorcet इंटरनेट मतदान सेवा
     ta: Condorcet இணைய வாக்களிப்பு சேவை
-    ko: 콩도르세 인터넷 투표 서비스
+    ko: Condorcet 인터넷 투표 서비스
     de: Condorcet Internet Voting Service
     it: Servizio di votazione Internet Condorcet
     nl: Condorcet Internet Stemdienst
@@ -197,7 +197,7 @@ Condorcet_voting {
     uk: Кондорсе голосування
     hi: Condorcet मतदान
     ta: Condorcet வாக்களிப்பு
-    ko: 콩도르세 투표
+    ko: Condorcet 투표
     it: Voto Condorcet
     nl: Condorcet stemmen
     ja: コンドルセ投票
@@ -899,7 +899,7 @@ Footnote_1 {
         href="@DONATE_URL@">இந்த இலவச (மற்றும் விளம்பரம் இல்லாத மற்றும் டிராக்கர் இல்லாத)
         சேவையை ஆதரிப்பதற்கான நன்கொடைகள்</a> வரவேற்கப்படுகின்றன.</p>
     }
-    ko:  <p>콩도르세 인터넷 투표 서비스는 2003년부터 운영되고 있습니다. 이 서비스는 <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a>가 지원하지만 서비스가 아닙니다. <a href="http://www.cornell.edu/">코넬 대학교</a>에서 제공합니다. CIVS 버전 @VERSION@입니다. 피드백, 도움, <a href="@DONATE_URL@">광고와 추적기가 없는 무료 서비스를 지원하기 위한 기부</a>를 환영합니다.</p>
+    ko:  <p>Condorcet 인터넷 투표 서비스는 2003년부터 운영되고 있습니다. 이 서비스는 <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a>가 지원하지만 서비스가 아닙니다. <a href="http://www.cornell.edu/">코넬 대학교</a>에서 제공합니다. CIVS 버전 @VERSION@입니다. 피드백, 도움, <a href="@DONATE_URL@">광고와 추적기가 없는 무료 서비스를 지원하기 위한 기부</a>를 환영합니다.</p>
     it:  <p>Il servizio di voto Internet Condorcet è attivo dal 2003. Questo servizio è supportato da <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> ma non è un servizio offerto dalla <a href="http://www.cornell.edu/">Cornell University.</a> Questa è la versione CIVS @VERSION@. Feedback, aiuto e <a href="@DONATE_URL@">donazioni per supportare questo servizio gratuito (e senza pubblicità e senza tracker)</a> sono i benvenuti.</p>
     nl:  <p>De Condorcet Internet Voting Service bestaat sinds 2003. Deze service wordt ondersteund door <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> maar is geen service aangeboden door <a href="http://www.cornell.edu/">Cornell University.</a> Dit is CIVS-versie @VERSION@. Feedback, hulp en <a href="@DONATE_URL@">donaties ter ondersteuning van deze gratis (en advertentie- en trackervrije) service</a> zijn welkom.</p>
     ja:  <p>コンドルセ インターネット投票サービスは 2003 年から運営されています。このサービスは <a href="http://www.cs.cornell.edu/andru">Andrew Myers</a> によってサポートされていますが、サービスではありません。 <a href="http://www.cornell.edu/">コーネル大学</a>が提供。これは CIVS バージョン @VERSION@ です。フィードバック、ヘルプ、<a href="@DONATE_URL@">この無料 (および広告なし、トラッカーなし) サービスをサポートするための寄付</a>を歓迎します。</p>
