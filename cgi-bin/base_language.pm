@@ -1059,11 +1059,11 @@ sub preference_description {
 }
 
 sub mail_management_instructions {
-    p("CIVS does not store email addresses of voters and it only sends mail when
+    p("CIVS does not store email addresses of voters, and it only sends mail when
        a poll supervisor who already knows your address requests that mail be sent.
        You can prevent CIVS from sending you mail, by entering your email address below.").
     p("Click the button on the right to request a deactivation code by email. This authentication
-       step is necessary to prevent people from blocking other users' email.").
+       step is necessary to prevent people from blocking other users' mail.").
     p(b("Warning:"), "If you block mail from CIVS, it will be difficult to re-enable it, because CIVS
       does user authentication using email addresses. You will not be able to vote in any CIVS polls
       and you will not be able to create CIVS polls.")
