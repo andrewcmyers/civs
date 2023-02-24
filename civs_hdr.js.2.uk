@@ -1,0 +1,10 @@
+    uk: {
+        CIVS_logo: "Логотип CIVS",
+        Condorcet_Internet_Voting_Service: "Служба Інтернет-голосування Condorcet",
+        About_CIVS: "Про CIVS",
+        Public_polls: "Громадські опитування",
+        Activate_user: "Активувати користувача",
+        Create_new_poll: "Створіть опитування",
+        Security_and_privacy: "Безпека та конфіденційність",
+        FAQ: "FAQ"
+    },

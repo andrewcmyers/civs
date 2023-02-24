@@ -1,0 +1,10 @@
+    de: {
+        CIVS_logo: "CIVS logo",
+        Condorcet_Internet_Voting_Service: "Condorcet Internet Voting Service",
+        About_CIVS: "Über CIVS",
+        Public_polls: "Öffentliche Umfragen",
+        Activate_user: "Benutzer aktivieren",
+        Create_new_poll: "Neue Umfrage erstellen",
+        Security_and_privacy: "Sicherheit und Privatsphäre",
+        FAQ: "FAQ"
+    },

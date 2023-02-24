@@ -1,0 +1,10 @@
+    ta: {
+        CIVS_logo: "CIVS லோகோ",
+        Condorcet_Internet_Voting_Service: "Condorcet இணைய வாக்களிப்பு சேவை",
+        About_CIVS: "CIVS பற்றி",
+        Public_polls: "பொது வாக்கெடுப்பு",
+        Activate_user: "பயனரை இயக்கவும்",
+        Create_new_poll: "வாக்கெடுப்பை உருவாக்கவும்",
+        Security_and_privacy: "பாதுகாப்பு மற்றும் தனியுரிமை",
+        FAQ: "அடிக்கடி கேட்கப்படும் கேள்விகள்"
+    },

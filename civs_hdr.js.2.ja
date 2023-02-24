@@ -1,0 +1,10 @@
+    ja: {
+        CIVS_logo: "CIVS ロゴ",
+        Condorcet_Internet_Voting_Service: "コンドルセ インターネット投票サービス",
+        About_CIVS: "CIVSについて",
+        Public_polls: "世論調査",
+        Activate_user: "ユーザーをアクティブ化",
+        Create_new_poll: "アンケートを作成する",
+        Security_and_privacy: "セキュリティとプライバシー",
+        FAQ: "よくある質問"
+    },

@@ -1,7 +1,14 @@
-.git*
 *.sw?
-data
-data/*
+.*.sw?
+.git*
 config
 config/*
+data
+data/*
+data/private_host_id
+excludes
+jquery
+jquery-ui
+qrcodejs
+shipit*
 shipit.excludes

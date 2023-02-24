@@ -1,0 +1,10 @@
+    it: {
+        CIVS_logo: "Il logo CIV",
+        Condorcet_Internet_Voting_Service: "Servizio di votazione Internet Condorcet",
+        About_CIVS: "A proposito di CIVS",
+        Public_polls: "Sondaggi pubblici",
+        Activate_user: "Attiva utente",
+        Create_new_poll: "Crea un sondaggio",
+        Security_and_privacy: "Sicurezza e privacy",
+        FAQ: "FAQ"
+    },
