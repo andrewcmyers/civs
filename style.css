@@ -44,9 +44,9 @@ div#footnote {
 }
 
 a            { text-decoration: none }
-a:link       { color: #278; background-color: transparent; font-weight: bold }
-a:visited    { color: #167; background-color: transparent; font-weight: bold }
-a:hover      { color: #49a; background-color: transparent }
+a:link       { color: #0D61A5; background-color: transparent; font-weight: bold }
+a:visited    { color: #207cc6; background-color: transparent; font-weight: bold }
+a:hover      { color: #3294e3; background-color: transparent }
 a.small      { font-size: 80% }
 a.result_link { background-color: #00355f; color: white; padding: 5px 8px}
 
