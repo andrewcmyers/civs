@@ -783,4 +783,8 @@ sub preference_description {
     "ה$_[1]&ndash;$_[2] העדפה של $_[3] על-פני $_[4]."
 }
 
+sub try_some_public_polls {
+    'בא לך להצביע על משהו אחר? נסה את אחד מהסקרים הציבוריים הבאים:'
+}
+
 1; # package succeeded!
