@@ -168,6 +168,7 @@ public poll where any number of people can vote. Elections have been
 successfully run with several thousand voters, and this is a load it should
 stand up to even if voters all try to vote around the same time. Election
 results are now cached, so the system has become much more scalable.
+</p>
 <p>
 However, CIVS hasn't been stress-tested on polls of 20,000 or more voters.
 The server is implemented in Perl, and it can easily handle a few thousand voters per hour. If your
@@ -184,8 +185,8 @@ Note that using the experimental proportional method for your poll can
 dramatically increase the load on the CIVS server, so please avoid that mode
 for large polls, especially if there are many candidates to choose from.
 </p>
-<li>
 
+<li>
 <b>How reliable is CIVS?</b>
 
 There have been no known data losses due to hardware failure, and no problems
@@ -249,6 +250,33 @@ bounces. However, don't count on learning all the bad addresses this way:
 bounce notifications may not be sent, parsing email bounces is fragile, and the
 administrator may not have time to help you.  The best policy is to verify all
 emails that you give to CIVS before adding voters.
+
+<li>
+<b>Can I create a mock poll to explore how CIVS works?</b>
+
+Yes, just tick the box in the More Options section that is labeled
+“Make this a test poll: read all votes from a file.” Then, once you
+start the poll you can upload mock ballots. The ballot format is pretty
+simple. The ballot file should be a text file with one ballot on each
+line. Each line contains the ranks of the N choices, in order, separated by
+either commas or spaces. A rank is either a number from 1 to N, or a
+dash (<kbd>-</kbd>) to represent “no opinion”. Not all ranks need to be
+used, and two choices may be given the same rank.
+Lines may be terminated with either a Unix-style LF or a Windows-style CR/LF.
+Whitespace is ignored, and lines whose first non-whitespace character is # are also ignored.
+A line may also begin with <i>m</i><kbd>X</kbd> where <i>m</i> is a number, which
+signifies <i>m</i> identical ballots that are described by the rest of the line.
+<p>
+Here are some examples of ballots:
+<table>
+<tr>
+<th>Ballot line</th><th>Comments</th> </tr>
+<td>1,4,3,2,5</td><td>  <i>A simple ballot ranking five choices.</i> </td></tr>
+<td>5,4,4,4,2</td><td>  <i>Ranking five choices where three choices are tied.</i> </td></tr>
+<td>5 - 2 - 3</td><td>   <i>Another ranking of five choices. Dashes indicate unranked choices.</i> </td></tr>
+<td>8X1 4 3 2 5</td><td>      <i>Eight ballots like the first example ballot.</i> </td></tr>
+</tr>
+</table>
 
 <li><b>Why do the website or the invitation emails appear in a language
     other than the one I want to use?</b>
