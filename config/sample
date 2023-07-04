@@ -42,6 +42,9 @@ PERL='/usr/bin/perl'
 # installation is under user <username>, that the web server
 # recognizes HTMLDIR as a source for web documents, and that
 # the web server is willing to run CGI scripts from CGIBINDIR.
+# Typical Mac OS settings:
+#   HTMLDIR='/Library/WebServer/Documents/civs'
+#   CGIBINDIR='/Library/WebServer/CGI-Executables/civs'
 HTMLDIR='/var/www/html/civs'
 CGIBINDIR='/usr/lib/cgi-bin/civs'
 
