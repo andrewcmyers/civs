@@ -82,7 +82,7 @@ if (VerifyUpload($ballot_fh, \@errors, "test ballot file")) {
                 push @errors, li("Line $lineno: missing rank for choice ", $i + 1);
                 next;
             }
-            if (!($rank =~ /\A(0|[1-9][0-9]*)\Z/)) {
+            if (!($rank =~ /\A(-|0|[1-9][0-9]*)\Z/)) {
                 push @errors, li("Line $lineno: illegal rank $rank for choice ",
                     $i + 1);
                 next;
