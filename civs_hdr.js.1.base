@@ -1,4 +1,0 @@
-// requires ezdom.js
-
-var create_header = function(title, language) {
-  let translations = {

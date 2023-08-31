@@ -1,8 +1,0 @@
-URI: news.html
-
-URI: news.html.en
-Content-type: text/html
-Content-language: en
-
-URI: news.html.en
-Content-type: text/html; qs=0.2
