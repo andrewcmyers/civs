@@ -40,7 +40,9 @@ echo "Installing version $version"
 
 echo "Building executables"
 
-make -s gettimeofday timeout lockserv
+(cd src; make -s gettimeofday timeout lockserv) || exit 1
+
+echo "Creating target directories"
 
 TestAndCreateDir "$HTMLDIR"
 TestAndCreateDir "$CGIBINDIR"
@@ -52,6 +54,11 @@ rm -f "$CIVSDATADIR/elections/admission_control" "$CIVSDATADIR/lockserv"
 
 SubstituteFile() {
     echo "  $1 -> $2"
+    if [[ ! -r "$1" ]]
+    then
+        echo  "  File $1 not found"
+        exit 1
+    fi
     sed									      \
          -e 's|@ADDTOPATH@|'$ADDTOPATH'|'				      \
          -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|'				      \
@@ -99,42 +106,60 @@ echo "Creating language-specific web pages"
 
 webpage_langs=( en de fr es uk ta hi ko it nl ja zh )
 
-for file in index.html civs_create.html civs_hdr.js.2
+for file in html/index.html html/civs_create.html js/civs_hdr.js.2
 do 
     echo " $file ->"
     for lang in ${webpage_langs[@]}
     do
         echo "  $file.$lang"
-        perl subst_text.pl static-translations.txt $lang ${file}.base ${file}.$lang || exit 1
+        perl subst_text.pl html/static-translations.txt $lang ${file}.base ${file}.$lang || exit 1
     done
 done
-cat civs_hdr.js.1.base > civs_hdr.js
-for lang in ${webpage_langs[@]}
-do
+( cd js
+  cat civs_hdr.js.1.base > civs_hdr.js
+  for lang in ${webpage_langs[@]}
+  do
     cat civs_hdr.js.2.$lang >> civs_hdr.js
-done
-cat civs_hdr.js.3.base >> civs_hdr.js
+  done
+  cat civs_hdr.js.3.base >> civs_hdr.js
+) || exit 1
 
-echo "Installing web pages"
+echo "Installing HTML content"
 
-for f in civs_create.html* index.html* public_elections.html*		      \
+(
+  cd html
+  for f in civs_create.html* index.html* public_elections.html*		      \
     proportional.html* sec_priv.html* acks.html changelog.html*		      \
     news.html* *.var rp.html* publicized_polls.html* faq.html*		      \
-    style.css results.js vote.js ajax.js ezdom.js civs_hdr.js		      \
-    mail_mgmt.js opt_in.js add_voters.js hebrew.css			      \
-    jquery-ui-touch-punch/jquery.ui.touch-punch.js			      \
-    qrcodejs/qrcode.min.js
-do
+    style.css hebrew.css
+  do
     b=`basename "$f"`
     case "$f" in
+        *.base)   dest=/dev/null;;
         *.var)    dest="${HTMLDIR}/${b}";;
         *.html.*) dest="${HTMLDIR}/${b}${UTF8_SUFFIX}";;
         *.html)   dest="${HTMLDIR}/${b}${EN_SUFFIX}";;
-        *.base)   dest=/dev/null;;
-        *)        dest="${HTMLDIR}/${b}";;
+        *.css)    dest="${HTMLDIR}/${b}";;
+        *)        echo "Unrecognized file type: $f"; exit 1;;
     esac
     SubstituteFile "$f" "$dest"
-done
+  done
+) || exit 1
+
+echo "Installing JS scripts"
+
+(
+  cd js
+  for f in results.js vote.js ajax.js ezdom.js				      \
+    civs_hdr.js mail_mgmt.js opt_in.js add_voters.js			      \
+    jquery-ui-touch-punch/jquery.ui.touch-punch.js			      \
+    qrcodejs/qrcode.min.js
+  do
+    b=`basename "$f"`
+    dest="${HTMLDIR}/${b}"
+    SubstituteFile "$f" "$dest"
+  done
+) || exit 1
 
 echo "Installing CGI scripts"
 
@@ -213,6 +238,7 @@ chmod 644 $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock      \
 
 echo "Installing executables"
 
+(cd src
 if [ -e gettimeofday.exe ]; then
     CopyFile gettimeofday.exe $CIVSDATADIR/gettimeofday.exe
 else
@@ -228,5 +254,6 @@ if [ -e lockserv.exe ]; then
 else
     CopyFile lockserv $CIVSDATADIR/lockserv
 fi
+) || exit 1
 
 echo "Install completed.  Check for any errors reported above."
