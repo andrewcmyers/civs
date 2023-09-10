@@ -1,0 +1,191 @@
+body, table, p, ul, li, td  {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 100%;
+    color: black;
+    text-align: right;
+}
+body { margin: 0;
+       background-color: #fffff8 }
+
+div, p, h1, h2, h3, h4, td { direction: rtl }
+div.contents {padding-left: 2em; padding-right: 2em; text-align: right }
+div.normal_text { max-width: 80ex; margin: 0 auto }
+
+div.home { text-align: justify; padding: 1em;
+           width: 700px}
+
+div.rlinks { width: 100%; }
+
+a            { text-decoration: none }
+a:link       { color: #339966; background-color: transparent; font-weight: bold }
+a:visited    { color: #009999; background-color: transparent; font-weight: bold }
+a:hover      { color: #0000FF; background-color: transparent }
+
+th              { font-family: Verdana, Arial, helvetica, sans-serif;
+                  color: white;
+		  background-color: #000080;
+		  border-color: #000080;
+		  font-weight: bold }
+#settings {
+    font-size: 90%;
+    background-color: #e8e8f0;
+    float: right; display: float;
+    margin-left: 15px;
+    padding: 5px;
+    border: solid 1px #bbc;
+    max-width: 60ex;
+}
+
+table { background-color: #e8e8f0 }
+table.matrix { background-color: #e0e0f0 }
+table.form { background-color: transparent }
+table#ballot { margin: 0 auto }
+table#ballot td { vertical-align: top; }
+div.emphasized {
+  background-color: #ffffd0; margin: 0px auto;
+  padding: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cca
+}
+
+input#vote {font-size:130%; font-weight: medium; background-color: #dd8;
+            margin: 0 auto}
+input#vote:hover {background-color: #ff6}
+
+span.explain {font-size: 75%; color: #404040 }
+
+p, ul, li {background-color: transparent}
+
+h1, h2, h3   { font-family: Optima, Trebuchet MS, Verdana, Arial, helvetica, sans-serif; color: #225588; background-color: transparent; font-weight: bold }
+
+table.banner a:link { color: white }
+table.banner a:visited { color: white }
+table.banner a:hover { color: yellow }
+table.banner a.here, table.banner a.here:link, table.banner a.here:visited {
+    color: #bdf
+}
+
+table.banner { background-image: url('sample-ballot.png');
+               background-color: #008;
+	       background-position: center left;
+	       background-repeat: repeat-x}
+table.banner h1 { color: white }
+table.banner h2 { color: white }
+
+/* used for mathematics */
+.math        { color: black; font-family: Times New Roman, serif;
+	       background-color: transparent }
+.symbol      { font-family: Symbol, symbol }
+
+h1  { font-size: 200%; text-align: center}
+h2  { font-size: 140%; }
+h3  { font-size: 120%; }
+form, input, textarea { font-size: 100%; }
+input[type=file] { background-color: #f8f0d0 }
+input, textarea, button { font-family: Verdana, helvetica, Arial, sans-serif;
+           background-color: #fff8e0 }
+input:hover, button:hover, textarea:hover {background-color: #eeb}
+/* input[type=text]:active, textarea:active, input[type=file]:active
+    {background-color: #ffa}  -- a little too 'active' */
+
+input#download {
+    background-color: blue;
+    color: white;
+    border-style: solid;
+    border-color: black;
+    font-weight: bold
+}
+input#download:hover {
+    background-color: #88f
+}
+
+pre, xmp { font-family: Courier New, Courier, monospace; margin-left: 1em;
+	   font-size: 90% }
+kbd, tt, code { font-family: Courier New, Courier, monospace; font-size: 90% }
+td { font-family: Verdana, Arial, helvetica, sans-serif; font-size: 100%; }
+
+td.recitation { background-color: #FFF0d0 }
+
+td.win { font-family: Courier New, courier, fixed; text-align:center;
+	 background-color: #d0ffd0; font-weight: bold }
+td.tie { font-family: Courier New, courier, fixed; text-align:center;
+	 background-color: #ffffd0; font-weight: bold }
+td.lose { font-family: Courier New, courier, fixed; text-align:center;
+	  background-color: #ffd0d0; font-weight: bold }
+td.count { text-align: center; font-family: Courier New, courier, fixed }
+th.choice { text-align: right }
+table#preftable tr:hover td { background-color: #f0f0ff }
+table#preftable td { cursor: move }
+table#preftable tr.selected:hover td { background-color: #ffffe0 }
+table#preftable { border-style: outset;
+		  margin: 0 auto;
+                  border-width: 1px;
+		  border-collapse: collapse;
+		  border-color: #abc }
+td.choice { font-weight: bold }
+table.matrix th { background-color: transparent; color: black }
+table.matrix, table.rankings { border: solid 1px #aac }
+table.rankings tr td { text-indent: 0; padding-left: 0; }
+table.rankings tr td ol { text-indent: 0ex }
+
+.links {
+    background-image: url('vertstrip.png');
+    border-color: #bbc;
+    border-style: solid;
+    border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
+    border-width: 1px;
+    margin: 5px
+}
+
+table.links tr td {
+    padding: 5px;
+    border-width: 1px;
+    margin: 0px
+}
+
+tr.selected { background-color: #ffffd0 }
+
+table.banner h1 {text-shadow: white 2px 2px 4px }
+table.banner td {white-space: nowrap}
+p.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
+div.list {padding: 1px 0px 1px 2ex}
+span.email {font-family: Courier New, courier, fixed; font-weight: 600}
+.warning {color: red}
+
+div.description { border: solid 1px #bbb;
+		  border-radius: 8px;
+		  max-width: 70ex;
+		  margin-right: 20px;
+		    -moz-border-radius: 8px;
+		    -webkit-border-radius: 8px;
+		  background-color: #f0f0f0; color: black; padding: 5px;
+		  font-family: Verdana, Arial, helvetica, sans-serif; }
+#jshelp p {text-align: right; width: 36ex}
+#jshelp ol {text-align: right; width: 36ex}
+p#jsnohelp {text-align: right; width: 36ex}
+
+div#details { border: solid 1px #ccb; background-color: #fffcee;
+              color: black; padding: 5px; margin: 5px;
+	      display: none }
+
+button#hide_details { display: inline }
+
+div.content {text-align: right; padding: 5ex}
+p.explanation {text-align: right; width: 60ex}
+td.answer {text-align: left}
+td.question {text-align: right}
+
+dt { font-weight: bold }
+dd { font-size: 90%; margin-left: 3em }
+
+table#completion_meter { border-style: solid; border-width: 1px; border-color: black; width: 250px; padding: 0; margin: 0}
+td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
+td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
+table#civs_uses {font-size: 90%}
+table.ballots {font-size: 80%; border: solid 1px #aac}
+table.ballots th {background-color: transparent; color: black; font-size: 70%}
+
+li b, strong { color: #842 }
+
+#move_top, #move_up, #make_tie, #move_down, #move_bottom { font-size: 90% }

@@ -1,0 +1,286 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<title>Condorcet Internet Szavazási Szolgáltatás</title>
+<link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<script type="text/javascript">
+    function trim(str)
+    {
+        return str.replace(/^\s+|\s+$/g, '')
+    };
+    function validateEmail(str)   // element to be validated
+    {
+	var str = trim(str);  // value of field with whitespace trimmed off
+	var email = /^[^@]+@[^@.]+\.[^@]*\w\w$/
+	return email.test(str);
+    };
+
+    function validate() {
+	var numerrs = 0;
+	var errs = new Array;
+	if (!validateEmail(document.forms.CreateElection.email_addr.value)) {
+	    errs[numerrs++] = 'A szavazásgazda email c<me hibás.';
+	}
+	if (!(document.forms.CreateElection.num_winners.value >= 1)) {
+	    errs[numerrs++] = 'Legalább egy győztes kell legyen.';
+	}
+	if (document.forms.CreateElection.proportional.checked &&
+	    !(document.forms.CreateElection.num_winners.value > 1)) {
+	    errs[numerrs++] =
+		'Az arányos képviselethez egynél több győztes kell.';
+	}
+	if (document.forms.CreateElection.choices.value == '' &&
+	    document.forms.CreateElection.choices_file.value == '') {
+	    errs[numerrs++] = 'Legalább két lehetőség kell a választáshoz.';
+	}
+	if (document.forms.CreateElection.restrict_results.checked) {
+	    var rs = document.forms.CreateElection.result_addrs.value;
+	    var ra = rs.split(/[\r\n]+/g);
+	    var nr = 0;
+	    for (i = 0; i < ra.length; i++) {
+		if (ra[i] == '') continue;
+		if (!validateEmail(ra[i])) {
+		    errs[numerrs++] =
+			'Az eredmény megtekintőjének email címe hibás:' + ra[i];
+		} else {
+		    nr++;
+		}
+	    }
+	    if (nr == 0) {
+		errs[numerrs++] =
+		    'Senkit nem adtál meg aki megtekinthetné az eredményeket.';
+	    }
+	}
+	if (numerrs == 0) return true;
+	if (numerrs == 1) {
+	    alert(errs[0]);
+	} else {
+	    var msg = 'Hibák:\n';
+	    for (i = 0; i < numerrs; i++) {
+		msg += (i+1);
+		msg += '. ';
+		msg += errs[i];
+		msg += "\n";
+	    }
+	    alert(msg);
+	}
+	return false;
+    }
+
+    var prcontrol, prparent;
+    var rvcontrol, rvparent;
+    var rrcontrol, rrparent;
+
+    function setup() {
+	prcontrol = document.getElementById("prcontrol");
+	prparent = prcontrol.parentNode;
+	prparent.removeChild(prcontrol);
+
+	rvcontrol = document.getElementById("reveal_voters");
+	rvparent = rvcontrol.parentNode;
+	rvparent.removeChild(rvcontrol);
+
+        rrcontrol = document.getElementById("rrcontrol");
+	rrparent = rrcontrol.parentNode;
+	rrparent.removeChild(rrcontrol);
+    }
+
+    function render_text(prefix, ta_id, span_id) {
+	var span = document.getElementById(span_id);
+	var ta = document.getElementById(ta_id);
+	span.innerHTML =  prefix + ta.value;
+	return 1;
+    }
+
+    function render_list(ta_id, span_id) {
+	var span = document.getElementById(span_id);
+	var ta = document.getElementById(ta_id);
+	var names = ta.value.split(/[\r\n]+/g);
+	var html = "";
+	for (i = 0; i < names.length; i++) {
+	    html = html + "<li>" + names[i] + "</li>";
+	}
+	span.innerHTML = "<ul>" + html + "</ul>";
+	return 1;
+    }
+</script>
+
+</head>
+
+<body>
+
+<table class="banner" border="0" width="100%" cellspacing="0" cellpadding="7">
+  <tbody><tr>
+    <td width="100%" valign="top" nowrap>
+      <h1>&nbsp;Condorcet Internet Szavazási Szolgáltatás</h1>
+    </td>
+    <td width=0% nowrap valign=top align=right>
+	<a href="@CIVSHOME@">CIVS</a><br>
+	<a href="@CIVSURL@/civs_create.html">Új szavazás létrehozása</a><br>
+	<a href="@CIVSURL@/sec_priv.html">A biztonságról és bizalmasságról</a><br>
+	<a href="@CIVSURL@/faq.html">Gyakran Ismételt Kérdések</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%" valign="top" nowrap colspan=2>
+      <h2 align="center">Új szavazás létrehozása</h2>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<div class="contents">
+
+<form method="POST"
+    action="@CIVSBINURL@/create_election@PERLEXT@"
+    enctype="multipart/form-data"
+    name="CreateElection"
+    onsubmit="return validate()">
+  <table class="form">
+  <tr>
+    <td align=right>A szavazás neve(pl. <b>A Magyar Köztársaság Elnöke</b>):</td>
+    <td><input type="text" name="title" size="50"></td>
+  <tr>
+    <td align=right>A szavazás gazdájának neve (a tiéd):</td>
+    <td><input type="text" name="name" size="20">
+  </td>
+  <tr>
+    <td align=right>A szavazás gazdájának e-mail címe:</td>
+    <td><input type="text" name="email_addr" size="20"
+      onchange="if (!validateEmail(this.value)) { alert('Hibás email cím!') }" >
+    </td>
+  </tr>
+  <tr>
+    <td valign=top align=right>Mikor szeretnéd a szavazást befejezni:<br>
+	<small>(<b>Figyelem:</b> A szavazásokat kézzel kell befejezni)</small>
+    </td>
+    <td><input type="text" name="election_end" id="election_end" size="30"
+          onchange="render_text('<br><i>Előnézet</i>: A szavazás vége:', 'election_end', 'rendered_end')">
+	 <span class="rendering" id="rendered_end"></span>
+</td>
+  </tr>
+  </table>
+
+<div class="emphasized"><small>
+  A neved és e-mail címed használatával küldjük ki az e-mailt a szavazóknak.
+  A neved a szavazók számára legyen felismerhető és az e-mail címnek működnie kell,
+  mert a CIVS e-mailben küldi el neked azt az információt, ami aszavazás vezérléséhez kell.
+  Biztosítsd hogy a spamszűrőd nem blokkolja a levelet a
+  <kbd>@SUPERVISOR@</kbd> címről (vagy ellenőrizd a spam folderedet, ha nem jön a levél!).
+  </small></div>
+
+  <p>A szavazás és az elérhető választások leírása (tartalmazhat HTML-t):<br>
+  <table class="form">
+    <tr>
+      <td><textarea id="description" valign="top" rows="5" name="description" cols="60"></textarea>
+      </td>
+      <td><input type="button" value="Előnézet&gt;&gt;"
+	    onClick="render_text('<h2>Szavazás leírása</h2>',
+				 'description',
+				 'rendered_description')"></td>
+      <td valign="top"><span class="rendering" id="rendered_description"></span></td>
+    </tr>
+  </table>
+  </p>
+
+  <p>Írd be a nevét az összes választási lehetőségnek (jelöltnek)
+     soronként egyet, vagy tölts fel egy file-t amely az összes lehetőséget tartalmazza:</p>
+  <p align="left">
+  <table class="form">
+  <tr><td>
+    <textarea rows="5" name="choices" cols="60" id="choices"></textarea></td>
+    <td>
+      <td><input type="button" value="Előnézet&gt;&gt;"
+	    onClick="render_list('choices', 'rendered_choices')"></td>
+      <td valign="top"><span class="rendering" id="rendered_choices"></span></td>
+    </tr>
+  </table>
+  </p>
+  <p align="left"><input type=file name="choices_file"></p>
+  <p>Ennyi lehetőség nyer: <input type="text" name="num_winners" size="5" value="1"></p>
+  <p>Az e-mail címe maximum 1000 szavazónak, soronként egy.
+    Később is lehet szavazókat hozzáadni.</p>
+  <p><textarea rows="2" name="addresses" cols="50"></textarea></p>
+  <p><input type=file name="addresses_file"></p>
+
+  <h3>További lehetőségek <small>(húzd az egeret a jelölőnégyzet fölé további információért)</small></h3>
+  <p><input type="checkbox" name="public" value="yes"
+      title="A nyilvános szavazásban egyetlen URL-t kapsz, amelyen bármely szavazó szavazhat. Ezért közzé lehet tenni levelezőlistán. Viszont csak jelzésértékű próbálkozás történik a többszörös szavazás kiszűrésére, a szavazó IP címe alapján. Ha biztosra akarsz menni, hogy a szavazók csak egyszer szavaznak, privát szavazást alkalmazz inkább.">
+  Legyen a szavazás nyilvános.
+<br>
+  <input type="checkbox" name="external_ballots" value="yes"
+      title="Ha a szavazatok mindegyikét inkább saját magad szeretnéd feltölteni, jelöld be ezt a négyzetet. Az ilyen szavazásokban szavazók nem szavazhatnak. Ez akkor lehet hasznos, amikor megpróbálod megérteni, hogy a különböző szavazási módszerek hogyan működnek, vagy ha a CIVS-en kívüli forrásból szereztél szavazatokat.">
+  Legyen ez egy teszt szavazás: olvasd az összes szavazatot egy fájlból.
+<br>
+  <input type="checkbox" name="restrict_results" value="yes"
+         onClick="rrparent.appendChild(rrcontrol);"
+	 title="Alapértelmezésben a szavazás eredménye mindenki számára látható aki szavaz.
+    Ha az eredmények megtekintését az emberek egy más csoportjának akarod elérhetővé tenni, használd ezt az opciót.">
+    A szavazás eredménye csak egy szűk csoport által megtekinthető.
+<br>
+    <span>
+    <p class="suboption" id="rrcontrol">
+    Írd be azoknak az email címét, akik megnézhetik a szavazás eredményét:
+    (Minden szavazó megnézheti ezeket az email címeket)
+    </br>
+    <textarea rows="2" name="result_addrs" cols="50"></textarea>
+    </p>
+    </span>
+  <input type="checkbox" name="ballot_reporting" value="yes"
+         onClick="rvparent.appendChild(rvcontrol);"
+	 title="Ez az opció lehetővé teszi, hogy minden szavazó megtekinthesse az összes szavazatot. Mindazonáltal a szavazókat azonosító információ nem lesz látható, kivéve ha a következő opciót is bejelölöd.">
+  Részletes szavazat jelentés engedélyezése.
+  <span>
+  <p class="suboption" id="reveal_voters">
+  <input type="checkbox" name="reveal_voters" value="yes">
+  A részletes szavazat jelentésben a szavazókat is jelenítsd meg a szavazatuk mellett.
+  <br>A szavazás <i class="warning">nem</i> titkos, ha ez az opció be van állítva, és a kiszolgáló nem törli a szavazók email címét, ahogyan azt normálisan tenné.
+  A szavazók figyelmeztetve lesznek az anonimitás hiányára.
+  </p>
+  </span><br>
+  <input type="checkbox" name="writeins" value="yes"
+   title="Ezzel az opcióval engedélyezheted a további lehetőségek hozzáadását.
+    Mindazonáltal a további lehetőségeknek nagy hátránya van, ha akkor kerülnek fel, amikor már néhány szavazatot leadtak. Ezért ha ez az opció van kiválasztva, van egy beírási fázis amikor szvazatot még nem lehet leadni, a szavazás gazdájának explicit módon indítania kell a szvazást.">
+  Engedjük a szavazóknak hogy beírjanak lehetőségeket.<br>
+  <input type="checkbox" name="shuffle" value="no"
+  title="Alapértelmezésben a lehetőségeket véletlenszerű sorrendben jelenítjük meg minden szavazólapon. Néhány szavazásnál pl. ha találkozó időpontját választjuk ki, a szavazók számára kényelmesebb pontosan ugyanazt a sorrendet látni, mint fennt.">
+  A lehetőségeket pontosan a megadott sorrendben jelenítsd meg.<br>
+  <input type="checkbox" name="no_opinion" value="yes"
+    title="A &#x22;nincs vélemény&#x22; opciónak váratlan eredményei lehetnek. Mindenképpen olvass róla, és informáld a szavazókat.">
+  A szavazók választhatják a &ldquo;nincs vélemény&rdquo; lehetőséget.<br>
+  <input type="checkbox" name="proportional" value="yes"
+         onClick="prparent.appendChild(prcontrol)"
+	 title="Az arányos mód csak többnyerteses választásokon hasznos, amikor biztosítani szeretnéd hogy a szavazók igényei arányosan legyenek képviselve. Egyébként a szavazók többsége dönthet a nyertesek mindegyikéről. Az arányos mód sokkal lassabb mint a szokásos nem arányos mód, és nem szabad használni amikor sok lehetőség és sok győztes van. A legtöbb, de nem minden esetben az arányos és nem arányos mód eredményei megegyeznek. Kattints a 'további információk' linkre ahhoz, hogy többet megtudj arról, ez a mód hogyan működik.">
+  Arányos reprezentáció [<a href="proportional.html">további információk</a>]</br>
+  <span>
+   <p class="suboption" id="prcontrol">
+    Az arányos reprezentációnál a szavazókról feltételezzük, hogy:<br>
+    <input type="radio" name="rating_interpretation"
+       value="best_choice"
+       checked> a kedvenc választásuk rangját maximalizálják<br>
+    <input type="radio" name="rating_interpretation"
+       value="combined_ratings"> a kiválasztott lehetőségek összsűlyát maximalizálják<br>
+   </p>
+  </span>
+
+<div class="emphasized">
+  Bizonyosodj meg arról hogy az e-mail címed korrekt, mert a szavazás információit
+  emailben kapod meg. A szavazók addig nem lesznek tájékoztatva a szavazás létéről, amíg nem válaszolsz erre az e-mail üzenetre.
+  </div>
+  <p style="margin-left: 5ex">
+    <input type="submit" value="Szavazás létrehozása" name="submit">
+  </p>
+</form>
+</div>
+
+<script type="text/javascript">
+  setup();
+</script>
+</body>
+
+</html>
