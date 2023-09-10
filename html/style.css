@@ -1,0 +1,355 @@
+body, table, p, ul, li, td  {
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+    font-size: 100%;
+    color: #222;
+}
+body { margin: 0;
+       background-color: #ffffff }
+
+@media screen and (min-width: 600px) {
+    div.contents {padding-left: 2em; padding-right: 2em }
+}
+div.contents {text-align: left }
+div.normal_text { max-width: 80ex; margin: 0 auto }
+
+div.home {
+    text-align: left;
+    padding: 1ex 1ex 0 1ex;
+    border-right: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    margin: 0 auto 0 0;
+    max-width: 80ex
+}
+
+@media screen and (min-width: 600px) {
+    div.home {
+        margin-left: 1vw;
+    }
+}
+@media screen and (max-width: 600px) {
+    div.home {
+        font-size: 90%
+    }
+}
+@media screen and (max-width: 400px) {
+    div.home {
+        font-size: 80%
+    }
+}
+
+div#footnote {
+    border-top: 1px solid #bbb;
+    text-align: justify;
+    font-size: 80%;
+}
+
+a            { text-decoration: none }
+a:link       { color: #0D61A5; background-color: transparent; font-weight: bold }
+a:visited    { color: #276ba2; background-color: transparent; font-weight: bold }
+a:hover      { color: #3294e3; background-color: transparent }
+a.small      { font-size: 80% }
+a.result_link { background-color: #00355f; color: white; padding: 5px 8px}
+
+th              { font-family: Verdana, Helvetica, Arial, sans-serif;
+                  color: white;
+		  background-color: #00355f;
+		  border-color: #00355f;
+		  font-weight: bold }
+#settings {
+    font-size: 90%;
+    background-color: #e8e8f0;
+    float: right;
+    margin-left: 15px;
+    padding: 5px;
+    border: solid 1px #bbc;
+    max-width: 60ex;
+    -moz-box-shadow: 3px 3px 5px #aaa;
+    -webkit-box-shadow: 3px 3px 5px #aaa;
+    box-shadow: 3px 3px 5px #aaa;
+}
+
+table { background-color: #e8e8f0 }
+table.matrix { background-color: #e0e0f0 }
+table.form   { background-color: transparent; text-align: left }
+table.form td { font-size: 100% }
+table.form td.label { text-align: right }
+table#main { margin: 0 auto }
+table#ballot { margin: 0 auto }
+table#ballot td { vertical-align: top; }
+.emphasized {
+  background-color: #ffffd0; margin: 0px auto;
+  font-size: 80%;
+  max-width: 80ex;
+  padding: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cca;
+  text-indent: 0px;
+}
+
+span.explain {font-size: 75%; color: #404040 }
+span.explain img {max-height: 40px}
+
+div.poll_end {display: inline}
+
+p, ul, li {background-color: transparent}
+
+h1, h2, h3, span.paragraph {
+    font-family: Optima, 'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;
+    color: #a52;
+    background-color: transparent;
+    font-weight: bold
+}
+
+.content h1 {
+    background-color: #0d61a5
+}
+
+.banner a:link { color: white }
+.banner a:visited { color: white }
+.banner a:hover { color: yellow }
+.banner a.here, .banner a.here:link, .banner a.here:visited {
+    color: #bdf
+}
+
+#bannermenu {float: right; padding: 1ex; text-align: left}
+#bannericon {float: left}
+
+.banner { background-color: #0D61A5;
+          text-align: left;
+          overflow: hidden;
+          /* background-image: url('sample-ballot.png');
+             background-position: center left;
+             background-repeat: repeat-x */}
+.banner h1 { color: white }
+.banner h2 { color: white; text-align: center }
+
+.bannerpart { background-color: transparent; display: inline-block; padding: 0.7ex }
+
+/* used for mathematics */
+.math        { color: black; font-family: 'Times New Roman', serif;
+	       background-color: transparent }
+.symbol      { font-family: Symbol, symbol }
+
+h1  { font-size: 5vmin; text-align: center; max-width: 120ex}
+h2  { font-size: 140%; }
+h3  { font-size: 120%; }
+form, input, textarea { font-size: 100%; }
+input[type="file"] { background-color: #f8f0d0 }
+input, textarea, button { font-family: Verdana, Helvetica, sans-serif;
+           background-color: #fff8e0 }
+button.small_button { font-size: 80% }
+button#hide_details { margin-left: 2ex }
+
+input#vote {font-size:130%; font-weight: normal; background-color: #ffc;
+            margin: 0 auto}
+input#vote:hover, input[type="submit"]:hover {background-color: #ff4}
+
+input[type="button"], button {
+    border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+input[type="button"], button, input[type="text"] {
+    border: solid 1px #bbb }
+input[type="submit"] {
+    border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+    background-color: #ffc;
+    border: 1px solid #666;
+}
+textarea { border: solid 1px #bbb }
+input[type="file"]:hover,
+  input[type="button"]:hover,
+  input[type="text"]:hover,
+  textarea:hover {
+    background-color: #eec
+}
+/* input[type=text]:active, textarea:active, input[type=file]:active
+    {background-color: #ffa}  -- a little too 'active' */
+
+input#download {
+    background-color: blue;
+    color: white;
+    border-style: solid;
+    border-color: black;
+    font-weight: bold;
+    font-size: 110%;
+}
+input#download:hover {
+    background-color: #88f
+}
+
+
+pre, xmp { font-family: 'Courier Prime', Courier, monospace; margin-left: 1em;
+	   font-size: 90% }
+kbd, tt, code { font-family: 'Courier Prime', Courier, monospace; font-size: 90% }
+td { font-family: Verdana, Helvetica, Arial, sans-serif; font-size: 100%; }
+
+td.recitation { background-color: #FFF0d0 }
+
+td.win { font-family: 'Courier Prime', Courier, monospace; text-align:center;
+	 background-color: #d0ffd0; font-weight: bold }
+td.tie { font-family: 'Courier Prime', Courier, monospace; text-align:center;
+	 background-color: #ffffd0; font-weight: bold }
+td.lose { font-family: 'Courier Prime', Courier, monospace; text-align:center;
+	  background-color: #ffd0d0; font-weight: bold }
+td.count { text-align: center; font-family: 'Courier Prime', Courier, monospace; }
+
+th.choice { text-align: left }
+table#preftable tr { border-style: none none groove none; border-bottom-color: #e8e8f0; border-bottom-width: 2px; border-collapse: collapse }
+table#preftable tr.tied { border-color: #ccc; border-style: none none dashed none; border-bottom-width: 1px; border-collapse: collapse; padding-bottom: 2px }
+table#preftable td { border-style: none; }
+table#preftable td.choice { cursor: move; padding-right: 1em }
+table#preftable tr:hover td.choice,
+    table#preftable tr:hover td.choice + td { background-color: #f0f0ff }
+table#preftable tr.selected:hover td.choice,
+    table#preftable tr.selected:hover td.choice + td  { background-color: #ffffe0 }
+
+table#preftable { border-style: outset;
+		  margin: 0 auto;
+                  border-width: 1px;
+		  border-collapse: collapse;
+		  border-color: #abc }
+td.choice, td.inactive_choice { font-weight: bold }
+table.matrix th { background-color: transparent; color: black }
+table.matrix, table.rankings { border: solid 1px #aac }
+table.rankings tr td { text-indent: -3ex; padding-left: 3ex }
+table.rankings tr td ol { text-indent: 0ex }
+
+div#topmenu {
+    position: relative;
+    background: #00355f;
+    top: -1.5ex;
+    font-size: 110%;
+}
+div#topmenu a:hover {
+    color: yellow;
+}
+div#topmenu a {
+    color: white;
+}
+div#topmenu li {
+    padding: 0.2ex 0
+}
+div.bubbles {
+    width: 33ex;
+    vertical-align: top;
+    float: right
+}
+div.bubble, div.trysomepolls {
+    /* background-image: url('vertstrip.png'); */
+    background-color: #fff0e8;
+    margin-bottom: 1em;
+    padding: 3px 6px 3px 5px;
+    border-color: #bbc;
+    border-style: solid;
+    border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 8px;
+    border-width: 1px;
+    -moz-box-shadow: 3px 3px 5px #aaa;
+    -webkit-box-shadow: 3px 3px 5px #aaa;
+    box-shadow: 3px 3px 5px #aaa;
+    margin-left: 0.5ex;
+}
+@media screen and (min-width: 600px) {
+    div.bubble {
+        margin-left: 1em;
+    }
+}
+div.bubble table { padding: 0; margin: 4px; background-color: transparent }
+div.bubble ul { width: 100%; padding: 0ex; margin: 1px 7px 1px 3px; background-color: transparent }
+div.bubble li { text-indent: 0; padding: 0; list-style: none; border-top: solid 1px #aaa; margin: 0; background-color: transparent}
+div.bubble li:first-child { border-top: none }
+
+div.bubble h3 { padding-top: 0; margin-top: 0 }
+
+div.small_list { font-size: 90% }
+
+table.links {
+    margin: 5px;
+    background-color: transparent
+}
+ul.news {
+    font-size: 90%
+}
+
+table.links tr td {
+    padding: 5px;
+    border-width: 1px;
+    margin: 0px
+}
+
+tr.selected { background-color: #ffffd0 }
+
+p.suboption, div.suboption {margin: 0 0 0 5ex; text-indent: -2ex}
+div.parent_wrapper {display: inline}
+div.list {padding: 1px 0px 1px 2ex}
+span.email {font-family: 'Courier Prime', Courier, monospace; font-weight: 600}
+.warning {color: red}
+
+div.description { border: solid 1px #bbb;
+		  border-radius: 8px;
+                  max-width: 80ex;
+                  margin-right: 20px;
+		    -moz-border-radius: 8px;
+		    -webkit-border-radius: 8px;
+		  background-color: #f0f0f0; color: #222; padding: 5px;
+		  font-family: Verdana, Helvetica, Arial, sans-serif; }
+
+#jshelp p {text-align: left; font-size: 90% }
+#jshelp ol {text-align: left; font-size: 90% }
+p#jsnohelp {text-align: left; font-size: 90% }
+
+div#details { border: solid 1px #ccb; background-color: #eee;
+              color: black; padding: 5px; margin: 5px;
+	      display: none }
+
+button#hide_details { display: inline }
+
+div.content {text-align: left; padding: 5ex}
+p.explanation {text-align: left; width: 60ex}
+td.answer {text-align: left}
+td.question {text-align: right}
+
+dt { font-weight: bold }
+dd { font-size: 90%; margin-left: 3em }
+
+table#completion_meter { border-style: solid; border-width: 1px; border-color: black; width: 250px; padding: 0; margin: 0}
+td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
+td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
+#civs_uses ul {font-size: 90%; padding: 0 2ex; margin: 0; column-count: 3 }
+table.ballots {font-size: 80%; border: solid 1px #aac}
+table.ballots th {background-color: transparent; color: black; font-size: 70%}
+
+li b, td > b, strong { color: #b84400 }
+
+#move_top, #move_up, #make_tie, #move_down, #move_bottom {
+    font-size: 90%;
+    margin-bottom: 0.5ex;
+}
+
+textarea.paste { font-family: 'Courier Prime', Courier, monospace; font-size: 80% }
+
+textarea#description_edit { display: none }
+input#save_description_button { display: none }
+.popup {
+    border: 1px solid black;
+    background-color: #ffffd0;
+    font-size: 80%;
+    position: relative;
+    left: 3em;
+    bottom: 3ex;
+    display: none
+}
+
+.pubpriv p {font-size: 80%}
+div.pubpriv {display: inline-block; width: 45%; min-width: 30ex; padding: 0.5ex}
+#pubpriv_choice {background-color: #f8f8f8}
+fieldset {border-width: 1px}
+
+div.centering { text-align: center }
+#mail_failures table { margin: 0 auto }
+#mail_failures th {
+    text-align: center;
+    padding: 0.5ex
+}
+#mail_failures td {
+    padding: 0.5ex
+}
