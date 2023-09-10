@@ -1,0 +1,408 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Condorcet Internet Voting Service</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="canonical" href="@CIVSURL@/faq.html">
+<link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+<style>
+  ol li { margin-top: 0.5ex }
+</style>
+<script src="ezdom.js"></script>
+<script src="civs_hdr.js"></script>
+</head>
+
+<body>
+
+<script>
+var body = document.getElementsByTagName('body')[0]
+body.appendChild(create_header("Frequently Asked Questions"))
+</script>
+
+<div class="contents">
+<div class="normal_text">
+
+<div class="links">
+<ul>
+<li><a href="#voting">Questions about voting</a>
+<li><a href="#setting_up">Questions about setting up a poll</a>
+<li><a href="#running">Questions about running a poll</a>
+<li><a href="sec_priv.html">Questions about security and privacy</a>
+<li><a href="#helping">How can I help?</a>
+</ul>
+</div>
+
+
+<h2 id="voting">Voting</h2>
+<ol>
+<li><b>What does &ldquo;no opinion&rdquo; mean?</b><br>
+It means you are providing no information about how this choice ranks with
+respect to the other choices. For example, if you give one choice the rank 1,
+and give all other choices the rank &ldquo;no opinion&rdquo;, your ballot
+becomes useless because it doesn't express any preferences.  Voters often pick
+&ldquo;no opinion&rdquo; when what they mean is that they don't like the choice
+or that they don't have any information about it. In these situations, it is often better to give the choice a low rank rather than to select &ldquo;no
+opinion&rdquo;. A good reason for a voter to give a choice the rank
+&ldquo;no opinion&rdquo; is because the voter isn't <em>supposed</em> to
+express an opinion about that choice.
+
+<li><b>What does it mean to activate me as a user?</b>
+Because of its strong privacy protections, CIVS does user management very
+differently from most web services. CIVS does not store any information about
+its users, and it does not have a login process. At the same time, for private
+polls, CIVS is a fully opt-in service.  By activating yourself as a user, you
+permit CIVS to send you email, by checking its database of cryptographic hashes
+of email addresses. In the activation process, you prove to CIVS that you
+control the email address you activate, which is important for your protection.
+</li>
+
+<li><b>Why doesn't the voting interface use my favorite language?</b><br>
+CIVS supports several different languages, including Chinese, French, German,
+Italian, Hebrew, Hungarian, Portuguese, Russian, Spanish, and Thai. Note that CIVS decides
+what language to show you based on your browser preference settings, so make sure you
+have told your browser your preferred language.
+If your favorite language is not supported,
+your help in localizing CIVS to it would be much appreciated!
+</li>
+
+<li><b>If I change my mind, can I recast my vote?</b>
+Yes, but you need to save your voting receipt in order to do that. Otherwise CIVS can't find your
+old ballot; it only knows whether you have voted but not what your vote was.
+The receipt allows CIVS to find your ballot and remove it so you can vote again.
+</li>
+<li><b>I don't like a poll that I have been invited to vote in. Can I ask to have the poll taken down?</b><br>
+Polls will not be taken down by the CIVS administrator without the permission of the poll supervisor
+except in extreme cases where the poll contains material in violation of U.S. law or where the poll
+contains clearly threatening or abusive content, in compliance with
+<a href="https://www.law.cornell.edu/uscode/text/47/230">47 U.S.C. § 230</a>.
+In any case, any takedown request to the CIVS administrator
+should copy the poll supervisor.
+<p>
+The CIVS administrator cannot make value judgments about poll content. Responsibility for
+the content of polls lies with the poll supervisors; CIVS is a medium for
+user communication rather than a publisher of content.
+</p>
+<p>Pragmatically, attempts to censor polls are mostly pointless.
+Any message that poll creators could send through CIVS can be more easily sent
+directly by email.</p>
+</li>
+<li><b>I don't like a poll invitation I received from CIVS. Can I prevent this from happening?</b>
+<br/>
+You can block email from poll supervisors based on their email address (or address
+pattern) using the <a href="@CIVSBINURL@/mail_mgmt@PERLEXT@">mail management
+page</a>.
+</p>
+<p>
+If that is not good enough, you can also opt out of all email from CIVS using
+the same page.  <b>Warning:</b> if you deactivate email from CIVS, the service
+will not be usable for you, and it is difficult to reactivate because CIVS uses
+email for user authentication.  Be sure to save the email containing your
+deactivation code so you can reactivate email later.
+</p>
+</li>
+<li><b>When I opted in to get email from CIVS, it showed me all the polls I had
+been invited to. But if I opt in again, it doesn't show more recent polls. What's
+going on?</b><br>
+CIVS records voting credentials (keys) for voters who haven't opted in, so that they can vote
+once they opt in. However, once voters have opted in, they are expected to receive
+credentials over email. CIVS does not record their credentials, to reduce the
+security risk if the server were compromised. Poll supervisors can always
+resend voters their credentials, so voters should contact the supervisor if they have
+lost the URL they were sent.
+</p>
+</ol>
+
+<h2 id="setting_up">Setting up a poll</h2>
+<ol>
+<li><b>What is the difference between Condorcet voting and voting methods
+that I am familiar with?</b>
+Condorcet voting methods let voters rank their preferences and do a good
+job of aggregating all the voter preferences into a single ranking.
+[&nbsp;<a href="rp.html">More&nbsp;information on Condorcet voting</a>&nbsp;]
+
+<li><b>For how long a period should I enable voting?</b>
+This is up to you. The best time period depends on your voters.
+For voters who are aware of the poll or who check email frequently,
+a couple of days is usually enough time. Most people vote right away, or
+not at all. Election durations of more than a week are usually too
+long, unless your intention is to set up a long-running public survey.
+</li>
+
+<li><b>I would like to separate out the acceptable choices from the
+unacceptable choices. Can I do that?</b>
+Just create a choice named something like &ldquo;choices ranked below this
+are unacceptable&rdquo;. You can then use the poll results in
+various ways. If you aim to reject choices that are considered unacceptable
+by a plurality of voters, reject those that are ranked below this pseudo-choice.
+If you want to find the choices that are acceptable to <i>every</i> voter,
+they are the ones that unanimously (n&ndash;0) beat this pseudo-choice.
+(This is handy for scheduling meetings where everyone needs to be present.)
+</li>
+
+<li><b>How many candidates/choices can I meaningfully rank with a poll?</b> It
+depends on the number of voters. Empirically, it seems that to rank the top N
+choices, you should have at least 3N voters.
+</li>
+
+<li><b>CIVS is not letting me send email to some voters in my private poll.
+What do I do?</b> CIVS changed its policy on email communication in April 2021.
+Previously, users could be added as voters without agreeing to receive email.
+Misuse of the system led to an opt-in approach: to vote in a private poll, a voter must agree
+to receive email from the system. Opting in is done using the “Activate user”
+page: <a href="@PROTO@://@THISHOST@@CIVSBINURL@/opt_in.pl">
+@PROTO@://@THISHOST@@CIVSBINURL@/opt_in.pl</a>.</p>
+<p>It is also possible that some voters have explicitly opted out from CIVS email.
+These users cannot simply opt in; they have to reactivate email using a
+deactivation code they received earlier, at the <a
+href="@PROTO@://@THISHOST@@CIVSBINURL@/mail_mgmt.pl">mail management page</a>.
+</p>
+</li>
+
+<li><b>How big a poll can I run?</b>
+
+CIVS is used regularly for polls with hundreds of voters.  You can set up a
+public poll where any number of people can vote. Elections have been
+successfully run with several thousand voters, and this is a load it should
+stand up to even if voters all try to vote around the same time. Election
+results are now cached, so the system has become much more scalable.
+</p>
+<p>
+However, CIVS hasn't been stress-tested on polls of 20,000 or more voters.
+The server is implemented in Perl, and it can easily handle a few thousand voters per hour. If your
+voters don't show up faster than that&mdash;and they usually don't&mdash;it should be
+fine no matter how many voters there are.  For private polls,
+the system only allows adding 1,000 voters at a time, but there is no
+limit on the number of voters added eventually. CIVS does limit the rate at which
+new voters can be added to a poll by controlling how quickly it is willing
+to send out invitations by email. For polls with more than 10,000 voters, you may
+have to spread out the invitations over hours or days.
+</p>
+<p>
+Note that using the experimental proportional method for your poll can
+dramatically increase the load on the CIVS server, so please avoid that mode
+for large polls, especially if there are many candidates to choose from.
+</p>
+
+<li>
+<b>How reliable is CIVS?</b>
+
+There have been no known data losses due to hardware failure, and no problems
+with poll results being corrupted due to bugs, since 2006. Each poll is stored
+in a separate database, so if there <em>were</em> data corruption in a poll, it
+would affect only that poll.
+
+<li>
+<b>A complete ranking of choices could embarrass some candidates.
+Can I avoid that?</b>
+By default, full poll results are available to every voter. However,
+you can designate a smaller set of people who are allowed to see the poll
+results. They can then report the winners to the voters, using some mechanism
+outside of CIVS.
+
+<li>
+<b>I'm paranoid. Can I make sure the person or people running the CIVS web site
+can't learn what my voters are voting on?</b> Yes, just
+give your choices nondescriptive names like A, B, C, .... Then, send
+all voters an explanation of what those names stand for. Less convenient
+for voters, but completely private.
+
+<li><b>Can poll choices include images?</b> Sure. Just use an
+HTML <code>&lt;img&gt;</code> tag. There is a
+maximum size for images: they cannot be larger than @MAX_IMAGE_SIZE@ bytes
+in size.
+
+<li><b>Can poll choices and descriptions include HTML formatting?</b> Yes, many
+standard HTML tags are supported, though there is filtering to block XSS
+attacks. For example, you can include paragraphs, ordered and unordered lists,
+standard text style directives like bold, italic, and code-font text.
+</li>
+
+<li><b>Can poll choices include Unicode characters including emojis?</b>
+No problem, assuming users' browsers know how to render them.
+
+<li><b>Why doesn't CIVS support my favorite election method (STV, ...)?</b>
+The focus has been on supporting Condorcet methods, which guarantee (when they can)
+that no one is preferred over the winner. However, the interface for adding new
+election methods is relatively clean, so you can add your own election methods if
+you like. We may even add them to CIVS if you provide the code.
+
+<li><b>Can I answer multiple questions within one poll?</b> Yes. While CIVS only
+allows one ranking to be defined per poll, it is possible to create polls in
+which incomparable things are ranked at the same time.  For example, if you
+wanted to pick a place to hold a meeting and also a time to hold it, you could
+have several choices that are meetings and several that are times, and instruct
+the voters to rank all places above all times.  Assuming your voters followed
+instructions, the poll result will have all places ranked above all times, and
+their relative rankings will match what you would have gotten if you had run
+two separate polls.
+
+<li><b>What happens if I enter a voter's email address wrong?</b>
+
+They will not receive their voter key and will be unable to vote.  If you
+determine that you entered a bad email address for a voter, you can fix the
+problem by adding them again under the correct email address.  If the bad
+address wasn't a good address for the wrong person, a bounce message may come
+back to the CIVS administrator, and you may receive an email identifying such
+bounces. However, don't count on learning all the bad addresses this way:
+bounce notifications may not be sent, parsing email bounces is fragile, and the
+administrator may not have time to help you.  The best policy is to verify all
+emails that you give to CIVS before adding voters.
+
+<li>
+<b>Can I create a mock poll to explore how CIVS works?</b>
+
+Yes, just tick the box in the More Options section that is labeled
+“Make this a test poll: read all votes from a file.” Then, once you
+start the poll you can upload mock ballots. The ballot format is pretty
+simple. The ballot file should be a text file with one ballot on each
+line. Each line contains the ranks of the N choices, in order, separated by
+either commas or spaces. A rank is either a number from 1 to N, or a
+dash (<kbd>-</kbd>) to represent “no opinion”. Not all ranks need to be
+used, and two choices may be given the same rank.
+Lines may be terminated with either a Unix-style LF or a Windows-style CR/LF.
+Whitespace is ignored, and lines whose first non-whitespace character is # are also ignored.
+A line may also begin with <i>m</i><kbd>X</kbd> where <i>m</i> is a number, which
+signifies <i>m</i> identical ballots that are described by the rest of the line.
+<p>
+Here are some examples of ballots:
+<table>
+<tr>
+<th>Ballot line</th><th>Comments</th> </tr>
+<td>1,4,3,2,5</td><td>  <i>A simple ballot ranking five choices.</i> </td></tr>
+<td>5,4,4,4,2</td><td>  <i>Ranking five choices where three choices are tied.</i> </td></tr>
+<td>5 - 2 - 3</td><td>   <i>Another ranking of five choices. Dashes indicate unranked choices.</i> </td></tr>
+<td>8X1 4 3 2 5</td><td>      <i>Eight ballots like the first example ballot.</i> </td></tr>
+</tr>
+</table>
+
+<li><b>Why do the website or the invitation emails appear in a language
+    other than the one I want to use?</b>
+
+CIVS uses your browser preference settings to decide what languages you speak,
+and it displays instructions and sends emails to voters in the most preferred
+language that it supports. If you are seeing a language other than the one you
+prefer to use, change your browser settings accordingly. If your users speak
+multiple languages, you will want to write instructions in all the languages;
+CIVS does not translate for you.
+</ol>
+
+<h2 id="running">Running a poll</h2>
+
+<ol>
+<li><b>Some voters never got their voter keys. What do I do?</b>
+It depends on whether you sent the voter key to the right address in the first
+place. If so, you can send it again by &ldquo;adding&rdquo; that voter with the
+poll control page. The same voter key will be generated, so
+the voter won't be able to vote twice. If the email address was broken,
+then email should have bounced. In that case it should be safe to add
+the voter under their correct email address. You can check with the CIVS
+administrator whether the email bounced, assuming you were not notified.
+</li>
+
+<li id="autoclosed"><b>My poll closed itself without my asking for it. What's going on?</b>
+This odd behavior often seems to be caused by a "safe links" feature of some Outlook
+installations. CIVS sends links through email; the mailer rewrites its links to
+go to a safe links site instead, which simulates clicking all the links in
+the destination page (to make sure they're "safe").
+Unfortunately, one of those "links" is the button for closing
+the poll. The workaround is to manually copy the URL from the email and
+paste it into the browser, rather than clicking on the link in the email.
+Then go complain to your IT staff about their annoying "security feature".
+Some security software may automatically
+click links for you under some settings. Check your configuration settings and
+if necessary, whitelist CIVS so its links don't get clicked automatically.
+</li>
+
+<li><b>Why doesn't the poll end automatically at the specified time?</b>
+We wanted to give poll supervisors the flexibility to write complex
+specifications of when the poll should end, such as &ldquo;by March 3 or
+when we get at least 100 votes&rdquo;. It's too hard to handle all these cases.
+But the supervisor can easily monitor progress through the poll control
+page. The supervisor needs to...supervise.
+</li>
+
+<li><b>Some voters haven't bothered to vote. Can I send them their voter
+keys again?</b> Yes, just &ldquo;add&rdquo; them again at the poll control page.
+This will send them all email. Make sure you use exactly the same email address
+you did the first time; otherwise, a new voter key will be generated because
+it's a different voter as far as CIVS can tell. For security and privacy reasons,
+CIVS doesn't record voter email or voter keys, so it has no way to send an already
+generated voter key to a new email address. It also cannot distinguish
+between voters who have voted and ones who have not, so it can't tell you
+who hasn't voted and it can't selectively send keys only to non-voters.
+</li>
+
+<li>
+<b>How long will poll results remain available?</b>
+<br>
+We are making a best effort to keep poll results forever, for any poll
+that receives more than one vote and doesn't look like a test of the system.
+However, it would be prudent to make a copy of the poll results page for
+posterity.
+</li>
+<li><b>Why doesn't the system notify voters when the poll has ended?</b>
+<br>
+Because it doesn't know who the voters are any more. Once voter keys are
+sent out, all information about the voters is destroyed. It's the job of
+the poll supervisor to close the poll and notify voters or
+result recipients.
+</li>
+<li><b>Can I make current poll results visible before the poll closes?</b>
+<br>
+This increases the danger of strategic voting. However, it is the
+behavior for &ldquo;public&rdquo; polls.
+
+<li><b>I lost the email that lets me see the election results. What do I do?</b>
+<br>
+Notify the poll supervisor.  A button on the poll control page lets the poll
+supervisor resend you the link.
+
+<li><b>Why don't voters see the ballot in their favorite language?</b>
+<br>
+CIVS supports several languages, including at least the following: English,
+German, French, Italian, Chinese, Hungarian, Hebrew, Portuguese, and Thai. The
+language used by CIVS is determined by the user's preferences, as set in the
+web browser. If a voter's preferred language is supported by CIVS, but is not
+displayed to them, then they have not set their browser language preferences
+correctly. The contribution of support for additional languages or of
+improvements to existing language support is most welcome.
+</ol>
+<h2>Security and Privacy</h2>
+
+<p>For a discussion of security and privacy in CIVS, see
+<a href="sec_priv.html">here</a>.
+
+<h2 id="helping">How can I help?</h2>
+<p>
+CIVS is a free service maintained and updated by volunteers. New feature
+suggestions and implementations are welcome. The
+<a href="@SUGGESTION_BOX@">CIVS suggestion box</a> is
+a good source of feature ideas. In addition:
+<ul>
+<li>Additional language support would be great. Existing languages have been
+provided by volunteers. Adding support for a new language is not difficult and
+does not require programming expertise.
+</li>
+<li>
+CIVS currently supports five algorithms for deciding winners.
+However, many other algorithms have been proposed. With hundreds of thousands
+of users, CIVS is a great place to evaluate voting algorithms. New algorithms
+can be plugged into CIVS in a modular way, by creating a new Perl module
+that implements a well-defined interface.
+</li>
+<li>
+Running CIVS takes resources, especially for large polls.
+The CIVS project <a href="http://www.cs.cornell.edu/andru/donate.html">
+welcomes donations</a>. The suggested donation is 1 penny per voter, which
+is actually still well below the level needed to support running CIVS. If
+your organization is running polls with hundreds of voters, please consider
+chipping in.
+</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

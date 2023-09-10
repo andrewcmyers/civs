@@ -1,0 +1,372 @@
+<!DOCTYPE HTML>
+<html><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Condorcet Internet Voting Service</title>
+  <link rel="canonical" href="@CIVSURL@/proportional.html">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+  <style type="text/css">
+    i {font-style: italic; font-family: "Times Roman", serif; font-size: 110%}
+  </style>
+  <script src="ezdom.js"></script>
+  <script src="civs_hdr.js"></script>
+</head>
+
+<body>
+
+<script type="text/javascript">
+var body = document.getElementsByTagName('body')[0]
+body.appendChild(create_header("Proportional Representation in CIVS"))
+</script>
+
+<div class="normal_text">
+<h2>Overview</h2>
+
+<p>
+CIVS supports an experimental mode in which it can be used to select multiple
+candidates while enforcing proportional representation. We refer to the
+possible sets of selected candidates as <i>committees</i>. The goal is to pick
+the best committee in a proportional way.  Roughly speaking, this means that a
+set of voters can only influence a fraction of the selected committee that is
+proportional to the number of voters in that set.
+</p>
+
+<p>
+For example, suppose that 60% of the voters want candidates <i>a</i>, <i>b</i>,
+<i>c</i>, <i>d</i>, and <i>e</i>, in that order, but the other 40% want <i>x</i>,
+<i>y</i>, <i>z</i>, <i>u</i>, and <i>v</i>.  Ordinary Condorcet voting will
+rank <i>a</i>, <i>b</i>, <i>c</i>, <i>d</i>, and <i>e</i> higher than the other
+five candidates, because a majority likes them better. For some tasks, electing
+these five (<i>a</i>, <i>b</i>, <i>c</i>, <i>d</i>, <i>e</i>) is
+the right way to run the election. However, if the goal is to find a
+five-person committee that fairly represents the whole population, the committee
+<i>abcde</i> gives 40% of the population no representation at all. By contrast, the proportional
+representation algorithm used by CIVS elects the committee <i>abcxy</i>,
+achieving perfect proportional representation.
+
+<p>In general, if there are <i>n</i> blocs of voters who always choose candidates from
+their disjoint factions, the number of candidates from a given faction in the
+selected committee is proportional to the number of voters, except that the
+number of candidates may be rounded up or down.
+</p>
+
+<h2>Determining the winning committee</h2>
+
+The goal of the election method is to select a committee,
+which is a set of <i>k</i> choices, in a proportional way.
+The rule used is a generalization of ordinary Condorcet
+voting. Voters express their preferences on
+individual candidates in the usual way as a ranking.
+These rankings are then <i>lifted</i> to obtain the
+preferences of the voters with respect to whole committees.
+Finally, using the preferences on whole committees, a
+standard Condorcet method is used to pick the &ldquo;best&rdquo;
+committee in the Condorcet sense.
+The key to making this method proportional is how the
+preferences on individual candidates are lifted to preferences
+on committees. This lifting does not in general allow a
+majority to dictate the composition of the entire committee:
+minorities can influence who is elected.
+
+<h3><i>f</i>-Preferences</h3>
+<p>
+Lifting preferences from candidates to committees
+is achieved through what we call <i>f</i>-preferences.  A given voter
+has an <i>f</i>-preference for one possible committee <i>A</i> over another,
+<i>B</i>, if the voter prefers <i>A</i> to <i>B</i> when considering
+in each committee <b>only</b> the <i>f</i> candidates most preferred
+by that voter.  For example, a voter has a 1-preference for committee <i>A</i> over
+committee <i>B</i> if the voter' favorite candidate in committee <i>A</i> is preferred by
+that voter over the voter's favorite candidate in committee <i>B</i>.  The voter has a
+2-preference for committee <i>A</i> over committee <i>B</i> if the two favorite candidates on
+committee 1 are preferred over the two favorite candidates on committee <i>B</i>.
+Determining whether a given voter prefers one pair (or generally, set) of
+candidates over another set is a separate issue that is discussed below.
+</p>
+
+<p>
+<span class="paragraph">Example.</span>
+Suppose that a voter's ballot contains the ranking <i>a</i> &gt;
+<i>b</i> &gt; <i>c</i> &gt; <i>d</i> &gt; <i>e</i>. That is, candidate <i>a</i>
+is most preferred and candidate <i>e</i> is least preferred among those listed.
+Such a voter has a 1-preference for committee <i>abc</i> over committee <i>bcd</i>,
+because looking at the favorite candidate in each committee, we see <i>a &gt; b</i>.
+In fact, the voter also has a 2-preference and a 3-preference, because <i>b &gt; c</i>
+and also <i>c &gt; d</i>.
+Considering instead the committees <i>abe</i> and <i>ade</i>,
+the voter has no 1-preference (the most-preferred candidate in each committee is <i>a</i>),
+but does have a 2-preference and a 3-preference for <i>abe</i> over <i>ade</i> because
+<i>b&gt;d</i>, and therefore <i>ab</i> is preferred over <i>ad</i> (the 2-preference) and also
+<i>abe</i> is preferred over <i>ade</i> (the 3-preference).
+</p>
+
+
+<h3>Comparing committees</h3>
+<p>
+A Condorcet method requires that we be able to be able to compare two choices
+pairwise, and derive the strength of the voters' preference between
+each pair. In this case the choices are committees rather than candidates. To compare two committees,
+we compute the aggregate <i>f</i>-preference of the voters for all values of
+<i>f</i> between
+1 and <i>k</i>. The aggregate <i>f</i>-preference for committee <i>A</i> over committee <i>B</i> is the
+number of voters with an <i>f</i>-preference for <i>A</i> over <i>B</i>.
+</p>
+
+<h3>Proportional preferences</h3>
+<p>
+Suppose that the aggregate <i>f</i>-preference for committee A over committee
+<i>B</i> is <i>v</i> and that there are <i>n</i> voters overall. Then the
+aggregate <i>f</i>-preference for committee <i>A</i> over committee <i>B</i> is
+<b>proportionally valid</b> if <i>v</i>(<i>k</i>+1)/<i>n</i> ≥ <i>f</i>,
+or equivalently, if <i>v</i>/<i>n</i> ≥ <i>f</i>/(<i>k</i>+1). That is,
+the fraction of the voters with the preference must be at least as large
+as a fraction <i>f</i>/<i>(k+1)</i> of the committee on which the preference
+is being expressed.
+</p>
+<p>
+To decide whether committee <i>A</i> is preferred over committee B, we find the
+largest <i>f</i> such that <i>v</i> voters have a proportionally valid
+aggregate <i>f</i>-preference for one of the two committees. This <i>v</i> we
+call the <b>proportional preference</b> for committee <i>A</i> over <i>B</i>.
+The aggregate <i>k</i>-preference for committee <i>A</i> over <i>B</i> we call
+the <b>nonproportional preference</b>, whether it is proportionally valid or
+not.
+</p>
+<p>
+To find the committee that wins the election, we use some Condorcet method.
+The choice of Condorcet method is orthogonal to this proportional method,
+because it can be used with any Condorcet method applied at the committee
+level. Condorcet methods require that choices can be compared pairwise
+according to some total order; in this case, the committees are compared
+pairwise according to the proportional preferences between them. For
+<i>k</i>=1, this voting method is simply an ordinary Condorcet method. For
+larger <i>k</i>, it yields proportional results.
+</p>
+
+<p>As an additional refinement, it is helpful to break ties between the
+proportional preferences of two committees by using the nonproportional
+preferences. This rule allows majorities to have their choice when the minority
+is indifferent.</p>
+
+<p>
+<span class="paragraph">Example.</span>
+In the initial example, voters in the 60% bloc have no proportionally valid preference for
+<i>abcde</i> over <i>abcxy</i> because their maximum
+proportionally valid preference is a 3-preference (because 3/6 &le; 60% &lt; 4/6).
+The 40%, on the other hand, have a valid 2-preference for <i>abcxy</i>
+(because 2/6 &le; 40% &lt; 3/6).
+Therefore, <i>abcxy</i> beats <i>abcde</i> by an aggregate 2-preference of 40%&ndash;0%,
+and in fact, <i>abcxy</i> is the winning committee. Thus proportionality is achieved.</p>
+
+<h3>Fairness</h3>
+
+<p>The factor (<i>k</i>+1) may be surprising in the condition for
+proportional validity,
+but it actually agrees with proportional representation election methods
+developed elsewhere; it is analogous to the
+<a href="http://www.encyclopedia4u.com/d/droop-quota.html">
+Droop quota</a> used by many STV election methods.
+Suppose the factor were changed to
+<i>k</i>. In that case, a set of voters would be
+unable to influence the selection of a candidate unless they were large
+enough to form a bloc of size <i>n</i>/<i>k</i>. For example, suppose that <i>k</i>=2 and
+a bare majority favors candidates <i>a</i> and <i>b</i>,
+while a slightly smaller minority
+favors <i>c</i> and <i>d</i>.
+In this case the minority would have no valid preference
+for <i>c</i> and the winners would be <i>ab</i>. However, the
+right result is clearly <i>ac</i>. With this algoritm, as long as the minority has
+least 1/3 of the voters, it will be represented by <i>c</i>. If the
+minority has less than 1/3, then we can view the majority as consisting
+of two blocs deserving representation, both of which are larger than the minority.
+So in that case the right result is <i>ab</i>, which is achieved because
+a 2/3 majority has a valid 2-preference.
+</p>
+<p>
+When the fraction
+of voters in each bloc don't match perfectly with the attainable fractions
+of seats, there is always some unfairness because some voters will be
+overrepresented and some underrepresented. Using a <i>k</i>+1 factor
+balances this unfairness so that a voter is overrepresented by at most
+a (<i>k</i>+1)/<i>k</i> factor. In the example just given, at exactly the 1/3
+point the majority (2/3) bloc has 50% (3/2) overrepresentation if it wins and
+the minority (1/3) bloc also has 50% overrepresentation if it wins.
+Using a different criterion for when a proportional preference is valid
+would result in a higher level of overrepresentation in some cases.
+</p>
+
+<h2>Determining a voter's preference</h2>
+
+<p>We deferred the question of how to decide whether a voter prefers one set of
+<i>f</i> candidates over another, where a set of candidates is a subset of a
+committee. In proportional representation mode, there is only one difference
+from the voter's perspective.  The voting algorithm decides which of two
+committees would be preferred by a candidate using one of two criteria,
+<i>combined weights</i> or <i>best candidate</i>.
+
+<p>
+<a name="combinedrating">
+<strong>Combined weights.</strong>
+</a>
+In combined-weights mode, the voter gives a nonnegative <b>weight</b> to
+each candidate instead of ranking the candidates. The voter's goal is to
+maximize the sum of weights
+of selected candidates. This is an appropriate criterion for elections where
+the quality of all the candidates is important to the voters, such as
+the election of an actual committee that will be voting on some issues.
+Weights make it possible to compare
+sets of candidates with different cardinality. For example,
+suppose that a voter wants candidates <i>x</i>, <i>y</i>,
+and <i>z</i>, in that
+order, but would end up (because of the other voters'
+preferences) choosing between <i>x</i> and the pair
+<i>yz</i>. The
+algorithm can't tell just from the rankings whether the
+voter would prefer to have the better candidate
+<i>x</i> or
+greater representation under <i>yz</i>. Using weights, this
+can be determined: if <i>x</i> is given a weight of
+10 and <i>y</i> and <i>z</i> have weights 8 and 6 respectively, then the voting
+algorithm will work on the voter's behalf towards electing
+<i>yz</i> in preference to <i>x</i>, because 14 &gt; 10.
+However, if <i>y</i> and <i>z</i> were instead given weights 4 and 2, the voter would have expressed that <i>x</i> is preferred to <i>yz</i>
+because 6 &lt; 10.
+</p>
+
+<p>
+<a name="bestcandidate">
+<strong>Best candidate.</strong>
+</a>
+In best-candidate mode, the voter's goal is to get a single very good candidate
+elected, and the quality of other elected candidates is a strictly secondary
+consideration.  This is appropriate for an election where the voter really only
+cares about the best candidate: for example, the selection of a set of entree
+dishes for a menu, where the voter will only eat one of the entrees.  Here, two
+committees are compared using their best candidates (according to the voter);
+other candidates are considered only if the voter has no preference between the
+best candidates. In the examples above, <i>x</i> would be preferred to
+<i>yz</i> in either case, because <i>x</i> is preferred to <i>y</i>. If the
+most-preferred candidate in each committee is equally preferred, then the
+second-most preferred candidate is used, and so on up to candidate <i>f</i>.
+</p>
+
+
+<h2>Algorithm</h2>
+
+<p>
+The election method described above can be evaluated in
+a brute-force form by computing a preference
+matrix for all <i>f</i> in 1..<i>k</i>. This matrix has size
+<b>C</b>(<i>c</i>,<i>k</i>)&times;<b>C</b>(<i>c</i>,<i>k</i>),
+where <i>c</i> is the number of candidates, and <b>C</b> is
+the combinatoric choose function. The storage and computational overhead of
+this brute-force computation is prohibitive for even moderately
+large <i>n</i> and <i>k</i>. Therefore, this is not how the actual
+CIVS implementation works.
+</p>
+
+<p>
+The current technique for identifying the winning committee is less
+expensive but may be incomplete. The current implementation performs a local
+search through the space of committees to identify the Schwartz set of
+committees: all committees that are beaten only by other committees in
+the set. (However, the correctness of the algorithm depends on a
+currently unproved conjecture: that if improvement of a committee is
+possible, it can be done by replacing one member at a time.) The
+beatpath winner algorithm is run using all committees explored during
+the search for the Schwartz set. An interactive form also allows
+comparison of any two sets.  However, the output of the system in this
+mode must be currently be interpreted with some caution: while no
+counterexamples have been found, there is no proof that the current
+implementation always finds the winning committee according to the
+above criteria.
+</p>
+
+<!--
+<h2>A longer example</h2>
+
+<p>The following test case for proportional Condorcet methods was suggested by
+David Gamble. In this case, two of four candidates are to be elected
+(<i>k</i>=2). The combined-weights criterion is used, and 100 voters assign
+weights to the candidates as follows:
+</p>
+
+<table>
+<tr><td>Group W (34 voters): A=99, D=70, B=40, C=10
+<tr><td>Group X (23 voters): B=99, D=98, C=97, A=0
+<tr><td>Group Y (22 voters): C=99, D=98, B=97, A=0
+<tr><td>Group Z (21 voters): D=99, C=98, B=97, A=0
+</table>
+
+W=34:
+	f=1	f=2
+AB      99	139
+AC	99	109
+AD	99	169
+BC	40	50
+BD	70	110
+CD	70	80
+
+X=23:
+	f=1	f=2
+AB      99	99
+AC	99	109
+AD	99	169
+BC	99	196
+BD	99	197
+CD	99	195
+
+Y=22:
+	f=1	f=2
+AB	97	97
+AC	99	99
+AD	98	98
+BC	99	196
+BD	98	195
+CD	99	197
+
+Z=21:
+	f=1	f=2
+AB	97	97
+AC	98	98
+AD	99	99
+BC	98	195
+BD	99	196
+CD	99	197
+
+
+Preference matrix:
+	AB	AC	AD	BC	BD	CD
+AB	-	0	0	W	W	W
+AC      XYZ	-	Y	W	W	W
+AD	WXYZ	WXZ	-	W	W	W
+BC	XYZ	XYZ	XYZ	-	Y	0
+BD	XYZ	XYZ	XYZ	WXZ	-	XW
+CD	XYZ	XYZ	XYZ     WYZ	Y	-
+
+The Condorcet winner is BD.
+
+There are a lot of subtle things going on here. The
+real contenders are BC, BD, and CD because of the
+consensus among voters X,Y, and Z. With 34 voters,
+group W isn't big enough to guarantee its first
+choice is picked. However, it does get its second and
+third choices because of the influence it exerts on
+the choice among BC, BD and CD.
+
+The most interesting contest is BD vs. CD:
+  X and W get to look at both candidates in making the choice, because
+  34+23 > 50%. If W were less than 28, they would be both indifferent
+  and the winner would be CD instead. On the other side, Z and Y only
+  get to look at 1 candidate, so Z is indifferent and only Y opposes.
+  oppose. Since X+W > Y, BD wins.
+
+-- Andrew
+
+-->
+
+</div>
+</div>
+
+</body></html>

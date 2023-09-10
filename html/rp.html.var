@@ -1,0 +1,8 @@
+URI: rp.html
+
+URI: rp.html.en
+Content-type: text/html
+Content-language: en
+
+URI: rp.html.en
+Content-type: text/html; qs=0.2
