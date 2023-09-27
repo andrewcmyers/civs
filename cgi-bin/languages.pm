@@ -89,7 +89,7 @@ sub init {
 	    }
 	}
     }
-    require "$language.pm";
+    require "languages/$language.pm";
     my $init = $language . "::init";
     $tx = &$init();
     return;

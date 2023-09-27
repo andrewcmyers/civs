@@ -1,8 +1,9 @@
-#!/usr/bin/perl -I/Users/andru/civs/cgi-bin
+#!/usr/bin/env -S perl -I/Users/andru/civs/cgi-bin
 
 use strict;
 use warnings;
 use POSIX;
+use JSON;
 
 use DB_File;
 use election_utils;
@@ -91,7 +92,7 @@ my $election_count = 0;
 foreach my $election_dir (@elections) {
     my $election_data = $elections_dir . $election_dir . "/election_data";
     my $vote_data = $elections_dir . $election_dir . "/vote_data";
-    print "Looking at election data in $election_data\n";
+    # print "Looking at election data in $election_data\n";
     my $tie = "=";
     my $cr = "\n";
     if (! -r $election_data) {
@@ -112,9 +113,9 @@ foreach my $election_dir (@elections) {
     tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH || print STDERR "Failed to open election DB\n";
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH || print STDERR "Failed to open election DB\n";
 
-    &GetElectionData(\%edata, \%vdata);
+    my $readable = &GetElectionData(\%edata, \%vdata);
+    if (!$readable || !defined($recorded_voters)) { next }
 
-    if (!defined($recorded_voters)) { next }
     my @voters = split /\n/, $recorded_voters;
     my @ballots = @{&ProcessBallots(\@voters, $election_id)};
 
@@ -137,7 +138,7 @@ foreach my $election_dir (@elections) {
         item $props++, "\"choices\" : "; begin; begin "[";
         my $nchoice = 0;
         foreach my $choice (@choices) {
-          item $nchoice++, "\"$choice\"";
+          item $nchoice++, to_json($choice);
         }
         end "]";
         end;

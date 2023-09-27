@@ -43,7 +43,7 @@ sub GetElectionData {
     $name = $eref->{'name'};
     if (!defined($name)) {
         print STDERR "Cannot read election data file -- wrong BDB version?\n";
-        exit 1;
+        return 0;
     }
     $title = $eref->{'title'};
     $email_addr = $eref->{'email_addr'};
@@ -80,6 +80,7 @@ sub GetElectionData {
     if ($restrict_results eq 'yes') {
 	$hash_result_key = $eref->{'hash_result_key'};
     }
+    1
 }
 
 1

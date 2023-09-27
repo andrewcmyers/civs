@@ -25,6 +25,13 @@ if (param('key') ne '@ADMIN_KEY@') {
     print p("Password missing or wrong");
     exit 1;
 }
+
+my $minsize = 0;
+
+if (param('minsize')) {
+    $minsize = param('minsize');
+}
+
 my $elections_dir = $home."/elections/";
 opendir(DIR, $elections_dir) or die "Can't open directory $elections_dir: $!";
 
