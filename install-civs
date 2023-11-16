@@ -194,7 +194,7 @@ for f in base_language.pm english.pm hungarian.pm italian.pm french.pm	      \
     russian.pm hindi.pm ukrainian.pm tamil.pm korean.pm dutch.pm	      \
     japanese.pm
 do
-    target="${CGIBINDIR}/languages/${f}"
+    target="${CGIBINDIR}/${f}"
     if [ -n "$PERLEXT" ]
     then
         case $target in

@@ -1,4 +1,5 @@
 *.sw?
+*.zip
 .*.sw?
 .git*
 config
@@ -9,6 +10,5 @@ data/private_host_id
 excludes
 jquery
 jquery-ui
-qrcodejs
 shipit*
 shipit.excludes
