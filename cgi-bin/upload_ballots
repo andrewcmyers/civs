@@ -20,7 +20,7 @@ my $thisurl = $civs_bin_path."/upload_ballots@PERLEXT@";
 
 my $control_key = bytesParam('key');
 my $authorization_key = bytesParam('akey');
-my $MAX_TEST_BALLOTS = 100000;
+my $MAX_TEST_BALLOTS = @MAX_TEST_BALLOTS@;
 
 HTML_Header('Load Ballots');
 

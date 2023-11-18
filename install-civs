@@ -80,6 +80,7 @@ SubstituteFile() {
          -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|'			      \
          -e 's|@MAX_UPLOAD_SIZE@|'$MAX_UPLOAD_SIZE'|'			      \
          -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|'			      \
+         -e 's|@MAX_TEST_BALLOTS@|'$MAX_TEST_BALLOTS'|'			      \
          -e 's|@PERL@|'$PERL'|'						      \
          -e 's|@PERLEXT@|'$PERLEXT'|'					      \
          -e 's|@PROTO@|'$PROTO'|'					      \

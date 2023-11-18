@@ -99,6 +99,9 @@ MAX_IMAGE_SIZE=1000000
 # Maximum size of uploaded files (e.g, voter lists and sample ballots)
 MAX_UPLOAD_SIZE=1000000
 
+# Maximum size of a test election
+MAX_TEST_BALLOTS=200000
+
 # A URL for people to visit to give suggestions. May be left empty.
 SUGGESTION_BOX='http://www.cs.cornell.edu/w8/~andru/cgi-perl/civs/vote.pl?id=E_5820adef7d6e8733&akey=51398305f80ae2cb'
 
