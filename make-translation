@@ -3,10 +3,10 @@
 # This script generates internationalization for specified languages.
 # Translations are generated using Google Translate. It can generate
 # both a Perl script file (e.g., italian.pm) and update the static
-# translation configuration (static-translations.txt) with new entries
+# translation configuration (html/static-translations.txt) with new entries
 # for a language (e.g., add 'it' entries). New static translations are
 # generated into a file new-translations.txt which should be copied back
-# to static-translation.txt once the updates are confirmed (and perhaps
+# to static-translations.txt once the updates are confirmed (and perhaps
 # modified by hand).
 
 my $home=$ENV{"HOME"};
@@ -160,7 +160,7 @@ else {
 my $trans_data;
 {
     local $/;
-    open (TRANSLATIONS, "<static-translations.txt") || die "can't find translations";
+    open (TRANSLATIONS, "<html/static-translations.txt") || die "can't find translations";
     $trans_data = <TRANSLATIONS>;
     close (TRANSLATIONS);
 }

@@ -703,14 +703,14 @@ sub VotingUrl {
 # authorized voters accordingly.
 sub SendKeys {
     my ($authorization_key, $addresses_ref, $resend) = @_;
-    my @addresses =  &unique_elements( @{$addresses_ref} );
+    my @addresses = map {&TrimAddr $_} @{$addresses_ref};
+    @addresses =  &unique_elements(@addresses); 
     my $now = time();
     my $load = GetEmailLoad($now);
     my $optouts = &GetOptouts();
     my @failures = ();
     OpenMail;
     foreach my $v (@addresses) {
-	$v = TrimAddr($v);
 	if ($v eq '') { next }
         my $url = &VotingUrl($v, $election_id, $authorization_key, $resend);
         if (!$url) { next }

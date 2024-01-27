@@ -106,11 +106,15 @@ sub init {
  &SetLanguage;
 }
 
-# Remove leading and trailing whitespace from a string;
-# convert an undefined value to an empty string.
+# Extract a single email address from a string, converting
+# an undefined value to an empty string. Result is always
+# lowercase.
 sub TrimAddr {
     (my $addr) = @_;
     if (!$addr) { return '' }
+    $addr = lc $addr;
+    ($inbrackets) = ($addr =~ m/\A.*<(.*)>.*\Z/);
+    $addr = $inbrackets if ($inbrackets);
     $addr =~ s/^(\s)+//;
     $addr =~ s/(\s)+$//;
     $addr =~ s/\s+/ /;
