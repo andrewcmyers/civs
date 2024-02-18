@@ -1,8 +1,21 @@
 package runoff;
 
 use CGI qw(:standard -utf8);
-use civs_common;
 use strict;
+use b2r;
+
+# From the Perl Cookbook, p. 121
+# Generate a random permutation of @array in place.
+sub fisher_yates_shuffle {
+    my $array = shift;
+    my $i;
+    return if $#{$array} < 1;
+    for ($i = @$array; --$i; ) {
+        my $j = int rand ($i+1);
+        next if $i == $j;
+        @$array[$i,$j] = @$array[$j,$i];
+    }
+}
 
 # rank_candidates($n, $mref, $bref, $choices) : construct a ranking of the choices.
 #
@@ -26,16 +39,29 @@ use strict;
 #     Some ballots may not have entries for all $n candidates, because of
 #     write-ins.
 #
+
+my $debug = 0;
+
 sub rank_candidates {
     my ($n, $mref, $bref, $choices) = @_;
-
-    # print pre('ranking candidates');
 
     my @result = ();
     my @ranked = ();
     my $num_ranked = 0;
     my @ballots = @{$bref}; # ugh -- is there a way to avoid this?
 
+    my $rank_counts = &b2r::compute_rank_counts($n, $bref);
+
+    if ($debug) {
+        for (my $i = 0; $i < $n; $i++) {
+            print $choices->[$i], ": ";
+            for (my $r = 0; $r < $n; $r++) {
+                if ($r != 0) { print ", " }
+                print $rank_counts->[$i][$r] // 0;
+            }
+            print "\n";
+        }
+    }
     my $log = '<ul>';
 
     while ($num_ranked < $n) {
@@ -52,7 +78,6 @@ sub rank_candidates {
 	my $num_active = $n - $num_ranked;
 	while (1) {
 	    # look for a CW among the active choices
-	    # print pre("Looking for CW among $num_active active choices");
 	    for (my $j = 0; $j < $n; $j++) {
 		if ($ranked[$j] || $rejected[$j]) { next; }
 		my $notcw = 0;
@@ -81,86 +106,30 @@ sub rank_candidates {
 		} else {
 		    $log .= ". Found CW $choices->[$cw].";
 		}
-		# print pre("Next rank: $cw"), $cr;
+		# print("Now have CW: ", $choices->[$cw], "\n");
 		last; # break out of while (1)
 	    } else {
 		# No CW yet. Reject the choices with the lowest number
 		# of top-position rankings among the choices not ranked so far.
-		my $worst_top_count = $#ballots + 1;
-		my $num_worst = 0;
-		my @top_count = ();
+                my $worst_choice = -1;
 
 		for (my $j = 0; $j < $n; $j++) {
 		    if ($ranked[$j] || $rejected[$j]) { next; }
-		    foreach $b (@ballots) {
-			my $rank = $b->[$j];
-			if ($rank == 0) { next; }
-			my $inc = 1;
-			for (my $k = 0; $k < $n; $k++) {
-			    if (!$ranked[$k] &&
-				!$rejected[$k] &&
-				$b->[$k] != 0 &&
-				$b->[$k] < $b->[$j]) {
-				$inc = 0;
-				last;
-			    }
-			}
-			$top_count[$j] += $inc;
-		    }
-		    if ($top_count[$j] < $worst_top_count) {
-			$worst_top_count = $top_count[$j];
-			$num_worst = 1;
-		    } elsif ($top_count[$j] == $worst_top_count) {
-			$num_worst++;
-		    }
+                    if ($worst_choice == -1) {
+                        $worst_choice = $j;
+                        # print("current worst is ", $choices->[$j], "\n");
+                    } elsif (&b2r::compare_choice_ranks($j, $worst_choice, $n, $rank_counts) > 0)  {
+                        $worst_choice = $j;
+                        # print("current worst is ", $choices->[$j], "\n");
+                    } else {
+                        # print("Actually $choices->[$j] is better (",
+                        # &b2r::compare_choice_ranks($j, $worst_choice, $n, $rank_counts),
+                        # ")\n");
+                    }
 		}
-		if ($num_active == $num_worst) {
-		    # everyone left is equally good -- no one to reject, just
-		    # take them all at this rank.
-		    my @top_tied = ();
-		    for (my $j = 0; $j < $n; $j++) {
-			if (!$rejected[$j] && !$ranked[$j]) {
-			    if ($top_count[$j] != $worst_top_count) {
-				# print pre("error in runoff algorithm");
-			    }
-			    # print pre("Ranking tied: $j"), $cr;
-			    push @top_tied, $j;
-			    $ranked[$j] = 1;
-			    $num_ranked++;
-			}
-		    }
-		    push @result, [@top_tied];
-		    if (!$rejected_any) {
-			$log .= 'Found top tied set immediately.';
-		    }
-		    last; # break out of while (1)
-		} else {
-		    # randomly drop one of the people tied for smallest number
-		    # of top ranks and try again to find a Condorcet winner
-		    my @losers = ();
-		    for (my $j = 0; $j < $n; $j++) {
-			if ($top_count[$j] == $worst_top_count &&
-			    !$ranked[$j] && !$rejected[$j]) {
-			    push @losers, $j;
-			}
-		    }
-		    &fisher_yates_shuffle(\@losers);
-		    if ($#losers < 0) {
-			print pre('no one to drop?');
-			die;
-		    }
-		    $rejected[$losers[0]] = 1;
-		    $num_active--;
-		    # print pre("Randomly dropping $choices->[$losers[0]]"), $cr;
-		    if (!$rejected_any) {
-			$log .= 'Ignored ';
-		    } else {
-			$log .= ', ';
-		    }
-		    $log .= $choices->[$losers[0]];
-		    if ($#losers > 0) { $log .= ' (random choice)'; }
-		    $rejected_any = 1;
-		}
+                $rejected[$worst_choice] = 1;
+                # print("Ignoring ", $choices->[$worst_choice], "\n");
+                $num_active--;
 	    }
 	}
     }
