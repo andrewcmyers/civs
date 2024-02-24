@@ -113,7 +113,7 @@ sub TrimAddr {
     (my $addr) = @_;
     if (!$addr) { return '' }
     $addr = lc $addr;
-    ($inbrackets) = ($addr =~ m/\A.*<(.*)>.*\Z/);
+    (my $inbrackets) = ($addr =~ m/\A.*<(.*)>.*\Z/);
     $addr = $inbrackets if ($inbrackets);
     $addr =~ s/^(\s)+//;
     $addr =~ s/(\s)+$//;
