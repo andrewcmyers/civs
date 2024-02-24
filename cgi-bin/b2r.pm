@@ -92,7 +92,6 @@ sub compare_choice_ranks {
         next if ($ac == $bc);
         return -($ac <=> $bc);
     }
-    print "OOPS they are equal\n";
     0;
 }
 
