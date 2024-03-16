@@ -2,20 +2,8 @@ package runoff;
 
 use CGI qw(:standard -utf8);
 use strict;
+use algorithms;
 use b2r;
-
-# From the Perl Cookbook, p. 121
-# Generate a random permutation of @array in place.
-sub fisher_yates_shuffle {
-    my $array = shift;
-    my $i;
-    return if $#{$array} < 1;
-    for ($i = @$array; --$i; ) {
-        my $j = int rand ($i+1);
-        next if $i == $j;
-        @$array[$i,$j] = @$array[$j,$i];
-    }
-}
 
 # rank_candidates($n, $mref, $bref, $choices) : construct a ranking of the choices.
 #

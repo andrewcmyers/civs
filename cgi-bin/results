@@ -18,23 +18,27 @@ use beatpath;
 use beatpath2;
 use rp;
 use runoff;
+use b2r;
 use minimax;
 
 my $thisurl = $civs_bin_path."/results@PERLEXT@";
 
 # Map each algorithm name to the module that computes it.
-my %algorithms = ('beatpath_winner', 'beatpath', # obsolete
-                  'beatpath', 'beatpath2',
-                  'civs_ranked_pairs', 'rp',
-		  'mam', 'rp',
-		  'runoff', 'runoff',
-                  'minimax', 'minimax');
+my %algorithms = (beatpath_winner => 'beatpath', # obsolete
+                  beatpath => 'beatpath2',
+                  civs_ranked_pairs => 'rp',
+		  mam => 'rp',
+		  runoff => 'runoff',
+                  minimax => 'minimax',
+                  b2r => 'b2r'
+                 );
 
 # maps legal algorithm modules to 1
-my %algorithm_modules = ('beatpath2', 1,
-                         'rp', 1,
-			 'runoff', 1,
-                         'minimax', 1);
+my %algorithm_modules = (beatpath2 => 1,
+                         rp => 1,
+			 runoff => 1,
+                         minimax => 1,
+                         b2r => 1);
 
 my $default_algorithm = 'minimax';
 
@@ -256,6 +260,7 @@ sub ComputeResults {
     my $mam_checked = '';
     my $minimax_checked = '';
     my $runoff_checked = '';
+    my $b2r_checked = '';
     my $proportional_checked = '';
     if ($proportional eq 'yes') {
         $proportional_checked = $checked;
@@ -265,6 +270,8 @@ sub ComputeResults {
 	$mam_checked = $checked;
     } elsif ($algorithm eq 'runoff') {
 	$runoff_checked = $checked;
+    } elsif ($algorithm eq 'b2r') {
+	$b2r_checked = $checked;
     } elsif ($algorithm eq 'minimax') {
 	$minimax_checked = $checked;
     } elsif ($algorithm eq 'beatpath') {
@@ -306,6 +313,12 @@ sub ComputeResults {
 	    value="runoff"',
 	    $runoff_checked,
 	' /> Condorcet-IRV', BR,
+	'<input type="radio"
+	    name="algorithm"
+	    onclick="newSettings()"
+	    value="b2r"',
+	    $b2r_checked,
+	' /> Bottom-2 Runoff', BR,
         '<input type="checkbox"
             onclick="newSettings()"
             name="proportional",

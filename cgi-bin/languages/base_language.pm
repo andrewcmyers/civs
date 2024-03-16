@@ -929,7 +929,7 @@ sub Number_of_winning_candidates {
     'Number of winning choices: '
 }
 sub Poll_actually_has { #winmsg
-    my $winmsg = '1 winner'
+    my $winmsg = '1 winner';
     if ($_[1] != 1) {
 	$winmsg = $_[1].' winners'
     }

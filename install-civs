@@ -165,15 +165,14 @@ echo "Installing JS scripts"
 
 echo "Installing CGI scripts"
 
-for f in add_voters beatpath.pm beatpath2.pm civs_common.pm		      \
-    voting.pm close control create_election download_ballots		      \
-    remove_writein upload_ballots results top_polls.pm			      \
-    get_top_polls languages.pm election.pm mail.pm start_election	      \
-    vote refresh_top_polls mail_mgmt opt_in publicize_election		      \
-    status clear_caches delete_election.pl edit_poll			      \
-    remove_defunct_elections request_deactivation request_activation	      \
-    resend_link send_result_key.pm rp.pm runoff.pm minimax.pm		      \
-    admctrl.pm
+for f in add_voters beatpath.pm beatpath2.pm civs_common.pm voting.pm	      \
+    close control create_election download_ballots remove_writein	      \
+    upload_ballots results top_polls.pm get_top_polls languages.pm	      \
+    election.pm mail.pm start_election algorithms.pm vote		      \
+    refresh_top_polls mail_mgmt opt_in publicize_election status	      \
+    clear_caches delete_election.pl edit_poll remove_defunct_elections	      \
+    request_deactivation request_activation resend_link			      \
+    send_result_key.pm rp.pm runoff.pm b2r.pm minimax.pm admctrl.pm
 do
     target="${CGIBINDIR}/${f}"
     if [ -n "$PERLEXT" ]

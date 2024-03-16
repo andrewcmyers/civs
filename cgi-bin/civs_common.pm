@@ -23,10 +23,10 @@ BEGIN {
     $VERSION     = 1.00;
     @ISA         = qw(Exporter);
     @EXPORT      = qw(&GetPrivateHostID &HTML_Header &CIVS_Header &Log &TrimAddr
-                      &SecureNonce &fisher_yates_shuffle $home $thishost
+                      &SecureNonce $home $thishost
                       $civs_bin_path $civs_log $civs_url $civs_home $local_debug $cr
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
-                      &unique_elements &civs_hash &system_load &CheckLoad
+                      &civs_hash &system_load &CheckLoad
                       &CheckPostRequest &CheckConfirmation
                       $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
@@ -466,30 +466,6 @@ sub fixUTF {
         }
     }
     return $result;
-}
-
-# From the Perl Cookbook, p. 121
-# Generate a random permutation of @array in place.
-sub fisher_yates_shuffle {
-    my $array = shift;
-    my $i;
-    return if $#{$array} < 1;
-    for ($i = @$array; --$i; ) {
-        my $j = int rand ($i+1);
-        next if $i == $j;
-        @$array[$i,$j] = @$array[$j,$i];
-    }
-}
-
-# From the Perl Cookbook, p. 102
-# Return the unique elements from a list.
-sub unique_elements {
-    my %seen = ();
-    my @uniq = ();
-    foreach my $item (@_) {
-        push(@uniq, $item) unless $seen{$item}++;
-    }
-    return @uniq;
 }
 
 # Return a numeric value for the argument. Return

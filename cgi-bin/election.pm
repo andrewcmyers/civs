@@ -36,6 +36,7 @@ BEGIN {
 
 # Package imports
 use civs_common;
+use algorithms;
 use CGI qw(:standard -utf8);
 use POSIX qw(strftime);
 use mail;
@@ -703,7 +704,7 @@ sub VotingUrl {
 # authorized voters accordingly.
 sub SendKeys {
     my ($authorization_key, $addresses_ref, $resend) = @_;
-    my @addresses = map {&TrimAddr $_} @{$addresses_ref};
+    my @addresses = map {&TrimAddr($_)} @{$addresses_ref};
     @addresses =  &unique_elements(@addresses); 
     my $now = time();
     my $load = GetEmailLoad($now);

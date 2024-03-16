@@ -6,6 +6,7 @@ package rp;
 
 use CGI qw(:standard -utf8);
 use civs_common;
+use algorithms;
 use strict;
 
 our $mam; # whether MAM tiebreaking is to be used.
@@ -112,7 +113,7 @@ sub TransitiveClosure {
 sub rank_candidates {
     my ($num_choices, $mref, $bref, $choices) = @_;
     my @ballots = @{$bref};
-    civs_common::fisher_yates_shuffle [@ballots];
+    fisher_yates_shuffle [@ballots];
 
     if ($main::algorithm eq 'mam') {
 	$mam = 1;

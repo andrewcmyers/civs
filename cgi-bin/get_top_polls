@@ -21,10 +21,11 @@ undef $/;
 
 print CGI::header(-charset => 'utf-8');
 
-open (IN, $top_polls);
-binmode IN, ':utf8';
+if (open (IN, $top_polls)) {
+    binmode IN, ':utf8';
 
-print <IN>;
+    print <IN>;
+}
 
 if ('@LOG_HOME_VISITS@') {
     my $languages = http('Accept-Language') || 'unspecified-lang';
