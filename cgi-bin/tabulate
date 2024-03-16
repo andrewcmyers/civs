@@ -7,15 +7,17 @@ use DB_File;
 use election_utils qw(:DEFAULT);
 
 sub usage {
-    print STDERR "Usage: tabulate [-A] [-m <minsize] <algorithm> <election_dir> ...\n";
+    print STDERR "Usage: tabulate [-A] [-m <minsize] [--anon] [-a <algorithm>] <election_dir> ...\n";
     exit 1;
 }
 
-my $dump_all = 0;
+my $dump_all;
 my $min_ballots = 0;
-my $include_tests = 0;
+my $include_tests;
 my $election_dir;
-my $verbose = 0;
+my $verbose;
+my $anonymize;
+my @algorithms;
 
 while ($ARGV[0] =~ m/^-/) {
     if ($ARGV[0] eq '-A') {
@@ -30,17 +32,53 @@ while ($ARGV[0] =~ m/^-/) {
     } elsif ($ARGV[0] eq '-v') {
         shift @ARGV;
         $verbose = 1;
+    } elsif ($ARGV[0] eq '-a') {
+        shift @ARGV;
+        push @algorithms, shift @ARGV;
+    } elsif ($ARGV[0] eq '--anon') {
+        shift @ARGV;
+        $anonymize = 1;
     } else {
         usage
     }
 }
 
 my @elections;
-my $algorithm = shift @ARGV;
 my $elections_dir;
 
+my $indent = 0;
+sub begin {
+    $indent++;
+    if ($#_ >= 0) {
+        foreach my $x (@_) {
+            print $x
+        }
+        print "\n", " " x ($indent * $tabstop);
+    }
+}
+sub newline {
+    print "\n", " " x ($indent * $tabstop);
+}
+sub end {
+    $indent--;
+    if ($#_ >= 0) {
+        newline;
+        print $_[0];
+    }
+}
+sub item {
+    my $lines = shift @_;
+    if ($lines > 0) {
+        print ",";
+        newline;
+    }
+    foreach my $x (@_) {
+        print $x;
+    }
+}
+
 if ($dump_all) {
-    print "[\n";
+    begin "[";
 }
 
 if (!$dump_all) {
@@ -62,7 +100,9 @@ if (!$dump_all) {
     # print "Scanning: ", join ", ", @elections, "\n";
 }
 
-require "$algorithm.pm";
+foreach my $algorithm (@algorithms) {
+    require "$algorithm.pm";
+}
 
 my $tie = "=";
 my $cr = "\n";
@@ -70,6 +110,11 @@ my $condorcet_winner;
 my $weak_cw;
 my %edata, my %vdata;
 my (@matrix, @closure_matrix, @choice_rank);
+
+sub name {
+    my $i = shift;
+    $anonymize ? $i : $choices[$i]
+}
 
 foreach $election_dir (@elections) {
     if ($verbose) {
@@ -99,19 +144,22 @@ foreach $election_dir (@elections) {
     if ($edata{'external_ballots'} && $edata{'external_ballots'} eq 'yes') {
         if (!$include_tests) { next }
     }
-    print "  {\n";
-    print "    'dir': '", $election_dir, "',\n";
-    print "    'Ballots': ", ($#voters + 1), ",\n";
+    begin "{";
+    item 0, "\"dir\": \"', $election_dir, "\"," if (!$anonymize);
+    item 1, "\"ballots\": ($#voters + 1)";
+    item 2, "\"num_choices\": ", ($#choices + 1), ",\n";
 
     &SetupMatrix;
-    #&PrintReport($algorithm);
     print "    'Condorcet winner': \"", ($condorcet_winner == -1) ? 'None' : $choices[$condorcet_winner], "\",\n";
     print "    'Weak Condorcet winner': \"", ($weak_cw == -1) ? 'None' : $choices[$weak_cw], "\"\n";
+    foreach my $algorithm (@algorithms) {
+        &PrintReport($algorithm);
+    }
     print "  },\n";
 }
 
 if ($dump_all) {
-    print "]\n";
+    end "]";
 }
 
 
@@ -215,7 +263,7 @@ sub PrintRanking {
 	}
 	for (my $i = 0; $i <= $#winner; $i++) {
 	    if ($i > 0) { print $cr, '      '; }
-            print $choices[$winner[$i]];
+            print &name($winner[$i]);
 	    $choice_rank[$winner[$i]] = $j++;
 	}
 	$num_seen += $#winner + 1;
