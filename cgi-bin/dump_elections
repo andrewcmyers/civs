@@ -7,6 +7,7 @@ use JSON;
 
 use DB_File;
 use election_utils;
+use algorithms;
 use Scalar::Util qw(&looks_like_number);
 
 if ($#ARGV < 0) {
@@ -88,6 +89,10 @@ if (!$dump_all) {
     # print "Scanning: ", join ", ", @elections, "\n";
 }
 
+if (!$reveal_private_info) {
+    &fisher_yates_shuffle(\@elections);
+}
+
 my $election_count = 0;
 foreach my $election_dir (@elections) {
     my $election_data = $elections_dir . $election_dir . "/election_data";
@@ -119,10 +124,21 @@ foreach my $election_dir (@elections) {
     my @voters = split /\n/, $recorded_voters;
     my @ballots = @{&ProcessBallots(\@voters, $election_id)};
 
+    if (!$reveal_private_info && $external_ballots eq 'yes') {
+        untie %edata; untie %vdata;
+        next
+    }
+
+    if (!$reveal_private_info) {
+        &fisher_yates_shuffle(\@ballots);
+    }
+
     item $election_count++;
     begin '{';
     my $props = 0;
-    item $props++, "\"election_id\" : \"$election_id\"";
+    if ($reveal_private_info) {
+        item $props++, "\"election_id\" : \"$election_id\"";
+    }
     if ($reveal_private_info) {
         item $props++, "\"title\" : \"$title\"";
     }

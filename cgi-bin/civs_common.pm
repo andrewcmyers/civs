@@ -11,6 +11,7 @@ use HTTP::Tiny;
 use MIME::Base64;
 use CGI qw(:standard -utf8);
 use Encode qw(encode);
+use algorithms;
 
 binmode STDOUT, ':encoding(UTF-8)';
 binmode STDERR, ':encoding(UTF-8)';

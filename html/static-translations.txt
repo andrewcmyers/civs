@@ -703,7 +703,7 @@ Why_rank_choices {
     zh: 为什么要对选择进行排序？
 }
 Why_rank_paras {
-    en  {
+    en {
         With CIVS, voters rank their choices rather than just picking
         their one favorite choice.  This process gives accurate
         results because it collects more information from voters. It
@@ -711,8 +711,9 @@ Why_rank_paras {
       </p><p>
         Ranked-choice voting is used in real elections. For example,
         Australia uses Single Transferable Vote (STV, also known as IRV).
-        However, the Condorcet methods supported by CIVS are better than IRV
-        at identifying consensus candidates.
+        However, CIVS is fairer than IRV because it chooses
+        a candidate who wins all
+        head-to-head contests with other candidates. In contrast,
         IRV can elect a candidate even though a majority of
         voters would prefer someone else, and
         <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">

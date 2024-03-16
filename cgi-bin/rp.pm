@@ -5,7 +5,7 @@ package rp;
 # See runoff.pm for a specification of this function.
 
 use CGI qw(:standard -utf8);
-use civs_common;
+use languages;
 use algorithms;
 use strict;
 
@@ -113,7 +113,7 @@ sub TransitiveClosure {
 sub rank_candidates {
     my ($num_choices, $mref, $bref, $choices) = @_;
     my @ballots = @{$bref};
-    fisher_yates_shuffle [@ballots];
+    &fisher_yates_shuffle(\@ballots);
 
     if ($main::algorithm eq 'mam') {
 	$mam = 1;

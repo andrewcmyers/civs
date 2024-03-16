@@ -29,47 +29,49 @@ The Marquis de Condorcet
 <h2>Introduction</h2>
 
 <p>
-Condorcet voting methods take into account the entire ranking of the candidates
-by every voter, which means they have more information to use in picking the
-winner.  But just as important as the use of rankings is how those rankings are
-used.</p>
-<p>
-Condorcet methods were invented by
-<a href="http://en.wikipedia.org/wiki/Marquis_de_Condorcet">
-Marie Jean Antoine Nicolas de Caritat, marquis de Condorcet</a>,
-a French philosopher, mathematician, and political scientist, known for his
-contributions to the field of social choice theory and for his advocacy of the
-rights of women and minorities.
+Condorcet voting methods take into account the entire ranking of the
+candidates by every voter, which means they have more information to use in
+picking the winner.  But just as important as the use of rankings is how
+those rankings are used.
 </p>
 
 <p>
-Condorcet election methods use the voters' rankings to compare every candidate
-(alternative) against every other in head-to-head contests. Intuitively, it
-would not make sense if the winner of an election would lose a head-to-head
-contest with some other candidate. Condorcet methods aim to prevent such an
-outcome.
+Condorcet methods were invented by <a
+href="http://en.wikipedia.org/wiki/Marquis_de_Condorcet"> Marie
+Jean Antoine Nicolas de Caritat, marquis de Condorcet</a>, a French
+philosopher, mathematician, and political scientist, known for his
+contributions to the field of social choice theory and for his advocacy
+of the rights of women and minorities.
 </p>
 
 <p>
-The voters are considered to collectively have a preference for candidate
-A over candidate B if A is ranked higher than B on more ballots than B
-is ranked higher than A on. If the voters prefer a candidate A to every
-other candidate, candidate A is the <b>Condorcet winner</b> (CW).  An election
-method is a <b>Condorcet method</b> if it is guaranteed to elect the
-Condorcet winner, when one exists.
+Condorcet elections are <em>head-to-head elections</em> because they use
+voter rankings to compare every candidate against every other in
+head-to-head contests.  Intuitively, it would not make sense to choose
+a winner who would lose a head-to-head contest with some other candidate.
+Condorcet methods aim to prevent this outcome.
 </p>
 
 <p>
-Although there is usually a Condorcet winner, especially when there are
-many voters, it is possible that there isn't one.
-In ranked-preference voting systems, <b>preference
-cycles</b> may exist. For example, it is possible that on most ballots, candidate
-A is preferred to candidate B, on most ballots B is preferred to C, and
-on most ballots C is preferred to A. Fortunately, cycles involving the
-top-ranked candidate don't seem to happen often. And there are good methods for
-resolving these cycles, called <b>completion rules</b>.
-If the goal of the election is simply to pick the top candidate,
-it usually doesn't matter which completion rule is used.
+The voters are considered to collectively have a preference for
+candidate A over candidate B if A is ranked higher than B on more
+ballots than B is ranked higher than A on. If the voters prefer a
+candidate A to every other candidate, candidate A is the <b>Condorcet
+winner</b> (CW).  An election method is a <b>Condorcet method</b> if it
+is guaranteed to elect the Condorcet winner, when one exists.
+</p>
+
+<p>
+There is usually a Condorcet winner, especially when there are many
+voters. Statistics from 20 years of CIVS polls suggest that this happens
+around 99% of the time. However, it is possible that there isn't one.
+<b>Preference cycles</b> may exist. For example, it is possible that
+on most ballots, candidate A is preferred to candidate B, on most
+ballots B is preferred to C, and on most ballots C is preferred to
+A. Fortunately, cycles involving the top-ranked candidate don't seem to
+happen often. And there are good ways to resolving these cycles, called
+<b>completion rules</b>.  If the goal of the election is simply to pick
+the top candidate, it rarely matters which completion rule is used.
 </p>
 
 <p>
@@ -82,89 +84,90 @@ doesn't matter what completion rule is used.
 
 <h3>Supported completion rules</h3>
 
-<p>CIVS currently supports five rules for Condorcet completion:
+<p>CIVS currently supports six rules for Condorcet completion:
 <a href="#minimax">Minimax-PM</a> (the default rule),
 <a href="http://en.wikipedia.org/wiki/Schulze_method">Schulze</a>
 (also known as Beatpath Winner or
 Cloneproof Schwartz Sequential Dropping),
 <a href="http://alumnus.caltech.edu/~seppley/">
 Maximize Affirmed Majorities</a> (MAM), a deterministic variant of MAM
-called <a href="#rp">CIVS Ranked Pairs</a>, and a runoff-based
-Condorcet algorithm called <a href="#runoff">Condorcet-IRV</a>.
+called <a href="#rp">CIVS Ranked Pairs</a>, and two runoff-based
+Condorcet algorithms called <a href="#runoff">Condorcet-IRV</a>
+and <a href="#b2r">Bottom-2 Runoff</a>.
 The Schulze and MAM rules are described in the linked documents;
 Minimax-PM, CIVS Ranked Pairs and Condorcet-IRV are described below.
 </p>
 
 <p>
-CIVS does not impose a completion rule; in fact, anyone viewing the results of
-an election can see what the results would have been with each of the rules. It
-is probably a good idea for the election supervisor to decide on an rule ahead
-of time, and include it in the election description.  On the other hand, all
-five rules usually agree with each other, especially on the ranking of the
-first few candidates.
+CIVS does not impose a completion rule; in fact, anyone viewing the
+results of an election can see what the results would have been
+with each of the rules. It is probably a good idea for the election
+supervisor to decide on an rule ahead of time, and include it in the
+election description.  On the other hand, all five rules usually agree
+with each other, especially on the ranking of the first few candidates.
 </p>
 
 <h2>Which completion rule should I use?</h2>
 <p>
 Usually it doesn't matter which completion rule is used, because there
-is usually a Condorcet winner, in which case all the rules will agree.  If all
-the rules agree, you can be confident that you're getting the right
-result.  However, it's a good idea to commit to the rule you're going
-to use ahead of time, to avoid arguments later on.
+is usually a Condorcet winner, in which case all the rules will agree.
+If all the rules agree, you can be confident that you're getting the
+right result.  However, it's a good idea to commit to the rule you're
+going to use ahead of time, to avoid arguments later on.
 </p>
 
 <p>
-The different rules have advantages and disadvantages. Minimax
-finds the candidate that in a reasonable sense is <em>closest</em> to being the
-Condorcet winner; it is also the cheapest to compute.
-Richard Darlington has written
-<a href="http://arxiv.org/abs/1807.01366">
-an in-depth comparison of Minimax
-against other preferential voting methods</a> (both Condorcet and non-Condorcet), and concluded
-that Minimax is the best method.
-Schulze (Beatpath Winner) is based on finding the strongest chains
-of pairwise defeats that can be used to argue one candidate is
-preferred over another; it can also be computed fairly cheaply using the Floyd-Warshall
-all-pairs-shortest-paths algorithm. The two ranked-pairs rules (CIVS
-Ranked Pairs and MAM) are more expensive but are still usually fast enough to be practical.
-If there are <i>n</i>
-candidates, the ranked pairs algorithms are about <i>n</i> times slower
-than Schulze. This slowdown is only noticeable if there are many
-candidates (more than twenty).  The rankings produced by minimax tend
-to be the most stable in the sense that a given voter's ballot
-does not affect the ordering much. The difference between the two
-ranked pairs methods, CIVS Ranked Pairs and MAM, is that MAM uses a
-random tie-breaking method, whereas CIVS Ranked Pairs is completely
+The different rules have advantages and disadvantages. Minimax finds
+the candidate that in a reasonable sense is <em>closest</em> to being
+the Condorcet winner; it is also the cheapest to compute.  Richard
+Darlington has written <a href="http://arxiv.org/abs/1807.01366">
+an in-depth comparison of Minimax against other preferential voting
+methods</a> (both Condorcet and non-Condorcet), and concluded that
+Minimax is the best method.  Schulze (Beatpath Winner) is based on
+finding the strongest chains of pairwise defeats that can be used to
+argue one candidate is preferred over another; it can also be computed
+fairly cheaply using the Floyd-Warshall all-pairs-shortest-paths
+algorithm. The two ranked-pairs rules (CIVS Ranked Pairs and MAM) are
+more expensive but are still usually fast enough to be practical.  If
+there are <i>n</i> candidates, the ranked pairs algorithms are about
+<i>n</i> times slower than Schulze. This slowdown is only noticeable if
+there are many candidates (more than twenty).  The rankings produced by
+minimax tend to be the most stable in the sense that a given voter's
+ballot does not affect the ordering much. The difference between the
+two ranked pairs methods, CIVS Ranked Pairs and MAM, is that MAM uses
+a random tie-breaking method, whereas CIVS Ranked Pairs is completely
 deterministic. Thus, the result of running MAM is not determined by
 just the ballots cast. Comparison of the results of MAM and CIVS RP
 will show if randomization was needed and used by MAM. If there is a
 lot of concern about strategic voting (particularly, burying attacks),
-Condorcet-IRV is a reasonable candidate. </p>
+Condorcet-IRV is a reasonable candidate.
+</p>
 
 <h2 id=minimax>Minimax-PM</h2>
 
 <p>
-<a href="https://en.wikipedia.org/wiki/Minimax_Condorcet">Minimax</a> (also known
-as Simpson–Kramer), orders candidates based on their weakest defeats. It is an attractive
-method because it finds the candidate who could become the Condorcet winner
-with the fewest number of additional ballots. Unlike some other methods
-(notably, Dodgson and Young) that
-also try to find candidates &ldquo;close to&rdquo; being Condorcet winners,
-Minimax is also inexpensive to compute.
+<a href="https://en.wikipedia.org/wiki/Minimax_Condorcet">Minimax</a>
+(also known as Simpson–Kramer), orders candidates based on their
+weakest defeats. It is an attractive method because it finds the
+candidate who could become the Condorcet winner with the fewest number
+of additional ballots. Unlike some other methods (notably, Dodgson and
+Young) that also try to find candidates &ldquo;close to&rdquo; being
+Condorcet winners, Minimax is also inexpensive to compute.
 </p>
 <p>
-There are several variants of Minimax, with subtly different properties. The
-version of Minimax implemented by CIVS, called Minimax-PM, was introduced by
-Richard Darlington. Minimax-PM orders candidates in a series of tie-breaking
-steps. Let W stand for the number of ballots ranking candidate 1 over candidate
-2, and L the number of ballots with the opposite ranking. Note that since CIVS
-allows voters to leave some candidates tied, the sum W+L may be less than the total
-number of ballots. Minimax-PM orders defeats first by the margin W&minus;L, and
-further by the ratio W/L when margins are tied. Further, two candidates are
-compared first by their weakest defeats; then, if tied on those, by their 2nd
-weakest defeats, and so on.  <a href="http://arxiv.org/abs/1807.01366">
-Darlington's simulation-based study</a> showed Minimax-PM to be the best
-Condorcet method.
+There are several variants of Minimax, with subtly different
+properties. The version of Minimax implemented by CIVS, called
+Minimax-PM, was introduced by Richard Darlington. Minimax-PM orders
+candidates in a series of tie-breaking steps. Let W stand for the number
+of ballots ranking candidate 1 over candidate 2, and L the number of
+ballots with the opposite ranking. Note that since CIVS allows voters
+to leave some candidates tied, the sum W+L may be less than the total
+number of ballots. Minimax-PM orders defeats first by the margin
+W&minus;L, and further by the ratio W/L when margins are tied. Further,
+two candidates are compared first by their weakest defeats; then,
+if tied on those, by their 2nd weakest defeats, and so on. <a
+href="http://arxiv.org/abs/1807.01366"> Darlington's simulation-based
+study</a> showed Minimax-PM to be the best Condorcet method.
 </p>
 
 <h2 id=rp>CIVS Ranked Pairs</h2>
@@ -183,13 +186,12 @@ conflict with stronger preferences.
 <h3>Affirming preferences</h3>
 
 <p>
-In the CIVS ranked
-pairs algorithm, as in MAM, one preference is stronger than another if it has
-more votes in favor, or if the number of votes in favor are equal, if the
-preference has fewer votes against.  Of course, it is entirely possible that
-two preferences have exactly the same number of votes in favor and against.
-Like MAM and unlike Tideman, the ordering of preferences does not take margins
-into account.
+In the CIVS ranked pairs algorithm, as in MAM, one preference is
+stronger than another if it has more votes in favor, or if the number of
+votes in favor are equal, if the preference has fewer votes against.  Of
+course, it is entirely possible that two preferences have exactly the
+same number of votes in favor and against.  Like MAM and unlike Tideman,
+the ordering of preferences does not take margins into account.
 </p>
 
 <p>
@@ -212,39 +214,43 @@ from the viewpoint of whoever controls the randomness.
 <h3>Ranking the candidates</h3>
 
 <p>
-The algorithm for ranking the various candidates is to successively identify the
-Schwartz sets defined by the graph of kept preferences.  The top-ranked candidates
-are the initial Schwartz set: the smallest set of candidates such that no candidates
-outside the set are preferred to any in the set. After these candidates are
-removed from the graph, the second tier of candidates are the Schwartz set in the
-new graph, and so on. Typically, the Schwartz set consists of a single candidate
-at every level; ties can only occur if there are preferences of equal strength.
-When a Schwartz set contains multiple candidates, there must be a cycle of kept
-preferences. In this case, the candidates within that Schwartz set are ranked
-based on the strength of the strongest preference against that candidate (note
-that preferences involving candidates from higher-ranked Schwartz sets are not
-germane for this comparison).
+The algorithm for ranking the various candidates is to successively
+identify the Schwartz sets defined by the graph of kept preferences.
+The top-ranked candidates are the initial Schwartz set: the smallest
+set of candidates such that no candidates outside the set are preferred
+to any in the set. After these candidates are removed from the graph,
+the second tier of candidates are the Schwartz set in the new graph,
+and so on. Typically, the Schwartz set consists of a single candidate
+at every level; ties can only occur if there are preferences of equal
+strength.  When a Schwartz set contains multiple candidates, there must
+be a cycle of kept preferences. In this case, the candidates within
+that Schwartz set are ranked based on the strength of the strongest
+preference against that candidate (note that preferences involving
+candidates from higher-ranked Schwartz sets are not germane for this
+comparison).
 </p>
 
 <h2 id=runoff>Condorcet-IRV</h2>
 
 <p>
-The Condorcet-IRV rule is a Condorcet completion rule that uses an IRV-like
-process to perform Condorcet completion. It was originally proposed by
-Thomas Hill of England's Electoral Reform Society.
-Given a set of candidates, this algorithm finds the top-ranked candidate (or
-candidates) in the following way.  If there is a Condorcet winner, that
-is the top-ranked candidate. Otherwise, for each candidate, the ballots are
-examined to see on how many of the ballots that candidate is the highest
-ranked among the candidates being considered.  Call this number the top
-count for the candidate. The candidate with the smallest count is removed
-from consideration and the process repeats, looking for a CW among the
-remaining candidates. (If multiple candidates tie for having the smallest
-top count, one is randomly picked for removal.) Eventually, there will
-either be a Condorcet winner, or the remaining candidates will all have
-the same top count. The remaining candidate or candidates are then considered
-the top-ranked candidates among the set.  CIVS repeats this algorithm to
-construct a ranking of all candidates.
+The Condorcet-IRV rule is a Condorcet completion rule that uses an
+IRV-like process to perform Condorcet completion. It is also known as
+Condorcet–Hare in the literature. Given a set of candidates,
+this algorithm finds the top-ranked candidate (or candidates) in the
+following way.  If there is a Condorcet winner, that is the top-ranked
+candidate. Otherwise, for each candidate, the ballots are examined to
+see on how many of the ballots that candidate is the highest ranked
+among the candidates being considered.  Call this number the top count
+for the candidate. The candidate with the smallest count is removed
+from consideration and the process repeats, looking for a CW among
+the remaining candidates. If multiple candidates tie for having the
+smallest top count, one is randomly picked for removal, the count
+of ballots where they have the second-rank is used to break the tie,
+and so on. Eventually,
+there will either be a Condorcet winner, or the remaining candidates
+all have the same count of ranks. The remaining candidate or candidates
+are then considered the top-ranked candidates among the set.  CIVS
+repeats this algorithm to construct a ranking of all candidates.
 </p>
 <p>
 Note that although this rule uses a runoff procedure to eliminate
@@ -253,22 +259,38 @@ it is still a Condorcet election method, unlike IRV/STV.  If there is a
 CW, it will always be the top-ranked candidate.
 </p>
 <p>
-The advantage of Condorcet-IRV is that it is relatively resistant to certain
-kinds of strategic voting. In particular, it resists <i>burying</i>, an attack
-in which voters insincerely push strong competitors to their preferred candidates
-lower in the rankings. A weaker form of <i>burying</i> is <i>truncation</i>, in
-which voters do not express their full preference by giving some set of
-candidates the lowest possible rank.  As long as burying does not create a
-preference cycle, it has no effect on any Condorcet method. However, it is
-possible for burying to create a preference cycle that many completion
-rules will then resolve in favor of the candidate of the voters who have voted
+The advantage of Condorcet-IRV is that it is relatively resistant
+to certain kinds of strategic voting. In particular, it resists
+<i>burying</i>, an attack in which voters insincerely push strong
+competitors to their preferred candidates lower in the rankings. A
+weaker form of <i>burying</i> is <i>truncation</i>, in which voters do
+not express their full preference by giving some set of candidates the
+lowest possible rank.  As long as burying does not create a preference
+cycle, it has no effect on any Condorcet method. However, it is possible
+for burying to create a preference cycle that many completion rules will
+then resolve in favor of the candidate of the voters who have voted
 insincerely.
 </p>
 <p>
 Regardless of the completion rule, burying can easily backfire on voters
-who employ it, because it can result in weaker candidates appearing to be consensus
-candidates. A successful use of burying can be tricky to carry off; the best
-policy is to vote sincerely.
+who employ it, because it can result in weaker candidates appearing to
+be consensus candidates. A successful use of burying can be tricky to
+carry off; the best policy is to vote sincerely.
+</p>
+
+<h2 id=b2r>Bottom-Two Runoff</h2>
+<p>
+Bottom-two runoff operates similarly to IRV, and similarly aims to be
+resistant to strategic voting. The candidates are initially seeded
+according to their top counts (using lower ranks to break ties, as
+described for Condorcet-IRV). Then the two lowest-seeded candidates
+are compared head-to-head to see who is preferred. The loser of this
+head-to-head contest is removed from consideration and the process
+repeats with the remaining candidates until a winner is found. CIVS
+then repeats this entire runoff process repeatedly to obtain the
+overall ranking of all candidates.  Unlike IRV, bottom-two runoff is a
+Condorcet-consistent method because the head-to-head runoffs guarantee
+that a CW can never be eliminated.
 </p>
 
 </div>

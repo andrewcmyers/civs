@@ -6,6 +6,7 @@ use warnings;
 use lib '@CGIBINDIR@';
 # use admctrl;
 use civs_common;
+use algorithms;
 use CGI qw(:standard -utf8);
 use Socket;
 use IO::Handle;
@@ -18,8 +19,8 @@ use beatpath;
 use beatpath2;
 use rp;
 use runoff;
-use b2r;
 use minimax;
+use b2r;
 
 my $thisurl = $civs_bin_path."/results@PERLEXT@";
 
@@ -260,8 +261,8 @@ sub ComputeResults {
     my $mam_checked = '';
     my $minimax_checked = '';
     my $runoff_checked = '';
-    my $b2r_checked = '';
     my $proportional_checked = '';
+    my $b2r_checked = '';
     if ($proportional eq 'yes') {
         $proportional_checked = $checked;
     } elsif ($algorithm eq 'civs_ranked_pairs') {
@@ -276,6 +277,8 @@ sub ComputeResults {
 	$minimax_checked = $checked;
     } elsif ($algorithm eq 'beatpath') {
 	$bw_checked = $checked;
+    } elsif ($algorithm eq 'b2r') {
+	$b2r_checked = $checked;
     } else {
 	$minimax_checked = $checked; # default
     }
@@ -708,22 +711,16 @@ sub PrintProportionalResults {
 	}
     }
 
-    $beatpath::n = $num_choices;
-    for (my $j = 0; $j < $num_choices; $j++) {
-	for (my $k = 0; $k < $num_choices; $k++) {
-	    $beatpath::matrix[$j][$k] = $matrix[$j][$k];
-	}
-    }
-    &beatpath::rank_candidates();
-    @result = @beatpath::result;
-    @choice_index = @beatpath::choice_index;
-    @closure_matrix = ();
-    for (my $j = 0; $j < $num_choices; $j++) {
-	for (my $k = 0; $k < $num_choices; $k++) {
-	    $closure_matrix[$j][$k] = $beatpath::closure_matrix[$j][$k];
-	}
-    }
-    $j = 0;
+    my $undefined;
+    my ($rref, $log) =
+      &minimax::rank_candidates($num_choices, \@matrix, $undefined,
+                                \@choices);
+
+    (my $ciref, my $crref) = &MakeChoiceIndex($rref);
+
+    @choice_index = @{$ciref};
+    @choice_rank = @{$crref};
+
     for (my $rank = 0; $rank <= $#result; $rank++) {
 	my @winner = @{$result[$rank]};
 	for (my $i = 0; $i <= $#winner; $i++) {

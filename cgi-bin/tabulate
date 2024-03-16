@@ -1,10 +1,14 @@
-#!/usr/bin/env perl -I/Users/andru/civs/cgi-bin
+#!/usr/bin/env perl -I/Users/andru/civs/cgi-bin -I/Library/WebServer/CGI-Executables/civs/languages
 
 use strict;
 use warnings;
 
+use JSON;
 use DB_File;
 use election_utils qw(:DEFAULT);
+use languages;
+
+&languages::init('en-US');
 
 sub usage {
     print STDERR "Usage: tabulate [-A] [-m <minsize] [--anon] [-a <algorithm>] <election_dir> ...\n";
@@ -12,32 +16,43 @@ sub usage {
 }
 
 my $dump_all;
+sub ReportProgress {}
+sub NewProgressPhase {}
+
 my $min_ballots = 0;
 my $include_tests;
 my $election_dir;
-my $verbose;
 my $anonymize;
+my $verbose = 1;
+my $print_ballots = 0;
 my @algorithms;
+my $max_choices = 100;
 
 while ($ARGV[0] =~ m/^-/) {
-    if ($ARGV[0] eq '-A') {
+    if ($ARGV[0] eq '-a') {
+        shift @ARGV;
+        push @algorithms, (shift @ARGV);
+    } elsif ($ARGV[0] eq '-A') {
         $dump_all = 1;
         shift @ARGV;
     } elsif ($ARGV[0] eq '-m') {
         shift @ARGV;
         $min_ballots = shift @ARGV;
+    } elsif ($ARGV[0] eq '-M') {
+        shift @ARGV;
+        $max_choices = shift @ARGV;
     } elsif ($ARGV[0] eq '-t') {
         shift @ARGV;
         $include_tests = 1;
     } elsif ($ARGV[0] eq '-v') {
         shift @ARGV;
         $verbose = 1;
-    } elsif ($ARGV[0] eq '-a') {
-        shift @ARGV;
-        push @algorithms, shift @ARGV;
     } elsif ($ARGV[0] eq '--anon') {
         shift @ARGV;
         $anonymize = 1;
+    } elsif ($ARGV[0] eq '-b') {
+        shift @ARGV;
+        $print_ballots = 1;
     } else {
         usage
     }
@@ -47,6 +62,8 @@ my @elections;
 my $elections_dir;
 
 my $indent = 0;
+my $tabstop = 2;
+
 sub begin {
     $indent++;
     if ($#_ >= 0) {
@@ -78,7 +95,7 @@ sub item {
 }
 
 if ($dump_all) {
-    begin "[";
+    &begin("[");
 }
 
 if (!$dump_all) {
@@ -104,10 +121,16 @@ foreach my $algorithm (@algorithms) {
     require "$algorithm.pm";
 }
 
+my $multi = $dump_all || $#elections > 0;
+
+if ($multi) {
+    begin("[");
+}
+
 my $tie = "=";
 my $cr = "\n";
 my $condorcet_winner;
-my $weak_cw;
+my $weak_cws;
 my %edata, my %vdata;
 my (@matrix, @closure_matrix, @choice_rank);
 
@@ -116,6 +139,7 @@ sub name {
     $anonymize ? $i : $choices[$i]
 }
 
+my $first_dir = 1;
 foreach $election_dir (@elections) {
     if ($verbose) {
         print STDERR $election_dir, "\n";
@@ -136,7 +160,12 @@ foreach $election_dir (@elections) {
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
     &GetElectionData(\%edata, \%vdata);
+    if ($proportional eq 'yes') {
+        print STDERR "Skipping proportional election\n";
+        next
+    }
     if (!$vdata{'recorded_voters'}) { next }
+    if ($num_choices > $max_choices) { next }
     my @voters = split /\n/, $vdata{'recorded_voters'};
     if ($#voters+1 < $min_ballots) {
         next
@@ -144,22 +173,43 @@ foreach $election_dir (@elections) {
     if ($edata{'external_ballots'} && $edata{'external_ballots'} eq 'yes') {
         if (!$include_tests) { next }
     }
-    begin "{";
-    item 0, "\"dir\": \"', $election_dir, "\"," if (!$anonymize);
-    item 1, "\"ballots\": ($#voters + 1)";
-    item 2, "\"num_choices\": ", ($#choices + 1), ",\n";
+    print ",\n" if (!$first_dir);
+    $first_dir = 0;
+    print "  {\n";
+    print "    \"dir\": ", encode_json($election_dir), ",\n";
+    print "    \"num_ballots\": ", ($#voters + 1), ",\n";
+    print "    \"choices\": [\n";
+    my $first = 1;
+    foreach my $choice (@choices) {
+        print ",\n" if (!$first);
+        $first = 0;
+        print "      ", encode_json($choice);
+    }
+    print "\n    ],\n";
 
     &SetupMatrix;
-    print "    'Condorcet winner': \"", ($condorcet_winner == -1) ? 'None' : $choices[$condorcet_winner], "\",\n";
-    print "    'Weak Condorcet winner': \"", ($weak_cw == -1) ? 'None' : $choices[$weak_cw], "\"\n";
+    print "    \"Condorcet winner\": ", encode_json(($condorcet_winner == -1) ? 'None' : $choices[$condorcet_winner]), ",\n";
+    print "    \"Weak Condorcet winners\": [";
+    my $first_wcw = 1;
+    foreach my $weak_cw (@{$weak_cws}) {
+      print ", " if (!$first_wcw);
+      $first_wcw = 0;
+      print encode_json($choices[$weak_cw]);
+    }
+    print "],\n";
+    my $first_alg = 1;
     foreach my $algorithm (@algorithms) {
+        if (!$first_alg) { print ",\n" }
+        else { $first_alg = 0; }
         &PrintReport($algorithm);
     }
-    print "  },\n";
+    print "\n  }";
 }
 
-if ($dump_all) {
+if ($multi) {
     end "]";
+} else {
+    print "\n";
 }
 
 
@@ -220,10 +270,11 @@ sub FixProp {
 
 sub SetupMatrix {
     # Compute condorcet winner and set up (nonproportional) $matrix
-    $condorcet_winner = $weak_cw = -1;
+    my @weak_cws = ();
+    $condorcet_winner = -1;
     for (my $j = 0; $j < $num_choices; $j++) {
 	if ($condorcet_winner < 0) { $condorcet_winner = $j; }
-	if ($weak_cw < 0) { $weak_cw = $j; }
+        my $seen_beat = 0;
 	for (my $k = 0; $k < $num_choices; $k++) {
 	    my $n; $n = $vdata{"$j.$k"} or $n = 0;
             $n = &FixProp($n);
@@ -234,24 +285,33 @@ sub SetupMatrix {
 		if ($n <= $m && $condorcet_winner == $j) {
                     $condorcet_winner = -1; # can't be this one
 		}
-		if ($n < $m && $weak_cw == $j) {
-                    $weak_cw = -1; # can't be this one
+		if ($n < $m) {
+                    $seen_beat = 1;
 		}
 	    }
 	}
+        if (!$seen_beat) {
+            push @weak_cws, $j;
+        }
     }
+    $weak_cws = \@weak_cws
 }
 
 sub PrintRanking {
     my @result = @{$_[0]};
     my @matrix = @{$_[1]};
+    my $algorithm = $_[2];
     my $had_tie = 0;
     my $j = 0;
     my $num_seen = 0;
+    print "    ", encode_json($algorithm), ": {\n";
+    my $first = 1;
     for (my $rank = 0; $rank <= $#result; $rank++) {
+        if (!$first) { print ",\n" }
+        else { $first = 0 }
 	my @winner = @{$result[$rank]};
 	# find the explanatory defeat
-	printf '%4d. ', $j+1;
+	printf '%9s: [', (encode_json(($j+1) . ""));
 	my $ranksize = $#winner + 1;
         my $tie;
 	if ($num_seen < $num_winners &&
@@ -262,13 +322,14 @@ sub PrintRanking {
 	    $tie = 0;
 	}
 	for (my $i = 0; $i <= $#winner; $i++) {
-	    if ($i > 0) { print $cr, '      '; }
-            print &name($winner[$i]);
+	    if ($i > 0) { print ',' , $cr , '            '; }
+            print encode_json(&name($winner[$i]));
 	    $choice_rank[$winner[$i]] = $j++;
 	}
 	$num_seen += $#winner + 1;
-	print $cr;
+	print ']';
     }
+    print "\n    }";
 }
 
 sub details_bookmark {
@@ -298,6 +359,9 @@ sub MakeChoiceIndex {
 sub ProcessBallots {
     my @voters = @{$_[0]};
     my @ballots = ();
+    if ($print_ballots) {
+        print "    'ballots': [\n";
+    }
     foreach my $voter_key (@voters) {
 	my $ballot = $vdata{$voter_key};
 	if (!defined($ballot)) {
@@ -305,14 +369,21 @@ sub ProcessBallots {
 	} else {
 	    my @row = split /,/, $ballot;
 	    push @ballots, \@row;
+            if ($print_ballots) {
+                print "      [", (join ",", @row), "],";
+                print "\n";
+            }
 	}
+    }
+    if ($print_ballots) {
+        print "    ],\n";
     }
     return \@ballots;
 }
 
 sub PrintReport {
     no strict 'refs';
-    (my $module) = @_;
+    my ($module) = @_;
     my @voters = split /\n/, $vdata{'recorded_voters'};
     my $bref = &ProcessBallots(\@voters);
     my $rank_candidates = $module.'::rank_candidates';
@@ -324,12 +395,13 @@ sub PrintReport {
 #     return;
 #   }
 
+
     (my $rref, my $log) =
 	&$rank_candidates($num_choices, \@matrix, $bref, \@choices);
 
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
 
-    &PrintRanking($rref, \@matrix);
+    &PrintRanking($rref, \@matrix, $module);
     # &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
     # &$print_details($log, $num_choices, \@choices, $ciref);
 
