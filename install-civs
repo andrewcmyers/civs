@@ -172,7 +172,7 @@ for f in add_voters beatpath.pm beatpath2.pm civs_common.pm voting.pm	      \
     refresh_top_polls mail_mgmt opt_in publicize_election status	      \
     clear_caches delete_election.pl edit_poll remove_defunct_elections	      \
     request_deactivation request_activation resend_link			      \
-    send_result_key.pm rp.pm runoff.pm b2r.pm minimax.pm admctrl.pm
+    send_result_key.pm rp.pm runoff.pm b2r.pm minimax.pm admctrl.pm rules.pm
 do
     target="${CGIBINDIR}/${f}"
     if [ -n "$PERLEXT" ]

@@ -889,7 +889,7 @@ sub Condorcet_completion_rule {
     'Condorcet completion rule:'
 }
 sub undefined_algorithm {
-    'Error: undefined algorithm.'
+    "Error: undefined algorithm $_[1]"
 }
 sub computing_results {
     'Computing results...'

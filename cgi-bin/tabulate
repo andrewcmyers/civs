@@ -7,6 +7,11 @@ use JSON;
 use DB_File;
 use election_utils qw(:DEFAULT);
 use languages;
+use rules;
+
+if (!$algorithm_module{"minimax"}) {
+    print "Import failed\n";
+}
 
 &languages::init('en-US');
 
@@ -94,10 +99,6 @@ sub item {
     }
 }
 
-if ($dump_all) {
-    &begin("[");
-}
-
 if (!$dump_all) {
     @elections = @ARGV;
 } else {
@@ -118,7 +119,12 @@ if (!$dump_all) {
 }
 
 foreach my $algorithm (@algorithms) {
-    require "$algorithm.pm";
+    my $module = $algorithm_module{$algorithm};
+    if (defined($module) && $legal_module{$module}) {
+        require "$module.pm";
+    } else {
+        require "$algorithm.pm";
+    }
 }
 
 my $multi = $dump_all || $#elections > 0;
@@ -201,7 +207,9 @@ foreach $election_dir (@elections) {
     foreach my $algorithm (@algorithms) {
         if (!$first_alg) { print ",\n" }
         else { $first_alg = 0; }
-        &PrintReport($algorithm);
+        my $module = $algorithm_module{$algorithm};
+        $module = $algorithm if !defined($module);
+        &PrintReport($module, $algorithm);
     }
     print "\n  }";
 }
@@ -383,7 +391,7 @@ sub ProcessBallots {
 
 sub PrintReport {
     no strict 'refs';
-    my ($module) = @_;
+    my ($module, $algorithm) = @_;
     my @voters = split /\n/, $vdata{'recorded_voters'};
     my $bref = &ProcessBallots(\@voters);
     my $rank_candidates = $module.'::rank_candidates';
@@ -397,11 +405,12 @@ sub PrintReport {
 
 
     (my $rref, my $log) =
-	&$rank_candidates($num_choices, \@matrix, $bref, \@choices);
+	&$rank_candidates($num_choices, \@matrix, $bref, \@choices,
+                        $algorithm);
 
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
 
-    &PrintRanking($rref, \@matrix, $module);
+    &PrintRanking($rref, \@matrix, $algorithm);
     # &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
     # &$print_details($log, $num_choices, \@choices, $ciref);
 
