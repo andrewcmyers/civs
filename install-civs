@@ -245,10 +245,10 @@ touch $CIVSDATADIR/nonce_seed $CIVSDATADIR/log $CIVSDATADIR/cgi-log	      \
 if [ "$id" = 0 ]; then
     $CHOWN "$WEB_USER" $CIVSDATADIR/nonce_seed $CIVSDATADIR/log		      \
                       $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock	      \
-                      $CIVSDATADIR/email-control.txt
+                      $CIVSDATADIR/email-control.txt $CIVSDATADIR/elections
     $CHGRP "$WEB_GROUP" $CIVSDATADIR/nonce_seed $CIVSDATADIR/log		      \
                       $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock	      \
-                      $CIVSDATADIR/email-control.txt
+                      $CIVSDATADIR/email-control.txt $CIVSDATADIR/elections
 fi
 chmod 600 $CIVSDATADIR/nonce_seed
 chmod 644 $CIVSDATADIR/log $CIVSDATADIR/cgi-log $CIVSDATADIR/global_lock      \

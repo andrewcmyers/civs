@@ -109,7 +109,7 @@
 </div>
 
 <footer>
-<div id="footnote" style="margin: 2ex">
+<div id=footnote style="margin: 2ex">
 @Footnote_1@
 @Fine_print@
 </div>
