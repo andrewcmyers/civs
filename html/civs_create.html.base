@@ -131,60 +131,52 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
     accept-charset="UTF-8"
     name="CreateElection"
     onsubmit="return validate()">
-  <table class="form">
-  <tr>
-    <td class=label><label for=title id=name_of_poll>@Name_of_the_poll@</label></td>
-    <td><input type=text title="Poll name" id=title name=title size="50" aria-labelledby=name_of_poll></td>
-  <tr>
-    <td class=label><label id=supervisor_name for=name>@Name_of_supervisor@</label></td>
-    <td><input type=text name=name id=name size="20" aria-labelledby="supervisor_name">
-  </td>
-  <tr>
-    <td class=label><label for=email_addr id=supervisor_email>@Email_address_of_supervisor@</label></td>
-    <td><input type=text id=email_addr name=email_addr size="20" aria-labelledby=supervisor_email
-      onchange="if (!validateEmail(this.value)) { alert('@Invalid_email_address@') }" >
-    </td>
-  </tr>
-  <tr>
-    <td class="label"><label for=election_end id=election_end_label>@Day_and_time_you_plan_to_stop@</label><br>
-        <small>@polls_must_be_stopped_manually@</small>
-    </td>
-    <td><input type="text" name="election_end" id="election_end" size="30"
-               aria-labelledby="election_end_label"
-          onchange="render_text('<br>@Preview_polls_ends@ ', 'election_end', 'rendered_end', 'poll_end', 'poll_end_preview')">
-         <span class="rendering" id="rendered_end"></span>
-</td>
-  </tr>
-  </table>
+  <div class=grid_container style="grid-template-columns: auto auto">
+    <label for=title id=name_of_poll>@Name_of_the_poll@</label>
+    <input type=text title="Poll name" id=title name=title size="50" aria-labelledby=name_of_poll>
 
-<div class="emphasized">
+    <label id=supervisor_name for=name>@Name_of_supervisor@</label>
+    <input type=text name=name id=name size="20" aria-labelledby="supervisor_name">
+
+    <label for=email_addr id=supervisor_email>@Email_address_of_supervisor@</label>
+    <input type=text id=email_addr name=email_addr size="20" aria-labelledby=supervisor_email
+      onchange="if (!validateEmail(this.value)) { alert('@Invalid_email_address@') }" >
+
+    <label for=election_end id=election_end_label>@Day_and_time_you_plan_to_stop@
+        <small>@polls_must_be_stopped_manually@</small>
+    </label>
+    <span>
+    <input type="text" name="election_end" id="election_end" size="30"
+               aria-labelledby="election_end_label"
+          onchange="render_text('<br>@Preview_polls_ends@ ', 'election_end',
+                                'rendered_end', 'poll_end', 'poll_end_preview')">
+         <span class="rendering" id="rendered_end"></span>
+    </span>
+</div>
+
+<div class=emphasized>
 @address_warning_para@
 </div>
 
-  <p><label id=description_label for=description>@Description_of_the_poll@</label><br>
-  <table class="form">
-    <tr>
-      <td><textarea id=description rows="5" name=description cols="60" aria-labelledby=description_label
+  <p><label id=description_label for=description>@Description_of_the_poll@</label></p>
+  <div class=grid_container style="grid-template-columns: auto auto auto">
+      <textarea id=description rows="5" name=description cols="60" aria-labelledby=description_label
                     onchange="preview_description()"></textarea>
-      </td>
-      <td><input type=button value="@Preview_arrow@"
+      <input type=button class=preview value="@Preview_arrow@"
             onClick="preview_description()">
-      <td><span class=rendering id=rendered_description></span></td>
+      <span class=rendering id=rendered_description></span>
     </tr>
-  </table>
+  </div>
 
   <p><label id=choices_label for=choices>@Enter_the_names_of_all_the_choices@</label></p>
-  <table class="form">
-  <tr><td>
+  <div class=grid_container style="grid-template-columns: auto auto auto">
     <textarea rows="5" name="choices" cols="60" id="choices"
         aria-labelledby="choices_label"
-        onchange="preview_choices()"></textarea></td>
-    <td>
-      <td><input type="button" value="@Preview_arrow@"
-            onClick="preview_choices()"></td>
-      <td><span class="rendering" id="rendered_choices"></span></td>
-    </tr>
-  </table>
+        onchange="preview_choices()"></textarea>
+    <input type=button class=preview value="@Preview_arrow@"
+            onClick="preview_choices()">
+      <span class="rendering" id="rendered_choices"></span>
+  </div>
   <p><input type=file aria-labelledby=choices_label name=choices_file id=choices_file></p>
 
   <p><label id=num_winners_label for=num_winners>@How_many_choices_will_win@</label>
@@ -275,9 +267,9 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
    </div>
 </div>
 <div id='no_IP_check_div'>
-  <input type="checkbox" name="no_IP_check" value="yes"
+  <input type="checkbox" name=no_IP_check id=no_IP_check value="yes"
          title="@No_IP_address_check_expl@">
-  @No_IP_address_check@
+  <label for=no_IP_check>@No_IP_address_check@</label>
 </div>
 
 <br><div class="emphasized">@Make_sure_your_address_is_correct@</div>

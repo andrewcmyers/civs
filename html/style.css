@@ -353,3 +353,18 @@ div.centering { text-align: center }
 #mail_failures td {
     padding: 0.5ex
 }
+
+.grid_container {
+    display: grid;
+    gap: 10px 15px;
+    padding: 1ex;
+}
+.grid_container label {
+    text-align: right;
+}
+.preview {
+    width: 100px;
+    max-width: 100px;
+    height: 30px;
+    max-height: 30px;
+}
