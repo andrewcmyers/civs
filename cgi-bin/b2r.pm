@@ -169,7 +169,7 @@ sub rank_candidates {
                 print "<li>Comparing preferences of ",
                     &choice_name($c1), " and ",
                     &choice_name($c2), ". " if $debug;
-                $log .= "Comparing preferences of &choice_name($c1) and &choice_name($c2).<br>\n";
+                $log .= "Comparing preferences of @{[&choice_name($c1)]} and @{[&choice_name($c2)]}.<br>\n";
 
                 my $n1 = $matrix->[$c1][$c2];
                 my $n2 = $matrix->[$c2][$c1];

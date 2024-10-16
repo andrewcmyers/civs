@@ -364,6 +364,7 @@ div.centering { text-align: center }
     display: grid;
     gap: 10px 15px;
     padding: 1ex;
+    align-items: self-start;
 }
 .grid_container label {
     text-align: right;
