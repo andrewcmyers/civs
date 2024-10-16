@@ -177,11 +177,11 @@ sub rank_candidates {
 
                 if ($n1 > $n2) {
                     $loser = $c2;
-                    print choice_name($c1), " wins.\n" if $debug;
-                    $log .= "choice_name($c1) wins.<br>\n";
+                    print &choice_name($c1), " wins.\n" if $debug;
+                    $log .= "@{[&choice_name($c1)]} wins.<br>\n";
                 } elsif ($n1 < $n2) {
                     $loser = $c1;
-                    $log .= "choice_name($c2) wins.<br>\n";
+                    $log .= "@{[&choice_name($c2)]} wins.<br>\n";
                 } else {
                     # tiebreaking using ordering
                     $loser = $c2;
@@ -195,7 +195,7 @@ sub rank_candidates {
                 @remaining_choices = @nr;
             }
             $winner = $remaining_choices[0];
-            $log .= "&choice_name($winner) wins this round.";
+            $log .= "@{[&choice_name($winner)]} wins this round.";
         }
         push @rankings, [$winner];
         $num_ranked++;
