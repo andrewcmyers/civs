@@ -2,36 +2,28 @@ package minimax;
 
 use strict;
 
-# rank_candidates($n, $matrix, $ballots) : construct a ranking of the choices.
-#
-# Arguments:
-#   n is the number of choices
-#   matrix is a reference to an n x n preference matrix
-#   ballots is a reference to a list of ballots, where each ballot
-#     is a reference to a list containing the ranking of the candidates.
-#
-# Returns: a list ($rankings, $log), where:
-#   $rankings is a reference to a list of references to lists. An element
-#     in the outer list is a rank (from highest/most preferred to
-#     lowest/least preferred) and each inner list contains the
-#     indices of choices.
-#   $log is an HTML log (string) giving details of how the algorithm worked.
-#
-# Requires:
-#     The matrix referenced by $matrix is consistent with the ballots
-#     referenced by $ballots, and matrix is the right shape (as defined by $n).
-#     Some ballots may not have entries for all $n candidates, because of
-#     write-ins.
-#
+my $use_wv;
 
-# order defeats by weakness.
+# order defeats by weakness. How they are compared
+# depends on whether the "winning votes" option is selected.
 sub compare_defeats {
     my ($a, $b) = @_;
-    (($b->[1] - $b->[2]) <=> ($a->[1] - $a->[2]))
-    ||
-    ($a->[1] <=> $b->[1])
+    if ($use_wv) {
+# first compare on the 'win' number and only then
+# then compare on the 'lose' number if the win numbers
+# are equal.
+        ($b->[1] <=> $a->[1]) || ($a->[2] <=> $b->[2])
+    } else {
+# compare margins and then 'win' votes if margins are equal
+        (($b->[1] - $b->[2]) <=> ($a->[1] - $a->[2]))
+        ||
+        ($a->[1] <=> $b->[1])
+    }
 }
-sub compare_defeats_sort { compare_defeats($a, $b) }
+
+sub compare_defeats_sort {
+    &compare_defeats($a, $b)
+}
 
 sub defeat_to_string {
     my ($d) = @_;
@@ -80,8 +72,29 @@ sub compare_candidates {
     }
 }
 
+# rank_candidates($n, $matrix, $ballots) : construct a ranking of the choices.
+#
+# Arguments:
+#   n is the number of choices
+#   matrix is a reference to an n x n preference matrix
+#   ballots is a reference to a list of ballots, where each ballot
+#     is a reference to a list containing the ranking of the candidates.
+#
+# Returns: a list ($rankings, $log), where:
+#   $rankings is a reference to a list of references to lists. An element
+#     in the outer list is a rank (from highest/most preferred to
+#     lowest/least preferred) and each inner list contains the
+#     indices of choices.
+#   $log is an HTML log (string) giving details of how the algorithm worked.
+#
+# Requires:
+#     The matrix referenced by $matrix is consistent with the ballots
+#     referenced by $ballots, and matrix is the right shape (as defined by $n).
+#     Some ballots may not have entries for all $n candidates, because of
+#     write-ins.
+#
 sub rank_candidates {
-    my ($n, $matrix, $ballots, $choices) = @_;
+    my ($n, $matrix, $ballots, $choices, $algorithm) = @_;
 
     my @rankings = ();
     my @ranked = ();
@@ -90,6 +103,10 @@ sub rank_candidates {
     my $log = '<ul>';
 
     my $defeats = [()];
+    $algorithm = 'minimax' unless defined($algorithm);
+    if ($algorithm eq 'minimax_wv') {
+        $use_wv = 1
+    }
 
 # construct sorted lists of defeats for each choice: O(n^2 log n)
     for (my $i = 0; $i < $n; $i++) {

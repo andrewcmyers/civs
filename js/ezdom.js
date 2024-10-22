@@ -20,7 +20,7 @@ var tags = [
     'ul', 'li', 'ol', 'p', 'b', 'i', 'em', 'table', 'thead', 'tbody', 'tr',
     'td', 'th', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'a', 'br', 'input',
     'blockquote', 'select', 'option', 'sup', 'sub', 'strong', 'pre', 'canvas',
-    'button', 'img', 'hr'
+    'button', 'img', 'hr', 'nav'
 ]
 
 /* Append the second and following arguments as children of node n,

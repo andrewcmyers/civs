@@ -232,7 +232,7 @@ sub CIVS_Header {
     if ($civs_header_printed) { return; }
     my $suggestion_box = '@SUGGESTION_BOX@';
 print
- '<div class="banner">';
+ '<div class=banner role=banner>';
 if ($local_debug) {
     print '<div style="text-align: center; background-color: yellow; width: 100%">',
           'LOCAL DEBUG MODE</div>';
@@ -244,7 +244,7 @@ print $cr,
   <div class=bannerpart>
     <h1>', $tx->Condorcet_Internet_Voting_Service, '</h1>
   </div>
-  <div class=bannerpart id=bannermenu>',
+  <div class=bannerpart id=bannermenu><nav>',
         a({-href => $civs_home}, $tx->about_civs), BR,
         a({-href => "$civs_url/publicized_polls.html"}, $tx->public_polls), BR,
         a({-href => "@CIVSBINURL@/opt_in@PERLEXT@"}, $tx->new_user), BR,
@@ -252,7 +252,7 @@ print $cr,
         a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
         a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
         a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
-    '</div><br>
+    '</nav></div><br>
   <div class=pagetitle>
     <h2>', $heading, '</h2>
   </div>

@@ -155,6 +155,12 @@ input[type="submit"] {
     background-color: #ffc;
     border: 1px solid #666;
 }
+input[type="button"].preview {
+    width: 100px;
+    max-width: 100px;
+    height: 30px;
+    max-height: 30px;
+}
 textarea { border: solid 1px #bbb }
 input[type="file"]:hover,
   input[type="button"]:hover,
@@ -352,4 +358,14 @@ div.centering { text-align: center }
 }
 #mail_failures td {
     padding: 0.5ex
+}
+
+.grid_container {
+    display: grid;
+    gap: 10px 15px;
+    padding: 1ex;
+    align-items: self-start;
+}
+.grid_container label {
+    text-align: right;
 }

@@ -131,149 +131,145 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
     accept-charset="UTF-8"
     name="CreateElection"
     onsubmit="return validate()">
-  <table class="form">
-  <tr>
-    <td class="label"><label id="name_of_poll">@Name_of_the_poll@</label></td>
-    <td><input type="text" title="Poll name" name="title" size="50" aria-labelledby="name_of_poll"></td>
-  <tr>
-    <td class="label"><label id="supervisor_name">@Name_of_supervisor@</label></td>
-    <td><input type="text" name="name" size="20" aria-labelledby="supervisor_name">
-  </td>
-  <tr>
-    <td class="label"><label id="supervisor_email">@Email_address_of_supervisor@</label></td>
-    <td><input type="text" name="email_addr" size="20" aria-labelledby="supervisor_email"
-      onchange="if (!validateEmail(this.value)) { alert('@Invalid_email_address@') }" >
-    </td>
-  </tr>
-  <tr>
-    <td class="label"><label
-    id="election_end_label">@Day_and_time_you_plan_to_stop@</label><br>
-        <small>@polls_must_be_stopped_manually@</small>
-    </td>
-    <td><input type="text" name="election_end" id="election_end" size="30"
-               aria-labelledby="election_end_label"
-          onchange="render_text('<br>@Preview_polls_ends@ ', 'election_end', 'rendered_end', 'poll_end', 'poll_end_preview')">
-         <span class="rendering" id="rendered_end"></span>
-</td>
-  </tr>
-  </table>
+  <div class=grid_container style="grid-template-columns: auto auto">
+    <label for=title id=name_of_poll>@Name_of_the_poll@</label>
+    <input type=text title="Poll name" id=title name=title size="50" aria-labelledby=name_of_poll>
 
-<div class="emphasized">
+    <label id=supervisor_name for=name>@Name_of_supervisor@</label>
+    <input type=text name=name id=name size="20" aria-labelledby="supervisor_name">
+
+    <label for=email_addr id=supervisor_email>@Email_address_of_supervisor@</label>
+    <input type=text id=email_addr name=email_addr size="20" aria-labelledby=supervisor_email
+      onchange="if (!validateEmail(this.value)) { alert('@Invalid_email_address@') }" >
+
+    <label for=election_end id=election_end_label>@Day_and_time_you_plan_to_stop@
+        <small>@polls_must_be_stopped_manually@</small>
+    </label>
+    <span>
+    <input type="text" name="election_end" id="election_end" size="30"
+               aria-labelledby="election_end_label"
+          onchange="render_text('<br>@Preview_polls_ends@ ', 'election_end',
+                                'rendered_end', 'poll_end', 'poll_end_preview')">
+         <span class="rendering" id="rendered_end"></span>
+    </span>
+</div>
+
+<div class=emphasized>
 @address_warning_para@
 </div>
 
-  <p><label id="description_label">@Description_of_the_poll@</label><br>
-  <table class="form">
-    <tr>
-      <td><textarea id="description" rows="5" name="description" cols="60"
-                    aria-labelledby="description_label"
+  <p><label id=description_label for=description>@Description_of_the_poll@</label></p>
+  <div class=grid_container style="grid-template-columns: auto auto auto">
+      <textarea id=description rows="5" name=description cols="60" aria-labelledby=description_label
                     onchange="preview_description()"></textarea>
-      </td>
-      <td><input type="button" value="@Preview_arrow@"
+      <input type=button class=preview value="@Preview_arrow@"
             onClick="preview_description()">
-      <td><span class="rendering" id="rendered_description"></span></td>
+      <span class=rendering id=rendered_description></span>
     </tr>
-  </table>
+  </div>
 
-  <p><label id="choices_label">@Enter_the_names_of_all_the_choices@</label></p>
-  <table class="form">
-  <tr><td>
+  <p><label id=choices_label for=choices>@Enter_the_names_of_all_the_choices@</label></p>
+  <div class=grid_container style="grid-template-columns: auto auto auto">
     <textarea rows="5" name="choices" cols="60" id="choices"
         aria-labelledby="choices_label"
-        onchange="preview_choices()"></textarea></td>
-    <td>
-      <td><input type="button" value="@Preview_arrow@"
-            onClick="preview_choices()"></td>
-      <td><span class="rendering" id="rendered_choices"></span></td>
-    </tr>
-  </table>
-  <p><input type=file aria-labelledby="choices_label" name="choices_file" id="choices_file"></p>
+        onchange="preview_choices()"></textarea>
+    <input type=button class=preview value="@Preview_arrow@"
+            onClick="preview_choices()">
+      <span class="rendering" id="rendered_choices"></span>
+  </div>
+  <p><input type=file aria-labelledby=choices_label name=choices_file id=choices_file></p>
 
-  <p><label id="num_winners_label">@How_many_choices_will_win@</label>
-     <input type="text" name="num_winners" size="5" value="1" aria-labelledby="num_winners_label"></p>
+  <p><label id=num_winners_label for=num_winners>@How_many_choices_will_win@</label>
+     <input type=text name=num_winners id=num_winners size="5" value="1" aria-labelledby=num_winners_label></p>
 
-  <p><label id="public_or_private">@public_or_private@</label></p>
-  <div id="pubpriv_choice">
-  <fieldset>
-  <div class="pubpriv">
-  <input type="radio" name="public" value="no" checked="checked" aria-labelledby="public_or_private">
-    @private_explanation@
+  <div id=pubpriv_choice>
+  <fieldset id=pubpriv_choice_fieldset><legend>@public_or_private@</legend>
+  <div class=pubpriv>
+  <input type=radio name=public value="no" checked="checked" id=pubpriv_private>
+    <label for=pubpriv_private>@private_explanation@</label>
   </div>
   <div class="pubpriv">
-  <input type="radio" name="public" value="yes" aria-labelledby="public_or_private"
-      onClick="make_visible('publicize', 'no_IP_check_div')">
-    @public_explanation@
+  <input type=radio name=public value="yes" id=pubpriv_public
+    onClick="make_visible('publicize', 'no_IP_check_div')">
+    <label for=pubpriv_public>@public_explanation@</label>
   </div>
   </fieldset>
   </div>
 
   <h3>@more_poll_options@</h3>
-    <div class="option" id="publicize">
-    <input type="checkbox" name="publicize" value="yes" title="@CIVS_will_announce_this_poll@"
+    <div class=option id=publicize>
+    <input type=checkbox name=publicize id=publicize value="yes" title="@CIVS_will_announce_this_poll@"
       onclick="make_invisible('restrict_results_div'); make_invisible('reveal_voters_div')">
-      @Have_CIVS_publicize_this_poll@
+        <label for=publicize>@Have_CIVS_publicize_this_poll@</label>
     </div>
     <div>
-  <input type="checkbox" name="external_ballots" value="yes" title="@If_you_want_to_upload@">
-      @Make_this_a_test_poll@
+  <input type=checkbox name=external_ballots id=external_ballots value="yes" title="@If_you_want_to_upload@">
+      <label for=external_ballots>@Make_this_a_test_poll@</label>
 </div>
-<div id='restrict_results_div'>
-  <input type="checkbox" id="restrict_results" name="restrict_results" value="yes"
+<div id=restrict_results_div>
+  <input type=checkbox id=restrict_results name=restrict_results value="yes"
          title="@Restrict_results@" onClick="make_visible('rrcontrol')">
-    @Do_not_release_results_to_all_voters@
-    <div class="emphasized">
+    <label for=restrict_results>@Do_not_release_results_to_all_voters@</label>
+    <div class=emphasized>
       @restriction_explanation@
     </div>
-    <div class="suboption" id="rrcontrol">
-    <label id="result_addrs_label">
+    <div class=suboption id=rrcontrol>
+    <label for=result_addrs id=result_addrs_label>
     @result_addrs_label@
     </label>
     <br>
-    <textarea rows="2" aria-labelledby="result_addrs_label" name="result_addrs" cols="50"></textarea>
+    <textarea rows="2" aria-labelledby=result_addrs_label id=result_addrs name=result_addrs cols="50"></textarea>
     </div>
 </div>
-<div id='reveal_voters_div'>
-  <input type="checkbox" name="ballot_reporting" value="yes"
+<div id=reveal_voters_div>
+  <input type=checkbox name=ballot_reporting id=ballot_reporting value="yes"
          onClick="make_visible('reveal_voters')"
          title="@Allows_any_to_view@">
-  @Enable_detailed_ballot_reporting@
-  <div class="suboption" id="reveal_voters">
-    <input type="checkbox" name="reveal_voters" value="yes" aria-labelledby="reveal_voters_label"/>
-    <label id="reveal_voters_label">@Also_reveal_identity@</label>
+  <label for=ballot_reporting>@Enable_detailed_ballot_reporting@</label>
+  <div class=suboption id=reveal_voters>
+    <input type=checkbox name=reveal_voters id=reveal_voters value="yes" aria-labelledby="reveal_voters_label"/>
+    <label for=reveal_voters id=reveal_voters_label>@Also_reveal_identity@</label>
     <p class=emphasized>@Reveal_warning@</p>
   </div>
 </div>
 <div>
-  <input type="checkbox" name="writeins" value="yes"
+  <input type=checkbox name=writeins id=writeins value="yes"
    title="@you_can_allow_writeins@">
-  @Allow_voters_to_write_in_new_choices@
+  <label for=writeins>@Allow_voters_to_write_in_new_choices@</label>
 </div>
 <div>
-  <input type="checkbox" name="shuffle" value="no"
+  <input type=checkbox id=shuffle name=shuffle value="no"
   title="@Present_choices_in_order_expl@">
-  @Present_choices_in_order@
+  <label for=shuffle>@Present_choices_in_order@</label>
 </div>
 <div>
-  <input type="checkbox" name="no_opinion" value="yes"
+  <input type=checkbox name=no_opinion id=no_opinion value="yes"
     title="@No_opinion_expl@">
-  @Allow_no_opinion@<br>
-  <input type="checkbox" name="proportional" value="yes"
+  <label for=no_opinion>@Allow_no_opinion@</label><br>
+  <input type=checkbox name=proportional id=proportional value="yes"
          onClick="make_visible('prcontrol')"
          title="@Proportional_rep_expl@">
-  @Enforce_proportional_representation@
-   <div class="suboption" id="prcontrol">
-   <label id="prcontrol_label">@voters_maximizing@</label><br>
-    <input type="radio" name="rating_interpretation"
-       value="best_choice" aria-labelledby="prcontrol_label"
-       checked>@rank_of_their_favorite_choice@<br>
-    <input type="radio" name="rating_interpretation" aria-labelledby="prcontrol_label"
-       value="combined_ratings">@combined_weights_of_selected_choices@<br>
+  <label for=proportional>@Enforce_proportional_representation@</label>
+   <div class=suboption id=prcontrol>
+    <fieldset><legend>@voters_maximizing@</legend>
+    <p>
+    <label><input type="radio" name="rating_interpretation"
+       value="best_choice"
+       checked>
+       @rank_of_their_favorite_choice@</label><br>
+       </p>
+       <p>
+    <label><input type="radio" name="rating_interpretation"
+       value="combined_ratings">
+       @combined_weights_of_selected_choices@</label><br>
+       </p>
+    </fieldset>
    </div>
 </div>
 <div id='no_IP_check_div'>
-  <input type="checkbox" name="no_IP_check" value="yes"
+  <input type="checkbox" name=no_IP_check id=no_IP_check value="yes"
          title="@No_IP_address_check_expl@">
-  @No_IP_address_check@
+  <label for=no_IP_check>@No_IP_address_check@</label>
 </div>
 
 <br><div class="emphasized">@Make_sure_your_address_is_correct@</div>

@@ -15,6 +15,7 @@ use Encode qw(encode decode);
 
 use Digest::MD5 qw(md5_hex);
 use DB_File;
+use rules;
 use beatpath;
 use beatpath2;
 use rp;
@@ -23,23 +24,6 @@ use minimax;
 use b2r;
 
 my $thisurl = $civs_bin_path."/results@PERLEXT@";
-
-# Map each algorithm name to the module that computes it.
-my %algorithms = (beatpath_winner => 'beatpath', # obsolete
-                  beatpath => 'beatpath2',
-                  civs_ranked_pairs => 'rp',
-		  mam => 'rp',
-		  runoff => 'runoff',
-                  minimax => 'minimax',
-                  b2r => 'b2r'
-                 );
-
-# maps legal algorithm modules to 1
-my %algorithm_modules = (beatpath2 => 1,
-                         rp => 1,
-			 runoff => 1,
-                         minimax => 1,
-                         b2r => 1);
 
 my $default_algorithm = 'minimax';
 
@@ -95,8 +79,8 @@ if ($show_combined) {
     $use_combined_ratings = $show_combined;
 }
 
-if (!defined($algorithms{$algorithm})) {
-    print p($tx->undefined_algorithm);
+if (!defined($algorithm_module{$algorithm})) {
+    print p($tx->undefined_algorithm($algorithm));
     print end_html();
     exit 0;
 }
@@ -347,7 +331,7 @@ sub ComputeResults {
 
 	print RESULTS h2($tx->Ranking_result), $cr;
 
-	&PrintReport($algorithms{$algorithm});
+	&PrintReport($algorithm_module{$algorithm});
     }
 }
 
@@ -647,14 +631,14 @@ sub PrintReport {
     my $rank_candidates = $module.'::rank_candidates';
     my $print_details = $module.'::print_details';
 
-    if (!$algorithm_modules{$module}) {
-	print RESULTS p("Algorithm module $module for algorithm $algorithm not valid");
+    if (!$legal_module{$module}) {
+	print RESULTS p("Module $module for algorithm $algorithm not valid");
 	print RESULTS '</div>';
 	return;
     }
 
     (my $rref, my $log) =
-	&$rank_candidates($num_choices, \@matrix, $bref, \@choices);
+	&$rank_candidates($num_choices, \@matrix, $bref, \@choices, $algorithm);
 
     (my $ciref, my $crref) = &MakeChoiceIndex($rref);
 

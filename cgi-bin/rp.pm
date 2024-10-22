@@ -111,17 +111,16 @@ sub TransitiveClosure {
 
 # See runoff.pm for a spec of this subroutine
 sub rank_candidates {
-    my ($num_choices, $mref, $bref, $choices) = @_;
+    my ($num_choices, $mref, $bref, $choices, $algorithm) = @_;
     my @ballots = @{$bref};
     &fisher_yates_shuffle(\@ballots);
 
-    if ($main::algorithm eq 'mam') {
+    if ($algorithm eq 'mam') {
 	$mam = 1;
 	&create_RVH([@ballots], $num_choices);
-
     } else {
-	    $mam = 0;
-	}
+        $mam = 0;
+    }
 
     (my $rref, my $ciref, my $denied_any,
 	my $allowed_cycle, my $denied_report) =
@@ -135,7 +134,7 @@ sub rank_candidates {
 	$log .= p($tx->Presence_of_a_green_entry_etc);
 	$log .= $denied_report;
     }
-    if ($main::algorithm eq 'mam') {
+    if ($algorithm eq 'mam') {
 	if ($tiebreak) {
 	    $log .= p($tx->Random_tie_breaking_used);
 	} else {

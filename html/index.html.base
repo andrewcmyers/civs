@@ -37,7 +37,7 @@
 
 <div id="main" class="form">
 <div class="bubbles">
-  <div class="bubble" id="topmenu">
+  <div class="bubble" id="topmenu"><nav>
     <ul>
 	<li><a href="civs_create.html">@Create_a_poll@</a></li>
 	<li><a href="@CIVSBINURL@/opt_in@PERLEXT@">@Activate_user@</a></li>
@@ -50,7 +50,7 @@
 	<li><a href="changelog.html">@CIVS_software@</a></li>
 	<li><a href="acks.html">@Acknowledgments@</a></li>
 	<li><a href="@SUGGESTION_BOX@">@Suggestion_box@</a>
-    </ul>
+    </nav></ul>
 </div>
 <div class="bubble">
     <h3>&nbsp;@CIVS_news@</h3>
@@ -109,7 +109,7 @@
 </div>
 
 <footer>
-<div id="footnote" style="margin: 2ex">
+<div id=footnote style="margin: 2ex">
 @Footnote_1@
 @Fine_print@
 </div>
