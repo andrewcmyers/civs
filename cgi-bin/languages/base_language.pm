@@ -10,7 +10,7 @@ sub lang { 'en-US' }
 sub CopyableURL {
     my ($self, $id, $url) = @_;
     "<tt><a href=\"$url\">$url</a></tt>
-    <img width=\"20\" src=\"@CIVSURL@/images/copy-icon.png\" onclick=\"copy_url('$id', '$url')\"/>
+    <img width=\"20\" alt=\"copy URL\" src=\"@CIVSURL@/images/copy-icon.png\" onclick=\"copy_url('$id', '$url')\"/>
     <span class=popup id=$id></span>"
 }
 
