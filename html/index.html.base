@@ -2,15 +2,18 @@
 <html lang="@LANGUAGE@">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@CIVS_name@</title>
-    <base href="@CIVSURL@/" />
-    <link rel="canonical" href="@CIVSURL@/" />
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <link rel="shortcut icon" href="@CIVSURL@/images/check123b.ico"/>
-    <link rel="apple-touch-icon" href="@CIVSURL@/images/check123b.png"/>
-    <script src="@CIVSURL@/ajax.js"></script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>@CIVS_name@</title>
+  <base href="@CIVSURL@/" />
+  <link rel="canonical" href="@CIVSURL@/" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="shortcut icon" href="@CIVSURL@/images/check123b.ico"/>
+  <link rel="apple-touch-icon" href="@CIVSURL@/images/check123b.png"/>
+  <script src="@CIVSURL@/ajax.js"></script>
+  <style>
+    h2 { font-size: 120% }
+  </style>
 </head>
 
 <body>
@@ -53,13 +56,13 @@
     </nav></ul>
 </div>
 <div class="bubble">
-    <h3>&nbsp;@CIVS_news@</h3>
+    <h2>&nbsp;@CIVS_news@</h2>
     <div id="newsfeed">
     @No_current_news@
     </div>
 </div>
 <div class="bubble">
-    <h3>@Top_public_polls@ <a class="small" href="publicized_polls.html">@see_more@</a></h3>
+    <h2>@Top_public_polls@ <a class="small" href="publicized_polls.html">@see_more@</a></h2>
     <div id="top_polls" class="small_list">
     @Loading@
     </div>

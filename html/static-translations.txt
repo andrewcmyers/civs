@@ -716,8 +716,10 @@ Why_rank_paras {
         head-to-head contests with other candidates. In contrast,
         IRV can elect a candidate even though a majority of
         voters would prefer someone else, and
-        <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
-        it has in real elections</a>.
+        it <a href="http://bolson.org/~bolson/2009/20090303_burlington_vt_mayor.html">
+        has,</a> <a
+href="https://drive.google.com/file/d/1y32bPVmq6vb6SwnMn6vwQxzoJfvrv6ID/view">repeatedly,</a>
+        in real elections</a>.
         Unlike most other Condorcet systems,
         CIVS also has a proportional representation mode.
       </p>
