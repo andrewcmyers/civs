@@ -5,6 +5,8 @@ use warnings;
 use POSIX;
 use JSON;
 use Switch;
+use Encode qw(encode);
+use Digest::MD5 qw(md5_hex);
 
 use DB_File;
 use election_utils;
@@ -12,11 +14,12 @@ use algorithms;
 use Scalar::Util qw(&looks_like_number);
 
 if ($#ARGV < 0) {
-    print STDERR "Usage: dump_elections [-p] [-s] [-d <drop_fraction>] [-A] <election_dir> ...\n";
-    print STDERR " -p : suppress private information\n";
+    print STDERR "Usage: dump_elections [options] <election_dir> ...\n";
+    print STDERR " -p <salt> : suppress private information\n";
     print STDERR " -d <drop_fraction> : randomly drop some ballots\n";
     print STDERR " -s : shuffle choices\n";
     print STDERR " -r <seed> : seed the random-number generator\n";
+    print STDERR " -m <min ballots> : only include sufficiently large polls\n";
     print STDERR " -A : dump all subdirectories of argument dir\n";
     exit 1;
 }
@@ -28,12 +31,15 @@ my $reveal_private_info = 1;
 my $dump_all = 0;
 my $drop_ballots = 0;
 my $shuffle_choices = 0;
+my $min_ballots = 1;
+my $salt;
 
 while ($ARGV[0] =~ m/^-/) {
     switch ($ARGV[0]) {
         case '-p' {
             $reveal_private_info = 0;
             shift @ARGV;
+            $salt = shift @ARGV;
         }
         case '-d' {
             shift @ARGV;
@@ -46,6 +52,10 @@ while ($ARGV[0] =~ m/^-/) {
         case '-r' {
             shift @ARGV;
             srand(shift @ARGV);
+        }
+        case '-m' {
+            shift @ARGV;
+            $min_ballots = shift @ARGV;
         }
         case '-A' {
             $dump_all = 1;
@@ -146,6 +156,11 @@ foreach my $election_dir (@elections) {
     my @voters = split /\n/, $recorded_voters;
     my @ballots = @{&ProcessBallots(\@voters, $election_id)};
 
+    if (@ballots < $min_ballots) {
+        untie %edata; untie %vdata;
+        next
+    }
+
     if (!$reveal_private_info && $external_ballots eq 'yes') {
         untie %edata; untie %vdata;
         next
@@ -164,9 +179,8 @@ foreach my $election_dir (@elections) {
     item $election_count++;
     begin '{';
     my $props = 0;
-    if ($reveal_private_info) {
-        item $props++, "\"election_id\" : \"$election_id\"";
-    }
+    my $id = $reveal_private_info ? $election_id : substr(md5_hex($salt, $election_id), 0, 10);
+    item $props++, "\"election_id\" : \"$id\"";
     if ($reveal_private_info) {
         item $props++, "\"title\" : \"$title\"";
     }
@@ -190,9 +204,15 @@ foreach my $election_dir (@elections) {
     item $props++, qw("test"), ' : "', (($external_ballots eq "yes") ? "yes" : "no"), '"';
     item $props++, qw("ballots"), ' : '; begin; begin '[';
     my $nballots = 0;
+    my $dropped = 0;
     foreach $b (@ballots) {
         if ($drop_ballots > 0 &&
-            rand() < $drop_ballots) { next }
+            @ballots - $dropped > $min_ballots &&
+            rand() < $drop_ballots)
+        {
+            $dropped++;
+            next
+        }
         my @row = @{$b};
         if (@row != $num_choices) { next }
         item $nballots++, '[ ';
