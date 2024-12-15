@@ -23,3 +23,35 @@ Content-language: de
 URI: civs_create.html.es@UTF8_SUFFIX@
 Content-type: text/html
 Content-language: es
+
+URI: civs_create.html.ko@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: ko
+
+URI: civs_create.html.hi@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: hi
+
+URI: civs_create.html.nl@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: nl
+
+URI: civs_create.html.ta@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: ta
+
+URI: civs_create.html.uk@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: uk
+
+URI: civs_create.html.zh@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: zh
+
+URI: civs_create.html.it@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: it
+
+URI: civs_create.html.ja@UTF8_SUFFIX@
+Content-type: text/html
+Content-language: ja

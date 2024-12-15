@@ -4,10 +4,6 @@ URI: faq.html.en
 Content-type: text/html
 Content-language: en
 
-URI: faq.html.fr.utf8
-Content-type: text/html
-Content-language: fr
-
 URI: faq.html.pt.utf8
 Content-type: text/html
 Content-language: pt

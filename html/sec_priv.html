@@ -32,12 +32,10 @@ include the following:
 of the election supervisor is made known to the designated voters.
 <li>The identity of a voter is known only to the election supervisor
 and the individual voter. The election supervisor knows how many voters
-cast votes, but has no other information about whether or how a given voter
+cast votes, but has no other information about how a given voter
 voted.
 <li>E-mail addresses of voters are erased immediately after the election
 begins.
-<li>The election supervisor can determine whether a voter has voted
-only with the permission of the voter and only after the election has ended.
 <li>There is considerable protection against people
 who break into the CIVS server. Some information is stored
 in cleartext on the server: the names of
@@ -50,16 +48,20 @@ voter or whether or how they voted. For public elections, it
 is not possible to determine how a voter voted, and it is
 only possible to know whether a voter voted if one has
 the authorization key for the election.
-<!-- <li>
-Voters receive a receipt that
-enables them to check that their vote was cast correctly. (Not yet implemented)
-The issue is that there is also value in preventing voters from proving how they
-voted on the issue. Technical issues remain to be resolved about how
-to reconcile these integrity and repudiation properties. -->
 </ul>
 
+<p>
 The remainder of this document describes why these goals are
 believed to be met.
+</p>
+<p>
+Note that
+<a href="data-releases.html">
+some data from CIVS polls
+</a>
+ is made available in a privacy-preserving, fully anonymized
+way, to support research on election systems and algorithms.
+</p>
 
 <h2>Election types</h2>
 
@@ -342,7 +344,7 @@ the same key can be reissued without giving them the ability
 to vote more than once.
 <li><strong>Malicious election supervisor.</strong>  A malicious
 supervisor is capable of violating confidentiality and integrity
-in limited ways.  The supervisor cannot learn how or whether
+in limited ways.  The supervisor cannot learn how
 a voter voted through normal use of CIVS.  However, a supervisor
 could create an election and invite only one voter to vote in it.
 Similarly, the supervisor could invite himself to vote many times
@@ -351,6 +353,9 @@ problems can be mitigated if the election ID and the voting population
 are common knowledge.  In the former case, this prevents a
 voter from being tricked into voting in the election; in the latter,
 the number of extra votes cast by the supervisor may be detected.
+However, note that a supervisor can indirectly learn whether a voter has voted
+because the system allows certain emails to be sent only to voters who have not
+voted yet.
 <li><strong>Intruder with read-only access.</strong>
 Very little information is stored in cleartext on the server.
 An intruder could learn email addresses, if he manages to

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Condorcet Internet Voting Service</title>
+<link rel="canonical" href="@CIVSURL@/sec_priv.html">
+<link rel="stylesheet" type="text/css" href="style.css">
+<link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+<script src="ezdom.js"></script>
+<script src="civs_hdr.js"></script>
+<style>
+ dt { font-family: Menlo, Courier, fixed }
+ th { min-width: 10em }
+</style>
+</head>
+
+<body>
+
+<script>
+var body = document.getElementsByTagName('body')[0]
+body.appendChild(create_header("CIVS Data Releases"))
+</script>
+
+<div class="contents">
+<div class="normal_text">
+
+<h2>Conditions of data release</h2>
+<p>
+Data from CIVS polls is released for research purposes only.
+</p>
+
+<h2>Privacy protections</h2>
+<p>Released data is fully anonymized, with all identifying information other
+than ballot rankings removed, including the title of the poll and the names of
+the choices. In addition, ballots are shuffled in two ways. First, the order of
+ballots is randomized, and the order of the choices is as well. Further, small
+fraction of ballots (around 10%) are randomly dropped.  With more than 20,000
+polls in the dataset, it is expected that it will be infeasible to reliably
+identify past polls or the content of ballots cast in them.
+</p>
+
+<h2>Format</h2>
+<p>
+Data is released as a compressed file in JSON format. The contents are an array
+of poll descriptions. The following attributes may be reported for each poll:
+<dl>
+<dt>election_id<dd>A pseudonymized identifier for the poll
+<dt>mode<dd>Either "proportional" or "nonproportional". Most polls are the latter.
+<dt>num_choices<dd>The number of choices/alternatives/candidates being ranked
+<dt>test<dd>Either "yes" or "no" depending on whether this was a test poll. Test polls
+   often use synthetic data, depending on how they were used.
+<dt>ballots<dd> An array of ballots. Each ballot is an array containing the ranks of
+   the choices, from 1 up to the number of choices. The rank may also be "?" if the
+   voter did not express an opinion about the rank of that choice.
+<dt>num_ballots<dd>The length of the ballot array
+</dl>
+
+</p>
+
+<h2>Releases</h2>
+
+<table>
+<tr>
+<th>Date
+<th>Link
+<tr>
+<td>2024-12-15
+<td><a href="data-release-dir/2024-12-15.zip">Zip file</a>
+</table>
+
+</div>
+</div>
+</body>
+</html>

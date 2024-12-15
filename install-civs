@@ -133,7 +133,7 @@ echo "Installing HTML content"
   for f in civs_create.html* index.html* public_elections.html*		      \
     proportional.html* sec_priv.html* acks.html changelog.html*		      \
     news.html* *.var rp.html* publicized_polls.html* faq.html*		      \
-    style.css hebrew.css
+    data-releases.html* style.css hebrew.css
   do
     b=`basename "$f"`
     case "$f" in
