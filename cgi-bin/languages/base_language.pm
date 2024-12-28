@@ -992,6 +992,9 @@ sub Condorcet_winner_explanation {
 sub undefeated_explanation {
     '&nbsp;&nbsp;(Not defeated in any contest vs. another choice)'
 }
+sub third_party_explanation {
+    '&nbsp;&nbsp;(does not do as well as higher-ranked choices, against other choices)'
+}
 sub Choices_shown_in_red_have_tied {
     'Choices shown in red have tied for being selected.
 	You may wish to select among them randomly.'

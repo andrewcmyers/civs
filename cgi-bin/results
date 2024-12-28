@@ -522,7 +522,7 @@ sub PrintRanking {
 	if ($ranksize > 1) {
 	    print RESULTS $tx->Tied, br, $cr;
 	}
-	    my $tie;
+        my $tie;
 	if ($num_seen < $num_winners &&
 	    $num_seen + $ranksize > $num_winners) {
 	    $tie = 1;
@@ -534,6 +534,7 @@ sub PrintRanking {
 	    if ($i > 0) { print RESULTS '<br>', $cr; }
 	    if ($tie) { print RESULTS '<span class=warning>'; }
 	    my $explanation = '';
+            my $some_explanation;
 	    if ($rank > 0) {
 		for (my $brank = $rank-1; $brank >= 0; $brank--) {
 		    my @pwinners = @{$result[$brank]};
@@ -568,10 +569,14 @@ sub PrintRanking {
 				    $matrix[$condorcet_winner][$winner[$i]],
 				    $matrix[$winner[$i]][$condorcet_winner]),
 			      '</span>';
+                $some_explanation = 1;
 	    }
 	    if ($explanation ne '') {
 		print RESULTS '<span class="explain">'.$explanation.'</span>';
-	    }
+	    } else {
+		print RESULTS '<span class="explain">'.$tx->third_party_explanation.'</span>'
+                  unless $some_explanation;
+            }
 	    $choice_rank[$winner[$i]] = $j++;
 	    if (0 && $explanation ne '') {
 		print RESULTS '</span>';

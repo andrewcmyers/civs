@@ -33,13 +33,16 @@ Data from CIVS polls is released for research purposes only.
 </p>
 
 <h2>Privacy protections</h2>
-<p>Released data is fully anonymized, with all identifying information other
+
+<p>
+Released data is fully anonymized, with all identifying information other
 than ballot rankings removed, including the title of the poll and the names of
 the choices. In addition, ballots are shuffled in two ways. First, the order of
-ballots is randomized, and the order of the choices is as well. Further, a small
-fraction of ballots (around 10%) are randomly dropped.  With more than 20,000
-polls in the dataset, it is expected that it will be infeasible to reliably
-identify past polls or the content of ballots cast in them.
+ballots is randomized, and second, the order of the choices is as well. Further, a
+small fraction of ballots (around 10%) are randomly dropped.  Only polls with
+at least three voters are included. With more than 20,000 polls in the dataset,
+it is expected to be difficult to reliably identify most past polls and infeasible
+to determine the content of ballots that voters cast.
 </p>
 
 <h2>Format</h2>
@@ -66,10 +69,12 @@ of poll descriptions. The following attributes may be reported for each poll:
 <tr>
 <th>Date
 <th>Link
+<th>Number of polls
 <th>SHA-256 hash
 <tr>
 <td>2024-12-15
 <td><a href="data-release-dir/2024-12-15.zip">Zip file</a>
+<td>22477
 <td class=hash>9f0d5aeec38ec84f031c1a6d07172d1d8a99f62ca1c0b5c24c5c65b3aee84d98
 </table>
 
