@@ -1076,7 +1076,7 @@ sub activation_code {
 sub someone_has_requested_activation {
     my ($self, $address, $code, $mail_mgmt_url) = @_;
   "누군가가 CIVS 투표 시스템이 투표에서 투표하기 위해 이메일 주소 <$address>를 활성화하도록 요청했습니다. 이 주소를 활성화하려면 다음 활성화 코드가 필요합니다.
- $코드
+ $code
 이 요청을 시작하지 않은 경우 이 이메일을 무시해도 됩니다.
 $mail_mgmt_url 링크를 사용하여 CIVS에서 이메일을 제어합니다."
 }
