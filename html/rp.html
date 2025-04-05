@@ -103,8 +103,10 @@ CIVS does not impose a completion rule; in fact, anyone viewing the
 results of an election can see what the results would have been
 with each of the rules. It is probably a good idea for the election
 supervisor to decide on an rule ahead of time, and include it in the
-election description.  On the other hand, all five rules usually agree
+election description.  On the other hand, the various rules usually agree
 with each other, especially on the ranking of the first few candidates.
+The Schulze, Beatpath, Minimax, and MAM methods especially tend to
+agree with each other.
 </p>
 
 <h2>Which completion rule should I use?</h2>
@@ -128,10 +130,7 @@ finding the strongest chains of pairwise defeats that can be used to
 argue one candidate is preferred over another; it can also be computed
 fairly cheaply using the Floyd-Warshall all-pairs-shortest-paths
 algorithm. The two ranked-pairs rules (CIVS Ranked Pairs and MAM) are
-more expensive but are still usually fast enough to be practical.  If
-there are <i>n</i> candidates, the ranked pairs algorithms are about
-<i>n</i> times slower than Schulze. This slowdown is only noticeable if
-there are many candidates (more than twenty).  The rankings produced by
+also fast enough to be practical. The rankings produced by
 minimax tend to be the most stable in the sense that a given voter's
 ballot does not affect the ordering much. The difference between the
 two ranked pairs methods, CIVS Ranked Pairs and MAM, is that MAM uses
@@ -140,7 +139,10 @@ deterministic. Thus, the result of running MAM is not determined by
 just the ballots cast. Comparison of the results of MAM and CIVS RP
 will show if randomization was needed and used by MAM. If there is a
 lot of concern about strategic voting (particularly, burying attacks),
-Condorcet-IRV is a reasonable candidate.
+the runoff-based methods (Condorcet-IRV and Bottom-2 Runoff) are
+reasonable completion methods to use because they appear to
+resist strategic voting better while still remaining
+Condorcet-compliant.
 </p>
 
 <h2 id=minimax>Minimax-PM</h2>
