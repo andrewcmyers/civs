@@ -710,7 +710,11 @@ sub SendKeys {
     my $load = GetEmailLoad($now);
     my $optouts = &GetOptouts();
     my @failures = ();
-    OpenMail;
+    if (!OpenMail) {
+        print p("Could not connect to SMTP server", tt('@SMTP_HOST@'));
+        Log("Failed to send keys to voters");
+        return;
+    }
     foreach my $v (@addresses) {
 	if ($v eq '') { next }
         my $url = &VotingUrl($v, $election_id, $authorization_key, $resend);

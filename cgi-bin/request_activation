@@ -61,7 +61,11 @@ if (!defined($code)) {
     if ("@LOCALDEBUG@") {
         print "OK Would email activation code $code to $address at this point."
     } else {
-        OpenMail;
+        if (!OpenMail) {
+            print p("Could not connect to SMTP server", tt('@SMTP_HOST@'));
+            Log("Failed to send activation code");
+            return;
+        }
 
         if (MailFrom('@AUTH_SENDER@') && MailTo($address) && StartMailData()) {
             my $uniqueid = &SecureNonce;
