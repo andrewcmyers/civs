@@ -34,7 +34,8 @@ $control_key = $control_key || 'omitted';
 
 print h1("$title");
 
-print $tx->poll_supervisor($name,$email_addr), br(), $cr;
+print $tx->poll_supervisor(escapeHTML($name), escapeHTML($email_addr)),
+      br(), $cr;
 if (!IsStarted) {
     print "<form method=\"POST\"
         action=\"$civs_bin_path/start_election@PERLEXT@\"

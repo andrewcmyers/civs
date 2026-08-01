@@ -370,28 +370,167 @@ my $allowed_tags = {
     ol => {type => ['a', '1', 'A']}
 };
 
+my $max_image_size = @MAX_IMAGE_SIZE@;
+
+# The image formats we are willing to inline, identified by the leading bytes
+# of the data rather than by the content type the remote server claims. The
+# type recorded in the generated data: URI comes from this table, so a hostile
+# server cannot choose it. SVG is deliberately absent, since it can carry
+# script.
+my @image_magic = (
+    ["\x89PNG\r\n\x1a\n" => 'image/png'],
+    ["\xff\xd8\xff"      => 'image/jpeg'],
+    ['GIF87a'            => 'image/gif'],
+    ['GIF89a'            => 'image/gif'],
+    ['BM'                => 'image/bmp'],
+    ["\x00\x00\x01\x00"  => 'image/x-icon'],   # icon; \x02 would be a cursor
+);
+
+# Return the content type for image data, or undef if it is not one of the
+# formats above.
+sub ImageContentType {
+    my ($content) = @_;
+    return undef unless defined($content);
+    foreach my $entry (@image_magic) {
+        my ($magic, $type) = @$entry;
+        return $type if length($content) >= length($magic)
+                     && substr($content, 0, length($magic)) eq $magic;
+    }
+    # WebP is RIFF with a WEBP tag four bytes after the length.
+    if (length($content) >= 12 && substr($content, 0, 4) eq 'RIFF'
+                               && substr($content, 8, 4) eq 'WEBP') {
+        return 'image/webp';
+    }
+    return undef;
+}
+
+# Report whether a packed address is one CIVS must not fetch from: loopback,
+# link-local (which is where cloud instance metadata lives), private and other
+# special-purpose ranges.
+sub BlockedAddress {
+    my ($family, $packed) = @_;
+    if ($family == AF_INET) {
+        my @o = unpack('C4', $packed);
+        return 1 if $o[0] == 0;                            # 0.0.0.0/8
+        return 1 if $o[0] == 10;                           # private
+        return 1 if $o[0] == 127;                          # loopback
+        return 1 if $o[0] == 169 && $o[1] == 254;          # link-local
+        return 1 if $o[0] == 172 && $o[1] >= 16 && $o[1] <= 31;
+        return 1 if $o[0] == 192 && $o[1] == 168;
+        return 1 if $o[0] == 192 && $o[1] == 0 && $o[2] == 0;
+        return 1 if $o[0] == 100 && $o[1] >= 64 && $o[1] <= 127;   # CGNAT
+        return 1 if $o[0] == 198 && ($o[1] == 18 || $o[1] == 19);  # benchmarks
+        return 1 if $o[0] >= 224;                          # multicast/reserved
+        return 0;
+    }
+    if ($family == AF_INET6) {
+        my @b = unpack('C16', $packed);
+        my $top_zero = 1;
+        foreach my $i (0..9) { $top_zero = 0 if $b[$i] != 0 }
+        # IPv4-mapped and IPv4-compatible addresses: judge the embedded address,
+        # so ::ffff:127.0.0.1 cannot be used to sidestep the checks above.
+        if ($top_zero && (($b[10] == 0xff && $b[11] == 0xff)
+                       || ($b[10] == 0 && $b[11] == 0))) {
+            return BlockedAddress(AF_INET, pack('C4', @b[12..15]));
+        }
+        return 1 if ($b[0] & 0xfe) == 0xfc;                # fc00::/7
+        return 1 if $b[0] == 0xfe && ($b[1] & 0xc0) == 0x80;  # fe80::/10
+        return 1 if $b[0] == 0xff;                         # multicast
+        return 0;
+    }
+    return 1;   # unrecognized family: refuse
+}
+
+# Fetch an image to inline into poll text. Returns (content type, bytes), or
+# an empty list if the URL is one we decline to fetch or the reply is not an
+# image of an accepted format.
+#
+# This request is issued by the server, from inside whatever network it sits
+# in, and the bytes come back embedded in a page shown to whoever supplied the
+# URL. Without the checks below, a poll description could use it to read the
+# server's own internal HTTP endpoints.
+sub FetchImage {
+    my ($src) = @_;
+    return () unless defined($src);
+    $src =~ s/\A\s+//;
+    $src =~ s/\s+\z//;
+    my ($scheme, $hostport) = $src =~ m{\A(https?)://([^/?\#]*)}i;
+    if (!defined($scheme)) {
+        &Log("Image fetch refused: not an http or https URL");
+        return ();
+    }
+    if ($hostport =~ m/\@/) {   # credentials obscure which host is addressed
+        &Log("Image fetch refused: credentials in URL");
+        return ();
+    }
+    my ($host) = $hostport =~ m/\A\[([^\]]*)\]/;   # bracketed IPv6 literal
+    if (!defined($host)) { ($host) = $hostport =~ m/\A([^:]*)/ }
+    if (!defined($host) || $host eq '') {
+        &Log("Image fetch refused: no host in URL");
+        return ();
+    }
+    my ($err, @addrs) =
+        Socket::getaddrinfo($host, '', {socktype => SOCK_STREAM});
+    if ($err || !@addrs) {
+        &Log("Image fetch refused: cannot resolve host");
+        return ();
+    }
+    foreach my $a (@addrs) {
+        my $packed;
+        if ($a->{family} == AF_INET) {
+            (undef, $packed) = Socket::unpack_sockaddr_in($a->{addr});
+        } elsif ($a->{family} == AF_INET6) {
+            (undef, $packed) = Socket::unpack_sockaddr_in6($a->{addr});
+        }
+        if (!defined($packed) || &BlockedAddress($a->{family}, $packed)) {
+            &Log("Image fetch refused: address not permitted");
+            return ();
+        }
+    }
+    # Do not follow redirects: a redirect is a second request to a target that
+    # was never checked above.
+    #
+    # max_size aborts the read once the body passes the limit, instead of
+    # letting the whole thing into memory and rejecting it afterwards. It
+    # applies whatever the status is, so an oversized error body is capped
+    # too, and a server that lies about (or omits) Content-Length gains
+    # nothing. Exceeding it comes back as status 599, which is rejected below.
+    my $http = HTTP::Tiny->new(verify_SSL => 0, timeout => 10,
+                               max_redirect => 0,
+                               max_size => $max_image_size);
+    my $response = $http->get($src);
+    if (!$response->{success} || $response->{status} != 200) {
+        &Log("Image fetch failed with status " . $response->{status});
+        return ();
+    }
+    my $content = $response->{content};
+    if (!defined($content) || $content eq '') { return () }
+    if (length($content) >= $max_image_size) {
+        &Log("Image too large: " . length($content));
+        return ();
+    }
+    my $type = &ImageContentType($content);
+    if (!defined($type)) {
+        &Log("Image fetch refused: content is not a recognized image format");
+        return ();
+    }
+    return ($type, $content);
+}
+
 if ($filter_tags ne 'no') {
     $tf = new HTML::TagFilter(
       on_open_tag => sub {
           my ($self, $tag, $attributes, $sequence) = @_;
           if ($$tag eq 'img') {
-            my $src = &TrimAddr($attributes->{src});
+            my $src = $attributes->{src};
+            # Replace the source unconditionally: when the fetch is refused or
+            # fails, the poll shows the placeholder rather than leaving a URL
+            # that every viewer's browser would request.
             $attributes->{src} = '@CIVSURL@/images/check123b.png';
-            my $http = HTTP::Tiny->new(verify_SSL => 0);
-            my $response = $http->get($src);
-
-            if ($response->{status} eq 200) {
-                my $contenttype = $response->{headers}->{'content-type'};
-                my $content = $response->{content};
-                if (length $content < @MAX_IMAGE_SIZE@) {
-                    my $enc = MIME::Base64::encode_base64($content,'');
-                    my $newsrc = "data:$contenttype;base64,$enc";
-                    $attributes->{src} = $newsrc;
-                } else {
-                    print STDERR "Image too large: ", length $content, "\n";
-                }
-            } else {
-                print STDERR "Failed to fetch image: ", $src, "\n";
+            my ($type, $content) = &FetchImage($src);
+            if (defined($type)) {
+                $attributes->{src} = "data:$type;base64,"
+                          . MIME::Base64::encode_base64($content, '');
             }
           }
           return;

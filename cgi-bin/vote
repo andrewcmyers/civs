@@ -398,7 +398,7 @@ sub IntroduceWriteins {
     print div({class => 'description'}, p($description)), $cr;
 
     print p($tx->instructions1($num_winners, $election_end,
-                               $name, $email_addr)), $cr;
+                               escapeHTML($name), escapeHTML($email_addr))), $cr;
     print p($tx->only_writeins_are_permitted), $cr;
 }
 
@@ -406,7 +406,7 @@ sub IntroduceVoting {
     print div({class => 'description'}, p($description)), $cr;
 
     print p($tx->instructions1($num_winners, $election_end,
-                               $name, $email_addr)), $cr;
+                               escapeHTML($name), escapeHTML($email_addr))), $cr;
     if ($num_auth) {
         print p($tx->report_authorized($num_auth));
     }

@@ -330,7 +330,8 @@ sub CheckStopped {
     if (!IsStopped() && (!$local_debug)) {
 	print h1($tx->Poll_not_yet_ended);
 	print p(
-	    $tx->The_poll_has_not_yet_been_ended($title,$name,$email_addr),
+	    $tx->The_poll_has_not_yet_been_ended($title, escapeHTML($name),
+						escapeHTML($email_addr)),
 	    $tx->poll_has_been_announced_to_end($election_end));
 	PointToResults;
 	print end_html();
@@ -777,7 +778,8 @@ sub SendKeys {
 <meta content=\"text/html;charset=UTF-8\" http-equiv=\"Content-Type\"
 </head>
 <body><p>";
-	    $html .= $tx->voter_mail_intro($title, $name, $email_addr);
+	    $html .= $tx->voter_mail_intro($title, escapeHTML($name),
+					   escapeHTML($email_addr));
 	    $html .= '</p>';
 
 	    if (!($description =~ m/^(\s)*$/)) {

@@ -198,7 +198,10 @@ sub ComputeResults {
 	    action="'.$thisurl.'"
 	    enctype="multipart/form-data"
 	    name="changeSettings">';
-    print RESULTS span($tx->Supervisor($name, &Email($email_addr))), br;
+    # name and email_addr are UTF-8 fields, not filtered HTML, so they must be
+    # escaped here (see the field notes in election.pm).
+    print RESULTS span($tx->Supervisor(escapeHTML($name),
+				       &Email(escapeHTML($email_addr)))), br;
     print RESULTS span($tx->Announced_end_of_poll($election_end)), br, $cr;
     if (IsStopped) {
 	# my $close_time = $vdata_copy{'close_time'};

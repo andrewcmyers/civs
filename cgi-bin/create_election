@@ -105,7 +105,10 @@ tie %edata, "DB_File", $election_data, O_CREAT|O_RDWR, 0777, $DB_HASH;
 my $title = &Filter(scalar param('title') || ''); $edata{'title'} = encode('utf-8', $title);
 $edata{'description'} = encode('utf-8', &Filter(scalar param('description') || ''));
 my $name = param('name') || "unspecified"; $edata{'name'} = encode('utf-8', $name);
-$edata{'email_addr'} = encode('utf-8', scalar param('email_addr'));
+# Store the address validated above, not the raw parameter. TrimAddr extracts
+# an address from within angle brackets, so the raw value can carry arbitrary
+# text alongside the address that CheckAddr accepted.
+$edata{'email_addr'} = encode('utf-8', $email_addr);
 $edata{'num_winners'} = natParam('num_winners');
 $edata{'election_end'} = encode('utf-8', &Filter(scalar param('election_end')));
 $edata{'election_begin'} = time();
@@ -218,7 +221,7 @@ if (!($local_debug)) {
         print "</pre>\n";
 
         if ($success) {
-            print p($tx->mail_has_been_sent($email_addr));
+            print p($tx->mail_has_been_sent(escapeHTML($email_addr)));
             print p($tx->click_on_the_URL_to_start($title));
         } else {
         }
