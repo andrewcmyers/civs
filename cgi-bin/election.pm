@@ -506,16 +506,12 @@ sub ElectionUsesAuthorizationKey {
 sub CheckAuthorizationKey {
     my $authorization_key = shift;
     if (!&ElectionUsesAuthorizationKey) {
-        # if the hash doesn't exist in the database, then this is
-        # an election that was created before authorization keys
-        # were added to the CIVS design. Or it is a publicized election.
-        # In either case the test passes.
         return 1;
     }
     if (!defined($authorization_key)) {
         # if the key is undefined, then the CGI script didn't receive
         # the parameter.  That's either an authorization violation,
-        # or an old election that didn't use an auth. key.  Since
+        # or an old election that didn't use an auth. key. Since
         # we've already checked the second case, assume the first.
         return 0;
     }
@@ -666,9 +662,10 @@ sub GetEmailLoad {
     return $load;
 }
 
-# Return the proper URL for the voter.  Also update $num_auth and $voter_keys
+# Return the proper URL for the voter based on their address.  Also update $num_auth and $voter_keys
 # appropriately, and print a message about the user already being authorized if
-# they are. The voter email address does not need to be in canonical form.
+# they are. $email must be a valid email address as accepted by CheckAddr. It need
+# not need to be in canonical form.
 sub VotingUrl {
     my ($email, $election_id, $authorization_key, $resend) = @_;
     my $v = &CanonicalizeAddr($email);
@@ -683,11 +680,13 @@ sub VotingUrl {
         $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
                     ."&key=$voter_key";
         if ($voter_keys{$hash_voter_key}) {
-            # This email address has already been added to the poll
+            # This email address has already been added to the poll.
+            # By the precondition $email cannot contain a tag, but & is legal
+            # in a local part, so escape it for well-formed output.
             if ($resend || !$used_voter_keys{$hash_voter_key}) {
-                print $tx->Voter_v_already_authorized($email), $cr;
+                print $tx->Voter_v_already_authorized(escapeHTML($email)), $cr;
             } else {
-                print $tx->Skipping_already_voted($email), $cr;
+                print $tx->Skipping_already_voted(escapeHTML($email)), $cr;
                 return '';
             }
         } else {
@@ -702,6 +701,8 @@ sub VotingUrl {
 # Send all of the voters their keys, with logging to STDOUT.
 # Record the keys in the database, and update the number of
 # authorized voters accordingly.
+# Note that we cannot assume the addresses are valid email addresses
+# at this point.
 sub SendKeys {
     my ($authorization_key, $addresses_ref, $resend) = @_;
     my @addresses = map {&TrimAddr($_)} @{$addresses_ref};
@@ -717,6 +718,11 @@ sub SendKeys {
     }
     foreach my $v (@addresses) {
 	if ($v eq '') { next }
+	if (!CheckAddr($v)) {
+	    # Invalid address, could be dangerous junk
+	    print $tx->Invalid_email_address(escapeHTML($v)), $cr;
+	    next;
+	}
         my $url = &VotingUrl($v, $election_id, $authorization_key, $resend);
         if (!$url) { next }
 
@@ -731,10 +737,6 @@ sub SendKeys {
             &RecordInvitation($v, $url, $title);
             next;
         }
-	if (!CheckAddr($v)) {
-	    print $tx->Invalid_email_address($v), $cr;
-	    next;
-	}
         $load++;
 
         if ($local_debug) {

@@ -383,6 +383,9 @@ sub Too_many_voters_added {
 sub Too_much_email {
     'Sorry, CIVS places limits on how much email is generated. Please add more voters later.'
 }
+sub No_voters_added_no_mail {
+    'No voters were added, because CIVS could not reach the mail server. Please try again later.'
+}
 sub Out_of_upload_space {
     'Server may be out of disk space for uploads.'
 }

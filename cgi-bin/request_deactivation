@@ -19,7 +19,11 @@ my $address = &TrimAddr(param("address") || "");
 print CGI::header(-charset => 'utf-8');
 
 if (!CheckAddr($address)) {
-    print start_html(), p("Illegal mail address <$address>"), end_html();
+    # $address failed validation, so it is arbitrary text from the request.
+    # Escaping the whole message also keeps the angle brackets around the
+    # address from being read as a tag, which hid the address entirely.
+    print start_html(), p(escapeHTML("Illegal mail address <$address>")),
+          end_html();
     exit 0;
 }
 

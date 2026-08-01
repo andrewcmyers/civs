@@ -18,7 +18,8 @@ my $code = param('code');
 print CGI::header(-charset => 'utf-8');
 
 if (!CheckAddr($address)) {
-    print start_html(), p("Illegal mail address <$address>");
+    # $address failed validation, so it is arbitrary text from the request.
+    print start_html(), p(escapeHTML("Illegal mail address <$address>"));
     exit 0;
 }
 

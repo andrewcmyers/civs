@@ -63,8 +63,19 @@ if ($#errors >= 0) {
 
 GetPrivateHostID;
 
-# Send all of the voters their keys
-my @mail_failures = @{SendKeys($authorization_key, \@new_addresses, $resend)};
+# Send all of the voters their keys. Return a reference to an array containing
+# failed addresses. Return undef if the mail server cannot be reached.
+my $mail_failures = SendKeys($authorization_key, \@new_addresses, $resend);
+if (!defined($mail_failures)) {
+    print p($tx->No_voters_added_no_mail), $cr;
+    my $url = "$civs_bin_path/control@PERLEXT@?id=$election_id&key=$control_key";
+    $url .= "&akey=$authorization_key" if defined($authorization_key);
+    print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>'), $cr;
+    print end_html();
+    ElectionLog("No voters added to $election_id: could not reach the mail server");
+    exit 0;
+}
+my @mail_failures = @{$mail_failures};
 
 $num_auth = $num_auth || 0;
 
@@ -84,7 +95,9 @@ if ($#mail_failures >= 0) {
     my @rows = Tr(th($tx->Address), th($tx->Reason));
     foreach my $rowref (@mail_failures) {
         my ($failure_type, $addr) =  @{$rowref};
-        push @rows, Tr(td($addr), td($tx->mail_failure_reason($failure_type, $addr)));
+        # Note: $addr may be arbitrary text from the user request.
+        push @rows, Tr(td(escapeHTML($addr)),
+                       td($tx->mail_failure_reason($failure_type, $addr)));
         if ($failure_type eq 'not activated') {
             push @not_activated, $addr;
         } elsif ($failure_type eq 'opted_out') {

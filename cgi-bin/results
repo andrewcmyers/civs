@@ -79,7 +79,9 @@ my $real_combined = $use_combined_ratings ? 1 : 0;
 $use_combined_ratings = boolParam('use_combined_ratings', $real_combined);
 
 if (!defined($algorithm_module{$algorithm})) {
-    print p($tx->undefined_algorithm($algorithm));
+    # Reached only when the requested algorithm is not one we know about:
+    # the name is arbitrary text from the request.
+    print p($tx->undefined_algorithm(escapeHTML($algorithm)));
     print end_html();
     exit 0;
 }
