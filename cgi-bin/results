@@ -73,11 +73,10 @@ if ($show_prop) {
     $proportional = $show_prop;
 }
 
-my $real_combined = $use_combined_ratings;
-my $show_combined = param('use_combined_ratings');
-if ($show_combined) {
-    $use_combined_ratings = $show_combined;
-}
+my $real_combined = $use_combined_ratings ? 1 : 0;
+# Note: this value is used to construct the cache file name below, so it
+# must not be taken from the request without sanitizing it.
+$use_combined_ratings = boolParam('use_combined_ratings', $real_combined);
 
 if (!defined($algorithm_module{$algorithm})) {
     print p($tx->undefined_algorithm($algorithm));

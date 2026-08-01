@@ -31,7 +31,8 @@ BEGIN {
                       &CheckPostRequest &CheckConfirmation
                       $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
-                      &VerifyUpload &hexdump &toNatural &natParam &bytesParam &fixUTF);
+                      &VerifyUpload &hexdump &toNatural &natParam &toBoolean
+                      &boolParam &bytesParam &fixUTF);
     $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
 
@@ -473,7 +474,7 @@ sub fixUTF {
 # 0 if the argument is undefined or not a natural number.
 sub toNatural {
     my $n = shift;
-    return 0 unless defined($n) && $n =~ /\A(0|[1-9][0-9]*)\Z/;
+    return 0 unless defined($n) && $n =~ /\A(0|[1-9][0-9]*)\z/;
     return $n;
 }
 
@@ -481,6 +482,23 @@ sub toNatural {
 # 0 if the value of the parameter is absent or non-numeric.
 sub natParam {
     toNatural(scalar param($_[0]))
+}
+
+# Return 0 or 1 for the argument, which is expected to be a boolean
+# represented as 0 or 1. Anything else, including an undefined value,
+# yields the default provided as the second argument (itself defaulting
+# to 0).
+sub toBoolean {
+    my ($b, $default) = @_;
+    $default = 0 unless defined($default);
+    return $default unless defined($b) && $b =~ /\A[01]\z/;
+    return $b + 0;
+}
+
+# A 0 or 1 value for the named parameter. If the parameter is absent or
+# is not 0 or 1, the default provided as the second argument is used.
+sub boolParam {
+    toBoolean(scalar param($_[0]), $_[1])
 }
 
 # Convert the named param to a string of bytes. An undefined param becomes

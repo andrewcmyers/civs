@@ -11,7 +11,10 @@ use mail;
 
 my $civs_supervisor = '@SUPERVISOR@';
 
-my $address = param("address") || "";
+# Trim here rather than relying on CheckAddr, which validates a trimmed copy
+# and would otherwise leave surrounding whitespace -- including a line
+# terminator -- in the address used below for RCPT TO and the To: header.
+my $address = &TrimAddr(param("address") || "");
 
 print CGI::header(-charset => 'utf-8');
 

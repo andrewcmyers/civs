@@ -43,12 +43,26 @@ sub init {
 
 # Package functions
 
-# Check whether the given address is an email address
+# Check whether the given address is a valid email address.
 sub CheckAddr {
     (my $addr) = @_;
     $addr = &TrimAddr($addr);
 
-    return ($addr =~ m/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2,18})$/i);
+    return ($addr =~ m/\A[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2,18})\z/i);
+}
+
+# Replace the characters that must not appear in a mail header value or an
+# SMTP command with spaces. CR and LF are the dangerous ones: text that
+# reaches a header comes from poll titles, supervisor names and email
+# addresses, so without this a submitted newline would let the submitter add
+# headers of their own (Bcc:, Reply-To:, ...) or terminate the header section
+# and supply a body. The other C0 controls and DEL are not legal in header
+# text either. TAB is kept because it is valid folding whitespace.
+sub StripControlChars {
+    (my $s) = @_;
+    return '' unless defined($s);
+    $s =~ s/[\x00-\x08\x0A-\x1F\x7F]/ /g;
+    return $s;
 }
 
 # Convert an email address into canonical form.  All whitespace is removed, the
@@ -260,8 +274,24 @@ sub OpenMail {
     1
 }
 
+# Whether every address given is free of dangerous control characters that
+# would affect the SMTP command it is placed in.  Addresses reaching here
+# should have been through CheckAddr; this is defense in depth.
+sub CheckSMTPAddrs {
+    (my $what, my @addrs) = @_;
+    foreach my $addr (@addrs) {
+        if (!defined($addr) || $addr =~ m/[\x00-\x1F\x7F]/) {
+            print "$what: illegal character in address", $cr;
+            &Log("Refused to send to an address containing a control character");
+            return 0
+        }
+    }
+    1
+}
+
 sub MailFrom {
     (my $sender) = @_;
+    return 0 unless CheckSMTPAddrs('MailFrom', $sender);
     if ($local_debug) {
         print "From ", $sender, $cr;
     } elsif (!$smtp->mail($sender)) {
@@ -272,6 +302,7 @@ sub MailFrom {
 }
 
 sub MailTo {
+    return 0 unless CheckSMTPAddrs('To', @_);
     if ($local_debug) {
         print "To ", $_[0], $cr;
     } elsif (!$smtp->recipient(@_)) {
@@ -314,7 +345,13 @@ sub EncodeHeaderValue {
     my $first = 1;
     my $header = shift @_;
     my $ascii_only = 1;
-    foreach my $section (@_) {
+    foreach my $arg (@_) {
+	# Strip before anything else: the all-ASCII case below appends the
+	# section to the header verbatim, so the line breaks this routine
+	# inserts for folding must be the only ones in the result. Note that
+	# this is a copy, not the loop alias, since @_ aliases the caller's
+	# own variables and this routine reassigns the section below.
+	my $section = StripControlChars($arg);
 	if (!$first) { $text .= "\r\n " }
 	$first = 0;
 	if ($section =~ m/[\x80-\x{10FFFF}]/) {
@@ -363,7 +400,7 @@ sub EncodeHeaderValue {
 }
 
 sub SendHeader {
-    my $header = shift @_;
+    my $header = StripControlChars(shift @_);
     SendBytes $header . ': ' . EncodeHeaderValue($header, @_). "\r\n";
     # print $header, ': ', $text;
 }
