@@ -114,7 +114,7 @@ do
     for lang in ${webpage_langs[@]}
     do
         echo "  $file.$lang"
-        perl subst_text.pl html/static-translations.txt $lang ${file}.base ${file}.$lang || exit 1
+        perl tools/subst_text.pl html/static-translations.txt $lang ${file}.base ${file}.$lang || exit 1
     done
 done
 ( cd js

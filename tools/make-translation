@@ -12,12 +12,16 @@
 my $home=$ENV{"HOME"};
 
 # This needs to be updated to a file containg a valid authorization key
-my $credfile="$home/civs/axiomatic-set-373716-3a0f9821df99.json";
+my $credfile="$home/civs/axiomatic-set-######-############.json";
 
 # Location of the gcloud script
 my $gcloud="$home/google-cloud-sdk/bin/gcloud";
 
-use lib ".";
+# translations.pm sits beside this script, and the static translations are up
+# one level in html/. Locate both relative to the script rather than to the
+# working directory, so it can be run from anywhere.
+use FindBin;
+use lib $FindBin::Bin;
 use lib "$home/civs/cgi-bin";
 use lib '/Library/WebServer/CGI-Executables/civs';
 use strict;
@@ -160,7 +164,8 @@ else {
 my $trans_data;
 {
     local $/;
-    open (TRANSLATIONS, "<html/static-translations.txt") || die "can't find translations";
+    open (TRANSLATIONS, "<$FindBin::Bin/../html/static-translations.txt")
+        || die "can't find translations";
     $trans_data = <TRANSLATIONS>;
     close (TRANSLATIONS);
 }
