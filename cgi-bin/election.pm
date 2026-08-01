@@ -19,6 +19,7 @@ BEGIN {
     &LockElection &UnlockElection &StartElection &IsStarted
     &CheckStarted &PointToResults &IsStopped &CheckNotStopped
     &CheckStopped &CheckVoterKey &CheckNotVoted &CheckControlKey &CheckResultKey
+    &ResultKeyOK
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
     &IsWriteinName &GetEmailLoad &RevoteButton
@@ -521,13 +522,23 @@ sub CheckAuthorizationKey {
     return $hash_authorization_key eq $hash_authorization_key_check;
 }
 
-sub CheckResultKey {
+# Report whether this is the result key for the poll, without printing
+# anything. Callers that have not yet decided what kind of response to send
+# (download_ballots emits a CSV attachment, not a page) need to ask without
+# committing to an HTML error page.
+# Only meaningful when restrict_results is 'yes'; otherwise there is no key.
+sub ResultKeyOK {
     my $result_key = shift;
-    if (defined($result_key) && (
+    return (defined($result_key) && (
 	&civs_hash($result_key) eq $hash_result_key
 # originally CIVS stored the hash of the key, but this provides little
 # added security while interfering with usability
-     || $result_key eq $hash_result_key)) {
+     || $result_key eq $hash_result_key));
+}
+
+sub CheckResultKey {
+    my $result_key = shift;
+    if (&ResultKeyOK($result_key)) {
 	return;
     }
     ElectionLog("Election: $title ($election_id) : invalid attempt to view election results (wrong key)");

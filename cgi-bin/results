@@ -420,6 +420,13 @@ sub BallotReport {
     if ($ballot_reporting eq 'yes') {
 	print RESULTS h3($tx->Ballot_report), $cr;
 
+	# Individual ballots stay hidden until voting is over, even
+        # for admins because of result caching.
+	if (!IsStopped) {
+	    print RESULTS p($tx->Ballots_shown_after_poll_closes), $cr;
+	    return;
+	}
+
 	my @voters = split /\n/, ($vdata_copy{'recorded_voters'} || '');
 	if ($#voters >= 0) {
 	    my @headings = @choices;
@@ -460,7 +467,11 @@ sub BallotReport {
 	    print RESULTS table({-class=>'ballots'},
 		    Tr(\@rows));
 	    print RESULTS p($tx->Ballots_are_shown_in_random_order);
-	    print RESULTS p($tx->Download_ballots_as_a_CSV("@PROTO@://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id"));
+	    my $download_url = "@PROTO@://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id";
+	    if ($restrict_results eq 'yes' && $result_key ne '') {
+		$download_url .= '&rkey=' . escapeHTML($result_key);
+	    }
+	    print RESULTS p($tx->Download_ballots_as_a_CSV($download_url));
         } else {
 	    print RESULTS p($tx->No_ballots_were_cast);
 	}

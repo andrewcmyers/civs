@@ -26,15 +26,24 @@ if (!IsStarted) {
     error("This poll does not exist or has not been started");
 }
 
+my $result_key = bytesParam('rkey');
+
 if (!param('admin_key') || param('admin_key') ne '@ADMIN_KEY@') {
-    if ($public ne 'yes') {
-	if (!IsStopped) {
-	    error("This poll has not yet been closed");
-	}
+    # Ballots are not released before the poll closes, whether or not it is a
+    # public poll: until then they would show a voter how others have voted.
+    if (!IsStopped) {
+	error("This poll has not yet been closed");
     }
 
     if ($ballot_reporting ne 'yes') {
 	error("Ballot reporting is not enabled for this poll");
+    }
+
+    # The ballots are at least as sensitive as the tally, so a poll whose
+    # results are restricted must demand the same key here that results does.
+    if ($restrict_results eq 'yes' && !ResultKeyOK($result_key)) {
+	ElectionLog("Election: $title ($election_id) : invalid attempt to download ballots (wrong key)");
+	error("You do not have permission to download the ballots for this poll.");
     }
 }
 

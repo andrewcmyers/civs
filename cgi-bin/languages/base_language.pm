@@ -980,6 +980,9 @@ sub No_ballots_were_cast {
 sub Ballot_reporting_was_not_enabled {
     'Ballot reporting was not enabled for this poll.'
 }
+sub Ballots_shown_after_poll_closes {
+    'Individual ballots will be shown after the poll closes.'
+}
 sub Tied {
     "<i>Tied</i>:"
 }
