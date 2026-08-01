@@ -29,7 +29,8 @@ BEGIN {
                       $lockfile $private_host_id &Fatal_CIVS_Error &CIVS_End
                       &civs_hash &system_load &CheckLoad
                       &CheckPostRequest &CheckConfirmation
-                      $remote_ip_address $languages $tx &FileTimestamp &BR &Filter
+                      $remote_ip_address $peer_ip_address &LogIPAddress
+                      $languages $tx &FileTimestamp &BR &Filter
                       &TrySomePolls &AcquireGlobalLock &ReleaseGlobalLock
                       &VerifyUpload &hexdump &toNatural &natParam &toBoolean
                       &boolParam &bytesParam &fixUTF);
@@ -48,6 +49,7 @@ BEGIN {
 our $local_debug;
 our $using_ISA = '@USING_ISA@';
 our $remote_ip_address;
+our $peer_ip_address;
 our $languages;
 
 # Package constructor
@@ -124,11 +126,32 @@ sub TrimAddr {
 }
 
 sub SetIPAddress {
+    # The address the connection actually came from. Unlike the headers below,
+    # this cannot be chosen by the sender -- though behind a proxy it is the
+    # proxy's address rather than the client's, which is why the headers are
+    # consulted at all.
+    $peer_ip_address = remote_addr();
     $remote_ip_address = http('HTTP_X_REAL_IP')
                       || http('HTTP_X_FORWARDED_FOR')
                       || http('HTTP_IPREMOTEADDR')
                       || http('HTTP_REMOTE_ADDRESS')
-                      || remote_addr();
+                      || $peer_ip_address;
+    # These headers are whatever the sender chose to send, and the value ends
+    # up in log messages. Remove control characters here rather than at each
+    # log call, so that an embedded newline cannot append forged log lines.
+    $remote_ip_address =~ s/[\x00-\x1F\x7F]/ /g;
+}
+
+# The address to record in a log entry. Whoever sent the request can set the
+# forwarding headers, so when one of them has overridden the peer address the
+# entry records both: the address claimed, and the address the connection came
+# from. Otherwise a request could be logged against an uninvolved third party.
+sub LogIPAddress {
+    my $claimed = $remote_ip_address;
+    $claimed = '' unless defined($claimed);
+    return $claimed if !defined($peer_ip_address)
+                    || $claimed eq $peer_ip_address;
+    return $claimed . '(peer=' . $peer_ip_address . ')';
 }
 
 sub SetLanguage {
@@ -298,7 +321,7 @@ sub Log {
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open(CIVS_LOG, ">>$civs_log");
     binmode CIVS_LOG, ':utf8';
-    print CIVS_LOG $now.' '.$remote_ip_address.' '.$_[0].$cr;
+    print CIVS_LOG $now.' '.&LogIPAddress.' '.$_[0].$cr;
     close(CIVS_LOG);
 }
 

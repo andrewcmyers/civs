@@ -30,11 +30,19 @@ if (open (IN, $top_polls)) {
 if ('@LOG_HOME_VISITS@') {
     my $languages = http('Accept-Language') || 'unspecified-lang';
 
+    # This script does not use civs_common, so it repeats the address lookup
+    # and the logging rule described there: record the peer address too when a
+    # forwarding header, which the sender controls, has overridden it.
+    my $peer_ip_address = remote_addr();
     my $remote_ip_address = http('HTTP_X_REAL_IP')
                       || http('HTTP_X_FORWARDED_FOR')
                       || http('HTTP_IPREMOTEADDR')
                       || http('HTTP_REMOTE_ADDRESS')
-                      || remote_addr();
+                      || $peer_ip_address;
+    $remote_ip_address =~ s/[\x00-\x1F\x7F]/ /g;
+    if ($remote_ip_address ne $peer_ip_address) {
+        $remote_ip_address .= "(peer=$peer_ip_address)";
+    }
 
     my $civs_log = $home . '/log';
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
