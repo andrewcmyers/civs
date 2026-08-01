@@ -186,7 +186,10 @@ sub HTML_Header {
     if (!$generated_header) {
       my $style = $tx->style_file;
       if ($#js < 0) {
-        print header(-charset => 'utf-8', -content_language => $tx->lang),
+        # The meta tag below says the same thing, but only takes effect once
+        # the parser reaches it; the header covers the whole response.
+        print header(-charset => 'utf-8', -content_language => $tx->lang,
+                     -referrer_policy => 'no-referrer'),
               start_html(
                 -title => $title,
                 -lang => $tx->lang,
@@ -198,7 +201,7 @@ sub HTML_Header {
                    meta({-name => 'viewport',
                          -content => 'width=device-width, initial-scale=1'}),
                    meta({-name => 'referrer',
-                         -context => 'no-referrer'})
+                         -content => 'no-referrer'})
                 ],
                 -encoding => 'utf-8',
                 -style => {'src' => "@CIVSURL@/$style"}
@@ -214,7 +217,10 @@ sub HTML_Header {
         foreach my $script (@js) {
             push @scripts, { 'src' => ('@CIVSURL@/' . $script) };
         }
-        print header(-charset => 'utf-8', -content_language => $tx->lang),
+        # The meta tag below says the same thing, but only takes effect once
+        # the parser reaches it; the header covers the whole response.
+        print header(-charset => 'utf-8', -content_language => $tx->lang,
+                     -referrer_policy => 'no-referrer'),
               start_html(
                 -title => $title,
                 -lang => $tx->lang,
@@ -229,7 +235,7 @@ sub HTML_Header {
                   }),
                   meta({
                     -name => 'referrer',
-                    -context => 'no-referrer'
+                    -content => 'no-referrer'
                   })
                 ],
                 -encoding => 'utf-8',

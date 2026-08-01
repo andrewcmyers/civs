@@ -16,7 +16,7 @@ my $civs_supervisor = '@SUPERVISOR@';
 # terminator -- in the address used below for RCPT TO and the To: header.
 my $address = &TrimAddr(param("address") || "");
 
-print CGI::header(-charset => 'utf-8');
+print CGI::header(-charset => 'utf-8', -referrer_policy => 'no-referrer');
 
 if (!CheckAddr($address)) {
     # $address failed validation, so it is arbitrary text from the request.
