@@ -1,0 +1,91 @@
+Server-side tests for CIVS
+==========================
+
+These cover the Perl half of CIVS: the CGI scripts and the modules behind
+them. A throwaway installation is built under tests/server/work and
+exercised there, so nothing outside that directory is touched, no mail is
+sent, and no existing poll data is read or written.
+
+    tests/server/run-tests                  build from config/sample
+    tests/server/run-tests <settings-file>  build from another settings file
+    tests/server/run-tests -k               keep the installation to poke at
+
+The base settings file only supplies the things that do not matter here;
+the install paths, LOCALDEBUG and ADMIN_KEY are overridden by the runner.
+LOCALDEBUG makes create_election print the control URL rather than mailing
+it, which is how the tests learn the id of a poll they have just created.
+
+The suites
+----------
+
+compile   Runs perl -c over every module and script in the installation,
+          which is the only way to see the scripts compile with their
+          @PLACEHOLDER@ settings substituted. Two things make this less
+          simple than it looks, both explained in run-tests: election.pm
+          exits the process when it is loaded without a poll to work on,
+          and CGI::Carp turns a compilation failure into a web page and a
+          zero exit status. Between them they once let this suite pass a
+          script that was garbage below its "use election" line. The offline tools --
+          tabulate, dump_elections and election_utils.pm -- are not
+          installed by install-civs, so they are checked in cgi-bin where
+          they are run from.
+
+storage   Creates polls through create_election and reads them back
+          through election.pm, checking how questions are laid out in the
+          database: that a poll asking one question stores exactly what it
+          always did, that further questions are stored under "qN." keys,
+          that a poll written before multiple questions existed still
+          loads as a one-question poll, and that election_utils.pm, which
+          the offline tools read through, agrees with election.pm.
+
+legacy    A poll created before polls could ask more than one question,
+          with ballots already cast. The fixture is a poll made the
+          ordinary way and then stripped of every key that only exists
+          now, which is what such a poll looks like on disk. It has to
+          go on tabulating, downloading, accepting votes and accepting
+          write-ins with no sign that anything changed under it.
+
+control   The supervisor's page for a poll that asks several questions:
+          that each question's choices, text and winner count are shown
+          under their own heading, that a write-in is added to and removed
+          from the question it belongs to, that disallowing write-ins
+          turns them off for every question, that the ballots answering
+          each question are counted separately, and that a poll asking one
+          question looks as it always has.
+
+results   Tabulating a poll that asks several questions: that each is
+          reported separately from its own ballots, with its own settings
+          form and its own cache file, that the poll's own description
+          and the advertisement for other polls appear once rather than
+          per question, that a question a voter skipped leaves them out
+          of its tally, and that a poll asking one question produces what
+          it always did, from a cache file of the same name.
+
+voting    Casting a ballot on a poll that asks several questions: that
+          each question is recorded as it is answered rather than at the
+          end, that the receipt leads back into a ballot in progress and
+          can change an answer already given without counting it twice,
+          that skipping records nothing and withdraws anything recorded
+          before, that a voter returning without their receipt is turned
+          away, and that a poll asking one question behaves exactly as it
+          always has.
+
+ballots   Downloading and uploading ballots: that each question's are
+          handled on their own, in the format a poll asking one question
+          has always used, that a question a voter skipped contributes no
+          row, and that uploading a test poll's ballots for one question
+          leaves the others alone.
+
+Writing a test
+--------------
+
+Write tests/server/test-<name>.pl taking the installation directory and
+the source directory as its two arguments, exiting non-zero on failure,
+then add a block for it in run-tests. To drive a CGI script, POST to it
+the way test-storage.pl does: the request body has to be a real file
+rather than an in-memory handle, since it must survive the exec.
+
+Give ck the prototype the existing suites use. Without it a failing match
+yields an empty list rather than a false value, the arguments shift along,
+and the text meant for the failure message arrives as the condition -- so
+the check passes exactly when it should not.

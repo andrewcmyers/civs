@@ -1,0 +1,8 @@
+{
+  "name": "civs-tests",
+  "private": true,
+  "description": "Browser-side tests for the CIVS web pages. Run tests/run-tests.",
+  "dependencies": {
+    "jsdom": "^27.0.0"
+  }
+}

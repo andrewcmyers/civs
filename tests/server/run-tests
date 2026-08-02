@@ -1,0 +1,175 @@
+#!/bin/bash
+#
+# Run the server-side tests for CIVS.
+#
+# A throwaway installation is built under tests/server/work and exercised
+# there, so nothing outside that directory is touched, no mail is sent, and
+# no existing poll data is read or written.
+#
+#   tests/server/run-tests                  use config/sample as the base
+#   tests/server/run-tests <settings-file>  use another settings file
+#   tests/server/run-tests -k               keep the installation afterwards
+#
+# Whichever settings file is used, the install paths, the debug flag and
+# the admin key are overridden below.
+
+set -u
+
+here=$(cd "$(dirname "$0")" && pwd)
+root=$(cd "$here/../.." && pwd)
+work="$here/work"
+inst="$work/inst"
+
+keep=""
+if [ "${1:-}" = "-k" ]; then keep=1; shift; fi
+settings="${1:-$root/config/sample}"
+
+if [ ! -r "$settings" ]; then
+    echo "ERROR: cannot read settings file $settings"
+    exit 1
+fi
+
+failed=""
+ran=0
+report() {
+    if [ "$2" -eq 0 ]; then echo "PASS: $1"
+    else echo "FAIL: $1"; failed="$failed $1"; fi
+    ran=$((ran + 1))
+}
+
+echo
+echo "=== building a throwaway installation in tests/server/work ==="
+
+rm -rf "$work"
+mkdir -p "$inst/html" "$inst/cgi" "$inst/data/elections" "$inst/data/invites"
+
+# install-civs substitutes settings into sed expressions without quoting
+# them, so a value containing spaces -- as the sample admin key does --
+# would split into several sed arguments and break the run.
+sed -e "s|^HTMLDIR=.*|HTMLDIR='$inst/html'|"        \
+    -e "s|^CGIBINDIR=.*|CGIBINDIR='$inst/cgi'|"     \
+    -e "s|^CIVSDATADIR=.*|CIVSDATADIR='$inst/data'|" \
+    -e "s|^LOCALDEBUG=.*|LOCALDEBUG=1|"             \
+    -e "s|^ADMIN_KEY=.*|ADMIN_KEY='test-admin-key'|" \
+    "$settings" > "$work/settings"
+
+( cd "$root" && ./install-civs "$work/settings" ) > "$work/install.log" 2>&1
+if [ $? -ne 0 ]; then
+    echo "  install-civs failed; see tests/server/work/install.log"
+    tail -20 "$work/install.log" | sed 's/^/    /'
+    exit 1
+fi
+echo "  ok: installed"
+
+echo
+echo "=== compile: every installed module and script ==="
+# Checking these with perl -c takes some care.
+#
+# election.pm runs init when it is loaded, and init exits the process when
+# there is no readable poll to work on. An exit during compilation leaves
+# perl with no errors recorded, so it cheerfully reports "syntax OK"
+# having never parsed the rest of the file -- which made this check pass
+# on a script that was pure garbage below its "use election" line. So a
+# poll is put where init can find one, and named in the environment.
+#
+# The exit status is then meaningful, except that anything loading
+# civs_common has CGI::Carp's fatalsToBrowser installed; that reports a
+# compilation failure as a web page. Both are checked, and "syntax OK" --
+# which carpout sends to the CGI log rather than to stderr -- is what
+# confirms success.
+cgi_log="$inst/data/cgi-log"
+probe_id=E_0000000000000000
+mkdir -p "$inst/data/elections/$probe_id"
+perl -e '
+    use DB_File; use Fcntl;
+    my %e;
+    tie %e, "DB_File", "$ARGV[0]/election_data", O_CREAT|O_RDWR, 0666, $DB_HASH
+        or die $!;
+    %e = (name => "probe", title => "probe", email_addr => "p@example.invalid",
+          description => "", election_end => "never", election_begin => 0,
+          public => "no", choices => "A\nB\n", num_winners => 1);
+    untie %e;
+' "$inst/data/elections/$probe_id" || exit 1
+
+compiles() {
+    local dir="$1" file="$2" out status
+    : > "$cgi_log"
+    out=$( cd "$dir" && REQUEST_METHOD=GET QUERY_STRING="id=$probe_id" \
+           perl -I. -c "$file" 2>&1 )
+    status=$?
+    if [ $status -eq 0 ] &&
+       { grep -qF "$file syntax OK" "$cgi_log" 2>/dev/null ||
+         case "$out" in *"syntax OK"*) true;; *) false;; esac; }
+    then
+        return 0
+    fi
+    { echo "$out"; cat "$cgi_log" 2>/dev/null; } |
+        grep -aE 'syntax error|Global symbol|compilation aborted|Can.t locate|requires explicit package' |
+        head -3 | sed 's/^/      /'
+    return 1
+}
+rc=0
+count=0
+for f in $(cd "$inst/cgi" && ls *.pm *.pl 2>/dev/null | sort -u); do
+    count=$((count + 1))
+    if ! compiles "$inst/cgi" "$f"; then
+        echo "  FAIL: $f"
+        rc=1
+    fi
+done
+# The offline tools are run from cgi-bin rather than installed, so they are
+# checked where they live.
+for f in tabulate dump_elections election_utils.pm election_data.pm; do
+    count=$((count + 1))
+    if ! compiles "$root/cgi-bin" "$f"; then
+        echo "  FAIL: cgi-bin/$f"
+        rc=1
+    fi
+done
+[ $rc -eq 0 ] && echo "  ok: $count files compile"
+report compile $rc
+
+echo
+echo "=== storage: polls with one and several questions ==="
+perl "$here/test-storage.pl" "$inst" "$root"
+report storage $?
+
+echo
+echo "=== legacy: a poll from before questions existed ==="
+perl "$here/test-legacy.pl" "$inst" "$root"
+report legacy $?
+
+echo
+echo "=== control: the supervisor's view of a poll's questions ==="
+perl "$here/test-control.pl" "$inst" "$root"
+report control $?
+
+echo
+echo "=== voting: one question at a time, recorded as answered ==="
+perl "$here/test-voting.pl" "$inst" "$root"
+report voting $?
+
+echo
+echo "=== results: one report per question ==="
+perl "$here/test-results.pl" "$inst" "$root"
+report results $?
+
+echo
+echo "=== ballots: downloading and uploading, question by question ==="
+perl "$here/test-ballots.pl" "$inst" "$root"
+report ballots $?
+
+if [ -z "$keep" ]; then
+    rm -rf "$work"
+else
+    echo
+    echo "Installation kept in tests/server/work/inst"
+fi
+
+echo
+if [ -n "$failed" ]; then
+    echo "FAILED:$failed"
+    exit 1
+else
+    echo "All $ran suites passed."
+fi

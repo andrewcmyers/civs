@@ -1,0 +1,54 @@
+Tests for the CIVS web pages
+============================
+
+These cover the client-side half of CIVS: the markup and JavaScript that
+install-civs generates from html/*.base. They run under Node.js using
+jsdom, so no web server, no CGI, and no installed copy of CIVS is needed.
+The pages under test are built into tests/work, which is disposable.
+
+    tests/run-tests               run everything
+    tests/run-tests questions     run one suite (matched as a substring)
+
+Node.js must be installed. On the first run, jsdom is fetched into
+tests/node_modules; neither directory is part of a release.
+
+The suites
+----------
+
+substitution  Builds html/create_poll.html.base in all the languages
+              install-civs generates, and checks that no @Token@ is left
+              unresolved. This catches a malformed entry in
+              html/static-translations.txt, which otherwise silently
+              swallows every entry after it. The @PLACEHOLDER@ settings
+              that install-civs rather than subst_text.pl fills in are
+              allowed to remain, except MAX_QUESTIONS: that one reaches
+              the page as a JavaScript number, so the runner substitutes
+              it, using a value other than the shipped default so that the
+              tests notice if it stops arriving.
+
+questions     The multi-question poll creation UI: adding, removing and
+              reordering questions, the field names and question indices
+              that result, header numbering, label and aria associations,
+              and form validation.
+
+shadowing     Checks, in every language, that no function called from an
+              inline event handler shares a name with a form control's id
+              or name. Such a name is shadowed, because inline handlers
+              resolve names against the enclosing form before the global
+              scope, and a form finds its controls by id as well as by
+              name. The symptom is "x is not a function" on click. This
+              has to be checked statically: jsdom does not implement the
+              form named getter, so clicking things will not reproduce it.
+
+nojs          Checks that the page degrades correctly with scripting
+              disabled -- the multi-question controls stay hidden and the
+              form posts the same fields a single-question poll always
+              has.
+
+Adding a suite
+--------------
+
+Write tests/test-<name>.js taking the page to test as its first argument,
+exiting non-zero on failure, then add a block for it in run-tests. The
+existing suites share no harness; each is a standalone script of about a
+hundred lines, which has so far been easier to read than a framework.

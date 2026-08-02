@@ -1,0 +1,170 @@
+#!/bin/bash
+#
+# Run the browser-side tests for the CIVS web pages.
+#
+# These exercise the JavaScript and markup that install-civs generates
+# from html/*.base, using jsdom to supply a DOM outside a browser. Nothing
+# is installed and no server is needed: the pages under test are built
+# into tests/work.
+#
+#   tests/run-tests            run every suite
+#   tests/run-tests shadowing  run just the suites whose name matches
+#
+# Node.js is required. On the first run, jsdom is installed into
+# tests/node_modules.
+
+set -u
+
+here=$(cd "$(dirname "$0")" && pwd)
+root=$(cd "$here/../.." && pwd)
+work="$here/work"
+filter="${1:-}"
+
+if ! command -v node > /dev/null; then
+    echo "ERROR: node is not installed, and these tests need it."
+    echo "On macOS: brew install node"
+    exit 1
+fi
+
+if [ ! -d "$here/node_modules/jsdom" ]; then
+    echo "Installing test dependencies into tests/node_modules ..."
+    (cd "$here" && npm install --silent --no-audit --no-fund) || exit 1
+fi
+
+# Take the language list and the set of install-time placeholders from
+# install-civs itself, so that this script cannot drift away from it.
+langs=$(sed -n 's/^webpage_langs=( *\(.*[^ ]\) *)/\1/p' "$root/install-civs")
+install_tokens=$(sed -n "s/.*-e 's|@\([A-Z_0-9]*\)@|.*/\1/p" "$root/install-civs" |
+                 sort -u | tr '\n' '|' | sed 's/|$//')
+
+# MAX_QUESTIONS is an installation setting that reaches the page as a
+# JavaScript number, so unlike the other install-time placeholders it has
+# to be filled in before the page will parse. A value that is not the
+# shipped default is used, so that the tests notice if the setting stops
+# reaching the page and the built-in 20 is silently used instead.
+test_max_questions=7
+
+rm -rf "$work"
+mkdir -p "$work"
+
+failed=""
+ran=0
+
+# Announce a suite and record whether it passed. Suites are skipped unless
+# their name matches the filter argument, if one was given.
+wanted() {
+    case "$1" in
+        *"$filter"*) return 0;;
+        *)           return 1;;
+    esac
+}
+
+report() {
+    if [ "$2" -eq 0 ]; then
+        echo "PASS: $1"
+    else
+        echo "FAIL: $1"
+        failed="$failed $1"
+    fi
+    ran=$((ran + 1))
+}
+
+# Building every language is itself a test: a translation entry with
+# unbalanced braces silently drops the entries that follow it, which shows
+# up here as an unresolved @Token@.
+build_pages() {
+    local bad=0 lang out left
+    for lang in $langs; do
+        out="$work/create_poll.html.$lang"
+        if ! perl "$root/tools/subst_text.pl" \
+                  "$root/html/static-translations.txt" "$lang" \
+                  "$root/html/create_poll.html.base" "$out"; then
+            echo "  FAIL: $lang: subst_text.pl failed"
+            bad=1
+            continue
+        fi
+        left=$(grep -oh '@[A-Za-z][A-Za-z_0-9]*@' "$out" |
+               grep -vE "^@($install_tokens)@\$" | sort -u | tr '\n' ' ')
+        # install-civs fills this one in; without it the page will not parse.
+        sed -i.bak "s|@MAX_QUESTIONS@|$test_max_questions|g" "$out"
+        rm -f "$out.bak"
+        # Fold create_poll.js into the page. jsdom is not asked to fetch
+        # anything, so the script has to be there for the suites to run it,
+        # and inlining keeps them all working from a single file.
+        JS="$root/js/create_poll.js" perl -0pi -e '
+            BEGIN { local $/; open(my $f, "<", $ENV{JS}) or die "$ENV{JS}: $!";
+                    our $js = <$f>; close $f }
+            s{<script src="create_poll\.js"></script>}{<script>\n$js\n</script>}
+                or die "no create_poll.js script tag to replace\n"' "$out"
+        if [ -n "$left" ]; then
+            echo "  FAIL: $lang: unresolved placeholders: $left"
+            bad=1
+        else
+            echo "  ok: $lang"
+        fi
+    done
+    return $bad
+}
+
+echo
+echo "=== substitution: html/create_poll.html.base in every language ==="
+if wanted substitution; then
+    build_pages
+    report substitution $?
+else
+    # The other suites need a page to run against even when filtered out.
+    build_pages > /dev/null
+fi
+
+# The page is language-independent structurally, so the suites that check
+# behaviour run against English, where the assertions can name the strings
+# they expect. Shadowing is cheap enough to check in every language.
+en="$work/create_poll.html.en"
+
+if wanted questions; then
+    echo
+    echo "=== questions: adding, removing and reordering questions ==="
+    node "$here/test-questions.js" "$en" "$test_max_questions"
+    report questions $?
+fi
+
+if wanted draft; then
+    echo
+    echo "=== draft: keeping an unfinished form in local storage ==="
+    node "$here/test-draft.js" "$en"
+    report draft $?
+fi
+
+if wanted shadowing; then
+    echo
+    echo "=== shadowing: inline handler names vs form control ids ==="
+    rc=0
+    for lang in $langs; do
+        out=$(node "$here/test-shadowing.js" "$work/create_poll.html.$lang" 2>&1) || {
+            rc=1
+            echo "$out" | sed "s/^/  [$lang] /"
+        }
+    done
+    [ $rc -eq 0 ] && echo "  ok: no shadowed handler names in any language"
+    report shadowing $rc
+fi
+
+if wanted nojs; then
+    echo
+    echo "=== nojs: the page with scripting disabled ==="
+    node "$here/test-nojs.js" "$en" "$root/html/style.css"
+    report nojs $?
+fi
+
+echo
+if [ "$ran" -eq 0 ]; then
+    echo "No suite matched '$filter'. Known suites: substitution questions shadowing nojs"
+    exit 1
+elif [ -n "$failed" ]; then
+    echo "FAILED:$failed"
+    exit 1
+elif [ "$ran" -eq 1 ]; then
+    echo "1 suite passed."
+else
+    echo "All $ran suites passed."
+fi
