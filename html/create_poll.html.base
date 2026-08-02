@@ -167,18 +167,21 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
     <label for=proportional_0>@Enforce_proportional_representation@</label>
   </div>
 
-  <div class="suboption prcontrol">
-    <fieldset><legend>@voters_maximizing@</legend>
-    <p>
-    <label><input type="radio" name="rating_interpretation"
-       class=rating_interpretation value="best_choice" checked>
-       @rank_of_their_favorite_choice@</label>
-    </p>
-    <p>
-    <label><input type="radio" name="rating_interpretation"
-       class=rating_interpretation value="combined_ratings">
-       @combined_weights_of_selected_choices@</label>
-    </p>
+  <!-- Not "suboption": that class carries a negative text-indent, which
+       pulls the first line out through the border. The two choices are
+       laid out as flex items so they share a line when one will hold
+       them and stack tightly when it will not. -->
+  <div class=prcontrol>
+    <fieldset>
+      <legend>@voters_maximizing@</legend>
+      <div class=pr_options>
+        <label><input type="radio" name="rating_interpretation"
+           class=rating_interpretation value="best_choice"
+           checked>@rank_of_their_favorite_choice@</label>
+        <label><input type="radio" name="rating_interpretation"
+           class=rating_interpretation
+           value="combined_ratings">@combined_weights_of_selected_choices@</label>
+      </div>
     </fieldset>
   </div>
 

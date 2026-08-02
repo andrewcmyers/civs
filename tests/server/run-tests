@@ -130,6 +130,11 @@ done
 report compile $rc
 
 echo
+echo "=== messages: every language's strings, rendered ==="
+perl "$here/test-messages.pl" "$inst" "$root"
+report messages $?
+
+echo
 echo "=== storage: polls with one and several questions ==="
 perl "$here/test-storage.pl" "$inst" "$root"
 report storage $?

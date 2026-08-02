@@ -353,16 +353,18 @@ sub ballot_reporting_is_enabled {
      Your ballot (the rankings you assign to choices)
      will be made public when the poll ends.';
 }
-sub instructions1 { # num_winners, end, name, email
+sub winning_choices { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
 	$wintxt="single favorite choice";
     } else {
 	$wintxt="$_[1] favorite choices";
     }
-    "Only the $wintxt will win the poll.<br />
-	    The poll ends <b>$_[2]</b>.
-	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
+    "Only the $wintxt will win the poll.";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "The poll ends <b>$_[1]</b>.
+	    The poll supervisor is $_[2] (<tt>$_[3]</tt>).
 	    Contact the poll supervisor if you need help.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url

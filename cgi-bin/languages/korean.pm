@@ -410,19 +410,6 @@ sub page_header_CIVS_Vote { # election_title
 sub ballot_reporting_is_enabled {
   '이 투표에 대해 투표 보고가 사용 설정되었습니다. 귀하의 투표(선택 항목에 할당한 순위)는 투표가 종료되면 투표 결과에 표시됩니다.'
 }
-sub instructions1 { # num_winners, end, name, email
-    my $wintxt;
-    if ($_[1] == 1) {
-	$wintxt="single favorite choice";
-    } else {
-	$wintxt="$_[1] favorite choices";
-    }
-    "Only the $wintxt will win the poll.<br />
-	    The poll ends <b>$_[2]</b>.
-	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
-	    Contact the poll supervisor if you need help.";
-# UNTRANSLATED
-}
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;

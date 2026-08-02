@@ -363,17 +363,19 @@ sub ballot_reporting_is_enabled {
     (рейтинг, который вы присваиваете вариантам) будет обнародован по окончании
     голосования.'
 }
- sub instructions1 { # num_winners, end, name, email
+ sub winning_choices { # num_winners
      my $wintxt;
      if ($_[1] == 1) {
  	$wintxt="единственный любимый выбор";
      } else {
        $wintxt = $_[1]."любимых выборы"
      }
- 	"Только $wintxt выиграет опрос.<br />
- 	    Опрос заканчивается <b>$_[2]</b>.
- 	    Руководитель опроса $_[3] (<tt>$_[4]</tt>).
-            Обратитесь к руководителю опроса, если вам нужна помощь."
+ 	"Только $wintxt выиграет опрос.";
+ }
+ sub poll_end_and_supervisor { # end, name, email
+ 	"Опрос заканчивается <b>$_[1]</b>.
+ 	    Руководитель опроса $_[2] (<tt>$_[3]</tt>).
+            Обратитесь к руководителю опроса, если вам нужна помощь.";
  }
  sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
      my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;

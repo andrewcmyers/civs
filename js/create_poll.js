@@ -187,6 +187,12 @@ function questions() {
 function renumber_questions() {
     const blocks = questions()
     const multi = blocks.length > 1
+    // Renaming moves a radio from one group to another, and a group keeps
+    // only one checked member: renaming one question's radio can turn off
+    // the choice made in a question that has not been renamed yet. Note
+    // what is chosen, and put it back once every name is settled.
+    const radios = [...document.querySelectorAll('#questions input[type=radio]')]
+    const chosen = radios.map(r => r.checked)
     for (let i = 0; i < blocks.length; i++) {
         const b = blocks[i]
         set_question_index(b, i)
@@ -204,6 +210,11 @@ function renumber_questions() {
         b.querySelector('.move_up').disabled = (i == 0)
         b.querySelector('.move_down').disabled = (i == blocks.length - 1)
     }
+    radios.forEach((r, i) => { r.checked = chosen[i] })
+    // A cloned or moved question carries the inline display its panel had
+    // in the block it came from, which need not match the box it now has
+    // ticked. Settle that here, where every structural change passes.
+    update_conditional_visibility()
     document.getElementById('question_area').classList.toggle('multi', multi)
     document.getElementById('num_questions').value = blocks.length
     document.getElementById('add_question_button').disabled =
@@ -244,8 +255,18 @@ function add_question(no_focus) {
     // Clone the first question rather than keeping a separate template
     // of the same markup, so that the two cannot drift apart.
     const block = first.cloneNode(true)
+    // Rename its fields before it joins the form. While its radios still
+    // share a name with the first question's they are one group, and a
+    // group holds one checked member: appending a clone whose radio is
+    // checked turns off the selection of the question it was copied from.
+    set_question_index(block, questions().length)
     for (const e of block.querySelectorAll('input[type=text], input[type=file], textarea')) {
         e.value = ''
+    }
+    // A new question starts from what the markup says, not from whatever
+    // happened to be ticked on the question it was copied from.
+    for (const e of block.querySelectorAll('input[type=checkbox], input[type=radio]')) {
+        e.checked = e.defaultChecked
     }
     block.querySelector('.num_winners').value = '1'
     block.querySelector('.rendered_choices').innerHTML = ''
@@ -461,4 +482,10 @@ function create_poll_init() {
     document.forms.CreateElection.addEventListener('input', schedule_save)
     document.forms.CreateElection.addEventListener('change', schedule_save)
     offer_draft()
+    // Coming back to this page with the back button, the browser puts the
+    // controls back as they were -- but silently, and after this script
+    // has already run. Without looking again, a panel whose checkbox has
+    // just been restored ticked would stay hidden. pageshow fires both on
+    // an ordinary load and on a restore from the back-forward cache.
+    window.addEventListener('pageshow', update_conditional_visibility)
 }

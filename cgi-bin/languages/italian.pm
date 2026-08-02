@@ -305,10 +305,12 @@ sub ballot_reporting_is_enabled {
      La tua scheda (il punteggio assegnato ai candidati)
      sarà resa pubblica al termine della votazione.';
 }
-sub instructions1 { # winners_text, end, name, email
-    "Questa elezione avrà $_[1].<p>
-	    Termine della votazione: <b>$_[2]</b>.
-	    Supervisore della votazione: $_[3] (<tt>$_[4]</tt>).
+sub winning_choices { # num_winners
+    "Questa elezione avrà $_[1].";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "Termine della votazione: <b>$_[1]</b>.
+	    Supervisore della votazione: $_[2] (<tt>$_[3]</tt>).
 	    Contattare il supervisore in caso di problemi.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url

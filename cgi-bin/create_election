@@ -66,7 +66,7 @@ sub QuestionField {
 sub ReadChoices {
     my ($q) = @_;
     my $text = param(QuestionField($q, 'choices'));
-    my @split = split /(\r\n)+/, (defined($text) ? $text : '');
+    my @split = split /[\r\n]+/, (defined($text) ? $text : '');
     my $file = upload(QuestionField($q, 'choices_file'));
     if (defined($file) && VerifyUpload($file, \@errors, "file of choices")) {
         local $/ = "\n";
@@ -99,7 +99,12 @@ for (my $q = 0; $q < $num_questions; $q++) {
     # Only say which question when the poll asks more than one.
     my $where = ($num_questions > 1) ? $tx->Question_number($q + 1) . ': ' : '';
     my ($choices, $num_choices) = ReadChoices($q);
-    if ($num_choices < 2) {
+    if (!defined(param(QuestionField($q, 'choices')))
+        && !defined(upload(QuestionField($q, 'choices_file')))) {
+        # The form and the number of questions it claims disagree, which
+        # is not the same as the question being filled in badly.
+        push @errors, li($where . $tx->Question_was_not_submitted);
+    } elsif ($num_choices < 2) {
         push @errors, li($where . $tx->Poll_must_have_two_choices);
     }
     if ($num_choices > @MAX_CHOICES@) {

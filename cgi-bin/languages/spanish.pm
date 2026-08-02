@@ -299,17 +299,19 @@ sub ballot_reporting_is_enabled {
      Su cuestionario (la clasificación que se asigna a las opciones)
      se hará público cuando se termine la encuesta. '
 }
-sub instructions1 {# num_winners, al final, el nombre, correo electrónico
+sub winning_choices { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
 	$wintxt = "única opción preferida";
     } else {
 	$wintxt ="$_[ 1] opciones preferidas ";
     }
-    "Sólo el $wintxt ganará las elecciones. <p>
-    La encuesta termina <b>$_[2]</b>.
-    El supervisor de la encuesta es $_[3] (<tt>$_[4]</tt>).
-    Póngase en contacto con el supervisor de la encuesta si necesita ayuda. "
+    "Sólo el $wintxt ganará las elecciones.";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "La encuesta termina <b>$_[1]</b>.
+    El supervisor de la encuesta es $_[2] (<tt>$_[3]</tt>).
+    Póngase en contacto con el supervisor de la encuesta si necesita ayuda. ";
 }
 sub instructions2 {# no_opinion, combined_ratings proporcional, civs_url
     my ($self, $no_opinion, $apoyo, $combinado, $civs_url) = @ _;

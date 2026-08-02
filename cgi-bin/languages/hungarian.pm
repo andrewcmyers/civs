@@ -302,10 +302,12 @@ sub ballot_reporting_is_enabled {
         A szavazatod (a választási lehetségekhez rendelt rangsorod)
         nyilvános lesz amikor a szavazás lezárul.';
 }
-sub instructions1 { # num_winners, end, name, email
-    return "A szavazásnak $_[1] győztese lesz.<p>
-        A szavazás vége: <b>$_[2]</b>.
-        A szavazás gazdája $_[3] (<tt>$_[4]</tt>).
+sub winning_choices { # num_winners
+    "A szavazásnak $_[1] győztese lesz.";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "A szavazás vége: <b>$_[1]</b>.
+        A szavazás gazdája $_[2] (<tt>$_[3]</tt>).
         Ha segítségre van szükséged, keresd a szavazás gazdáját.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url

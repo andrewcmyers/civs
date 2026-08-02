@@ -98,6 +98,24 @@ my $ip = '10.1.0.1';
 my $p = post('vote.pl', $ip, id => $id, akey => $akey, q => 0);
 ck('opens on question 1 of 3', $p =~ /Question 1 of 3/, ($p =~ /Question \d of \d/)[0]);
 ck('shows the question text', $p =~ /Where\?/);
+# When the poll ends and who runs it belong to the poll, so they are said
+# once, above the questions; how many choices win belongs to the question.
+ck('the supervisor is named above the question',
+   index($p, 'poll supervisor is') < index($p, 'Question 1 of 3')
+   && index($p, 'poll supervisor is') > 0);
+ck('and said only once', scalar(() = $p =~ /poll supervisor is/g) == 1,
+   scalar(() = $p =~ /poll supervisor is/g));
+ck('the winner count sits with the question',
+   index($p, 'will win.') > index($p, 'Question 1 of 3'));
+ck('and no longer claims to win the poll', $p !~ /will win the poll/);
+# The description is of the whole poll, so it belongs above the question
+# rather than below it.
+ck('the poll description comes before the question',
+   index($p, 'class="description"') < index($p, 'Question 1 of 3')
+   && index($p, 'class="description"') > 0,
+   index($p, 'class="description"') . ' vs ' . index($p, 'Question 1 of 3'));
+ck('and the description appears once', scalar(() = $p =~ /class="description"/g) == 1,
+   scalar(() = $p =~ /class="description"/g));
 ck('offers to skip', $p =~ /value="Skip this question" name="Skip"/,
    ($p =~ /(value="[^"]*" name="Skip")/)[0]);
 ck('does not offer to go back from the first', $p !~ /name="Previous"/);
@@ -114,6 +132,13 @@ $p = post('vote.pl', $ip, id => $id, akey => $akey, q => 0,
 my $receipt = receipt_of($p);
 ck('moves on to question 2', $p =~ /Question 2 of 3/, ($p =~ /Question \d of \d/)[0]);
 ck('hands over a receipt straight away', defined($receipt), $receipt);
+# The receipt is worth keeping, so it comes with the same copy-to-clipboard
+# control the control page offers for a poll's link.
+ck('with an icon that copies it',
+   $p =~ /copy_element\('midvote_receipt_text', 'midvote_receipt_popup'/,
+   ($p =~ /(copy_element\([^)]*\))/)[0]);
+ck('the receipt is in the element that icon reads',
+   $p =~ /id="midvote_receipt_text">\Q$receipt\E</, $receipt);
 ck('offers to go back', $p =~ /name="Previous"/);
 ck('going back turns off the ballot checks too',
    $p =~ /name="Previous" onclick="window\.skip_ballot_checks = true"/,
@@ -136,6 +161,10 @@ ck('the last question offers to finish', $p =~ /name="Vote"/ && $p =~ /finish/i)
 $p = post('vote.pl', $ip, id => $id, akey => $akey, q => 2, receipt => $receipt,
           C0 => 1, C1 => 2, Vote => 'go');
 ck('finishing thanks the voter', $p =~ /[Tt]hank/, ($p =~ /<h1>(.*?)</)[0]);
+ck('the final receipt is copyable too',
+   $p =~ /id="final_receipt_text">\Q$receipt\E</ &&
+   $p =~ /copy_element\('final_receipt_text', 'final_receipt_popup'/,
+   ($p =~ /(final_receipt[^>]*>)/)[0]);
 $d = raw($id);
 ck('all three answers stored', defined($d->{"v:$bkey"}) &&
    defined($d->{"v:q1.$bkey"}) && defined($d->{"v:q2.$bkey"}));

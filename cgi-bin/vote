@@ -134,6 +134,20 @@ if ($load) {
 
 print '<div class="normal_text">', BR;
 
+# The description is of the poll as a whole, so it comes before the
+# question being put to the voter rather than after it. The instructions
+# stay with the question, since some of what they say -- the winner count,
+# proportional representation -- is settled question by question.
+print div({class => 'description'}, p($description)), $cr;
+
+# When the poll ends and who runs it are true of the whole poll, so they
+# are said once here rather than repeated with each question.
+print p($tx->poll_end_and_supervisor($election_end, escapeHTML($name),
+                                     escapeHTML($email_addr))), $cr;
+if ($num_auth) {
+    print p($tx->report_authorized($num_auth)), $cr;
+}
+
 # A poll asking one question introduces itself by its title alone.
 # If multiple, each question gets its own heading.
 if ($num_questions > 1) {
@@ -267,7 +281,8 @@ sub FinishVoting {
         CIVS_End;
         return;
     }
-    print p($tx->thank_you_for_voting($title, $receipt));
+    print p($tx->thank_you_for_voting($title,
+                $tx->CopyableText('final_receipt', $receipt)));
     PointToResults;
     print $tx->you_can_change_ballot_now;
     RevoteButton($voter_key, $tx->change_ballot, $receipt);
@@ -437,23 +452,15 @@ sub Load {
 }
 
 sub IntroduceWriteins {
-    print div({class => 'description'}, p($description)), $cr;
-
-    print p($tx->instructions1($num_winners, $election_end,
-                               escapeHTML($name), escapeHTML($email_addr))), $cr;
+    print p($tx->winning_choices($num_winners)), $cr;
     print p($tx->only_writeins_are_permitted), $cr;
 }
 
 sub IntroduceVoting {
-    print div({class => 'description'}, p($description)), $cr;
-
-    print p($tx->instructions1($num_winners, $election_end,
-                               escapeHTML($name), escapeHTML($email_addr))), $cr;
-    if ($num_auth) {
-        print p($tx->report_authorized($num_auth));
-    }
+    print p($tx->winning_choices($num_winners)), $cr;
     print p($tx->instructions2(($no_opinion eq 'yes'),
                                ($proportional eq 'yes'),
                                $use_combined_ratings,
-                               $civs_url)), $cr;
+                               $civs_url,
+                               ($num_questions > 1))), $cr;
 }

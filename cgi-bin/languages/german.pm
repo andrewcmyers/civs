@@ -310,11 +310,13 @@ sub ballot_reporting_is_enabled {
      Ihre Stimme (mit der Rangfolge, die Sie den Kandidaten zuweisen)
      wird nach Abstimmungsschluss veröffentlicht.';
 }
-sub instructions1 { # num_winners, end, name, email
+sub winning_choices { # num_winners
     my $wintxt = ($_[1] == 1) ? 'genau einen Sieger' : "$_[1] Sieger";
-    "Es wird $wintxt geben.<p>
-            Abstimmungsschluss: <b>$_[2]</b>.
-            Der Abstimmungsleiter ist $_[3] (<tt>$_[4]</tt>).
+    "Es wird $wintxt geben.";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "Abstimmungsschluss: <b>$_[1]</b>.
+            Der Abstimmungsleiter ist $_[2] (<tt>$_[3]</tt>).
             Nehmen Sie mit dem Abstimmungsleiter Kontakt auf, falls Sie Hilfe benötigen.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url

@@ -84,3 +84,36 @@ function install_tag(tag) {
 for (var t in tags) {
     install_tag(tags[t])
 }
+
+// Briefly show a message in an element, then hide it again.
+function clear(node) {
+    if (node == undefined) return;
+    while (node.firstChild) node.removeChild(node.firstChild);
+}
+
+function popup(id, msg) {
+    const elem = document.getElementById(id);
+    clear(elem);
+    app(elem, msg);
+    elem.style.display = 'inline';
+    setTimeout(function() {
+        const e = document.getElementById(id);
+        if (e) e.style.display = 'none';
+    }, 1000);
+}
+
+// Copy the text of one element to the clipboard, saying so in another.
+// Taking the text from the page rather than from an argument keeps it out
+// of the onclick attribute, where quoting it would be the caller's
+// problem.
+function copy_element(text_id, popup_id, msg) {
+    const source = document.getElementById(text_id);
+    if (!source) return;
+    navigator.clipboard.writeText(source.textContent).then(
+        () => popup(popup_id, msg),
+        () => popup(popup_id, msg));
+}
+
+function copy_url(id, url) {
+    navigator.clipboard.writeText(url).then(msg => popup(id, "URL copied"))
+}

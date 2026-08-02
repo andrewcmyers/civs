@@ -1144,10 +1144,10 @@ Draft_found {
     en: An unfinished poll form was saved in this browser on %s.
 }
 Restore_draft {
-    en: Fill it in again
+    en: Restore
 }
 Discard_draft {
-    en: Discard it
+    en: Discard
 }
 Draft_files_not_restored {
     en: Files you had chosen to upload are not kept, and will need choosing again.

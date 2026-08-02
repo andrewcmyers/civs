@@ -304,16 +304,18 @@ sub ballot_reporting_is_enabled {
      您的选票 (您给每个选项的权重)
      将在投票结束的时候被公开。';
 }
-sub instructions1 { # num_winners, end, name, email
+sub winning_choices { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
 	$wintxt="单选";
     } else {
 	$wintxt="$_[1] 多选";
     }
-    "只有 $wintxt 会赢得此次投票。<p>
-	    投票结束 <b>$_[2]</b>.
-	    投票创建者 $_[3] (<tt>$_[4]</tt>).
+    "只有 $wintxt 会赢得此次投票。";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "投票结束 <b>$_[1]</b>.
+	    投票创建者 $_[2] (<tt>$_[3]</tt>).
 	    如果需要帮助请联系投票创建者。";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url

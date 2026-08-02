@@ -301,16 +301,18 @@ sub ballot_reporting_is_enabled {
     'O relatório de votos está habilitado para esta votação.
      Seu voto será publicado quando a votação for encerrada.';
 }
-sub instructions1 { # num_winners, end, name, email
+sub winning_choices { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
 	$wintxt="um vencedor";
     } else {
 	$wintxt="$_[1] vencedores";
     }
-    "A votação terá $wintxt.<p>
-	    Término da votação: <b>$_[2]</b>.<p>
-	    Supervisor da votação: $_[3] (<tt>$_[4]</tt>).
+    "A votação terá $wintxt.";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "Término da votação: <b>$_[1]</b>.<p>
+	    Supervisor da votação: $_[2] (<tt>$_[3]</tt>).
             Não hesite em contactá-lo se precisar de ajuda.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url

@@ -97,6 +97,14 @@ ck('the panel really contains its fieldset',
    [...d.querySelectorAll('.prcontrol')].every(e => e.querySelector('fieldset')));
 ck('and the fieldset is hidden along with the panel',
    [...d.querySelectorAll('.question fieldset')].every(e => e.closest('.prcontrol')));
+// The two readings of a rating are laid out to share a line where one
+// will hold them, which needs them to be siblings in the flex container
+// rather than each wrapped in its own paragraph.
+ck('the two rating options are siblings, not each in a paragraph',
+   [...d.querySelectorAll('#question_0 .pr_options > label')].length === 2 &&
+   !d.querySelector('#question_0 .prcontrol p'));
+ck('the panel does not carry the negative-indent class',
+   !d.querySelector('.prcontrol').classList.contains('suboption'));
 ck('the winner count and the checkbox share a line',
    d.querySelector('#num_winners_0').parentNode ===
    d.querySelector('#proportional_0').parentNode);
@@ -111,6 +119,67 @@ d.getElementById('proportional_1').checked = false;
 w.update_conditional_visibility();
 ck('unticking hides it again',
    d.querySelector('#question_1 .prcontrol').style.display === 'none');
+
+// A clone joins the form with its fields still named as the block it was
+// copied from. Radios in one group keep a single checked member, so an
+// unrenamed clone can switch off the choice made in the question it came
+// from -- and the clone must not inherit what was ticked there either.
+const criterion = b => {
+    const on = b.querySelector('input[type=radio]:checked');
+    return on ? on.value : 'NONE';
+};
+const blocks_now = () => [...d.querySelectorAll('#questions .question')];
+ck('adding a question leaves the first one its criterion',
+   blocks_now().every(b => criterion(b) === 'best_choice'),
+   blocks_now().map(criterion).join(','));
+ck('a new question does not inherit a ticked checkbox',
+   d.querySelector('#question_1 .proportional').checked === false);
+// The clone also carries the inline display its panel had in the block it
+// came from, which must not be left showing over an unticked box.
+const agrees = b =>
+    (b.querySelector('.prcontrol').style.display === 'block') ===
+    b.querySelector('.proportional').checked;
+ck('and its panel matches its own checkbox',
+   blocks_now().every(agrees),
+   blocks_now().map(b => b.querySelector('.prcontrol').style.display).join(','));
+d.querySelector('#question_0 .proportional').checked = true;
+w.add_question();
+ck('still does not, when the one copied from is ticked',
+   d.querySelector('#question_2 .proportional').checked === false &&
+   d.querySelector('#question_0 .proportional').checked === true);
+ck('and every question keeps its criterion',
+   blocks_now().every(b => criterion(b) === 'best_choice'),
+   blocks_now().map(criterion).join(','));
+// Reordering renames too, so it can lose a choice the same way.
+w.move_question(d.querySelector('#question_2 .move_up'), -1);
+ck('reordering keeps every criterion',
+   blocks_now().every(b => criterion(b) === 'best_choice'),
+   blocks_now().map(criterion).join(','));
+ck('and every panel still matches its own checkbox',
+   blocks_now().every(agrees),
+   blocks_now().map(b => b.querySelector('.prcontrol').style.display).join(','));
+w.remove_question(d.querySelector('#question_2 .remove_question'));
+d.querySelector('#question_0 .proportional').checked = false;
+w.renumber_questions();
+
+// Returning with the back button, the browser restores the controls
+// silently and after this script has run, so a panel whose checkbox comes
+// back ticked would otherwise stay hidden.
+console.log('\n== returning with the back button ==');
+d.querySelector('#question_0 .proportional').checked = true;      // no event
+ck('a silently restored tick leaves the panel hidden until asked',
+   d.querySelector('#question_0 .prcontrol').style.display === 'none');
+w.dispatchEvent(new w.Event('pageshow'));
+ck('pageshow reveals it', 
+   d.querySelector('#question_0 .prcontrol').style.display === 'block',
+   d.querySelector('#question_0 .prcontrol').style.display);
+d.getElementById('restrict_results').checked = true;              // no event
+w.dispatchEvent(new w.Event('pageshow'));
+ck('and the other conditional panels too',
+   d.getElementById('rrcontrol').style.display === 'block');
+d.querySelector('#question_0 .proportional').checked = false;
+d.getElementById('restrict_results').checked = false;
+w.dispatchEvent(new w.Event('pageshow'));
 
 console.log('\n== per-question preview is scoped ==');
 d.getElementById('choices_1').value = 'Yes\nNo';

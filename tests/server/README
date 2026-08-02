@@ -30,6 +30,14 @@ compile   Runs perl -c over every module and script in the installation,
           installed by install-civs, so they are checked in cgi-bin where
           they are run from.
 
+messages  Loads every installed language and renders its message strings
+          with recognisable arguments, checking that each argument comes
+          out where it belongs and that no language object or array leaks
+          into the text. perl -c only says a string parses; it does not
+          say it still says the right thing. Nothing else here reaches
+          them -- the tests run with LOCALDEBUG set, so no mail is
+          composed, and most of these strings only a voter ever sees.
+
 storage   Creates polls through create_election and reads them back
           through election.pm, checking how questions are laid out in the
           database: that a poll asking one question stores exactly what it

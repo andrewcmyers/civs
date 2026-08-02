@@ -332,7 +332,9 @@ sub ComputeResults {
     print RESULTS br();
     if ($proportional eq 'yes') {
 	my $url = $civs_url.'/proportional.html';
-	print RESULTS "This poll implements <a href=\"$url\">proportional representation</a>. ";
+	# Only this question is decided proportionally; others need not be.
+	my $what = ($num_questions > 1) ? 'This question' : 'This poll';
+	print RESULTS "$what implements <a href=\"$url\">proportional representation</a>. ";
 	if ($use_combined_ratings) {
 	    print RESULTS " The <a
 	    href=\"$url#combinedratings\">combined-weights criterion</a>";

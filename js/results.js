@@ -60,21 +60,6 @@ function resendResultsLink() {
 	function(err) { alert(err); });
 }
 
-function clear(node) {
-    if (node == undefined) return;
-    while (node.firstChild) node.removeChild(node.firstChild);
-}
-
-function popup(id, msg) {
-    var elem = document.getElementById(id);
-    clear(elem);
-    app(elem, msg);
-    elem.style.display = 'inline';
-    setTimeout(function() {
-	document.getElementById(id).style.display = 'none';
-    }, 1000);
-}
-
 function post_new_description(desc) {
     post_to_url("edit_poll@PERLEXT@",
 	{ id: election_id, key: control_key, description: desc },
@@ -84,9 +69,6 @@ function post_new_description(desc) {
 	function(err) { alert(err); });
 }
 
-function copy_url(id, url) {
-    navigator.clipboard.writeText(url).then(msg => popup(id, "URL copied"))
-}
 function confirm_close(msg) {
     var code = prompt(msg)
     document.getElementsByName('confirmation')[0].value = code

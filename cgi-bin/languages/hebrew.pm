@@ -298,16 +298,18 @@ sub ballot_reporting_is_enabled {
      טופס ההצבעה שלך (הדירוגים שהקצית למועמדים)
      יהפוך פומבי עם סיום ההצבעה.';
 }
-sub instructions1 { # num_winners, end, name, email
+sub winning_choices { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
 	$wintxt="הבחירה המועדפת הבודדת";
     } else {
 	$wintxt="$_[1] הבחירות המועדפות";
     }
-    "רק $wintxt ינצח(ו) בהצבעה.<p>
-	    ההצבעה מסתיימת <b>$_[2]</b>.
-	    מפקח ההצבעה הוא <tt>$_[4]&gt;</tt> $_[3]<tt>&gt;</tt>.
+    "רק $wintxt ינצח(ו) בהצבעה.";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "ההצבעה מסתיימת <b>$_[1]</b>.
+	    מפקח ההצבעה הוא <tt>$_[3]&gt;</tt> $_[2]<tt>&gt;</tt>.
 	    צור קשר עם מפקח ההצבעה אם אתה זקוק לעזרה.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url

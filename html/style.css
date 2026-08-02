@@ -338,6 +338,9 @@ input#save_description_button { display: none }
 .popup {
     border: 1px solid black;
     background-color: #ffffd0;
+    /* Stated rather than inherited: the popup sits next to whatever it
+       confirms, and beside a receipt or a link that is monospace. */
+    font-family: Verdana, Helvetica, Arial, sans-serif;
     font-size: 80%;
     position: relative;
     left: 3em;
@@ -416,6 +419,26 @@ div.centering { text-align: center }
 }
 #question_area .prcontrol {
     margin-left: 4ex;
+    max-width: 80ex;
+}
+#question_area .prcontrol fieldset {
+    margin: 0.5ex 0 0 0;
+    padding: 0.5ex 1.5ex 1ex 1.5ex;
+}
+#question_area .prcontrol legend {
+    padding: 0 0.5ex;
+}
+/* Side by side when the line will hold them, stacked tightly when not. */
+#question_area .pr_options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4ex 3ex;
+}
+#question_area .pr_options label {
+    display: inline-block;
+}
+#question_area .pr_options input[type="radio"] {
+    margin-right: 0.6ex;
 }
 /* Reorder and remove controls, stacked in the gutter beside the rule that
    marks off each question. */
@@ -451,4 +474,15 @@ div.centering { text-align: center }
     color: #a00;
     font-size: 130%;
     margin-top: 0.5ex;
+}
+
+/* The icon beside a receipt or link that copies it to the clipboard. */
+img.copy_icon {
+    vertical-align: text-bottom;
+    margin-left: 0.6ex;
+    cursor: pointer;
+    opacity: 0.6;
+}
+img.copy_icon:hover {
+    opacity: 1;
 }

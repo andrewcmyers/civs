@@ -14,6 +14,28 @@ sub CopyableURL {
     <span class=popup id=$id></span>"
 }
 
+# A piece of text with an icon beside it that copies it to the clipboard,
+# the same control This_is_a_public_poll_plus_link offers for a poll's
+# link. The text is read back out of the page rather than passed to the
+# script, so quoting it is not this function's problem.
+sub CopyableText {
+    my ($self, $id, $text) = @_;
+    my $copied = $self->Copied;
+    $copied =~ s/'/\\'/g;
+    my $alt = $self->Copy_to_clipboard;
+    "<span id=\"${id}_text\">$text</span>"
+    . "<img class=\"copy_icon\" width=\"16\" alt=\"$alt\" title=\"$alt\""
+    . " src=\"@CIVSURL@/images/copy-icon.png\""
+    . " onclick=\"copy_element('${id}_text', '${id}_popup', '$copied')\">"
+    . "<span class=popup id=\"${id}_popup\"></span>"
+}
+sub Copy_to_clipboard {
+    'copy to clipboard'
+}
+sub Copied {
+    'Copied'
+}
+
 sub init {
     my $self = {};
     bless $self;
@@ -101,6 +123,10 @@ sub Poll_created {
 sub Address_unacceptable { #addr
     "The address \"$_[1]\" is not acceptable"
 }
+sub Question_was_not_submitted {
+    'Nothing was submitted for this question. Reload the poll creation
+     page and try again; if it keeps happening, please report it.'
+}
 sub Poll_must_have_two_choices {
     'A poll must have at least two choices.'
 }
@@ -143,9 +169,10 @@ sub Finish_voting {
 }
 sub keep_your_receipt {
     my ($self, $receipt) = @_;
-    "Your answers so far have been recorded. Keep this receipt: it is the
+    "Your answers so far have been recorded. Keep the following receipt: it is the
      only way back to this ballot if you leave before finishing, and the
-     only way to change an answer afterwards. <tt>$receipt</tt>"
+     only way to change an answer afterwards. <b>Receipt:</b> <tt>"
+    . $self->CopyableText('midvote_receipt', $receipt) . "</tt>"
 }
 sub no_questions_answered {
     'You skipped every question, so no ballot was recorded.'
@@ -168,7 +195,8 @@ sub CIVS_poll_created {
  "CIVS poll created: $_[1]"
 }
 sub creation_email_info1 { # title, url
-    my ($title, $url) = @_;
+    # These are called as methods, so the language object comes first.
+    my ($self, $title, $url) = @_;
 "This email acknowledges the creation of a new poll,
 $title. You have been designated as the supervisor of this
 poll. To start and stop the poll, please use the following URL:
@@ -511,6 +539,24 @@ sub ballot_reporting_is_enabled {
      Your ballot (the rankings you assign to choices)
      will be visible in the poll results when the poll ends.'
 }
+# What instructions1 used to say, split in two: how many choices win is
+# settled question by question, while when the poll ends and who runs it
+# are true of the whole poll and are said once, above the questions.
+sub winning_choices { # num_winners
+    my ($self, $num_winners) = @_;
+    my $wintxt = ($num_winners == 1) ? 'single favorite choice'
+                                     : "$num_winners favorite choices";
+    "Only the $wintxt will win."
+}
+sub poll_end_and_supervisor { # end, name, email
+    my ($self, $end, $name, $email) = @_;
+    "The poll ends <b>$end</b>.
+     The poll supervisor is $name (<tt>$email</tt>).
+     Contact the poll supervisor if you need help."
+}
+
+# Superseded by the two above; kept because the translations still define
+# it and langtest still shows it.
 sub instructions1 { # num_winners, end, name, email
     my $wintxt;
     if ($_[1] == 1) {
@@ -523,9 +569,12 @@ sub instructions1 { # num_winners, end, name, email
 	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
 	    Contact the poll supervisor if you need help.";
 }
-sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
-    my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
+sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url, several
+    my ($self, $no_opinion, $prop, $combined, $civs_url, $several) = @_;
     my $ret;
+    # Proportional representation is settled question by question, so in a
+    # poll that asks several this describes the question, not the poll.
+    my $what = $several ? 'This question' : 'This poll';
     if (!$prop || !$combined) {
 	$ret = "Give each of the following choices
 	    a rank, where a smaller-numbered rank means that you
@@ -543,16 +592,16 @@ sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
 		    other choices.</p>' . $cr;
 	}
 	if ($prop) {
-	    $ret .= '<p>This poll is decided using an experimental Condorcet-based
+	    $ret .= "<p>$what is decided using an experimental Condorcet-based
 	    method designed to provide proportional representation. It is assumed
 	    by the voting algorithm that you want the ranking of your most
 	    preferred <i>winning</i> choice to be as high as possible, and if two
 	    sets of winning choices agree on the choice you prefer most, then you
 	    would decide between them using the second most preferred choice, and
-	    so on. '
+	    so on. "
 	}
     } else {
-	$ret = '<p>This poll is decided using an experimental
+	$ret = '<p>' . $what . ' is decided using an experimental
 	Condorcet-based algorithm designed to provide proportional
 	representation.
 	Please give each of the following choices a

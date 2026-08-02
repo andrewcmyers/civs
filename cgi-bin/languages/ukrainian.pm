@@ -409,19 +409,6 @@ sub page_header_CIVS_Vote { # election_title
 sub ballot_reporting_is_enabled {
   'Для цього опитування ввімкнено звіт про голосування. Ваш бюлетень (рейтинг, який ви призначаєте варіантам) буде видно в результатах опитування, коли опитування закінчиться.'
 }
-sub instructions1 { # num_winners, end, name, email
-    my $wintxt;
-    if ($_[1] == 1) {
-	$wintxt="single favorite choice";
-    } else {
-	$wintxt="$_[1] favorite choices";
-    }
-    "Only the $wintxt will win the poll.<br />
-	    The poll ends <b>$_[2]</b>.
-	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
-	    Contact the poll supervisor if you need help.";
-# UNTRANSLATED
-}
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;

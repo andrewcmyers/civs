@@ -410,19 +410,6 @@ sub page_header_CIVS_Vote { # election_title
 sub ballot_reporting_is_enabled {
   'இந்த வாக்கெடுப்புக்கு வாக்குச் சீட்டு அறிக்கையிடல் இயக்கப்பட்டுள்ளது. வாக்கெடுப்பு முடியும்போது உங்கள் வாக்குச்சீட்டு (தேர்வுகளுக்கு நீங்கள் ஒதுக்கும் தரவரிசை) வாக்கெடுப்பு முடிவுகளில் தெரியும்.'
 }
-sub instructions1 { # num_winners, end, name, email
-    my $wintxt;
-    if ($_[1] == 1) {
-	$wintxt="single favorite choice";
-    } else {
-	$wintxt="$_[1] favorite choices";
-    }
-    "Only the $wintxt will win the poll.<br />
-	    The poll ends <b>$_[2]</b>.
-	    The poll supervisor is $_[3] (<tt>$_[4]</tt>).
-	    Contact the poll supervisor if you need help.";
-# UNTRANSLATED
-}
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url
     my ($self, $no_opinion, $prop, $combined, $civs_url) = @_;
     my $ret;

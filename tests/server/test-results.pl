@@ -158,6 +158,21 @@ ck('question 1 matrix has 2 choices, question 2 has 3',
 ck('the skipped ballot is absent from question 2',
    $q2_part !~ /Lost ballot/);
 
+print "\n== proportional wording names the question, not the poll ==\n";
+# Only one question of a poll may be decided proportionally, so the text
+# must not claim it of the whole poll.
+my ($pid, $pkey, $pakey) = make_poll(
+    num_questions     => 2,
+    question_title    => 'Plain?',  choices => "Pizza\r\nTacos",  num_winners => 1,
+    q1_question_title => 'Proportional?', q1_choices => "Walk\r\nBus\r\nTrain",
+    q1_num_winners    => 2, q1_proportional => 'yes',
+);
+cast($pid, $pakey, '10.6.9.1', [1, 2], [1, 2, 3]);
+post('close.pl', '10.0.0.1', id => $pid, key => $pkey, confirmation => 'close');
+my $pp = get('results.pl', '10.6.9.9', id => $pid);
+ck('it says "This question implements"', $pp =~ /This question implements/,
+   ($pp =~ /(This \w+ implements[^<]*)/)[0]);
+ck('and never claims it of the poll', $pp !~ /This poll implements/);
 print "\n== a cache file per question ==\n";
 my @c = caches($id);
 ck('two cache files', scalar(@c) == 2, join(',', @c));
@@ -191,6 +206,8 @@ ck('one cache file, named as before',
    scalar(@c1) == 1 && $c1[0] =~ /^results_f\d+,win=1,alg=minimax,lang=/, join(',', @c1));
 ck('the supervisor is still shown', $p =~ /tester\@example\.invalid/);
 ck('the description is still shown', $p =~ /Where shall we go/);
+ck('a poll asking one question is never called a question',
+   $p !~ /This question implements/);
 
 print "\n== results cached by an earlier version are not served ==\n";
 # What is cached is markup the page's stylesheet and script must agree

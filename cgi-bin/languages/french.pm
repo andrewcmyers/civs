@@ -311,16 +311,18 @@ sub ballot_reporting_is_enabled {
      Votre bulletin de vote sera donc rendu public
      à la fin de la consultation.';
 }
-sub instructions1 { # num_winners, end, name, email
+sub winning_choices { # num_winners
     my $wintxt;
     if ($_[1] == 1) {
 	$wintxt="single favorite choice";
     } else {
 	$wintxt="$_[1] favorite choices";
     }
-    "Seulement les $_[1] premiers remporteront la consultation.<p>
-	    La consultation sera clôturée le <b>$_[2]</b>.
-	    Le responsable de la consultation est $_[3] (<tt>$_[4]</tt>).
+    "Seulement les $_[1] premiers remporteront la consultation.";
+}
+sub poll_end_and_supervisor { # end, name, email
+    "La consultation sera clôturée le <b>$_[1]</b>.
+	    Le responsable de la consultation est $_[2] (<tt>$_[3]</tt>).
 	    N'hésitez pas à le contacter si vous avez besoin d'aide.";
 }
 sub instructions2 { #no_opinion, proportional, combined_ratings, civs_url

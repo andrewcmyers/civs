@@ -118,6 +118,34 @@ ck('num_winners under the unprefixed key', ($r1->{num_winners} // '') eq '1');
 ck('no q1 keys written', !grep(/^q1\./, keys %$r1), join(',', grep(/^q\d/, keys %$r1)));
 print probe_lines(load($id1)), "\n";
 
+print "\n== choices separated by bare newlines ==\n";
+# A browser submits a textarea with CRLF, but anything arriving with plain
+# newlines used to collapse into a single choice and be rejected for
+# having fewer than two.
+my $lf = post('create_election.pl', %common,
+              num_questions => 2,
+              question_title => 'A?', choices => "Pizza\nTacos", num_winners => 1,
+              q1_question_title => 'B?', q1_choices => "Walk\nBus",
+              q1_num_winners => 1);
+my ($lf_id) = $lf =~ m{control[^?]*\?id=(E_[0-9a-f]+)};
+ck('the poll is created', defined($lf_id),
+   join(' | ', $lf =~ m{<li>(.*?)</li>}g));
+if (defined $lf_id) {
+    my $r = raw($lf_id);
+    ck('both choices of question 1', ($r->{choices} // '') eq "Pizza\nTacos\n");
+    ck('both choices of question 2', ($r->{'q1.choices'} // '') eq "Walk\nBus\n");
+}
+
+print "\n== a question the form never submitted ==\n";
+# num_questions says two, but nothing was sent for the second.
+my $missing = post('create_election.pl', %common,
+                   num_questions => 2,
+                   choices => "Pizza\r\nTacos", num_winners => 1,
+                   question_title => 'A?');
+ck('it says so, rather than blaming the choices',
+   $missing =~ /Nothing was submitted for this question/,
+   join(' | ', $missing =~ m{<li>(.*?)</li>}g));
+
 print "\n== a poll asking three questions ==\n";
 my $out3 = post('create_election.pl', %common,
     num_questions  => 3,
