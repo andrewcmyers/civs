@@ -75,7 +75,24 @@ connection with the use or performance of this software.
 <h2>Recent updates</h2>
 
 <ul>
-<li>2.28 (current)</li>
+<li>2.29 (current)</li>
+<ul>
+    <li>Security fixes: a request parameter could escape the results cache
+        filename; mail headers could be injected via poll and supervisor
+        names; several pages echoed request data or stored poll data without
+        escaping it; embedded poll images could be used to fetch internal
+        URLs</li>
+    <li>Ballots can no longer be viewed or downloaded before a poll closes,
+        and downloading them now requires the result key when a poll's
+        results are restricted</li>
+    <li>Logs now record the address a request actually came from alongside
+        any forwarded address supplied in a header</li>
+    <li>The no-referrer policy is now actually applied, and is also sent as
+        an HTTP header</li>
+    <li>Better error handling when the mail server cannot be reached</li>
+    <li>Helper scripts collected into a tools/ directory</li>
+</ul>
+<li>2.28 (April 2025)</li>
 <ul>
 <li>Accessibility improvements
 <li>Added script for converting ballot formats
