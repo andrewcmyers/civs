@@ -22,7 +22,8 @@
 #question_area .question_header,
 #question_area .question_title_row,
 #question_area .question_controls,
-#question_area .add_question_row { display: none }
+#question_area .add_question_row,
+#question_area .prcontrol { display: none }
 #question_area.js .add_question_row { display: block }
 #question_area.multi .question_header,
 #question_area.multi .question_title_row,
@@ -152,31 +153,34 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
   <p><input type=file aria-labelledby=choices_label_0 class=choices_file
             name=choices_file id=choices_file_0></p>
 
-  <p><label class=num_winners_label id=num_winners_label_0
-            for=num_winners_0>@How_many_choices_will_win@</label>
-     <input type=text name=num_winners id=num_winners_0 class=num_winners size="5" value="1"
-            aria-labelledby=num_winners_label_0></p>
-
-  <p class=proportional_row>
+  <!-- A div, not a p: the panel below holds a fieldset, and a p is closed
+       automatically by the parser as soon as one of those begins, which
+       would carry the panel's contents out of it. -->
+  <div class=num_winners_row>
+    <label class=num_winners_label id=num_winners_label_0
+           for=num_winners_0>@How_many_choices_will_win@</label>
+    <input type=text name=num_winners id=num_winners_0 class=num_winners
+           size="5" value="1" aria-labelledby=num_winners_label_0>
     <input type=checkbox name=proportional class=proportional id=proportional_0
            value="yes" onClick="update_conditional_visibility()"
            title="@Proportional_rep_expl@">
     <label for=proportional_0>@Enforce_proportional_representation@</label>
-    <span class="suboption prcontrol">
-      <fieldset><legend>@voters_maximizing@</legend>
-      <p>
-      <label><input type="radio" name="rating_interpretation"
-         class=rating_interpretation value="best_choice" checked>
-         @rank_of_their_favorite_choice@</label><br>
-      </p>
-      <p>
-      <label><input type="radio" name="rating_interpretation"
-         class=rating_interpretation value="combined_ratings">
-         @combined_weights_of_selected_choices@</label><br>
-      </p>
-      </fieldset>
-    </span>
-  </p>
+  </div>
+
+  <div class="suboption prcontrol">
+    <fieldset><legend>@voters_maximizing@</legend>
+    <p>
+    <label><input type="radio" name="rating_interpretation"
+       class=rating_interpretation value="best_choice" checked>
+       @rank_of_their_favorite_choice@</label>
+    </p>
+    <p>
+    <label><input type="radio" name="rating_interpretation"
+       class=rating_interpretation value="combined_ratings">
+       @combined_weights_of_selected_choices@</label>
+    </p>
+    </fieldset>
+  </div>
 
   </div>
   </div>

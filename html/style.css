@@ -406,6 +406,17 @@ div.centering { text-align: center }
 #question_area .question_header {
     margin-bottom: 0.5ex;
 }
+/* The winner count and the proportional-representation checkbox share a
+   line; the panel that the checkbox reveals sits under them. */
+#question_area .num_winners_row {
+    margin: 1ex 0;
+}
+#question_area .num_winners_row .proportional {
+    margin-left: 4ex;
+}
+#question_area .prcontrol {
+    margin-left: 4ex;
+}
 /* Reorder and remove controls, stacked in the gutter beside the rule that
    marks off each question. */
 #question_area .question_controls {

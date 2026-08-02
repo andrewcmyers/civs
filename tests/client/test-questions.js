@@ -90,6 +90,16 @@ console.log('\n== proportional representation is per question ==');
 ck('each question has its own checkbox',
    d.querySelectorAll('.question .proportional').length === 2);
 ck('and its own panel', d.querySelectorAll('.question .prcontrol').length === 2);
+// A fieldset cannot live inside a p or a span: the parser closes the p and
+// hoists the fieldset out, which once left the panel empty and its
+// contents permanently on screen. Check the parse, not just the markup.
+ck('the panel really contains its fieldset',
+   [...d.querySelectorAll('.prcontrol')].every(e => e.querySelector('fieldset')));
+ck('and the fieldset is hidden along with the panel',
+   [...d.querySelectorAll('.question fieldset')].every(e => e.closest('.prcontrol')));
+ck('the winner count and the checkbox share a line',
+   d.querySelector('#num_winners_0').parentNode ===
+   d.querySelector('#proportional_0').parentNode);
 ck('both panels start hidden',
    [...d.querySelectorAll('.prcontrol')].every(e => e.style.display === 'none'));
 d.getElementById('proportional_1').checked = true;
