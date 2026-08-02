@@ -231,7 +231,6 @@ sub Add_voters {
 }
 
 sub the_top_n_will_win { # num_winners
-    my $wintxt;
     if ($_[1] == 1) {
 	$wintxt = "Un seul candidat ou une seule proposition sera gagnant";
     } else {
@@ -312,13 +311,11 @@ sub ballot_reporting_is_enabled {
      à la fin de la consultation.';
 }
 sub winning_choices { # num_winners
-    my $wintxt;
     if ($_[1] == 1) {
-	$wintxt="single favorite choice";
+        "Seul le candidat favori l'emportera."
     } else {
-	$wintxt="$_[1] favorite choices";
+        "Seuls les $_[1] favoris gagneront."
     }
-    "Seulement les $_[1] premiers remporteront la consultation.";
 }
 sub poll_end_and_supervisor { # end, name, email
     "La consultation sera clôturée le <b>$_[1]</b>.

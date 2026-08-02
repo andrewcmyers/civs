@@ -539,14 +539,11 @@ sub ballot_reporting_is_enabled {
      Your ballot (the rankings you assign to choices)
      will be visible in the poll results when the poll ends.'
 }
-# What instructions1 used to say, split in two: how many choices win is
-# settled question by question, while when the poll ends and who runs it
-# are true of the whole poll and are said once, above the questions.
 sub winning_choices { # num_winners
     my ($self, $num_winners) = @_;
-    my $wintxt = ($num_winners == 1) ? 'single favorite choice'
-                                     : "$num_winners favorite choices";
-    "Only the $wintxt will win."
+    ($num_winners == 1)
+        ? 'Only the single favorite choice will win'
+        : "Only the $num_winners favorite choices will win"
 }
 sub poll_end_and_supervisor { # end, name, email
     my ($self, $end, $name, $email) = @_;
@@ -555,8 +552,6 @@ sub poll_end_and_supervisor { # end, name, email
      Contact the poll supervisor if you need help."
 }
 
-# Superseded by the two above; kept because the translations still define
-# it and langtest still shows it.
 sub instructions1 { # num_winners, end, name, email
     my $wintxt;
     if ($_[1] == 1) {

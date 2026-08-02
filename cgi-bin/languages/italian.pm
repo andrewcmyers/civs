@@ -306,7 +306,9 @@ sub ballot_reporting_is_enabled {
      sarà resa pubblica al termine della votazione.';
 }
 sub winning_choices { # num_winners
-    "Questa elezione avrà $_[1].";
+    ($_[1] == 1)
+       ? "Solo la scelta preferita vincerà."
+       : "Solo le $_[1] opzioni preferite vinceranno."
 }
 sub poll_end_and_supervisor { # end, name, email
     "Termine della votazione: <b>$_[1]</b>.

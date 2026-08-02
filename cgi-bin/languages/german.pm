@@ -311,8 +311,9 @@ sub ballot_reporting_is_enabled {
      wird nach Abstimmungsschluss veröffentlicht.';
 }
 sub winning_choices { # num_winners
-    my $wintxt = ($_[1] == 1) ? 'genau einen Sieger' : "$_[1] Sieger";
-    "Es wird $wintxt geben.";
+    ($_[1] == 1)
+        ? "Nur der Favorit wird gewinnen."
+        : "Nur die $_[1] Favoriten werden gewinnen."
 }
 sub poll_end_and_supervisor { # end, name, email
     "Abstimmungsschluss: <b>$_[1]</b>.
