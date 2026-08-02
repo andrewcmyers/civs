@@ -7,10 +7,10 @@
   <title>@CIVS_name@</title>
   <base href="@CIVSURL@/" />
   <link rel="canonical" href="@CIVSURL@/" />
-  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" type="text/css" href="style.css?v=@ASSET_VERSION@" />
   <link rel="shortcut icon" href="@CIVSURL@/images/check123b.ico"/>
   <link rel="apple-touch-icon" href="@CIVSURL@/images/check123b.png"/>
-  <script src="@CIVSURL@/ajax.js"></script>
+  <script src="@CIVSURL@/ajax.js?v=@ASSET_VERSION@"></script>
   <style>
     h2 { font-size: 120% }
   </style>

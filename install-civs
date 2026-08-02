@@ -38,6 +38,12 @@ version=`head -1 README | perl -e '@a = split / /, <STDIN>; print $a[1]'`
 
 echo "Installing version $version"
 
+# Appended to the URLs of the stylesheets and scripts this installs, so
+# that browsers holding an older copy fetch the new one. It has to change
+# on every install: work is deployed between releases, so a tag that only
+# changed with $version would leave those deploys serving stale files.
+asset_version="$version-$(date +%Y%m%d%H%M%S)"
+
 echo "Building executables"
 
 (cd src; make -s gettimeofday timeout lockserv) || exit 1
@@ -62,6 +68,7 @@ SubstituteFile() {
     fi
     sed									      \
          -e 's|@ADDTOPATH@|'$ADDTOPATH'|'				      \
+         -e 's|@ASSET_VERSION@|'$asset_version'|'			      \
          -e 's|@ADMIN_KEY@|'$ADMIN_KEY'|'				      \
          -e 's|@AUTH_SENDER@|'$AUTH_SENDER'|'				      \
          -e 's|@CGIBINDIR@|'"$CGIBINDIR"'|'				      \

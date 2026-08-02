@@ -204,21 +204,20 @@ sub HTML_Header {
                          -content => 'no-referrer'})
                 ],
                 -encoding => 'utf-8',
-                -style => {'src' => "@CIVSURL@/$style"}
+                -style => {'src' => "@CIVSURL@/$style?v=@ASSET_VERSION@"}
               );
       } else {
         my $ajaxlibs = "@PROTO@://ajax.googleapis.com/ajax/libs";
         my @scripts = (
-            {'src' => "@CIVSURL@/ezdom.js"},
+            {'src' => "@CIVSURL@/ezdom.js?v=@ASSET_VERSION@"},
             {'src' => "$ajaxlibs/jquery/3.6.0/jquery.min.js"},
             {'src' => "$ajaxlibs/jqueryui/1.12.1/jquery-ui.min.js"},
-            {'src' => "@CIVSURL@/jquery.ui.touch-punch.js"}
+            {'src' => "@CIVSURL@/jquery.ui.touch-punch.js?v=@ASSET_VERSION@"}
         );
         foreach my $script (@js) {
-            push @scripts, { 'src' => ('@CIVSURL@/' . $script) };
+            push @scripts,
+                { 'src' => ('@CIVSURL@/' . $script . '?v=@ASSET_VERSION@') };
         }
-        # The meta tag below says the same thing, but only takes effect once
-        # the parser reaches it; the header covers the whole response.
         print header(-charset => 'utf-8', -content_language => $tx->lang,
                      -referrer_policy => 'no-referrer'),
               start_html(
@@ -239,7 +238,7 @@ sub HTML_Header {
                   })
                 ],
                 -encoding => 'utf-8',
-                -style => {'src' => "@CIVSURL@/$style"},
+                -style => {'src' => "@CIVSURL@/$style?v=@ASSET_VERSION@"},
                 -script => \@scripts,
                 -onLoad => "setup()"
               );
@@ -316,7 +315,7 @@ sub Fatal_CIVS_Error {
 sub TrySomePolls {
     return $cr
         . p($tx->try_some_public_polls)
-        . '<script type="text/javascript" src="@CIVSURL@/ajax.js"></script>'
+        . '<script type="text/javascript" src="@CIVSURL@/ajax.js?v=@ASSET_VERSION@"></script>'
         . div({id=>"top_polls", class=>"small_list"}, "Loading...")
         . '<script type="text/javascript">fetch_content("top_polls", '
         . '"@PROTO@://@THISHOST@@CIVSBINURL@/get_top_polls@PERLEXT@")</script>';

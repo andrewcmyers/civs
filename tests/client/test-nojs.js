@@ -4,10 +4,11 @@
 const fs = require('fs');
 const { JSDOM } = require('jsdom');
 
-const css = fs.readFileSync(process.argv[3], 'utf8');
+// style.css is a separate file, separately cached, and can be stale or
+// missing when the page is not. Nothing that must stay hidden may depend
+// on it, so it is deliberately not supplied here.
 let html = fs.readFileSync(process.argv[2], 'utf8')
-    .replace(/<script[\s\S]*?<\/script>/g, '')          // no scripting at all
-    .replace('</head>', '<style>' + css + '</style></head>');
+    .replace(/<script(?![^>]*\btype=)[\s\S]*?<\/script>/g, '');  // no scripting
 
 const d = new JSDOM(html).window;
 const doc = d.document;
@@ -27,6 +28,10 @@ ck('gutter controls hidden', disp('.question_controls') === 'none', disp('.quest
 ck("no question border", d.getComputedStyle(doc.querySelector('.question')).borderLeftWidth !== '3px');
 ck('add button hidden', disp('.add_question_row') === 'none', disp('.add_question_row'));
 ck('choices still visible', disp('.choices') !== 'none', disp('.choices'));
+// The restore offer is useless without scripting, and its buttons would do
+// nothing; it must not appear even if the stylesheet never arrives.
+ck('no offer to restore a draft', disp('#draft_notice') === 'none',
+   disp('#draft_notice'));
 ck('num_winners still visible', disp('.num_winners') !== 'none', disp('.num_winners'));
 
 const posted = [...doc.querySelectorAll('#questions [name]')].map(e => e.name);

@@ -94,7 +94,7 @@ build_pages() {
         JS="$root/js/create_poll.js" perl -0pi -e '
             BEGIN { local $/; open(my $f, "<", $ENV{JS}) or die "$ENV{JS}: $!";
                     our $js = <$f>; close $f }
-            s{<script src="create_poll\.js"></script>}{<script>\n$js\n</script>}
+            s{<script src="create_poll\.js(\?[^"]*)?"></script>}{<script>\n$js\n</script>}
                 or die "no create_poll.js script tag to replace\n"' "$out"
         if [ -n "$left" ]; then
             echo "  FAIL: $lang: unresolved placeholders: $left"
@@ -152,7 +152,7 @@ fi
 if wanted nojs; then
     echo
     echo "=== nojs: the page with scripting disabled ==="
-    node "$here/test-nojs.js" "$en" "$root/html/style.css"
+    node "$here/test-nojs.js" "$en"
     report nojs $?
 fi
 

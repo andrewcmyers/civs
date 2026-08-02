@@ -379,11 +379,9 @@ div.centering { text-align: center }
     margin-right: 1.5ex;
 }
 
-/* Offer of an unfinished poll form kept from a previous visit. Hidden
-   until the script finds one, so it never appears without scripting or
-   when there is nothing to restore. */
+/* Offer of an unfinished poll form kept from a previous visit. Whether it
+   is shown is decided in the page; this only says what it looks like. */
 #draft_notice {
-    display: none;
     background-color: #ffffd0;
     border: 1px solid #aaa;
     border-radius: 4px;
@@ -394,24 +392,9 @@ div.centering { text-align: center }
     margin: 0.5ex 0;
 }
 
-/* Polls with more than one question. The per-question chrome (header,
-   question text, remove button) and the "add question" button are hidden
-   by default and revealed by JavaScript, so that with scripting disabled
-   the form degrades to the single-question form it has always been. */
-#question_area .question_header,
-#question_area .question_title_row,
-#question_area .question_controls,
-#question_area .add_question_row {
-    display: none;
-}
-#question_area.js .add_question_row {
-    display: block;
-}
-#question_area.multi .question_header,
-#question_area.multi .question_title_row,
-#question_area.multi .question_controls {
-    display: block;
-}
+/* Polls with more than one question. Which of these are shown is decided
+   by rules in the page itself, not here: a stale copy of this file must
+   not be able to reveal something the page means to keep hidden. */
 #question_area .question {
     position: relative;
 }

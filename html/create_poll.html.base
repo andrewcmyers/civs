@@ -5,9 +5,29 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Condorcet Internet Voting Service</title>
-<link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
+<link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css?v=@ASSET_VERSION@" />
 <link rel="canonical" href="@CIVSURL@/create_poll.html">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
+<style>
+/* Whether these are shown is part of the page rather than of style.css,
+   which is a separate file and separately cached: an old copy of it must
+   not be able to reveal what the page means to keep hidden. What they
+   look like once shown is still styled there.
+
+   Everything here starts hidden and is revealed by script, so with
+   scripting off the form degrades to the single-question form it has
+   always been, and the offer to restore an unfinished form -- which only
+   a script can act on -- never appears at all. */
+#draft_notice,
+#question_area .question_header,
+#question_area .question_title_row,
+#question_area .question_controls,
+#question_area .add_question_row { display: none }
+#question_area.js .add_question_row { display: block }
+#question_area.multi .question_header,
+#question_area.multi .question_title_row,
+#question_area.multi .question_controls { display: block }
+</style>
 <script>
 // Text and settings for create_poll.js. They live here rather than in the
 // script because this page is generated once per language and once per
@@ -30,9 +50,9 @@ const create_poll_config = {
     }
 }
 </script>
-<script src="create_poll.js"></script>
-<script src="ezdom.js"></script>
-<script src="civs_hdr.js"></script>
+<script src="create_poll.js?v=@ASSET_VERSION@"></script>
+<script src="ezdom.js?v=@ASSET_VERSION@"></script>
+<script src="civs_hdr.js?v=@ASSET_VERSION@"></script>
 
 </head>
 
