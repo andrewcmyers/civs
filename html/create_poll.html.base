@@ -6,111 +6,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Condorcet Internet Voting Service</title>
 <link rel="stylesheet" type="text/css" href="@CIVSURL@/style.css" />
-<link rel="canonical" href="@CIVSURL@/civs_create.html">
+<link rel="canonical" href="@CIVSURL@/create_poll.html">
 <link href="@CIVSURL@/images/check123b.png" rel="shortcut icon">
 <script>
-    function trim(str) {
-        return str.replace(/^\s+|\s+$/g, '')
+// Text and settings for create_poll.js. They live here rather than in the
+// script because this page is generated once per language and once per
+// installation, while the script is shared by all of them.
+const create_poll_config = {
+    max_questions: @MAX_QUESTIONS@,
+    text: {
+        invalid_supervisor_email: '@Invalid_supervisor_email@',
+        question_number: '@Question_number@',
+        must_have_at_least_one_winner: '@Must_have_at_least_one_winner@',
+        proportional_needs_more_winners:
+            '@Proportional_representation_requires_more_than_one_winner@',
+        must_have_two_choices: '@Must_have_at_least_two_choices_to_vote_on@',
+        each_question_needs_text: '@Each_question_needs_text@',
+        results_recipient_invalid: '@Results_recipient_email_address_is_invalid@',
+        no_users_can_see_results:
+            '@You_have_specified_no_users_who_can_see_the_poll_results@',
+        // %s is replaced with when the unfinished form was saved.
+        draft_found: '@Draft_found@'
     }
-    function validateEmail(str)   // element to be validated
-    {
-        var str = trim(str);  // value of field with whitespace trimmed off
-        var email = /^[^@]+@[^@.]+\.[^@]*\w\w$/
-        return email.test(str);
-    }
-
-    function validate() {
-        var numerrs = 0;
-        var errs = new Array;
-        if (!validateEmail(document.forms.CreateElection.email_addr.value)) {
-            errs[numerrs++] = '@Invalid_supervisor_email@';
-        }
-        if (!(document.forms.CreateElection.num_winners.value >= 1)) {
-            errs[numerrs++] = '@Must_have_at_least_one_winner@';
-        }
-        if (document.forms.CreateElection.proportional.checked &&
-            !(document.forms.CreateElection.num_winners.value > 1)) {
-            errs[numerrs++] =
-                '@Proportional_representation_requires_more_than_one_winner@';
-        }
-        if (document.forms.CreateElection.choices.value == '' &&
-            document.forms.CreateElection.choices_file.value == '') {
-            errs[numerrs++] = 'Must have at least two choices to vote on.';
-        }
-        if (document.forms.CreateElection.restrict_results.checked) {
-            var rs = document.forms.CreateElection.result_addrs.value;
-            var ra = rs.split(/[\r\n]+/g);
-            var nr = 0;
-            for (i = 0; i < ra.length; i++) {
-                if (ra[i] == '') continue;
-                if (!validateEmail(ra[i])) {
-                    errs[numerrs++] =
-                        '@Results_recipient_email_address_is_invalid@ ' + ra[i];
-                } else {
-                    nr++;
-                }
-            }
-            if (nr == 0) {
-                errs[numerrs++] =
-                    '@You_have_specified_no_users_who_can_see_the_poll_results@';
-            }
-        }
-        if (numerrs == 0) return true;
-        if (numerrs == 1) {
-            alert(errs[0]);
-        } else {
-            var msg = 'Errors:\n';
-            for (i = 0; i < numerrs; i++) {
-                msg += (i+1);
-                msg += '. ';
-                msg += errs[i];
-                msg += "\n";
-            }
-            alert(msg);
-        }
-        return false;
-    }
-
-    function render_text(prefix, ta_id, span_id, clss) {
-        var span = document.getElementById(span_id);
-        var ta = document.getElementById(ta_id);
-        span.innerHTML = prefix + '<div class="' + clss + '">' + ta.value + "</div>";
-        return 1;
-    }
-
-    function render_list(ta_id, span_id) {
-        var span = document.getElementById(span_id);
-        var ta = document.getElementById(ta_id);
-        var names = ta.value.split(/[\r\n]+/g);
-        var html = "";
-        for (i = 0; i < names.length; i++) {
-            if (names[i] != "")
-                html = html + "<li>" + names[i] + "</li>";
-        }
-        span.innerHTML = "<ul>" + html + "</ul>";
-        return 1;
-    }
-
-    function make_invisible(...ids) {
-        for (const id of ids) {
-            document.getElementById(id).style.display = 'none'
-        }
-    }
-    function make_visible(...ids) {
-        for (const id of ids) {
-            document.getElementById(id).style.display = 'block'
-        }
-    }
-    function preview_description() {
-        render_text('<h2>Poll description</h2>',
-                    'description',
-                    'rendered_description',
-                    'description')
-    }
-    function preview_choices() {
-        render_list('choices', 'rendered_choices')
-    }
+}
 </script>
+<script src="create_poll.js"></script>
 <script src="ezdom.js"></script>
 <script src="civs_hdr.js"></script>
 
@@ -119,11 +39,21 @@
 <body>
 
 <script>
-var body = document.getElementsByTagName('body')[0]
+const body = document.getElementsByTagName('body')[0]
 body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
 </script>
 
 <div class="contents">
+
+<!-- Shown only when an unfinished form was left in this browser. -->
+<div id=draft_notice>
+  <p><span id=draft_notice_text></span>
+     <input type=button id=restore_button value="@Restore_draft@"
+            onClick="restore_draft()">
+     <input type=button id=discard_button value="@Discard_draft@"
+            onClick="discard_saved_draft()"></p>
+  <p><small>@Draft_files_not_restored@</small></p>
+</div>
 
 <form method="POST"
     action="@CIVSBINURL@/create_election@PERLEXT@"
@@ -168,19 +98,77 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
     </tr>
   </div>
 
-  <p><label id=choices_label for=choices>@Enter_the_names_of_all_the_choices@</label></p>
-  <div class=grid_container style="grid-template-columns: auto auto auto">
-    <textarea rows="5" name="choices" cols="60" id="choices"
-        aria-labelledby="choices_label"
-        onchange="preview_choices()"></textarea>
-    <input type=button class=preview value="@Preview_arrow@"
-            onClick="preview_choices()">
-      <span class="rendering" id="rendered_choices"></span>
-  </div>
-  <p><input type=file aria-labelledby=choices_label name=choices_file id=choices_file></p>
+  <div id=question_area>
+  <div id=questions>
+  <div class=question id=question_0>
 
-  <p><label id=num_winners_label for=num_winners>@How_many_choices_will_win@</label>
-     <input type=text name=num_winners id=num_winners size="5" value="1" aria-labelledby=num_winners_label></p>
+  <div class=question_controls>
+    <button type=button class=move_up onClick="move_question(this, -1)"
+            title="@Move_question_up@" aria-label="@Move_question_up@">&#9650;</button>
+    <button type=button class=move_down onClick="move_question(this, 1)"
+            title="@Move_question_down@" aria-label="@Move_question_down@">&#9660;</button>
+    <button type=button class=remove_question onClick="remove_question(this)"
+            title="@Remove_question@" aria-label="@Remove_question@">&#215;</button>
+  </div>
+
+  <h3 class=question_header id=question_header_0>@Question_number@ 1</h3>
+
+  <p class=question_title_row>
+    <label class=question_title_label id=question_title_label_0
+           for=question_title_0>@Text_of_this_question@</label>
+    <input type=text class=question_title name=question_title id=question_title_0
+           size="50" aria-labelledby=question_title_label_0>
+  </p>
+
+  <p><label class=choices_label id=choices_label_0 for=choices_0>@Enter_the_names_of_all_the_choices@</label></p>
+  <div class=grid_container style="grid-template-columns: auto auto auto">
+    <textarea rows="5" name="choices" cols="60" id="choices_0" class=choices
+        aria-labelledby="choices_label_0"
+        onchange="preview_choices(this)"></textarea>
+    <input type=button class=preview value="@Preview_arrow@"
+            onClick="preview_choices(this)">
+      <span class="rendering rendered_choices"></span>
+  </div>
+  <p><input type=file aria-labelledby=choices_label_0 class=choices_file
+            name=choices_file id=choices_file_0></p>
+
+  <p><label class=num_winners_label id=num_winners_label_0
+            for=num_winners_0>@How_many_choices_will_win@</label>
+     <input type=text name=num_winners id=num_winners_0 class=num_winners size="5" value="1"
+            aria-labelledby=num_winners_label_0></p>
+
+  <p class=proportional_row>
+    <input type=checkbox name=proportional class=proportional id=proportional_0
+           value="yes" onClick="update_conditional_visibility()"
+           title="@Proportional_rep_expl@">
+    <label for=proportional_0>@Enforce_proportional_representation@</label>
+    <span class="suboption prcontrol">
+      <fieldset><legend>@voters_maximizing@</legend>
+      <p>
+      <label><input type="radio" name="rating_interpretation"
+         class=rating_interpretation value="best_choice" checked>
+         @rank_of_their_favorite_choice@</label><br>
+      </p>
+      <p>
+      <label><input type="radio" name="rating_interpretation"
+         class=rating_interpretation value="combined_ratings">
+         @combined_weights_of_selected_choices@</label><br>
+      </p>
+      </fieldset>
+    </span>
+  </p>
+
+  </div>
+  </div>
+  <p class=add_question_row>
+    <!-- The id must not match the name of a function called from an inline
+         handler: such handlers resolve names against the enclosing form
+         first, and a form finds its controls by id as well as by name. -->
+    <input type=button id=add_question_button value="@Add_question@"
+           onClick="add_question()">
+  </p>
+  <input type=hidden name=num_questions id=num_questions value="1">
+  </div>
 
   <div id=pubpriv_choice>
   <fieldset id=pubpriv_choice_fieldset><legend>@public_or_private@</legend>
@@ -190,16 +178,16 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
   </div>
   <div class="pubpriv">
   <input type=radio name=public value="yes" id=pubpriv_public
-    onClick="make_visible('publicize', 'no_IP_check_div')">
+    onClick="update_conditional_visibility()">
     <label for=pubpriv_public>@public_explanation@</label>
   </div>
   </fieldset>
   </div>
 
   <h3>@more_poll_options@</h3>
-    <div class=option id=publicize>
+    <div class=option id=publicize_div>
     <input type=checkbox name=publicize id=publicize value="yes" title="@CIVS_will_announce_this_poll@"
-      onclick="make_invisible('restrict_results_div'); make_invisible('reveal_voters_div')">
+      onclick="update_conditional_visibility()">
         <label for=publicize>@Have_CIVS_publicize_this_poll@</label>
     </div>
     <div>
@@ -208,7 +196,7 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
 </div>
 <div id=restrict_results_div>
   <input type=checkbox id=restrict_results name=restrict_results value="yes"
-         title="@Restrict_results@" onClick="make_visible('rrcontrol')">
+         title="@Restrict_results@" onClick="update_conditional_visibility()">
     <label for=restrict_results>@Do_not_release_results_to_all_voters@</label>
     <div class=emphasized>
       @restriction_explanation@
@@ -223,10 +211,10 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
 </div>
 <div id=reveal_voters_div>
   <input type=checkbox name=ballot_reporting id=ballot_reporting value="yes"
-         onClick="make_visible('reveal_voters')"
+         onClick="update_conditional_visibility()"
          title="@Allows_any_to_view@">
   <label for=ballot_reporting>@Enable_detailed_ballot_reporting@</label>
-  <div class=suboption id=reveal_voters>
+  <div class=suboption id=reveal_voters_sub>
     <input type=checkbox name=reveal_voters id=reveal_voters value="yes" aria-labelledby="reveal_voters_label"/>
     <label for=reveal_voters id=reveal_voters_label>@Also_reveal_identity@</label>
     <p class=emphasized>@Reveal_warning@</p>
@@ -245,26 +233,7 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
 <div>
   <input type=checkbox name=no_opinion id=no_opinion value="yes"
     title="@No_opinion_expl@">
-  <label for=no_opinion>@Allow_no_opinion@</label><br>
-  <input type=checkbox name=proportional id=proportional value="yes"
-         onClick="make_visible('prcontrol')"
-         title="@Proportional_rep_expl@">
-  <label for=proportional>@Enforce_proportional_representation@</label>
-   <div class=suboption id=prcontrol>
-    <fieldset><legend>@voters_maximizing@</legend>
-    <p>
-    <label><input type="radio" name="rating_interpretation"
-       value="best_choice"
-       checked>
-       @rank_of_their_favorite_choice@</label><br>
-       </p>
-       <p>
-    <label><input type="radio" name="rating_interpretation"
-       value="combined_ratings">
-       @combined_weights_of_selected_choices@</label><br>
-       </p>
-    </fieldset>
-   </div>
+  <label for=no_opinion>@Allow_no_opinion@</label>
 </div>
 <div id='no_IP_check_div'>
   <input type="checkbox" name=no_IP_check id=no_IP_check value="yes"
@@ -280,7 +249,7 @@ body.appendChild(create_header("@Create_a_poll@", "@lang2@"))
 </div>
 
 <script>
-    make_invisible('publicize', 'prcontrol', 'reveal_voters', 'rrcontrol', 'no_IP_check_div');
+    create_poll_init();
 </script>
 </body>
 

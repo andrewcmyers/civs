@@ -6,6 +6,7 @@ use warnings;
 use lib '@CGIBINDIR@';
 use CGI qw(:standard -utf8);
 use civs_common;
+use election_data qw(QuestionKey);
 use Encode qw(encode decode);
 $CGI::POST_MAX = @MAX_UPLOAD_SIZE@;
 # $CGI::UNLINK_TMP_FILES = 0;
@@ -36,6 +37,14 @@ if ($external_ballots ne 'yes') {
     print p("Error: this election does not allow external ballots to be uploaded");
     exit 0;
 }
+
+# Ballots are uploaded one question at a time, since each question has its
+# own choices and so its own file. Row i of a question's file is ballot i's
+# answer to that question; a question with fewer rows than another simply
+# has no answer from the ballots beyond them.
+my $q = natParam('q');
+if (!$q || $q < 0 || $q >= $num_questions) { $q = 0 }
+SelectQuestion($q);
 
 my $ballot_fh = upload('ballot_data');
 
@@ -125,20 +134,20 @@ if ($#errors >= 0) {
 }
 print p("Ballot file is well formed and contains $num_ballots ballots."), $cr;
 
-my $num_votes = $vdata{'num_votes'} // 0;
-my @recorded_voters;
 my @matrix;
 
-#
-# compute DB updates
-#
+# An upload defines this question's answers completely, replacing anything
+# uploaded for it before. The ballots themselves are shared between the
+# questions: ballot i is "exti" whichever question is being loaded.
+my $previously = QuestionAnswerCount($q);
+
 for (my $i = 0; $i < $num_ballots; $i++) {
     my $vote = '';
     my @rank;
 #
 # Record the vote
 #
-    my $ballot_key = 'ext' . ($i + $num_votes);
+    my $ballot_key = 'ext' . $i;
     for (my $j=0; $j < $num_choices; $j++) {
 	my $rank = $ballots[$i][$j];
 	if ($vote eq '') {
@@ -148,11 +157,10 @@ for (my $i = 0; $i < $num_ballots; $i++) {
 	}
 	$rank[$j] = $rank;
     }
-    $vdata{$ballot_key} = $vote;
+    $vdata{QuestionKey($q, $ballot_key)} = $vote;
 #
 # Record the "voter"
 #
-    push @recorded_voters, $ballot_key;
     if ($reveal_voters eq 'yes') {
 	$vdata{"voter key of $ballot_key"} = $ballot_key;
     }
@@ -165,20 +173,34 @@ for (my $i = 0; $i < $num_ballots; $i++) {
                 $rank[$k] ne 'No opinion' &&
                 $rank[$j] < $rank[$k]) {
                 $matrix[$j][$k]++;
-            }	
+            }
 	}
     }
 }
 
-for (my $j = 0; $j < $num_choices; $j++) {
-    for (my $k = 0; $k < $num_choices; $k++) {
-        $vdata{"$j.$k"} = $matrix[$j][$k];
-    }
+# Anything left over from a larger upload for this question would
+# otherwise be counted alongside the new ballots.
+for (my $i = $num_ballots; $i < $previously; $i++) {
+    delete $vdata{QuestionKey($q, 'ext' . $i)};
 }
 
-$vdata{'recorded_voters'} = join "\n", @recorded_voters;
+for (my $j = 0; $j < $num_choices; $j++) {
+    for (my $k = 0; $k < $num_choices; $k++) {
+        $vdata{QuestionKey($q, "$j.$k")} = $matrix[$j][$k] || 0;
+    }
+}
+$vdata{QuestionKey($q, 'answered')} = $num_ballots;
+
+# The poll holds as many ballots as its longest question has answers.
+my $total = 0;
+for (my $i = 0; $i < $num_questions; $i++) {
+    my $n = ($i == $q) ? $num_ballots : QuestionAnswerCount($i);
+    $total = $n if $n > $total;
+}
+$vdata{'recorded_voters'} =
+    join "\n", map { 'ext' . $_ } (0 .. $total - 1);
 $vdata{'last_vote_time'} = $last_vote_time = time();
-$vdata{'num_votes'} += $num_ballots;
+$vdata{'num_votes'} = $total;
 
 print p('Ballots uploaded successfully.'), $cr;
 
@@ -186,7 +208,7 @@ if (!IsStarted) {
     StartElection;
 }
 
-&PointToResults;
+PointToResults();
 print end_html();
 
 exit 0;

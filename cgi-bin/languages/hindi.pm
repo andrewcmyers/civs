@@ -69,7 +69,7 @@ sub Sorry_the_server_is_busy {
   'क्षमा करें, CIVS वेब सर्वर अभी बहुत व्यस्त है और अधिक अनुरोधों को हैंडल नहीं कर सकता। कृपया थोड़ी देर बाद पुन: प्रयास करें।'
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
   "मेल आपके दिए गए पते पर भेज दी गई है (<tt>$_[1]</tt>)।"
@@ -616,7 +616,7 @@ sub following_URL_reports_results {
 sub if_you_want_to_change {
   'आप यहां अपनी मतदाता रसीद दर्ज करके अपना पिछला वोट हटा सकते हैं और फिर से वोट कर सकते हैं:'
 }
-sub invalid_release_key {
+sub invalid_receipt_key {
     my ($self, $receipt) = @_;
   'प्रदान की गई मतदाता रसीद ('.$receipt.') गलत है। यह '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').' जैसा दिखना चाहिए।'
 }

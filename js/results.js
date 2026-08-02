@@ -1,23 +1,33 @@
-function newSettings() {
-    document.changeSettings.submit();
+// A poll may ask several questions, and the results page then shows one
+// block per question, each with its own settings form and its own details
+// section. So these take the control that was used and work outwards from
+// it, rather than looking for the one element of each kind on the page.
+
+function question_block(elt) {
+    return elt.closest('.question_results') || document;
+}
+
+function newSettings(control) {
+    control.form.submit();
 }
 
 function setup() {
-    // don't need the "update" button if we have JavaScript
-    // working.
-    var button = document.getElementById("recomplete");
-    if (button != null)
+    // don't need the "update" buttons if we have JavaScript working.
+    for (const button of document.querySelectorAll('.recomplete')) {
 	button.parentNode.removeChild(button);
+    }
 }
 
-function hide_details() {
-    document.getElementById("details").style.display = "none";
-    document.getElementById("show_details").style.display = "block";
+function hide_details(button) {
+    const block = question_block(button);
+    block.querySelector('.details').style.display = "none";
+    block.querySelector('.show_details').style.display = "block";
 }
 
-function show_details() {
-    document.getElementById("details").style.display = "block";
-    document.getElementById("show_details").style.display = "none";
+function show_details(button) {
+    const block = question_block(button);
+    block.querySelector('.details').style.display = "block";
+    block.querySelector('.show_details').style.display = "none";
 }
 
 function edit_description() {

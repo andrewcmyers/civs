@@ -22,7 +22,7 @@ sub compare_defeats {
 }
 
 sub compare_defeats_sort {
-    &compare_defeats($a, $b)
+    compare_defeats($a, $b)
 }
 
 sub defeat_to_string {
@@ -64,7 +64,7 @@ sub compare_candidates {
         my $u2 = ($j >= @{$d2});
         return $u1 <=> $u2 if ($u1 || $u2);
 
-        my $cmp = &compare_defeats($d1->[$i], $d2->[$j]);
+        my $cmp = compare_defeats($d1->[$i], $d2->[$j]);
         return $cmp if $cmp != 0;
 
         $i++;
@@ -124,7 +124,7 @@ sub rank_candidates {
         my @best;
         for (my $i = 0; $i < $n; $i++) {
             next if $ranked[$i];
-            #$log .= "choice $i: " . &defeats_to_string($defeats->[$i]) . "<br>\r\n";
+            #$log .= "choice $i: " . defeats_to_string($defeats->[$i]) . "<br>\r\n";
             if (!@best) {
                  #$log .= "  first unranked: $i<br>";
                 @best = ($i);
@@ -136,9 +136,9 @@ sub rank_candidates {
                 }
             }
             my $j = $best[0];
-            #$log .= "  comparing $i against current best: $j " . &defeats_to_string($defeats->[$j]) . "<br>";
+            #$log .= "  comparing $i against current best: $j " . defeats_to_string($defeats->[$j]) . "<br>";
 
-            my $cmp = &compare_candidates($defeats->[$i], $defeats->[$j], \@ranked);
+            my $cmp = compare_candidates($defeats->[$i], $defeats->[$j], \@ranked);
 
             if ($cmp > 0) {
                 @best = ($i);
@@ -154,7 +154,7 @@ sub rank_candidates {
         foreach my $i (@best) {
             $ranked[$i] = 1;
             my $nm = $choices->[$i];
-            $log .= "&nbsp;&nbsp;$nm ($i): " . &defeats_to_string($defeats->[$i]) . "<br>";
+            $log .= "&nbsp;&nbsp;$nm ($i): " . defeats_to_string($defeats->[$i]) . "<br>";
         }
         push @rankings, \@best;
         $num_ranked += @best;

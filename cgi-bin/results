@@ -6,6 +6,7 @@ use warnings;
 use lib '@CGIBINDIR@';
 # use admctrl;
 use civs_common;
+use election_data qw(QuestionKey);
 use algorithms;
 use CGI qw(:standard -utf8);
 use Socket;
@@ -42,94 +43,68 @@ CheckStarted;
 our %vdata_copy = %vdata;
 our %edata_copy = %edata;
 
-&CloseDatabase;
-&UnlockElection; # try to avoid blocking out other people
+CloseDatabase();
+UnlockElection(); # try to avoid blocking out other people
 
 my $result_key = bytesParam('rkey');
 
 if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
     if ($public ne 'yes') {
-	&CheckStopped;
+	CheckStopped();
     }
 
     if ($restrict_results eq 'yes') {
-	&CheckResultKey($result_key);
+	CheckResultKey($result_key);
     }
 }
 
 print br();
 
-my $nwin_param = natParam('num_winners');
-my $real_nwin = $num_winners;
-if ($nwin_param > 0 && $nwin_param < $num_choices) {
-    $num_winners = $nwin_param;
+# The settings form belongs to one question and posts which; every other
+# question on the page is shown with its own stored settings.
+my $settings_for = natParam('q');
+if (!$settings_for || $settings_for < 0 || $settings_for >= $num_questions) {
+    $settings_for = 0;
 }
 
-my $algorithm = param('algorithm') || $default_algorithm;
+# Set per question, before that question's results are computed.
+my ($algorithm, $real_nwin, $real_prop, $real_combined);
 
-my $real_prop = $proportional;
-my $show_prop = param('proportional');
-if ($show_prop) {
-    $proportional = $show_prop;
-}
+# The question whose results are being produced. This has to be a file
+# scoped variable rather than a loop variable: the proportional code below
+# defines named subs that read it, and those capture the variable itself.
+my $question = 0;
 
-my $real_combined = $use_combined_ratings ? 1 : 0;
-# Note: this value is used to construct the cache file name below, so it
-# must not be taken from the request without sanitizing it.
-$use_combined_ratings = boolParam('use_combined_ratings', $real_combined);
+# Bump this whenever the markup written into a cache file changes. What is
+# cached is HTML that the page's stylesheet and script have to agree with,
+# so results cached by an earlier version cannot simply be served by a
+# later one: naming them apart means the old ones are never read again.
+# They are left on disk, and clear_caches removes them.
+my $cache_format = 2;
 
-if (!defined($algorithm_module{$algorithm})) {
-    # Reached only when the requested algorithm is not one we know about:
-    # the name is arbitrary text from the request.
-    print p($tx->undefined_algorithm(escapeHTML($algorithm)));
-    print end_html();
-    exit 0;
-}
-
-my $cache_file = "$election_dir/results_win=$num_winners,alg=$algorithm,lang=".$tx->lang;
-if ($proportional eq 'yes') { $cache_file .= ",prop,comb=$use_combined_ratings"; }
-
-my $cache_time = &FileTimestamp($cache_file);
-
-if ($cache_time == 0) {
-    print '<!-- No cache file -->', $cr;
-} else {
-    print "<!-- Cache file timestamp: $cache_time -->", $cr;
-}
+# Progress meter state, spanning the whole page rather than one question.
 my $progress_level = 0.0;
 my $progress_base = 0.0;
 my $progress_max = 1.0;
 
+# These variables are global to the results computations.
+my ($condorcet_winner);
+my (@result, @matrix, @closure_matrix, @choice_index, @choice_rank);
+my (%visited);
+
+# The ballots that answered the question being reported, which need not be
+# all of them: a voter may skip a question.
+my (@question_voters, $question_num_votes);
+
 if ($restrict_results eq 'yes') {
-    &election::ReportResultReaders;
+    election::ReportResultReaders();
 }
 
-if (param('fresh') || param('Compare') ||             # Can force a refresh
-
-     (defined($last_vote_time) && $last_vote_time > $cache_time &&     # Recompute if out of date
-      time() - $cache_time > 15) ||                                    # and cache at least 5 sec
-                                                                       # old.
-
-     (defined($last_vote_time) && $last_vote_time eq '' && $cache_time == 0)) {   # Recompute old if no cache
-    print "<!-- Computing fresh results -->", $cr;
-    &StartProgressMeter;
-    my $nonce = &SecureNonce;
-    open (RESULTS, ">$cache_file.$nonce");
-    binmode RESULTS, ':utf8';
-    &ComputeResults;
-    close (RESULTS);
-    rename("$cache_file.$nonce", "$cache_file");
-    &ReportCompletion;
-} else {
-    print "<!-- Reusing cached results -->", $cr;
+for ($question = 0; $question < $num_questions; $question++) {
+    ShowQuestionResults($question);
 }
 
-if (open (RESULTS, "<$cache_file")) {
-    my $results = do { local $/; <RESULTS> };
-    $results = decode('utf-8', fixUTF($results));
-    print $results;
-    close (RESULTS);
-}
+AdvertisePolls();
 
 CIVS_End;
 
@@ -139,22 +114,139 @@ sub Email {
     return "<span class=\"email\">$_[0]</span>";
 }
 
-# These variables are global to the results computations.
-my ($condorcet_winner);
-my (@result, @matrix, @closure_matrix, @choice_index, @choice_rank);
-my (%visited);
+sub SelectQuestionBallots {
+    my ($q) = @_;
+    @question_voters = ();
+    foreach my $ballot_key (split /\n/, ($vdata_copy{'recorded_voters'} || '')) {
+        push @question_voters, $ballot_key
+            if defined($vdata_copy{QuestionKey($q, $ballot_key)});
+    }
+    $question_num_votes = scalar @question_voters;
+}
 
-# Start the progress meter (sends to STDOUT)
+# Where one question's computed results are kept.
+sub QuestionCacheFile {
+    my ($q) = @_;
+    my $name = "results_f$cache_format," . ($q == 0 ? '' : "q$q,")
+             . "win=$num_winners,alg=$algorithm,lang=" . $tx->lang;
+    if ($proportional eq 'yes') { $name .= ",prop,comb=$use_combined_ratings" }
+    return "$election_dir/$name";
+}
+
+# Settle the settings this question is to be reported under. Those asked
+# for in the request apply only to the question whose form they came from.
+sub QuestionSettings {
+    my ($q) = @_;
+    $real_nwin = $num_winners;
+    $real_prop = $proportional;
+    $real_combined = $use_combined_ratings ? 1 : 0;
+    $algorithm = $default_algorithm;
+    return if $q != $settings_for;
+
+    my $nwin_param = natParam('num_winners');
+    if ($nwin_param > 0 && $nwin_param < $num_choices) {
+        $num_winners = $nwin_param;
+    }
+    $algorithm = param('algorithm') || $default_algorithm;
+    my $show_prop = param('proportional');
+    if ($show_prop) { $proportional = $show_prop }
+    # Note: this value is used to construct the cache file name below, so
+    # it must not be taken from the request without sanitizing it.
+    $use_combined_ratings = boolParam('use_combined_ratings', $real_combined);
+
+    if (!defined($algorithm_module{$algorithm})) {
+        # Reached only when the requested algorithm is not one we know
+        # about: the name is arbitrary text from the request.
+        print p($tx->undefined_algorithm(escapeHTML($algorithm)));
+        print end_html();
+        exit 0;
+    }
+}
+
+# Report one question, computing its results if what is cached for it is
+# out of date.
+sub ShowQuestionResults {
+    my ($q) = @_;
+    SelectQuestion($q);
+    SelectQuestionBallots($q);
+    QuestionSettings($q);
+
+    # Nothing carries over from the question before.
+    $condorcet_winner = -1;
+    @result = (); @matrix = (); @closure_matrix = ();
+    @choice_index = (); @choice_rank = (); %visited = ();
+
+    if ($num_questions > 1) {
+        print h2($tx->Question_number($q + 1)), $cr;
+        my $question_title = $questions[$q]->{'question_title'};
+        if (defined($question_title) && $question_title ne '') {
+            # Filtered HTML, like the description: not escaped again.
+            print div({-class => 'question_text'}, $question_title), $cr;
+        }
+        print p($tx->ballots_answering_question($q + 1, $question_num_votes)),
+              $cr;
+    }
+
+    my $cache_file = QuestionCacheFile($q);
+    my $cache_time = FileTimestamp($cache_file);
+    if ($cache_time == 0) {
+        print '<!-- No cache file -->', $cr;
+    } else {
+        print "<!-- Cache file timestamp: $cache_time -->", $cr;
+    }
+
+    if (param('fresh') || param('Compare') ||        # Can force a refresh
+
+         (defined($last_vote_time) && $last_vote_time > $cache_time &&
+          time() - $cache_time > 15) ||              # and cache at least 5 sec old
+
+         (defined($last_vote_time) && $last_vote_time eq '' && $cache_time == 0)) {
+        print "<!-- Computing fresh results -->", $cr;
+        StartProgressMeter($q);
+        my $nonce = SecureNonce();
+        open (RESULTS, ">$cache_file.$nonce");
+        binmode RESULTS, ':utf8';
+        ComputeResults($q);
+        close (RESULTS);
+        rename("$cache_file.$nonce", "$cache_file");
+        ReportCompletion($q);
+    } else {
+        print "<!-- Reusing cached results -->", $cr;
+    }
+
+    if (open (RESULTS, "<$cache_file")) {
+        my $results = do { local $/; <RESULTS> };
+        $results = decode('utf-8', fixUTF($results));
+        print $results;
+        close (RESULTS);
+    }
+}
+
+# Start the progress meter for one question (sends to STDOUT).
+#
+# Each question that has to be recomputed gets a meter of its own, so they
+# need ids of their own: sharing one meant every question drove the first
+# question's bar and left its own on screen for good. The reports that
+# follow in the output stream belong to whichever meter was started last,
+# which is what report_progress is pointed at here.
 sub StartProgressMeter {
-    print '<p id="compute_msg"><i>'. $tx->computing_results. '</i></p>', $cr;
-    print '<table id="completion_meter" cellpadding="0"><tr><td id="completed_meter" width="0px" height="2ex"></td><td id="incomplete_meter" width="100%"></td></tr></table>',$cr;
+    my ($q) = @_;
+    $progress_level = 0.0;
+    $progress_base = 0.0;
+    $progress_max = 1.0;
+    print '<p class="compute_msg" id="compute_msg_'.$q.'"><i>',
+          $tx->computing_results, '</i></p>', $cr;
+    print '<table class="completion_meter" id="completion_meter_'.$q.'"
+              cellpadding="0"><tr>
+              <td class="completed_meter" width="0px" height="2ex"></td>
+              <td class="incomplete_meter" width="100%"></td>
+           </tr></table>', $cr;
     print '<script type="text/javascript">
-       var complete = document.getElementById("completed_meter");
-       var incomplete = document.getElementById("incomplete_meter");
+       var civs_meter = document.getElementById("completion_meter_'.$q.'");
        function report_progress(x) {
          x = Math.round(100 * x);
-	 complete.style.width = "" + x + "%";
-         incomplete.style.width= "" + (100-x) + "%";
+         civs_meter.querySelector(".completed_meter").style.width = "" + x + "%";
+         civs_meter.querySelector(".incomplete_meter").style.width = "" + (100-x) + "%";
        }
 </script>', $cr;
     STDOUT->flush();
@@ -182,55 +274,61 @@ sub NewProgressPhase {
     $progress_max = (1.0 - $progress_base) * $new_max + $progress_base;
 }
 
-# Call when results are finished, to remove progress meter.
+# Call when one question's results are finished, to remove its meter.
 sub ReportCompletion {
+    my ($q) = @_;
     print '<script type="text/javascript">
-	document.getElementById("compute_msg").style.display = "none";
-	document.getElementById("completion_meter").style.display = "none";
+	document.getElementById("compute_msg_'.$q.'").style.display = "none";
+	document.getElementById("completion_meter_'.$q.'").style.display = "none";
 	</script>', $cr;
 }
 
-# Compute the results for the current election. Write the results to the
-# output file RESULTS. Generate progress reports appropriately.
+# Compute the results for one question of the current election. Write them
+# to the output file RESULTS. Generate progress reports appropriately.
 sub ComputeResults {
+    my ($q) = @_;
 
-    print RESULTS '<div id="settings"><form method="get"
+    print RESULTS '<div class="question_results">', $cr;
+
+    print RESULTS '<div class="settings"><form method="get"
 	    action="'.$thisurl.'"
-	    enctype="multipart/form-data"
-	    name="changeSettings">';
-    # name and email_addr are UTF-8 fields, not filtered HTML, so they must be
-    # escaped here (see the field notes in election.pm).
-    print RESULTS span($tx->Supervisor(escapeHTML($name),
-				       &Email(escapeHTML($email_addr)))), br;
-    print RESULTS span($tx->Announced_end_of_poll($election_end)), br, $cr;
-    if (IsStopped) {
-	# my $close_time = $vdata_copy{'close_time'};
-	print RESULTS $tx->Actual_time_poll_closed($close_time), br, $cr;
-    } else {
-	print RESULTS $tx->Poll_not_ended, br, $cr;
+	    enctype="multipart/form-data">';
+    # The poll as a whole is described once, alongside its first question.
+    if ($q == 0) {
+	# name and email_addr are UTF-8 fields, not filtered HTML, so they
+	# must be escaped here (see the field notes in election.pm).
+	print RESULTS span($tx->Supervisor(escapeHTML($name),
+					   Email(escapeHTML($email_addr)))), br;
+	print RESULTS span($tx->Announced_end_of_poll($election_end)), br, $cr;
+	if (IsStopped) {
+	    print RESULTS $tx->Actual_time_poll_closed($close_time), br, $cr;
+	} else {
+	    print RESULTS $tx->Poll_not_ended, br, $cr;
+	}
+	if ($external_ballots eq 'yes') {
+	    print RESULTS $tx->This_is_a_test_poll, br, $cr;
+	} elsif ($public ne 'yes') {
+	    print RESULTS $tx->This_is_a_private_poll($num_auth), br, $cr;
+	} else {
+	    print RESULTS $tx->This_is_a_public_poll, br, $cr;
+	}
+	print RESULTS $tx->Actual_votes_cast($num_votes), br, $cr;
     }
-    if ($external_ballots eq 'yes') {
-	print RESULTS $tx->This_is_a_test_poll, br, $cr;
-    } elsif ($public ne 'yes') {
-	print RESULTS $tx->This_is_a_private_poll($num_auth), br, $cr;
-    } else {
-	print RESULTS $tx->This_is_a_public_poll, br, $cr;
-    }
-    print RESULTS $tx->Actual_votes_cast($num_votes), br, $cr;
 
     print RESULTS $tx->Number_of_winning_candidates;
     print RESULTS '<input type="text" size="2"
 	    name="num_winners"
-	    onchange="newSettings()"
+	    onchange="newSettings(this)"
 	    value="', $num_winners, '" />';
     print RESULTS hidden('id', $election_id);
+    # Which question these settings are for.
+    print RESULTS hidden(-name => 'q', -value => $q, -override => 1);
     if (defined($result_key)) {
 	print RESULTS hidden('rkey', escapeHTML($result_key));
     }
     if ($real_nwin != $num_winners) {
 	print RESULTS $tx->Poll_actually_has($real_nwin);
     }
-
     print RESULTS br();
     if ($proportional eq 'yes') {
 	my $url = $civs_url.'/proportional.html';
@@ -276,67 +374,70 @@ sub ComputeResults {
        '<blockquote>',
 	'<input type="radio"
 	    name="algorithm"
-	    onclick="newSettings()"
+	    onclick="newSettings(this)"
 	    value="minimax"',
 	    $minimax_checked,
 	' /> Minimax', BR,
 	'<input type="radio"
 	    name="algorithm"
-	    onclick="newSettings()"
+	    onclick="newSettings(this)"
 	    value="civs_ranked_pairs"',
 	    $rp_checked,
 	' /> CIVS Ranked Pairs', BR,
 	'<input type="radio"
 	    name="algorithm"
-	    onclick="newSettings()"
+	    onclick="newSettings(this)"
 	    value="beatpath" ',
 	    $bw_checked,
 	' /> Schulze/Beatpath', BR,
 	'<input type="radio"
 	    name="algorithm"
-	    onclick="newSettings()"
+	    onclick="newSettings(this)"
 	    value="mam"',
 	    $mam_checked,
 	' /> MAM', BR,
 	'<input type="radio"
 	    name="algorithm"
-	    onclick="newSettings()"
+	    onclick="newSettings(this)"
 	    value="runoff"',
 	    $runoff_checked,
 	' /> Condorcet-IRV', BR,
 	'<input type="radio"
 	    name="algorithm"
-	    onclick="newSettings()"
+	    onclick="newSettings(this)"
 	    value="b2r"',
 	    $b2r_checked,
 	' /> Bottom-2 Runoff', BR,
         '<input type="checkbox"
-            onclick="newSettings()"
+            onclick="newSettings(this)"
             name="proportional",
             value="yes"',
             $proportional_checked,
         ' /> Proportional', BR;
 
-	print RESULTS '<input type="submit" id="recomplete" value="Update" />';
+	print RESULTS '<input type="submit" class="recomplete" value="Update" />';
 
     print RESULTS '</blockquote></form></div>',$cr;
 
-    print RESULTS h2($tx->poll_description_hdr), $cr,
-	'<div class="description">',
-	p($description),
-	'</div>', $cr;
+    if ($q == 0) {
+	print RESULTS h2($tx->poll_description_hdr), $cr,
+	    '<div class="description">',
+	    p($description),
+	    '</div>', $cr;
+    }
 
-    &SetupMatrix;
+    SetupMatrix();
 
     if ($proportional eq 'yes') {
-        &ComputeNonproportionalResults;
-	&PrintProportionalResults;
+        ComputeNonproportionalResults();
+	PrintProportionalResults();
     } else {
 
 	print RESULTS h2($tx->Ranking_result), $cr;
 
-	&PrintReport($algorithm_module{$algorithm});
+	PrintReport($algorithm_module{$algorithm});
     }
+    print RESULTS '</div>', $cr;
 }
 
 # PrintMatrix(n, m, choices, choice_index, zerodot)
@@ -399,15 +500,15 @@ sub PrintMatrix {
 
 sub DetailsHeader {
     # print RESULTS hr(),$cr;
-    print RESULTS '<p id="show_details">',
+    print RESULTS '<p class="show_details">',
 	$tx->some_result_details_not_shown, '&nbsp;',
-	'<button onclick="show_details();">',
+	'<button onclick="show_details(this);">',
 	    $tx->Show_details,
 	'</button></p>', $cr;
 
-    print RESULTS '<div id="details">';
+    print RESULTS '<div class="details">';
     print RESULTS '<h2>', $tx->Result_details,
-	'<button id="hide_details" onclick="hide_details();">',
+	'<button class="hide_details" onclick="hide_details(this);">',
 	$tx->Hide_details, '</button></h2>', $cr;
 }
 
@@ -427,7 +528,7 @@ sub BallotReport {
 	    return;
 	}
 
-	my @voters = split /\n/, ($vdata_copy{'recorded_voters'} || '');
+	my @voters = @question_voters;
 	if ($#voters >= 0) {
 	    my @headings = @choices;
 	    my @rows = th({-width=>'40px'}, '&nbsp;') . th(\@headings);
@@ -442,7 +543,7 @@ sub BallotReport {
 		# ranks that the voter assigned to candidates.
 		# Element i of the list corresponds to candidate
 		# i.
-		my $recorded_vote = $vdata_copy{$ballot_key};
+		my $recorded_vote = $vdata_copy{QuestionKey($question, $ballot_key)};
 		if (!defined($recorded_vote)) {
 		    Log "Election $election_id ($title): Lost ballot for voter key $ballot_key?";
 		    next;
@@ -459,7 +560,7 @@ sub BallotReport {
 		    $i++;
 		}
                 for (my $i = 1; $i <= $#row; $i++) {
-                    $row[$i] = &FixProp($row[$i])
+                    $row[$i] = FixProp($row[$i])
                 }
 		push @rows, td(\@row);
 	    }
@@ -468,6 +569,7 @@ sub BallotReport {
 		    Tr(\@rows));
 	    print RESULTS p($tx->Ballots_are_shown_in_random_order);
 	    my $download_url = "@PROTO@://$thishost$civs_bin_path/download_ballots@PERLEXT@?id=$election_id";
+	    $download_url .= "&q=$question" if $question > 0;
 	    if ($restrict_results eq 'yes' && $result_key ne '') {
 		$download_url .= '&rkey=' . escapeHTML($result_key);
 	    }
@@ -495,12 +597,12 @@ sub SetupMatrix {
     for (my $j = 0; $j < $num_choices; $j++) {
 	if ($condorcet_winner < 0) { $condorcet_winner = $j; }
 	for (my $k = 0; $k < $num_choices; $k++) {
-	    my $n; $n = $vdata_copy{"$j.$k"} or $n = 0;
-            $n = &FixProp($n);
+	    my $n; $n = $vdata_copy{QuestionKey($question, "$j.$k")} or $n = 0;
+            $n = FixProp($n);
 	    $matrix[$j][$k] = $n;
 	    if ($j != $k) {
-		my $m; $m = $vdata_copy{"$k.$j"} or $m = 0;
-                $m = &FixProp($m);
+		my $m; $m = $vdata_copy{QuestionKey($question, "$k.$j")} or $m = 0;
+                $m = FixProp($m);
 		if ($n <= $m && $condorcet_winner == $j) {
                     $condorcet_winner = -1; # can't be this one
 		}
@@ -514,9 +616,9 @@ sub ComputeNonproportionalResults {
     if ($proportional eq 'yes') { NewProgressPhase(0.1); }
 
     (my $rref, my $log) =
-	&minimax::rank_candidates($num_choices, \@matrix, 0, \@choices);
+	minimax::rank_candidates($num_choices, \@matrix, 0, \@choices);
 
-    (my $ciref, my $crref) = &MakeChoiceIndex($rref);
+    (my $ciref, my $crref) = MakeChoiceIndex($rref);
 
     @result = @{$rref};
     @choice_index = @{$ciref};
@@ -631,7 +733,7 @@ sub ProcessBallots {
     my @voters = @{$_[0]};
     my @ballots = ();
     foreach my $voter_key (@voters) {
-	my $ballot = $vdata_copy{$voter_key};
+	my $ballot = $vdata_copy{QuestionKey($question, $voter_key)};
 	if (!defined($ballot)) {
 	    Log "Election $election_id ($title): Lost ballot for voter key $voter_key?";
 	} else {
@@ -645,9 +747,7 @@ sub ProcessBallots {
 sub PrintReport {
     no strict 'refs';
     (my $module) = @_;
-    my @voters;
-    @voters = split /\n/, ($vdata_copy{'recorded_voters'} || '');
-    my $bref = &ProcessBallots(\@voters);
+    my $bref = ProcessBallots(\@question_voters);
     my $rank_candidates = $module.'::rank_candidates';
     my $print_details = $module.'::print_details';
 
@@ -660,21 +760,20 @@ sub PrintReport {
     (my $rref, my $log) =
 	&$rank_candidates($num_choices, \@matrix, $bref, \@choices, $algorithm);
 
-    (my $ciref, my $crref) = &MakeChoiceIndex($rref);
+    (my $ciref, my $crref) = MakeChoiceIndex($rref);
 
-    &PrintRanking($rref, \@matrix);
-    &DetailsHeader;
-      &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
-      &BallotReport;
+    PrintRanking($rref, \@matrix);
+    DetailsHeader();
+      PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
+      BallotReport();
       &$print_details($log, $num_choices, \@choices, $ciref);
-    &DetailsFooter;
-    &AdvertisePolls;
+    DetailsFooter();
 }
 
 sub AdvertisePolls {
-    print RESULTS
+    print
         '<div class=trysomepolls>', $cr,
-          &TrySomePolls(), $cr,
+          TrySomePolls(), $cr,
         '</div>', $cr;
 }
 
@@ -691,15 +790,15 @@ sub PrintProportionalResults {
 # first sort the choices by the ordinary election algorithm
     # print pre('printing proportional results');
     NewProgressPhase(0.2);
-    @voter_keys = split /[\r\n]+/, $recorded_voters;
+    @voter_keys = @question_voters;
     for (my $j = 0; $j < $num_choices; $j++) {
 	$choice_index[$j] = $j;
 	for (my $k = 0; $k < $j; $k++) {
 	    my $sjk = 0;
 	    my $skj = 0;
-	    for (my $v = 0; $v < $num_votes; $v++) {
+	    for (my $v = 0; $v < $question_num_votes; $v++) {
 		my $voter_key = $voter_keys[$v];
-		my $ratings = $vdata_copy{$voter_key};
+		my $ratings = $vdata_copy{QuestionKey($question, $voter_key)};
 		my @ratings = split /,/, $ratings;
 		my $wj = $ratings[$j];
 		my $wk = $ratings[$k];
@@ -717,10 +816,10 @@ sub PrintProportionalResults {
 
     my $undefined;
     my ($rref, $log) =
-      &minimax::rank_candidates($num_choices, \@matrix, $undefined,
+      minimax::rank_candidates($num_choices, \@matrix, $undefined,
                                 \@choices);
 
-    (my $ciref, my $crref) = &MakeChoiceIndex($rref);
+    (my $ciref, my $crref) = MakeChoiceIndex($rref);
 
     @choice_index = @{$ciref};
     @choice_rank = @{$crref};
@@ -764,7 +863,7 @@ sub PrintProportionalResults {
     if ($prop_details) {
 	print RESULTS '<pre>';
     }
-    if ($num_votes != $#voter_keys + 1) {
+    if ($question_num_votes != $#voter_keys + 1) {
 	print RESULTS "Warning: discrepancy between number of
 	recorded voters and number of recorded votes!";
     }
@@ -777,11 +876,11 @@ sub PrintProportionalResults {
 # kPrefVoter(f, v, c1, c2) is 1 if voter with index $v
 #   has a f-preference for committee c1, 1 if a f-preference
 #   for committee c2, and 0 otherwise. Choices are indexed in
-#   0..$num_choices-1, voters in 0..$num_votes. c1 and c2 are
+#   0..$num_choices-1, voters in 0..$question_num_votes. c1 and c2 are
 #   represented as strings.
 	my ($f, $v, $i, $j) = @_;
 	$voter_key = $voter_keys[$v];
-	$ratings = $vdata_copy{$voter_key};
+	$ratings = $vdata_copy{QuestionKey($question, $voter_key)};
 	@ratings = split /,/, $ratings;
 
 	#print RESULTS "Voter: $ratings considering $i vs. $j with $f-pref\n";
@@ -825,7 +924,7 @@ sub PrintProportionalResults {
 	my ($f, $i, $j) = @_;
 	#print RESULTS "Comparing $i to $j at $f-preference. ";
 	my ($icnt, $jcnt) = (0,0);
-	for (my $v = 0; $v < $num_votes; $v++) {
+	for (my $v = 0; $v < $question_num_votes; $v++) {
 	    if ($f == 0) {
 		$c = kPrefVoter($num_winners, $v, $i, $j);
 	    } else {
@@ -837,11 +936,11 @@ sub PrintProportionalResults {
 	#print RESULTS "Simple count yields $icnt, $jcnt\n";
 # now throw out invalid f-preferences
 	$ipref = $icnt; $jpref = $jcnt;
-	if ($f != 0 && $ipref > 0 && ($ipref * ($num_winners+1)/$num_votes) < $f) {
+	if ($f != 0 && $ipref > 0 && ($ipref * ($num_winners+1)/$question_num_votes) < $f) {
 	    #print RESULTS "Pref 1 is invalid\n";
 	    $ipref = 0;
 	}
-	if ($f != 0 && $jpref > 0 && ($jpref * ($num_winners+1)/$num_votes) < $f) {
+	if ($f != 0 && $jpref > 0 && ($jpref * ($num_winners+1)/$question_num_votes) < $f) {
 	    #print RESULTS "Pref 2 is invalid\n";
 	    $jpref = 0;
 	}
@@ -904,7 +1003,7 @@ sub PrintProportionalResults {
 	    # dprint flatten(renumber($curr_comm)).' vs. '.flatten(renumber($new_comm)).":$cr";
 	    my $bestpref = 0;
 	    my $bestpreffor = 0;
-	    my $bestprefagainst = $num_votes;
+	    my $bestprefagainst = $question_num_votes;
 	    my $bestipref = 0;
 	    my $bestjpref = 0;
 	    $seen{$curr_comm} = $seen{$new_comm} = 1;
@@ -1100,7 +1199,7 @@ sub PrintProportionalResults {
 
     $recurse = 0;
     $divisor = 1;
-    while ($divisor < $num_votes) { $divisor *= 10; }
+    while ($divisor < $question_num_votes) { $divisor *= 10; }
 
 
     #print pre('Building the matrix');
@@ -1127,7 +1226,7 @@ sub PrintProportionalResults {
     }
     NewProgressPhase(1.0);
     $beatpath::n = $#committee + 1;
-    &beatpath::rank_candidates();
+    beatpath::rank_candidates();
     @cresult = @beatpath::result;
     @committee_cmatrix = @beatpath::closure_matrix;
     @comm_choice_index = @beatpath::choice_index;
@@ -1287,5 +1386,5 @@ sub PrintProportionalResults {
     print RESULTS h2('Ranking of the choices').$cr;
     print RESULTS p('Winning choices are shown in bold.');
 
-    &PrintReport($algorithms{$algorithm});
+    PrintReport($algorithms{$algorithm});
 }

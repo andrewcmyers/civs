@@ -62,7 +62,7 @@ sub Sorry_the_server_is_busy {
      больше запросов. Пожалуйста, попробуйте еще раз чуть позже.'
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "Почта был отправлен на указанный вами адрес. (<tt>$_[1]</tt>)."

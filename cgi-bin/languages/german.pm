@@ -62,7 +62,7 @@ sub Sorry_the_server_is_busy {
      weiteren Anfragen bearbeiten.  Bitte versuchen Sie es später noch einmal.';
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "Eine Nachricht wurde an die angegebene E-Mail-Adresse gesandt (<tt>$_[1]</tt>).";

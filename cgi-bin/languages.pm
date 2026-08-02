@@ -68,7 +68,7 @@ my @variants =
    ['ukrainian', 'uk-ua', 0.9],
   );
 
-# Result: &init() determines the current language preference using the
+# Result: init() determines the current language preference using the
 #         available languages and the HTTP Accept-Language header.
 sub init {
     ($accept_language) = @_;

@@ -13,7 +13,7 @@ if (!$algorithm_module{"minimax"}) {
     print "Import failed\n";
 }
 
-&languages::init('en-US');
+languages::init('en-US');
 
 sub usage {
     print STDERR "Usage: tabulate [-A] [-m <minsize] [--anon] [-a <algorithm>] <election_dir> ...\n";
@@ -165,7 +165,7 @@ foreach $election_dir (@elections) {
     tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH;
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH;
 
-    &GetElectionData(\%edata, \%vdata);
+    GetElectionData(\%edata, \%vdata);
     if ($proportional eq 'yes') {
         print STDERR "Skipping proportional election\n";
         next
@@ -193,7 +193,7 @@ foreach $election_dir (@elections) {
     }
     print "\n    ],\n";
 
-    &SetupMatrix;
+    SetupMatrix();
     print "    \"Condorcet winner\": ", encode_json(($condorcet_winner == -1) ? 'None' : $choices[$condorcet_winner]), ",\n";
     print "    \"Weak Condorcet winners\": [";
     my $first_wcw = 1;
@@ -209,7 +209,7 @@ foreach $election_dir (@elections) {
         else { $first_alg = 0; }
         my $module = $algorithm_module{$algorithm};
         $module = $algorithm if !defined($module);
-        &PrintReport($module, $algorithm);
+        PrintReport($module, $algorithm);
     }
     print "\n  }";
 }
@@ -285,11 +285,11 @@ sub SetupMatrix {
         my $seen_beat = 0;
 	for (my $k = 0; $k < $num_choices; $k++) {
 	    my $n; $n = $vdata{"$j.$k"} or $n = 0;
-            $n = &FixProp($n);
+            $n = FixProp($n);
 	    $matrix[$j][$k] = $n;
 	    if ($j != $k) {
 		my $m; $m = $vdata{"$k.$j"} or $m = 0;
-                $m = &FixProp($m);
+                $m = FixProp($m);
 		if ($n <= $m && $condorcet_winner == $j) {
                     $condorcet_winner = -1; # can't be this one
 		}
@@ -331,7 +331,7 @@ sub PrintRanking {
 	}
 	for (my $i = 0; $i <= $#winner; $i++) {
 	    if ($i > 0) { print ',' , $cr , '            '; }
-            print encode_json(&name($winner[$i]));
+            print encode_json(name($winner[$i]));
 	    $choice_rank[$winner[$i]] = $j++;
 	}
 	$num_seen += $#winner + 1;
@@ -373,7 +373,7 @@ sub ProcessBallots {
     foreach my $voter_key (@voters) {
 	my $ballot = $vdata{$voter_key};
 	if (!defined($ballot)) {
-	    &Log("Lost ballot for voter key $voter_key?");
+	    Log("Lost ballot for voter key $voter_key?");
 	} else {
 	    my @row = split /,/, $ballot;
 	    push @ballots, \@row;
@@ -393,7 +393,7 @@ sub PrintReport {
     no strict 'refs';
     my ($module, $algorithm) = @_;
     my @voters = split /\n/, $vdata{'recorded_voters'};
-    my $bref = &ProcessBallots(\@voters);
+    my $bref = ProcessBallots(\@voters);
     my $rank_candidates = $module.'::rank_candidates';
     my $print_details = $module.'::print_details';
 
@@ -408,10 +408,10 @@ sub PrintReport {
 	&$rank_candidates($num_choices, \@matrix, $bref, \@choices,
                         $algorithm);
 
-    (my $ciref, my $crref) = &MakeChoiceIndex($rref);
+    (my $ciref, my $crref) = MakeChoiceIndex($rref);
 
-    &PrintRanking($rref, \@matrix, $algorithm);
-    # &PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
+    PrintRanking($rref, \@matrix, $algorithm);
+    # PrintMatrix($num_choices, \@matrix, \@choices, $ciref, 0);
     # &$print_details($log, $num_choices, \@choices, $ciref);
 
 }

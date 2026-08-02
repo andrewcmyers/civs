@@ -49,7 +49,7 @@ sub Sorry_the_server_is_busy {
      gestire nuove richieste. Si prega di riprovare più tardi.';
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "L'e-mail è stata inviata all'indirizzo fornito (<tt>$_[1]</tt>).";

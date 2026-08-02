@@ -51,7 +51,7 @@ sub Sorry_the_server_is_busy {
     'Sajnáljuk, a CIVS kiszolgáló nagyon le van most terhelve, és nem tud több kérést feldolgozni. Légy szíves térj vissza később.';
 }
 
-# civs_create
+# create_poll
 sub mail_has_been_sent {
     return "Levelet küldtünk az általad megadott címre(<tt>$_[1]</tt>).";
 }

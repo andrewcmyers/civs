@@ -15,8 +15,8 @@ use File::stat;
 use DB_File;
 use POSIX qw(strftime);
 
-&HTML_Header('CIVS maintenance');
-&CIVS_Header('Clearing result caches');
+HTML_Header('CIVS maintenance');
+CIVS_Header('Clearing result caches');
 
 if (param('key') ne '@ADMIN_KEY@') {
     print p("Password missing or wrong");

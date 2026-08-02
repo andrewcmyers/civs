@@ -69,7 +69,7 @@ sub Sorry_the_server_is_busy {
   'На жаль, веб-сервер CIVS зараз дуже зайнятий і не може обробляти додаткові запити. Спробуйте ще раз трохи пізніше.'
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
   "Пошту надіслано на вказану вами адресу (<tt>$_[1]</tt>)."
@@ -615,7 +615,7 @@ sub following_URL_reports_results {
 sub if_you_want_to_change {
   'Ви можете видалити свій попередній голос і проголосувати знову, ввівши свою квитанцію тут:'
 }
-sub invalid_release_key {
+sub invalid_receipt_key {
     my ($self, $receipt) = @_;
   'Надана виборча квитанція ('.$receipt.') є неправильною. Він має виглядати подібно до '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').'.'
 }

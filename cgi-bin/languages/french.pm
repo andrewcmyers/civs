@@ -51,7 +51,7 @@ sub Sorry_the_server_is_busy {
      essayer de nouveau ultérieurement.';
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "Un courrier électronique a été envoyé à l'adresse que vous nous avez communiqué (<tt>$_[1]</tt>).";

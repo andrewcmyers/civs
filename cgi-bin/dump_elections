@@ -122,7 +122,7 @@ if (!$dump_all) {
 }
 
 if (!$reveal_private_info) {
-    &fisher_yates_shuffle(\@elections);
+    fisher_yates_shuffle(\@elections);
 }
 
 my $election_count = 0;
@@ -150,11 +150,11 @@ foreach my $election_dir (@elections) {
     tie %edata, "DB_File", $election_data, O_RDONLY, 0777, $DB_HASH || print STDERR "Failed to open election DB\n";
     tie %vdata, "DB_File", $vote_data, O_RDONLY, 0666, $DB_HASH || print STDERR "Failed to open election DB\n";
 
-    my $readable = &GetElectionData(\%edata, \%vdata);
+    my $readable = GetElectionData(\%edata, \%vdata);
     if (!$readable || !defined($recorded_voters)) { next }
 
     my @voters = split /\n/, $recorded_voters;
-    my @ballots = @{&ProcessBallots(\@voters, $election_id)};
+    my @ballots = @{ProcessBallots(\@voters, $election_id)};
 
     if (@ballots < $min_ballots) {
         untie %edata; untie %vdata;
@@ -167,13 +167,13 @@ foreach my $election_dir (@elections) {
     }
 
     if (!$reveal_private_info) {
-        &fisher_yates_shuffle(\@ballots);
+        fisher_yates_shuffle(\@ballots);
     }
 
     my @choice_permutation = (0..$#choices);
 
     if ($shuffle_choices) {
-        &fisher_yates_shuffle(\@choice_permutation);
+        fisher_yates_shuffle(\@choice_permutation);
     }
 
     item $election_count++;
@@ -224,7 +224,7 @@ foreach my $election_dir (@elections) {
                 print ", ";
             }
             $first = 0;
-            print &FixProp($rank);
+            print FixProp($rank);
         }
         print ' ]';
     }
@@ -257,7 +257,7 @@ sub ProcessBallots {
     foreach my $voter_key (@voters) {
 	my $ballot = $vdata{$voter_key};
 	if (!defined($ballot)) {
-	    &Log("Election $election_id: Missing ballot for voter key $voter_key");
+	    Log("Election $election_id: Missing ballot for voter key $voter_key");
 	} else {
 	    my @row = split /,/, $ballot;
 	    push @ballots, \@row;

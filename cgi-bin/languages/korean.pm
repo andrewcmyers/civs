@@ -69,7 +69,7 @@ sub Sorry_the_server_is_busy {
   '죄송합니다. 현재 CIVS 웹 서버가 매우 바빠서 추가 요청을 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.'
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
   "귀하가 제공한 주소(<tt>$_[1]</tt>)로 메일이 발송되었습니다."
@@ -616,7 +616,7 @@ sub following_URL_reports_results {
 sub if_you_want_to_change {
   '여기에 유권자 영수증을 입력하여 이전 투표를 제거하고 다시 투표할 수 있습니다.'
 }
-sub invalid_release_key {
+sub invalid_receipt_key {
     my ($self, $receipt) = @_;
   '제공된 유권자 영수증('.$receipt.')이 올바르지 않습니다. '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').'와 유사해야 합니다.'
 }

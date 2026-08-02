@@ -4,7 +4,7 @@ use languages;
 
 my $cr = "\r\n";
 
-&languages::init($ARGV[0]);
+languages::init($ARGV[0]);
 
 print $languages::log;
 

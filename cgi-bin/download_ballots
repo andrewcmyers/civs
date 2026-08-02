@@ -5,6 +5,7 @@ use warnings;
 
 use lib '@CGIBINDIR@';
 use civs_common;
+use election_data qw(QuestionKey);
 use algorithms;
 use CGI qw(:standard -utf8);
 use Digest::MD5 qw(md5_hex);
@@ -47,19 +48,30 @@ if (!param('admin_key') || param('admin_key') ne '@ADMIN_KEY@') {
     }
 }
 
-print header(-type=>'application/text', -attachment=>'civs_ballots.csv');
+# One question's ballots are downloaded at a time: each question has its
+# own choices, so a single file could not name the columns. The results
+# page offers a link per question.
+my $q = natParam('q');
+if (!$q || $q < 0 || $q >= $num_questions) { $q = 0 }
+SelectQuestion($q);
+
+my $filename = ($num_questions > 1) ? 'civs_ballots_q' . ($q + 1) . '.csv'
+                                    : 'civs_ballots.csv';
+print header(-type=>'application/text', -attachment=>$filename);
 
 # print the list of candidate names
 print join ',', @choices;
 print "\n";
 
-my @voters = split /\n/, $vdata{'recorded_voters'};
+my @voters = split /\n/, ($vdata{'recorded_voters'} || '');
 fisher_yates_shuffle(\@voters);  # permute @voters to improve anonymity
 foreach my $voter_key (@voters) {
     # recorded_vote is a comma separated list of the ranks
     # that the voter assigned to candidates.  Element i of the list
-    # corresponds to candidate i.
-    my $recorded_vote = $vdata{$voter_key};
+    # corresponds to candidate i. A voter may skip a question, and then
+    # has no row here.
+    my $recorded_vote = $vdata{QuestionKey($q, $voter_key)};
+    next unless defined($recorded_vote);
     print "$recorded_vote\n";
 }
 

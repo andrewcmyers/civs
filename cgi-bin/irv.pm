@@ -128,7 +128,7 @@ sub rank_candidates {
             foreach my $choice (@remaining_choices) {
                 $active[$choice] = 1;
             }
-            my $rank_counts = &compute_rank_counts($n, $ballots, \@active);
+            my $rank_counts = compute_rank_counts($n, $ballots, \@active);
             if ($debug) {
                 print "Recomputed rank counts:\n";
                 for (my $i = 0; $i < $n; $i++) {
@@ -157,7 +157,7 @@ sub rank_candidates {
         }
         my $winner = $remaining_choices[0];
         push @rankings, [$winner];
-        print "Round won by ", &choice_name($winner), "\n" if $debug;
+        print "Round won by ", choice_name($winner), "\n" if $debug;
         my @uc;
         foreach my $c (@unranked_choices) {
             if ($c != $winner) {

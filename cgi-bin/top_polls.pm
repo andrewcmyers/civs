@@ -28,7 +28,7 @@ sub find_top_polls {
     open(IN, $public_vote_log);
     binmode IN, ':encoding(UTF-8)';
     if (!sysopen NEWLOG, $reduced_log, O_WRONLY|O_CREAT|O_TRUNC) {
-	&Log("Could not open public vote log temp output file $reduced_log");
+	Log("Could not open public vote log temp output file $reduced_log");
 	return;
     }
     binmode NEWLOG, ':encoding(UTF-8)';
@@ -86,11 +86,11 @@ sub find_top_polls {
     close(IN);
 
     if (!sysopen OUT, $top_polls_temp, O_WRONLY|O_CREAT|O_TRUNC) {
-	&Log("Could not open top polls temp output file $top_polls_temp");
+	Log("Could not open top polls temp output file $top_polls_temp");
 	return;
     }
     if (!sysopen FULL, $top_polls_full_temp, O_WRONLY|O_CREAT|O_TRUNC) {
-	&Log("Could not open top polls temp output file $top_polls_full_temp");
+	Log("Could not open top polls temp output file $top_polls_full_temp");
 	return;
     }
     binmode OUT, ':encoding(UTF-8)';

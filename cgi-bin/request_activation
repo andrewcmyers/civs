@@ -12,7 +12,7 @@ use mail;
 my $civs_supervisor = '@SUPERVISOR@';
 my $mail_mgmt_url = '@PROTO@://@THISHOST@@CIVSBINURL@/mail_mgmt@PERLEXT@';
 
-my $address = &TrimAddr(param('address') || "");
+my $address = TrimAddr(param('address') || "");
 my $code = param('code');
 
 print CGI::header(-charset => 'utf-8', -referrer_policy => 'no-referrer');
@@ -23,17 +23,17 @@ if (!CheckAddr($address)) {
     exit 0;
 }
 
-&AcquireGlobalLock;
+AcquireGlobalLock();
 
-my $optouts = &GetOptouts();
-my $opted_out = &HasOptOuts($optouts, $address);
+my $optouts = GetOptouts();
+my $opted_out = HasOptOuts($optouts, $address);
 
 # The activation code for this address
 sub ActivationCode {
     my ($address) = @_;
-    $address = encode('utf-8', &CanonicalizeAddr($address));
+    $address = encode('utf-8', CanonicalizeAddr($address));
     if (!defined($private_host_id)) {
-        &GetPrivateHostID;
+        GetPrivateHostID();
     }
     return civs_hash('activation', $address, $private_host_id);
 }
@@ -50,14 +50,14 @@ sub CleanCode {
 if (!defined($code)) {
 # This is a request to send a code
 
-    &ReleaseGlobalLock;
+    ReleaseGlobalLock();
 
     if ($opted_out) {
         print start_html(), p($tx->cant_send_email), end_html();
         exit 0;
     }
 
-    my $code = &ActivationCode($address);
+    my $code = ActivationCode($address);
 
     if ("@LOCALDEBUG@") {
         print "OK Would email activation code $code to $address at this point."
@@ -69,7 +69,7 @@ if (!defined($code)) {
         }
 
         if (MailFrom('@AUTH_SENDER@') && MailTo($address) && StartMailData()) {
-            my $uniqueid = &SecureNonce;
+            my $uniqueid = SecureNonce();
             my $message_id = "CIVS-activation.$uniqueid\@$thishost";
 
             SendHeader('From', $tx->CIVS_sender, "<$civs_supervisor>");
@@ -91,8 +91,8 @@ if (!defined($code)) {
     }
 } else {
 # This is a request to use a code.
-    $code = &CleanCode($code);
-    my $expected_code = &ActivationCode($address);
+    $code = CleanCode($code);
+    my $expected_code = ActivationCode($address);
     if ($code eq $expected_code) {
         my $report;
         if (UserActivated($optouts, $address)) {
@@ -102,7 +102,7 @@ if (!defined($code)) {
         }
         my $pats = SetOptOutPatterns($optouts, $address, '+');
         SaveOptOuts($optouts);
-        my $key = &OptOutKey(&CanonicalizeAddr($address));
+        my $key = OptOutKey(CanonicalizeAddr($address));
         my $fname = "@CIVSDATADIR@/invites/$key";
         my @rows = ();
         my $invites = "";
@@ -127,7 +127,7 @@ if (!defined($code)) {
             print "<br>Expected code: $expected_code";
         }
     }
-    &ReleaseGlobalLock;
+    ReleaseGlobalLock();
 }
 
 1;

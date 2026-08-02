@@ -66,7 +66,7 @@ sub style_file {
 #      cannot handle more requests. Please try again a little later.'
 # }
 
-# # civs_create
+# # create_poll
 
 # sub mail_has_been_sent {
 #     "Mail has been sent to the address you provided (<tt>$_[1]</tt>)."

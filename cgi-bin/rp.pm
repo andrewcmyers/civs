@@ -113,18 +113,18 @@ sub TransitiveClosure {
 sub rank_candidates {
     my ($num_choices, $mref, $bref, $choices, $algorithm) = @_;
     my @ballots = @{$bref};
-    &fisher_yates_shuffle(\@ballots);
+    fisher_yates_shuffle(\@ballots);
 
     if ($algorithm eq 'mam') {
 	$mam = 1;
-	&create_RVH([@ballots], $num_choices);
+	create_RVH([@ballots], $num_choices);
     } else {
         $mam = 0;
     }
 
     (my $rref, my $ciref, my $denied_any,
 	my $allowed_cycle, my $denied_report) =
-            &rank_candidates_internal($mref, $num_choices, $choices);
+            rank_candidates_internal($mref, $num_choices, $choices);
 
     my $log = '';
     if (!$allowed_cycle && !$denied_any) {
@@ -198,7 +198,7 @@ sub rank_candidates_internal {
 	# print pre("Considering the $winvotes-$losevotes pref for $wname over $lname");
 	#STDOUT->flush();
 	$a = $last_pair; $b = $pair_ref;
-	if ($last_pair eq 'none' || &order_pairs() < 0) {
+	if ($last_pair eq 'none' || order_pairs() < 0) {
 # new bunch: commit the affirmed prefs from the previous bunch
 	    for (my $j = 0; $j < $num_choices; $j++) {
 		for (my $k = 0; $k < $num_choices; $k++) {
@@ -207,7 +207,7 @@ sub rank_candidates_internal {
 	    }
 	    $bunch_index = 0;
 	} else {
-	    if ($mam && ($last_pair ne 'none' && &order_pairs() != 0)) {
+	    if ($mam && ($last_pair ne 'none' && order_pairs() != 0)) {
 		die "Shouldn't get here.\n";
 	    }
 # in MAM mode we shouldn't get here, and sorting should ensure <= 0
@@ -302,14 +302,14 @@ sub rank_candidates_internal {
 			$b = [($j, $i, $matrix[$j][$i], $matrix[$i][$j])];
 			if (!defined($strongest_defeat[$i])) {
 			    $strongest_defeat[$i] = $b;
-			    my $ub = &unparse($b);
+			    my $ub = unparse($b);
 			    #print pre("  Initializing SD of $i to $ub");
 			} else {
 			    $a = $strongest_defeat[$i];
-			    if (&order_pairs > 0) {
+			    if (order_pairs()> 0) {
 				$strongest_defeat[$i] = $b;
-				my $ub = &unparse($b);
-				my $ua = &unparse($a);
+				my $ub = unparse($b);
+				my $ua = unparse($a);
 				# print pre("  Updating SD of $i to $ub (was $ua)");
 			    }
 			}
@@ -323,18 +323,18 @@ sub rank_candidates_internal {
 	    foreach my $j (@group) {
 		$a = $strongest_defeat[$i];
 		$b = $strongest_defeat[$j];
-		my $ub = &unparse($b);
-		my $ua = &unparse($a);
+		my $ub = unparse($b);
+		my $ua = unparse($a);
 		if ($j == $i || !defined($a)) { next; }
 		# print pre("comparing defeats of $i and $j : $ua and $ub");
-		if (!defined($b) || &order_pairs < 0) {
+		if (!defined($b) || order_pairs()< 0) {
 		    # print pre("  Removing $i from group, stronger defeat than $j ($ua vs $ub)");
 		    $won = 0;
 		    last;
 		}
 	    }
 	    if ($won) {
-		my $ud = &unparse($strongest_defeat[$i]);
+		my $ud = unparse($strongest_defeat[$i]);
 		# print pre("$i is in the next winner set, SD was $ud");
 		push @winner, $i;
 	    }

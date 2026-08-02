@@ -7,6 +7,7 @@ use lib '@CGIBINDIR@';
 # use admctrl;
 
 use civs_common;
+use election_data qw(QuestionKey);
 use algorithms;
 use Encode qw(encode);
 
@@ -19,8 +20,6 @@ use Socket;
 use IO::Handle;
 
 my $thisurl = $civs_bin_path."/vote@PERLEXT@";
-
-my $NO_OPINION = 'No opinion';
 
 use election;
 use voting;
@@ -42,6 +41,10 @@ my $allow_debug_votes = 0;         # allow multiple votes from the same voter in
 my $voter_key = bytesParam('key');
 my $authorization_key = bytesParam('akey');
 # encode keys to make sure they are just byte strings
+
+my $q = natParam('q');
+if (!$q || $q < 0 || $q >= $num_questions) { $q = 0 }
+SelectQuestion($q);
 
 my $js_ui = 1;
 if (defined($proportional) && defined($use_combined_ratings) &&
@@ -67,50 +70,88 @@ if ($public ne 'yes') {
         ? param('email_address') || $remote_ip_address
         : $remote_ip_address;
     $voter_id = encode('utf-8', $voter_id); # ensure it's a byte string
-    if (!&ElectionUsesAuthorizationKey) {
+    if (!ElectionUsesAuthorizationKey()) {
         # for backward compatibility and publicized polls
         $voter_key = $voter_id;
     } else {
         CheckAuthorizationKeyForVoting($authorization_key);
-        $voter_key = &civs_hash($voter_id, $authorization_key);
+        $voter_key = civs_hash($voter_id, $authorization_key);
     }
 }
 
-my $old_ballot;
+# A voter partway through a ballot carries their receipt from question to
+# question.
+my $receipt = bytesParam('receipt');
+my $receipt_key = '';
+my $ballot_key = '';
+if ($receipt ne '') {
+    $ballot_key = BallotFromReceipt($receipt);
+    if (!$ballot_key) {
+        print h1($tx->Error), $cr;
+        print p($tx->invalid_receipt_key(escapeHTML($receipt))), $cr;
+        CIVS_End();
+        exit 0;
+    }
+    ($receipt_key) = $receipt =~ m|/([0-9a-f]+)\z|;
+}
 
-if (!$allow_debug_votes || !$local_debug) {
+if (!$ballot_key && (!$allow_debug_votes || !$local_debug)) {
     if ($public eq 'no' || $no_IP_check eq 'no' || $reveal_voters eq 'yes') {
-        $old_ballot = CheckNotVoted($voter_key);
+        CheckNotVoted($voter_key);   # does not return if they have voted
     }
 }
 
 my $add_writein = param('AddWritein');
 my $vote = param('Vote');
+my $skip = param('Skip');
+my $previous = param('Previous');
 my $load = param('Load');
 
-if ($vote && $voting_enabled) {
-    &CheckPostRequest;
-    &ProcessVote;     # prints out confirmation; call does not return
-    exit 0;           # should not happen.
+if (($vote || $skip || $previous) && $voting_enabled) {
+    CheckPostRequest();
+    my $next = AdvanceBallot();
+    if ($next >= $num_questions) {
+        FinishVoting();    # does not return
+        exit 0;
+    }
+    $q = $next;
+    SelectQuestion($q);
 }
 
+# Whatever this ballot said about the question now being shown.
+my $old_ballot = $ballot_key ? QuestionBallot($ballot_key, $q) : undef;
+
 my (@rank, @choice_index, @iota);
-&OrderChoices($old_ballot);
+OrderChoices($old_ballot);
 
 if ($add_writein and $writeins eq 'yes') {
-    &AddWritein;
+    AddWritein();
 }
 
 if ($load) {
-    &Load;
+    Load();
 }
 
 print '<div class="normal_text">', BR;
 
+# A poll asking one question introduces itself by its title alone.
+# If multiple, each question gets its own heading.
+if ($num_questions > 1) {
+    print h2($tx->Question_n_of_m($q + 1, $num_questions)), $cr;
+    my $question_title = $questions[$q]->{'question_title'};
+    if (defined($question_title) && $question_title ne '') {
+        # Filtered HTML, like the poll description: not escaped again.
+        print div({-class => 'question_text'}, $question_title), $cr;
+    }
+    if ($ballot_key) {
+        print p($tx->keep_your_receipt($election_id . '/' . $receipt_key)), $cr;
+    }
+}
+
 if ($voting_enabled) {
-    &IntroduceVoting;
+    IntroduceVoting();
 } else {
-    &IntroduceWriteins;
+    IntroduceWriteins();
 }
 
 if ($ballot_reporting eq 'yes') {
@@ -133,10 +174,14 @@ if ($ballot_reporting eq 'yes') {
 
 print '</div>', $cr;
 
-&voting::GenerateVoteForm($voter_key, $authorization_key, [@choice_index], [@rank], $js_ui, 0,
+voting::GenerateVoteForm($voter_key, $authorization_key, [@choice_index], [@rank], $js_ui, 0,
     ($ballot_reporting eq 'yes' &&
      $reveal_voters eq 'yes' &&
-     $public eq 'yes'));
+     $public eq 'yes'),
+    { question => $q,
+      count    => $num_questions,
+      answered => defined($old_ballot),
+      receipt  => ($ballot_key ? $election_id . '/' . $receipt_key : '') });
 
 if ($public eq 'yes') {
     my $url = "@PROTO@://@THISHOST@$thisurl?id=$election_id";
@@ -153,21 +198,14 @@ if ($voting_enabled && $public eq 'yes') {
         p($tx->if_you_have_already_voted($url)));
 }
 
-&CIVS_End;
+CIVS_End();
 ###############################
 
-# Record a vote.
-# A vote, or ballot, is represented as a comma-separated string of ranks, which
-# are numbers between 1 and the maximum rank, or else the string $NO_OPINION if
-# the poll permits that choice.
-#
-# Votes are recorded in vdata, which is indexed by voter key to preserve
-# anonymity.
-#
-sub ProcessVote {
-    my $vote = '';
-    $vdata{'last_vote_time'} = $last_vote_time = time();
-
+# Read the ranks the voter gave the choices of the question just shown.
+# A rank is a number from 1 to the number of choices, or the string
+# $NO_OPINION where the poll allows it.
+sub ReadRanks {
+    my @ranks;
     for (my $i = 0; $i < $num_choices; $i++) {
         my $rank = param('C'.$i) || $num_choices;
         if ($rank ne $NO_OPINION && !($rank =~ m/\A[0-9]+\Z/)) {
@@ -178,71 +216,69 @@ sub ProcessVote {
         }
         if ($rank ne $NO_OPINION && $rank < 0) { $rank = 0; } # must be proportional
         if ($rank ne $NO_OPINION && $rank > 999) { $rank = 999; } # must be proportional
-        if ($vote eq '') {
-            $vote = $rank;
-        } else {
-            $vote = $vote . ',' . $rank;
-        }
-        $rank[$i] = $rank;
+        $ranks[$i] = $rank;
     }
-    if ($publicize eq 'yes') {
-        &LogPublicVote;
-    }
+    return @ranks;
+}
 
-    # Record vote, but not voter
-    my $voter_ballot_release_key = SecureNonce();
-    &GetPrivateHostID;
-    my $ballot_key = civs_hash($voter_ballot_release_key,
-                               $private_host_id);
-    $vdata{$ballot_key} = $vote;
-    $vdata{'num_votes'}++;
-    $used_voter_keys{civs_hash($voter_key)} = 1;
-    &SyncVoterKeys;
-    ElectionLog("Election: $title ($election_id) : Recorded vote from voter key $voter_key");
-    if ($recorded_voters) {
-        $vdata{'recorded_voters'} = $recorded_voters . "\n".  $ballot_key;
-    } else {
-        $vdata{'recorded_voters'} = $ballot_key;
-    }
-    if ($reveal_voters eq 'yes') {
-        $vdata{"voter key of $ballot_key"} = $voter_key;
-        if ($public eq 'yes') {
-            $edata{"email_addr $voter_key"} = encode('utf-8',
-                                                     param('email_address'));
-        }
-    }
+# Act on the button the voter pressed, and return the question to show
+# next. A number at or past the last question means the ballot is done.
+#
+# Each question is recorded as it is answered rather than the whole ballot
+# at the end, so a voter who stops part-way still counts in the questions
+# they did answer. Going back leaves the question being left alone: only
+# Skip withdraws an answer, so that no one is recorded as having answered
+# a question merely by paging past it.
+sub AdvanceBallot {
+    if ($previous) { return $q - 1 }
 
-    # Now, update matrix.
-    # Note: vdata{"2.3"} contains the number of votes where
-    # choice 2 beats choice 3 (i.e., has lower
-    # numbered rank)
-    for (my $j = 0; $j < $num_choices; $j++) {
-        for (my $k = 0; $k < $num_choices; $k++) {
-            my $jk = $vdata{"$j.$k"};
-            $jk = 0 if (!defined($jk));
-            if ($rank[$j] ne $NO_OPINION &&
-                $rank[$k] ne $NO_OPINION &&
-                $rank[$j] < $rank[$k]) {
-                $vdata{"$j.$k"} = $jk + 1;
+    if (!$skip) {
+        my @ranks = ReadRanks();
+        if (!$ballot_key) {
+            ($receipt_key, $ballot_key) = StartBallot($voter_key);
+            $receipt = "$election_id/$receipt_key";
+            if ($reveal_voters eq 'yes') {
+                $vdata{"voter key of $ballot_key"} = $voter_key;
+                if ($public eq 'yes') {
+                    $edata{"email_addr $voter_key"} =
+                        encode('utf-8', param('email_address'));
+                }
             }
+            if ($publicize eq 'yes') { LogPublicVote()}
+            ElectionLog("Election: $title ($election_id) : "
+                . "Recorded vote from voter key $voter_key");
         }
+        RecordQuestionBallot($ballot_key, $q, \@ranks);
+    } elsif ($ballot_key) {
+        WithdrawQuestionBallot($ballot_key, $q);
     }
 
-    my $receipt = "$election_id/$voter_ballot_release_key";
-    print p($tx->thank_you_for_voting($title, $receipt));
+    $vdata{'last_vote_time'} = $last_vote_time = time();
+    return $q + 1;
+}
 
+# The end of the ballot: hand over the receipt and point at the results.
+sub FinishVoting {
+    if (!$ballot_key) {
+        # Every question was skipped, so there is no ballot to speak of.
+        print p($tx->no_questions_answered), $cr;
+        PointToResults;
+        print TrySomePolls();
+        CIVS_End;
+        return;
+    }
+    print p($tx->thank_you_for_voting($title, $receipt));
     PointToResults;
     print $tx->you_can_change_ballot_now;
     RevoteButton($voter_key, $tx->change_ballot, $receipt);
-
-    print &TrySomePolls();
+    print TrySomePolls();
     CIVS_End;
 }
 
 sub LogPublicVote {
     my $public_vote_log = $home. "/elections/public_vote.log";
     if (!sysopen OUT, $public_vote_log, O_WRONLY|O_CREAT|O_APPEND) {
-        &Log("Could not open publicized log file $public_vote_log");
+        Log("Could not open publicized log file $public_vote_log");
         return;
     }
     binmode OUT, ':encoding(UTF-8)';
@@ -250,10 +286,10 @@ sub LogPublicVote {
     close(OUT);
 
     my $top_polls = $home . "/elections/top_polls.html";
-    my $top_polls_time = &FileTimestamp($top_polls);
+    my $top_polls_time = FileTimestamp($top_polls);
 
     if (time() - $top_polls_time > $top_polls_refresh) {
-        &top_polls::standard_refresh;
+        top_polls::standard_refresh();
     }
 }
 
@@ -286,7 +322,7 @@ sub OrderChoices {
     if ($add_writein || $old_ballot) {
         my @old_ranks = split /,/, ($old_ballot || '');
         for (my $i = 0; $i < $num_choices; $i++) {
-            my $rank = param('C'.$i) || $old_ranks[$i] || &default_rank($i);
+            my $rank = param('C'.$i) || $old_ranks[$i] || default_rank($i);
             $iota[$i] = $i;
             $rank[$i] = $rank;
         }
@@ -295,9 +331,9 @@ sub OrderChoices {
             ($r ne $NO_OPINION) ? $r : $num_choices + 1;
         }
         if ($proportional ne 'yes') {
-            @choice_index = sort { &nrank($a) <=> &nrank($b) } @iota;
+            @choice_index = sort { nrank($a) <=> nrank($b) } @iota;
         } else {
-            @choice_index = sort { &nrank($b) <=> &nrank($a) } @iota;
+            @choice_index = sort { nrank($b) <=> nrank($a) } @iota;
         }
     } else { # randomize
         for (my $i = 0; $i < $num_choices; $i++) {
@@ -305,7 +341,7 @@ sub OrderChoices {
             if ($proportional eq 'yes' && $use_combined_ratings) {
                 $rank[$i] = 0;
             } else {
-                $rank[$i] = &default_rank($i);
+                $rank[$i] = default_rank($i);
             }
         }
         if (!defined($shuffle) || $shuffle ne 'no') {
@@ -318,7 +354,7 @@ sub AddWritein {
     # This function has a race condition.  The effect of two concurrent
     # writeins is not clear.  Nor is the effect of a concurrent writein
     # and vote, or even a request for the candidate list.
-    my $writein = &CanonicalizeName(scalar param('writein'));
+    my $writein = CanonicalizeName(scalar param('writein'));
     my $ok = 1;
     if ($num_choices >= @MAX_CHOICES@) {
         print p($tx->Poll_exceeds_max_choices(@MAX_CHOICES@));
@@ -346,12 +382,18 @@ sub AddWritein {
         $choices[$index] = $writein;
         $num_choices++;
         $choices = join "\n", @choices;
-        $edata{'choices'} = encode('utf-8', $choices);
+        # The write-in belongs to the question being shown, so it goes
+        # into that question's choices and that question's matrix.
+        $edata{QuestionKey($q, 'choices')} = encode('utf-8', $choices);
+        $questions[$q]->{'choices'} = $choices;
+        $questions[$q]->{'choice_list'} = [@choices];
+        $questions[$q]->{'num_choices'} = $num_choices;
 
         # Now update the vote matrix so that this write-in is
         # ranked last by every voter so far.
+        my $answered = QuestionAnswerCount($q);
         for (my $j = 0; $j < $num_choices - 1; $j++) {
-            $vdata{"$j.$index"} = $num_votes;
+            $vdata{QuestionKey($q, "$j.$index")} = $answered;
         }
     }
 }

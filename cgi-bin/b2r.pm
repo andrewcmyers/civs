@@ -99,7 +99,7 @@ sub rank_candidates {
     my ($n, $matrix, $ballots, $choices) = @_;
 
     my $log = '<ul>';
-    my $rank_counts = &compute_rank_counts($n, $ballots);
+    my $rank_counts = compute_rank_counts($n, $ballots);
 
     sub choice_name {
         $choices->[shift];
@@ -121,16 +121,16 @@ sub rank_candidates {
     my @rankings = ();
 
     if ($debug) {
-        print "Unsorted: ", ((join ", ", (map {&choice_name($_)} @unranked_choices)), "\n")
+        print "Unsorted: ", ((join ", ", (map {choice_name($_)} @unranked_choices)), "\n")
     }
-    @unranked_choices = sort {&compare_choice_ranks($a, $b, $n, $rank_counts)} @unranked_choices;
+    @unranked_choices = sort {compare_choice_ranks($a, $b, $n, $rank_counts)} @unranked_choices;
 
     print 
         "choices in seeded order: ",
-        (join ( ", ", (map {&choice_name($_)} @unranked_choices))),
+        (join ( ", ", (map {choice_name($_)} @unranked_choices))),
         "\n" if $debug;
     $log .=  "<li>Choices in seeded order: <ol><li>".
-        (join ( "<li>&nbsp;", (map {&choice_name($_)} @unranked_choices))).
+        (join ( "<li>&nbsp;", (map {choice_name($_)} @unranked_choices))).
         "<br>\n";
     $log .= "</ol>";
     my $num_ranked = 0;
@@ -141,7 +141,7 @@ sub rank_candidates {
         my @remaining_choices = @unranked_choices;
 
 # Optimistically hope we have a local CW
-        my @sorted1 = sort {&compare_choice_ranks($a, $b, $n, $rank_counts)} @remaining_choices;
+        my @sorted1 = sort {compare_choice_ranks($a, $b, $n, $rank_counts)} @remaining_choices;
         my $top = $sorted1[0];
         my $local_cw = 1;
         foreach my $c (@sorted1) {
@@ -158,7 +158,7 @@ sub rank_candidates {
             if ($debug) {
                 print "Picking local CW\n";
             }
-            $log .= "Local CW chosen: ".&choice_name($winner)."\n";
+            $log .= "Local CW chosen: ".choice_name($winner)."\n";
         } else {
             while ($#remaining_choices > 0) {
                 my @sorted = sort {compare_choice_ranks($a, $b, $n, $rank_counts)} @remaining_choices;
@@ -167,9 +167,9 @@ sub rank_candidates {
                 my $c2 = $sorted[$m];
 
                 print "<li>Comparing preferences of ",
-                    &choice_name($c1), " and ",
-                    &choice_name($c2), ". " if $debug;
-                $log .= "Comparing preferences of @{[&choice_name($c1)]} and @{[&choice_name($c2)]}.<br>\n";
+                    choice_name($c1), " and ",
+                    choice_name($c2), ". " if $debug;
+                $log .= "Comparing preferences of @{[choice_name($c1)]} and @{[choice_name($c2)]}.<br>\n";
 
                 my $n1 = $matrix->[$c1][$c2];
                 my $n2 = $matrix->[$c2][$c1];
@@ -177,11 +177,11 @@ sub rank_candidates {
 
                 if ($n1 > $n2) {
                     $loser = $c2;
-                    print &choice_name($c1), " wins.\n" if $debug;
-                    $log .= "@{[&choice_name($c1)]} wins.<br>\n";
+                    print choice_name($c1), " wins.\n" if $debug;
+                    $log .= "@{[choice_name($c1)]} wins.<br>\n";
                 } elsif ($n1 < $n2) {
                     $loser = $c1;
-                    $log .= "@{[&choice_name($c2)]} wins.<br>\n";
+                    $log .= "@{[choice_name($c2)]} wins.<br>\n";
                 } else {
                     # tiebreaking using ordering
                     $loser = $c2;
@@ -195,11 +195,11 @@ sub rank_candidates {
                 @remaining_choices = @nr;
             }
             $winner = $remaining_choices[0];
-            $log .= "@{[&choice_name($winner)]} wins this round.";
+            $log .= "@{[choice_name($winner)]} wins this round.";
         }
         push @rankings, [$winner];
         $num_ranked++;
-        print "Round won by ", &choice_name($winner), "\n" if $debug;
+        print "Round won by ", choice_name($winner), "\n" if $debug;
         my @uc;
         foreach my $c (@unranked_choices) {
             if ($c != $winner) {

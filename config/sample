@@ -90,6 +90,10 @@ MAX_VOTER_ADD=1000
 # for a large number of choices.
 MAX_CHOICES=100
 
+# Maximum number of questions a single poll can ask. Each question is
+# tabulated separately, so the cost of a poll grows with this.
+MAX_QUESTIONS=20
+
 # Maximum number of emails sent per day per poll (low-pass-filtered)
 MAX_EMAIL_LOAD=5000
 

@@ -10,5 +10,7 @@ data/private_host_id
 excludes
 jquery
 jquery-ui
+node_modules
+tests/work
 shipit*
 shipit.excludes

@@ -5,12 +5,21 @@ use CGI qw(:standard -utf8);
 use election;
 use strict;
 
+# Print the ballot form for the question currently selected.
+#
+# $nav, if given, describes where this question sits in a poll that asks
+# several: { question => index, count => how many, receipt => the ballot's
+# receipt or '' }. Without it -- as when control previews a ballot, and
+# for every poll asking a single question -- the form is what it has
+# always been, with one submit button and no way to move between
+# questions.
 sub GenerateVoteForm {
 
-    my ($voter_key, $authorization_key, $choice_index_ref, $rank_ref, $js_ui, $lean, $askforid) = @_;
+    my ($voter_key, $authorization_key, $choice_index_ref, $rank_ref, $js_ui, $lean, $askforid, $nav) = @_;
 
     my @choice_index = @{$choice_index_ref};
     my @rank = @{$rank_ref};
+    my $several = ($nav && $nav->{'count'} > 1);
 
     my $rating = $tx->Rank;
     if ($proportional eq 'yes' && $use_combined_ratings) {
@@ -32,6 +41,12 @@ sub GenerateVoteForm {
     print hidden('key', $voter_key), $cr;
     print hidden('id', $election_id), $cr;
     print hidden('akey', $authorization_key), $cr;
+    if ($nav) {
+        print hidden(-name => 'q', -value => $nav->{'question'},
+                     -override => 1), $cr;
+        print hidden(-name => 'receipt', -value => $nav->{'receipt'},
+                     -override => 1), $cr;
+    }
 
     print '<table class="form" id="ballot" border="0" cellpadding="5" cellspacing="0"><tr><td>', $cr;
 
@@ -114,7 +129,35 @@ sub GenerateVoteForm {
 
 
     if ($voting_enabled) {
-	print '<tr><td style="height: 100%"><input id="vote" type="submit" value="'.$tx->submit_ranking.'" name="Vote" /></td></tr>', $cr;
+	print '<tr><td style="height: 100%">', $cr;
+	if ($several) {
+	    my $last = ($nav->{'question'} == $nav->{'count'} - 1);
+	    # Going back only navigates: it does not record the question
+	    # being left, so that a voter who has not made up their mind
+	    # cannot be recorded as having answered it by looking away.
+	    # Neither of these records a ballot, so they turn off the
+	    # checks doublecheck_ballot makes of one.
+	    my $no_ballot = ' onclick="window.skip_ballot_checks = true"';
+	    if ($nav->{'question'} > 0) {
+		print '<input class="ballot_nav" type="submit" value="'
+		    . $tx->Previous_question . '" name="Previous"'
+		    . $no_ballot . ' />', $cr;
+	    }
+	    # Same action either way; but on a question already answered,
+	    # moving past it throws that answer away, which "skip" does
+	    # not convey.
+	    print '<input class="ballot_nav" type="submit" value="'
+		. ($nav->{'answered'} ? $tx->Discard_answer
+				      : $tx->Skip_question)
+		. '" name="Skip"' . $no_ballot . ' />', $cr;
+	    print '<input id="vote" type="submit" value="'
+		. ($last ? $tx->Finish_voting : $tx->Next_question)
+		. '" name="Vote" />', $cr;
+	} else {
+	    print '<input id="vote" type="submit" value="'
+		. $tx->submit_ranking . '" name="Vote" />', $cr;
+	}
+	print '</td></tr>', $cr;
     }
 
     print '</table>', $cr;
@@ -131,6 +174,12 @@ sub GenerateVoteForm {
 	print hidden('key', $voter_key);
 	print hidden('id', $election_id);
 	print hidden('akey', $authorization_key);
+	if ($nav) {
+	    print hidden(-name => 'q', -value => $nav->{'question'},
+			 -override => 1);
+	    print hidden(-name => 'receipt', -value => $nav->{'receipt'},
+			 -override => 1);
+	}
 	print '</form>', $cr;
     }
 

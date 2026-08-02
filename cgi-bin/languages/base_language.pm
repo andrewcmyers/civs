@@ -73,7 +73,7 @@ sub Sorry_the_server_is_busy {
      cannot handle more requests. Please try again a little later.'
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "Mail has been sent to the address you provided (<tt>$_[1]</tt>)."
@@ -108,6 +108,59 @@ sub Poll_exceeds_max_choices {
     my ($self, $count) = @_;
     "A poll can have at most $count choices."
 }
+sub Poll_exceeds_max_questions {
+    my ($self, $count) = @_;
+    "A poll can ask at most $count questions."
+}
+sub Question_number {
+    my ($self, $n) = @_;
+    "Question $n"
+}
+sub Each_question_needs_text {
+    'Each question must have its own text.'
+}
+# Where the voter is up to in a poll that asks several questions.
+sub Question_n_of_m {
+    my ($self, $n, $m) = @_;
+    "Question $n of $m"
+}
+sub Next_question {
+    'Record and go on'
+}
+sub Previous_question {
+    'Back to the previous question'
+}
+sub Skip_question {
+    'Skip this question'
+}
+# Same button as Skip_question, on a question already answered: moving
+# past it now throws that answer away.
+sub Discard_answer {
+    'Discard this answer'
+}
+sub Finish_voting {
+    'Record and finish'
+}
+sub keep_your_receipt {
+    my ($self, $receipt) = @_;
+    "Your answers so far have been recorded. Keep this receipt: it is the
+     only way back to this ballot if you leave before finishing, and the
+     only way to change an answer afterwards. <tt>$receipt</tt>"
+}
+sub no_questions_answered {
+    'You skipped every question, so no ballot was recorded.'
+}
+sub ballots_answering_question {
+    my ($self, $n, $count) = @_;
+    "&nbsp;&nbsp;Question $n was answered by $count voters."
+}
+sub pasted_ballot_is_first_question_only {
+    'This code shows the first question only. A voter who answers it is
+     brought here to answer the rest.'
+}
+sub Must_have_at_least_one_winner {
+    'A poll must have at least one winner.'
+}
 sub Poll_directory_not_writeable {
     "Configuration error? Unable to create the poll directory <tt>$_[1]</tt>"
 }
@@ -115,11 +168,12 @@ sub CIVS_poll_created {
  "CIVS poll created: $_[1]"
 }
 sub creation_email_info1 { # title, url
+    my ($title, $url) = @_;
 "This email acknowledges the creation of a new poll,
-$_[1]. You have been designated as the supervisor of this
+$title. You have been designated as the supervisor of this
 poll. To start and stop the poll, please use the following URL:
 
-  <$_[2]>
+  <$url>
 
 Save this email and keep it private. If you lose it you will not be able
 to control the poll.
@@ -227,6 +281,10 @@ sub this_is_a_test_poll {
 }
 sub file_to_upload_from {
     'File to upload ballots from:'
+}
+# Each question has its own choices, so its ballots are their own file.
+sub ballots_are_for_question {
+    'These ballots answer:'
 }
 sub Load_ballots {
     'Load ballots'
@@ -667,7 +725,7 @@ sub following_URL_reports_results {
 sub if_you_want_to_change {
     'You can remove your previous vote and vote again by entering your voter receipt here:'
 }
-sub invalid_release_key {
+sub invalid_receipt_key {
     my ($self, $receipt) = @_;
     'The provided voter receipt ('.$receipt.') is incorrect. It should look similar to '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').'.'
 }
@@ -1093,7 +1151,7 @@ sub send_deactivation_code {
     'Send deactivation code by email'
 }
 sub cant_send_email {
-    'You cannot send email to this user using CIVS. Email to this user must first be reactivated using a previously sent deactivation code.'
+    'You cannot send mail to this user using CIVS. Email to this user must first be reactivated using a previously sent deactivation code.'
 }
 sub submit_deact_react {
     'Submit deactivation/reactivation'
@@ -1111,12 +1169,12 @@ sub reactivation_successful {
     'You have successfully reactivated mail to this address.'
 }
 sub someone_has_requested {
-"Someone has requested a code for preventing CIVS from sending email
+"Someone has requested a code for preventing CIVS from sending mail
 to you. If it was you, you will know what to do with it. The code is:
 
     $_[1]
 
-Keep this email because you will need this code if you want to use the
+Keep this mail because you will need this code if you want to use the
 service in the future."
 }
 sub deactivation_code_subject {

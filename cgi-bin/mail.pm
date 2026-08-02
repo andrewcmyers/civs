@@ -34,7 +34,7 @@ our $smtp;
 our $verbose;
 our $use_ssl = @SMTP_USE_SSL@;
 
-&init;
+init();
 
 # Initialize package
 sub init {
@@ -46,7 +46,7 @@ sub init {
 # Check whether the given address is a valid email address.
 sub CheckAddr {
     (my $addr) = @_;
-    $addr = &TrimAddr($addr);
+    $addr = TrimAddr($addr);
 
     return ($addr =~ m/\A[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2,18})\z/i);
 }
@@ -115,7 +115,7 @@ sub SaveOptOuts {
     my ($optouts) = @_;
     my $temp_output = "$optout_file.$$";
     if (!sysopen OPTOUTS, $temp_output, O_WRONLY|O_CREAT|O_TRUNC) {
-	&Log("Could not open top polls temp output file $temp_output");
+	Log("Could not open top polls temp output file $temp_output");
         print "<i>Internal error saving opt-out information (open)</i>", $cr;
 	return;
     }
@@ -127,7 +127,7 @@ sub SaveOptOuts {
     }
     close(OPTOUTS);
     if (!rename($temp_output, $optout_file)) {
-	&Log("Could not rename top polls temp output file $temp_output");
+	Log("Could not rename top polls temp output file $temp_output");
         print "<i>Internal error saving opt-out information (rename $temp_output $optout_file)</i>", $cr;
     }
 }
@@ -142,15 +142,15 @@ sub OptOutKey {
 # Is this receiver an activated user?
 sub UserActivated {
     my ($optouts, $receiver) = @_;
-    $receiver = &CanonicalizeAddr($receiver);
-    return defined($optouts->{&OptOutKey($receiver)});
+    $receiver = CanonicalizeAddr($receiver);
+    return defined($optouts->{OptOutKey($receiver)});
 }
 
 # Does this receiver have any opt-outs defined?
 sub HasOptOuts {
     my ($optouts, $receiver) = @_;
-    $receiver = &CanonicalizeAddr($receiver);
-    my $mapping = $optouts->{&OptOutKey($receiver)};
+    $receiver = CanonicalizeAddr($receiver);
+    my $mapping = $optouts->{OptOutKey($receiver)};
     if (!defined($mapping)) { return 0 }
     my @patterns = @{$mapping};
     if ($#patterns == 0 && $patterns[0] eq '+') { return 0 }
@@ -161,8 +161,8 @@ sub HasOptOuts {
 # Return 1 if so, 0 otherwise.
 sub CheckOptOutSender {
     my ($optouts, $receiver, $sender) = @_;
-    $receiver = &CanonicalizeAddr($receiver);
-    $sender = &CanonicalizeAddr($sender);
+    $receiver = CanonicalizeAddr($receiver);
+    $sender = CanonicalizeAddr($sender);
     my $mapping = $optouts->{OptOutKey($receiver)};
     if (!defined($mapping)) {
         return 0;
@@ -202,23 +202,23 @@ sub SetOptOutPatterns {
     my @patarr = split / +/, $patterns;
     my @valid_pats = ();
     for my $p (@patarr) {
-        if (&VerifyOptoutPattern($p)) {
+        if (VerifyOptoutPattern($p)) {
             push @valid_pats, $p;
         }
     }
     if ($#valid_pats == -1) {
         @valid_pats = ('*');
     }
-    $receiver = &CanonicalizeAddr($receiver);
-    $optouts->{&OptOutKey($receiver)} = \@valid_pats;
+    $receiver = CanonicalizeAddr($receiver);
+    $optouts->{OptOutKey($receiver)} = \@valid_pats;
     return "@valid_pats";
 }
 
 # Remove opt-out information for an address.
 sub RemoveOptOut {
     (my $optouts, my $addr) = @_;
-    $addr = &CanonicalizeAddr($addr);
-    delete $optouts->{&OptOutKey($addr)};
+    $addr = CanonicalizeAddr($addr);
+    delete $optouts->{OptOutKey($addr)};
 }
 
 # Send a sequence of bytes, represented as a string,
@@ -282,7 +282,7 @@ sub CheckSMTPAddrs {
     foreach my $addr (@addrs) {
         if (!defined($addr) || $addr =~ m/[\x00-\x1F\x7F]/) {
             print "$what: illegal character in address", $cr;
-            &Log("Refused to send to an address containing a control character");
+            Log("Refused to send to an address containing a control character");
             return 0
         }
     }

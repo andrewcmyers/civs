@@ -78,6 +78,7 @@ SubstituteFile() {
          -e 's|@MAX_CHOICES@|'$MAX_CHOICES'|'				      \
          -e 's|@MAX_EMAIL_LOAD@|'$MAX_EMAIL_LOAD'|'			      \
          -e 's|@MAX_IMAGE_SIZE@|'$MAX_IMAGE_SIZE'|'			      \
+         -e 's|@MAX_QUESTIONS@|'${MAX_QUESTIONS:-20}'|'			      \
          -e 's|@MAX_UPLOAD_SIZE@|'$MAX_UPLOAD_SIZE'|'			      \
          -e 's|@MAX_VOTER_ADD@|'$MAX_VOTER_ADD'|'			      \
          -e 's|@MAX_TEST_BALLOTS@|'$MAX_TEST_BALLOTS'|'			      \
@@ -108,7 +109,7 @@ echo "Creating language-specific web pages"
 
 webpage_langs=( en de fr es uk ta hi ko it nl ja zh )
 
-for file in html/index.html html/civs_create.html js/civs_hdr.js.2
+for file in html/index.html html/create_poll.html js/civs_hdr.js.2
 do 
     echo " $file ->"
     for lang in ${webpage_langs[@]}
@@ -130,7 +131,8 @@ echo "Installing HTML content"
 
 (
   cd html
-  for f in civs_create.html* index.html* public_elections.html*		      \
+  for f in create_poll.html* civs_create.html index.html*		      \
+    public_elections.html*						      \
     proportional.html* sec_priv.html* acks.html changelog.html*		      \
     news.html* *.var rp.html* publicized_polls.html* faq.html*		      \
     data-releases.html* style.css hebrew.css
@@ -153,7 +155,7 @@ echo "Installing JS scripts"
 (
   cd js
   for f in results.js vote.js ajax.js ezdom.js				      \
-    civs_hdr.js mail_mgmt.js opt_in.js add_voters.js			      \
+    civs_hdr.js mail_mgmt.js opt_in.js add_voters.js create_poll.js	      \
     jquery-ui-touch-punch/jquery.ui.touch-punch.js			      \
     qrcodejs/qrcode.min.js
   do
@@ -168,7 +170,7 @@ echo "Installing CGI scripts"
 for f in add_voters beatpath.pm beatpath2.pm civs_common.pm voting.pm	      \
     close control create_election download_ballots remove_writein	      \
     upload_ballots results top_polls.pm get_top_polls languages.pm	      \
-    election.pm mail.pm start_election algorithms.pm vote		      \
+    election.pm election_data.pm mail.pm start_election algorithms.pm vote    \
     refresh_top_polls mail_mgmt opt_in publicize_election status	      \
     clear_caches delete_election.pl edit_poll remove_defunct_elections	      \
     request_deactivation request_activation resend_link			      \

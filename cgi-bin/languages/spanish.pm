@@ -53,7 +53,7 @@ sub Sorry_the_server_is_busy {
      no puede manejar más solicitudes. Por favor, inténtelo de nuevo un poco más tarde .';
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "El correo ha sido enviado a la dirección que nos ha facilitado (<tt>$_[1]</tt >).";

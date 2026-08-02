@@ -14,7 +14,7 @@ my $civs_supervisor = '@SUPERVISOR@';
 # Trim here rather than relying on CheckAddr, which validates a trimmed copy
 # and would otherwise leave surrounding whitespace -- including a line
 # terminator -- in the address used below for RCPT TO and the To: header.
-my $address = &TrimAddr(param("address") || "");
+my $address = TrimAddr(param("address") || "");
 
 print CGI::header(-charset => 'utf-8', -referrer_policy => 'no-referrer');
 
@@ -27,11 +27,11 @@ if (!CheckAddr($address)) {
     exit 0;
 }
 
-&AcquireGlobalLock;
+AcquireGlobalLock();
 
 my $code = param('code');
-my $optouts = &GetOptouts();
-my $opted_out = &HasOptOuts($optouts, $address);
+my $optouts = GetOptouts();
+my $opted_out = HasOptOuts($optouts, $address);
 my $filter_pattern = param('filter_pattern');
 
 if (!defined($filter_pattern)) { $filter_pattern = '' }
@@ -44,9 +44,9 @@ if (defined(param("check")) && param("check") eq "true") {
 
 sub DeactivationCode {
     my ($address) = @_;
-    $address = encode('utf-8', &CanonicalizeAddr($address));
+    $address = encode('utf-8', CanonicalizeAddr($address));
     if (!defined($private_host_id)) {
-        &GetPrivateHostID;
+        GetPrivateHostID();
     }
     return civs_hash('deactivation', $address, $private_host_id);
 }
@@ -54,7 +54,7 @@ sub DeactivationCode {
 if (!defined($code)) {
 # This is a request to send a code
 
-    &ReleaseGlobalLock;
+    ReleaseGlobalLock();
 
     print start_html(), h2("Deactivation request");
 
@@ -63,7 +63,7 @@ if (!defined($code)) {
         exit 0;
     }
 
-    my $code = &DeactivationCode($address);
+    my $code = DeactivationCode($address);
 
     if ("@LOCALDEBUG@") {
         print pre("Would email deactivation code $code to $address at this point.")
@@ -76,7 +76,7 @@ if (!defined($code)) {
 
 
         if (MailFrom('@AUTH_SENDER@') && MailTo($address) && StartMailData()) {
-            my $uniqueid = &SecureNonce;
+            my $uniqueid = SecureNonce();
             my $message_id = "CIVS-deactivation.$uniqueid\@$thishost";
 
             SendHeader('From', $tx->CIVS_sender, "<$civs_supervisor>");
@@ -99,7 +99,7 @@ if (!defined($code)) {
     print "OK";
 } else {
 # This is a request to use a code.
-    my $expected_code = &DeactivationCode($address);
+    my $expected_code = DeactivationCode($address);
     if ($code eq $expected_code) {
         if (HasOptOuts($optouts, $address) && $filter_pattern eq '') {
             my $pats = SetOptOutPatterns($optouts, $address, '+');
@@ -117,7 +117,7 @@ if (!defined($code)) {
         }
         print end_html();
     }
-    &ReleaseGlobalLock;
+    ReleaseGlobalLock();
 }
 
 1;

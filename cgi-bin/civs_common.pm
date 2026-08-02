@@ -102,12 +102,12 @@ our $nonce_seed_file = $home.'/nonce_seed';
 our $civs_header_printed = 0;
 our $html_header_printed = 0;
 
-&init;
+init();
 
 sub init {
- &GetPrivateHostID;
- &SetIPAddress;
- &SetLanguage;
+ GetPrivateHostID();
+ SetIPAddress();
+ SetLanguage();
 }
 
 # Extract a single email address from a string, converting
@@ -163,13 +163,13 @@ sub SetLanguage {
 # allow language to be overridden by URL parameter
         $languages = param('language');
     }
-    &languages::init($languages);
+    languages::init($languages);
 }
 
 sub GetPrivateHostID {
     if (defined($private_host_id)) { return; }
     if (!open(HOSTID, $private_host_id_file)) {
-        &HTML_Header("Configuration error");
+        HTML_Header("Configuration error");
         print h1($tx->Error),
               p("Unable to access the server's private key"),
               end_html();
@@ -258,7 +258,7 @@ sub CIVS_Header {
     if (!$heading) {
         $heading = "CIVS";
     }
-    &HTML_Header($heading);
+    HTML_Header($heading);
     if ($civs_header_printed) { return; }
     my $suggestion_box = '@SUGGESTION_BOX@';
 print
@@ -278,7 +278,7 @@ print $cr,
         a({-href => $civs_home}, $tx->about_civs), BR,
         a({-href => "$civs_url/publicized_polls.html"}, $tx->public_polls), BR,
         a({-href => "@CIVSBINURL@/opt_in@PERLEXT@"}, $tx->new_user), BR,
-        a({-href => "$civs_url/civs_create.html"}, $tx->create_new_poll), BR,
+        a({-href => "$civs_url/create_poll.html"}, $tx->create_new_poll), BR,
         a({-href => "$civs_url/sec_priv.html"}, $tx->about_security_and_privacy), BR,
         a({-href => "$civs_url/faq.html"}, $tx->FAQ), BR,
         a({-href => $suggestion_box}, $tx->CIVS_suggestion_box), BR,
@@ -302,8 +302,8 @@ sub CIVS_End {
 }
 
 sub Fatal_CIVS_Error {
-    &HTML_Header($tx->CIVS_Error) unless $html_header_printed;
-    &CIVS_Header($tx->Error) unless $civs_header_printed;
+    HTML_Header($tx->CIVS_Error) unless $html_header_printed;
+    CIVS_Header($tx->Error) unless $civs_header_printed;
 
     print h2($tx->Error),
           p($tx->unable_to_process);
@@ -327,7 +327,7 @@ sub Log {
     my $now = strftime "%a %b %e %H:%M:%S %Y", localtime;
     open(CIVS_LOG, ">>$civs_log");
     binmode CIVS_LOG, ':utf8';
-    print CIVS_LOG $now.' '.&LogIPAddress.' '.$_[0].$cr;
+    print CIVS_LOG $now.' '.LogIPAddress().' '.$_[0].$cr;
     close(CIVS_LOG);
 }
 
@@ -345,8 +345,8 @@ sub ReleaseGlobalLock {
 # be predicted from the future state of the system (except
 # for data derived from the nonce itself).
 sub SecureNonce {
-    &GetPrivateHostID;
-    &AcquireGlobalLock;
+    GetPrivateHostID();
+    AcquireGlobalLock();
 
     open(NONCEFILE, "<$nonce_seed_file")
         or die "Can't open nonce file for read: $!\n";
@@ -362,7 +362,7 @@ sub SecureNonce {
         or die "Can't open nonce file for write: $!\n";
     print NONCEFILE $seed.$cr;
     close(NONCEFILE);
-    &ReleaseGlobalLock;
+    ReleaseGlobalLock();
     return $ret;
 }
 
@@ -485,23 +485,23 @@ sub FetchImage {
     $src =~ s/\s+\z//;
     my ($scheme, $hostport) = $src =~ m{\A(https?)://([^/?\#]*)}i;
     if (!defined($scheme)) {
-        &Log("Image fetch refused: not an http or https URL");
+        Log("Image fetch refused: not an http or https URL");
         return ();
     }
     if ($hostport =~ m/\@/) {   # credentials obscure which host is addressed
-        &Log("Image fetch refused: credentials in URL");
+        Log("Image fetch refused: credentials in URL");
         return ();
     }
     my ($host) = $hostport =~ m/\A\[([^\]]*)\]/;   # bracketed IPv6 literal
     if (!defined($host)) { ($host) = $hostport =~ m/\A([^:]*)/ }
     if (!defined($host) || $host eq '') {
-        &Log("Image fetch refused: no host in URL");
+        Log("Image fetch refused: no host in URL");
         return ();
     }
     my ($err, @addrs) =
         Socket::getaddrinfo($host, '', {socktype => SOCK_STREAM});
     if ($err || !@addrs) {
-        &Log("Image fetch refused: cannot resolve host");
+        Log("Image fetch refused: cannot resolve host");
         return ();
     }
     foreach my $a (@addrs) {
@@ -511,8 +511,8 @@ sub FetchImage {
         } elsif ($a->{family} == AF_INET6) {
             (undef, $packed) = Socket::unpack_sockaddr_in6($a->{addr});
         }
-        if (!defined($packed) || &BlockedAddress($a->{family}, $packed)) {
-            &Log("Image fetch refused: address not permitted");
+        if (!defined($packed) || BlockedAddress($a->{family}, $packed)) {
+            Log("Image fetch refused: address not permitted");
             return ();
         }
     }
@@ -529,18 +529,18 @@ sub FetchImage {
                                max_size => $max_image_size);
     my $response = $http->get($src);
     if (!$response->{success} || $response->{status} != 200) {
-        &Log("Image fetch failed with status " . $response->{status});
+        Log("Image fetch failed with status " . $response->{status});
         return ();
     }
     my $content = $response->{content};
     if (!defined($content) || $content eq '') { return () }
     if (length($content) >= $max_image_size) {
-        &Log("Image too large: " . length($content));
+        Log("Image too large: " . length($content));
         return ();
     }
-    my $type = &ImageContentType($content);
+    my $type = ImageContentType($content);
     if (!defined($type)) {
-        &Log("Image fetch refused: content is not a recognized image format");
+        Log("Image fetch refused: content is not a recognized image format");
         return ();
     }
     return ($type, $content);
@@ -556,7 +556,7 @@ if ($filter_tags ne 'no') {
             # fails, the poll shows the placeholder rather than leaving a URL
             # that every viewer's browser would request.
             $attributes->{src} = '@CIVSURL@/images/check123b.png';
-            my ($type, $content) = &FetchImage($src);
+            my ($type, $content) = FetchImage($src);
             if (defined($type)) {
                 $attributes->{src} = "data:$type;base64,"
                           . MIME::Base64::encode_base64($content, '');
@@ -701,7 +701,7 @@ sub system_load {
 }
 
 sub CheckLoad {
-    my $load = &toNatural(system_load);
+    my $load = toNatural(system_load);
     if ($load >= 10.0) {
         HTML_Header($tx->CIVS_server_busy);
         CIVS_Header($tx->CIVS_server_busy);

@@ -70,7 +70,7 @@ sub Sorry_the_server_is_busy {
   '申し訳ありませんが、CIVS Web サーバーは現在非常にビジーで、これ以上のリクエストを処理できません。しばらくしてからもう一度お試しください。'
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
   "入力したアドレス (<tt>$_[1]</tt>) にメールを送信しました。"
@@ -617,7 +617,7 @@ sub following_URL_reports_results {
 sub if_you_want_to_change {
   'ここに有権者の領収書を入力することで、以前の投票を削除して再度投票することができます。'
 }
-sub invalid_release_key {
+sub invalid_receipt_key {
     my ($self, $receipt) = @_;
   '提供された有権者領収書 ('.$receipt.') が正しくありません。 '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').' のようになります。'
 }

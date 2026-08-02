@@ -18,10 +18,13 @@ BEGIN {
                       $no_opinion %voter_keys %used_voter_keys
                       $restrict_results $result_addrs
                       $hash_result_key $last_vote_time $close_time
-                      $email_load &GetElectionData);
+                      $email_load @questions $num_questions
+                      &GetElectionData &SelectQuestion);
 
    $ENV{'PATH'} = $ENV{'PATH'}.'@ADDTOPATH@';
 }
+
+use election_data qw(ReadElectionData);
 
 our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      @addresses, $election_begin, $election_end, $public, $publicize,
@@ -33,54 +36,71 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $result_addrs, $hash_result_key, $last_vote_time, $close_time,
      $email_load);
 
-# Extract data from databases. This should be factored out into common
-# code that is used both here and in election.pm
+# Every question in the poll. The scalars above describe question 0.
+our (@questions, $num_questions);
+
+# GetElectionData($eref, $vref) expects references to the election data map
+# and the voting data map, set up using `tie`. The layout of those maps is
+# described in election_data.pm, which the CGI scripts read polls through
+# as well.
 #
-# ExtractData($eref, $vref) expects references to the election data map
-# and the voting data map, set up using `tie`.
+# The offline tools work in bytes rather than decoded characters, so the
+# decoder passed below returns each stored value untouched.
 sub GetElectionData {
     my ($eref, $vref) = @_;
-    $name = $eref->{'name'};
-    if (!defined($name)) {
+    my $data = ReadElectionData($eref, $vref, sub { $_[0]->{$_[1]} });
+    if (!defined($data)) {
         print STDERR "Cannot read election data file -- wrong BDB version?\n";
         return 0;
     }
-    $title = $eref->{'title'};
-    $email_addr = $eref->{'email_addr'};
-    $description = $eref->{'description'};
-    $num_winners = $eref->{'num_winners'};
-    $addresses = $eref->{'addresses'} or $addresses = "";
+    @questions = @{$data->{'questions'}};
+    $num_questions = $data->{'num_questions'};
+    my $poll = $data->{'poll'};
+
+    $name = $poll->{'name'};
+    $title = $poll->{'title'};
+    $email_addr = $poll->{'email_addr'};
+    $description = $poll->{'description'};
+    $addresses = $poll->{'addresses'};
     @addresses = split /[\r\n]+/, $addresses;
-    $election_begin = $eref->{'election_begin'};
-    $election_end = $eref->{'election_end'};
-    $public = $eref->{'public'};
-    $publicize = $eref->{'publicize'};
-    $writeins = $eref->{'writeins'};
-    $allow_voting = $eref->{'allow_voting'} || 'no';
-    $voting_enabled = (($writeins && $writeins ne 'yes') || $allow_voting eq 'yes');
-    $proportional = $eref->{'proportional'} or $proportional = "";
-    $use_combined_ratings = $eref->{'use_combined_ratings'};
-    $choices = $eref->{'choices'} or $choices = "";
-    @choices = split /[\r\n]+/, $choices;
-    $num_choices = $#choices + 1;
-    $num_auth = $eref->{'num_auth'};
-    $shuffle = $eref->{'shuffle'};
-    $no_opinion = $eref->{'no_opinion'} or $no_opinion = 'yes';
-    $num_votes = $vref->{'num_votes'} or $num_votes = 0;
-    $close_time = $vref->{'close_time'};
-    $recorded_voters = $vref->{'recorded_voters'};
-    $ballot_reporting = $eref->{'ballot_reporting'} or $ballot_reporting = '';
-    $external_ballots = $eref->{'external_ballots'} or $external_ballots = 'no';
-    $reveal_voters = $eref->{'reveal_voters'} or $reveal_voters = '';
-    $restrict_results = $eref->{'restrict_results'};
-    $result_addrs = $eref->{'result_addrs'};
-    $hash_result_key = 0;
-    $last_vote_time = $vref->{'last_vote_time'};
-    $email_load = $eref->{'email_load'}; # timestamp num_mails
-    if ($restrict_results eq 'yes') {
-	$hash_result_key = $eref->{'hash_result_key'};
-    }
+    $election_begin = $poll->{'election_begin'};
+    $election_end = $poll->{'election_end'};
+    $public = $poll->{'public'};
+    $publicize = $poll->{'publicize'};
+    $allow_voting = $poll->{'allow_voting'};
+    $voting_enabled = $poll->{'voting_enabled'};
+    $num_auth = $poll->{'num_auth'};
+    $no_opinion = $poll->{'no_opinion'};
+    $num_votes = $poll->{'num_votes'};
+    $close_time = $poll->{'close_time'};
+    $recorded_voters = $poll->{'recorded_voters'};
+    $ballot_reporting = $poll->{'ballot_reporting'};
+    $external_ballots = $poll->{'external_ballots'};
+    $reveal_voters = $poll->{'reveal_voters'};
+    $restrict_results = $poll->{'restrict_results'};
+    $result_addrs = $poll->{'result_addrs'};
+    $hash_result_key = $poll->{'hash_result_key'};
+    $last_vote_time = $poll->{'last_vote_time'};
+    $email_load = $poll->{'email_load'}; # timestamp num_mails
+
+    SelectQuestion(0);
     1
+}
+
+# Point the per-question globals at question $q. See the same routine in
+# election.pm.
+sub SelectQuestion {
+    (my $q) = @_;
+    my $question = $questions[$q];
+    return unless defined($question);
+    $choices = $question->{'choices'};
+    @choices = @{$question->{'choice_list'}};
+    $num_choices = $question->{'num_choices'};
+    $num_winners = $question->{'num_winners'};
+    $proportional = $question->{'proportional'};
+    $use_combined_ratings = $question->{'use_combined_ratings'};
+    $shuffle = $question->{'shuffle'};
+    $writeins = $question->{'writeins'};
 }
 
 1

@@ -432,7 +432,10 @@ function drag_update(e, u) {
     set_row_borders();
 }
 
+// make sure the ballot captures voter intent
 function doublecheck_ballot() {
+    if (window.skip_ballot_checks) { return true }
+
     if (window.voter_id_required !== undefined) {
         if (ge("id_request").value.match(/^\s*$/)) {
             alert(ge("need_id_msg").innerText);

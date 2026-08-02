@@ -70,7 +70,7 @@ sub initial_matrix {
 # a new reference to such an array.
 sub max {
     my ($xr, $yr) = @_;
-    if (&compare_beats($xr, $yr) > 0) { return $xr; }
+    if (compare_beats($xr, $yr) > 0) { return $xr; }
     else { return $yr; }
 }
 
@@ -78,7 +78,7 @@ sub max {
 # a new reference to such an array.
 sub min {
     my ($xr, $yr) = @_;
-    if (&compare_beats($xr, $yr) > 0) { return $yr; }
+    if (compare_beats($xr, $yr) > 0) { return $yr; }
     else { return $xr; }
 }
 
@@ -112,8 +112,8 @@ sub transitive_closure {
     for (my $i = 0; $i < $n; $i++) {
       for (my $j = 0; $j < $n; $j++) {
 # Consider going from i to j via k, comparing to existing path.
-	$m->[$i][$j] = &max($m->[$i][$j],
-	                    &min($m->[$i][$k], $m->[$k][$j]));
+	$m->[$i][$j] = max($m->[$i][$j],
+	                    min($m->[$i][$k], $m->[$k][$j]));
       }
     }
   }
@@ -133,7 +133,7 @@ sub winners {
       my $won = 1;
       for (my $j = 0; $j < $n; $j++) {
 	if (!$ignore->[$j]) {
-	  if (&compare_beats($m->[$j][$i], $m->[$i][$j]) > 0) {
+	  if (compare_beats($m->[$j][$i], $m->[$i][$j]) > 0) {
 	    $won = 0;
 	    last;
 	  }
@@ -160,14 +160,14 @@ sub winners {
 #
 sub rank_candidates {
   my ($n, $prefs, $ballots, $choices) = @_;
-  my $beatpaths = &initial_matrix($prefs, $n);
+  my $beatpaths = initial_matrix($prefs, $n);
   my $ignore = [()];
-  &transitive_closure($beatpaths, $n);
+  transitive_closure($beatpaths, $n);
 
   my $num_ranked = 0;
   my @result = ();
   while ($num_ranked < $n) {
-    my $winner_list = &winners($beatpaths, $n, $ignore);
+    my $winner_list = winners($beatpaths, $n, $ignore);
     push @result, $winner_list;
     foreach my $j (@{$winner_list}) {
 	$ignore->[$j] = 1;
@@ -219,7 +219,7 @@ sub print_details {
 		my $llabel = "$l->[0]<small>&ndash;$l->[1]</small>";
 		my $llabelt = "$l->[0]-$l->[1]";
 		if ($l->[0] == 0 && $l->[1] == 0) { $llabelt = $tx->no_pref; }
-		my $comparison = &compare_beats($w, $l);
+		my $comparison = compare_beats($w, $l);
 		if ($comparison > 0) {
 		    Print "<td class=\"win\" title=\"$wlabelt vs. $llabelt\">";
 		} elsif ($comparison == 0) {

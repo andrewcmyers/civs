@@ -5,6 +5,7 @@ use warnings;
 
 use lib '@CGIBINDIR@';
 use civs_common;
+use election_data qw(QuestionKey);
 use algorithms;
 use CGI qw(:standard -utf8);
 use Digest::MD5 qw(md5_hex);
@@ -31,6 +32,25 @@ if (!defined(param('admin_key')) || param('admin_key') ne '@ADMIN_KEY@') {
 }
 
 $control_key = $control_key || 'omitted';
+
+# Write-ins belong to a question, but the supervisor turns them on and off
+# for the poll as a whole, so these consider every question at once.
+sub AnyWriteins {
+    foreach my $question (@questions) {
+        return 1 if defined($question->{'writeins'})
+                 && $question->{'writeins'} eq 'yes';
+    }
+    return 0;
+}
+
+sub DisallowWriteins {
+    for (my $i = 0; $i < $num_questions; $i++) {
+        $edata{QuestionKey($i, 'writeins')} = 'no';
+        $questions[$i]->{'writeins'} = 'no';
+    }
+    $writeins = 'no';
+    $voting_enabled = 1;
+}
 
 print h1("$title");
 
@@ -64,13 +84,13 @@ if (!IsStarted) {
         . '\')">', $cr;
     print '</p></form>', $cr;
 
-    if ($writeins eq 'yes') {
+    if (AnyWriteins()) {
         if (param('allow_voting')) {
             $edata{'allow_voting'} = $allow_voting = 'yes';
             $voting_enabled = 1;
         }
         if (param('nowriteins')) {
-            $edata{'writeins'} = $writeins = 'no';
+            DisallowWriteins();
             print p($tx->writeins_have_been_disabled);
         } else {
             print "<form method=\"POST\"
@@ -105,6 +125,9 @@ if (!IsStarted) {
         print p($tx->This_is_a_public_poll_plus_link($url, $publicize eq 'yes')), $cr;
     
         print p($tx->Or_paste_this_code);
+        if ($num_questions > 1) {
+            print p($tx->pasted_ballot_is_first_question_only), $cr;
+        }
         print '<textarea class="paste" rows=8 cols=90>';
         my @choice_index, my @rank;
         my $js_ui = 1;
@@ -121,7 +144,7 @@ if (!IsStarted) {
         if (!defined($shuffle) || $shuffle ne 'no') {
             fisher_yates_shuffle(\@choice_index);
         }
-        &voting::GenerateVoteForm('', $authorization_key, [@choice_index], [@rank], $js_ui, 1,
+        voting::GenerateVoteForm('', $authorization_key, [@choice_index], [@rank], $js_ui, 1,
             ($ballot_reporting eq 'yes' &&
             $reveal_voters eq 'yes' &&
             $public));
@@ -133,7 +156,7 @@ if (!IsStarted) {
     }
 
 } else {
-    &CloseDatabase;
+    CloseDatabase();
     my $results_link;
     if ($restrict_results eq 'yes') {
         $results_link = "";
@@ -185,10 +208,17 @@ if ($restrict_results eq 'yes') {
     }
 }
 print $tx->actual_votes_so_far($num_votes), br(), $cr;
+# A voter may skip a question, so a ballot does not answer all of them.
+if ($num_questions > 1) {
+    for (my $i = 0; $i < $num_questions; $i++) {
+        print $tx->ballots_answering_question($i + 1, QuestionAnswerCount($i)),
+              br(), $cr;
+    }
+}
 print $tx->poll_ends($election_end), br(), $cr;
 print $tx->email_load(GetEmailLoad(time())), br(), $cr;
 
-if ($writeins eq 'yes') {
+if (AnyWriteins()) {
     print $tx->Writeins_allowed, br(), $cr;
     if (!$voting_enabled) {
         print $tx->Voting_is_disabled_during_writeins, br(), $cr;
@@ -201,16 +231,21 @@ if ($no_opinion eq 'yes') {
     print $tx->Voters_can_choose_No_opinion, br(), $cr;
 }
 
-if ($proportional eq 'yes') {
-    if ($use_combined_ratings) {
-        print 'This poll uses the proportional representation
-            algorithm with the combined-ratings voter criterion.',br(), $cr;
+# Proportional representation is settled question by question, and does
+# nothing for a question that elects a single winner.
+for (my $i = 0; $i < $num_questions; $i++) {
+    next unless ($questions[$i]->{'proportional'} // '') eq 'yes';
+    my $which = ($num_questions > 1)
+        ? $tx->Question_number($i + 1) . ': ' : '';
+    if ($questions[$i]->{'use_combined_ratings'}) {
+        print $which, 'uses the proportional representation
+            algorithm with the combined-ratings voter criterion.', br(), $cr;
     } else {
-        print 'This poll uses the proportional representation
-            algorithm with the best-candidate voter criterion.',br(), $cr;
+        print $which, 'uses the proportional representation
+            algorithm with the best-candidate voter criterion.', br(), $cr;
     }
-    if ($num_choices == 1) {
-        print p('Proportional representation is enabled
+    if ($questions[$i]->{'num_winners'} == 1) {
+        print p($which . 'Proportional representation is enabled
             but there is only a single winner. Therefore, proportional
             representation mode will have no effect.'), $cr;
     }
@@ -251,8 +286,6 @@ print $cr, button(-name => 'save_description',
                   -onclick => "save_description()");
 
 print $cr, h2($tx->Candidates);
-print p($tx->the_top_n_will_win($num_winners));
-print "<ul id='candidates'>$cr";
 
 print "<form method=\"POST\"
             action=\"$civs_bin_path/remove_writein@PERLEXT@\"
@@ -264,18 +297,41 @@ print hidden('akey', $authorization_key)
         if defined($authorization_key);
 print hidden('writein', 'num');
 print hidden('writein_name', 'foo');
-for (my $j = 0; $j < $num_choices; $j++) {
-    if (IsWriteinName($choices[$j]) && $num_votes < 1) {
-        print li($choices[$j], $cr,
-            button(-name => "remove",
-                   -value => $tx->Remove_button,
-                   -onclick => "document.RemoveWritein.elements.writein.value = '$j'; document.RemoveWritein.submit()",
-                   -class => 'small_button')), $cr;
-    } else {
-        print li($choices[$j], $cr);
+# Which question a write-in is being removed from.
+print hidden(-name => 'q', -value => '0', -override => 1);
+
+# Each question has its own choices, winner count and write-ins. A poll
+# asking one question prints exactly what it always did.
+for (my $i = 0; $i < $num_questions; $i++) {
+    SelectQuestion($i);
+    if ($num_questions > 1) {
+        print h3($tx->Question_number($i + 1)), $cr;
+        my $question_title = $questions[$i]->{'question_title'};
+        if (defined($question_title) && $question_title ne '') {
+            # Filtered HTML, like the description: not escaped again.
+            print div({-class => 'question_text'}, $question_title), $cr;
+        }
     }
+    print p($tx->the_top_n_will_win($num_winners));
+    print "<ul class='candidates'>$cr";
+    my $answered = QuestionAnswerCount($i);
+    for (my $j = 0; $j < $num_choices; $j++) {
+        if (IsWriteinName($choices[$j]) && $answered < 1) {
+            print li($choices[$j], $cr,
+                button(-name => "remove",
+                       -value => $tx->Remove_button,
+                       -onclick => "document.RemoveWritein.elements.writein.value = '$j';"
+                                 . " document.RemoveWritein.elements.q.value = '$i';"
+                                 . " document.RemoveWritein.submit()",
+                       -class => 'small_button')), $cr;
+        } else {
+            print li($choices[$j], $cr);
+        }
+    }
+    print "</ul>$cr";
 }
-print "</ul></form>$cr";
+SelectQuestion(0);
+print "</form>$cr";
 
 if ($external_ballots ne 'yes') {
   if (IsStarted) {
@@ -308,6 +364,16 @@ if ($external_ballots ne 'yes') {
     print hidden('id', $election_id), $cr;
     print hidden('key', $control_key), $cr;
     print hidden('akey', $authorization_key) if defined($authorization_key);
+
+    # Each question has its own choices, so its ballots are their own file.
+    if ($num_questions > 1) {
+        my @values = (0 .. $num_questions - 1);
+        my %labels = map { $_ => $tx->Question_number($_ + 1) } @values;
+        print $cr, $tx->ballots_are_for_question, '&nbsp;',
+              popup_menu(-name => 'q', -values => \@values,
+                         -labels => \%labels, -default => 0,
+                         -override => 1), $cr;
+    }
 
     print $cr, $tx->file_to_upload_from, $cr;
     print input({type => 'file',

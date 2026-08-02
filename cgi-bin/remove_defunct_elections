@@ -23,8 +23,8 @@ undef $/;
 
 my $doit = 0;
 
-&HTML_Header("CIVS Server Status");
-&CIVS_Header("Server Status");
+HTML_Header("CIVS Server Status");
+CIVS_Header("Server Status");
 
 if (param('key') ne '@ADMIN_KEY@') {
     print p("Password missing or wrong");

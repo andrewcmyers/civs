@@ -55,7 +55,7 @@ sub Sorry_the_server_is_busy {
 'צר לנו, שרת הרשת של CIVS עסוק מאד כרגע, ואינו יכול לטפל בבקשות נוספות. אנא נסו שנית מעט מאוחר יותר. '
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "הודעת דואל נשלחה לכתובת שציינת (<tt>$_[1]</tt>).";

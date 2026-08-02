@@ -55,7 +55,7 @@ th              { font-family: Verdana, Helvetica, Arial, sans-serif;
 		  background-color: #00355f;
 		  border-color: #00355f;
 		  font-weight: bold }
-#settings {
+.settings {
     font-size: 90%;
     background-color: #e8e8f0;
     float: right;
@@ -139,7 +139,7 @@ input[type="file"] { background-color: #f8f0d0 }
 input, textarea, button { font-family: Verdana, Helvetica, sans-serif;
            background-color: #fff8e0 }
 button.small_button { font-size: 80% }
-button#hide_details { margin-left: 2ex }
+button.hide_details { margin-left: 2ex }
 
 input#vote {font-size:130%; font-weight: normal; background-color: #ffc;
             margin: 0 auto}
@@ -303,11 +303,11 @@ div.description { border: solid 1px #bbb;
 #jshelp ol {text-align: left; font-size: 90% }
 p#jsnohelp {text-align: left; font-size: 90% }
 
-div#details { border: solid 1px #ccb; background-color: #eee;
+div.details { border: solid 1px #ccb; background-color: #eee;
               color: black; padding: 5px; margin: 5px;
 	      display: none }
 
-button#hide_details { display: inline }
+button.hide_details { display: inline }
 
 div.content {text-align: left; padding: 5ex}
 p.explanation {text-align: left; width: 60ex}
@@ -317,9 +317,9 @@ td.question {text-align: right}
 dt { font-weight: bold }
 dd { font-size: 90%; margin-left: 3em }
 
-table#completion_meter { border-style: solid; border-width: 1px; border-color: black; width: 250px; padding: 0; margin: 0}
-td#completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
-td#incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
+table.completion_meter { border-style: solid; border-width: 1px; border-color: black; width: 250px; padding: 0; margin: 0}
+td.completed_meter {height: 1ex; background-color: #000080; padding: 0; margin: 0; border-style: none}
+td.incomplete_meter {background-color: transparent; padding: 0; margin: 0; border-style: none}
 #civs_uses ul {font-size: 90%; padding: 0 2ex; margin: 0; column-count: 3 }
 table.ballots {font-size: 80%; border: solid 1px #aac}
 table.ballots th {background-color: transparent; color: black; font-size: 70%}
@@ -368,4 +368,93 @@ div.centering { text-align: center }
 }
 .grid_container label {
     text-align: right;
+}
+
+/* The text of one question, on the ballot of a poll that asks several. */
+.question_text {
+    font-weight: bold;
+    margin-bottom: 1ex;
+}
+.ballot_nav {
+    margin-right: 1.5ex;
+}
+
+/* Offer of an unfinished poll form kept from a previous visit. Hidden
+   until the script finds one, so it never appears without scripting or
+   when there is nothing to restore. */
+#draft_notice {
+    display: none;
+    background-color: #ffffd0;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: 1ex 2ex;
+    margin-bottom: 1.5ex;
+}
+#draft_notice p {
+    margin: 0.5ex 0;
+}
+
+/* Polls with more than one question. The per-question chrome (header,
+   question text, remove button) and the "add question" button are hidden
+   by default and revealed by JavaScript, so that with scripting disabled
+   the form degrades to the single-question form it has always been. */
+#question_area .question_header,
+#question_area .question_title_row,
+#question_area .question_controls,
+#question_area .add_question_row {
+    display: none;
+}
+#question_area.js .add_question_row {
+    display: block;
+}
+#question_area.multi .question_header,
+#question_area.multi .question_title_row,
+#question_area.multi .question_controls {
+    display: block;
+}
+#question_area .question {
+    position: relative;
+}
+#question_area.multi .question {
+    border-left: 3px solid #0D61A5;
+    padding-left: 4.5ex;
+    margin-bottom: 2ex;
+}
+#question_area .question_header {
+    margin-bottom: 0.5ex;
+}
+/* Reorder and remove controls, stacked in the gutter beside the rule that
+   marks off each question. */
+#question_area .question_controls {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3.5ex;
+    text-align: center;
+}
+#question_area .question_controls button {
+    display: block;
+    width: 100%;
+    margin: 0 0 0.2ex 0;
+    padding: 0;
+    border: none;
+    border-radius: 3px;
+    background: transparent;
+    color: #0D61A5;
+    font-size: 100%;
+    line-height: 1.5;
+    cursor: pointer;
+}
+#question_area .question_controls button:hover:enabled {
+    background-color: #e8e8f0;
+    color: #00355f;
+}
+#question_area .question_controls button:disabled {
+    color: #bbb;
+    cursor: default;
+}
+#question_area .question_controls .remove_question {
+    color: #a00;
+    font-size: 130%;
+    margin-top: 0.5ex;
 }

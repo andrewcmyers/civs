@@ -5,6 +5,7 @@ use warnings;
 
 use lib '@CGIBINDIR@';
 use civs_common;
+use election_data qw(QuestionKey);
 use CGI qw(:standard -utf8);
 use Digest::MD5 qw(md5_hex);
 use Encode qw(encode);
@@ -17,8 +18,8 @@ use election 1.02;
 
 CIVS_Header($tx->Poll_control);
 
-my $control_key = &bytesParam('key');
-my $authorization_key = &bytesParam('akey');
+my $control_key = bytesParam('key');
+my $authorization_key = bytesParam('akey');
 
 CheckElectionID;
 CheckControlKey($control_key);
@@ -28,6 +29,12 @@ sub GoBackLink {
     $url .= "&akey=$authorization_key" if defined($authorization_key);
     print p("<a href=\"$url\">", $tx->Go_back_to_poll_control, '</a>');
 }
+
+# The write-in belongs to one question, and so do the choices it is being
+# removed from.
+my $q = natParam('q');
+if (!$q || $q < 0 || $q >= $num_questions) { $q = 0 }
+SelectQuestion($q);
 
 my $to_remove = natParam('writein');
 
@@ -41,7 +48,9 @@ if (!IsWriteinName($choices[$to_remove])) {
     GoBackLink;
     exit 0;
 }
-if ($num_votes != 0) {
+# Only this question's answers matter: removing a choice renumbers this
+# question's matrix and nothing else.
+if (QuestionAnswerCount($q) != 0) {
     print p("Sorry, votes have been cast already.");
     GoBackLink;
     exit 0;
@@ -62,7 +71,7 @@ for (my $i = 0; $i < $num_choices; $i++) {
 }
 print '</ul>';
 
-$edata{'choices'} = encode('utf-8', $choices = $new_choices);
+$edata{QuestionKey($q, 'choices')} = encode('utf-8', $choices = $new_choices);
 
 GoBackLink;
 

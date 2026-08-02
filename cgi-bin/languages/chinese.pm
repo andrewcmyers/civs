@@ -61,7 +61,7 @@ sub Sorry_the_server_is_busy {
     '抱歉，当前CIVS网络服务器正忙。请稍后再试。';
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "邮件已发送到您提供的地址 (<tt>$_[1]</tt>)。";

@@ -8,9 +8,14 @@ src/timeout
 src/lockserv
 src/gettimeofday
 html/index.html.??
-html/civs_create.html.??
+html/create_poll.html.??
 js/civs_hdr.js
 js/civs_hdr.js.2.??
+
+# test dependencies and scratch output
+tests/*/node_modules
+tests/*/package-lock.json
+tests/*/work
 
 
 # local stuff

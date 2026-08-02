@@ -32,17 +32,17 @@ sub SendResultKey {
 
     if (!$local_debug) { OpenMail }
     my @result_addrs = split /\s+/, $result_addrs;
-    my $optouts = &GetOptouts();
+    my $optouts = GetOptouts();
     foreach my $addr (@result_addrs) {
-	$addr = &TrimAddr($addr);
+	$addr = TrimAddr($addr);
 	if ($addr eq '') { next; }
 	print $tx->Sending_result_key(escapeHTML($addr));
 
-	if (!(&CheckAddr($addr))) {
+	if (!(CheckAddr($addr))) {
 	    print p($tx->Invalid_email_address(escapeHTML($addr)));
 	    next;
 	}
-        if (&CheckOptOutSender($optouts, $addr, $supervisor)) {
+        if (CheckOptOutSender($optouts, $addr, $supervisor)) {
             print p($tx->opted_out(escapeHTML($addr)));
             next;
         }

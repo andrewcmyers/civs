@@ -69,7 +69,7 @@ sub Sorry_the_server_is_busy {
   'Sorry, de CIVS-webserver is momenteel erg druk en kan niet meer verzoeken verwerken. Probeer het later nog eens.'
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
   "E-mail is verzonden naar het door u opgegeven adres (<tt>$_[1]</tt>)."
@@ -616,7 +616,7 @@ sub following_URL_reports_results {
 sub if_you_want_to_change {
   'U kunt uw vorige stem verwijderen en opnieuw stemmen door hier uw stembewijs in te voeren:'
 }
-sub invalid_release_key {
+sub invalid_receipt_key {
     my ($self, $receipt) = @_;
   'Het verstrekte ontvangstbewijs van de kiezer ('.$receipt.') is onjuist. Het zou moeten lijken op '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').'.'
 }

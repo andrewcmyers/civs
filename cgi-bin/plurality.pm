@@ -36,7 +36,7 @@ sub sort_by_top_rank {
 sub rank_candidates {
     my ($n, $matrix, $ballots, $choices) = @_;
 
-    my $rank_counts = &b2r::compute_rank_counts($n, $ballots);
+    my $rank_counts = b2r::compute_rank_counts($n, $ballots);
 
     if ($debug) {
         for (my $i = 0; $i < $n; $i++) {
@@ -57,7 +57,7 @@ sub rank_candidates {
     if ($debug) {
         print "Unsorted: ", ((join ", ", (map {$choices->[$_]} @unranked_choices)), "\n")
     }
-    @unranked_choices = sort {&sort_by_top_rank($a, $b, $n, $rank_counts)} @unranked_choices;
+    @unranked_choices = sort {sort_by_top_rank($a, $b, $n, $rank_counts)} @unranked_choices;
 
     my $current_count = -1;
     foreach my $i (@unranked_choices) {

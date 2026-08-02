@@ -69,7 +69,7 @@ sub Sorry_the_server_is_busy {
   'மன்னிக்கவும், CIVS இணைய சேவையகம் தற்போது மிகவும் பிஸியாக உள்ளது மேலும் கோரிக்கைகளை கையாள முடியாது. சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.'
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
   "நீங்கள் வழங்கிய முகவரிக்கு அஞ்சல் அனுப்பப்பட்டது (<tt>$_[1]</tt>)."
@@ -616,7 +616,7 @@ sub following_URL_reports_results {
 sub if_you_want_to_change {
   'உங்களின் முந்தைய வாக்கை நீக்கிவிட்டு, உங்கள் வாக்காளர் ரசீதை இங்கே உள்ளிடுவதன் மூலம் மீண்டும் வாக்களிக்கலாம்:'
 }
-sub invalid_release_key {
+sub invalid_receipt_key {
     my ($self, $receipt) = @_;
   'வழங்கப்பட்ட வாக்காளர் ரசீது ('.$receipt.') தவறானது. இது '.code('E_2ad1ca99ac3cac7a/3a191bd9fb00ef73').' போல இருக்க வேண்டும்.'
 }

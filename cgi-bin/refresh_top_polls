@@ -17,7 +17,7 @@ if (!defined(param('key')) || param('key') ne '@ADMIN_KEY@') {
     exit 0;
 }
 
-&top_polls::standard_refresh;
+top_polls::standard_refresh();
 
 print p("Top polls have been refreshed.");
 

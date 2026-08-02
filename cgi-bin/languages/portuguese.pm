@@ -52,7 +52,7 @@ sub Sorry_the_server_is_busy {
      Por favor tente novamente mais tarde.';
 }
 
-# civs_create
+# create_poll
 
 sub mail_has_been_sent {
     "Foi enviada uma mensagem ao endereço que você forneceu (<tt>$_[1]</tt>).";

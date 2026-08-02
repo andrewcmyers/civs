@@ -22,7 +22,10 @@ BEGIN {
     &ResultKeyOK
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
-    &IsWriteinName &GetEmailLoad &RevoteButton
+    &IsWriteinName &GetEmailLoad &RevoteButton &SelectQuestion
+    &BallotFromReceipt &QuestionBallot &StartBallot &UpdateMatrix
+    &WithdrawQuestionBallot &RecordQuestionBallot &QuestionAnswerCount
+    $NO_OPINION
     $election_id $election_dir $started_file $stopped_file
     $election_data $election_log $vote_data $election_lock $name
     $title $email_addr $description $num_winners $addresses @addresses
@@ -32,11 +35,13 @@ BEGIN {
     $recorded_voters $ballot_reporting $reveal_voters $authorization_key
     %used_voter_keys $restrict_results $result_addrs $hash_result_key $no_opinion
     $close_time $last_vote_time $election_begin $email_load
+    @questions $num_questions
     %voter_keys %edata %vdata);
 }
 
 # Package imports
 use civs_common;
+use election_data qw(ReadElectionData QuestionKey);
 use algorithms;
 use CGI qw(:standard -utf8);
 use POSIX qw(strftime);
@@ -59,6 +64,15 @@ our ($name, $title, $email_addr, $description, $num_winners, $addresses,
      $restrict_results, $result_addrs, $hash_result_key, $last_vote_time,
      $close_time, $email_load);
 
+# Every question in the poll, in the order they are put to the voter. The
+# scalars above describe question 0, for backward compatibility with
+# old polls.
+our (@questions, $num_questions);
+
+# The rank a voter gives a choice they have no view on. Stored in ballots
+# verbatim, so it cannot be changed without rewriting existing ones.
+our $NO_OPINION = 'No opinion';
+
 our $civs_supervisor = '@SUPERVISOR@';
 our $auth_sender = '@AUTH_SENDER@';
 our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
@@ -66,20 +80,23 @@ our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 # Non-exported variables
 my ($db_is_open, $election_is_locked);
 
-&init;
+init();
 
 # Decode a database field using UTF-8. If FIXUTF8 option is enabled, Ad-hoc
 # fixup is done of embedded Latin-1 characters and doubly encoded UTF-8.
 # Returns undefined if the field is undefined.
+#
+# Takes the database rather than using %edata directly, so that it can be
+# handed to election_data::ReadElectionData as its decoder.
 sub DB_decode {
-    (my $key) = @_;
-    my $e = $edata{$key};
+    (my $eref, my $key) = @_;
+    my $e = $eref->{$key};
     return $e unless $e;
     my $d = fixUTF($e);
     if (@FIXUTF8@ && $d =~ m/\303[\202-\203]\302[\200-\277]/) {
         print STDERR "Fixing UTF-8 double encoding in $election_id\n";
         $d = decode('utf-8', $d);
-        $edata{$key} = $d;
+        $eref->{$key} = $d;
     }
     return decode('utf-8', $d);
 }
@@ -87,12 +104,12 @@ sub DB_decode {
 sub init {
     # Get election ID
     $election_id = param('id') or do {
-	&CIVS_Header($tx->Error);
+	CIVS_Header($tx->Error);
         print p($tx->No_poll_ID), end_html();
         exit 0;
     };
-    &IsWellFormedElectionID or do {
-	&CIVS_Header($tx->Error);
+    IsWellFormedElectionID()or do {
+	CIVS_Header($tx->Error);
         print p($tx->Ill_formed_poll_ID(escapeHTML($election_id))), end_html();
         exit 0;
     };
@@ -106,8 +123,8 @@ sub init {
     $vote_data = $election_dir."/vote_data";
     $election_lock = $election_dir."/lock";
 
-    &LockElection;
-    &OpenDatabase;
+    LockElection();
+    OpenDatabase();
 
     # Extract data from databases
     #
@@ -116,75 +133,92 @@ sub init {
     #   UTF-8 encoded strings                     - must be escaped in HTML output
     #   UTF-8 encoded HTML strings (which have been filtered) - should not be escaped in HTML output
     #
-    $name = DB_decode('name');                 # name of supervisor: UTF-8
-    $title = DB_decode('title');               # title of poll: HTML
-    $email_addr = DB_decode('email_addr');     # email of supervisor: UTF-8
-    $description = DB_decode('description');   # poll description: HTML
-    $num_winners = $edata{'num_winners'};
-    $addresses = DB_decode('addresses') || '';
+    # The layout itself lives in election_data.pm, which the offline tools
+    # read polls through as well.
+    my $data = ReadElectionData(\%edata, \%vdata, \&DB_decode);
+    @questions = @{$data->{'questions'}};
+    $num_questions = $data->{'num_questions'};
+    my $poll = $data->{'poll'};
+
+    $name = $poll->{'name'};                 # name of supervisor: UTF-8
+    $title = $poll->{'title'};               # title of poll: HTML
+    $email_addr = $poll->{'email_addr'};     # email of supervisor: UTF-8
+    $description = $poll->{'description'};   # poll description: HTML
+    $addresses = $poll->{'addresses'};
     @addresses = split /[\r\n]+/, $addresses;
-    $election_begin = $edata{'election_begin'};
-    $election_end = DB_decode('election_end');  # HTML
-    $public = $edata{'public'};
-    $publicize = $edata{'publicize'} || 'no';
-    $writeins = $edata{'writeins'};
-    $allow_voting = $edata{'allow_voting'} || 'no';
-    $voting_enabled = ($writeins ne 'yes' || $allow_voting eq 'yes');
-    $proportional = $edata{'proportional'} // '';
-    $use_combined_ratings = $edata{'use_combined_ratings'} || 0;
-    $choices = DB_decode('choices') // '';    # list of newline-separated choices/candidates: HTML
-    @choices = split /[\r\n]+/, $choices;
-    $num_choices = $#choices + 1;
-    $num_auth = $edata{'num_auth'};
-    $shuffle = $edata{'shuffle'};
-    $no_opinion = $edata{'no_opinion'} || 'yes';
-    $num_votes = $vdata{'num_votes'} || 0;
-    $close_time = $vdata{'close_time'};
-    $recorded_voters = $vdata{'recorded_voters'};
-    $ballot_reporting = $edata{'ballot_reporting'} // '';
-    $external_ballots = $edata{'external_ballots'} // 'no';
-    $reveal_voters = $edata{'reveal_voters'} // '';
-    $restrict_results = $edata{'restrict_results'} // 'no';
-    $result_addrs = DB_decode('result_addrs');
-    $hash_result_key = 0;
-    $last_vote_time = $vdata{'last_vote_time'};
-    $email_load = $edata{'email_load'}; # timestamp num_mails
-    $no_IP_check = $edata{'no_IP_check'} // 'no';
-    if ($restrict_results eq 'yes') {
-	$hash_result_key = $edata{'hash_result_key'};
-    }
+    $election_begin = $poll->{'election_begin'};
+    $election_end = $poll->{'election_end'};  # HTML
+    $public = $poll->{'public'};
+    $publicize = $poll->{'publicize'};
+    $allow_voting = $poll->{'allow_voting'};
+    $voting_enabled = $poll->{'voting_enabled'};
+    $num_auth = $poll->{'num_auth'};
+    $no_opinion = $poll->{'no_opinion'};
+    $num_votes = $poll->{'num_votes'};
+    $close_time = $poll->{'close_time'};
+    $recorded_voters = $poll->{'recorded_voters'};
+    $ballot_reporting = $poll->{'ballot_reporting'};
+    $external_ballots = $poll->{'external_ballots'};
+    $reveal_voters = $poll->{'reveal_voters'};
+    $restrict_results = $poll->{'restrict_results'};
+    $result_addrs = $poll->{'result_addrs'};
+    $hash_result_key = $poll->{'hash_result_key'};
+    $last_vote_time = $poll->{'last_vote_time'};
+    $email_load = $poll->{'email_load'}; # timestamp num_mails
+    $no_IP_check = $poll->{'no_IP_check'};
+
+    # Question 0 is the default for backward compatibility.
+    SelectQuestion(0);
+
     %voter_keys = ();
-    &LoadHash('voter_keys', \%voter_keys);
-    &LoadHash('used_voter_keys', \%used_voter_keys);
+    LoadHash('voter_keys', \%voter_keys);
+    LoadHash('used_voter_keys', \%used_voter_keys);
+}
+
+# Point the per-question globals at question $q, for use of scripts 
+# that don't know about multiple questions. The
+# question 0 -- which for a poll asking one question is the whole poll.
+# Converting such a script means walking @questions instead, or calling
+# this around the part of it that handles one question at a time.
+sub SelectQuestion {
+    (my $q) = @_;
+    my $question = $questions[$q];
+    return unless defined($question);
+    $choices = $question->{'choices'};
+    @choices = @{$question->{'choice_list'}};
+    $num_choices = $question->{'num_choices'};
+    $num_winners = $question->{'num_winners'};
+    $proportional = $question->{'proportional'};
+    $use_combined_ratings = $question->{'use_combined_ratings'};
+    $shuffle = $question->{'shuffle'};
+    $writeins = $question->{'writeins'};
 }
 
 END {
-    &SyncVoterKeys;
-    &CloseDatabase;
-    &UnlockElection;
+    SyncVoterKeys();
+    CloseDatabase();
+    UnlockElection();
 }
 
 # utility routines
 
 sub SyncVoterKeys {
-    &SaveHash('voter_keys', \%voter_keys);
-    &SaveHash('used_voter_keys', \%used_voter_keys);
+    SaveHash('voter_keys', \%voter_keys);
+    SaveHash('used_voter_keys', \%used_voter_keys);
 }
 
 sub LoadHash {
-    my $hash_name = shift;
-    my $hash_ref = shift;
+    my ($hash_name, $hash_ref) = @_;
     my $s;
     $s = $edata{$hash_name} or $s = "";
     my @a = split /[\r\n]+/, $s;
     foreach my $k (@a) {
-    $$hash_ref{$k} = 1;
+        $$hash_ref{$k} = 1;
     }
 }
 
 sub SaveHash {
-    my $hash_name = shift;
-    my $hash_ref = shift;
+    my ($hash_name, $hash_ref) = @_;
     my $s = '';
     my $k;
     foreach $k (keys %{$hash_ref}) {
@@ -301,7 +335,7 @@ sub ReportResultReaders {
 
 sub PointToResultsComplete {
   if ($restrict_results eq 'yes') {
-    &ReportResultReaders;
+    ReportResultReaders();
   } else {
     print "<p>", $tx->The_results_of_this_completed_poll_are_here, br, $cr;
     print "<a href=\"@PROTO@://$thishost$civs_bin_path/results@PERLEXT@?id=$election_id\">
@@ -353,72 +387,125 @@ sub IsWriteinName {
     $_[0] =~ m/\(write-in\)$/
 }
 
-# Check whether the voter has provided a correct receipt for a prior
-# vote; if so, remove their old ballot and return their old ballot as a
-# string.
-sub CheckReceipt {
-    (my $voter_key) = @_;
-    my $receipt = bytesParam('receipt');
-    if ($receipt) {
-        my ($id, $release_key) = $receipt =~ m|(E_[0-9a-f]+)/([0-9a-f]+)|;
-        my $ballot_key = $id ? civs_hash($release_key, $private_host_id) : '';
-        my $used_voters_data = $vdata{'used_voters'};
-        my @used_voters;
-        if (defined($used_voters_data)) {
-            @used_voters = split /\n/, $used_voters_data;
-        }
-        my @rv = split /\n/, $recorded_voters;
-        if ($id && $id eq $election_id && $vdata{$ballot_key}) {
-            my $ballot = $vdata{$ballot_key};
-            delete $vdata{$ballot_key};
-            $vdata{'num_votes'}--;
-            delete $used_voter_keys{&civs_hash($voter_key)};
-            my $found = 0;
-            for (my $i = 0; $i <= $#rv; $i++) {
-                if ($rv[$i] eq $ballot_key) {
-                    splice @rv, $i, 1;
-                    $vdata{'recorded_voters'} = join "\n", @rv;
-                    $found = 1;
-                    last;
-                }
-            }
-            if (!$found) {
-                Log "Warning: election $election_id revote: could not remove previous recorded voter $release_key (voter key $voter_key, ballot key $ballot_key)"
-            } else {
-                Log "Removed ballot from voter key $voter_key (ballot key $ballot_key, release key $release_key)"
-            }
-            SyncVoterKeys;
+# A voter has one ballot, named by a ballot key, and answers each of the
+# poll's questions separately within it. The ballot key is derived from a
+# receipt key that only the voter is ever given;
+# nothing records which ballot belongs to which voter, keeping
+# ballots anonymous.
+#
+# Question 0's answer is stored under the ballot key itself and its
+# pairwise matrix under "j.k", which is where a poll asking one question
+# has always kept them. Question N uses the same names prefixed "qN.".
 
-            my @rank = split /,/, $ballot;
-            for (my $j = 0; $j < $num_choices; $j++) {
-                if (!defined($rank[$j])) {
-                    $rank[$j] = $num_choices;
-                }
-            }
+# Resolve a receipt to the ballot it names, or '' if it names none of this
+# poll's ballots.
+sub BallotFromReceipt {
+    my ($receipt) = @_;
+    return '' unless defined($receipt) && $receipt ne '';
+    my ($id, $receipt_key) = $receipt =~ m|\A(E_[0-9a-f]+)/([0-9a-f]+)\z|;
+    return '' unless defined($id) && $id eq $election_id;
+    GetPrivateHostID();
+    my $ballot_key = civs_hash($receipt_key, $private_host_id);
+    foreach my $recorded (split /\n/, ($recorded_voters || '')) {
+        return $ballot_key if $recorded eq $ballot_key;
+    }
+    return '';
+}
 
-            for (my $j = 0; $j < $num_choices; $j++) {
-                for (my $k = 0; $k < $num_choices; $k++) {
-                    my $jk = $vdata{"$j.$k"};
-                    $jk = 0 if (!defined($jk));
-                    if ($rank[$j] ne 'No opinion' &&
-                        $rank[$k] ne 'No opinion' &&
-                        $rank[$j] < $rank[$k]) {
-                        $vdata{"$j.$k"} = $jk - 1;
-                    }
-                }
-            }
+# This ballot's answer to question $q, or undef if it did not answer.
+sub QuestionBallot {
+    my ($ballot_key, $q) = @_;
+    return $vdata{QuestionKey($q, $ballot_key)};
+}
 
-            return $ballot;
-        } else {
-            if (!$id || !$ballot_key) {
-                print $tx->invalid_release_key($receipt);
-            }
-            if (!$vdata{$ballot_key}) {
-                print $tx->no_ballot_under_key($receipt);
-            }
+# Begin a ballot for this voter and return its receipt key and ballot key.
+#
+# From this point the voter cannot start again from their invitation: the
+# receipt is the only way back to the ballot. Were it otherwise, a voter
+# who answered one question and then lost the page could start a second
+# ballot, and their first answer would be counted twice -- which nothing
+# here could detect, since it holds no link between voter and ballot.
+sub StartBallot {
+    my ($voter_key) = @_;
+    my $receipt_key = SecureNonce();
+    GetPrivateHostID();
+    my $ballot_key = civs_hash($receipt_key, $private_host_id);
+    $vdata{'num_votes'} = ($vdata{'num_votes'} || 0) + 1;
+    $recorded_voters = $recorded_voters
+        ? $recorded_voters . "\n" . $ballot_key
+        : $ballot_key;
+    $vdata{'recorded_voters'} = $recorded_voters;
+    $used_voter_keys{civs_hash($voter_key)} = 1;
+    SyncVoterKeys();
+    return ($receipt_key, $ballot_key);
+}
+
+# Add ($delta == 1) or take back ($delta == -1) one ballot's contribution
+# to a question's pairwise matrix, in which entry "j.k" counts the ballots
+# ranking choice j above choice k.
+sub UpdateMatrix {
+    my ($q, $ranks_ref, $delta) = @_;
+    my @rank = @{$ranks_ref};
+    my $n = $questions[$q]->{'num_choices'};
+    # A write-in added after this ballot was cast leaves it short; such a
+    # choice counts as ranked last, which is what AddWritein assumed of
+    # the ballots already cast when it made room for it.
+    for (my $j = 0; $j < $n; $j++) {
+        $rank[$j] = $n unless defined($rank[$j]);
+    }
+    for (my $j = 0; $j < $n; $j++) {
+        next if $rank[$j] eq $NO_OPINION;
+        for (my $k = 0; $k < $n; $k++) {
+            next if $rank[$k] eq $NO_OPINION;
+            next unless $rank[$j] < $rank[$k];
+            my $key = QuestionKey($q, "$j.$k");
+            $vdata{$key} = ($vdata{$key} || 0) + $delta;
         }
     }
-    return 0;
+}
+
+# Take back this ballot's answer to question $q, if it gave one. Returns
+# whether there was one.
+sub WithdrawQuestionBallot {
+    my ($ballot_key, $q) = @_;
+    my $key = QuestionKey($q, $ballot_key);
+    my $old = $vdata{$key};
+    return 0 unless defined($old);
+    UpdateMatrix($q, [split /,/, $old], -1);
+    delete $vdata{$key};
+    my $count = QuestionKey($q, 'answered');
+    $vdata{$count} = ($vdata{$count} || 1) - 1;
+    return 1;
+}
+
+# Record this ballot's answer to question $q, replacing any earlier one.
+sub RecordQuestionBallot {
+    my ($ballot_key, $q, $ranks_ref) = @_;
+    WithdrawQuestionBallot($ballot_key, $q);
+    $vdata{QuestionKey($q, $ballot_key)} = join ',', @{$ranks_ref};
+    my $count = QuestionKey($q, 'answered');
+    $vdata{$count} = ($vdata{$count} || 0) + 1;
+    UpdateMatrix($q, $ranks_ref, 1);
+}
+
+# How many ballots answered question $q.
+#
+# A poll created before polls could ask more than one question has no such
+# counter, so it is worked out from the ballots the first time it is
+# wanted, and kept from then on. Without that an old poll would look as
+# though nobody had answered it: a write-in added to one would be recorded
+# as though no ballots existed to rank it last, and a write-in could be
+# removed from one whose votes were already cast.
+sub QuestionAnswerCount {
+    my ($q) = @_;
+    my $key = QuestionKey($q, 'answered');
+    return $vdata{$key} if defined($vdata{$key});
+    my $count = 0;
+    foreach my $ballot_key (split /\n/, ($recorded_voters || '')) {
+        $count++ if defined($vdata{QuestionKey($q, $ballot_key)});
+    }
+    $vdata{$key} = $count;
+    return $count;
 }
 
 # Generate a form that lets voters try to vote again.
@@ -448,17 +535,19 @@ sub RevoteButton {
 
 # Check if the voter has already voted (and this is not a valid revote).
 # If so, generate a page that lets them revote by providing a receipt, and exit.
+# Stop a voter who already has a ballot. Their receipt is the way back to
+# it, so the caller resolves that first and only asks this when there was
+# none: see BallotFromReceipt.
 sub CheckNotVoted {
     my ($voter_key) = @_;
-    if ($voter_key && $used_voter_keys{&civs_hash($voter_key)}) {
-        if (my $ballot = CheckReceipt($voter_key)) { return $ballot }
+    if ($voter_key && $used_voter_keys{civs_hash($voter_key)}) {
 	print h1($tx->Already_voted), $cr;
 	print p($tx->vote_has_already_been_cast), $cr;
-	&PointToResults;
+	PointToResults();
         print p($tx->if_you_want_to_change), $cr;
-        &RevoteButton($voter_key, $tx->change_ballot); # no receipt provided
-        &main::TrySomePolls;
-        &CIVS_End;
+        RevoteButton($voter_key, $tx->change_ballot); # no receipt provided
+        main::TrySomePolls();
+        CIVS_End();
 
         ElectionLog("Election: $title ($election_id) : Saw second vote "
                 . "from voter key $voter_key");
@@ -489,12 +578,12 @@ sub CheckControlKey {
         my $hash_control_key = civs_hash($control_key);
         my $hash_control_key_check = $edata{'hash_control_key'};
         if ($hash_control_key ne $hash_control_key_check) {
-            &ControlKeyError;
+            ControlKeyError();
         }
     } else {
         my $control_key_check = civs_hash("control".$private_host_id.$election_id);
         if ($control_key ne $control_key_check) {
-            &ControlKeyError;
+            ControlKeyError();
         }
     }
 }
@@ -507,7 +596,7 @@ sub ElectionUsesAuthorizationKey {
 
 sub CheckAuthorizationKey {
     my $authorization_key = shift;
-    if (!&ElectionUsesAuthorizationKey) {
+    if (!ElectionUsesAuthorizationKey()) {
         return 1;
     }
     if (!defined($authorization_key)) {
@@ -530,7 +619,7 @@ sub CheckAuthorizationKey {
 sub ResultKeyOK {
     my $result_key = shift;
     return (defined($result_key) && (
-	&civs_hash($result_key) eq $hash_result_key
+	civs_hash($result_key) eq $hash_result_key
 # originally CIVS stored the hash of the key, but this provides little
 # added security while interfering with usability
      || $result_key eq $hash_result_key));
@@ -538,7 +627,7 @@ sub ResultKeyOK {
 
 sub CheckResultKey {
     my $result_key = shift;
-    if (&ResultKeyOK($result_key)) {
+    if (ResultKeyOK($result_key)) {
 	return;
     }
     ElectionLog("Election: $title ($election_id) : invalid attempt to view election results (wrong key)");
@@ -599,7 +688,7 @@ sub ElectionLog {
 	exit 0;
     }
     binmode ELECTION_LOG, ':utf8';
-    print ELECTION_LOG $now." ".&LogIPAddress." ".$log_msg."\n";
+    print ELECTION_LOG $now." ".LogIPAddress()." ".$log_msg."\n";
     close ELECTION_LOG;
 }
 
@@ -624,7 +713,7 @@ sub GenerateVoterKey {
 # tags are replaced with angle brackets.
 sub SendBody {
     my $html = shift;
-    my $boundary = 'CIVS-'.&SecureNonce;
+    my $boundary = 'CIVS-'.SecureNonce();
     my $plain = $html;
     $plain =~ s|<code>(.*)</code>|[[$1]]|g;
     $plain =~ s/<[^>]+>//g;
@@ -680,14 +769,14 @@ sub GetEmailLoad {
 # not need to be in canonical form.
 sub VotingUrl {
     my ($email, $election_id, $authorization_key, $resend) = @_;
-    my $v = &CanonicalizeAddr($email);
+    my $v = CanonicalizeAddr($email);
     my $url = "";
     if ($public eq 'yes') {
         $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id";
         $url .= "&akey=$authorization_key"
-            if (&ElectionUsesAuthorizationKey);
+            if (ElectionUsesAuthorizationKey());
     } else {
-        my $voter_key = &GenerateVoterKey($v, $authorization_key);
+        my $voter_key = GenerateVoterKey($v, $authorization_key);
         my $hash_voter_key = civs_hash($voter_key);
         $url = "@PROTO@://$thishost$civs_bin_path/vote@PERLEXT@?id=$election_id"
                     ."&key=$voter_key";
@@ -717,11 +806,11 @@ sub VotingUrl {
 # at this point.
 sub SendKeys {
     my ($authorization_key, $addresses_ref, $resend) = @_;
-    my @addresses = map {&TrimAddr($_)} @{$addresses_ref};
-    @addresses =  &unique_elements(@addresses); 
+    my @addresses = map {TrimAddr($_)} @{$addresses_ref};
+    @addresses =  unique_elements(@addresses); 
     my $now = time();
     my $load = GetEmailLoad($now);
-    my $optouts = &GetOptouts();
+    my $optouts = GetOptouts();
     my @failures = ();
     if (!OpenMail) {
         print p("Could not connect to SMTP server", tt('@SMTP_HOST@'));
@@ -735,18 +824,18 @@ sub SendKeys {
 	    print $tx->Invalid_email_address(escapeHTML($v)), $cr;
 	    next;
 	}
-        my $url = &VotingUrl($v, $election_id, $authorization_key, $resend);
+        my $url = VotingUrl($v, $election_id, $authorization_key, $resend);
         if (!$url) { next }
 
         # print "Checking whether $email_addr can send to $v\n";
-        if (!&UserActivated($optouts, $v)) {
+        if (!UserActivated($optouts, $v)) {
             push @failures, [('not activated', $v)];
-            &RecordInvitation($v, $url, $title);
+            RecordInvitation($v, $url, $title);
             next;
         }
-        if (&CheckOptOutSender($optouts, $v, $email_addr)) {
+        if (CheckOptOutSender($optouts, $v, $email_addr)) {
             push @failures, [('opted out', $v)];
-            &RecordInvitation($v, $url, $title);
+            RecordInvitation($v, $url, $title);
             next;
         }
         $load++;
@@ -766,7 +855,7 @@ sub SendKeys {
 
             ElectionLog("Sending mail to a voter for poll $election_id\n");
             print $tx->Sending_mail_to_voter_v($v), $cr; STDOUT->flush();
-	    my $uniqueid = &SecureNonce;
+	    my $uniqueid = SecureNonce();
 	    my $messageid = "CIVS-$election_id.$uniqueid\@$thishost";
 
             MailFrom($auth_sender) &&
@@ -811,11 +900,11 @@ sub SendKeys {
 	    $html .= $cr."</p><p>".$tx->poll_has_been_announced_to_end($election_end);
             if ($restrict_results ne 'yes') {
 		$html .= ' ' .
-		  $tx->To_view_the_results_at_the_end(&MakeURL("@PROTO@://$thishost$civs_bin_path/".
+		  $tx->To_view_the_results_at_the_end(MakeURL("@PROTO@://$thishost$civs_bin_path/".
 				"results@PERLEXT@?id=$election_id"));
 	    }
 	    $html .= '<p>'
-                  .   $tx->For_more_information(&MakeURL($civs_home), &MakeURL($mail_mgmt_url))
+                  .   $tx->For_more_information(MakeURL($civs_home), MakeURL($mail_mgmt_url))
                   .  '</p>
 </body>
 </html>';
@@ -834,7 +923,7 @@ sub SendKeys {
 sub RecordInvitation {
     (my $addr, my $url) = @_;
     $addr = CanonicalizeAddr($addr);
-    my $key = &OptOutKey($addr);
+    my $key = OptOutKey($addr);
     my $fname = "@CIVSDATADIR@/invites/$key";
     if (open(INVITES, ">>", $fname)) {
         binmode INVITES, ':utf8';

@@ -38,7 +38,7 @@ sub rank_candidates {
     my $num_ranked = 0;
     my @ballots = @{$bref}; # ugh -- is there a way to avoid this?
 
-    my $rank_counts = &b2r::compute_rank_counts($n, $bref);
+    my $rank_counts = b2r::compute_rank_counts($n, $bref);
 
     if ($debug) {
         for (my $i = 0; $i < $n; $i++) {
@@ -106,12 +106,12 @@ sub rank_candidates {
                     if ($worst_choice == -1) {
                         $worst_choice = $j;
                         # print("current worst is ", $choices->[$j], "\n");
-                    } elsif (&b2r::compare_choice_ranks($j, $worst_choice, $n, $rank_counts) > 0)  {
+                    } elsif (b2r::compare_choice_ranks($j, $worst_choice, $n, $rank_counts) > 0)  {
                         $worst_choice = $j;
                         # print("current worst is ", $choices->[$j], "\n");
                     } else {
                         # print("Actually $choices->[$j] is better (",
-                        # &b2r::compare_choice_ranks($j, $worst_choice, $n, $rank_counts),
+                        # b2r::compare_choice_ranks($j, $worst_choice, $n, $rank_counts),
                         # ")\n");
                     }
 		}

@@ -1006,7 +1006,7 @@ Fine_print {
   zh:  <p> <b>细则：</b>该投票服务免费供公众使用。所有投票内容均由投票创建者负责。不能保证此服务将是正确的或可用的，并且在任何情况下，作者或服务提供商（包括康奈尔大学）都不对因使用、数据或利润损失而造成的任何损害承担责任，无论是在合同诉讼中、因使用本服务而引起或与之相关的疏忽或其他侵权行为。 </p>
 }
 
-# civs_create
+# create_poll
 
 Invalid_supervisor_email {
   en: Supervisor email address is invalid.
@@ -1085,6 +1085,72 @@ Must_have_at_least_two_choices_to_vote_on {
     nl: Moet ten minste twee keuzes hebben om op te stemmen
     ja: 投票するには少なくとも 2 つの選択肢が必要です
     zh: 必须至少有两个选择才能投票
+}
+# Polls with more than one question. Only the English text is given here;
+# the other languages fall back to English until make-translation is run.
+Question_number {
+    en: Question
+    de: Frage
+    fr: Question
+    it: Domanda
+    es: Pregunta
+    nl: Vraag
+    uk: Запитання
+    hi: प्रश्न
+    ko: 질문
+    ja: 質問
+    zh: 问题
+}
+Text_of_this_question {
+    en: Question text:
+    de: Fragetext:
+    fr: Texte de la question :
+    it: Testo della domanda:
+    es: Texto de la pregunta:
+    nl: Vraagtekst:
+    uk: Текст питання:
+    hi: प्रश्न टेक्स्ट:
+    ko: 질문: 
+    ja: 質問文：
+    zh: 问题：
+}
+Add_question {
+    en: Add a question
+    de: Stelle eine Frage
+    fr: Ajoute une question
+    it: Aggiungi una domanda
+    es: Añade una pregunta
+    nl: Voeg een vraag toe
+    uk: Додайте запитання
+    hi: एक प्रश्न जोड़ें
+    ko: 질문을 추가하세요
+    ja: 質問を追加する
+    zh: 再问一个问题吧
+}
+Remove_question {
+    en: Remove this question
+}
+Move_question_up {
+    en: Move this question earlier
+}
+Move_question_down {
+    en: Move this question later
+}
+Each_question_needs_text {
+    en: Each question must have its own text.
+}
+# %s is replaced with the date and time the unfinished form was saved.
+Draft_found {
+    en: An unfinished poll form was saved in this browser on %s.
+}
+Restore_draft {
+    en: Fill it in again
+}
+Discard_draft {
+    en: Discard it
+}
+Draft_files_not_restored {
+    en: Files you had chosen to upload are not kept, and will need choosing again.
 }
 Results_recipient_email_address_is_invalid {
     en: Results recipient e-mail address is invalid:

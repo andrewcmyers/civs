@@ -12,9 +12,9 @@ use File::stat;
 use DB_File;
 undef $/;
 
-&HTML_Header("CIVS Election deletion");
+HTML_Header("CIVS Election deletion");
 use election;
-&CIVS_Header("Election deletion");
+CIVS_Header("Election deletion");
 
 CheckElectionID;
 

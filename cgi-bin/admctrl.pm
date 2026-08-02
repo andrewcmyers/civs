@@ -52,11 +52,11 @@ sub AdmissionControl {
     #HTML_Header("Debugging admission control");
     #print pre($success);
     if ($success eq '') {
-	&Busy;
+	Busy();
 	exit 0;
     } else {
 	return 1; # gained admission
     }
 }
 
-&AdmissionControl;
+AdmissionControl();
