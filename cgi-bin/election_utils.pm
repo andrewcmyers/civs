@@ -55,33 +55,32 @@ sub GetElectionData {
     }
     @questions = @{$data->{'questions'}};
     $num_questions = $data->{'num_questions'};
-    my $poll = $data->{'poll'};
 
-    $name = $poll->{'name'};
-    $title = $poll->{'title'};
-    $email_addr = $poll->{'email_addr'};
-    $description = $poll->{'description'};
-    $addresses = $poll->{'addresses'};
+    $name = $data->{'name'};
+    $title = $data->{'title'};
+    $email_addr = $data->{'email_addr'};
+    $description = $data->{'description'};
+    $addresses = $data->{'addresses'};
     @addresses = split /[\r\n]+/, $addresses;
-    $election_begin = $poll->{'election_begin'};
-    $election_end = $poll->{'election_end'};
-    $public = $poll->{'public'};
-    $publicize = $poll->{'publicize'};
-    $allow_voting = $poll->{'allow_voting'};
-    $voting_enabled = $poll->{'voting_enabled'};
-    $num_auth = $poll->{'num_auth'};
-    $no_opinion = $poll->{'no_opinion'};
-    $num_votes = $poll->{'num_votes'};
-    $close_time = $poll->{'close_time'};
-    $recorded_voters = $poll->{'recorded_voters'};
-    $ballot_reporting = $poll->{'ballot_reporting'};
-    $external_ballots = $poll->{'external_ballots'};
-    $reveal_voters = $poll->{'reveal_voters'};
-    $restrict_results = $poll->{'restrict_results'};
-    $result_addrs = $poll->{'result_addrs'};
-    $hash_result_key = $poll->{'hash_result_key'};
-    $last_vote_time = $poll->{'last_vote_time'};
-    $email_load = $poll->{'email_load'}; # timestamp num_mails
+    $election_begin = $data->{'election_begin'};
+    $election_end = $data->{'election_end'};
+    $public = $data->{'public'};
+    $publicize = $data->{'publicize'};
+    $allow_voting = $data->{'allow_voting'};
+    $voting_enabled = $data->{'voting_enabled'};
+    $num_auth = $data->{'num_auth'};
+    $no_opinion = $data->{'no_opinion'};
+    $num_votes = $data->{'num_votes'};
+    $close_time = $data->{'close_time'};
+    $recorded_voters = $data->{'recorded_voters'};
+    $ballot_reporting = $data->{'ballot_reporting'};
+    $external_ballots = $data->{'external_ballots'};
+    $reveal_voters = $data->{'reveal_voters'};
+    $restrict_results = $data->{'restrict_results'};
+    $result_addrs = $data->{'result_addrs'};
+    $hash_result_key = $data->{'hash_result_key'};
+    $last_vote_time = $data->{'last_vote_time'};
+    $email_load = $data->{'email_load'}; # timestamp num_mails
 
     SelectQuestion(0);
     1

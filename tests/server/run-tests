@@ -168,7 +168,7 @@ if [ -z "$keep" ]; then
     rm -rf "$work"
 else
     echo
-    echo "Installation kept in tests/server/work/inst"
+    echo "Installation kept in $inst"
 fi
 
 echo
