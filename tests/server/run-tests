@@ -17,7 +17,7 @@ set -u
 
 here=$(cd "$(dirname "$0")" && pwd)
 root=$(cd "$here/../.." && pwd)
-work="$here/work"
+work="$here/work/$$"
 inst="$work/inst"
 
 keep=""
@@ -38,7 +38,7 @@ report() {
 }
 
 echo
-echo "=== building a throwaway installation in tests/server/work ==="
+echo "=== building a throwaway installation in $work ==="
 
 rm -rf "$work"
 mkdir -p "$inst/html" "$inst/cgi" "$inst/data/elections" "$inst/data/invites"

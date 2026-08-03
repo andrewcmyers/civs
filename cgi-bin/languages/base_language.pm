@@ -542,8 +542,8 @@ sub ballot_reporting_is_enabled {
 sub winning_choices { # num_winners
     my ($self, $num_winners) = @_;
     ($num_winners == 1)
-        ? 'Only the single favorite choice will win'
-        : "Only the $num_winners favorite choices will win"
+        ? 'Only the single favorite choice will win.'
+        : "Only the $num_winners favorite choices will win."
 }
 sub poll_end_and_supervisor { # end, name, email
     my ($self, $end, $name, $email) = @_;

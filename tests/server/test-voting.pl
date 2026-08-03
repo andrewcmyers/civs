@@ -105,8 +105,13 @@ ck('the supervisor is named above the question',
    && index($p, 'poll supervisor is') > 0);
 ck('and said only once', scalar(() = $p =~ /poll supervisor is/g) == 1,
    scalar(() = $p =~ /poll supervisor is/g));
+# Ask the language module what it says rather than repeating it here,
+# so that rewording the string does not fail this.
+my $winner_text = qx{$^X -I'$cgi' -e '
+    require "base_language.pm"; print base_language->init->winning_choices(1);'};
 ck('the winner count sits with the question',
-   index($p, 'will win.') > index($p, 'Question 1 of 3'));
+   $winner_text ne '' && index($p, $winner_text) > index($p, 'Question 1 of 3'),
+   $winner_text);
 ck('and no longer claims to win the poll', $p !~ /will win the poll/);
 # The description is of the whole poll, so it belongs above the question
 # rather than below it.
