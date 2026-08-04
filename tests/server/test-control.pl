@@ -174,6 +174,22 @@ ck('question 2 answered once', $p =~ /Question 2 was answered by 1 voters/,
    ($p =~ /(Question 2 was answered[^<]*)/)[0]);
 ck('question 3 answered twice', $p =~ /Question 3 was answered by 2 voters/);
 
+print "\n== the counts survive the poll being closed ==\n";
+# Once a poll has ended the control page closes the databases before it
+# reports, so anything it reports afterwards has to have been taken while
+# they were open.
+post('close.pl', '10.0.0.1', id => $id, key => $key, confirmation => 'close');
+$p = post('control.pl', '10.0.0.1', id => $id, key => $key, akey => $akey);
+ck('the poll reports as ended', $p =~ /poll has ended|Actual time poll closed/);
+ck('two ballots still reported', $p =~ /cast so far:\s*2/,
+   ($p =~ /(cast so far:[^<]*)/)[0]);
+ck('question 1 still answered twice', $p =~ /Question 1 was answered by 2 voters/,
+   ($p =~ /(Question 1 was answered[^<]*)/)[0]);
+ck('question 2 still answered once', $p =~ /Question 2 was answered by 1 voters/,
+   ($p =~ /(Question 2 was answered[^<]*)/)[0]);
+ck('question 3 still answered twice', $p =~ /Question 3 was answered by 2 voters/,
+   ($p =~ /(Question 3 was answered[^<]*)/)[0]);
+
 print "\n== a poll asking one question is unchanged ==\n";
 my ($id1, $key1, $akey1) = make_poll(choices => "Red\r\nGreen", num_winners => 1);
 $p = post('control.pl', '10.0.0.1', id => $id1, key => $key1, akey => $akey1);

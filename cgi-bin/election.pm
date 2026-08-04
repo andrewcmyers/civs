@@ -80,6 +80,9 @@ our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 # Non-exported variables
 my ($db_is_open, $election_is_locked);
 
+# How many ballots answered each question.
+my @question_answer_count;
+
 init();
 
 # Decode a database field using UTF-8. If FIXUTF8 option is enabled, Ad-hoc
@@ -168,6 +171,11 @@ sub init {
 
     # Question 0 is the default for backward compatibility.
     SelectQuestion(0);
+
+    @question_answer_count = ();
+    for (my $q = 0; $q < $num_questions; $q++) {
+        $question_answer_count[$q] = $vdata{QuestionKey($q, 'answered')};
+    }
 
     %voter_keys = ();
     LoadHash('voter_keys', \%voter_keys);
@@ -470,10 +478,10 @@ sub WithdrawQuestionBallot {
     my $key = QuestionKey($q, $ballot_key);
     my $old = $vdata{$key};
     return 0 unless defined($old);
+    my $count = QuestionAnswerCount($q);
     UpdateMatrix($q, [split /,/, $old], -1);
     delete $vdata{$key};
-    my $count = QuestionKey($q, 'answered');
-    $vdata{$count} = ($vdata{$count} || 1) - 1;
+    SetQuestionAnswerCount($q, $count - 1);
     return 1;
 }
 
@@ -481,9 +489,9 @@ sub WithdrawQuestionBallot {
 sub RecordQuestionBallot {
     my ($ballot_key, $q, $ranks_ref) = @_;
     WithdrawQuestionBallot($ballot_key, $q);
+    my $count = QuestionAnswerCount($q);
     $vdata{QuestionKey($q, $ballot_key)} = join ',', @{$ranks_ref};
-    my $count = QuestionKey($q, 'answered');
-    $vdata{$count} = ($vdata{$count} || 0) + 1;
+    SetQuestionAnswerCount($q, $count + 1);
     UpdateMatrix($q, $ranks_ref, 1);
 }
 
@@ -497,14 +505,22 @@ sub RecordQuestionBallot {
 # removed from one whose votes were already cast.
 sub QuestionAnswerCount {
     my ($q) = @_;
-    my $key = QuestionKey($q, 'answered');
-    return $vdata{$key} if defined($vdata{$key});
+    return $question_answer_count[$q] if defined($question_answer_count[$q]);
+    # Only an old poll reaches here, and only until the count is worked out
+    # and written back below.
     my $count = 0;
     foreach my $ballot_key (split /\n/, ($recorded_voters || '')) {
         $count++ if defined($vdata{QuestionKey($q, $ballot_key)});
     }
-    $vdata{$key} = $count;
+    SetQuestionAnswerCount($q, $count);
     return $count;
+}
+
+# Record how many ballots answer question $q.
+sub SetQuestionAnswerCount {
+    my ($q, $count) = @_;
+    $vdata{QuestionKey($q, 'answered')} = $count;
+    $question_answer_count[$q] = $count;
 }
 
 # Generate a form that lets voters try to vote again.

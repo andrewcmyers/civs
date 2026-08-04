@@ -7,6 +7,8 @@ config/*
 data
 data/*
 data/private_host_id
+tests/client/work
+tests/server/work
 excludes
 jquery
 jquery-ui
