@@ -17,7 +17,7 @@ sub compare_defeats {
 # compare margins and then 'win' votes if margins are equal
         (($b->[1] - $b->[2]) <=> ($a->[1] - $a->[2]))
         ||
-        ($a->[1] <=> $b->[1])
+        ($b->[1] <=> $a->[1])
     }
 }
 
