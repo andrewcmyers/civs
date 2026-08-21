@@ -40,7 +40,6 @@ CIVS_Header($tx->Adding_voters);
 
 my $control_key = bytesParam('key');
 CheckControlKey($control_key);
-my $authorization_key = bytesParam('akey');
 CheckAuthorizationKeyForAddingVoter($authorization_key);
 
 if (!IsStarted || IsStopped) {

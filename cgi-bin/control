@@ -21,7 +21,6 @@ use election 1.02;
 use voting;
 
 my $control_key = bytesParam('key');
-my $authorization_key = bytesParam('akey');
 
 CIVS_Header($tx->Poll_control);
 

@@ -53,17 +53,18 @@ use DB_File;
 
 # Declare exported variables
 our $election_id = '';
-our ($election_dir, $started_file, $stopped_file, $election_data, $election_log, $vote_data, $election_lock);
+our ($election_dir, $started_file, $stopped_file, $election_data,
+    $election_log, $vote_data, $election_lock);
 
 our (%edata, %vdata);
 our ($name, $title, $email_addr, $description, $num_winners, $addresses,
-     @addresses, $election_begin, $election_end, $public, $publicize, $writeins, $allow_voting, $voting_enabled,
-     $proportional, $use_combined_ratings, $external_ballots,
-     $choices, @choices, $num_choices, $num_auth,
-     $num_votes, $recorded_voters, $ballot_reporting, $reveal_voters, $no_IP_check,
-     $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
-     $restrict_results, $result_addrs, $hash_result_key, $last_vote_time,
-     $close_time, $email_load);
+    @addresses, $election_begin, $election_end, $public, $publicize, $writeins,
+    $allow_voting, $voting_enabled, $proportional, $use_combined_ratings,
+    $external_ballots, $choices, @choices, $num_choices, $num_auth, $num_votes,
+    $recorded_voters, $ballot_reporting, $reveal_voters, $no_IP_check,
+    $authorization_key, $shuffle, $no_opinion, %voter_keys, %used_voter_keys,
+    $restrict_results, $result_addrs, $hash_result_key, $last_vote_time,
+    $close_time, $email_load);
 
 # Every question in the poll, in the order they are put to the voter. The
 # scalars above describe question 0, for backward compatibility with
@@ -185,6 +186,8 @@ sub init {
     %voter_keys = ();
     LoadHash('voter_keys', \%voter_keys);
     LoadHash('used_voter_keys', \%used_voter_keys);
+
+    $authorization_key = bytesParam('akey');
 }
 
 # Point the per-question globals at question $q, for use of scripts 
@@ -554,11 +557,19 @@ sub RevoteButton {
         -accept_charset => 'UTF-8',
         -action => '@CIVSBINURL@/vote@PERLEXT@'
     ), $cr;
-    print hidden(-name => 'id', -value => $election_id), $cr;
-    print hidden(-name => 'key', -value => $voter_key), $cr;
-    print hidden(-name => 'akey', -value => $authorization_key), $cr;
+    # Every one of these is overridden. CGI.pm's hidden() otherwise takes
+    # its value from the request that is being answered rather than from
+    # the argument, and the ballot form posts an empty receipt: the button
+    # came out with nothing in it, so pressing it looked like a voter
+    # arriving with no receipt at all and they were told they had already
+    # voted. This form states values; it does not inherit them.
+    print hidden(-name => 'id', -value => $election_id, -override => 1), $cr;
+    print hidden(-name => 'key', -value => $voter_key, -override => 1), $cr;
+    print hidden(-name => 'akey', -value => $authorization_key,
+                 -override => 1), $cr;
     if ($receipt) {
-        print hidden(-name => 'receipt', -value => $receipt), $cr;
+        print hidden(-name => 'receipt', -value => $receipt,
+                     -override => 1), $cr;
     } else {
         print textfield(-name => 'receipt'), $cr;
     }

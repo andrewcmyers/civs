@@ -279,5 +279,35 @@ ck('plain matrix keys', ($d1->{'v:0.1'} // 0) == 1);
 ck('one vote', ($d1->{'v:num_votes'} // 0) == 1);
 ck('no q1 keys anywhere', !grep(/^v:q\d/, keys %$d1), join(',', grep(/^v:q\d/, keys %$d1)));
 
+print "\n== the button that offers another go carries the receipt ==\n";
+# CGI.pm's hidden() takes its value from the request being answered unless
+# it is told otherwise, and the ballot form posts an empty receipt. So this
+# button came out with nothing in it, and pressing it looked like a voter
+# arriving with no receipt at all: they were turned away as having already
+# voted and asked to type in the receipt printed just above the button.
+my $r1 = receipt_of($p);
+my ($revote) = $p =~ m{(<form[^>]*name="receipt_form".*?</form>)}s;
+ck('the thank-you page offers another go', defined($revote));
+my %field;
+while (($revote // '') =~ /<input([^>]*)>/g) {
+    my $input = $1;
+    next if $input =~ /type="submit"/;
+    my ($n) = $input =~ /name="([^"]*)"/;
+    my ($v) = $input =~ /value="([^"]*)"/;
+    $field{$n} = $v // '' if defined $n;
+}
+ck('it carries the receipt', ($field{receipt} // '') eq ($r1 // ''),
+   "'" . ($field{receipt} // '') . "' for '" . ($r1 // '') . "'");
+ck('and names the poll', ($field{id} // '') eq $id1, $field{id});
+# election.pm keeps its own copy of the authorization key, which nothing
+# ever assigned: the field had been inheriting the request's key, which
+# hid that. Sending an empty one here is refused as an invalid key.
+ck('and the authorization key', ($field{akey} // '') eq $akey1,
+   "'" . ($field{akey} // '') . "' for '$akey1'");
+$p = post('vote.pl', '10.2.0.1', %field);
+ck('pressing it returns the ballot', $p =~ /name="CastVote"/,
+   ($p =~ m{class="contents".*?<h1>([^<]*)}s)[0]);
+ck('showing what was voted before', $p =~ /name="C0".*?selected/s);
+
 print "\n", ($fails ? "$fails FAILED\n" : "all $checks checks passed\n");
 exit($fails ? 1 : 0);

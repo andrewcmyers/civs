@@ -17,7 +17,6 @@ use election;
 
 my $max_voters = 1000;
 my $control_key = bytesParam('key');
-my $authorization_key = bytesParam('akey');
 
 CheckElectionID;
 CheckControlKey($control_key);

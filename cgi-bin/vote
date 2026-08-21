@@ -40,7 +40,6 @@ my $refresh_top_polls = 0;         # is one due once the poll is let go?
 my $allow_debug_votes = 0;         # allow multiple votes from the same voter in debug mode?
 
 my $voter_key = bytesParam('key');
-my $authorization_key = bytesParam('akey');
 # encode keys to make sure they are just byte strings
 
 my $q = natParam('q');
