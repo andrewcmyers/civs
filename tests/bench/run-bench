@@ -16,10 +16,10 @@
 #
 #   tests/bench/run-bench [options]
 #
-#     --start R      first arrival rate, votes/second (default 1)
-#     --step F       multiply the rate by this after each run (default 1.5)
+#     --start R      first arrival rate, votes/second (default 50)
+#     --step F       multiply the rate by this after each run (default 1.1)
 #     --max R        stop at this rate even if the poll is still keeping up
-#     --steps N      run at no more than this many rates (default 12)
+#     --steps N      run at no more than this many rates (default 20)
 #     --duration S   seconds measured at each rate (default 20)
 #     --warmup S     seconds run before measuring, at each rate (default 3)
 #     --choices N    choices in the poll (default 5)
@@ -43,10 +43,10 @@ root=$(cd "$here/../.." && pwd)
 work="$here/work/$$"
 inst="$work/inst"
 
-start=1
-step=1.5
+start=50
+step=1.1
 max=0
-steps=12
+steps=20
 duration=20
 warmup=3
 choices=5
