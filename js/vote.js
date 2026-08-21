@@ -28,6 +28,11 @@ let touch_selects = window.matchMedia
     ? window.matchMedia('(hover: none) and (pointer: coarse)').matches
     : false;
 
+// The row a drag has just moved, until the click that ends the drag has
+// been turned away. jQuery UI's touch support finishes a short drag with a
+// synthetic click, and dragging a row is not choosing it.
+let dragged_row = null;
+
 // How to select rows, in the terms of whatever the ballot is being voted
 // on. There is no shift key to talk about on a phone.
 function how_to_select(least) {
@@ -144,6 +149,12 @@ function set_row_style(i) {
 // if the user want to add to (or remove from)
 // the current selection.
 function select_row(row, add) {
+    if (row === dragged_row) {
+        // The click that ended the drag. Dropping a row where the voter
+        // wants it says nothing about whether they meant to select it.
+        dragged_row = null;
+        return;
+    }
     const extend = add || touch_selects;
     for (var i = 0; i < num_choices; i++) {
         if (!extend) {
@@ -154,6 +165,21 @@ function select_row(row, add) {
 	}
 	set_row_style(i);
     }
+}
+
+// Reindex "selected" against where the rows now are in the table, given
+// that "rows" still holds the order they were in. read_rows() reads the
+// table afresh and so loses that order: anything reordering rows in the
+// page behind vote.js's back has to come through here first. sort_rows()
+// and resort_row(), which do their own moving, keep the two in step
+// themselves and do not need it.
+function carry_selection_over() {
+    const was = new Map();
+    for (let i = 0; i < num_choices; i++) was.set(rows[i], selected[i]);
+    const now = new Array(num_choices);
+    for (let i = 0; i < num_choices; i++) now[i] = was.get(preftable.rows[i + 1]);
+    selected = now;
+    selected_list = null;
 }
 
 // Recompute the arrays "rows" and "rank" from the rows of the table.
@@ -407,17 +433,24 @@ function do_move_bottom() {
 function drag_update(e, u) {
     var this_select = u.item.find('select')[0];
     var rownum = 0;
+    // The rows have already moved in the page, but "selected" still says
+    // which of the old positions were chosen. Take it along with them
+    // before read_rows() below forgets where they were, or the highlight
+    // stays behind on whichever row came up into the vacated place.
+    carry_selection_over();
+    // Turn away the click that ends this drag; see select_row.
+    dragged_row = u.item[0];
     read_rows();
     var i;
-    var selected;
+    var dragged;
     for (i = 0; i < num_choices; i++) {
         if (selector(rows[i]) == this_select) {
-            selected = i;
+            dragged = i;
         }
     }
-    selector(rows[selected]).selectedIndex = selected;
-    i = selected-1;
-    var last_dest = selected;
+    selector(rows[dragged]).selectedIndex = dragged;
+    i = dragged-1;
+    var last_dest = dragged;
     var last_src = -1;
 
     while (i >= 0) {
@@ -433,9 +466,9 @@ function drag_update(e, u) {
         selector(rows[i]).selectedIndex = last_dest;
         i--;
     }
-    i = selected+1;
+    i = dragged+1;
     last_src = -1;
-    last_dest = selected;
+    last_dest = dragged;
     while (i < num_choices) {
         if (rank[i] != last_src) {
             last_src = rank[i];
@@ -546,6 +579,11 @@ function setup() {
         // handling that may go on to cancel the tap.
         preftable.addEventListener('pointerdown', e => {
             touch_selects = (e.pointerType === 'touch');
+            // A fresh touch or click of its own, whatever went before: a
+            // drag long enough not to be taken for a tap ends without the
+            // click drag_update expects, and that must not be left to
+            // swallow the next one.
+            dragged_row = null;
         }, true);
 
         // The rank pulldown is a control in its own right, and neither
