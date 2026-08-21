@@ -1,0 +1,237 @@
+#!/bin/bash
+#
+# Measure how quickly CIVS can record votes.
+#
+# A throwaway installation is built under tests/bench/work, served over
+# real HTTP by tests/bench/cgi-server.pl, and voted in by concurrent
+# clients making real requests. Nothing outside that directory is touched,
+# no mail is sent, and no existing poll data is read or written.
+#
+# The workload is open (Schroeder et al., NSDI '06): voters arrive at a
+# fixed rate whatever the server is doing, the wait between one request
+# and the next being -k*ln(U) for U drawn from [0,1). The rate is raised
+# from run to run until the poll can no longer keep up, so what comes out
+# is not one number but the curve of response time against offered load,
+# and the rate at which it turns upwards.
+#
+#   tests/bench/run-bench [options]
+#
+#     --start R      first arrival rate, votes/second (default 1)
+#     --step F       multiply the rate by this after each run (default 1.5)
+#     --max R        stop at this rate even if the poll is still keeping up
+#     --steps N      run at no more than this many rates (default 12)
+#     --duration S   seconds measured at each rate (default 20)
+#     --warmup S     seconds run before measuring, at each rate (default 3)
+#     --choices N    choices in the poll (default 5)
+#     --questions N  questions in the poll (default 1)
+#     --mode M       vote, ballot, or session; see load.js (default vote)
+#     --workers N    requests the server will serve at once (default 8)
+#     --reuse-poll   vote in one poll throughout instead of a fresh one
+#                    per rate, so that the cost of a poll filling up is
+#                    part of what is measured
+#     --settings F   settings file to install from (default config/sample)
+#     -k             keep the installation afterwards
+#
+# The numbers are of this machine, this filesystem and this perl. They are
+# worth comparing against other numbers taken the same way, and not much
+# else.
+
+set -u
+
+here=$(cd "$(dirname "$0")" && pwd)
+root=$(cd "$here/../.." && pwd)
+work="$here/work/$$"
+inst="$work/inst"
+
+start=1
+step=1.5
+max=0
+steps=12
+duration=20
+warmup=3
+choices=5
+questions=1
+mode=vote
+workers=8
+reuse=""
+keep=""
+settings="$root/config/sample"
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --start)      start="$2"; shift 2;;
+        --step)       step="$2"; shift 2;;
+        --max)        max="$2"; shift 2;;
+        --steps)      steps="$2"; shift 2;;
+        --duration)   duration="$2"; shift 2;;
+        --warmup)     warmup="$2"; shift 2;;
+        --choices)    choices="$2"; shift 2;;
+        --questions)  questions="$2"; shift 2;;
+        --mode)       mode="$2"; shift 2;;
+        --workers)    workers="$2"; shift 2;;
+        --reuse-poll) reuse=1; shift;;
+        --settings)   settings="$2"; shift 2;;
+        -k)           keep=1; shift;;
+        -h|--help)    sed -n '2,40p' "$0" | sed 's/^# \{0,1\}//'; exit 0;;
+        *)            echo "ERROR: unknown option $1"; exit 1;;
+    esac
+done
+
+# A run at a high rate has many sockets open at once, on both sides of the
+# loopback. Some systems hand out only a couple of hundred descriptors by
+# default, which shows up as the server refusing connections and looks for
+# all the world like the poll falling over.
+ulimit -n 4096 2>/dev/null || true
+
+if [ ! -r "$settings" ]; then
+    echo "ERROR: cannot read settings file $settings"
+    exit 1
+fi
+command -v node >/dev/null || { echo "ERROR: node is needed to generate the load"; exit 1; }
+
+server_pid=""
+cleanup() {
+    if [ -n "$server_pid" ]; then
+        kill "$server_pid" 2>/dev/null
+        # Give it a moment to take its workers down with it, then insist.
+        for _ in 1 2 3 4 5 6 7 8 9 10; do
+            kill -0 "$server_pid" 2>/dev/null || break
+            perl -e 'select undef, undef, undef, 0.1'
+        done
+        kill -9 "$server_pid" 2>/dev/null
+        wait "$server_pid" 2>/dev/null
+    fi
+    if [ -z "$keep" ]; then rm -rf "$work"; fi
+}
+trap cleanup EXIT INT TERM
+
+echo
+echo "=== building a throwaway installation in $work ==="
+
+rm -rf "$work"
+mkdir -p "$inst/html" "$inst/cgi" "$inst/data/elections" "$inst/data/invites"
+
+# install-civs substitutes settings into sed expressions without quoting
+# them, so a value containing spaces -- as the sample admin key does --
+# would split into several sed arguments and break the run.
+sed -e "s|^HTMLDIR=.*|HTMLDIR='$inst/html'|"        \
+    -e "s|^CGIBINDIR=.*|CGIBINDIR='$inst/cgi'|"     \
+    -e "s|^CIVSDATADIR=.*|CIVSDATADIR='$inst/data'|" \
+    -e "s|^LOCALDEBUG=.*|LOCALDEBUG=1|"             \
+    -e "s|^ADMIN_KEY=.*|ADMIN_KEY='bench-admin-key'|" \
+    "$settings" > "$work/settings"
+
+( cd "$root" && ./install-civs "$work/settings" ) > "$work/install.log" 2>&1
+if [ $? -ne 0 ]; then
+    echo "  install-civs failed; see $work/install.log"
+    tail -20 "$work/install.log" | sed 's/^/    /'
+    exit 1
+fi
+echo "  ok: installed"
+
+echo
+echo "=== starting the web server ==="
+perl "$here/cgi-server.pl" --cgi-dir "$inst/cgi" --workers "$workers" \
+     --log "$work/server.log" > "$work/port" 2>"$work/server.err" &
+server_pid=$!
+port=""
+for _ in $(seq 1 100); do
+    port=$(awk '/^listening/ {print $2; exit}' "$work/port" 2>/dev/null)
+    [ -n "$port" ] && break
+    perl -e 'select undef, undef, undef, 0.1'
+done
+if [ -z "$port" ]; then
+    echo "  the server did not come up"
+    cat "$work/server.err" | sed 's/^/    /'
+    exit 1
+fi
+url="http://127.0.0.1:$port/cgi-bin/civs/vote.pl"
+echo "  ok: $workers workers serving $url"
+
+cpus=$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo '?')
+echo
+echo "  machine: $cpus cpus, $(perl -e 'print "perl $]"'), node $(node --version)"
+echo "  poll:    $questions question(s), $choices choices, mode $mode"
+
+summary="$work/summary.tsv"
+: > "$summary"
+
+poll=""
+make_poll() {
+    local out
+    out=$(perl "$here/make-poll.pl" "$inst" "$choices" "$questions") || return 1
+    poll="$out"
+}
+[ -n "$reuse" ] && { make_poll || { echo "  could not create a poll"; exit 1; }; }
+
+rate=$start
+n=0
+ip_base=0
+last_ok=""
+fell_over=""
+verdict="it was still keeping up at every rate asked for"
+while [ "$n" -lt "$steps" ]; do
+    n=$((n + 1))
+    if [ -z "$reuse" ]; then
+        make_poll || { echo "  could not create a poll"; exit 1; }
+    fi
+    id="${poll%% *}"
+    # A poll without an authorization key is printed as the id alone, and
+    # stripping a prefix that is not there would leave the id as the key.
+    akey=""
+    case "$poll" in *' '*) akey="${poll#* }";; esac
+    echo
+    echo "=== $n: $rate votes/s ==="
+    node "$here/load.js" --url "$url" --id "$id" --akey "$akey" \
+         --rate "$rate" --duration "$duration" --warmup "$warmup" \
+         --choices "$choices" --questions "$questions" --mode "$mode" \
+         --ip-base "$ip_base" --summary "$summary"
+    status=$?
+    if [ "$status" -eq 3 ]; then
+        fell_over="$rate"
+        verdict="it fell over at $rate votes/s"
+        break
+    elif [ "$status" -ne 0 ]; then
+        verdict="the generator failed"
+        break
+    fi
+    last_ok="$rate"
+    # Each run votes as addresses no earlier run used, so that a poll kept
+    # across runs never sees the same voter twice.
+    ip_base=$((ip_base + 200000))
+    rate=$(perl -e 'printf "%.4g", $ARGV[0] * $ARGV[1]' "$rate" "$step")
+    if [ "$max" != "0" ] &&
+       [ "$(perl -e 'print(($ARGV[0] > $ARGV[1]) ? 1 : 0)' "$rate" "$max")" = 1 ]; then
+        verdict="it was still keeping up at the highest rate asked for"
+        break
+    fi
+done
+
+echo
+echo "=== how the poll held up ==="
+printf '  %8s %8s %7s %7s %7s %7s %7s %7s  %s\n' \
+       offered achieved ok failed mean p50 p90 p99 verdict
+awk -F'\t' '{ printf "  %8s %8s %7s %7s %7s %7s %7s %7s  %s\n",
+              $1, $6, $4, $5, $7, $8, $9, $10, $13 }' "$summary"
+echo
+echo "  offered and achieved are votes per second; ok and failed are counts"
+echo "  mean, p50, p90, p99: response time in ms, from the moment the voter arrived"
+echo
+best=$(awk -F'\t' 'BEGIN {m = 0} $6 > m {m = $6} END {printf "%.1f", m}' "$summary")
+if [ -n "$fell_over" ] && [ -n "$last_ok" ]; then
+    echo "  it kept up at $last_ok votes/s and fell over at $fell_over"
+else
+    echo "  $verdict"
+fi
+echo "  the most it recorded in any run was $best votes/s"
+
+if [ -n "$keep" ]; then
+    echo
+    echo "  installation kept in $inst"
+    echo "  server log $work/server.log"
+fi
+
+case "$verdict" in
+    "the generator failed") exit 1;;
+esac
+exit 0

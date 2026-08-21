@@ -1,0 +1,233 @@
+Benchmarking CIVS
+=================
+
+    tests/bench/run-bench
+
+This measures how quickly CIVS can record votes, by building a throwaway
+installation, serving it over real HTTP, and voting in it from concurrent
+clients making real requests. Nothing outside tests/bench/work is touched,
+no mail is sent, and no existing poll data is read or written.
+
+It is a benchmark, not a test: it reports numbers rather than passing or
+failing, and the numbers belong to the machine, the filesystem and the
+perl they were taken on. Compare them against other numbers taken the same
+way, and against nothing else.
+
+
+An open workload
+----------------
+
+Voters arrive at a fixed rate, and that rate owes nothing to how the
+server is coping. The generator waits
+
+    -k * ln(U),   U drawn from [0,1)
+
+between issuing one request and issuing the next -- a Poisson process of
+rate 1/k -- and issues each one whether or not the requests before it have
+come back.
+
+This is the open system of Schroeder, Wierman and Harchol-Balter, "Open
+Versus Closed: A Cautionary Tale" (NSDI '06). The distinction matters more
+than it sounds. A closed generator -- some fixed number of simulated
+clients, each sending again only once its previous request has returned --
+throttles itself exactly when the server slows down. Load is capped at the
+number of clients however slow things get, the queue can never grow, and
+so a closed generator cannot show a server falling over: it reports a
+comfortable-looking response time at every load, right up to loads the
+server could never really have carried. An open generator can show it, and
+that is what this one is for.
+
+The consequence is that an overloaded run has requests piling up with
+nothing to stop them. The generator calls the run off when too many are
+outstanding at once (--max-inflight) rather than letting the machine
+thrash, and reports that as the poll having fallen over, which it is.
+
+run-bench raises the rate from run to run until the poll can no longer
+keep up. What comes out is not a single number but the curve of response
+time against offered load, and the rate at which it turns upwards.
+
+
+What is measured
+----------------
+
+Response time is counted from the moment a voter meant to arrive, not from
+the moment the generator got round to the socket, so any delay of the
+generator's own is charged to the measurement rather than quietly
+forgiven. Each run reports how late it issued its arrivals; if that figure
+is not small next to the response times, the generator was the bottleneck
+and the run is worthless.
+
+A run is judged to have fallen over if any of these holds:
+
+  - too many requests were outstanding at once, so the run was called off;
+  - fewer votes were recorded than arrived, by more than the work a server
+    that was keeping up would have had in hand anyway;
+  - requests failed, or never finished.
+
+There is deliberately no separate test of whether the backlog grew.
+Nothing leaves the system except by completing, so the votes that arrived
+during the window and were not recorded during it are exactly the ones
+still in the queue when it closed: the shortfall in throughput and the
+growth of the backlog are one number seen from either end. To judge a run
+on both would be to convict it on a single piece of evidence counted
+twice -- and since a queue near capacity wanders up and down a good deal,
+whichever of the two was read more loosely would decide every case.
+
+What that number is measured against is the work a server keeping up
+would have had in hand at any moment: at a rate of lambda with responses
+taking R there are always about lambda*R requests being worked on, which
+the run measures for itself as the occupancy when the window opened. That
+much is allowed, plus a twentieth of the window's arrivals for the
+wandering of a random arrival process, and a few requests so that a short
+run is not condemned by two or three of them. Beyond that, the server is
+falling behind.
+
+A queue that rose through a window the server nonetheless kept up with is
+not a failure, but it is where the failure will be, so it is reported:
+
+    VERDICT: kept up, but the backlog rose from 5.4 to 14.9 outstanding:
+             the next rate may be too much
+
+The second test needs enough arrivals to mean anything, since a short run
+is mostly luck. Below thirty measured arrivals only outright failure is
+looked for, and the run says as much rather than pronouncing on a rate it
+cannot see.
+
+That rule is the whole difference between a benchmark that finds where a
+poll gives way and one that stops at the first rate to make the queue
+wobble -- and when a rate near the limit is called a failure, the
+temptation is to loosen a threshold until it is not. So runs already
+taken are kept in load.js alongside what they plainly were, and
+
+    node tests/bench/load.js --check
+
+puts them back through the judgement. It needs no server and votes in
+nothing. Change the rule and it will say which of those runs the change
+has altered its mind about.
+
+A 200 that is not the page that was wanted -- a poll refusing the ballot,
+an error page -- counts as a failure. Otherwise a run in which every vote
+was turned away would look wonderfully fast.
+
+Each rate gets a poll of its own by default, so that the rates can be
+compared with each other. Pass --reuse-poll to vote in one poll
+throughout: what CIVS costs to vote in grows with the number of votes
+already cast, since every request loads and rewrites the whole list of
+voter keys, so a run against a poll that is filling up measures something
+real but different.
+
+
+The pieces
+----------
+
+  run-bench       builds the installation, starts the server, walks the
+                  arrival rate upwards, and prints the table at the end
+  cgi-server.pl   a small CGI web server: enough of CGI/1.1 to run the
+                  CIVS scripts over a socket, and no more
+  load.js         the load generator: one arrival rate per run
+  make-poll.pl    creates and starts the poll to vote in, by running the
+                  installed CGI scripts as a supervisor would
+
+node is needed for the generator, as it is for the browser-side tests.
+
+A high rate holds many sockets open at once on both sides of the loopback
+interface, so run-bench raises its own descriptor limit before it starts.
+Where the system will not allow that, the server begins refusing
+connections, which reads as the poll having fallen over when it is really
+the machine that has.
+
+The server forks a process and starts a perl interpreter for every
+request, as mod_cgi does, and serves a fixed number of requests at once
+(--workers, 8 by default). That worker count and the listen backlog are
+the server's shape, not the workload's: they are the c and the queue of an
+M/G/c station. Raising them lets more of the machine be used and lets more
+requests wait; neither makes a vote take less time to record.
+
+CIVS reads a voter's address from the forwarding headers a reverse proxy
+would set, so the generator sets X-Real-IP and one machine can stand in
+for as many voters as the run needs. Without that, every ballot would come
+from 127.0.0.1 and the second one would be turned away as a repeat vote.
+Ballots are posted as multipart/form-data, which is what the ballot form
+itself asks browsers to send.
+
+
+Reading the output
+------------------
+
+    === 2: 80 votes/s ===
+      offered 80.00 votes/s  (mean wait k = 12.5 ms)
+      arrivals 796 measured (79.60/s), 1030 issued in all
+      completed 796 ok, 0 failed, 0 outstanding at the end
+      throughput 79.30 votes/s recorded during the window
+      response  mean 81 ms   median 77   p90 96   p99 132   max 141 ms
+      in system mean 6.5, most 16  (first third 6.2, last third 7.0)
+      generator issued arrivals a median of 0.9 ms late, at worst 3 ms
+      VERDICT: kept up
+
+"in system" is the number of votes being worked on at once, sampled ten
+times a second. Its first and last thirds are given because a server past
+its capacity does not slow down gracefully under an open workload: the
+number in the system climbs for as long as the run lasts. Little's law
+holds here, so mean in system should be about the arrival rate times the
+mean response time -- 80 x 0.081 is 6.5, which is what it says -- and a
+run where it is not is a run to distrust.
+
+The last run of a ramp is the interesting one:
+
+    === 3: 160 votes/s ===
+      completed 1200 ok, 347 failed, 0 outstanding at the end
+      throughput 119.70 votes/s recorded during the window
+      response  mean 2561 ms   median 1559   p90 5158   p99 13229
+      in system mean 258.0, most 357  (first third 202.8, last third 306.2)
+      180 x connection: write EPIPE
+      VERDICT: fell over -- recorded 119.7 of the 154.7 votes/s arriving,
+               leaving 350 unfinished when the window closed; 347 of 1547
+               requests failed
+
+Response time has gone from 81 ms to two and a half seconds for a rate
+twice as high, which is the shape of every queue past its capacity. Note
+what failure looks like from outside: connections refused and reset, as
+the queue of connections waiting to be accepted overflows. That is what an
+overloaded server does, but it is the server's shape failing rather than
+anything about counting votes -- the accept queue on most systems is
+clamped well below what --backlog asks for. Read those as the symptom of
+the rate being too high, not as a fault of their own.
+
+The table at the end gathers the runs together:
+
+       offered achieved      ok  failed    mean     p50     p90     p99  verdict
+         40.00    40.90     415       0      71      70      76      84  kept-up
+         80.00    79.30     796       0      81      77      96     132  kept-up
+        160.00   119.70    1200     347    2561    1559    5158   13229  fell-over
+
+      it kept up at 80 votes/s and fell over at 160
+      the most it recorded in any run was 119.7 votes/s
+
+
+Options
+-------
+
+    --start R      first arrival rate, votes/second (default 1)
+    --step F       multiply the rate by this after each run (default 1.5)
+    --max R        stop at this rate even if the poll is still keeping up
+    --steps N      run at no more than this many rates (default 12)
+    --duration S   seconds measured at each rate (default 20)
+    --warmup S     seconds run before measuring, at each rate (default 3)
+    --choices N    choices in the poll (default 5)
+    --questions N  questions in the poll (default 1)
+    --mode M       vote:    cast a ballot, one POST per question
+                   ballot:  fetch the ballot form and nothing else
+                   session: fetch the form, then cast the ballot
+    --workers N    requests the server will serve at once (default 8)
+    --reuse-poll   vote in one poll throughout
+    --settings F   settings file to install from (default config/sample)
+    -k             keep the installation, and the server log, afterwards
+
+A run of a dozen rates at the default duration takes a few minutes. For a
+quick look:
+
+    tests/bench/run-bench --start 5 --step 1.7 --steps 6 --duration 10
+
+The default is deliberately gentle at the start: the first rates are meant
+to be easy, so that the response time at no load is on the table to
+compare the rest against.
