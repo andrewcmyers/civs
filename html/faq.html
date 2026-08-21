@@ -166,19 +166,16 @@ href="@PROTO@://@THISHOST@@CIVSBINURL@/mail_mgmt.pl">mail management page</a>.
 CIVS is used regularly for polls with hundreds of voters.  You can set up a
 public poll where any number of people can vote. Elections have been
 successfully run with several thousand voters, and this is a load it should
-stand up to even if voters all try to vote around the same time. Election
-results are now cached, so the system has become much more scalable.
-</p>
-<p>
-However, CIVS hasn't been stress-tested on polls of 20,000 or more voters.
-The server is implemented in Perl, and it can easily handle a few thousand voters per hour. If your
-voters don't show up faster than that&mdash;and they usually don't&mdash;it should be
-fine no matter how many voters there are.  For private polls,
+stand up to even if voters all try to vote around the same time.
+The server is implemented in Perl, so it is not extremely fast. While it can easily
+handle thousands of votes per hour, it won't handle hundreds of thousands. If your
+voters don't show up faster than that, it should be fine.  For private polls,
 the system only allows adding 1,000 voters at a time, but there is no
 limit on the number of voters added eventually. CIVS does limit the rate at which
 new voters can be added to a poll by controlling how quickly it is willing
 to send out invitations by email. For polls with more than 10,000 voters, you may
-have to spread out the invitations over hours or days.
+have to spread out the invitations over hours or days. Alternatively, you can
+run your own server instance.
 </p>
 <p>
 Note that using the experimental proportional method for your poll can
