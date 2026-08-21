@@ -18,6 +18,27 @@ var num_selected;
 var selected_list;
 var num_at_rank = new Array;
 
+// Whether the ballot is being tapped rather than clicked. A touch screen
+// has no shift key, so a tap has to add to the selection instead of
+// replacing it: otherwise two rows can never be selected at once, and the
+// tie and move buttons, which need at least two, are unreachable. The
+// media query is the answer for a machine that is only ever one or the
+// other; setup() corrects it per interaction on one that is both.
+let touch_selects = window.matchMedia
+    ? window.matchMedia('(hover: none) and (pointer: coarse)').matches
+    : false;
+
+// How to select rows, in the terms of whatever the ballot is being voted
+// on. There is no shift key to talk about on a phone.
+function how_to_select(least) {
+    if (touch_selects) {
+        return least > 1 ? 'Tap two or more choices to select them.'
+                         : 'Tap a choice to select it.';
+    }
+    return least > 1 ? 'Shift-click to select two or more choices.'
+                     : 'Click (or shift-click) to select choices.';
+}
+
 // Move the element of a currently at index i so it is just
 // before the element currently at index j, while keeping
 // all other elements in the same relative order. if
@@ -123,8 +144,9 @@ function set_row_style(i) {
 // if the user want to add to (or remove from)
 // the current selection.
 function select_row(row, add) {
+    const extend = add || touch_selects;
     for (var i = 0; i < num_choices; i++) {
-        if (!add) {
+        if (!extend) {
 	    selected[i] = false;
         }
         if (rows[i] == row) {
@@ -207,8 +229,7 @@ function set_rank(i, r) {
 function do_make_tie() {
     var min_rank = min_selected_rank();
     if (num_selected < 2) {
-        alert("Not enough choices were selected. "+
-              "Shift-click to select two or more choices");
+        alert("Not enough choices were selected. " + how_to_select(2));
         return;
     }
     for (var i = 0; i < num_choices; i++) {
@@ -222,8 +243,7 @@ function do_make_tie() {
 function do_move_up () {
     var min_rank = min_selected_rank();
     if (num_selected < 1) {
-        alert("No choices were selected. "+
-              "Click (or shift-click) to select choices");
+        alert("No choices were selected. " + how_to_select(1));
         return;
     }
     if (min_rank == 1) return;
@@ -278,8 +298,7 @@ function do_move_up () {
 function do_move_down () {
     var max_rank = max_selected_rank();
     if (num_selected < 1) {
-        alert("No choices were selected. "+
-              "Click (or shift-click) to select choices");
+        alert("No choices were selected. " + how_to_select(1));
         return;
     }
     if (max_rank == num_choices + 1) {
@@ -340,8 +359,7 @@ function do_move_down () {
 function do_move_top() {
     var min_rank = min_selected_rank();
     if (num_selected < 1) {
-        alert("No choices were selected. "+
-              "Click (or shift-click) to select choices");
+        alert("No choices were selected. " + how_to_select(1));
         return;
     }
     //if (min_rank <= cur_top)
@@ -365,8 +383,7 @@ function do_move_top() {
 function do_move_bottom() {
     var max_rank = max_selected_rank();
     if (num_selected < 1) {
-        alert("No choices were selected. "+
-              "Click (or shift-click) to select choices");
+        alert("No choices were selected. " + how_to_select(1));
         return;
     }
     //if (max_rank >= cur_bot)
@@ -522,6 +539,34 @@ function setup() {
         $('#preftable tbody').sortable({'items':'tr:not(.heading)',
                             'axis':'y',
                             'update':drag_update});
+
+        // Which of the two the last interaction was. A laptop with a touch
+        // screen answers to both media queries, so only the pointer that
+        // arrives says which is in use; this fires before the touch
+        // handling that may go on to cancel the tap.
+        preftable.addEventListener('pointerdown', e => {
+            touch_selects = (e.pointerType === 'touch');
+        }, true);
+
+        // The rank pulldown is a control in its own right, and neither
+        // way of reaching it belongs to the row underneath.
+        //
+        // A touch has to be kept from the sortable above all: jQuery UI's
+        // touch support cancels the touch it sees so as to synthesise a
+        // drag from it, and does so before consulting the sortable's
+        // "cancel" option, which is there precisely to exempt form
+        // controls. The pulldown is left with no touch to open its menu
+        // with, which is what made ballots unrankable on a phone -- the
+        // rows could only be dragged. That code is a submodule, so the
+        // touch is stopped here instead, before it can reach the sortable.
+        //
+        // A click merely should not disturb the selection: choosing a rank
+        // is not choosing the row. That matters more on a phone, where
+        // every tap adds to the selection rather than replacing it.
+        for (const menu of preftable.querySelectorAll('select')) {
+            menu.addEventListener('touchstart', e => e.stopPropagation());
+            menu.addEventListener('click', e => e.stopPropagation());
+        }
     }
 }
 //vim: sw=4 ts=8

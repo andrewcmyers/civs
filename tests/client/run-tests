@@ -156,9 +156,19 @@ if wanted nojs; then
     report nojs $?
 fi
 
+# The ballot is printed by the CGI rather than built from html/*.base, so
+# this suite builds its own and works against js/vote.js directly. It is
+# given voting.pm too, to notice when the real ballot stops matching.
+if wanted ballot; then
+    echo
+    echo "=== ballot: ranking by tap and by click ==="
+    node "$here/test-ballot.js" "$root/js/vote.js" "$root/cgi-bin/voting.pm"
+    report ballot $?
+fi
+
 echo
 if [ "$ran" -eq 0 ]; then
-    echo "No suite matched '$filter'. Known suites: substitution questions shadowing nojs"
+    echo "No suite matched '$filter'. Known suites: substitution questions draft shadowing nojs ballot"
     exit 1
 elif [ -n "$failed" ]; then
     echo "FAILED:$failed"

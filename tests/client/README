@@ -31,6 +31,9 @@ questions     The multi-question poll creation UI: adding, removing and
               that result, header numbering, label and aria associations,
               and form validation.
 
+draft         The unfinished form the create page keeps in local storage
+              and offers back on a later visit.
+
 shadowing     Checks, in every language, that no function called from an
               inline event handler shares a name with a form control's id
               or name. Such a name is shadowed, because inline handlers
@@ -44,6 +47,16 @@ nojs          Checks that the page degrades correctly with scripting
               disabled -- the multi-question controls stay hidden and the
               form posts the same fields a single-question poll always
               has.
+
+ballot        Ranking a ballot by tap and by click: that a touch on a
+              rank pulldown is kept away from the sortable, which would
+              otherwise cancel the touch to start a drag and leave the
+              pulldown unable to open, and that a tap adds to the row
+              selection rather than replacing it, there being no shift
+              key on a phone to select the two rows the tie and move
+              buttons need. The ballot comes from the CGI rather than
+              from html/*.base, so this suite builds one of its own and
+              checks cgi-bin/voting.pm still prints that shape.
 
 Adding a suite
 --------------
