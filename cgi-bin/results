@@ -43,8 +43,9 @@ CheckStarted;
 our %vdata_copy = %vdata;
 our %edata_copy = %edata;
 
-CloseDatabase();
-UnlockElection(); # try to avoid blocking out other people
+# The copies above are everything this page needs, so the poll goes back
+# now: tabulating a result and printing it should not keep voters out.
+ReleaseElection();
 
 my $result_key = bytesParam('rkey');
 

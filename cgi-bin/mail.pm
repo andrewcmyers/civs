@@ -5,9 +5,8 @@ package mail;   # should be CIVS::Mail
 use strict;
 use warnings;
 use MIME::Base64;
-use Authen::SASL;
-use Net::SMTP;
-use IO::Socket::SSL;
+# For performance, Net::SMTP, IO::Socket::SSL and Authen::SASL are
+# loaded by OpenMail rather than here.
 use Encode qw(encode decode);
 use Fcntl;
 
@@ -247,6 +246,9 @@ sub OpenMail {
 	print "<pre>\r\n";
         return 1
     }
+    require Net::SMTP;
+    require IO::Socket::SSL;
+    require Authen::SASL;
     $smtp = Net::SMTP->new('@SMTP_HOST@',
        Hello => '@THISHOST@',
        SSL => @SMTP_USE_SSL@,
@@ -259,7 +261,8 @@ sub OpenMail {
     }
     # print 'Connected to: ', $smtp->domain, $cr;
     if (@SMTP_STARTTLS@) {
-        if (!$smtp->starttls(SSL_verify_mode => SSL_VERIFY_NONE)) {
+        if (!$smtp->starttls(
+                SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE())) {
             print 'STARTTLS failed:', $smtp->message(), $cr;
             return 0
         }

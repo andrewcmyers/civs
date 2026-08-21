@@ -22,6 +22,7 @@ BEGIN {
     &ResultKeyOK
     &IsWellFormedElectionID &CheckElectionID &ElectionLog &SendKeys
     &ElectionUsesAuthorizationKey &SyncVoterKeys &CloseDatabase &SendBody
+    &ReleaseElection
     &IsWriteinName &GetEmailLoad &RevoteButton &SelectQuestion
     &BallotFromReceipt &QuestionBallot &StartBallot &UpdateMatrix
     &WithdrawQuestionBallot &RecordQuestionBallot &QuestionAnswerCount
@@ -79,6 +80,10 @@ our $mail_mgmt_url = "@PROTO@://$thishost$civs_bin_path/mail_mgmt@PERLEXT@";
 
 # Non-exported variables
 my ($db_is_open, $election_is_locked);
+# Whether anything has been added to the voter key hashes since they were
+# read. Writing them back means rewriting both of them whole, which is not
+# a thing to do on a request that only read the poll.
+my $voter_keys_dirty;
 
 # How many ballots answered each question.
 my @question_answer_count;
@@ -202,9 +207,7 @@ sub SelectQuestion {
 }
 
 END {
-    SyncVoterKeys();
-    CloseDatabase();
-    UnlockElection();
+    ReleaseElection();
 }
 
 # utility routines
@@ -212,6 +215,7 @@ END {
 sub SyncVoterKeys {
     SaveHash('voter_keys', \%voter_keys);
     SaveHash('used_voter_keys', \%used_voter_keys);
+    $voter_keys_dirty = 0;
 }
 
 sub LoadHash {
@@ -253,6 +257,17 @@ sub UnlockElection {
     }
 }
 
+# Give the poll back: write anything outstanding, close its databases and
+# drop its lock.  Calling it twice is harmless. Note that the END
+# block calls this automatically.
+sub ReleaseElection {
+    if ($db_is_open) {
+        SyncVoterKeys() if $voter_keys_dirty;
+        CloseDatabase();
+    }
+    UnlockElection();
+}
+
 sub OpenDatabase {
     tie %edata, "DB_File", $election_data, &O_RDWR, 0666, $DB_HASH
         or die "Unable to tie poll db=$election_data: $!\n";
@@ -266,6 +281,8 @@ sub CloseDatabase {
     if ($db_is_open) {
         untie %edata;
         untie %vdata;
+        tie %edata, 'election::closed', 'poll data';
+        tie %vdata, 'election::closed', 'ballot data';
         $db_is_open = 0;
     }
 }
@@ -443,6 +460,7 @@ sub StartBallot {
         : $ballot_key;
     $vdata{'recorded_voters'} = $recorded_voters;
     $used_voter_keys{civs_hash($voter_key)} = 1;
+    $voter_keys_dirty = 1;
     SyncVoterKeys();
     return ($receipt_key, $ballot_key);
 }
@@ -807,6 +825,7 @@ sub VotingUrl {
             }
         } else {
             $voter_keys{$hash_voter_key} = 1;
+            $voter_keys_dirty = 1;
             $num_auth++; $edata{'num_auth'} = $num_auth;
         }
     }
@@ -948,3 +967,31 @@ sub RecordInvitation {
     }
     close(INVITES) || Log("Error closing invite file $fname");
 }
+
+# The poll's databases, once they have been closed. Anything reading them
+# after that point wants data this process no longer holds the poll's lock
+# on, so it says which database it was rather than handing back undef and
+# letting a page come out quietly short of whatever it asked for.
+package election::closed;
+
+sub TIEHASH {
+    my ($class, $what) = @_;
+    return bless \$what, $class;
+}
+
+sub complain {
+    my ($self) = @_;
+    die "The poll's $$self was read after the poll was released. "
+      . "Whatever needs it has to run before ReleaseElection.\n";
+}
+
+sub FETCH    { $_[0]->complain }
+sub STORE    { $_[0]->complain }
+sub EXISTS   { $_[0]->complain }
+sub DELETE   { $_[0]->complain }
+sub CLEAR    { $_[0]->complain }
+sub FIRSTKEY { $_[0]->complain }
+sub NEXTKEY  { $_[0]->complain }
+sub SCALAR   { $_[0]->complain }
+
+1;

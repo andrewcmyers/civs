@@ -36,6 +36,7 @@ use top_polls;
 # 6. To reload a set of rankings
 
 my $top_polls_refresh = 24 * 3600; # daily refresh
+my $refresh_top_polls = 0;         # is one due once the poll is let go?
 my $allow_debug_votes = 0;         # allow multiple votes from the same voter in debug mode?
 
 my $voter_key = bytesParam('key');
@@ -131,6 +132,11 @@ if ($add_writein and $writeins eq 'yes') {
 if ($load) {
     Load();
 }
+
+# The last of the poll's data has been read. What remains is the ballot
+# page, which is written from memory, so the poll is let go here rather
+# than when this process ends.
+DoneWithPoll();
 
 print '<div class="normal_text">', BR;
 
@@ -273,6 +279,7 @@ sub AdvanceBallot {
 
 # The end of the ballot: hand over the receipt and point at the results.
 sub FinishVoting {
+    DoneWithPoll();
     if (!$ballot_key) {
         # Every question was skipped, so there is no ballot to speak of.
         print p($tx->no_questions_answered), $cr;
@@ -303,7 +310,24 @@ sub LogPublicVote {
     my $top_polls = $home . "/elections/top_polls.html";
     my $top_polls_time = FileTimestamp($top_polls);
 
+    # The refresh reads every publicized poll and rewrites the top-polls
+    # page. It has nothing to do with this poll, so it is not done here,
+    # holding this poll's lock, where the one voter a day who happens to
+    # find the page stale would make every other voter wait behind it.
+    # DoneWithPoll picks it up once the lock has gone back.
     if (time() - $top_polls_time > $top_polls_refresh) {
+        $refresh_top_polls = 1;
+    }
+}
+
+# Hand the poll back to whoever is waiting for it. Everything after this
+# is written from what init() read into memory, so there is nothing left
+# to hold the lock for; see ReleaseElection in election.pm. Then do the
+# work that was deliberately put off until the lock was gone.
+sub DoneWithPoll {
+    ReleaseElection();
+    if ($refresh_top_polls) {
+        $refresh_top_polls = 0;
         top_polls::standard_refresh();
     }
 }
